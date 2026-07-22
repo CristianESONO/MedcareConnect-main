@@ -1,0 +1,378 @@
+{% extends "visitor_base.html" %}
+{% load static humanize %}
+
+{% block title %}MedCare — Première plateforme paraclinique digitale du Sénégal{% endblock %}
+
+{% block visitor_extra_css %}
+<link rel="stylesheet" href="{% static 'css/index_medcare.css' %}?v=2">
+{% endblock %}
+
+{% block body_extra_class %} mc-vitrine-page mc-index-body{% endblock %}
+
+{% block visitor_page_class %} mc-index-page{% endblock %}
+
+{% block page_content %}
+
+{# ── HERO DESKTOP / TABLETTE (cartes glass) — masqué mobile ── #}
+<section class="msn-hero msn-hero--desktop" aria-label="Accueil">
+  <div class="msn-hero-inner">
+    <div class="msn-pill">Première plateforme paraclinique digitale du Sénégal</div>
+    <h1 class="msn-hero-title">Votre santé,<br><span>au bout des doigts.</span></h1>
+    <p class="msn-hero-sub">Identifiez-vous pour commencer</p>
+    <div class="msn-hero-cards">
+      <a href="{% url 'healthcare:search' %}" class="msn-glass-card msn-glass-card--patient">
+        <div class="msn-glass-icon"><i class="ti ti-user-heart"></i></div>
+        <p class="msn-glass-label">Trouvez l'examen médical dont vous avez besoin.</p>
+        <h2 class="msn-glass-title">Je suis patient</h2>
+        <span class="msn-glass-btn">Trouver un service →</span>
+      </a>
+      <a href="{% url 'users:register' %}" class="msn-glass-card msn-glass-card--pro">
+        <div class="msn-glass-icon"><i class="ti ti-stethoscope"></i></div>
+        <p class="msn-glass-label">Référencez votre structure ou votre pratique.</p>
+        <h2 class="msn-glass-title">Je suis soignant</h2>
+        <span class="msn-glass-btn msn-glass-btn--outline">Rejoindre MedCare →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+{# ── HERO MOBILE — PATIENT / SOIGNANT ── #}
+<section class="msn-hero msn-hero--mobile" aria-label="Accueil mobile">
+  <div class="msn-hero-inner">
+    <div class="msn-pill">🇸🇳 Première plateforme paraclinique digitale</div>
+    <h1 class="msn-hero-title">Votre santé,<br><span>au bout des doigts.</span></h1>
+    <p class="msn-hero-identify">Identifiez-vous</p>
+    <div class="msn-hero-btns">
+      <a href="{% url 'healthcare:search' %}" class="msn-btn msn-btn--patient">PATIENT</a>
+      <a href="{% url 'users:register' %}" class="msn-btn msn-btn--pro">SOIGNANT</a>
+    </div>
+  </div>
+</section>
+
+{# ── PROCESS STRIP (elementor 2499e83) ── #}
+<section class="msn-process" aria-label="Parcours">
+  <div class="msn-process-inner">
+    <div class="msn-process-step">
+      <div class="msn-process-icon"><i class="ti ti-search"></i></div>
+      <div class="msn-process-text">
+        <div class="msn-process-title">Rechercher</div>
+        <div class="msn-process-desc">Examen ou service</div>
+      </div>
+    </div>
+    <div class="msn-process-step">
+      <div class="msn-process-icon"><i class="ti ti-scale"></i></div>
+      <div class="msn-process-text">
+        <div class="msn-process-title">Comparer</div>
+        <div class="msn-process-desc">Prix · Distance · Assurance</div>
+      </div>
+    </div>
+    <div class="msn-process-step">
+      <div class="msn-process-icon"><i class="ti ti-id"></i></div>
+      <div class="msn-process-text">
+        <div class="msn-process-title">Consulter la fiche</div>
+        <div class="msn-process-desc">Infos vérifiées</div>
+      </div>
+    </div>
+    <div class="msn-process-step msn-process-step--last">
+      <div class="msn-process-icon msn-process-icon--wa"><i class="ti ti-brand-whatsapp"></i></div>
+      <div class="msn-process-text">
+        <div class="msn-process-title">Contacter</div>
+        <div class="msn-process-desc">WhatsApp direct</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ── ACCÈS IMMÉDIAT ── #}
+<section class="msn-acces">
+  <div class="msn-wrap">
+    <div class="msn-pill msn-pill--on-dark">ACCÈS IMMEDIAT</div>
+    <h2 class="msn-acces-title">Prix <span>réels</span>,<br>Localisations <span>exactes</span>,<br>Assurances <span>acceptés</span>.</h2>
+    <p class="msn-acces-sub">Tout ce qu'il faut savoir avant de se déplacer.</p>
+  </div>
+</section>
+
+{# ── CATÉGORIES / 6 PILIERS ── #}
+<section class="msn-section msn-piliers">
+  <div class="msn-wrap">
+    <div class="msn-section-head">
+      <div>
+        <div class="msn-pill msn-pill--light">Catégories</div>
+        <h2 class="msn-heading">Les 6 piliers <span>MedCare</span></h2>
+        <p class="msn-desc msn-desc--desktop">Chaque service est structuré, standardisé et accessible en quelques secondes.</p>
+      </div>
+      <a href="{% url 'healthcare:search' %}" class="msn-link-all">Voir tous les services <i class="ti ti-arrow-right"></i></a>
+    </div>
+    <div class="msn-piliers-grid">
+      {% for pillar in pillars %}
+      {% with service=pillar.service %}
+      <a href="{% url 'healthcare:service_detail' service.slug %}" class="msn-pilier-card">
+        <div class="msn-pilier-icon">
+          {% if pillar.sample_key == "biologie" %}<i class="ti ti-flask"></i>
+          {% elif pillar.sample_key == "imagerie" %}<i class="ti ti-scan"></i>
+          {% elif pillar.sample_key == "exploration" %}<i class="ti ti-heartbeat"></i>
+          {% elif pillar.sample_key == "ambulance" %}<i class="ti ti-ambulance"></i>
+          {% elif pillar.sample_key == "dentaire" %}<i class="ti ti-dental"></i>
+          {% elif pillar.sample_key == "specialise" %}<i class="ti ti-needle"></i>
+          {% else %}<i class="ti ti-activity"></i>{% endif %}
+        </div>
+        <div class="msn-pilier-name">{{ service.name }}</div>
+        <div class="msn-pilier-sub">{{ pillar.sample_acts }}</div>
+        <div class="msn-pilier-link">Explorer {{ pillar.act_count }} actes</div>
+      </a>
+      {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ── FIABILITÉ ── #}
+<section class="msn-trust">
+  <div class="msn-wrap">
+    <div class="msn-trust-intro">
+      <div class="msn-pill msn-pill--on-dark">Fiabilité</div>
+      <h2 class="msn-trust-heading">Des données <span>dont vous pouvez</span> avoir confiance.</h2>
+    </div>
+    <div class="msn-trust-grid">
+      <div class="msn-trust-card">
+        <div class="msn-trust-icon"><i class="ti ti-users"></i></div>
+        <h3>Données déclarées</h3>
+        <p>Les informations sont renseignées directement par les établissements, en toute autonomie et responsabilité.</p>
+      </div>
+      <div class="msn-trust-card">
+        <div class="msn-trust-icon"><i class="ti ti-refresh"></i></div>
+        <h3>Date de mise à jour</h3>
+        <p>Les fiches affichent clairement la dernière date de mise à jour. Les structures modifient leurs infos à tout moment.</p>
+      </div>
+      <div class="msn-trust-card">
+        <div class="msn-trust-icon"><i class="ti ti-rosette"></i></div>
+        <h3>Badge Vérifié</h3>
+        <p>Les établissements validés par l'équipe MedCare obtiennent le badge de confiance visible sur toutes leurs fiches.</p>
+      </div>
+      <div class="msn-trust-card">
+        <div class="msn-trust-icon"><i class="ti ti-credit-card"></i></div>
+        <h3>Tarifs et Prise en charge</h3>
+        <p>Chaque établissement renseigne ses tarifs, les types d'assurances acceptées pour une transparence totale avant votre visite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ── TENDANCES ── #}
+{% if trending_actes %}
+<section class="msn-section msn-trending">
+  <div class="msn-wrap">
+    <div class="msn-section-head">
+      <div>
+        <div class="msn-pill msn-pill--light">Tendances</div>
+        <h2 class="msn-heading">Services les plus <span>recherchés</span></h2>
+      </div>
+      <a href="{% url 'healthcare:search' %}" class="msn-link-all">Voir tous les services <i class="ti ti-arrow-right"></i></a>
+    </div>
+    <div class="msn-trend-grid">
+      {% for row in trending_actes %}
+      <article class="msn-trend-card">
+        <div class="msn-trend-top">
+          <h3>{{ row.acte.name }}</h3>
+          {% if row.is_verified %}<span class="msn-badge">Vérifié</span>{% endif %}
+        </div>
+        <div class="msn-trend-meta">
+          {% if row.location %}<span>{{ row.location }}</span>{% endif %}
+          <span>{{ row.category }}</span>
+          <span>{% if row.subfamily %}{{ row.subfamily }} · {% endif %}{{ row.struct_count }} structure{{ row.struct_count|pluralize }}</span>
+        </div>
+        {% if row.min_price %}
+        <div class="msn-trend-price">{{ row.min_price|floatformat:0|intcomma }} <small>Fcfa</small></div>
+        {% endif %}
+        <a href="{% url 'healthcare:search' %}?acte={{ row.acte.pk }}&sort=price_asc" class="msn-trend-link">Voir résultats →</a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ── VISION + PRINCIPES ── #}
+<section class="msn-vision">
+  <div class="msn-wrap msn-vision-inner">
+    <div class="msn-vision-text">
+      <div class="msn-pill msn-pill--light">Notre vision</div>
+      <h2 class="msn-heading">Construire l'infrastructure paraclinique digitale de <span>référence en Afrique.</span></h2>
+      <p class="msn-desc">MedCare ambitionne de devenir la couche digitale qui organise, cartographie et structure l'offre de services médicaux à travers l'Afrique en commençant par le Sénégal.</p>
+      <div class="msn-phases">
+        <div class="msn-phase msn-phase--active">
+          <div class="msn-phase-label">Phase 1</div>
+          <div class="msn-phase-title">Dakar</div>
+        </div>
+        <div class="msn-phase">
+          <div class="msn-phase-label">Phase 2</div>
+          <div class="msn-phase-title">Sénégal</div>
+        </div>
+        <div class="msn-phase">
+          <div class="msn-phase-label">Phase 3</div>
+          <div class="msn-phase-title">Afrique</div>
+        </div>
+      </div>
+    </div>
+    <div class="msn-principes" id="msnPrincipes" role="button" tabindex="0" aria-label="Nos principes MedCare">
+      <div class="msn-principes-face msn-principes-face--front">
+        <div class="msn-principes-label"><span class="msn-dot"></span> Nos Principes · 1/2</div>
+        <ul class="msn-principes-list">
+          <li><span class="msn-principes-emoji">🔓</span><div><strong>Transparence</strong><small>Prix affichés, infos vérifiables</small></div></li>
+          <li><span class="msn-principes-emoji">📐</span><div><strong>Standardisation</strong><small>Fiches homogènes et comparables</small></div></li>
+        </ul>
+        <div class="msn-principes-hint">Voir la suite <span>↻</span></div>
+      </div>
+      <div class="msn-principes-face msn-principes-face--back">
+        <div class="msn-principes-label"><span class="msn-dot"></span> Nos Principes · 2/2</div>
+        <ul class="msn-principes-list">
+          <li><span class="msn-principes-emoji">🌍</span><div><strong>Accessibilité équitable</strong><small>Pour tout patient, partout</small></div></li>
+          <li><span class="msn-principes-emoji">📊</span><div><strong>Donnée structurée</strong><small>Information fiable et exploitable</small></div></li>
+        </ul>
+        <div class="msn-principes-hint">Retour <span>↺</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ── TCA ── #}
+<section class="msn-section msn-tca">
+  <div class="msn-wrap msn-tca-inner">
+    <p class="msn-tca-kicker">Trouver · Comparer · Accéder…</p>
+    <h2 class="msn-heading">Première plateforme digitale dédiée à la <span>paraclinique</span> au Sénégal</h2>
+    <p class="msn-desc">MedCare centralise l’offre de services médicaux</p>
+    <div class="msn-tca-grid">
+      <div class="msn-tca-card"><i class="ti ti-search"></i><h3>Rechercher un service par type d’examen</h3></div>
+      <div class="msn-tca-card"><i class="ti ti-map-pin"></i><h3>Localiser les structures disponibles</h3></div>
+      <div class="msn-tca-card"><i class="ti ti-brand-whatsapp"></i><h3>Faciliter la prise de contact</h3></div>
+    </div>
+  </div>
+</section>
+
+{# ── BENEFITS ── #}
+<section class="msn-section msn-benefits">
+  <div class="msn-wrap msn-benefits-inner">
+    <h2 class="msn-heading">Une nouvelle façon d’accéder aux <span>services de santé</span></h2>
+    <div class="msn-benefits-grid">
+      <div class="msn-benefit"><i class="ti ti-eye"></i><h3>Transparence des services disponibles</h3></div>
+      <div class="msn-benefit"><i class="ti ti-building-hospital"></i><h3>Meilleure visibilité pour les structures</h3></div>
+      <div class="msn-benefit"><i class="ti ti-route"></i><h3>Optimisation du parcours patient</h3></div>
+    </div>
+  </div>
+</section>
+
+{# ── NOS 6 PILIERS (visuel) ── #}
+<section class="msn-pillars-visual">
+  <div class="msn-wrap">
+    <h2 class="msn-pillars-visual-title">NOS 6 PILIERS !</h2>
+    <div class="msn-pillars-visual-grid">
+      {% for pillar in pillars %}
+      {% with service=pillar.service %}
+      <a href="{% url 'healthcare:service_detail' service.slug %}" class="msn-pillar-vcard">
+        <div class="msn-pillar-vicon">
+          {% if pillar.sample_key == "biologie" %}<i class="ti ti-flask"></i>
+          {% elif pillar.sample_key == "imagerie" %}<i class="ti ti-scan"></i>
+          {% elif pillar.sample_key == "exploration" %}<i class="ti ti-heartbeat"></i>
+          {% elif pillar.sample_key == "ambulance" %}<i class="ti ti-ambulance"></i>
+          {% elif pillar.sample_key == "dentaire" %}<i class="ti ti-dental"></i>
+          {% elif pillar.sample_key == "specialise" %}<i class="ti ti-needle"></i>
+          {% else %}<i class="ti ti-activity"></i>{% endif %}
+        </div>
+        <h3>{{ service.name }}</h3>
+        <p>
+          {% if pillar.sample_key == "imagerie" %}Radio, Écho, Scanner…
+          {% elif pillar.sample_key == "exploration" %}ECG, Fibro, ENMG…
+          {% elif pillar.sample_key == "dentaire" %}Blanchiment, Prothèse, Esthétique…
+          {% elif pillar.sample_key == "ambulance" %}Médicalisées, Couverture médicale…
+          {% elif pillar.sample_key == "specialise" %}Dialyse, Radiothérapie, Soins infirmiers…
+          {% elif pillar.sample_key == "biologie" %}Analyses, Examens de labo…
+          {% else %}{{ pillar.sample_acts }}{% endif %}
+        </p>
+        <span>Voir les détails <i class="ti ti-arrow-right"></i></span>
+      </a>
+      {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ── VISION CTA ── #}
+<section class="msn-vision-cta">
+  <div class="msn-wrap msn-vision-cta-inner">
+    <div class="msn-pill msn-pill--on-dark">Notre vision</div>
+    <h2 class="msn-heading msn-heading--light">Construire l’infrastructure sanitaire digitale de <span>référence</span></h2>
+    <p>MedCare ambitionne de devenir la couche digitale permettant d’organiser, cartographier et structurer l’offre de services médicaux en Afrique.</p>
+    <a href="{% url 'about' %}" class="msn-btn msn-btn--patient">En savoir plus !</a>
+  </div>
+</section>
+
+{# ── FAQ ── #}
+<section class="msn-section msn-faq" id="faq">
+  <div class="msn-wrap">
+    <div class="msn-faq-intro">
+      <div class="msn-pill msn-pill--light">FAQ</div>
+      <h2 class="msn-heading">Vous avez des doutes&nbsp;?</h2>
+      <p class="msn-desc">Notre foire à questions est là pour vous guider.</p>
+      <p class="msn-faq-sub">Les questions les plus posées</p>
+    </div>
+    <div class="msn-faq-list" id="msnFaqList">
+      <details class="msn-faq-item" open>
+        <summary>Qu’est-ce que MedCare exactement&nbsp;?</summary>
+        <p>MedCare est une plateforme digitale qui référence les établissements et services de santé afin de faciliter la recherche, la comparaison et la prise de contact.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Les informations affichées sont-elles fiables&nbsp;?</summary>
+        <p>Les données sont collectées directement auprès des structures et vérifiées par l’équipe MedCare avant publication.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Est-ce que MedCare prend en charge les paiements&nbsp;?</summary>
+        <p>Non. MedCare facilite la mise en relation. Le paiement se fait directement auprès de la structure de santé.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Mes données personnelles sont-elles protégées&nbsp;?</summary>
+        <p>Oui. MedCare ne vend ni ne partage vos données personnelles sans consentement.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Comment les structures apparaissent-elles sur MedCare&nbsp;?</summary>
+        <p>Les établissements s’inscrivent volontairement et fournissent leurs informations. MedCare garantit une présentation neutre et standardisée. Les utilisateurs peuvent affiner leurs recherches grâce à des filtres dynamiques basés notamment sur la localisation, le type de service, la spécialité, la fourchette de prix ou la prise en charge par assurance.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Faut-il créer un compte pour rechercher&nbsp;?</summary>
+        <p>Non. La recherche est entièrement gratuite et libre. Aucun compte ni inscription nécessaire pour trouver, comparer ou contacter.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Les prix affichés sont-ils garantis&nbsp;?</summary>
+        <p>Les prix sont déclarés par les établissements eux-mêmes et la date de mise à jour est affichée. Nous recommandons de confirmer le tarif directement avec la structure avant de se déplacer.</p>
+      </details>
+      <details class="msn-faq-item">
+        <summary>Comment fonctionne le contact WhatsApp&nbsp;?</summary>
+        <p>Un clic sur le bouton WhatsApp ouvre directement une conversation avec l’établissement. Aucune donnée n’est stockée par MedCare — c’est un lien direct.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var card = document.getElementById('msnPrincipes');
+  if (card) {
+    function toggle() { card.classList.toggle('is-flipped'); }
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  }
+  var faq = document.getElementById('msnFaqList');
+  if (faq) {
+    faq.addEventListener('toggle', function (e) {
+      var t = e.target;
+      if (!t.open || t.tagName !== 'DETAILS') return;
+      faq.querySelectorAll('details').forEach(function (d) { if (d !== t) d.open = false; });
+    }, true);
+  }
+})();
+</script>
+{% endblock %}

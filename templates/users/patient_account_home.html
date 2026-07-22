@@ -1,0 +1,13 @@
+{% extends "users/patient_account_base.html" %}
+{% block title %}Mon compte — Mes RDV{% endblock %}
+{% block account_content %}
+<div class="pac-section-title">RDV à venir</div>
+<p class="pac-empty">Aucun RDV à venir.<br><span style="font-size:11px;margin-top:6px;display:inline-block">Obtenez un devis WhatsApp depuis la recherche, puis confirmez votre créneau avec la structure.</span></p>
+
+<div class="pac-section-title">Historique</div>
+<p class="pac-empty">Aucun rendez-vous passé pour le moment.</p>
+
+<div class="pac-info-banner">
+  La prise de RDV en ligne arrive prochainement. Vos devis restent accessibles dans l’onglet <a href="{% url 'cart:devis_list' %}" class="font-semibold underline">Mes devis</a>.
+</div>
+{% endblock %}

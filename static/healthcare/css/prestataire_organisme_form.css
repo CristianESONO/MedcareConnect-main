@@ -1,0 +1,388 @@
+/* Édition profil établissement — aligné charte prestataire */
+.org-edit-admin {
+  border-radius: var(--mc-radius-lg, 24px);
+  border: 1px solid var(--mc-border, #D4DEEE);
+  background: var(--mc-white, #fff);
+  padding: 1.15rem 1.25rem;
+  box-shadow: var(--mc-shadow-sm, 0 1px 4px rgba(18, 58, 99, 0.08));
+}
+.org-edit-admin h1 {
+  font-family: var(--mc-font-display, 'Syne', sans-serif);
+  color: var(--mc-text, #0A1535);
+  letter-spacing: -0.02em;
+}
+.org-edit-lead { color: var(--mc-text-body, #374872); }
+.org-edit-actions a,
+.org-edit-actions button {
+  border-radius: var(--mc-radius, 14px);
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.org-edit-actions a:hover { transform: translateY(-1px); }
+
+.org-edit-card {
+  border-radius: var(--mc-radius, 14px);
+  border: 1px solid var(--mc-border, #D4DEEE);
+  background: var(--mc-white, #fff);
+  box-shadow: var(--mc-shadow-sm);
+  overflow: hidden;
+}
+.org-edit-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--mc-border, #D4DEEE);
+  background: var(--mc-surface, #EBF0F8);
+}
+.org-edit-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: 0.65rem;
+  background: var(--mc-white, #fff);
+  color: var(--mc-navy, #123a63);
+  box-shadow: var(--mc-shadow-sm);
+}
+.org-edit-card-title {
+  font-family: var(--mc-font-display, 'Syne', sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--mc-text, #0A1535);
+}
+.org-edit-card-sub {
+  margin-top: 0.15rem;
+  font-size: 0.625rem;
+  color: var(--mc-text-muted, #7A89B0);
+  line-height: 1.45;
+}
+.org-edit-card-body { padding: 1rem; }
+
+.org-edit-label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mc-text-muted, #7A89B0);
+  margin-bottom: 0.35rem;
+}
+.org-edit-hint {
+  margin-top: 0.35rem;
+  font-size: 0.625rem;
+  color: var(--mc-text-muted, #7A89B0);
+  line-height: 1.45;
+}
+
+#organisme-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]),
+#organisme-form select,
+#organisme-form textarea {
+  width: 100%;
+  border: 1.5px solid var(--mc-border, #D4DEEE);
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8125rem;
+  font-family: var(--mc-font-ui, 'DM Sans', sans-serif);
+  color: var(--mc-text, #0A1535);
+  background: var(--mc-white, #fff);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+#organisme-form input:focus,
+#organisme-form select:focus,
+#organisme-form textarea:focus {
+  outline: none;
+  border-color: var(--mc-accent, #4fa3c7);
+  box-shadow: 0 0 0 3px var(--mc-accent-light, rgba(79, 163, 199, 0.15));
+}
+#organisme-form input[type="file"]:not(.org-edit-logo-input) {
+  font-size: 0.6875rem;
+  padding: 0.45rem;
+  background: var(--mc-bg, #F4F7FB);
+}
+#organisme-form .errorlist {
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #b91c1c;
+}
+
+.org-edit-logo {
+  border-radius: var(--mc-radius, 14px);
+  border: 1.5px dashed var(--mc-border, #D4DEEE);
+  background: linear-gradient(180deg, var(--mc-bg, #F4F7FB) 0%, var(--mc-white, #fff) 100%);
+  padding: 1rem;
+  text-align: center;
+}
+.org-edit-logo-preview,
+.org-edit-logo-fallback {
+  margin: 0.65rem auto 0;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 1rem;
+  border: 3px solid var(--mc-white, #fff);
+  box-shadow: var(--mc-shadow-md);
+  object-fit: cover;
+}
+.org-edit-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--mc-accent, #4fa3c7), var(--mc-navy, #123a63));
+  font-family: var(--mc-font-display, 'Syne', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+}
+.org-edit-logo-preview-wrap { margin-top: 0.65rem; }
+.org-edit-logo-upload {
+  position: relative;
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.org-edit-logo-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.org-edit-logo-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.65rem;
+  border: 1.5px dashed rgba(79, 163, 199, 0.45);
+  background: var(--mc-white, #fff);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.org-edit-logo-pick:hover,
+.org-edit-logo-input:focus-visible + .org-edit-logo-pick,
+.org-edit-logo-upload:has(.org-edit-logo-input:focus-visible) .org-edit-logo-pick {
+  border-color: var(--mc-accent, #4fa3c7);
+  background: var(--mc-accent-light, rgba(79, 163, 199, 0.08));
+  box-shadow: 0 0 0 3px var(--mc-accent-light, rgba(79, 163, 199, 0.15));
+}
+.org-edit-logo-pick-icon {
+  display: flex;
+  color: var(--mc-navy, #123a63);
+  opacity: 0.85;
+}
+.org-edit-logo-pick-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mc-navy, #123a63);
+}
+.org-edit-logo-pick-hint {
+  font-size: 0.625rem;
+  color: var(--mc-text-muted, #7A89B0);
+}
+.org-edit-logo-remove {
+  padding: 0.4rem 0.65rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #b91c1c;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.org-edit-logo-remove:hover { background: #fef2f2; }
+.org-edit-logo-clear {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.org-edit-logo-filename {
+  margin: 0.45rem 0 0;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--mc-accent-dark, #3d8aad);
+  line-height: 1.4;
+  word-break: break-word;
+}
+.org-edit-logo.is-pending-remove .org-edit-logo-preview,
+.org-edit-logo.is-pending-remove .org-edit-logo-fallback {
+  opacity: 0.35;
+  filter: grayscale(0.6);
+}
+
+.org-edit-geo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border-radius: var(--mc-radius, 14px);
+  border: 1px solid rgba(79, 163, 199, 0.28);
+  background: var(--mc-accent-light, rgba(79, 163, 199, 0.1));
+}
+@media (min-width: 640px) {
+  .org-edit-geo { flex-direction: row; flex-wrap: wrap; align-items: center; }
+}
+.org-edit-geo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(79, 163, 199, 0.35);
+  background: var(--mc-white, #fff);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mc-navy, #123a63);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.org-edit-geo-btn:hover { background: var(--mc-bg, #F4F7FB); }
+.org-edit-geo-btn:disabled { opacity: 0.6; cursor: wait; }
+.org-edit-geo-search {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 0.45rem;
+}
+.org-edit-geo-search input {
+  flex: 1;
+  min-width: 0;
+}
+.org-edit-geo-submit {
+  flex-shrink: 0;
+  padding: 0.55rem 0.85rem;
+  border: none;
+  border-radius: 0.65rem;
+  background: var(--mc-navy, #123a63);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.org-edit-geo-submit:hover { background: var(--mc-navy-deep, #0d1b4b); }
+.org-edit-geo-sug {
+  max-height: 11rem;
+  overflow: auto;
+  border-radius: 0.65rem;
+  border: 1px solid var(--mc-border, #D4DEEE);
+  background: var(--mc-white, #fff);
+  box-shadow: var(--mc-shadow-md);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.org-edit-geo-sug li {
+  cursor: pointer;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid var(--mc-border, #D4DEEE);
+}
+.org-edit-geo-sug li:hover { background: var(--mc-accent-light, rgba(79, 163, 199, 0.12)); }
+.org-edit-map {
+  overflow: hidden;
+  border-radius: var(--mc-radius, 14px);
+  border: 1px solid var(--mc-border, #D4DEEE);
+}
+.org-edit-map iframe { width: 100%; height: 11rem; border: 0; display: block; }
+
+.org-edit-aside-card {
+  border-radius: var(--mc-radius, 14px);
+  border: 1px solid var(--mc-border, #D4DEEE);
+  background: var(--mc-white, #fff);
+  padding: 0.85rem 1rem;
+  box-shadow: var(--mc-shadow-sm);
+}
+.org-edit-aside-title {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mc-text-muted, #7A89B0);
+}
+
+.org-edit-progress-ring {
+  position: relative;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0.75rem auto 0;
+}
+.org-edit-progress-ring svg { transform: rotate(-90deg); }
+.org-edit-progress-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mc-font-display, 'Syne', sans-serif);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--mc-navy, #123a63);
+}
+.org-edit-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.6875rem;
+  padding: 0.2rem 0;
+}
+.org-edit-checklist li.is-done { color: var(--mc-accent-dark, #3d8aad); font-weight: 600; }
+.org-edit-checklist li.is-missing { color: var(--mc-text-muted, #7A89B0); }
+.org-edit-check-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background: var(--mc-border, #D4DEEE);
+}
+.org-edit-checklist li.is-done .org-edit-check-dot { background: var(--mc-accent, #4fa3c7); }
+
+.org-edit-save-card {
+  border-radius: var(--mc-radius, 14px);
+  border: 1px solid rgba(79, 163, 199, 0.28);
+  background: linear-gradient(180deg, rgba(79, 163, 199, 0.08) 0%, var(--mc-white, #fff) 100%);
+  padding: 0.85rem 1rem;
+}
+.org-edit-alert {
+  margin-top: 1rem;
+  border-radius: var(--mc-radius, 14px);
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  color: #92400e;
+}
+.org-edit-alert-errors {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.org-edit-mobile-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+  background: linear-gradient(180deg, transparent, var(--mc-bg, #F4F7FB) 25%);
+}
+@media (min-width: 1024px) {
+  .org-edit-mobile-bar { display: none; }
+}
+.org-edit-ico { width: 1.125rem; height: 1.125rem; flex-shrink: 0; }
+.org-edit-ico--sm { width: 1rem; height: 1rem; }

@@ -1,0 +1,98 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load humanize %}
+
+{% block title %}Prestations à domicile{% endblock %}
+
+{% block dash_content %}
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">🏠 Prestations à domicile</h1>
+    <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Configurez vos zones de déplacement et les forfaits associés. Les patients verront ces informations sur votre profil.</p>
+  </div>
+</div>
+
+{# ───── Toggle global ───── #}
+<form method="post" class="mt-5">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="toggle_global">
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold text-gray-900">Service prestation à domicile</p>
+        <p class="mt-1 text-xs text-gray-500">Indique aux patients que vous proposez ce service. Les zones et forfaits ci-dessous ne s'affichent que si le service est activé.</p>
+      </div>
+      <button type="submit" class="rounded-xl px-4 py-2 text-xs font-bold transition {% if org.prises_sang_domicile %}mc-bg-accent text-white{% else %}border border-gray-300 bg-white text-gray-700 hover:bg-gray-50{% endif %}">
+        {% if org.prises_sang_domicile %}● Activé — Cliquer pour désactiver{% else %}○ Désactivé — Cliquer pour activer{% endif %}
+      </button>
+    </div>
+  </div>
+</form>
+
+{% if org.prises_sang_domicile %}
+{# ───── Liste / édition des zones ───── #}
+<div class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="text-sm font-bold text-gray-900">Zones tarifaires</h2>
+      <p class="text-[11px] text-gray-500">Définissez chaque zone géographique et son forfait de déplacement (0 FCFA = gratuit).</p>
+    </div>
+    <span class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-bold text-gray-600">{{ zones.count }} zone{{ zones.count|pluralize }}</span>
+  </div>
+
+  <div class="mt-4 space-y-2.5">
+    {% for z in zones %}
+    <form method="post" class="grid grid-cols-1 items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3 sm:grid-cols-[1fr,160px,auto,auto]">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="update_zone">
+      <input type="hidden" name="zone_pk" value="{{ z.pk }}">
+      <div>
+        <label class="text-[10px] font-semibold uppercase tracking-wider text-gray-500">Quartier / Zone</label>
+        <input type="text" name="label" value="{{ z.label }}" required class="mt-0.5 w-full rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm" />
+      </div>
+      <div>
+        <label class="text-[10px] font-semibold uppercase tracking-wider text-gray-500">Forfait (FCFA)</label>
+        <input type="number" name="forfait_fcfa" value="{{ z.forfait_fcfa }}" min="0" class="mt-0.5 w-full rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm" />
+      </div>
+      <label class="inline-flex items-center gap-2 text-xs">
+        <input type="checkbox" name="is_active" {% if z.is_active %}checked{% endif %} class="h-4 w-4 rounded border-gray-300">
+        <span class="font-semibold text-gray-700">Active</span>
+      </label>
+      <div class="flex gap-1.5 sm:justify-end">
+        <button type="submit" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-primary-600">💾</button>
+        <button type="submit" name="action" value="delete_zone" formnovalidate onclick="return confirm('Supprimer la zone « {{ z.label|escapejs }} » ?');" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50">✕</button>
+      </div>
+    </form>
+    {% empty %}
+    <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center text-sm text-gray-500">
+      Aucune zone définie pour l'instant.
+    </div>
+    {% endfor %}
+  </div>
+
+  {# ───── Ajouter ───── #}
+  <form method="post" class="mt-5 grid grid-cols-1 items-end gap-2 rounded-xl border-2 border-dashed border-[var(--mc-accent)] mc-bg-accent-light p-3 sm:grid-cols-[1fr,160px,auto]">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add_zone">
+    <div>
+      <label class="text-[10px] font-semibold uppercase tracking-wider mc-text-accent-dark">Nouvelle zone</label>
+      <input type="text" name="label" required placeholder="Ex : Mermoz, Plateau, Pikine…" class="mt-0.5 w-full rounded-lg border border-[var(--mc-border)] bg-white px-3 py-1.5 text-sm" />
+    </div>
+    <div>
+      <label class="text-[10px] font-semibold uppercase tracking-wider mc-text-accent-dark">Forfait (FCFA)</label>
+      <input type="number" name="forfait_fcfa" value="0" min="0" class="mt-0.5 w-full rounded-lg border border-[var(--mc-border)] bg-white px-3 py-1.5 text-sm" />
+    </div>
+    <button type="submit" class="rounded-lg mc-bg-accent px-4 py-2 text-xs font-bold text-white">+ Ajouter</button>
+  </form>
+</div>
+
+<div class="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs text-blue-900">
+  <p class="font-semibold">Comment c'est utilisé ?</p>
+  <p class="mt-1 leading-relaxed">Les zones ci-dessus sont affichées sur votre profil public et indiquent au patient le coût supplémentaire de déplacement selon son quartier. Ceci ne remplace pas la prise de RDV — c'est une information tarifaire transparente.</p>
+</div>
+{% else %}
+<div class="mt-6 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center">
+  <p class="text-sm font-semibold text-gray-700">Service désactivé</p>
+  <p class="mt-1 text-xs text-gray-500">Activez le service ci-dessus pour configurer vos zones et forfaits.</p>
+</div>
+{% endif %}
+{% endblock %}

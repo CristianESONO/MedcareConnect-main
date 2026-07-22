@@ -1,0 +1,19 @@
+{% load static %}
+<div id="pac-root" class="pac-root" aria-hidden="true">
+  <div class="pac-backdrop" id="pac-backdrop"></div>
+  <div class="pac-modal" id="pac-modal" role="dialog" aria-modal="true" aria-labelledby="pac-content-title">
+    <div class="pac-page pac-page--overlay">
+      {% include "users/_patient_compte_sidebar.html" %}
+      <div class="pac-main">
+        <header class="pac-main-head">
+          <div class="min-w-0">
+            <h1 class="pac-main-title" id="pac-content-title">Mon compte</h1>
+            <p class="pac-main-sub truncate">{{ user.display_name }} · {{ user.email|default:user.username }}</p>
+          </div>
+          <button type="button" class="pac-back-btn" id="pac-close-btn">← Retour aux prestations</button>
+        </header>
+        <div class="pac-main-body" id="pac-overlay-content"><div class="pac-inner"></div></div>
+      </div>
+    </div>
+  </div>
+</div>

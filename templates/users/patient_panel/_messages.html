@@ -1,0 +1,7 @@
+{% if pac_messages %}
+<div class="pac-flash-list mb-4">
+  {% for msg in pac_messages %}
+  <div class="pac-flash {% if msg.tags == 'error' %}pac-flash--error{% elif msg.tags == 'success' %}pac-flash--success{% else %}pac-flash--info{% endif %}">{{ msg }}</div>
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,48 @@
+# Tests automatisés à chaque push / PR (SQLite, pas de services externes).
+name: Tests
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  django-pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Django system check
+        run: python manage.py check
+        env:
+          DJANGO_SETTINGS_MODULE: medcare_connect.settings
+
+      - name: Migrate
+        run: python manage.py migrate --noinput
+        env:
+          DJANGO_SETTINGS_MODULE: medcare_connect.settings
+          DATABASE_URL: ""
+
+      - name: Unit tests (manage.py test)
+        run: python manage.py test notifications.tests healthcare.tests cart.tests -v 1
+        env:
+          DJANGO_SETTINGS_MODULE: medcare_connect.settings
+          DATABASE_URL: ""
+
+      - name: QA tests (pytest)
+        run: python -m pytest qa_tests -q --tb=short
+        env:
+          DJANGO_SETTINGS_MODULE: medcare_connect.settings
+          DATABASE_URL: ""

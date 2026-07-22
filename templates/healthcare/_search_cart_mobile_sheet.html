@@ -1,0 +1,44 @@
+{% comment %}Barre Filtres + Chariot mobile et feuille panier — après la fermeture de #layout-body.{% endcomment %}
+  <div class="dem-mobile-quickbar lg:hidden" id="dem-mobile-quickbar" role="toolbar" aria-label="Actions rapides">
+    <button type="button" class="dem-mq-btn" id="dem-mq-open-filters" aria-controls="sheet-panel">
+      <span class="dem-mq-ic" aria-hidden="true">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"/></svg>
+      </span>
+      <span class="dem-mq-label">Actes &amp; filtres</span>
+      {% if active_filter_count %}<span class="dem-mq-badge">{{ active_filter_count }}</span>{% endif %}
+    </button>
+    <button type="button" class="dem-mq-btn dem-mq-btn--cart" id="dem-mq-open-cart" aria-controls="dem-cart-sheet" aria-expanded="false">
+      <span class="dem-mq-ic" aria-hidden="true">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+      </span>
+      <span class="dem-mq-label">Panier</span>
+      <span class="dem-mq-cart-count cart-count" data-dem-cart-count>0</span>
+    </button>
+  </div>
+
+  <div class="sheet-backdrop" id="dem-cart-backdrop" aria-hidden="true"></div>
+  <aside class="sheet-panel dem-cart-sheet flex max-h-[90dvh] flex-col" id="dem-cart-sheet" role="dialog" aria-modal="true" aria-label="Votre panier">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="dem-cart-sheet-head flex items-start justify-between gap-3 border-b border-gray-100 px-4 pb-3 pt-1">
+      <div>
+        <h2 class="dem-cart-sheet-title text-lg font-bold text-gray-900">Panier</h2>
+        <p class="dem-cart-sheet-sub mt-1 text-xs text-gray-500">Sélection sur cette page · <a href="{% url 'cart:cart_view' %}" class="font-semibold text-accent-600 hover:text-accent-700">Ouvrir le panier complet</a></p>
+      </div>
+      <button type="button" id="dem-cart-sheet-close" class="rounded-full p-2 text-gray-400 hover:bg-gray-100" aria-label="Fermer">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="dem-cart-sheet-body min-h-0 flex-1 overflow-y-auto px-4 py-3">
+      <div data-dem-cart-body>
+        <div class="cart-empty py-10 text-center text-sm text-gray-500">Ajoutez des actes depuis les cartes ci-dessous.</div>
+      </div>
+    </div>
+    <div class="dem-cart-sheet-foot border-t border-gray-100 px-4 py-3" data-dem-cart-footer hidden>
+      <div class="cart-total-row flex items-center justify-between gap-3 text-sm font-semibold text-gray-900">
+        <span class="ct-label">Total estimé</span>
+        <span class="ct-value" data-dem-cart-total>0 FCFA</span>
+      </div>
+      <div class="cart-structs-info mt-2" data-dem-cart-structs-info></div>
+      <p class="cart-devis-hint mt-2 text-center text-[11px] text-gray-500">Un devis par acte — bouton sur chaque ligne.</p>
+    </div>
+  </aside>

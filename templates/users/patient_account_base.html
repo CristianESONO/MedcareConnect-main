@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% block account_title %}Mon compte{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=23">
+<link rel="stylesheet" href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=3">
+{% block account_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block body_extra_class %} pac-page-open{% endblock %}
+
+{% block content %}
+<div id="pac-page" class="pac-page pac-page--{{ account_active|default:'accueil' }}">
+  {% include "users/_patient_compte_sidebar.html" %}
+  <div class="pac-main">
+    <header class="pac-main-head">
+      <div class="min-w-0">
+        <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
+        <p class="pac-main-sub truncate">{{ user.display_name }} · {{ user.email|default:user.username }}</p>
+      </div>
+      <a href="{% url 'healthcare:search' %}" class="pac-back-btn hidden sm:inline-flex">← Retour aux prestations</a>
+    </header>
+    <div class="pac-main-body" id="pac-content">
+      <div class="pac-inner">
+        {% block account_content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
+{% include "users/_patient_account_drawer.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.MEDCARE_PAC = {
+  tabUrls: {
+    accueil: '{% url "users:patient_panel_tab" tab="accueil" %}?pac_partial=1',
+    rdv: '{% url "users:patient_panel_tab" tab="rdv" %}?pac_partial=1',
+    devis: '{% url "users:patient_panel_tab" tab="devis" %}?pac_partial=1',
+    assurance: '{% url "users:patient_panel_tab" tab="assurance" %}?pac_partial=1',
+    profil: '{% url "users:patient_panel_tab" tab="profil" %}?pac_partial=1',
+    chariot: '{% url "users:patient_panel_tab" tab="chariot" %}?pac_partial=1',
+    recherches: '{% url "users:patient_panel_tab" tab="recherches" %}?pac_partial=1'
+  },
+  devisDetailUrl: '{% url "users:patient_panel_devis" ref="__REF__" %}?pac_partial=1',
+  pageTitles: {
+    accueil: 'Tableau de bord',
+    rdv: 'Mes RDV',
+    devis: 'Mes devis',
+    assurance: 'Assurance',
+    profil: 'Mes informations',
+    chariot: 'Panier',
+    recherches: 'Historique des recherches'
+  }
+};
+</script>
+<script src="{% static 'users/js/patient_compte.js' %}?v=1"></script>
+{% endblock %}

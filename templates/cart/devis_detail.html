@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Devis {{ devis.reference }}{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Devis {{ devis.reference }}</h1>
+            <p class="text-sm text-gray-500">Généré le {{ devis.created_at|date:"d/m/Y à H:i" }} · Valide jusqu'au {{ devis.valid_until|date:"d/m/Y" }}</p>
+        </div>
+        <span class="rounded-full px-3 py-1 text-xs font-semibold {% if devis.status == 'draft' %}bg-gray-100 text-gray-600{% elif devis.status == 'sent' %}bg-blue-50 text-blue-600{% elif devis.status == 'viewed' %}mc-bg-accent-light mc-text-accent{% else %}bg-red-50 text-red-600{% endif %}">{{ devis.get_status_display }}</span>
+    </div>
+
+    {% include "cart/partials/devis_parts_wa.html" %}
+
+    <div class="mt-8 rounded-xl border border-gray-200 bg-white">
+        <div class="border-b border-gray-100 px-6 py-4 bg-gray-50/60">
+            <div class="flex justify-between text-xs font-medium uppercase text-gray-500">
+                <span>Acte / Prestataire</span><span>Montant</span>
+            </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+            {% for line in devis.details %}
+            <div class="flex items-center justify-between px-6 py-3">
+                <div>
+                    <p class="text-sm font-medium text-gray-900">{{ line.acte }}</p>
+                    <p class="text-xs text-gray-400">{{ line.organisme }} · Qté : {{ line.quantity }}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm font-semibold text-gray-900">{{ line.subtotal }} XOF</p>
+                    {% if line.coverage_rate %}<p class="text-xs mc-text-accent">Couverture {{ line.coverage_rate }}% → {{ line.patient_cost }} XOF</p>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="border-t border-gray-200 px-6 py-4 bg-gray-50/60">
+            <dl class="space-y-1 text-sm">
+                <div class="flex justify-between"><dt class="text-gray-500">Total brut</dt><dd class="font-medium">{{ devis.total_brut|floatformat:0 }} XOF</dd></div>
+                {% if devis.insurance %}<div class="flex justify-between"><dt class="text-gray-500">Assurance ({{ devis.insurance.name }})</dt><dd class="font-medium mc-text-accent">-{{ devis.total_assurance|floatformat:0 }} XOF</dd></div>{% endif %}
+                <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Reste à charge patient</dt><dd class="text-lg font-bold text-primary-500">{{ devis.total_patient|floatformat:0 }} XOF</dd></div>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-6 flex gap-3">
+        <a href="{% url 'cart:devis_list' %}" class="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Tous mes devis</a>
+        <button onclick="window.print()" class="rounded-lg bg-primary-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-600">Imprimer / PDF</button>
+    </div>
+</div>
+{% endblock %}

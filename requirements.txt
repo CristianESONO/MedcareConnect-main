@@ -1,0 +1,12 @@
+Django>=5.1,<6.1
+psycopg2-binary>=2.9
+Pillow>=10.0
+gunicorn>=21.2
+django-environ>=0.11
+whitenoise>=6.5
+django-select2>=8.4
+django-redis>=6.0
+
+# Tests parcours / QA (optionnel en prod)
+pytest>=8.0
+pytest-django>=4.8

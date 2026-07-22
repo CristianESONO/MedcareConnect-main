@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MedCare Connect{% endblock %} — Marketplace Médicale au Sénégal</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo-sm.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=37">
+    <link rel="stylesheet" href="{% static 'css/output.css' %}?v=12">
+    <link rel="stylesheet" href="{% static 'css/visitor_charte.css' %}?v=19">
+    <link rel="stylesheet" href="{% static 'css/password_toggle.css' %}?v=2">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      :root {
+        --medcare-tab-bar-h: calc(4.125rem + env(safe-area-inset-bottom, 0px));
+      }
+      /* Assure un Select2 plein largeur dans nos cartes Tailwind */
+      .select2-container { width: 100% !important; }
+      /* Barre d’onglets mobile (style app — démo MOBILE PATIENT) */
+      .medcare-tab-bar,
+      #medcare-tab-bar.bottom-nav {
+        min-height: var(--medcare-tab-bar-h);
+        z-index: 450;
+        display: flex;
+        align-items: stretch;
+        background: #fff;
+        border-top: 1px solid #e5e7eb;
+      }
+      @media (max-width: 1023px) {
+        #medcare-tab-bar.bottom-nav {
+          display: flex !important;
+          visibility: visible !important;
+        }
+      }
+      @media (min-width: 1024px) {
+        #medcare-tab-bar.bottom-nav {
+          display: none !important;
+        }
+        body.mc-tab-bar-pad {
+          padding-bottom: 0 !important;
+        }
+      }
+      @media (max-width: 1023px) {
+        body.mc-tab-bar-pad {
+          padding-bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px));
+        }
+      }
+      .bnav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+        padding: 0;
+        transition: all 0.15s;
+        position: relative;
+        text-decoration: none;
+        color: inherit;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      .bnav-icon-wrap { position: relative; display: inline-flex; }
+      .bnav-icon { display: inline-flex; width: 20px; height: 20px; color: #9ca3af; transition: transform 0.2s, color 0.15s; }
+      .bnav-icon svg { width: 20px; height: 20px; }
+      .bnav-label { font-size: 9.5px; font-weight: 500; color: #9ca3af; letter-spacing: 0.01em; transition: color 0.15s; }
+      .bnav-btn.active .bnav-label { color: #0a5c8a; font-weight: 700; }
+      .bnav-btn.active .bnav-icon { color: #0a5c8a; transform: translateY(-1px); }
+      .bnav-dot {
+        position: absolute;
+        top: -2px;
+        right: -4px;
+        width: 7px;
+        height: 7px;
+        background: #14b87a;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        display: none;
+      }
+      .bnav-dot.show { display: block; }
+      .medcare-tab-bar__link { -webkit-tap-highlight-color: transparent; touch-action: manipulation; border: none; background: transparent; cursor: pointer; text-decoration: none; }
+      .medcare-tab-bar__link--active { color: #0a5c8a; font-weight: 600; }
+      .medcare-tab-bar__link--active svg { stroke: #0a5c8a; }
+      .mc-brand-logo {
+        display: block;
+        width: auto;
+        height: 2.25rem;
+        max-width: 11rem;
+        object-fit: contain;
+        object-position: left center;
+      }
+      @media (min-width: 768px) {
+        .mc-brand-logo { height: 2.5rem; }
+      }
+    </style>
+    {% if medcare_user_is_patient %}
+    <link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=23">
+    {% endif %}
+    {% block extra_css %}{% endblock %}
+</head>
+<body
+    class="flex min-h-full flex-col bg-gray-50{% if use_visitor_chrome %} mc-visitor-body{% endif %} mc-tab-bar-pad{% block body_extra_class %}{% endblock %}"
+    {% if not user.is_authenticated %}data-medcare-guest-cart-count="{{ cart_count }}"{% endif %}
+    data-medcare-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+    data-medcare-is-patient="{{ medcare_user_is_patient|yesno:'true,false' }}"
+    data-medcare-guest-cart-merge-url="{% if medcare_user_is_patient %}{{ guest_cart_merge_url }}{% endif %}"
+>
+    <div class="hidden" aria-hidden="true">{% csrf_token %}</div>
+
+    <!-- Navbar -->
+    {% block site_nav %}
+    {% if use_visitor_chrome %}
+    {% include "includes/landing_header.html" %}
+    {% else %}
+    <nav id="medcare-site-nav" class="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+
+                <!-- Logo -->
+                <a href="{% url 'home' %}" class="flex items-center gap-2.5">
+                    {% include "includes/_brand_logo.html" %}
+                </a>
+
+                <!-- Desktop nav -->
+                <div class="hidden items-center gap-1 md:flex">
+                    <a href="{% url 'home' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">Accueil</a>
+                    <a href="{% url 'healthcare:search' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">Prestations</a>
+                    <a href="{% url 'healthcare:annuaire' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900{% if request.resolver_match.namespace == 'healthcare' and request.resolver_match.url_name == 'annuaire' %} bg-gray-100 text-gray-900{% endif %}">Annuaire</a>
+                    <a href="{% url 'cart:cart_view' %}" class="relative inline-flex items-center rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Panier{% if cart_count %} ({{ cart_count }}){% endif %}"><svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.036 1.657 11.772A2.25 2.25 0 0 1 18.165 22.5H5.835a2.25 2.25 0 0 1-2.247-2.264l1.657-11.772M8.25 10.5h7.5"/></svg><span class="medcare-cart-badge absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-400 px-1 text-[10px] font-bold text-white {% if not cart_count %}hidden{% endif %}">{{ cart_count }}</span></a>
+                    {% if user.is_authenticated %}
+                        {% if user.is_prestataire %}
+                        <a href="{% url 'healthcare:prestataire_dashboard' %}" class="rounded-lg bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-700 ring-1 ring-primary-100 transition hover:bg-primary-100">Espace pro</a>
+                        {% endif %}
+                        <a href="{% url 'messaging:inbox' %}" class="relative rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Messages">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+                            {% if unread_messages %}<span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-400 px-1 text-[10px] font-bold text-white">{% if unread_messages > 9 %}9+{% else %}{{ unread_messages }}{% endif %}</span>{% endif %}
+                        </a>
+                        {% include "partials/notif_bell.html" %}
+                        {% if user.is_superuser or user.is_admin_user %}
+                        <a href="{% url 'dashboard:index' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-accent-500 transition hover:bg-accent-50">Admin</a>
+                        {% endif %}
+                        <div class="ml-3 flex items-center gap-3 border-l border-gray-200 pl-3">
+                            <a href="{% if user.is_patient %}{% url 'users:patient_account' %}{% else %}{% url 'users:profile' %}{% endif %}" class="text-sm font-medium text-gray-700 hover:text-accent-500">{{ user.first_name|default:user.username }}</a>
+                            <a href="{% url 'users:logout' %}" class="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-200">Déconnexion</a>
+                        </div>
+                    {% else %}
+                        <div class="ml-3 flex items-center gap-2 border-l border-gray-200 pl-3">
+                            <a href="{% url 'users:login' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">Connexion</a>
+                            <a href="{% url 'users:register' %}" class="rounded-lg bg-accent-400 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-500">S'inscrire</a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile menu button -->
+                <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="mc-app-burger md:hidden" aria-label="Ouvrir le menu" aria-controls="mobile-menu">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden border-t border-gray-200 bg-white md:hidden">
+            <div class="space-y-1 px-4 pb-4 pt-2">
+                <a href="{% url 'home' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Accueil</a>
+                <a href="{% url 'healthcare:search' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Prestations</a>
+                <a href="{% url 'healthcare:annuaire' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Annuaire</a>
+                <a href="{% url 'cart:cart_view' %}" class="relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"><svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.036 1.657 11.772A2.25 2.25 0 0 1 18.165 22.5H5.835a2.25 2.25 0 0 1-2.247-2.264l1.657-11.772M8.25 10.5h7.5"/></svg>Panier<span class="medcare-cart-badge ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-400 px-1.5 text-[11px] font-bold text-white {% if not cart_count %}hidden{% endif %}">{{ cart_count }}</span></a>
+                {% if user.is_authenticated %}
+                    {% if user.is_prestataire %}
+                    <a href="{% url 'healthcare:prestataire_dashboard' %}" class="block rounded-lg bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-700">Espace pro — tableau de bord</a>
+                    {% endif %}
+                    <a href="{% url 'messaging:inbox' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Messages{% if unread_messages %} ({{ unread_messages }}){% endif %}</a>
+                    <a href="{% url 'messaging:notifications' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Notifications{% if unread_notifications %} ({{ unread_notifications }}){% endif %}</a>
+                    {% if user.is_superuser or user.is_admin_user %}
+                    <a href="{% url 'dashboard:index' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-accent-500 hover:bg-accent-50">Administration</a>
+                    {% endif %}
+                    <div class="mt-3 border-t border-gray-200 pt-3">
+                        <a href="{% if user.is_patient %}{% url 'users:patient_account' %}{% else %}{% url 'users:profile' %}{% endif %}" class="block px-3 py-1 text-sm font-medium text-gray-700 hover:text-accent-500">{% if user.is_patient %}Mon compte{% else %}Mon profil{% endif %}</a>
+                        <a href="{% url 'users:logout' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50">Déconnexion</a>
+                    </div>
+                {% else %}
+                    <div class="mt-3 space-y-2 border-t border-gray-200 pt-3">
+                        <a href="{% url 'users:login' %}" class="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Connexion</a>
+                        <a href="{% url 'users:register' %}" class="block rounded-lg bg-accent-400 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-accent-500">S'inscrire</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+    {% endblock site_nav %}
+
+    {% block visitor_banner %}
+    {# Bandeau « mode visiteur » Connect masqué — chrome medcare.sn pour les non connectés #}
+    {% endblock visitor_banner %}
+
+    {% include "partials/flash_toasts.html" %}
+
+    {% if medcare_user_is_patient %}
+    {% include "users/_patient_account_drawer.html" %}
+    {% endif %}
+
+    <!-- Main content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Navigation pied d’écran (mobile, type app — démo MOBILE PATIENT) -->
+    {% block mobile_tab_bar %}
+    <nav id="medcare-tab-bar" class="bottom-nav medcare-tab-bar fixed bottom-0 left-0 right-0 z-[450]"
+         style="padding-bottom: env(safe-area-inset-bottom, 0px);" aria-label="Navigation principale">
+        {% include "partials/_medcare_mobile_tab_bar.html" %}
+    </nav>
+    {% endblock mobile_tab_bar %}
+
+    <!-- Footer (charte accueil medcare.sn) -->
+    {% block site_footer %}
+    {% include "includes/landing_footer.html" %}
+    {% endblock site_footer %}
+
+    <script>
+      window.MEDCARE_IS_AUTHENTICATED = {{ user.is_authenticated|yesno:"true,false" }};
+      window.MEDCARE_IS_PATIENT = {{ medcare_user_is_patient|yesno:"true,false" }};
+      {% if medcare_user_is_patient %}window.MEDCARE_GUEST_CART_MERGE_URL = "{{ guest_cart_merge_url }}";{% endif %}
+    </script>
+    <script src="{% static 'js/guest_cart.js' %}?v=3"></script>
+    <script src="{% static 'js/password_toggle.js' %}?v=2"></script>
+    {% if use_visitor_chrome %}
+    <script src="{% static 'js/visitor_chrome.js' %}?v=10"></script>
+    {% endif %}
+    {% if medcare_user_is_patient %}
+    <script>
+    window.MEDCARE_PAC = {
+      tabUrls: {
+        accueil: '{% url "users:patient_panel_tab" tab="accueil" %}?pac_partial=1',
+        rdv: '{% url "users:patient_panel_tab" tab="rdv" %}?pac_partial=1',
+        devis: '{% url "users:patient_panel_tab" tab="devis" %}?pac_partial=1',
+        assurance: '{% url "users:patient_panel_tab" tab="assurance" %}?pac_partial=1',
+        profil: '{% url "users:patient_panel_tab" tab="profil" %}?pac_partial=1',
+        chariot: '{% url "users:patient_panel_tab" tab="chariot" %}?pac_partial=1',
+        recherches: '{% url "users:patient_panel_tab" tab="recherches" %}?pac_partial=1'
+      },
+      devisDetailUrl: '{% url "users:patient_panel_devis" ref="__REF__" %}?pac_partial=1',
+      pageTitles: {
+        accueil: 'Tableau de bord',
+        rdv: 'Mes RDV',
+        devis: 'Mes devis',
+        assurance: 'Assurance',
+        profil: 'Mes informations',
+        chariot: 'Panier',
+        recherches: 'Historique des recherches'
+      }
+    };
+    </script>
+    <script src="{% static 'users/js/patient_compte.js' %}?v=8"></script>
+    {% endif %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

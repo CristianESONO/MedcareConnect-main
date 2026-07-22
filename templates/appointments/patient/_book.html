@@ -1,0 +1,10 @@
+{% load static %}
+<div data-pac-active="devis">
+{% include "users/patient_panel/_messages.html" %}
+
+<p class="mb-3">
+  <button type="button" class="pac-btn-link js-pac-tab" data-pac-tab="devis">← Mes devis</button>
+</p>
+
+{% include "appointments/patient/_chat.html" %}
+</div>

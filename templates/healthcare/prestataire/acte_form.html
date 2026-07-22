@@ -1,0 +1,151 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% block title %}{% if is_edit %}Modifier{% else %}Ajouter{% endif %} un acte{% endblock %}
+
+{# Dashboard : navbar sticky z-50 — lever le z-index Select2 pour éviter liste masquée. #}
+{% block dash_extra_css %}
+<style>
+  .select2-container--open { z-index: 60 !important; }
+  .select2-dropdown { z-index: 60 !important; }
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div>
+  <h1 class="text-xl font-bold text-gray-900">{% if is_edit %}Modifier l'acte{% else %}Ajouter un acte{% endif %}</h1>
+  <p class="mt-0.5 text-sm text-gray-500">
+    {% if is_edit %}Modifiez le tarif ou la disponibilité. Pour changer d’acte, choisissez un autre libellé dans la liste.
+    {% else %}Parcourez le référentiel par <strong>service médical</strong>, puis par <strong>niveaux</strong> (sous-service › acte).{% endif %}
+  </p>
+</div>
+
+<div class="mt-6 max-w-2xl">
+  <form method="POST" class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+      {% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="mb-6 flex flex-wrap gap-2 text-xs text-gray-500">
+      <span class="inline-flex items-center rounded-full bg-primary-50 px-2.5 py-1 font-semibold text-primary-800">1 · Service</span>
+      <span class="text-gray-300">→</span>
+      <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 font-semibold text-gray-700">2 · Acte (hiérarchie)</span>
+      <span class="text-gray-300">→</span>
+      <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 font-semibold text-gray-700">3 · Tarif</span>
+    </div>
+
+    <div class="space-y-2">
+      <label for="id_acte" class="block text-sm font-medium text-gray-900">Acte proposé *</label>
+      <p class="text-xs text-gray-500">Tapez pour rechercher, puis choisissez un <strong>acte spécifique</strong> (ligne du bas). Le <strong>type de service</strong> (ex. Immunologie &amp; auto-immunité) figure dans l’en-tête du groupe « pilier — type », pas comme ligne sélectionnable.</p>
+      {% if form.acte.errors %}
+      <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{{ form.acte.errors }}</div>
+      {% endif %}
+      {{ form.media }}
+      <select name="acte" id="id_acte" required
+        data-minimum-input-length="0" data-theme="default"
+        data-placeholder="Rechercher un acte…" data-minimum-results-for-search="0" data-width="100%"
+        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 shadow-sm transition focus:border-accent-400 focus:ring-2 focus:ring-accent-400/20 focus:outline-none medcare-presta-acte-select2">
+        {% for g in acte_option_groups %}
+        <optgroup label="{{ g.service_name }}">
+          {% for pk, label in g.options %}
+          <option value="{{ pk }}"{% if selected_acte_id == pk %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </optgroup>
+        {% empty %}
+        {% endfor %}
+      </select>
+      {% if not acte_option_groups %}
+      <p class="mt-2 text-xs text-amber-700">Aucun acte disponible (fin de branche) pour le moment.</p>
+      {% endif %}
+    </div>
+
+    <div class="mt-8 space-y-5 border-t border-gray-100 pt-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Prix (XOF) *</label>
+        <div class="mt-1">{{ form.price }}</div>
+        {% for e in form.price.errors %}<p class="mt-1 text-xs text-red-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Délai indicatif</label>
+        <div class="mt-1">{{ form.delai }}</div>
+        <p class="mt-1 text-xs text-gray-500">Aide les patients à choisir : « 30 min », « 24 h », « Sur RDV »…</p>
+        {% for e in form.delai.errors %}<p class="mt-1 text-xs text-red-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="flex items-center gap-2 text-sm font-medium text-gray-700"><span>{{ form.is_available }}</span> Disponible</label>
+        {% for e in form.is_available.errors %}<p class="mt-1 text-xs text-red-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Notes</label>
+        <div class="mt-1">{{ form.notes }}</div>
+        {% for e in form.notes.errors %}<p class="mt-1 text-xs text-red-600">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div class="mt-6 flex gap-3 border-t border-gray-100 pt-5">
+      <a href="{% url 'healthcare:actes_list' %}" class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50">Annuler</a>
+      <button type="submit" class="rounded-xl bg-accent-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-accent-600">{% if is_edit %}Enregistrer{% else %}Ajouter{% endif %}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+(function() {
+  function norm(s) {
+    try {
+      return (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    } catch (e) {
+      return (s || '').toString().toLowerCase();
+    }
+  }
+  /** Même règle que le panier invité (assurances) : parent matche → tout le groupe ; sinon enfants filtrés. */
+  function prestaActeOptgroupMatcher(params, data) {
+    if ($.trim(params.term) === '') {
+      return data;
+    }
+    var q = norm(params.term);
+    if (typeof data.text === 'undefined') {
+      return null;
+    }
+    var kids = data.children;
+    if (Array.isArray(kids) && kids.length > 0) {
+      var parentMatches = norm(data.text).indexOf(q) !== -1;
+      if (parentMatches) {
+        var allInGroup = $.extend({}, data);
+        allInGroup.children = kids.slice();
+        return allInGroup;
+      }
+      var filteredChildren = [];
+      for (var i = 0; i < kids.length; i++) {
+        var leaf = kids[i];
+        if (leaf && typeof leaf.text !== 'undefined' && norm(leaf.text).indexOf(q) !== -1) {
+          filteredChildren.push(leaf);
+        }
+      }
+      if (filteredChildren.length === 0) {
+        return null;
+      }
+      var modifiedData = $.extend({}, data);
+      modifiedData.children = filteredChildren;
+      return modifiedData;
+    }
+    if (norm(data.text).indexOf(q) !== -1) {
+      return $.extend({}, data);
+    }
+    return null;
+  }
+  $(function() {
+    var $el = $('#id_acte');
+    if (!$el.length) return;
+    if ($el.hasClass('select2-hidden-accessible')) {
+      $el.select2('destroy');
+    }
+    $el.select2({ matcher: prestaActeOptgroupMatcher });
+  });
+})();
+</script>
+{% endblock %}
+

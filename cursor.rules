@@ -1,0 +1,116 @@
+# .rules for MedCare Connect Project (Django & Tailwind CSS)
+
+--- GLOBAL GUIDELINES ---
+
+1. Project Goal
+   The primary goal is to build a secure, performant, and user-friendly medical marketplace for Senegal.
+   Prioritize clarity, maintainability, and security in all generated code.
+
+2. Tech Stack Consistency
+   - Backend: Django (Python). Adhere to Django's best practices, including ORM, Class-Based Views (CBVs) where appropriate, and built-in security features.
+   - Frontend: HTML, Tailwind CSS, and minimal JavaScript (Vanilla JS or Alpine.js for interactivity). Avoid heavy JS frameworks unless explicitly requested for specific, complex components.
+   - Database: PostgreSQL (assume this for production-ready model design).
+
+3. Code Quality & Readability
+   - Adhere to PEP8 for Python code.
+   - Use clear, descriptive variable and function names.
+   - Include meaningful comments for complex logic, but prioritize self-documenting code.
+   - Break down complex functions/methods into smaller, single-responsibility units.
+   - Avoid redundant code.
+
+4. Security First
+   - Always assume potential malicious input. Validate all user inputs rigorously, both server-side and client-side (for UX, but server-side validation is paramount).
+   - Leverage Django's built-in security features (CSRF tokens, XSS protection in templates, password hashing).
+   - Implement robust access control: users can only access/modify data they own or are explicitly authorized for.
+   - Never hardcode sensitive information (API keys, secrets). Use environment variables.
+   - Avoid raw SQL queries; use Django ORM. If raw SQL is absolutely necessary, ensure proper sanitization/parameterization.
+   - Be mindful of common web vulnerabilities (OWASP Top 10) in every generated piece of code.
+
+5. Performance Considerations
+   - Optimize database queries (use `select_related`, `prefetch_related` to minimize N+1 queries).
+   - Implement pagination for large lists of data.
+   - Minimize frontend asset sizes (CSS, JS, images).
+   - Prioritize server-side rendering with Django templates for initial page loads unless specific interactive components justify a client-side approach.
+
+6. Responsive Design (Frontend)
+   - All frontend code must be fully responsive, adapting seamlessly to desktop, tablet, and mobile screen sizes.
+   - Use Tailwind's responsive utility classes extensively (`sm:`, `md:`, `lg:`, etc.).
+
+7. Error Handling & Logging
+   - Implement graceful error handling for all potential failure points (form validation, API calls, database operations).
+   - Provide informative error messages to users without exposing sensitive internal details.
+   - Implement logging for critical events and errors.
+
+8. Internationalization (Future Consideration, but keep in mind)
+   - Design templates and string usage with future i18n in mind, even if only French is supported initially.
+
+--- DESIGN & UI/UX GUIDELINES (Tailwind CSS) ---
+
+9. Design System Principles (Épuré, Pro, Moderne)
+   - Simplicity: Minimize visual clutter. Focus on essential elements and clear hierarchy.
+   - Consistency: Reuse established component styles (buttons, forms, cards, navigation).
+   - Typography: Use modern, legible sans-serif fonts. Define a consistent type scale.
+   - Color Palette: Limited and harmonious. Prioritize neutrals (grays, whites) with thoughtful use of accent colors for interaction/importance. Avoid overly saturated or clashing colors.
+   - Spacing: Utilize generous whitespace (`p-X`, `m-X` in Tailwind) for readability and visual breathing room.
+   - Iconography: Use a consistent icon set (e.g., Heroicons, Feather Icons via a CDN or local build) for visual cues.
+
+10. Tailwind CSS Usage
+    - Prefer utility classes over custom CSS whenever possible.
+    - Organize utility classes logically (e.g., `flex items-center justify-between` then `px-4 py-2` then `bg-blue-500 hover:bg-blue-600` then `rounded-md`).
+    - Create custom components (using `@apply` or directly in templates with consistent class groups) for complex, reusable patterns to maintain dry code, but only when necessary.
+    - Define custom colors, fonts, and spacing in `tailwind.config.js` to align with the design system.
+
+11. Interactive Elements
+    - Provide clear visual feedback for user interactions (hover states, focus states, active states for buttons, links, form fields).
+    - Use minimal, performant JavaScript (Vanilla or Alpine.js) for client-side interactivity (e.g., dropdowns, modals, form validation feedback).
+
+--- DATABASE & MODEL GUIDELINES (Django) ---
+
+12. Model Design
+    - Adhere strictly to the defined models and their relationships from the project's data model section in the SRS.
+    - Use appropriate field types (CharField, DecimalField, ForeignKey, OneToOneField, ManyToManyField).
+    - Implement `__str__` methods for all models for better readability in the Django Admin.
+    - Use `related_name` for ForeignKey/OneToOneField relationships to avoid clashes and improve reverse query readability.
+    - Ensure `unique=True` or `unique_together` constraints are applied where logical (e.g., `ServiceMedical.name`, `PrestataireActe` for a given organism and act).
+
+13. Migrations
+    - Always generate and apply migrations (`makemigrations`, `migrate`) for any model changes.
+    - Review migration files before applying them in production-like environments.
+
+--- DJANGO SPECIFIC GUIDELINES ---
+
+14. Views
+    - Prefer Class-Based Views (CBVs) for common CRUD operations and patterns (ListView, DetailView, CreateView, UpdateView, DeleteView).
+    - Use Function-Based Views (FBVs) for simpler logic or when CBVs introduce unnecessary complexity.
+    - Separate concerns: Views should handle request/response, call appropriate services/managers for business logic, and interact with the ORM.
+
+15. Forms
+    - Use Django Forms or ModelForms for all data input and validation.
+    - Implement both server-side and client-side validation for a good UX and robust security.
+    - Customize form widgets with Tailwind classes for consistent styling.
+
+16. Templates
+    - Use Django Template Language for rendering dynamic content.
+    - Extend a base template (`base.html`) for consistent layout, header, footer, and navigation.
+    - Include necessary static files (Tailwind CSS, custom JS) in the base template.
+    - Use template tags and filters effectively.
+
+17. URLs
+    - Organize URL patterns logically using `include()` for different app modules.
+    - Use named URL patterns (`name='my_url'`) for easy referencing in templates and views.
+
+18. Django Admin
+    - Register all relevant models in `admin.py` for easy data management.
+    - Customize the admin interface (`list_display`, `list_filter`, `search_fields`, `fieldsets`) to enhance usability for administrators.
+
+--- SPECIFIC FUNCTIONALITY GUIDELINES ---
+
+19. WhatsApp Integration
+    - For the initial "Contacter via WhatsApp" feature, generate a `tel:` link or a direct WhatsApp API URL (`https://wa.me/<phone_number>?text=<prefilled_text>`).
+    - Ensure the phone number is correctly formatted (with country code).
+    - The pre-filled text should be configurable and include relevant details from the patient's cart if applicable.
+
+20. Price & Coverage Calculation
+    - Implement the logic for calculating estimated costs and insurance coverage strictly based on the `PrestataireActe`, `PriseEnChargeAssurance`, and `PriseEnChargeActeAssurance` models.
+    - Prioritize `PriseEnChargeActeAssurance` if it exists for a specific act. Otherwise, use `PriseEnChargeAssurance.global_coverage_rate`.
+    - All calculations must occur server-side for accuracy and security, then displayed on the frontend.

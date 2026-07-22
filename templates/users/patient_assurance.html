@@ -1,0 +1,93 @@
+{% extends "users/patient_account_base.html" %}
+{% block title %}Mon compte — Assurance{% endblock %}
+{% block account_content %}
+<form method="post" id="pac-ins-form">
+  {% csrf_token %}
+  <input type="hidden" name="has_insurance" id="pac-has-insurance" value="{% if has_insurance %}1{% else %}0{% endif %}">
+
+  <div class="pac-section-title" style="margin-top:0">Ma couverture santé</div>
+  <div class="pac-ins-card">
+    <div style="font-size:12px;font-weight:600;color:#111827;margin-bottom:4px">Avez-vous une assurance maladie ?</div>
+    <div style="font-size:10px;color:#9ca3af;margin-bottom:10px">Cette information permet de filtrer automatiquement les structures qui vous acceptent.</div>
+
+    <div class="pac-ins-yn">
+      <button type="button" class="pac-ins-yn-btn {% if has_insurance %}pac-ins-yn-btn--active{% endif %}" data-ins-yes="1">✅ Oui, j'ai une assurance</button>
+      <button type="button" class="pac-ins-yn-btn {% if not has_insurance %}pac-ins-yn-btn--active{% endif %}" data-ins-yes="0">❌ Non / Paiement direct</button>
+    </div>
+
+    <div id="pac-ins-selector" {% if not has_insurance %}class="hidden"{% endif %}>
+      <div style="margin-bottom:10px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:6px">Assurance enregistrée</div>
+        <div class="pac-ins-tag-row">
+          {% if patient_profile.insurance %}
+          <span class="pac-ins-tag">{{ patient_profile.insurance.name }}</span>
+          {% else %}
+          <span style="font-size:11px;color:#9ca3af">Aucune assurance enregistrée</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_insurance">Choisir ou modifier votre organisme</label>
+        {{ insurance_form.insurance }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_insurance_number">N° adhérent / carte (optionnel)</label>
+        {{ insurance_form.insurance_number }}
+      </div>
+      <button type="submit" class="pac-btn-save">💾 Enregistrer ma couverture</button>
+    </div>
+
+    <div id="pac-ins-direct" class="pac-direct-box {% if has_insurance %}hidden{% endif %}">
+      Vous paierez directement à la structure. Les tarifs affichés sur MedCare sont les tarifs réels pratiqués — sans frais supplémentaires de notre part.
+      <div style="margin-top:8px;font-size:10px;font-weight:600;color:var(--mc-accent-dark, #3d8fb3)">✓ Toutes les structures acceptant le paiement direct vous seront visibles.</div>
+      <button type="submit" class="pac-btn-save mt-3">Enregistrer (paiement direct)</button>
+    </div>
+  </div>
+
+  {% if patient_profile.insurance and compatible_orgs %}
+  <div class="pac-section-title">Structures compatibles avec ma couverture</div>
+  <div class="pac-compat-list">
+    {% for org in compatible_orgs %}
+    <div class="pac-compat-row">
+      <div class="min-w-0">
+        <div class="pac-compat-name">{{ org.name }}</div>
+        <div class="pac-compat-meta">📍 {{ org.quartier|default:org.city }} · {{ patient_profile.insurance.name }}</div>
+      </div>
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" class="pac-compat-btn">Voir →</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="pac-section-title">Intégration CMU · Roadmap</div>
+  <div class="pac-roadmap">
+    <div class="pac-roadmap-item"><span style="width:18px;height:18px;border-radius:50%;background:var(--mc-accent, #4fa3c7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">✓</span> Scan QR Code carte CMU · Disponible maintenant</div>
+    <div class="pac-roadmap-item"><span style="width:18px;height:18px;border-radius:50%;background:#fbbf24;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">2</span> Lecture puce NFC CMU · ~18–24 mois</div>
+    <div class="pac-roadmap-item" style="opacity:.6"><span style="width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.15);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">3</span> Identifiant biométrique unique · ~36+ mois</div>
+  </div>
+</form>
+
+<script>
+(function(){
+  var form = document.getElementById('pac-ins-form');
+  var hidden = document.getElementById('pac-has-insurance');
+  var selZone = document.getElementById('pac-ins-selector');
+  var directZone = document.getElementById('pac-ins-direct');
+  var insSelect = document.getElementById('id_insurance');
+  document.querySelectorAll('[data-ins-yes]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var yes = btn.getAttribute('data-ins-yes') === '1';
+      hidden.value = yes ? '1' : '0';
+      document.querySelectorAll('.pac-ins-yn-btn').forEach(function(b){ b.classList.remove('pac-ins-yn-btn--active'); });
+      btn.classList.add('pac-ins-yn-btn--active');
+      if (selZone) selZone.classList.toggle('hidden', !yes);
+      if (directZone) directZone.classList.toggle('hidden', yes);
+      if (!yes && insSelect) insSelect.value = '';
+    });
+  });
+  form.addEventListener('submit', function(){
+    if (hidden.value === '0' && insSelect) insSelect.value = '';
+  });
+})();
+</script>
+{% endblock %}

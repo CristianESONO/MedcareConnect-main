@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Mes notifications{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-4xl px-4 py-10">
+  <h1 class="text-2xl font-bold text-gray-900">Préférences de notifications</h1>
+  <p class="mt-1 text-sm text-gray-500">Cochez/décochez ce que vous souhaitez recevoir, par événement et par canal. Les destinataires sont d'abord définis par les règles globales : ce panneau permet de vous <strong>désabonner</strong> de ce qui vous parvient.</p>
+
+  <form method="post" class="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    {% csrf_token %}
+    {% include "notifications/_pref_table.html" %}
+    <div class="flex justify-end gap-2 border-t border-gray-100 bg-gray-50/60 px-5 py-3">
+      <button type="submit" class="rounded-xl bg-primary-500 px-5 py-2 text-sm font-bold text-white hover:bg-primary-600">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

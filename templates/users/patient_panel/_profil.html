@@ -1,0 +1,81 @@
+{% include "users/patient_panel/_messages.html" %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'users:patient_panel_tab' tab='profil' %}">
+  {% csrf_token %}
+
+  <div class="compte-section-title" style="margin-top:0">Informations personnelles</div>
+  <div class="pac-form-card">
+    <div class="pac-profil-grid">
+      <div class="pac-profil-field">
+        <label for="id_first_name">Prénom</label>
+        {{ user_form.first_name }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_last_name">Nom</label>
+        {{ user_form.last_name }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_email">Email</label>
+        {{ user_form.email }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_phone_number">Téléphone</label>
+        {{ user_form.phone_number }}
+      </div>
+      {% if patient_form %}
+      <div class="pac-profil-field">
+        <label for="id_quartier">Zone / Quartier</label>
+        {{ patient_form.quartier }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_city">Ville</label>
+        {{ patient_form.city }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_date_of_birth">Date de naissance</label>
+        {{ patient_form.date_of_birth }}
+      </div>
+      <div class="pac-profil-field pac-profil-field--full">
+        <label for="id_address">Adresse</label>
+        {{ patient_form.address }}
+      </div>
+      {% endif %}
+    </div>
+    <button type="submit" name="save_profile" value="1" class="pac-btn-save" style="margin-top:14px">Sauvegarder</button>
+  </div>
+</form>
+
+<form method="post" id="securite" action="{% url 'users:patient_panel_tab' tab='profil' %}">
+  {% csrf_token %}
+  <div class="compte-section-title">Sécurité</div>
+  <div class="pac-form-card">
+    <div class="pac-profil-grid">
+      <div class="pac-profil-field pac-profil-field--full">
+        <label for="id_old_password">Mot de passe actuel</label>
+        {{ password_form.old_password }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_new_password1">Nouveau mot de passe</label>
+        {{ password_form.new_password1 }}
+      </div>
+      <div class="pac-profil-field">
+        <label for="id_new_password2">Confirmer</label>
+        {{ password_form.new_password2 }}
+      </div>
+    </div>
+    {% if password_form.errors %}
+    <div class="pac-flash pac-flash--error mt-3">
+      {% for field, errors in password_form.errors.items %}
+        {% for err in errors %}<p>{{ err }}</p>{% endfor %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    <button type="submit" name="save_password" value="1" class="pac-btn-save" style="margin-top:14px">Modifier le mot de passe</button>
+  </div>
+</form>
+
+<div class="compte-section-title pac-danger-title">Zone de danger</div>
+<div class="pac-form-card" style="border-color:#fecaca;background:#fffbfb">
+  <p style="font-size:11px;color:#6b7280;margin:0 0 10px;line-height:1.5">La suppression de compte est définitive. Contactez le support MedCare si vous souhaitez fermer votre espace patient.</p>
+  <button type="button" disabled class="pac-btn-danger" title="Contactez le support MedCare pour supprimer votre compte">Supprimer mon compte</button>
+</div>

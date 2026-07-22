@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Votre avis MedCare{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900">Votre avis sur MedCare</h1>
+        <p class="mt-2 text-sm text-gray-600">
+            Les retours sont centralisés sur la plateforme (plus sur chaque fiche structure), comme sur la démo catalogues&nbsp;: cochez les actes concernés, une note globale, et un champ libre pour tarifs &amp; délais.
+        </p>
+
+        {% if existing_platform_review %}
+        <div class="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900">
+            <p class="font-semibold">Merci, votre avis a bien été enregistré.</p>
+            <p class="mt-1 text-sky-800">Un seul avis par compte patient est possible. Vous pouvez aussi nous laisser un avis sur Google.</p>
+        </div>
+        <div class="mt-6 flex flex-wrap gap-3">
+            <a href="{% url 'healthcare:platform_review_google' %}" class="inline-flex rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-bold text-white hover:bg-gray-800">Vers Google Avis</a>
+            <a href="{% url 'healthcare:search' %}" class="inline-flex rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50">Continuer sur MedCare</a>
+        </div>
+        {% else %}
+        <form method="post" class="mt-8 space-y-8">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <div>
+                <p class="text-sm font-bold text-gray-900">{{ form.rating.label }}</p>
+                <div class="mt-2 flex flex-wrap gap-1" role="group" aria-label="{{ form.rating.label }}">
+                    {% for val, label in form.rating.field.choices %}
+                    <label class="cursor-pointer">
+                        <input type="radio" name="rating" value="{{ val }}" class="peer sr-only" {% if form.rating.value|stringformat:"s" == val|stringformat:"s" %}checked{% endif %}>
+                        <svg class="h-8 w-8 fill-current text-gray-300 peer-checked:text-amber-400 hover:text-amber-300" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 0 0 .951-.69l1.07-3.292Z"/></svg>
+                        <span class="sr-only">{{ val }} sur 5</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% if form.rating.errors %}<p class="mt-1 text-xs text-red-600">{{ form.rating.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-sm font-bold text-gray-900">Actes concernés</p>
+                <p class="text-xs text-gray-500">Cochez tout ce qui correspond à votre parcours (liste alignée sur la segmentation services / actes de la base).</p>
+                {% for service, actes in service_acte_groups %}
+                <div class="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 sm:p-5">
+                    <h2 class="text-base font-bold text-gray-900">{{ service.name }}</h2>
+                    <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                        {% for acte in actes %}
+                        <label class="flex cursor-pointer items-start gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 shadow-sm hover:border-sky-200 hover:bg-sky-50/30">
+                            <input type="checkbox" name="actes" value="{{ acte.pk }}" class="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-sky-600 focus:ring-sky-500"{% if acte.pk in selected_acte_ids %} checked{% endif %}>
+                            <span>{{ acte.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-sm text-amber-700">Aucun acte configuré pour le moment. Contactez l’administrateur.</p>
+                {% endfor %}
+            </div>
+
+            <div>
+                <label for="{{ form.tarifs_delais_comment.id_for_label }}" class="text-sm font-bold text-gray-900">{{ form.tarifs_delais_comment.label }}</label>
+                <div class="mt-2">{{ form.tarifs_delais_comment }}</div>
+                {% if form.tarifs_delais_comment.errors %}<p class="mt-1 text-xs text-red-600">{{ form.tarifs_delais_comment.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 border-t border-gray-100 pt-6">
+                <button type="submit" class="inline-flex rounded-xl bg-accent-400 px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-accent-500">Envoyer pour modération</button>
+                {% if google_url %}
+                <a href="{% url 'healthcare:platform_review_google' %}" class="text-sm font-semibold text-sky-700 hover:text-sky-900">Passer directement à Google Avis</a>
+                {% endif %}
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

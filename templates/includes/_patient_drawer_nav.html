@@ -1,0 +1,86 @@
+{% comment %}Navigation drawer patient — partagée header vitrine + menu in-app.{% endcomment %}
+{% with rm=request.resolver_match %}
+<div class="mc-landing-drawer-header">
+  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu" data-fallback-href="{% url 'healthcare:search' %}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
+    {% include "includes/_brand_logo.html" %}
+  </a>
+  <p class="mc-landing-drawer-user">{{ user.display_name|default:"Mon compte" }}</p>
+  <p class="mc-landing-drawer-tagline">{{ user.email|default:user.username }}</p>
+</div>
+
+<nav class="mc-landing-drawer-nav" aria-label="Navigation compte">
+  <ul>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-search mc-landing-drawer-icon" aria-hidden="true"></i> Parcourir</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="search" %} Trouver un service</a></li>
+        <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="annuaire" %} Annuaire des structures</a></li>
+      </ul>
+    </li>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-layout-dashboard mc-landing-drawer-icon" aria-hidden="true"></i> Vue d'ensemble</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'accueil' %} is-active{% endif %}" data-pac-tab="accueil">{% include "includes/_patient_nav_link_icons.html" with item="accueil" %} Tableau de bord</a></li>
+      </ul>
+    </li>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-user mc-landing-drawer-icon" aria-hidden="true"></i> Profil</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'users:patient_panel_tab' tab='profil' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'profil' %} is-active{% endif %}" data-pac-tab="profil">{% include "includes/_patient_nav_link_icons.html" with item="profil" %} Mes informations</a></li>
+        <li><a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'assurance' %} is-active{% endif %}" data-pac-tab="assurance">{% include "includes/_patient_nav_link_icons.html" with item="assurance" %} Assurance</a></li>
+      </ul>
+    </li>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-stethoscope mc-landing-drawer-icon" aria-hidden="true"></i> Soins &amp; achats</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li>
+          {% if sipn_embedded_drawer %}
+          <button type="button" class="mc-landing-drawer-link mc-landing-drawer-link--btn sipn-goto-panier" data-sipn-goto-tab="panier">
+            {% include "includes/_patient_nav_link_icons.html" with item="chariot" %}
+            Panier{% if cart_count %}<span class="mc-landing-drawer-badge">{{ cart_count }}</span>{% endif %}
+          </button>
+          {% else %}
+          <a href="{% url 'users:patient_panel_tab' tab='chariot' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'chariot' %} is-active{% endif %}" data-pac-tab="chariot">
+            {% include "includes/_patient_nav_link_icons.html" with item="chariot" %}
+            Panier{% if cart_count %}<span class="mc-landing-drawer-badge">{{ cart_count }}</span>{% endif %}
+          </a>
+          {% endif %}
+        </li>
+        <li><a href="{% url 'users:patient_panel_tab' tab='devis' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'devis' %} is-active{% endif %}" data-pac-tab="devis">{% include "includes/_patient_nav_link_icons.html" with item="devis" %} Mes devis</a></li>
+        <li>
+          {% if sipn_embedded_drawer %}
+          <button type="button" class="mc-landing-drawer-link mc-landing-drawer-link--btn sipn-goto-messages" data-sipn-goto-tab="messages">
+            {% include "includes/_patient_nav_link_icons.html" with item="messages" %}
+            Messagerie{% if unread_messages %}<span class="mc-landing-drawer-badge">{{ unread_messages }}</span>{% endif %}
+          </button>
+          {% else %}
+          <a href="{% url 'messaging:inbox' %}" class="mc-landing-drawer-link{% if account_active == 'messages' %} is-active{% endif %}">
+            {% include "includes/_patient_nav_link_icons.html" with item="messages" %}
+            Messagerie{% if unread_messages %}<span class="mc-landing-drawer-badge">{{ unread_messages }}</span>{% endif %}
+          </a>
+          {% endif %}
+        </li>
+        <li><a href="{% url 'users:patient_panel_tab' tab='rdv' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'rdv' %} is-active{% endif %}" data-pac-tab="rdv">{% include "includes/_patient_nav_link_icons.html" with item="rdv" %} Mes RDV</a></li>
+        <li><a href="{% url 'messaging:notifications' %}" class="mc-landing-drawer-link{% if account_active == 'notifications' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="notifications" %} Notifications{% if unread_notifications %}<span class="mc-landing-drawer-badge">{{ unread_notifications }}</span>{% endif %}</a></li>
+        <li><a href="{% url 'messaging:rappels' %}" class="mc-landing-drawer-link{% if account_active == 'rappels' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="rappels" %} Rappels{% if unread_rappels %}<span class="mc-landing-drawer-badge">{{ unread_rappels }}</span>{% endif %}</a></li>
+        <li><a href="{% url 'users:patient_panel_tab' tab='recherches' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'recherches' %} is-active{% endif %}" data-pac-tab="recherches">{% include "includes/_patient_nav_link_icons.html" with item="recherches" %} Historique</a></li>
+      </ul>
+    </li>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-info-circle mc-landing-drawer-icon" aria-hidden="true"></i> Informations</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'about' %}" class="mc-landing-drawer-link">À propos · medcare.sn</a></li>
+        <li><a href="{% url 'trust' %}" class="mc-landing-drawer-link">CGU &amp; confidentialité</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div class="mc-landing-drawer-cta">
+  <a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-patient"><i class="ti ti-search" aria-hidden="true"></i> Trouver un service</a>
+  <a href="{% url 'users:logout' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Déconnexion</a>
+</div>
+{% endwith %}

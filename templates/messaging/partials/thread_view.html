@@ -1,0 +1,144 @@
+{% load static %}
+{% with org=conversation.organisme %}
+
+<div class="mc-thread"
+  {% if org %}data-org-name="{{ org.name|escape }}"{% endif %}
+  {% if show_book and book_ctx.has_slots %}
+  id="pac-book-root"
+  data-mc-thread-book
+  data-book-url="{% url 'appointments:patient_book' book_ctx.part.reference %}"
+  data-csrf="{{ csrf_token }}"
+  data-success-url="{{ book_ctx.success_url }}"
+  data-intro="Je souhaite prendre rendez-vous."
+  data-embed="1"
+  {% elif show_reschedule and reschedule_ctx.has_slots %}
+  id="pac-book-root"
+  data-mc-thread-book
+  data-book-url="{% url 'appointments:patient_reschedule' reschedule_ctx.rdv_ref %}"
+  data-csrf="{{ csrf_token }}"
+  data-success-url="{{ reschedule_ctx.success_url }}"
+  data-intro="Je souhaite modifier mon créneau."
+  data-embed="1"
+  {% endif %}>
+  <header class="mc-thread-head">
+    {% if user == conversation.patient %}
+    <a href="{% url 'messaging:inbox' %}" class="mc-thread-back-btn" aria-label="Retour à la messagerie">‹</a>
+    {% endif %}
+    <div class="mc-thread-av" aria-hidden="true">
+      {% if org %}{{ org.name|make_list|first|upper }}{% else %}M{% endif %}
+    </div>
+    <div class="min-w-0 flex-1">
+      <div class="mc-thread-hn truncate">
+        {% if user == conversation.patient %}
+          {% if conversation.prestataire.display_name %}{{ conversation.prestataire.display_name }}{% elif org %}{{ org.name }}{% else %}Structure{% endif %}
+        {% else %}
+          {{ conversation.patient.display_name }}
+        {% endif %}
+      </div>
+      <div class="mc-thread-hs truncate">{{ conversation.dossier_label }}{% if org and org.city %} · {{ org.city }}{% endif %}</div>
+    </div>
+  </header>
+
+  {% if status_banner %}
+  <p class="mc-thread-status mc-thread-status--{{ status_banner.class }}">{{ status_banner.text }}</p>
+  {% elif org and not thread_timeline and not conversation.devis_part %}
+  <p class="mc-thread-status mc-thread-status--ok">Estimation indicative — montants et assurance sous validation du prestataire.</p>
+  {% endif %}
+
+  {% if show_book and book_ctx and not book_ctx.has_slots %}
+  <p class="mc-thread-status mc-thread-status--expired">Aucun créneau en ligne pour le moment — la structure vous recontactera ou utilisez ses coordonnées.</p>
+  {% elif show_reschedule and reschedule_ctx and not reschedule_ctx.has_slots %}
+  <p class="mc-thread-status mc-thread-status--expired">Aucun créneau disponible pour modifier ce rendez-vous.</p>
+  {% endif %}
+
+  <div class="mc-thread-chat" id="mc-thread-chat"
+    {% if show_book and book_ctx.has_slots or show_reschedule and reschedule_ctx.has_slots %}aria-live="polite"{% endif %}>
+
+    {% if conversation.devis_part %}
+    <div class="mc-wmsg mc-wmsg--sys">{{ devis_open_date_label }}</div>
+    <div class="mc-wmsg mc-wmsg--s" id="mc-devis-request-msg">
+      Bonjour, je souhaite un devis pour {{ conversation.devis_part.details|length }} acte{{ conversation.devis_part.details|length|pluralize }} via MedCare.
+      <div class="mc-wtime">{{ conversation.created_at|date:"H:i" }}</div>
+    </div>
+    {% include "messaging/partials/_thread_devis_card_message.html" %}
+    {% endif %}
+
+    {% for item in thread_timeline %}
+      {% if item.kind == 'date' %}
+      <div class="mc-wmsg mc-wmsg--sys">{{ item.label }}</div>
+      {% else %}
+      {% include "messaging/partials/_thread_bubble.html" with msg=item.msg %}
+      {% endif %}
+    {% empty %}
+      {% if not conversation.devis_part %}
+      <div class="mc-wmsg mc-wmsg--sys">Fil ouvert — les messages apparaîtront ici.</div>
+      {% endif %}
+    {% endfor %}
+
+    {% if show_book and book_ctx.has_slots or show_reschedule and reschedule_ctx.has_slots %}
+    <div class="mc-thread-section mc-thread-section--booking" id="mc-book-section">
+      <div class="mc-thread-section__head">
+        <span class="mc-thread-section__icon" aria-hidden="true">📅</span>
+        {% if show_reschedule %}Modifier le créneau{% else %}Prendre un rendez-vous{% endif %}
+      </div>
+      <div id="mc-book-insert" class="mc-book-insert" aria-live="polite"></div>
+    </div>
+    {% else %}
+    <div id="mc-book-insert" class="mc-book-insert" aria-hidden="true"></div>
+    {% endif %}
+  </div>
+
+  {% if thread_actions %}
+  <div class="mc-thread-actions">
+    {% for act in thread_actions %}
+      {% if act.method == 'POST' %}
+      <form method="post" action="{{ act.url }}" class="inline"{% if act.confirm %} onsubmit="return confirm('{{ act.confirm }}');"{% endif %}>
+        {% csrf_token %}
+        {% for name, val in act.hidden.items %}
+        <input type="hidden" name="{{ name }}" value="{{ val }}">
+        {% endfor %}
+        <button type="submit" class="mc-thread-act mc-thread-act--{{ act.style|default:'muted' }}">{{ act.label }}</button>
+      </form>
+      {% else %}
+      <a href="{{ act.url }}" class="mc-thread-act mc-thread-act--{{ act.style|default:'muted' }}">{{ act.label }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% elif org and user == conversation.patient and conversation.devis_part and not has_live_rdv %}
+    {% if not show_book and not show_reschedule %}
+  <div class="mc-thread-footer">
+    <a href="{% url 'messaging:conversation_detail' conversation.pk %}?book=1" class="mc-thread-foot-btn mc-thread-foot-btn--primary">Prendre RDV</a>
+  </div>
+    {% endif %}
+  {% endif %}
+
+  {% if show_book and book_ctx.has_slots or show_reschedule and reschedule_ctx.has_slots %}
+  <script type="application/json" id="pac-book-data">{% if show_reschedule %}{{ reschedule_ctx.book_data_json|safe }}{% else %}{{ book_ctx.book_data_json|safe }}{% endif %}</script>
+  <div class="mc-thread-bar" id="pac-wbar">
+    <input type="text" class="mc-thread-inp" id="pac-note-input" maxlength="200"
+           placeholder="Sélectionnez d'abord un créneau…" disabled autocomplete="off">
+    <button type="button" class="mc-thread-send" id="pac-wsend" disabled aria-label="Confirmer">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+    </button>
+  </div>
+  <script src="{% static 'messaging/js/thread_book.js' %}?v=9"></script>
+  {% elif conversation.thread_status != 'closed' and user == conversation.prestataire %}
+  <form method="post" class="mc-thread-bar">
+    {% csrf_token %}
+    <input type="text" name="content" class="mc-thread-inp" placeholder="Message…" maxlength="500" autocomplete="off">
+    <button type="submit" class="mc-thread-send" aria-label="Envoyer">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+    </button>
+  </form>
+  {% endif %}
+</div>
+
+{% endwith %}
+
+<script>
+(function(){
+  var box = document.getElementById('mc-thread-chat');
+  if (!box) return;
+  box.scrollTop = box.scrollHeight;
+})();
+</script>

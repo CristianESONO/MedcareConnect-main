@@ -1,0 +1,30 @@
+---
+description: Méthode BMAD MedCare Connect — documentation obligatoire (PRD/TECH) avant et après modifications
+alwaysApply: true
+---
+
+# MedCare Connect — BMAD & documentation
+
+Référence complète : `ressources/rules.md` (à ouvrir pour le détail des phases et check-lists).
+
+## Avant toute modification de code
+
+1. Lire les sections pertinentes de `ressources/prd.md` (fonctionnel, URLs, règles métier).
+2. Lire les sections pertinentes de `ressources/tech.md` (stack, apps, modèles, intégrations, points d’attention).
+3. Identifier l’impact (fichiers, migrations, templates) — pas d’hypothèse sans lecture du code cible.
+
+## Après toute modification
+
+1. Mettre à jour **`ressources/prd.md`** si le comportement produit, les droits, les parcours ou les URLs nommées changent.
+2. Mettre à jour **`ressources/tech.md`** si la stack, les modèles, le routage, les deps ou le déploiement changent.
+3. Mettre à jour **`ressources/FONCTIONNALITES_ET_PARCOURS_TESTS.md`** si les parcours utilisateur ou les tests manuels décrits ne sont plus valides.
+4. **Production** : si le code a été déployé sur le serveur, exécuter **`sudo systemctl restart medcareconnect`** pour recharger Gunicorn (voir `ressources/rules.md`).
+
+## Phases BMAD (rappel)
+
+- **B** Baser — contexte PRD/TECH + code
+- **M** Modéliser — périmètre et effets de bord
+- **A** Agir — implémentation minimale et cohérente avec le projet
+- **D** Documenter — synchroniser les trois fichiers `ressources/` ci-dessus
+
+Ne pas livrer de changement fonctionnel ou structurel sans avoir planifié la mise à jour documentaire correspondante.

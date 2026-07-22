@@ -1,0 +1,90 @@
+{% comment %}Sidebar Mon compte — desktop : barre latérale ; mobile : drawer vitrine.{% endcomment %}
+<aside class="pac-sidebar" id="pac-sidebar" aria-label="Navigation du compte">
+  <div class="pac-sidebar-inner pac-sidebar-inner--desktop">
+    <div class="pac-sidebar-user">
+      <div class="pac-sidebar-user-row">
+        <div class="pac-avatar" aria-hidden="true">{{ user.display_name|make_list|first|upper }}</div>
+        <div class="min-w-0">
+          <div class="pac-sidebar-name">{{ user.display_name|default:"Mon compte" }}</div>
+          <div class="pac-sidebar-email truncate">{{ user.email|default:user.username }}</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="pac-sidebar-nav">
+      <div class="pac-nav-group-lbl">Parcourir</div>
+      <a href="{% url 'healthcare:search' %}" class="sb-link">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+        Trouver un service
+      </a>
+      <a href="{% url 'healthcare:annuaire' %}" class="sb-link{% if request.resolver_match.namespace == 'healthcare' and request.resolver_match.url_name == 'annuaire' %} active{% endif %}">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18M10.5 7.5h6.75M10.5 12h6.75M10.5 16.5h6.75M3.75 7.5h.008v.008H3.75V7.5Zm0 4.5h.008v.008H3.75V12Zm0 4.5h.008v.008H3.75v-.008Z"/></svg>
+        Annuaire
+      </a>
+
+      <div class="pac-nav-group-lbl">Vue d'ensemble</div>
+      <a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="sb-link js-pac-nav {% if account_active == 'accueil' %}active{% endif %}" data-pac-tab="accueil">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z"/></svg>
+        Tableau de bord
+      </a>
+
+      <div class="pac-nav-group-lbl">Profil</div>
+      <a href="{% url 'users:patient_panel_tab' tab='profil' %}" class="sb-link js-pac-nav {% if account_active == 'profil' %}active{% endif %}" data-pac-tab="profil">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+        Mes informations
+      </a>
+      <a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="sb-link js-pac-nav {% if account_active == 'assurance' %}active{% endif %}" data-pac-tab="assurance">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+        Assurance
+      </a>
+
+      <div class="pac-nav-group-lbl">Soins &amp; Achats</div>
+      <a href="{% url 'users:patient_panel_tab' tab='chariot' %}" class="sb-link js-pac-nav {% if account_active == 'chariot' %}active{% endif %}" data-pac-tab="chariot">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.036 1.657 11.772A2.25 2.25 0 0 1 18.165 22.5H5.835a2.25 2.25 0 0 1-2.247-2.264l1.657-11.772M8.25 10.5h7.5"/></svg>
+        Panier
+        {% if cart_count %}<span class="sb-badge">{{ cart_count }}</span>{% endif %}
+      </a>
+      <a href="{% url 'users:patient_panel_tab' tab='devis' %}" class="sb-link js-pac-nav {% if account_active == 'devis' %}active{% endif %}" data-pac-tab="devis">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+        Mes devis
+      </a>
+      <a href="{% url 'messaging:inbox' %}" class="sb-link {% if account_active == 'messages' %}active{% endif %}">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+        Messagerie
+        {% if unread_messages %}<span class="sb-badge sb-badge-green">{{ unread_messages }}</span>{% endif %}
+      </a>
+      <a href="{% url 'users:patient_panel_tab' tab='rdv' %}" class="sb-link js-pac-nav {% if account_active == 'rdv' %}active{% endif %}" data-pac-tab="rdv">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+        Mes RDV
+      </a>
+      <a href="{% url 'messaging:notifications' %}" class="sb-link {% if account_active == 'notifications' %}active{% endif %}">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+        Notifications
+        {% if unread_notifications %}<span class="sb-badge sb-badge-green">{{ unread_notifications }}</span>{% endif %}
+      </a>
+      <a href="{% url 'messaging:rappels' %}" class="sb-link {% if account_active == 'rappels' %}active{% endif %}">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        Rappels
+        {% if unread_rappels %}<span class="sb-badge sb-badge-green">{{ unread_rappels }}</span>{% endif %}
+      </a>
+      <a href="{% url 'users:patient_panel_tab' tab='recherches' %}" class="sb-link js-pac-nav {% if account_active == 'recherches' %}active{% endif %}" data-pac-tab="recherches">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        Historique
+      </a>
+
+      <div class="pac-nav-group-lbl pac-nav-group-lbl--mobile">Informations</div>
+      <a href="{% url 'about' %}" class="sb-link pac-info-link">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
+        <span>À propos · medcare.sn</span>
+      </a>
+      <a href="{% url 'trust' %}" class="sb-link pac-info-link">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 15h6m-6 3h6m2.25 3H6.75A2.25 2.25 0 0 1 4.5 18.75V5.25A2.25 2.25 0 0 1 6.75 3h5.379a2.25 2.25 0 0 1 1.591.659l4.621 4.621A2.25 2.25 0 0 1 19 9.871V18.75A2.25 2.25 0 0 1 16.75 21Z"/></svg>
+        CGU &amp; Confidentialité
+      </a>
+    </nav>
+  </div>
+
+  <div class="pac-sidebar-inner pac-sidebar-inner--mobile">
+    {% include "includes/_patient_app_drawer.html" %}
+  </div>
+</aside>

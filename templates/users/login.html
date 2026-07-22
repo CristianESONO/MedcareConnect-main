@@ -1,0 +1,36 @@
+{% extends "visitor_base.html" %}
+{% load static %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block page_content %}
+  <section class="mc-auth-section">
+    <div class="mc-container">
+      <div class="mc-auth-card">
+        <div class="mc-auth-header">
+          <h1>Connexion</h1>
+          <p>Accédez à votre espace MedCare Connect</p>
+        </div>
+
+        <form method="POST" action="{% url 'users:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">
+          {% csrf_token %}
+          {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+
+          <div class="mc-form-group">
+            <label class="mc-form-label" for="username">Nom d'utilisateur</label>
+            <input type="text" name="username" id="username" class="mc-form-input" required autofocus placeholder="votre_nom" autocomplete="username">
+          </div>
+
+          {% include "includes/_password_field.html" with name="password" id="password" label="Mot de passe" required=True placeholder="••••••••" autocomplete="current-password" %}
+
+          <button type="submit" class="mc-btn-primary mc-btn-primary--block">Se connecter</button>
+        </form>
+
+        <p class="mc-auth-footer">
+          Pas encore de compte ?
+          <a href="{% url 'users:register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">S'inscrire</a>
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

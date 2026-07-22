@@ -1,0 +1,59 @@
+{% comment %}
+Modale connexion / inscription pour le panier visiteur.
+Variables : guest_auth_next (URL absolue de retour après connexion).
+{% endcomment %}
+<style>
+  #guest-auth-modal {
+    z-index: 200;
+  }
+  #guest-auth-modal .guest-auth-sheet {
+    max-height: min(90dvh, calc(100dvh - 1.5rem));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (max-width: 767px) {
+    #guest-auth-modal .guest-auth-sheet {
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+  body.guest-auth-open {
+    overflow: hidden;
+    padding-bottom: 0 !important;
+  }
+  body.guest-auth-open .medcare-tab-bar {
+    display: none !important;
+  }
+</style>
+<div id="guest-auth-modal" class="fixed inset-0 hidden items-end justify-center bg-slate-900/45 p-0 sm:items-center sm:p-4" aria-hidden="true" role="dialog" aria-labelledby="guest-auth-title">
+  <div class="guest-auth-sheet w-full max-w-md rounded-t-2xl bg-white shadow-xl sm:rounded-2xl">
+    <div class="flex items-start justify-between gap-3 border-b border-gray-100 px-5 py-4">
+      <div class="min-w-0">
+        <h2 id="guest-auth-title" class="text-base font-bold text-gray-900">Connexion patient</h2>
+        <p id="guest-auth-subtitle" class="mt-0.5 text-xs text-gray-500">Connectez-vous pour obtenir votre estimation et prendre rendez-vous en ligne.</p>
+      </div>
+      <button type="button" class="guest-auth-close rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600" aria-label="Fermer">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="px-5 py-4 pb-6">
+      <form method="post" action="{% url 'users:login' %}?next={{ guest_auth_next|urlencode }}" class="space-y-4">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ guest_auth_next }}">
+        <div>
+          <label for="guest-auth-username" class="block text-xs font-semibold text-gray-700">Nom d'utilisateur</label>
+          <input type="text" name="username" id="guest-auth-username" required autocomplete="username"
+            class="mt-1.5 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-accent-400 focus:ring-2 focus:ring-accent-400/20 focus:outline-none"
+            placeholder="votre_nom">
+        </div>
+        {% include "includes/_password_field.html" with name="password" id="guest-auth-password" label="Mot de passe" required=True placeholder="••••••••" autocomplete="current-password" label_class="block text-xs font-semibold text-gray-700" input_class="mt-1.5 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-accent-400 focus:ring-2 focus:ring-accent-400/20 focus:outline-none" wrap_class="!mb-0" %}
+        <button type="submit" class="w-full rounded-lg bg-accent-400 py-2.5 text-sm font-semibold text-white hover:bg-accent-500">Se connecter</button>
+      </form>
+
+      <p class="mt-4 text-center text-xs text-gray-500">
+        Pas encore de compte ?
+        <a id="guest-auth-register" href="{% url 'users:register' %}?next={{ guest_auth_next|urlencode }}" class="font-semibold text-accent-500 hover:text-accent-600">Créer un compte patient</a>
+      </p>
+    </div>
+  </div>
+</div>

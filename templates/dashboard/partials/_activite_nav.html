@@ -1,0 +1,20 @@
+{% with current=request.resolver_match.url_name %}
+<nav class="mb-6 flex flex-wrap gap-1.5 rounded-xl border border-gray-200 bg-white p-1 text-xs font-semibold shadow-sm">
+  <a href="{% url 'dashboard:activite_overview' %}"
+     class="rounded-lg px-3 py-1.5 transition {% if current == 'activite_overview' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+    Vue 360°
+  </a>
+  <a href="{% url 'dashboard:devis_overview' %}"
+     class="rounded-lg px-3 py-1.5 transition {% if current == 'devis_overview' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+    Devis WhatsApp
+  </a>
+  <a href="{% url 'dashboard:rdv_overview' %}"
+     class="rounded-lg px-3 py-1.5 transition {% if current == 'rdv_overview' or current == 'rdv_admin_detail' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+    Rendez-vous
+  </a>
+  <a href="{% url 'dashboard:messaging_overview' %}"
+     class="rounded-lg px-3 py-1.5 transition {% if current == 'messaging_overview' or current == 'messaging_admin_detail' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+    Messagerie
+  </a>
+</nav>
+{% endwith %}

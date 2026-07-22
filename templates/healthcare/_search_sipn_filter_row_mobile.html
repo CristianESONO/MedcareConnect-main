@@ -1,0 +1,34 @@
+{% comment %}Tri + filtres mobile — affichés uniquement sur l'onglet Résultats (≤1023px).{% endcomment %}
+<div class="sipn-filter-row sipn-filters-m sipn-m-filter-only sipn-mobile-results-filters" aria-label="Trier et filtrer les résultats">
+  <span class="sipn-filter-lbl">Trier :</span>
+  <button type="button" class="sipn-filter-chip{% if current_sort %} active{% endif %}" id="sipn-m-sort-chip" data-sipn-m-sheet="sort" aria-pressed="{% if current_sort %}true{% else %}false{% endif %}">
+    <span id="sipn-m-sort-lbl">
+      {% if current_sort == "price_desc" %}Prix décroissant
+      {% elif current_sort == "popular" %}Populaires
+      {% elif current_sort == "delai_asc" %}Délai ↑
+      {% elif current_sort == "delai_desc" %}Délai ↓
+      {% elif current_sort == "name_org" %}Zone / Quartier
+      {% elif current_sort == "distance" %}Distance
+      {% else %}Prix croissant{% endif %}
+    </span>
+    <span class="sipn-filter-arr" aria-hidden="true">▼</span>
+  </button>
+
+  <span class="sipn-filter-lbl">Filtrer :</span>
+  <button type="button" class="sipn-filter-chip{% if current_assurances %} active{% endif %}" id="sipn-m-ins-chip" data-sipn-m-sheet="assurance">
+    <span id="sipn-m-ins-lbl">{% if current_assurances %}{{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}Assurance{% endif %}</span>
+    <span class="sipn-filter-arr" aria-hidden="true">▼</span>
+  </button>
+  <button type="button" class="sipn-filter-chip{% if current_city %} active{% endif %}" id="sipn-m-zone-chip" data-sipn-m-sheet="zone">
+    <span id="sipn-m-zone-lbl">{% if current_city %}{{ current_city }}{% else %}Zone{% endif %}</span>
+    <span class="sipn-filter-arr" aria-hidden="true">▼</span>
+  </button>
+  <button type="button" class="sipn-filter-chip{% if price_max_val %} active{% endif %}" id="sipn-m-budget-chip" data-sipn-m-sheet="budget">
+    <span id="sipn-m-budget-lbl">{% if price_max_val %}≤ {{ price_max_val|floatformat:0 }} F{% else %}Budget{% endif %}</span>
+    <span class="sipn-filter-arr" aria-hidden="true">▼</span>
+  </button>
+  <button type="button" class="sipn-filter-chip{% if current_delai %} active{% endif %}" id="sipn-m-delai-chip" data-sipn-m-sheet="delai">
+    <span id="sipn-m-delai-lbl">{% if current_delai %}{% for val, label in delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}{% else %}Délai{% endif %}</span>
+    <span class="sipn-filter-arr" aria-hidden="true">▼</span>
+  </button>
+</div>

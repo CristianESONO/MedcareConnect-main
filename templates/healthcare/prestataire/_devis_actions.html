@@ -1,0 +1,59 @@
+{% load humanize %}
+{# Variables : r (row enrichie), status_filter, compact=False #}
+{% with p=r.part d=r.devis %}
+<div class="flex flex-wrap items-center gap-2 {% if not compact %}border-t border-gray-100 pt-3 mt-3{% endif %}">
+  <a href="{% url 'healthcare:prestataire_devis_part_detail' p.reference %}?status={{ status_filter|default:'active' }}"
+     class="action-btn inline-flex items-center gap-1 rounded-md bg-primary-50 px-2.5 py-1 text-[10px] font-semibold text-primary-700 hover:bg-primary-100">
+    👁 Consulter
+  </a>
+  {% if r.thread_url %}
+  <a href="{{ r.thread_url }}"
+     class="action-btn mc-badge mc-badge--accent inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-semibold hover:opacity-90">
+    💬 Fil messagerie
+  </a>
+  {% endif %}
+  {% if r.show_confirm and r.pending_rdv %}
+  <form method="post" action="{% url 'appointments:prestataire_rdv_action' r.pending_rdv.reference %}" class="inline">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="confirm">
+    <input type="hidden" name="next" value="{{ request.path }}?status={{ status_filter|default:'active' }}">
+    <button type="submit" class="action-btn mc-btn-primary mc-btn-primary--xs inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-semibold">
+      ✓ Confirmer le RDV
+    </button>
+  </form>
+  <form method="post" action="{% url 'appointments:prestataire_rdv_action' r.pending_rdv.reference %}" class="inline" onsubmit="return confirm('Refuser ce créneau ?');">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="decline">
+    <input type="hidden" name="next" value="{{ request.path }}?status={{ status_filter|default:'active' }}">
+    <button type="submit" class="action-btn inline-flex items-center gap-1 rounded-md bg-rose-100 px-2.5 py-1 text-[10px] font-semibold text-rose-800 hover:bg-rose-500 hover:text-white">
+      ✗ Refuser
+    </button>
+  </form>
+  {% elif r.is_accepted and r.active_rdv %}
+  <a href="{% url 'appointments:prestataire_rdv_list' %}?status=upcoming"
+     class="action-btn inline-flex items-center gap-1 rounded-md bg-blue-50 px-2.5 py-1 text-[10px] font-semibold text-blue-800 hover:bg-blue-100">
+    ✅ RDV {{ r.active_rdv.reference }}
+  </a>
+  {% endif %}
+  {% if r.show_relance %}
+  <form method="post" action="{% url 'healthcare:prestataire_devis_relance' p.reference %}" class="inline">
+    {% csrf_token %}
+    <input type="hidden" name="status" value="{{ status_filter|default:'active' }}">
+    <button type="submit" class="action-btn inline-flex items-center gap-1 rounded-md bg-amber-100 px-2.5 py-1 text-[10px] font-semibold text-amber-900 hover:bg-amber-500 hover:text-white">
+      🔄 {% if p.status == 'relanced' %}Relancer à nouveau{% elif not r.creneau %}Relancer (sans créneau){% else %}Relancer{% endif %}
+    </button>
+  </form>
+  {% elif p.status != 'archived' and not p.can_relance %}
+  <span class="rounded-md bg-gray-100 px-2.5 py-1 text-[10px] font-semibold text-gray-400">Relances épuisées</span>
+  {% endif %}
+  {% if p.status != 'archived' %}
+  <form method="post" action="{% url 'healthcare:prestataire_devis_archiver' p.reference %}" class="inline {% if not compact %}ml-auto{% endif %}" onsubmit="return confirm('Archiver ce sous-devis ?');">
+    {% csrf_token %}
+    <input type="hidden" name="status" value="{{ status_filter|default:'active' }}">
+    <button type="submit" class="action-btn inline-flex items-center gap-1 rounded-md bg-gray-100 px-2.5 py-1 text-[10px] font-semibold text-gray-600 hover:bg-gray-200">
+      ✕ Archiver
+    </button>
+  </form>
+  {% endif %}
+</div>
+{% endwith %}

@@ -1,0 +1,172 @@
+{% comment %}
+Bloc de filtres réutilisable, deux variantes :
+- mode="desktop" : suffixes vides, classes Select2 "s2-…"
+- mode="mobile"  : suffixes "-mob", classes Select2 "s2-…-mob"
+Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
+{% endcomment %}
+{% if mode == "mobile" %}
+  {% with sfx="-mob" sx_single="s2-single-mob" sx_multi="s2-multi-mob" %}
+  <div class="space-y-4">
+    {% if not show_dem_service_acte_nav %}
+    <div>
+      <label class="dem-filter-label">Famille de soins</label>
+      <select name="service" class="{{ sx_single }} mt-0 w-full dem-field py-2.5 text-sm">
+        <option value="">Toutes</option>
+        {% for s in services %}<option value="{{ s.pk }}" {% if current_service == s.pk|stringformat:"d" %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Acte</label>
+      <select name="acte" class="{{ sx_single }} mt-0 w-full dem-field py-2.5 text-sm" {% if current_actes|length > 1 %}disabled{% endif %}>
+        <option value="">Tous</option>
+        {% for a in actes_for_filter %}<option value="{{ a.pk }}" {% if current_acte == a.pk|stringformat:"d" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    {% if not show_dem_service_acte_nav %}
+    <div>
+      <label class="dem-filter-label">Prix (XOF)</label>
+      <div class="mt-0 flex items-center justify-between text-[11px] text-gray-500">
+        <span id="price-label-min{{ sfx }}">{{ price_min_val|default:"0" }}</span>
+        <span id="price-label-max{{ sfx }}">{{ price_max_val|default:"—" }}</span>
+      </div>
+      <div id="price-slider{{ sfx }}" class="mt-2 mb-1"></div>
+      <input type="hidden" name="price_min" id="inp-price-min{{ sfx }}" value="{{ price_min_val }}">
+      <input type="hidden" name="price_max" id="inp-price-max{{ sfx }}" value="{{ price_max_val }}">
+    </div>
+    {% endif %}
+
+    <div>
+      <label class="dem-filter-label">Ville</label>
+      <input type="text" name="city" id="city-input-mob" list="city-options" value="{{ current_city }}" placeholder="Dakar, Thiès…" class="dem-field mt-0 py-2.5 text-sm">
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Assurance</label>
+      <select name="assurance" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+        {% for label, group in assurances_grouped %}
+        <optgroup label="{{ label }}">
+          {% for a in group %}<option value="{{ a.pk }}" {% if a.pk|stringformat:"d" in current_assurances %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Région</label>
+      <select name="region" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+        {% for r in regions %}<option value="{{ r.pk }}" {% if r.pk|stringformat:"d" in current_regions %}selected{% endif %}>{{ r.name }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Type d'établissement</label>
+      <select name="type" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+        {% for t in types %}<option value="{{ t.pk }}" {% if t.pk|stringformat:"d" in current_types %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Délai max</label>
+      <select name="delai" class="dem-field mt-0 py-2.5 text-sm">
+        <option value="">Tous</option>
+        {% for k, label in delai_choices %}<option value="{{ k }}" {% if current_delai == k %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <label class="flex cursor-pointer items-center justify-between gap-3 rounded-lg border-[1.5px] border-gray-200 bg-gray-50/80 px-3 py-2.5 transition-colors hover:border-accent-300">
+      <span class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+        <svg class="h-4 w-4 mc-text-accent" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>
+        Prestations à domicile
+      </span>
+      <input type="checkbox" name="domicile" value="1" class="h-4 w-4 rounded border-gray-300 mc-text-accent focus:ring-[var(--mc-accent)]" {% if current_domicile %}checked{% endif %}>
+    </label>
+  </div>
+  {% endwith %}
+{% else %}
+  {% with sfx="" sx_single="s2-single" sx_multi="s2-multi" %}
+  <div class="space-y-4">
+    {% if not show_dem_service_acte_nav %}
+    <div>
+      <label class="dem-filter-label">Famille de soins</label>
+      <select name="service" class="{{ sx_single }} mt-0 w-full dem-field py-2.5 text-sm">
+        <option value="">Toutes</option>
+        {% for s in services %}<option value="{{ s.pk }}" {% if current_service == s.pk|stringformat:"d" %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Acte</label>
+      <select name="acte" class="{{ sx_single }} mt-0 w-full dem-field py-2.5 text-sm" {% if current_actes|length > 1 %}disabled{% endif %}>
+        <option value="">Tous</option>
+        {% for a in actes_for_filter %}<option value="{{ a.pk }}" {% if current_acte == a.pk|stringformat:"d" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+      </select>
+      {% if current_actes|length > 1 %}<p class="mt-1 text-[10px] text-gray-500">Plusieurs actes actifs (lot).</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div>
+      <label class="dem-filter-label">Prix (XOF)</label>
+      <div class="mt-0 flex items-center justify-between text-[11px] text-gray-500">
+        <span id="price-label-min">{{ price_min_val|default:"0" }}</span>
+        <span id="price-label-max">{{ price_max_val|default:"—" }}</span>
+      </div>
+      <div id="price-slider" class="mt-2 mb-1"></div>
+      <input type="hidden" name="price_min" id="inp-price-min" value="{{ price_min_val }}">
+      <input type="hidden" name="price_max" id="inp-price-max" value="{{ price_max_val }}">
+    </div>
+
+    {% if not omit_assurance_desktop %}
+    <div>
+      <label class="dem-filter-label">Assurance</label>
+      <select name="assurance" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+        {% for label, group in assurances_grouped %}
+        <optgroup label="{{ label }}">
+          {% for a in group %}<option value="{{ a.pk }}" {% if a.pk|stringformat:"d" in current_assurances %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <div>
+      <label class="dem-filter-label">Région</label>
+      <select name="region" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+        {% for r in regions %}<option value="{{ r.pk }}" {% if r.pk|stringformat:"d" in current_regions %}selected{% endif %}>{{ r.name }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Ville</label>
+      <input type="text" name="city" id="city-input-desk" list="city-options" value="{{ current_city }}" placeholder="Dakar, Thiès…" class="dem-field mt-0 py-2.5 text-sm">
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Type d'établissement</label>
+      <select name="type" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+        {% for t in types %}<option value="{{ t.pk }}" {% if t.pk|stringformat:"d" in current_types %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label class="dem-filter-label">Délai max</label>
+      <select name="delai" class="dem-field mt-0 py-2.5 text-sm">
+        <option value="">Tous</option>
+        {% for k, label in delai_choices %}<option value="{{ k }}" {% if current_delai == k %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <label class="flex cursor-pointer items-center justify-between gap-3 rounded-lg border-[1.5px] border-gray-200 bg-gray-50/80 px-3 py-2.5 transition-colors hover:border-accent-300">
+      <span class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+        <svg class="h-4 w-4 mc-text-accent" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>
+        Prestations à domicile
+      </span>
+      <input type="checkbox" name="domicile" value="1" class="h-4 w-4 rounded border-gray-300 mc-text-accent focus:ring-[var(--mc-accent)]" {% if current_domicile %}checked{% endif %}>
+    </label>
+
+    <a href="{% url 'healthcare:search' %}" class="mt-1 block text-center text-xs text-gray-500 hover:text-gray-900">Réinitialiser les filtres</a>
+  </div>
+  {% endwith %}
+{% endif %}

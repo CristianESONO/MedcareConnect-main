@@ -1,0 +1,14 @@
+{% comment %}Vue menu compte in-app (onglet bas — démo MOBILE PATIENT).{% endcomment %}
+<div id="sipn-view-menu" class="sipn-mobile-app-view">
+  {% if user.is_authenticated and user.is_patient %}
+  {% include "includes/_patient_app_drawer.html" with sipn_embedded_drawer=True %}
+  {% else %}
+  <div class="sipn-guest-gate">
+    <div class="sipn-guest-gate-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="walk" class="sipn-ico sipn-ico--xl" %}</div>
+    <div class="sipn-guest-gate-title">Mon compte</div>
+    <p class="sipn-guest-gate-sub">Créez un compte pour suivre vos devis, RDV et messages.</p>
+    <a href="{% url 'users:register' %}" class="sipn-guest-gate-cta">S'inscrire</a>
+    <a href="{% url 'users:login' %}?next={% url 'healthcare:search' %}" class="sipn-guest-gate-link">Déjà inscrit ? Se connecter</a>
+  </div>
+  {% endif %}
+</div>

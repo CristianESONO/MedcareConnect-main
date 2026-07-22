@@ -1,0 +1,74 @@
+{% comment %}Navigation drawer prestataire — header vitrine + dashboard mobile.{% endcomment %}
+{% with org=prestataire_org rm=request.resolver_match %}
+<div class="mc-landing-drawer-header">
+  {% if show_drawer_close %}
+  <button type="button" class="mc-landing-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  {% endif %}
+  <a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-drawer-logo" aria-label="MedCare Pro">
+    {% include "includes/_brand_logo.html" %}
+  </a>
+  {% if org %}
+  <p class="mc-landing-drawer-user">{{ org.name }}</p>
+  <p class="mc-landing-drawer-tagline">{% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Espace prestataire{% endif %}</p>
+  {% else %}
+  <p class="mc-landing-drawer-user">{{ user.display_name }}</p>
+  <p class="mc-landing-drawer-tagline">Espace prestataire</p>
+  {% endif %}
+</div>
+
+<nav class="mc-landing-drawer-nav" aria-label="Navigation pro">
+  <ul>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-world mc-landing-drawer-icon" aria-hidden="true"></i> Parcourir</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'home' %}" class="mc-landing-drawer-link{% if rm.url_name == 'landing' or rm.url_name == 'home' %} is-active{% endif %}">Accueil</a></li>
+        <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">Annuaire</a></li>
+        <li><a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">Prestations</a></li>
+      </ul>
+    </li>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-layout-dashboard mc-landing-drawer-icon" aria-hidden="true"></i> Principal</span>
+      <ul class="mc-landing-drawer-sublist">
+        {% if org %}
+        <li><a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-drawer-link{% if dash_active == 'home' %} is-active{% endif %}">Tableau de bord</a></li>
+        <li><a href="{% url 'healthcare:prestataire_devis_list' %}" class="mc-landing-drawer-link{% if dash_active == 'devis' %} is-active{% endif %}">Devis WhatsApp{% if new_devis_count %}<span class="mc-landing-drawer-badge">{{ new_devis_count }}</span>{% endif %}</a></li>
+        <li><a href="{% url 'appointments:prestataire_rdv_list' %}" class="mc-landing-drawer-link{% if dash_active == 'rdv' %} is-active{% endif %}">Rendez-vous{% if new_rdv_count %}<span class="mc-landing-drawer-badge">{{ new_rdv_count }}</span>{% endif %}</a></li>
+        {% else %}
+        <li><a href="{% url 'healthcare:organisme_create' %}" class="mc-landing-drawer-link{% if dash_active == 'onboarding' %} is-active{% endif %}">Créer mon établissement</a></li>
+        {% endif %}
+      </ul>
+    </li>
+    {% if org %}
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-building-hospital mc-landing-drawer-icon" aria-hidden="true"></i> Mon établissement</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'healthcare:organisme_edit' %}" class="mc-landing-drawer-link{% if dash_active == 'profile' %} is-active{% endif %}">Profil établissement</a></li>
+        <li><a href="{% url 'healthcare:actes_list' %}" class="mc-landing-drawer-link{% if dash_active == 'actes' %} is-active{% endif %}">Catalogue d'actes</a></li>
+        <li><a href="{% url 'healthcare:insurances_manage' %}" class="mc-landing-drawer-link{% if dash_active == 'insurances' %} is-active{% endif %}">Assurances</a></li>
+        <li><a href="{% url 'healthcare:prestataire_zones_prelevement' %}" class="mc-landing-drawer-link{% if dash_active == 'zones' %} is-active{% endif %}">Prestations à domicile</a></li>
+        <li><a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="mc-landing-drawer-link{% if dash_active == 'public_profile' %} is-active{% endif %}">Profil public</a></li>
+        <li><a href="{% url 'messaging:inbox' %}" class="mc-landing-drawer-link{% if dash_active == 'messages' %} is-active{% endif %}">Messagerie{% if unread_messages %}<span class="mc-landing-drawer-badge">{{ unread_messages }}</span>{% endif %}</a></li>
+        <li><a href="{% url 'healthcare:prestataire_medplaque' %}" class="mc-landing-drawer-link{% if dash_active == 'medplaque' %} is-active{% endif %}">MedPlaque NFC</a></li>
+      </ul>
+    </li>
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="ti ti-settings mc-landing-drawer-icon" aria-hidden="true"></i> Compte</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'healthcare:prestataire_bilan' %}" class="mc-landing-drawer-link{% if dash_active == 'bilan' %} is-active{% endif %}">Bilan KPI</a></li>
+        <li><a href="{% url 'healthcare:prestataire_settings' %}" class="mc-landing-drawer-link{% if dash_active == 'settings' %} is-active{% endif %}">Paramètres</a></li>
+      </ul>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="mc-landing-drawer-cta">
+  <a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-patient"><i class="ti ti-search" aria-hidden="true"></i> Vitrine patient</a>
+  {% if org %}
+  <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="mc-landing-drawer-btn mc-landing-drawer-btn-pro"><i class="ti ti-external-link" aria-hidden="true"></i> Voir profil public</a>
+  {% endif %}
+  <a href="{% url 'users:logout' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Déconnexion</a>
+</div>
+{% endwith %}

@@ -1,0 +1,98 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Utilisateurs{% endblock %}
+{% block page_title %}Gestion des utilisateurs{% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-3">
+    <form method="GET" class="flex flex-1 items-center gap-2">
+        <div class="relative flex-1 max-w-sm">
+            <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+            </svg>
+            <input type="text" name="q" value="{{ search }}" placeholder="Rechercher…"
+                class="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-accent-400 focus:ring-1 focus:ring-accent-400 focus:outline-none">
+        </div>
+        {% if current_type %}<input type="hidden" name="type" value="{{ current_type }}">{% endif %}
+        <button type="submit" class="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600">Rechercher</button>
+    </form>
+    <div class="flex gap-1 rounded-lg bg-gray-100 p-1">
+        <a href="{% url 'dashboard:users_list' %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_type %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Tous</a>
+        <a href="?type=patient" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'patient' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Patients</a>
+        <a href="?type=prestataire" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'prestataire' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Prestataires</a>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <table class="w-full text-left text-sm">
+        <thead class="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
+            <tr>
+                <th class="px-4 py-3 font-medium">Utilisateur</th>
+                <th class="px-4 py-3 font-medium">Type</th>
+                <th class="hidden px-4 py-3 font-medium sm:table-cell">Téléphone</th>
+                <th class="hidden px-4 py-3 font-medium md:table-cell">Inscrit le</th>
+                <th class="px-4 py-3 font-medium">Statut</th>
+                <th class="px-4 py-3 font-medium">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for u in page %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-xs font-bold text-primary-500">{{ u.username|make_list|first|upper }}</div>
+                        <div>
+                            <p class="font-medium text-gray-900">{{ u.display_name }}</p>
+                            <p class="text-xs text-gray-400">{{ u.email }}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-3">
+                    <span class="rounded-full px-2 py-0.5 text-[11px] font-medium {% if u.user_type == 'prestataire' %}bg-blue-50 text-blue-700 {% elif u.user_type == 'admin' %}bg-purple-50 text-purple-700 {% else %}bg-gray-100 text-gray-600{% endif %}">
+                        {{ u.get_user_type_display }}
+                    </span>
+                </td>
+                <td class="hidden px-4 py-3 text-gray-500 sm:table-cell">{{ u.phone_number|default:"—" }}</td>
+                <td class="hidden px-4 py-3 text-gray-500 md:table-cell">{{ u.date_joined|date:"d/m/Y H:i" }}</td>
+                <td class="px-4 py-3">
+                    {% if u.is_active %}
+                    <span class="inline-flex items-center gap-1 rounded-full mc-bg-accent-light px-2 py-0.5 text-[11px] font-medium mc-text-accent-dark">
+                        <span class="h-1.5 w-1.5 rounded-full mc-bg-accent"></span> Actif
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-600">
+                        <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span> Inactif
+                    </span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3">
+                    <a href="{% url 'dashboard:user_toggle_active' u.pk %}"
+                       class="rounded-md px-2 py-1 text-xs font-medium {% if u.is_active %}bg-red-50 text-red-600 hover:bg-red-100{% else %}mc-bg-accent-light mc-text-accent-dark{% endif %}">
+                        {% if u.is_active %}Désactiver{% else %}Activer{% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+{% if page.has_other_pages %}
+<div class="mt-4 flex items-center justify-between">
+    <p class="text-xs text-gray-500">Page {{ page.number }} / {{ page.paginator.num_pages }} — {{ page.paginator.count }} résultats</p>
+    <div class="flex gap-1">
+        {% if page.has_previous %}
+        <a href="?page={{ page.previous_page_number }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search %}&q={{ search }}{% endif %}"
+           class="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">Précédent</a>
+        {% endif %}
+        {% if page.has_next %}
+        <a href="?page={{ page.next_page_number }}{% if current_type %}&type={{ current_type }}{% endif %}{% if search %}&q={{ search }}{% endif %}"
+           class="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">Suivant</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

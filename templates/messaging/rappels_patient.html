@@ -1,0 +1,17 @@
+{% extends "users/patient_account_base.html" %}
+{% block title %}Rappels{% endblock %}
+{% block account_page_title %}Rappels{% endblock %}
+{% block account_content %}
+<div class="pac-toolbar">
+  <p class="pac-lead" style="margin:0">Confirmations de RDV, consignes avant vos examens et rappels de soins programmés.</p>
+  {% if notifications %}
+  <form method="post" action="{% url 'messaging:mark_all_read' %}">
+    {% csrf_token %}
+    <input type="hidden" name="scope" value="rappels">
+    <button type="submit" class="pac-btn-outline">Tout marquer comme lu</button>
+  </form>
+  {% endif %}
+</div>
+
+{% include "messaging/_patient_notif_list.html" with empty_title="Aucun rappel pour le moment" empty_hint="Les confirmations de rendez-vous, préparatifs d'actes et rappels programmés s'affichent ici — distincts des notifications de devis." %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Avis Google — MedCare{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-lg px-4 py-12 sm:px-6">
+    <div class="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+        <h1 class="text-xl font-bold text-gray-900">Merci de soutenir MedCare sur Google</h1>
+        <p class="mt-2 text-sm text-gray-600">Votre avis public aide les patients à nous trouver et renforce la confiance dans le réseau.</p>
+
+        {% if google_reviews_url %}
+        <a href="{{ google_reviews_url }}" target="_blank" rel="noopener noreferrer" class="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-gray-900 px-6 py-3.5 text-sm font-bold text-white hover:bg-gray-800 sm:w-auto">
+            Laisser un avis sur Google
+        </a>
+        <p class="mt-3 text-xs text-gray-400">Ouverture dans un nouvel onglet.</p>
+        {% else %}
+        <p class="mt-6 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">
+            Aucune URL n’est configurée. Renseignez <strong>URL « Avis Google »</strong> dans
+            <strong>Admin Django → Réglages notifications</strong> (section Général), ou définissez
+            <code class="rounded bg-white px-1">MEDCARE_GOOGLE_REVIEWS_URL</code> dans l’environnement / <code class="rounded bg-white px-1">.env</code>.
+        </p>
+        {% endif %}
+
+        <div class="mt-8 flex flex-col gap-2 text-sm">
+            <a href="{% url 'healthcare:platform_review' %}" class="font-semibold text-sky-700 hover:text-sky-900">Retour au formulaire MedCare</a>
+            <a href="{% url 'healthcare:search' %}" class="text-gray-500 hover:text-gray-800">Recherche</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

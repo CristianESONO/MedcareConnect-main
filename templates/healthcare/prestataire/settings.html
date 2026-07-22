@@ -1,0 +1,274 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% block title %}Paramètres{% endblock %}
+
+{% block dash_extra_css %}
+<style>
+  .param-toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+  .param-toggle-row:last-child { border-bottom: none; }
+  .param-label { font-size: 12px; font-weight: 600; color: #111827; }
+  .param-sub { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+  .param-toggle { position: relative; width: 34px; height: 18px; display: inline-block; flex-shrink: 0; }
+  .param-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .param-toggle-track { position: absolute; inset: 0; background: #d1d5db; border-radius: 20px; transition: .2s; cursor: pointer; }
+  .param-toggle input:checked + .param-toggle-track { background: var(--mc-accent); }
+  .param-toggle-track::after { content: ''; position: absolute; height: 14px; width: 14px; left: 2px; bottom: 2px; background: #fff; border-radius: 50%; transition: .2s; }
+  .param-toggle input:checked + .param-toggle-track::after { transform: translateX(16px); }
+  .param-card { border-radius: 12px; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 0.06); overflow: hidden; }
+  .param-card-head { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; }
+  .param-card-title { font-size: 13px; font-weight: 700; color: #111827; }
+  .param-card-sub { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+  .param-card-body { padding: 14px 16px; }
+  .param-field-label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #6b7280; margin-bottom: 4px; }
+  .param-input { width: 100%; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 8px 11px; font-size: 12px; color: #111827; }
+  .param-input:focus { outline: none; border-color: var(--mc-navy, #123a63); }
+  .param-user-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }
+  .param-invite-box { display: none; margin-top: 8px; padding: 10px; border: 1px dashed #d1d5db; border-radius: 8px; background: #fafbfc; }
+  .param-invite-box.is-open { display: block; }
+  .param-invite-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .param-btn-outline { border: 1px solid #d1d5db; background: #fff; border-radius: 8px; padding: 7px 12px; font-size: 11px; font-weight: 600; color: #374151; cursor: pointer; }
+  .param-btn-outline:hover { border-color: #0a5c8a; color: #0a5c8a; }
+  .param-btn-ghost { border: none; background: transparent; color: #9ca3af; font-size: 11px; cursor: pointer; padding: 4px; }
+  .param-btn-ghost:hover { color: #dc2626; }
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div class="flex flex-wrap items-start justify-between gap-4">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Paramètres</h1>
+    <p class="mt-0.5 text-sm text-gray-500">Gestion du compte, notifications et préférences</p>
+  </div>
+  <button type="submit" form="frm-parametres" class="inline-flex items-center gap-2 mc-btn-primary rounded-xl px-4 py-2.5 text-sm font-bold">
+    💾 Sauvegarder
+  </button>
+</div>
+
+<form method="post" id="frm-parametres" class="mt-6 grid gap-3 lg:grid-cols-2" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  {# Compte & sécurité #}
+  <div class="param-card">
+    <div class="param-card-head">
+      <div class="param-card-title">👤 Compte &amp; sécurité</div>
+    </div>
+    <div class="param-card-body space-y-3.5">
+      <div>
+        <label class="param-field-label" for="id_first_name">Prénom</label>
+        {{ user_form.first_name }}
+      </div>
+      <div>
+        <label class="param-field-label" for="id_last_name">Nom</label>
+        {{ user_form.last_name }}
+      </div>
+      <div>
+        <label class="param-field-label" for="id_email">Email de connexion</label>
+        {{ user_form.email }}
+      </div>
+      <div>
+        <label class="param-field-label" for="id_phone_number">Téléphone</label>
+        {{ user_form.phone_number }}
+      </div>
+      <div>
+        <label class="param-field-label" for="new_password">Nouveau mot de passe</label>
+        <input type="password" name="new_password" id="new_password" class="param-input" placeholder="Laisser vide pour ne pas modifier" autocomplete="new-password">
+      </div>
+      <div>
+        <label class="param-field-label" for="confirm_password">Confirmer le mot de passe</label>
+        <input type="password" name="confirm_password" id="confirm_password" class="param-input" placeholder="Confirmation" autocomplete="new-password">
+      </div>
+      <div class="rounded-lg bg-primary-50 px-3 py-2.5 text-[10px] leading-relaxed text-primary-800">
+        🔒 Votre compte est protégé par chiffrement. Nous ne stockons jamais votre mot de passe en clair.
+      </div>
+    </div>
+  </div>
+
+  {# Accès & utilisateurs (démo) #}
+  <div class="param-card">
+    <div class="param-card-head">
+      <div class="param-card-title">👥 Accès &amp; utilisateurs</div>
+      <div class="param-card-sub">Qui peut accéder au dashboard</div>
+    </div>
+    <div class="param-card-body space-y-2.5">
+      <div class="param-user-row">
+        <div>
+          <div class="text-xs font-semibold text-gray-900">{{ user.get_full_name|default:user.username }}</div>
+          <div class="text-[10px] text-gray-400">Administrateur · Accès complet</div>
+        </div>
+        <span class="rounded-full bg-primary-50 px-2 py-0.5 text-[9px] font-bold text-primary-700">Vous</span>
+      </div>
+      {% for member in team_rows %}
+      <div class="param-user-row">
+        <div>
+          <div class="text-xs font-semibold text-gray-900">{{ member.name }}</div>
+          <div class="text-[10px] text-gray-400">{{ member.role_label }}{% if member.email %} · {{ member.email }}{% endif %}</div>
+        </div>
+        <button type="submit" name="team_remove" value="{{ member.index }}" class="param-btn-ghost" title="Retirer l'accès">✕</button>
+      </div>
+      {% endfor %}
+      <button type="button" class="param-btn-outline w-full" id="btn-team-invite-toggle">+ Inviter un utilisateur</button>
+      <div class="param-invite-box" id="team-invite-box">
+        <div>
+          <label class="param-field-label" for="team_invite_name">Nom</label>
+          <input type="text" name="team_invite_name" id="team_invite_name" class="param-input" placeholder="Ex. : Secrétaire accueil">
+        </div>
+        <div class="mt-2">
+          <label class="param-field-label" for="team_invite_email">Email</label>
+          <input type="email" name="team_invite_email" id="team_invite_email" class="param-input" placeholder="exemple@structure.sn">
+        </div>
+        <div class="mt-2">
+          <label class="param-field-label" for="team_invite_role">Rôle</label>
+          <select name="team_invite_role" id="team_invite_role" class="param-input">
+            <option value="secretaire">Secrétaire (Devis + RDV)</option>
+            <option value="readonly">Lecture seule</option>
+          </select>
+        </div>
+        <p class="mt-2 text-[9px] leading-relaxed text-gray-400">L'invitation est enregistrée ; l'accès multi-comptes sera activé prochainement.</p>
+      </div>
+      <p class="text-[9px] leading-relaxed text-gray-400">Rôles disponibles : Administrateur · Secrétaire (Devis + RDV) · Lecture seule.</p>
+    </div>
+  </div>
+
+  {# Notifications #}
+  <div class="param-card">
+    <div class="param-card-head">
+      <div class="param-card-title">🔔 Notifications</div>
+    </div>
+    <div class="param-card-body py-1">
+      {% for row in notification_toggles %}
+      <div class="param-toggle-row">
+        <div>
+          <div class="param-label">{{ row.label }}</div>
+          <div class="param-sub">{{ row.subtitle }}</div>
+        </div>
+        <label class="param-toggle">
+          <input type="checkbox" name="{{ row.field_name }}" {% if row.enabled %}checked{% endif %}>
+          <div class="param-toggle-track"></div>
+        </label>
+      </div>
+      {% empty %}
+      <p class="py-4 text-center text-xs text-gray-400">Aucune notification configurable pour le moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# Préférences #}
+  <div class="param-card">
+    <div class="param-card-head">
+      <div class="param-card-title">🎛 Préférences</div>
+    </div>
+    <div class="param-card-body space-y-3.5">
+      <div>
+        <label class="param-field-label" for="settings_locale">Langue du dashboard</label>
+        <select class="param-input" name="settings_locale" id="settings_locale">
+          <option value="fr" {% if settings_locale == "fr" %}selected{% endif %}>Français</option>
+          <option value="wo" {% if settings_locale == "wo" %}selected{% endif %}>Wolof (bientôt disponible)</option>
+          <option value="en" {% if settings_locale == "en" %}selected{% endif %}>English (coming soon)</option>
+        </select>
+      </div>
+      <div>
+        <label class="param-field-label" for="settings_currency">Devise d'affichage</label>
+        <select class="param-input" name="settings_currency" id="settings_currency">
+          <option value="XOF" {% if settings_currency == "XOF" %}selected{% endif %}>FCFA (XOF)</option>
+          <option value="EUR" {% if settings_currency == "EUR" %}selected{% endif %}>EUR (€)</option>
+          <option value="USD" {% if settings_currency == "USD" %}selected{% endif %}>USD ($)</option>
+        </select>
+      </div>
+      <div>
+        <label class="param-field-label" for="settings_dashboard_period">Période par défaut du dashboard</label>
+        <select class="param-input" name="settings_dashboard_period" id="settings_dashboard_period">
+          <option value="7j" {% if settings_dashboard_period == "7j" %}selected{% endif %}>7 jours</option>
+          <option value="30j" {% if settings_dashboard_period == "30j" %}selected{% endif %}>30 jours</option>
+          <option value="total" {% if settings_dashboard_period == "total" %}selected{% endif %}>Depuis M0 (total)</option>
+        </select>
+      </div>
+      <div class="param-toggle-row rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5" style="border-bottom:none">
+        <div>
+          <div class="param-label">Afficher les tarifs sur le profil public</div>
+          <div class="param-sub">Les patients voient les prix avant de demander un devis</div>
+        </div>
+        <label class="param-toggle">
+          <input type="checkbox" name="show_prices_on_public_profile" {% if show_prices_on_public_profile %}checked{% endif %}>
+          <div class="param-toggle-track"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  {# Abonnement — pleine largeur #}
+  <div class="param-card lg:col-span-2">
+    <div class="param-card-head flex flex-wrap items-center justify-between gap-2">
+      <div class="param-card-title">💳 Abonnement actuel</div>
+      {% if org.subscription_plan and org.subscription_plan.is_pioneer_offer %}
+      <span class="rounded-full mc-bg-accent-light px-2.5 py-0.5 text-[9px] font-bold mc-text-accent-dark">★ Partenaire Pionnier</span>
+      {% endif %}
+    </div>
+    <div class="param-card-body grid gap-4 sm:grid-cols-3">
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Plan actuel</p>
+        {% if org.subscription_plan %}
+        <p class="mt-1 text-base font-bold text-primary-700">{{ org.subscription_plan.name }}</p>
+        <p class="mt-0.5 text-[10px] text-gray-400">{{ org.subscription_plan.short_description|default:"Formule active" }}</p>
+        {% else %}
+        <p class="mt-1 text-base font-bold text-amber-800">Aucune formule</p>
+        {% endif %}
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Tarif indicatif</p>
+        <p class="mt-1 text-base font-bold text-gray-900">
+          {% if org.subscription_plan and org.subscription_plan.monthly_price_fcfa %}{{ org.subscription_plan.monthly_price_fcfa|floatformat:0 }} FCFA / mois{% else %}Gratuit{% endif %}
+        </p>
+        {% if pending_subscription_request %}
+        <p class="mt-1 text-[10px] font-medium text-amber-700">Demande en cours : {{ pending_subscription_request.requested_plan.name }}</p>
+        {% endif %}
+      </div>
+      <div class="flex flex-col gap-2 sm:justify-center">
+        <a href="{% url 'contact' %}" class="rounded-lg border border-primary-200 bg-white px-4 py-2 text-center text-xs font-bold text-primary-700 hover:bg-primary-50">Contacter MedCare</a>
+        <a href="{% url 'healthcare:prestataire_bilan' %}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-center text-xs font-bold text-gray-700 hover:bg-gray-50">📊 Bilan KPI</a>
+        <p class="text-[10px] leading-relaxed text-gray-500">Pour modifier votre formule, écrivez-nous — la grille des plans n'est pas accessible en self-service pour le moment.</p>
+      </div>
+    </div>
+    {% if subscription_recent %}
+    <div class="border-t border-gray-100 px-4 py-3">
+      <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Dernières demandes</p>
+      <ul class="mt-1 space-y-0.5 text-[11px] text-gray-600">
+        {% for r in subscription_recent %}
+        <li>{{ r.created_at|date:"d/m/Y" }} — {{ r.requested_plan.name }} ({{ r.get_status_display }})</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  {# Zone de danger #}
+  <div class="param-card border-rose-200 lg:col-span-2">
+    <div class="param-card-head border-rose-100">
+      <div class="param-card-title text-rose-700">⚠️ Zone de danger</div>
+    </div>
+    <div class="param-card-body flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold text-gray-900">Désactiver temporairement le profil public</p>
+        <p class="mt-1 text-[10px] text-gray-500">Votre fiche disparaît de l'annuaire MedCare. Vos données sont conservées.</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <a href="{% url 'users:logout' %}" class="rounded-lg border border-rose-200 bg-white px-4 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50">Se déconnecter</a>
+        <span class="cursor-not-allowed rounded-lg border border-rose-200 bg-rose-50/50 px-4 py-2 text-xs font-bold text-rose-300" title="Bientôt">Désactiver le profil</span>
+      </div>
+    </div>
+  </div>
+</form>
+<script>
+(function () {
+  var btn = document.getElementById('btn-team-invite-toggle');
+  var box = document.getElementById('team-invite-box');
+  if (btn && box) {
+    btn.addEventListener('click', function () {
+      box.classList.toggle('is-open');
+      if (box.classList.contains('is-open')) {
+        var email = document.getElementById('team_invite_email');
+        if (email) email.focus();
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}

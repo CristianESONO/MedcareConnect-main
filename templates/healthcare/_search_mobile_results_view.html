@@ -1,0 +1,42 @@
+{% comment %}Vue Résultats mobile — copie démo MOBILE PATIENT (#view-resultats).{% endcomment %}
+<div class="sipn-results-mobile-view sipn-pilier-mobile-ui">
+  <div class="sipn-results-sticky-head">
+  <div class="results-header">
+    <div class="results-header-row">
+      <div class="results-header-text">
+        <div class="rh-acte" id="rh-acte-m">{{ search_dem_ctx_title|default:"Sélectionnez un acte" }}</div>
+        <div class="rh-sub" id="rh-sub-m">{{ search_dem_ctx_sub|default:"Naviguez dans les familles d'actes ou utilisez la recherche." }}</div>
+      </div>
+      <button type="button" class="rh-back-btn sipn-ico-wrap" id="sipn-rh-back-prestations">{% include "healthcare/_icon_svg.html" with icon="arrow-left" class="sipn-ico sipn-ico--sm" %} Prestations</button>
+    </div>
+  </div>
+
+  {% include "healthcare/_search_sipn_filter_row_mobile.html" %}
+  </div>
+
+  <div id="struct-list-m" class="struct-list-m">
+    {% include "healthcare/_search_results_structure_list.html" with list_variant="mobile" %}
+  </div>
+
+  <div id="comp-panel-container" class="comp-panel-container-m" aria-live="polite"></div>
+
+  <div id="cart-float-wrap" class="cart-float-wrap-m" hidden>
+    <button type="button" class="cart-float-btn" id="sipn-cart-float-btn">
+      <div class="cfb-left">
+        {% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--sm" %}
+        <span id="cfb-label">Voir mon panier</span>
+        <span class="cfb-badge" id="cfb-count">0</span>
+      </div>
+      <span class="cfb-total" id="cfb-total">0 FCFA</span>
+    </button>
+  </div>
+  <div class="sipn-results-mobile-spacer" aria-hidden="true"></div>
+
+  {% if page.has_other_pages %}
+  <nav class="sipn-pagination sipn-results-mobile-pagination flex justify-center gap-2 px-3 pb-3" aria-label="Pagination">
+    {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="sipn-page-btn sipn-ico-wrap">{% include "healthcare/_icon_svg.html" with icon="arrow-left" class="sipn-ico sipn-ico--xs" %} Précédent</a>{% endif %}
+    <span class="sipn-page-num">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?page={{ page.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="sipn-page-btn">Suivant →</a>{% endif %}
+  </nav>
+  {% endif %}
+</div>

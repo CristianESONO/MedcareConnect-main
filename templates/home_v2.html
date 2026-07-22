@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}MedCare Connect — L'excellence médicale au Sénégal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+    :root {
+        --mc-navy: var(--mc-navy-deep, #0D1B4B);
+        --mc-teal: var(--mc-accent, #4fa3c7);
+        --mc-teal-dark: var(--mc-accent, #4fa3c7);
+        --mc-soft-bg: #f8fafc;
+        --mc-container-width: 1200px;
+    }
+
+    body { background-color: var(--mc-soft-bg); }
+
+    /* Layout Utilities */
+    .mc-container {
+        max-width: var(--mc-container-width);
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 24px;
+        padding-right: 24px;
+        width: 100%;
+    }
+
+    .mc-section-v2 {
+        padding-top: 96px;
+        padding-bottom: 96px;
+    }
+
+    /* Modern Hero */
+    .hero-v2 {
+        position: relative;
+        min-height: 600px;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, var(--mc-navy) 0%, #153c58 100%);
+        overflow: hidden;
+        padding: 80px 0;
+    }
+
+    .hero-v2::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(66, 171, 183, 0.15) 0%, rgba(66, 171, 183, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .search-card-v2 {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Bento Grid System */
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 220px;
+        gap: 24px;
+    }
+
+    .bento-item {
+        background: #fff;
+        border-radius: 24px;
+        padding: 32px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .bento-item:hover {
+        transform: translateY(-8px);
+        border-color: var(--mc-teal);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .bento-item.large { grid-column: span 2; grid-row: span 2; background: var(--mc-teal); color: #fff; border: none; }
+    .bento-item.tall { grid-row: span 2; }
+    .bento-item.wide { grid-column: span 2; }
+
+    /* Section Headers */
+    .section-title-v2 {
+        font-size: 48px;
+        font-weight: 800;
+        color: var(--mc-navy);
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+    }
+
+    .section-sub-v2 {
+        font-size: 18px;
+        color: #64748b;
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    /* Custom Button */
+    .btn-v2 {
+        background: var(--mc-teal);
+        color: #fff;
+        padding: 16px 32px;
+        border-radius: 16px;
+        font-weight: 700;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .btn-v2:hover {
+        background: var(--mc-teal-dark);
+        transform: scale(1.02);
+        box-shadow: 0 10px 15px -3px rgba(66, 171, 183, 0.3);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+        .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        .section-title-v2 { font-size: 40px; }
+    }
+
+    @media (max-width: 768px) {
+        .hero-v2 { padding: 60px 0; min-height: auto; }
+        .mc-section-v2 { padding-top: 64px; padding-bottom: 64px; }
+        .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; gap: 16px; }
+        .bento-item.large, .bento-item.wide, .bento-item.tall { grid-column: span 1; grid-row: span 1; }
+        .bento-item { padding: 24px; min-height: 200px; }
+        .section-title-v2 { font-size: 32px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="hero-v2">
+    <div class="mc-container">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+            <!-- Hero Text -->
+            <div class="lg:w-1/2 text-white space-y-8">
+                <div class="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full text-sm font-semibold">
+                    <span class="flex h-2 w-2 rounded-full mc-bg-accent animate-pulse"></span>
+                    {{ stats.acts }}+ actes médicaux référencés
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold leading-tight">
+                    La santé <br><span class="text-accent-400">transparente.</span>
+                </h1>
+                <p class="text-xl text-blue-100/70 max-w-lg leading-relaxed">
+                    Trouvez instantanément le meilleur prix pour vos examens médicaux au Sénégal. Vérifié, fiable, sans surprise.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#explorer" class="btn-v2">
+                        Explorer les services
+                        <i class="ti ti-arrow-right text-xl"></i>
+                    </a>
+                    <a href="{% url 'users:register' %}" class="px-8 py-4 rounded-2xl border border-white/20 hover:bg-white/10 transition font-bold">
+                        Espace Professionnel
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Search Card -->
+            <div class="lg:w-1/2 w-full">
+                <div class="search-card-v2 space-y-8">
+                    <div class="space-y-2">
+                        <h3 class="text-white text-2xl font-bold">Recherche intelligente</h3>
+                        <p class="text-gray-400 text-sm">Comparez les tarifs en quelques secondes</p>
+                    </div>
+                    
+                    <form action="{% url 'healthcare:search' %}" method="GET" class="space-y-6">
+                        <div class="relative">
+                            <i class="ti ti-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+                            <input type="text" name="q" placeholder="Ex: IRM, Bilan sanguin, Dentiste..." 
+                                   class="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-white placeholder-gray-500 focus:outline-none focus:border-accent-400 transition">
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="relative">
+                                <i class="ti ti-map-pin absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-gray-300 appearance-none focus:outline-none">
+                                    <option>Toutes zones</option>
+                                    <option>Dakar</option>
+                                    <option>Thiès</option>
+                                </select>
+                            </div>
+                            <div class="relative">
+                                <i class="ti ti-shield-check absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-gray-300 appearance-none focus:outline-none">
+                                    <option>Sans assurance</option>
+                                    <option>AXA</option>
+                                    <option>ASCOMA</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="w-full btn-v2">
+                            Trouver les meilleurs tarifs
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BENTO SERVICES -->
+<section id="explorer" class="mc-section-v2">
+    <div class="mc-container">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16">
+            <div class="space-y-4">
+                <h2 class="section-title-v2">Explorez par <br><span class="text-accent-500">catégories.</span></h2>
+                <p class="section-sub-v2">Une structure claire pour des décisions rapides et éclairées.</p>
+            </div>
+            <a href="{% url 'healthcare:search' %}" class="text-accent-600 font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                Tout voir <i class="ti ti-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Large Item: Biologie -->
+            <a href="/healthcare/service/biologie-medicale/" class="bento-item large">
+                <div class="flex justify-between items-start">
+                    <i class="ti ti-flask text-5xl"></i>
+                    <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Populaire</span>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-3xl font-bold">Biologie Médicale</h3>
+                    <p class="text-white/80">Analyses, NFS, Glycémie et bilans complets.</p>
+                </div>
+            </a>
+
+            <!-- Tall Item: Imagerie -->
+            <a href="/healthcare/service/imagerie-medicale/" class="bento-item tall">
+                <i class="ti ti-scan text-4xl text-accent-500"></i>
+                <div class="space-y-2">
+                    <h3 class="text-xl font-bold">Imagerie</h3>
+                    <p class="text-gray-500 text-sm">Scanner, IRM, Échographie et Radiologie.</p>
+                </div>
+            </a>
+
+            <!-- Standard Item: Dentaire -->
+            <a href="/healthcare/service/soins-dentaires/" class="bento-item">
+                <i class="ti ti-tooth text-4xl text-accent-500"></i>
+                <h3 class="text-xl font-bold">Soins Dentaires</h3>
+            </a>
+
+            <!-- Standard Item: Cardiologie -->
+            <a href="/healthcare/service/explorations-fonctionnelles/" class="bento-item">
+                <i class="ti ti-heartbeat text-4xl text-accent-500"></i>
+                <h3 class="text-xl font-bold">Cardiologie</h3>
+            </a>
+
+            <!-- Wide Item: Pro -->
+            <div class="bento-item wide bg-navy-900 text-white border-none" style="background-color: var(--mc-navy);">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                    <div class="w-20 h-20 rounded-2xl bg-accent-400 flex items-center justify-center shrink-0">
+                        <i class="ti ti-building-hospital text-4xl"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-2xl font-bold">Vous êtes un centre ?</h3>
+                        <p class="text-gray-400">Rejoignez les {{ stats.providers }} établissements déjà partenaires.</p>
+                        <a href="{% url 'users:register' %}" class="text-accent-400 font-bold inline-block pt-2">Inscrire ma structure →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Item: Ambulance -->
+            <a href="#" class="bento-item">
+                <i class="ti ti-ambulance text-4xl text-accent-500"></i>
+                <h3 class="text-xl font-bold">Urgences</h3>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- TRUST SECTION -->
+<section class="mc-section-v2 bg-white">
+    <div class="mc-container">
+        <div class="grid lg:grid-cols-2 gap-16 lg:gap-32 items-center">
+            <div class="space-y-12">
+                <h2 class="section-title-v2">Pourquoi choisir <br>MedCare Connect ?</h2>
+                
+                <div class="space-y-10">
+                    <div class="flex gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
+                            <i class="ti ti-currency-dollar text-2xl text-blue-600"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-xl font-bold text-navy-900">Transparence Totale</h4>
+                            <p class="text-gray-500 leading-relaxed">Accédez aux prix réels pratiqués par les centres, sans frais cachés ni commissions sur vos actes.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-accent-50 flex items-center justify-center shrink-0">
+                            <i class="ti ti-shield-check text-2xl text-accent-600"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-xl font-bold text-navy-900">Données Vérifiées</h4>
+                            <p class="text-gray-500 leading-relaxed">Chaque établissement est audité par nos équipes avant d'obtenir son badge de confiance MedCare.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center shrink-0">
+                            <i class="ti ti-device-mobile text-2xl text-purple-600"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-xl font-bold text-navy-900">Expérience Mobile</h4>
+                            <p class="text-gray-500 leading-relaxed">Prenez vos rendez-vous et gérez vos devis directement depuis votre smartphone, où que vous soyez.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative pt-12 lg:pt-0">
+                <div class="aspect-square rounded-[48px] bg-gray-100 overflow-hidden shadow-2xl">
+                    <img src="https://medcare.sn/wp-content/uploads/2026/02/Bienvenue-.jpg" class="w-full h-full object-cover" alt="MedCare Experience">
+                </div>
+                <!-- Floating Card -->
+                <div class="absolute -bottom-6 -left-6 sm:-bottom-10 sm:-left-10 bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-xs border border-gray-100 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-accent-500 flex items-center justify-center text-white font-bold shrink-0">98%</div>
+                        <div class="text-sm font-bold text-navy-900">Satisfaction Patients</div>
+                    </div>
+                    <p class="text-xs text-gray-400 leading-relaxed">Basé sur plus de 12 000 retours d'utilisateurs au Sénégal en 2025.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="mc-section-v2">
+    <div class="mc-container">
+        <div class="bg-navy-900 rounded-[48px] p-12 lg:p-24 text-center relative overflow-hidden" style="background-color: var(--mc-navy);">
+            <div class="relative z-10 space-y-10">
+                <h2 class="text-4xl lg:text-6xl font-extrabold text-white leading-tight">
+                    Prêt à simplifier <br>votre parcours de santé ?
+                </h2>
+                <div class="flex justify-center">
+                    <a href="{% url 'healthcare:search' %}" class="btn-v2 min-w-[240px]">
+                        Commencer ma recherche
+                    </a>
+                </div>
+            </div>
+            <!-- Abstract background shapes -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                <div class="absolute top-[-20%] left-[-10%] w-[40%] h-[80%] bg-accent-400 rounded-full blur-[120px]"></div>
+                <div class="absolute bottom-[-20%] right-[-10%] w-[40%] h-[80%] bg-blue-600 rounded-full blur-[120px]"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

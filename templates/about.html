@@ -1,0 +1,456 @@
+{% extends "visitor_base.html" %}
+{% load static %}
+
+{% block title %}À propos de Medcare{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ── À propos — Design premium ───────────────────────────────────── */
+  :root {
+    --ab-accent: var(--mc-accent, #4fa3c7);
+    --ab-navy: var(--mc-navy, #123a63);
+    --ab-navy-deep: var(--mc-navy-deep, #0a2540);
+    --ab-surface: var(--mc-surface, #f4f7fb);
+    --ab-border: var(--mc-border, #d4deee);
+    --ab-white: #fff;
+    --ab-shadow-lg: 0 20px 60px rgba(18,58,99,0.12);
+  }
+
+  /* Hero enrichi */
+  .mc-about-hero {
+    background: linear-gradient(135deg, var(--ab-navy-deep) 0%, var(--ab-navy) 60%, #1a5276 100%);
+    color: #fff;
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mc-about-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 80% 20%, rgba(79,163,199,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .mc-about-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+  }
+  .mc-about-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ab-accent);
+    border: 1px solid rgba(79,163,199,0.35);
+    border-radius: 999px;
+    padding: 6px 14px;
+    margin-bottom: 20px;
+    background: rgba(79,163,199,0.08);
+    backdrop-filter: blur(4px);
+  }
+  .mc-about-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ab-accent);
+    animation: ab-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes ab-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.75); }
+  }
+  .mc-about-hero h1 {
+    font-family: var(--mc-font-display, 'DM Sans', sans-serif);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    margin: 0 0 18px;
+  }
+  .mc-about-hero h1 em {
+    font-style: normal;
+    color: var(--ab-accent);
+  }
+  .mc-about-hero > .mc-container > p {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: rgba(255,255,255,0.78);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 600px;
+  }
+
+  /* Stats */
+  .mc-about-stats {
+    background: var(--ab-white);
+    border-bottom: 1px solid var(--ab-border);
+    padding: 0;
+  }
+  .mc-about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 767px) {
+    .mc-about-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .mc-about-stat {
+    padding: 32px 24px;
+    text-align: center;
+    border-right: 1px solid var(--ab-border);
+    position: relative;
+    transition: background 0.2s;
+  }
+  .mc-about-stat:last-child { border-right: none; }
+  .mc-about-stat:hover { background: var(--ab-surface); }
+  .mc-about-stat-val {
+    font-family: var(--mc-font-display, 'DM Sans', sans-serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--ab-navy);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .mc-about-stat-val--accent { color: var(--ab-accent); }
+  .mc-about-stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+  }
+
+  /* Vision section */
+  .mc-about-vision {
+    padding: 72px 0;
+    background: var(--ab-white);
+  }
+  .mc-about-vision-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .mc-about-vision-grid { grid-template-columns: 1fr; }
+  }
+  .mc-about-vision h2 {
+    font-family: var(--mc-font-display, 'DM Sans', sans-serif);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 800;
+    color: var(--ab-navy);
+    margin: 0 0 18px;
+    line-height: 1.2;
+  }
+  .mc-about-vision h2 em {
+    font-style: normal;
+    color: var(--ab-accent);
+  }
+  .mc-about-vision p {
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+  .mc-about-vision-box {
+    background: linear-gradient(135deg, var(--ab-navy) 0%, var(--ab-navy-deep) 100%);
+    border-radius: 20px;
+    padding: 36px 32px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .mc-about-vision-box::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 120px;
+    font-family: Georgia, serif;
+    color: rgba(79,163,199,0.2);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .mc-about-vision-box h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ab-accent);
+    margin: 0 0 14px;
+  }
+  .mc-about-vision-box p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.88);
+    font-style: italic;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Valeurs */
+  .mc-about-values {
+    background: var(--ab-surface);
+    padding: 72px 0;
+  }
+  .mc-about-values-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .mc-about-section-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ab-accent);
+    margin-bottom: 12px;
+  }
+  .mc-about-values-header h2 {
+    font-family: var(--mc-font-display, 'DM Sans', sans-serif);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--ab-navy);
+    margin: 0 0 12px;
+  }
+  .mc-about-values-header p {
+    color: #6b7280;
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .mc-about-values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 767px) {
+    .mc-about-values-grid { grid-template-columns: 1fr; }
+  }
+  .mc-about-value-card {
+    background: var(--ab-white);
+    border: 1px solid var(--ab-border);
+    border-radius: 20px;
+    padding: 36px 28px;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .mc-about-value-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ab-accent), var(--ab-navy));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s ease;
+  }
+  .mc-about-value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ab-shadow-lg);
+  }
+  .mc-about-value-card:hover::after {
+    transform: scaleX(1);
+  }
+  .mc-about-value-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(79,163,199,0.12), rgba(18,58,99,0.08));
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: var(--ab-navy);
+  }
+  .mc-about-value-card h3 {
+    font-family: var(--mc-font-display, 'DM Sans', sans-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ab-navy);
+    margin: 0 0 10px;
+  }
+  .mc-about-value-card p {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* Mission */
+  .mc-about-mission {
+    background: var(--ab-white);
+    padding: 72px 0;
+    border-top: 1px solid var(--ab-border);
+  }
+  .mc-about-mission-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .mc-about-mission h2 {
+    font-family: var(--mc-font-display, 'DM Sans', sans-serif);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--ab-navy);
+    margin: 0 0 18px;
+  }
+  .mc-about-mission p {
+    font-size: 16px;
+    color: #374151;
+    line-height: 1.72;
+    margin-bottom: 14px;
+  }
+  .mc-about-mission-cta {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+  .mc-about-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--ab-navy) 0%, var(--ab-navy-deep) 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 4px 16px rgba(18,58,99,0.25);
+  }
+  .mc-about-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(18,58,99,0.3);
+  }
+  .mc-about-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid var(--ab-border);
+    color: var(--ab-navy);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .mc-about-btn-ghost:hover {
+    border-color: var(--ab-accent);
+    background: rgba(79,163,199,0.06);
+  }
+</style>
+{% endblock %}
+
+{% block page_content %}
+  <!-- Hero -->
+  <section class="mc-about-hero">
+    <div class="mc-container">
+      <div class="mc-about-hero-inner">
+        <div class="mc-about-badge">Sénégal · Santé digitale</div>
+        <h1>Organiser l'offre de soins,<br><em>pour tous.</em></h1>
+        <p>Medcare est la première plateforme digitale dédiée à la transparence et à l'accessibilité des services médicaux au Sénégal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="mc-about-stats" aria-label="Chiffres clés">
+    <div class="mc-container">
+      <div class="mc-about-stats-grid">
+        <div class="mc-about-stat">
+          <div class="mc-about-stat-val mc-about-stat-val--accent">100+</div>
+          <div class="mc-about-stat-label">Structures référencées</div>
+        </div>
+        <div class="mc-about-stat">
+          <div class="mc-about-stat-val">5 000+</div>
+          <div class="mc-about-stat-label">Actes médicaux</div>
+        </div>
+        <div class="mc-about-stat">
+          <div class="mc-about-stat-val mc-about-stat-val--accent">0%</div>
+          <div class="mc-about-stat-label">Commission sur les actes</div>
+        </div>
+        <div class="mc-about-stat">
+          <div class="mc-about-stat-val">24/7</div>
+          <div class="mc-about-stat-label">Accessibilité</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="mc-about-vision">
+    <div class="mc-container">
+      <div class="mc-about-vision-grid">
+        <div>
+          <h2>L'infrastructure digitale de la <em>santé de demain.</em></h2>
+          <p>Né d'un besoin de simplification, Medcare centralise l'offre de soins paracliniques (biologie, imagerie, explorations) pour permettre à chaque patient de trouver le bon examen, au bon prix et à proximité.</p>
+          <p>Nous croyons que la donnée médicale doit être structurée et accessible pour améliorer l'efficacité du système de santé sénégalais.</p>
+        </div>
+        <div class="mc-about-vision-box">
+          <h3>Notre Vision</h3>
+          <p>Devenir la couche digitale de référence qui organise et structure l'offre de services médicaux à travers le continent africain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Valeurs -->
+  <section class="mc-about-values">
+    <div class="mc-container">
+      <div class="mc-about-values-header">
+        <div class="mc-about-section-tag">Nos engagements</div>
+        <h2>Nos Valeurs Fondamentales</h2>
+        <p>Ce qui nous guide chaque jour dans le développement de la plateforme.</p>
+      </div>
+      <div class="mc-about-values-grid">
+        <div class="mc-about-value-card">
+          <div class="mc-about-value-icon"><i class="ti ti-eye"></i></div>
+          <h3>Transparence</h3>
+          <p>Nous luttons contre l'asymétrie d'information en affichant les tarifs réels et les conventions d'assurance en toute clarté.</p>
+        </div>
+        <div class="mc-about-value-card">
+          <div class="mc-about-value-icon"><i class="ti ti-users"></i></div>
+          <h3>Équité</h3>
+          <p>Chaque patient, quel que soit son profil, doit pouvoir accéder aux meilleurs soins au meilleur prix disponible sur le marché.</p>
+        </div>
+        <div class="mc-about-value-card">
+          <div class="mc-about-value-icon"><i class="ti ti-shield-check"></i></div>
+          <h3>Fiabilité</h3>
+          <p>Nous certifions les structures de santé présentes sur notre plateforme pour garantir la qualité et l'exactitude des données.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission / CTA -->
+  <section class="mc-about-mission">
+    <div class="mc-container">
+      <div class="mc-about-mission-inner">
+        <div class="mc-about-section-tag">Notre mission</div>
+        <h2>Simplifier l'accès aux soins au Sénégal</h2>
+        <p>Medcare permet à chaque patient de rechercher, comparer et réserver des examens médicaux en quelques clics — sans intermédiaire, sans commission, avec une totale transparence sur les tarifs et la couverture assurance.</p>
+        <p>Nous accompagnons les structures de santé dans leur transformation numérique en leur fournissant des outils de gestion modernes et une visibilité nationale.</p>
+        <div class="mc-about-mission-cta">
+          <a href="{% url 'healthcare:search' %}" class="mc-about-btn-primary">
+            <i class="ti ti-search" aria-hidden="true"></i> Trouver un service
+          </a>
+          <a href="{% url 'contact' %}" class="mc-about-btn-ghost">
+            <i class="ti ti-mail" aria-hidden="true"></i> Nous contacter
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

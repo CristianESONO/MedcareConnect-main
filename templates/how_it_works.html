@@ -1,0 +1,541 @@
+{% extends "visitor_base.html" %}
+{% load static %}
+
+{% block title %}Comment ça marche - Medcare{% endblock %}
+
+{% block visitor_page_class %} mc-how-page{% endblock %}
+
+{% block page_content %}
+  <header class="mc-page-hero mc-how-hero">
+    <div class="mc-container">
+      <div class="mc-how-kicker"><span class="mc-how-kicker-dot" aria-hidden="true"></span>Comment ça marche</div>
+      <h1>Trouvez, comparez,<br><em>réservez</em> vos examens</h1>
+      <p>De la recherche d'un acte à la confirmation du rendez-vous — un parcours complet, sans intermédiaire et sans commission sur les actes médicaux.</p>
+      <div class="mc-how-hero-stats" aria-label="Chiffres clés">
+        <div class="mc-how-hero-stat">
+          <div class="mc-how-hero-stat-val">450+</div>
+          <div class="mc-how-hero-stat-label">Actes</div>
+        </div>
+        <div class="mc-how-hero-stat">
+          <div class="mc-how-hero-stat-val">16</div>
+          <div class="mc-how-hero-stat-label">Structures</div>
+        </div>
+        <div class="mc-how-hero-stat">
+          <div class="mc-how-hero-stat-val">6</div>
+          <div class="mc-how-hero-stat-label">Piliers</div>
+        </div>
+        <div class="mc-how-hero-stat">
+          <div class="mc-how-hero-stat-val mc-how-hero-stat-val--accent">0%</div>
+          <div class="mc-how-hero-stat-label">Commission</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="mc-how-switch" aria-label="Choisir votre profil">
+    <div class="mc-container">
+      <div class="mc-toggle-wrap">
+        <button type="button" class="mc-toggle-btn active" data-profile="patient" onclick="switchProfile('patient', this)">
+          <span class="mc-toggle-emoji" aria-hidden="true">🔎</span> Je suis patient
+        </button>
+        <button type="button" class="mc-toggle-btn mc-toggle-btn--struct" data-profile="soignant" onclick="switchProfile('soignant', this)">
+          <span class="mc-toggle-emoji" aria-hidden="true">🏥</span> Je suis une structure
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div id="content-patient" class="mc-how-flow mc-how-flow--patient" data-profile-content>
+    <div class="mc-how-flow-intro">
+      <div class="mc-container">
+        <span class="mc-how-flow-tag mc-how-flow-tag--patient">Côté patient · sur mobile</span>
+        <h2>Du symptôme au rendez-vous, en <em>8 étapes</em></h2>
+      </div>
+    </div>
+
+    <div class="mc-how-steps">
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">01</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Recherche</span>
+              <h3>Cherchez votre acte sur l'accueil</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static "images/Cherchez votre acte sur l'accueil.png" %}" alt="Recherche d'un acte sur l'accueil MedCare" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Recherche par nom ou par pilier</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Tri par prix, couverture ou distance</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>450+ actes · 16 structures · 0% commission</li>
+              </ul>
+              <p>Depuis l'écran d'accueil, recherchez un examen par son nom ou explorez les 6 piliers paracliniques. Tout est gratuit et sans compte : 450+ actes, 16 structures partenaires, zéro commission.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">02</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Sélection</span>
+              <h3>Sélectionnez vos actes</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Sélection multiple d'actes</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Nombre de structures par acte affiché</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Recherche et filtre dans la liste</li>
+              </ul>
+              <p>Dans un pilier (ici Biologie médicale), cochez tous les actes dont vous avez besoin. Le compteur « sélectionnés » se met à jour, et chaque acte indique le nombre de structures qui le proposent.</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Sélectionnez vos actes.png' %}" alt="Sélection d'actes dans un pilier" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">03</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Comparaison</span>
+              <h3>Comparez les structures par couverture</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Comparez les structures par couverture.png' %}" alt="Comparaison des structures par couverture d'actes" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Tri par couverture (4/4 actes)</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Détail prix, assurances &amp; badge Pionnier</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Ajout groupé au panier en un geste</li>
+              </ul>
+              <p>MedCare trie les structures selon leur couverture de votre sélection. Le Laboratoire BioSanté Mermoz couvre 4/4 actes : vous voyez le détail des prix, les assurances et le total — puis vous ajoutez tout au panier.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">04</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Panier</span>
+              <h3>Validez votre panier</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Panier groupé par structure</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Pris en charge / reste à payer calculés</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Réservation en un clic</li>
+              </ul>
+              <p>Le panier regroupe vos actes par structure, avec le total et la part prise en charge par vos assurances. Un bouton « Réserver mes actes » lance la demande de devis.</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Validez votre panier.png' %}" alt="Validation du panier patient" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">05</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Devis</span>
+              <h3>Recevez un devis détaillé</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/recevez un devis détaillé.png' %}" alt="Devis détaillé dans la conversation" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Devis automatique avec référence unique</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Structure, horaires, assurances &amp; détail des actes</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Bouton « Prendre RDV » directement dans le chat</li>
+              </ul>
+              <p>La conversation s'ouvre avec le secrétariat de la structure. MedCare y génère automatiquement un devis chiffré et référencé, reprenant structure, horaires, assurances et le détail des actes — tarifs indicatifs, zéro commission.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">06</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Créneau</span>
+              <h3>Choisissez votre créneau</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Disponibilités réelles de la structure</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Sélection directe dans le chat</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Créneaux occupés grisés automatiquement</li>
+              </ul>
+              <p>Toujours dans la conversation, la structure propose ses disponibilités réelles. Vous touchez le créneau qui vous convient — les horaires déjà pris sont grisés.</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Choisissez votre créneau.png' %}" alt="Choix d'un créneau de rendez-vous" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">07</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Confirmation</span>
+              <h3>Votre RDV est confirmé</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Votre RDV est confirmé.png' %}" alt="Confirmation du rendez-vous" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Transmission instantanée + WhatsApp</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Accusé puis confirmation dans le chat</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Référence de dossier à présenter à l'accueil</li>
+              </ul>
+              <p>Votre demande est transmise à la structure et par WhatsApp. Vous recevez d'abord un accusé « en attente », puis la confirmation avec une référence de dossier à présenter à l'accueil.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">08</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Suivi</span>
+              <h3>Suivez tout depuis votre tableau de bord</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>KPIs : RDV, devis, assurances, panier</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Prochain RDV confirmé avec détail complet</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Historique et rappels centralisés</li>
+              </ul>
+              <p>Votre espace personnel récapitule l'essentiel : RDV à venir, devis en attente, assurances et actes au panier. Le prochain rendez-vous confirmé s'affiche avec son détail complet et sa référence de paiement.</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Suivez tout depuis votre tableau de bord.png' %}" alt="Tableau de bord patient MedCare" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div id="content-soignant" class="mc-how-flow mc-how-flow--struct" data-profile-content>
+    <div class="mc-how-flow-intro">
+      <div class="mc-container">
+        <span class="mc-how-flow-tag mc-how-flow-tag--struct">Côté structure · sur ordinateur</span>
+        <h2>De l'inscription aux réservations, en <em>6 étapes</em></h2>
+      </div>
+    </div>
+
+    <div class="mc-how-steps">
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">01</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Inscription</span>
+              <h3>Créez votre compte structure</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Créez votre compte structure.png' %}" alt="Création du compte structure prestataire" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Formulaire unique pour tous les profils</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Type de compte Prestataire / Patient</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Compte protégé par chiffrement</li>
+              </ul>
+              <p>Inscrivez-vous en quelques minutes : informations de l'établissement, contact et identifiants. Sélectionnez le type de compte « Prestataire » pour accéder à l'espace structure.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">02</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Catalogue</span>
+              <h3>Déclarez votre type, pilier et catalogue</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>8 types de structure · pilier auto-activé</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Tarif, délai &amp; activation par acte</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Option prélèvement à domicile</li>
+              </ul>
+              <p>Choisissez votre type de structure (laboratoire, imagerie, clinique…) : le pilier d'activité s'active automatiquement. Renseignez ensuite chaque acte avec son tarif, son délai de résultat et son statut actif. Activez le prélèvement à domicile si besoin.</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Déclarez votre type, pilier et catalogue.png' %}" alt="Déclaration du catalogue d'actes" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">03</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Profil public</span>
+              <h3>Obtenez votre fiche publique</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Obtenez votre fiche publique.png' %}" alt="Fiche publique de la structure" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Fiche complète : identité, horaires, assurances</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Actes avec prix, reste à charge &amp; délai</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Bouton Devis WhatsApp &amp; itinéraire</li>
+              </ul>
+              <p>Votre établissement dispose d'une fiche publique complète, visible par les patients : identité, horaires, assurances acceptées, prélèvement à domicile et catalogue d'actes avec prix, reste à charge et délais. Le badge Partenaire Pionnier est affiché.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">04</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Devis</span>
+              <h3>Recevez et traitez les devis</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Devis automatiques avec actes &amp; montant</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Confirmer le RDV, refuser ou relancer</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Suivi par statut + valeur totale active</li>
+              </ul>
+              <p>Les demandes de devis générées par les patients arrivent automatiquement, avec actes, créneau souhaité, assurance et montant. Vous confirmez le RDV, refusez ou relancez — le tout suivi par statut (nouveaux, acceptés, expirés).</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Recevez et traitez les devis.png' %}" alt="Traitement des devis WhatsApp reçus" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">05</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Réservations</span>
+              <h3>Validez vos réservations</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-left">
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Validez vos réservations.png' %}" alt="Validation des réservations prestataire" loading="lazy">
+              </div>
+            </div>
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Tableau complet : patient, actes, assurance, créneau</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Statuts : en attente, confirmé, honoré, no-show</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Vue liste ou calendrier</li>
+              </ul>
+              <p>Toutes les réservations entrantes sont centralisées dans un tableau clair : référence, patient, actes, assurance, créneau, montant et statut. Confirmez, marquez honoré ou no-show, en vue liste ou calendrier.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="mc-how-step">
+        <div class="mc-container">
+          <header class="mc-how-step-banner">
+            <span class="mc-how-step-num">06</span>
+            <div class="mc-how-step-heading">
+              <span class="mc-how-step-label">Paramètres</span>
+              <h3>Pilotez votre compte et votre équipe</h3>
+            </div>
+          </header>
+          <div class="mc-how-step-grid mc-how-step-grid--img-right">
+            <div class="mc-how-step-text">
+              <ul class="mc-how-feats">
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Rôles &amp; invitations d'utilisateurs</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Notifications fines (devis, RDV, no-show)</li>
+                <li><span class="mc-how-feat-check" aria-hidden="true">✓</span>Préférences : langue, devise, affichage tarifs</li>
+              </ul>
+              <p>Gérez votre compte administrateur, invitez des utilisateurs avec des rôles (administrateur, secrétaire, lecture seule), réglez vos notifications et vos préférences — langue, devise, période du dashboard et affichage des tarifs sur le profil public.</p>
+            </div>
+            <div class="mc-how-step-visual">
+              <div class="mc-how-shot">
+                <img src="{% static 'images/Pilotez votre compte et votre équipe.png' %}" alt="Paramètres du compte et gestion de l'équipe" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <section class="mc-how-band" aria-labelledby="mc-how-band-title">
+    <div class="mc-container mc-how-band-inner">
+      <h2 id="mc-how-band-title">Zéro commission. Par principe.</h2>
+      <p>MedCare est un annuaire paraclinique digital : un modèle d'abonnement SaaS, jamais de prélèvement sur les actes médicaux. Le prix que vous voyez est le tarif net déclaré par la structure.</p>
+      <p class="mc-how-band-badge"><span aria-hidden="true">✓</span> Conforme Art. 11 · Décret N°67-147</p>
+    </div>
+  </section>
+
+  <section class="mc-section mc-faq">
+    <div class="mc-container">
+      <div class="mc-section-tag">FAQ</div>
+      <h2>Questions <em>fréquentes</em></h2>
+
+      <div class="mc-faq-grid">
+        <div class="mc-faq-item">
+          <div class="mc-faq-question">Faut-il un compte pour chercher un acte ? <i class="ti ti-chevron-down"></i></div>
+          <div class="mc-faq-answer">Non. La recherche, le tri et la comparaison sont libres et gratuits. Un compte n'est requis qu'au moment de générer un devis et de réserver un créneau.</div>
+        </div>
+        <div class="mc-faq-item">
+          <div class="mc-faq-question">MedCare prend-il une commission sur les actes ? <i class="ti ti-chevron-down"></i></div>
+          <div class="mc-faq-answer">Jamais. Le tarif affiché est le tarif net déclaré par la structure. MedCare se rémunère uniquement via l'abonnement SaaS des structures.</div>
+        </div>
+        <div class="mc-faq-item">
+          <div class="mc-faq-question">Où se passe la prise de rendez-vous ? <i class="ti ti-chevron-down"></i></div>
+          <div class="mc-faq-answer">Directement dans la conversation avec le secrétariat de la structure : devis, choix du créneau et confirmation se font dans le même fil, avec une référence de dossier unique.</div>
+        </div>
+        <div class="mc-faq-item">
+          <div class="mc-faq-question">Les prix affichés sont-ils garantis ? <i class="ti ti-chevron-down"></i></div>
+          <div class="mc-faq-answer">Ce sont des tarifs indicatifs déclarés et datés par les établissements. Le devis reprend le montant au moment de la demande ; confirmez toujours à l'accueil.</div>
+        </div>
+        <div class="mc-faq-item">
+          <div class="mc-faq-question">Comment retrouver mes rendez-vous ? <i class="ti ti-chevron-down"></i></div>
+          <div class="mc-faq-answer">Votre tableau de bord récapitule RDV à venir, devis en attente, assurances et actes au panier, avec le détail complet de chaque réservation.</div>
+        </div>
+        <div class="mc-faq-item">
+          <div class="mc-faq-question">Mes assurances sont-elles prises en compte ? <i class="ti ti-chevron-down"></i></div>
+          <div class="mc-faq-answer">Oui. Les assurances acceptées par chaque structure sont affichées, et le panier estime la part prise en charge ainsi que le reste à payer.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mc-how-cta" aria-labelledby="mc-how-cta-title">
+    <div class="mc-container mc-how-cta-inner">
+      <h2 id="mc-how-cta-title">Prêt à commencer ?</h2>
+      <p>Patients : trouvez et réservez vos examens en quelques minutes. Structures : rejoignez le premier annuaire paraclinique digital du Sénégal.</p>
+      <div class="mc-how-cta-actions">
+        <a href="{% url 'healthcare:search' %}" class="mc-btn-primary">Trouver un service →</a>
+        <a href="{% url 'users:register' %}" class="mc-how-btn-ghost">Rejoindre MedCare</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function switchProfile(profile, btn) {
+      document.querySelectorAll('.mc-toggle-btn').forEach(function (b) {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      document.querySelectorAll('[data-profile-content]').forEach(function (c) {
+        c.classList.remove('active');
+      });
+      document.getElementById('content-' + profile).classList.add('active');
+    }
+
+    document.querySelectorAll('.mc-faq-question').forEach(function (q) {
+      q.addEventListener('click', function () {
+        q.parentElement.classList.toggle('active');
+      });
+    });
+
+    document.getElementById('content-patient').classList.add('active');
+
+    // Animations d'entrée au scroll pour les étapes
+    (function () {
+      var steps = document.querySelectorAll('.mc-how-step');
+      if (!steps.length) return;
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('mc-step-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        steps.forEach(function (el) { observer.observe(el); });
+      } else {
+        // Fallback : tout rendre visible immédiatement
+        steps.forEach(function (el) { el.classList.add('mc-step-visible'); });
+      }
+    })();
+  </script>
+{% endblock %}

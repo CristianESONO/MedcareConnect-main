@@ -1,0 +1,291 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} — MedCare Admin</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo-sm.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="flex h-full bg-gray-100">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-primary-500 transition-transform duration-200 lg:translate-x-0 -translate-x-full">
+        <!-- Logo -->
+        <div class="border-b border-primary-400 px-4 py-4">
+            <div class="rounded-lg bg-white px-2.5 py-2">
+                <img src="{% static 'images/MEDCARE.png' %}" alt="MedCare Connect" class="h-9 w-full max-w-[11.5rem] object-contain object-left">
+            </div>
+            <span class="mt-2 block text-[10px] font-semibold uppercase tracking-widest text-primary-300">Administration</span>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 overflow-y-auto px-3 py-4">
+            <ul class="space-y-1">
+                {% with current=request.resolver_match.url_name %}
+
+                <li>
+                    <a href="{% url 'dashboard:index' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'index' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z"/>
+                        </svg>
+                        Tableau de bord
+                    </a>
+                </li>
+
+                <li class="pt-4">
+                    <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Gestion</span>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:users_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'users_list' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/>
+                        </svg>
+                        Utilisateurs
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:organismes_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'organismes_list' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"/>
+                        </svg>
+                        Prestataires
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:services_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'services_list' or current == 'service_create' or current == 'service_edit' or current == 'service_delete' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5"/>
+                        </svg>
+                        Services médicaux
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:actes_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'actes_list' or current == 'acte_create' or current == 'acte_edit' or current == 'acte_delete' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/>
+                        </svg>
+                        Actes médicaux
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:assurances_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'assurances_list' or current == 'assurance_create' or current == 'assurance_edit' or current == 'assurance_delete' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+                        </svg>
+                        Assurances
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:subscriptions_overview' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'subscriptions_overview' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/>
+                        </svg>
+                        Abonnements
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:subscription_plans_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'subscription_plans_list' or current == 'subscription_plan_create' or current == 'subscription_plan_edit' or current == 'subscription_plan_delete' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"/>
+                        </svg>
+                        <span class="text-xs font-normal">↳ Formules</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:subscription_features_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'subscription_features_list' or current == 'subscription_feature_create' or current == 'subscription_feature_edit' or current == 'subscription_feature_delete' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6Z"/>
+                        </svg>
+                        <span class="text-xs font-normal">↳ Droits (catalogue)</span>
+                    </a>
+                </li>
+
+                <li class="pt-4">
+                    <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Activité</span>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:devis_overview' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'devis_overview' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/>
+                        </svg>
+                        Devis WhatsApp
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:finances' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'finances' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"/>
+                        </svg>
+                        Finances & MRR
+                    </a>
+                </li>
+
+                <li class="pt-4">
+                    <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Pionniers CPP-2025</span>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:pioneers_overview' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'pioneers_overview' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+                        </svg>
+                        Slots Pionniers
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:bilans_overview' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'bilans_overview' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+                        </svg>
+                        Bilans KPI M5
+                    </a>
+                </li>
+
+                <li class="pt-4">
+                    <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Conformité</span>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:conformite' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'conformite' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/>
+                        </svg>
+                        Données & CDP
+                    </a>
+                </li>
+
+                <li class="pt-4">
+                    <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Modération</span>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard:reviews_list' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'reviews_list' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+                        </svg>
+                        Avis
+                    </a>
+                </li>
+
+                <li class="pt-4">
+                    <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Notifications</span>
+                </li>
+
+                <li>
+                    <a href="{% url 'notifications:admin_settings' %}"
+                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                              {% if current == 'admin_settings' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a6.759 6.759 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                        </svg>
+                        Notifications
+                    </a>
+                </li>
+
+                {% endwith %}
+            </ul>
+        </nav>
+
+        <!-- Bottom user section -->
+        <div class="border-t border-primary-400 px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent-400 text-xs font-bold text-white">
+                    {{ user.username|make_list|first|upper }}
+                </div>
+                <div class="flex-1 truncate">
+                    <p class="truncate text-sm font-medium text-white">{{ user.display_name }}</p>
+                    <p class="text-[11px] text-primary-300">Superadmin</p>
+                </div>
+            </div>
+            <div class="mt-3 flex gap-2">
+                <a href="{% url 'home' %}" class="flex-1 rounded-md bg-primary-400/50 px-2 py-1.5 text-center text-xs font-medium text-primary-100 transition hover:bg-primary-400">Retour au site</a>
+                <a href="{% url 'users:logout' %}" class="flex-1 rounded-md bg-primary-400/50 px-2 py-1.5 text-center text-xs font-medium text-primary-100 transition hover:bg-red-500/80 hover:text-white">Déconnexion</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main content -->
+    <div class="flex flex-1 flex-col lg:pl-64">
+        <!-- Top bar -->
+        <header class="sticky top-0 z-20 flex h-14 items-center gap-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:px-6">
+            <button onclick="toggleSidebar()" class="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 lg:hidden">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-900">{% block page_title %}Tableau de bord{% endblock %}</h1>
+            <div class="ml-auto flex items-center gap-3">
+                <a href="/admin/" target="_blank" class="rounded-md bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-200">Django Admin</a>
+            </div>
+        </header>
+
+        {% include "partials/flash_toasts.html" %}
+
+        <!-- Page content -->
+        <main class="flex-1 p-4 sm:p-6">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

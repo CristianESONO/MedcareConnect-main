@@ -1,0 +1,152 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static subscription_plans humanize %}
+{% block title %}Abonnement{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'healthcare/css/subscription_plans.css' %}">
+{% endblock %}
+
+{% block dash_content %}
+<div class="mcc-sub-plans">
+  <div class="mcc-sp-title-block">
+    <div class="mcc-sp-doc-type">Votre abonnement MedCare</div>
+    <div class="mcc-sp-doc-title">Formules d'abonnement</div>
+    <div class="mcc-sp-doc-subtitle">Comparez les offres. Pour changer de formule, <strong>cliquez sur la carte</strong> de votre choix puis validez en bas de page. Validation manuelle côté MedCare (pas de paiement en ligne pour l'instant).</div>
+  </div>
+
+  {% if org.subscription_plan %}
+  <div class="mcc-sp-current-banner">
+    <div class="mcc-sp-current-banner-label">Votre formule actuelle</div>
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-lg font-bold">{{ org.subscription_plan.name }}</span>
+      {% if org.subscription_plan.is_pioneer_offer %}
+      <span class="mcc-sp-pill mcc-sp-pill-amber">★ Partenaire Pionnier</span>
+      {% endif %}
+      {% if org.subscription_plan.monthly_price_fcfa %}
+      <span class="text-sm font-semibold text-primary-600">{{ org.subscription_plan.monthly_price_fcfa|floatformat:0|intcomma }} FCFA / mois</span>
+      {% else %}
+      <span class="text-sm font-semibold mc-text-accent-dark">Gratuit</span>
+      {% endif %}
+    </div>
+    {% if org.subscription_plan.short_description %}
+    <p class="mt-1 text-xs text-gray-600">{{ org.subscription_plan.short_description }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if pending_subscription_request %}
+  <div class="mb-5 flex flex-wrap items-start justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+    <div>
+      <p class="text-sm font-bold text-amber-900">Demande en cours</p>
+      <p class="mt-1 text-xs text-amber-800">
+        Vous avez demandé le passage à <strong>{{ pending_subscription_request.requested_plan.name }}</strong>
+        le {{ pending_subscription_request.created_at|date:"d/m/Y H:i" }}.
+      </p>
+      {% if pending_subscription_request.message_from_structure %}
+      <p class="mt-2 text-[11px] italic text-amber-900/80">« {{ pending_subscription_request.message_from_structure }} »</p>
+      {% endif %}
+    </div>
+    <form method="post" class="shrink-0">
+      {% csrf_token %}
+      <input type="hidden" name="cancel_subscription_request" value="1">
+      <button type="submit" class="rounded-xl border border-amber-300 bg-white px-3 py-2 text-xs font-bold text-amber-800 hover:bg-amber-100">Annuler la demande</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <div class="mcc-sp-section-header">
+    <div class="mcc-sp-section-num">1</div>
+    <div class="mcc-sp-section-title">Toutes les formules publiques</div>
+    <div class="mcc-sp-section-subtitle">
+      {% if can_request_subscription_change %}
+      Cartes sans badge « Actuelle » sélectionnables · complétez le message puis envoyez
+      {% elif pending_subscription_request %}
+      Demande en cours — lecture seule jusqu'à traitement
+      {% else %}
+      Contactez MedCare pour une offre sur mesure
+      {% endif %}
+    </div>
+  </div>
+
+  <p class="mb-4 text-[11px] leading-snug text-gray-400">Les fonctionnalités listées décrivent l'offre commerciale ; elles ne coupent pas encore l'accès aux écrans (contrôle technique à brancher plus tard si besoin).</p>
+
+  <div class="mcc-sp-plans-row">
+    {% for plan in plans %}
+      {% if org.subscription_plan_id == plan.id %}
+        {% include "healthcare/partials/_subscription_plan_card.html" with card_mode="current" plan_included_map=subscription_plan_included %}
+      {% elif pending_subscription_request %}
+        {% include "healthcare/partials/_subscription_plan_card.html" with card_mode="disabled" plan_included_map=subscription_plan_included %}
+      {% elif can_request_subscription_change %}
+        {% include "healthcare/partials/_subscription_plan_card.html" with card_mode="selectable" plan_included_map=subscription_plan_included %}
+      {% else %}
+        {% include "healthcare/partials/_subscription_plan_card.html" with card_mode="readonly" plan_included_map=subscription_plan_included %}
+      {% endif %}
+    {% empty %}
+    <p class="col-span-full text-sm text-gray-500">Aucune formule publique. Contactez l'administrateur MedCare.</p>
+    {% endfor %}
+  </div>
+
+  {% include "healthcare/partials/_subscription_medplaque_banner.html" %}
+
+  <div class="mcc-sp-section-header mt-8">
+    <div class="mcc-sp-section-num">2</div>
+    <div class="mcc-sp-section-title">Tableau comparatif — Features × Plans</div>
+    <div class="mcc-sp-section-subtitle">Nomenclature exacte SaaS app.medcare.sn</div>
+  </div>
+
+  {% include "healthcare/partials/_subscription_compare_table.html" with plan_included_map=subscription_plan_included %}
+
+  {% if org.subscription_plan and org.subscription_plan.is_pioneer_offer %}
+  <div class="mcc-sp-pionnier-block">
+    <div class="mcc-sp-pionnier-title">Vous êtes Partenaire Pionnier CPP-2025</div>
+    <div class="mcc-sp-pionnier-subtitle">Profitez de la période gratuite M0–M6 et du tarif bloqué à vie après validation du programme.</div>
+  </div>
+  {% endif %}
+</div>
+
+{% if can_request_subscription_change %}
+<div class="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+  <h2 class="text-sm font-bold text-gray-900">Finaliser votre demande</h2>
+  <p class="mt-1 text-xs text-gray-500">Ajoutez un message si besoin (contexte, date souhaitée, etc.), puis envoyez.</p>
+
+  <form id="subscription-change-form" method="post" class="mt-5 space-y-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% if form.requested_plan.errors %}
+    <div class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800">{{ form.requested_plan.errors }}</div>
+    {% endif %}
+
+    <div>
+      <label for="id_message_from_structure" class="text-xs font-semibold text-gray-700">{{ form.message_from_structure.label }}</label>
+      <div class="mt-1">{{ form.message_from_structure }}</div>
+      {{ form.message_from_structure.errors }}
+    </div>
+
+    <button type="submit" class="rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-accent-600">Envoyer la demande pour la formule sélectionnée</button>
+  </form>
+</div>
+{% endif %}
+
+{% if subscription_history %}
+<div class="mt-10">
+  <h2 class="text-sm font-bold text-gray-900">Historique des demandes</h2>
+  <ul class="mt-3 divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
+    {% for h in subscription_history %}
+    <li class="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+      <div>
+        <span class="font-medium text-gray-800">
+          {% if h.previous_plan %}{{ h.previous_plan.name }}{% else %}—{% endif %}
+          → {{ h.requested_plan.name }}
+        </span>
+        <span class="ml-2 text-xs text-gray-400">{{ h.created_at|date:"d/m/Y H:i" }}</span>
+      </div>
+      <span class="rounded-full px-2 py-0.5 text-[10px] font-bold {% if h.status == 'pending' %}bg-amber-100 text-amber-800 {% elif h.status == 'approved' %}mc-bg-accent-light mc-text-accent-dark {% elif h.status == 'rejected' %}bg-rose-100 text-rose-800 {% else %}bg-gray-100 text-gray-600{% endif %}">{{ h.get_status_display }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,95 @@
+{% load static %}
+<footer class="mc-landing-footer" id="mc-landing-footer">
+  <div class="mc-footer-glow" aria-hidden="true"></div>
+  <div class="mc-container mc-footer-inner">
+    <div class="mc-footer-grid">
+      <div class="mc-footer-col mc-footer-col--newsletter">
+        <div class="mc-footer-brand-col">
+          <a href="{% url 'landing' %}" class="mc-footer-logo-link" aria-label="MedCare">
+            <img src="{% static 'images/logo.png' %}" alt="MedCare Connect" class="mc-brand-logo" width="176" height="40" decoding="async">
+          </a>
+          <p class="mc-footer-tagline">L'infrastructure paraclinique digitale du Sénégal.</p>
+        </div>
+        <div class="mc-footer-newsletter-block">
+          <h5 class="mc-footer-newsletter-title">Newsletter</h5>
+          <form class="mc-footer-newsletter" action="#" method="post" onsubmit="return false;">
+            <label class="mc-footer-sr-only" for="mc-footer-prenom">Prénom</label>
+            <input type="text" id="mc-footer-prenom" name="prenom" class="mc-footer-input" placeholder="Prénom *" required autocomplete="given-name">
+            <label class="mc-footer-sr-only" for="mc-footer-email">Adresse de messagerie</label>
+            <input type="email" id="mc-footer-email" name="email" class="mc-footer-input" placeholder="Adresse e-mail *" required autocomplete="email">
+            <button type="submit" class="mc-footer-submit">S'abonner</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="mc-footer-col">
+        <h5 class="mc-footer-title">Services</h5>
+        <ul class="mc-footer-links">
+          {% for service in footer_pillars %}
+          <li><a href="{% url 'healthcare:service_detail' service.slug %}">{{ service.name|upper }}</a></li>
+          {% empty %}
+          {% for pillar in pillars %}
+          <li><a href="{% url 'healthcare:service_detail' pillar.service.slug %}">{{ pillar.service.name|upper }}</a></li>
+          {% empty %}
+          <li><a href="{% url 'healthcare:search' %}">Biologie médicale</a></li>
+          <li><a href="{% url 'healthcare:search' %}">Imagerie médicale</a></li>
+          <li><a href="{% url 'healthcare:search' %}">Explorations fonctionnelles</a></li>
+          <li><a href="{% url 'healthcare:search' %}">Ambulance médicalisée</a></li>
+          <li><a href="{% url 'healthcare:search' %}">Soins dentaires</a></li>
+          <li><a href="{% url 'healthcare:search' %}">Soins spécialisés</a></li>
+          {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="mc-footer-col">
+        <h5 class="mc-footer-title">Navigation</h5>
+        <ul class="mc-footer-links">
+          <li><a href="{% url 'healthcare:search' %}">Trouver un service</a></li>
+          <li><a href="{% url 'users:register' %}">Rejoindre MedCare</a></li>
+          <li><a href="{% url 'how_it_works' %}">Comment ça marche</a></li>
+          <li><a href="{% url 'about' %}">À propos</a></li>
+          <li><a href="{% url 'contact' %}">Politique de confidentialités</a></li>
+          <li><a href="{% url 'contact' %}">Mentions légales</a></li>
+        </ul>
+      </div>
+
+      <div class="mc-footer-col">
+        <h5 class="mc-footer-title">Contactez-nous</h5>
+        <ul class="mc-footer-contact">
+          <li>
+            <span class="mc-footer-contact-icon" aria-hidden="true"><i class="ti ti-map-pin"></i></span>
+            <span>Point E-Dakar Sénégal, 4890</span>
+          </li>
+          <li>
+            <span class="mc-footer-contact-icon" aria-hidden="true"><i class="ti ti-mail"></i></span>
+            <a href="mailto:contact@medcare.sn">contact@medcare.sn</a>
+          </li>
+          <li>
+            <span class="mc-footer-contact-icon" aria-hidden="true"><i class="ti ti-phone"></i></span>
+            <a href="tel:+221781673189">+221 78 167 31 89</a>
+          </li>
+        </ul>
+        <div class="mc-footer-social">
+          <a href="#" class="mc-footer-social-link" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
+          <a href="#" class="mc-footer-social-link" aria-label="X"><i class="ti ti-brand-x"></i></a>
+          <a href="#" class="mc-footer-social-link" aria-label="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
+          <a href="#" class="mc-footer-social-link" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mc-footer-bottom-bar">
+    <div class="mc-container mc-footer-inner">
+      <div class="mc-footer-bottom">
+        <p class="mc-footer-copy">&copy;{% now "Y" %} MedCare.sn &ndash; Tous droits réservés</p>
+        <nav class="mc-footer-legal" aria-label="Liens légaux">
+          <a href="{% url 'contact' %}">Privacy policy</a>
+          <a href="{% url 'contact' %}">Terms &amp; Conditions</a>
+          <a href="{% url 'contact' %}">FAQs</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>

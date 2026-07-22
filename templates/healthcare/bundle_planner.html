@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Composer mon parcours d'examens{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="rounded-2xl border border-primary-100 bg-gradient-to-br from-primary-500 to-primary-700 p-6 text-white shadow-lg sm:p-8">
+        <p class="text-xs font-semibold uppercase tracking-wider text-primary-200">Parcours patient</p>
+        <h1 class="mt-1 text-2xl font-bold sm:text-3xl">Composer un lot d'examens</h1>
+        <p class="mt-3 max-w-2xl text-sm text-primary-100">
+            Ajoutez les examens souhaités (ou choisissez un lot prédéfini). Nous proposons plusieurs <strong>combinaisons de centres</strong> selon le
+            <strong>prix total</strong>, la <strong>proximité</strong> ou un <strong>seul lieu</strong>. Vous pouvez ensuite <strong>changer de centre</strong> ligne par ligne avant d'ajouter au panier.
+        </p>
+    </div>
+
+    <!-- Lots prédéfinis -->
+    <section class="mt-8">
+        <h2 class="text-lg font-semibold text-gray-900">Lots prédéfinis</h2>
+        <p class="mt-1 text-sm text-gray-500">Un clic charge les examens du lot — vous pouvez en retirer ou en ajouter.</p>
+        <div id="preset-scroll" class="mt-4 flex gap-3 overflow-x-auto pb-2 scrollbar-thin"></div>
+    </section>
+
+    <!-- Recherche + sélection -->
+    <section class="mt-10 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-900">Vos examens</h2>
+        <div class="relative mt-3">
+            <label for="acte-search" class="sr-only">Rechercher un examen</label>
+            <input id="acte-search" type="search" autocomplete="off" placeholder="Ex. NFS, IRM, échographie, glycémie…" class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-accent-400 focus:ring-2 focus:ring-accent-400/20 focus:outline-none">
+            <div id="search-results" class="absolute z-20 mt-1 hidden max-h-56 w-full overflow-auto rounded-xl border border-gray-200 bg-white py-1 shadow-lg"></div>
+        </div>
+        <div id="selected-chips" class="mt-4 flex min-h-[2.5rem] flex-wrap gap-2"></div>
+        <p id="selection-empty" class="mt-2 text-sm text-amber-600">Ajoutez au moins un examen pour comparer les centres.</p>
+    </section>
+
+    <!-- Position (optionnel) -->
+    <section class="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-900">Votre position <span class="text-sm font-normal text-gray-400">(optionnel)</span></h2>
+        <p class="mt-1 text-sm text-gray-500">Pour classer les scénarios « plus proches » et le compromis prix / distance.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+            <button type="button" id="btn-geo" class="rounded-lg bg-accent-400 px-4 py-2 text-sm font-semibold text-white hover:bg-accent-500">Utiliser ma position</button>
+            <span class="text-xs text-gray-400" id="geo-status"></span>
+        </div>
+        <input type="hidden" id="lat" value="">
+        <input type="hidden" id="lng" value="">
+    </section>
+
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button type="button" id="btn-plan" class="rounded-xl bg-primary-500 px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50">
+            Comparer les combinaisons
+        </button>
+        <span id="plan-loading" class="hidden text-sm text-gray-500">Calcul en cours…</span>
+    </div>
+
+    <div id="warnings" class="mt-4 hidden rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"></div>
+
+    <!-- Résultats -->
+    <div id="plans-root" class="mt-8 space-y-6"></div>
+</div>
+
+<script>
+(function() {
+    const URL_PLAN = "{% url 'healthcare:api_bundle_plan' %}";
+    const URL_ACTES = "{% url 'healthcare:api_actes_autocomplete' %}";
+    const URL_SAVE = "{% url 'healthcare:bundle_save_session' %}";
+    const URL_ALT = "{{ pa_alternatives_url_tpl }}";
+    const URL_ADD_BUNDLE = "{% url 'cart:cart_add_bundle' %}";
+    const LOGIN_URL = "{% url 'users:login' %}?next={% url 'healthcare:bundle_planner' %}";
+    const IS_AUTH = {{ user.is_authenticated|yesno:"true,false" }};
+    const IS_PATIENT = {% if user.is_authenticated and user.is_patient %}true{% else %}false{% endif %};
+
+    const presets = {{ presets_json|safe }};
+    const initialIds = {{ initial_acte_ids_json|safe }};
+
+    function getCookie(name) {
+        const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return m ? decodeURIComponent(m[2]) : '';
+    }
+    function getCsrfToken() {
+        const inp = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        if (inp && inp.value) return inp.value;
+        return getCookie('csrftoken') || '';
+    }
+    const csrftoken = getCsrfToken();
+
+    const state = {
+        actes: new Map(),
+        plans: [],
+        loadedAlts: new Set(),
+    };
+
+    function saveSession() {
+        const ids = [...state.actes.keys()];
+        fetch(URL_SAVE, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+            body: JSON.stringify({acte_ids: ids}),
+        }).catch(() => {});
+    }
+
+    function renderPresets() {
+        const el = document.getElementById('preset-scroll');
+        el.innerHTML = '';
+        presets.forEach(p => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'shrink-0 rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-accent-300 hover:shadow-md';
+            btn.innerHTML = `<span class="text-xl">${p.icon || '📋'}</span><div class="mt-1 font-semibold text-gray-900">${escapeHtml(p.name)}</div><div class="text-xs text-gray-500">${escapeHtml(p.teaser || '')}</div>`;
+            btn.addEventListener('click', () => {
+                p.acte_ids.forEach((id, i) => {
+                    const label = p.acte_labels[i] || ('#' + id);
+                    state.actes.set(id, label);
+                });
+                renderChips();
+                saveSession();
+            });
+            el.appendChild(btn);
+        });
+    }
+
+    function escapeHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    function renderChips() {
+        const box = document.getElementById('selected-chips');
+        const empty = document.getElementById('selection-empty');
+        box.innerHTML = '';
+        state.actes.forEach((label, id) => {
+            const chip = document.createElement('span');
+            chip.className = 'inline-flex items-center gap-1 rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-800';
+            chip.innerHTML = `${escapeHtml(label)} <button type="button" class="ml-1 font-bold text-primary-500 hover:text-primary-700" data-rm="${id}">×</button>`;
+            box.appendChild(chip);
+        });
+        empty.classList.toggle('hidden', state.actes.size > 0);
+        box.querySelectorAll('[data-rm]').forEach(b => {
+            b.addEventListener('click', () => {
+                state.actes.delete(+b.dataset.rm);
+                renderChips();
+                saveSession();
+            });
+        });
+    }
+
+    function setupSearch() {
+        const input = document.getElementById('acte-search');
+        const res = document.getElementById('search-results');
+        let t;
+        input.addEventListener('input', () => {
+            clearTimeout(t);
+            const q = input.value.trim();
+            if (q.length < 2) { res.classList.add('hidden'); return; }
+            t = setTimeout(async () => {
+                const r = await fetch(URL_ACTES + '?q=' + encodeURIComponent(q));
+                const j = await r.json();
+                res.innerHTML = '';
+                j.results.forEach(row => {
+                    const a = document.createElement('button');
+                    a.type = 'button';
+                    a.className = 'flex w-full flex-col px-4 py-2 text-left text-sm hover:bg-gray-50';
+                    a.innerHTML = `<span class="font-medium text-gray-900">${escapeHtml(row.name)}</span><span class="text-xs text-gray-400">${escapeHtml(row.service)}</span>`;
+                    a.addEventListener('click', () => {
+                        state.actes.set(row.id, row.name);
+                        renderChips();
+                        saveSession();
+                        input.value = '';
+                        res.classList.add('hidden');
+                    });
+                    res.appendChild(a);
+                });
+                res.classList.toggle('hidden', j.results.length === 0);
+            }, 220);
+        });
+        document.addEventListener('click', (e) => {
+            if (!res.contains(e.target) && e.target !== input) res.classList.add('hidden');
+        });
+    }
+
+    document.getElementById('btn-geo').addEventListener('click', () => {
+        const st = document.getElementById('geo-status');
+        if (!navigator.geolocation) { st.textContent = 'Géolocalisation non disponible'; return; }
+        st.textContent = 'Localisation…';
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                document.getElementById('lat').value = pos.coords.latitude;
+                document.getElementById('lng').value = pos.coords.longitude;
+                st.textContent = 'Position enregistrée.';
+            },
+            () => { st.textContent = 'Impossible d\'obtenir la position.'; }
+        );
+    });
+
+    function moneyXOF(n) {
+        const x = parseFloat(n);
+        if (isNaN(x)) return n;
+        return new Intl.NumberFormat('fr-FR').format(Math.round(x)) + ' XOF';
+    }
+
+    function recalcPlanCard(card) {
+        const rows = card.querySelectorAll('tbody tr');
+        let total = 0;
+        const orgs = new Set();
+        rows.forEach(tr => {
+            const sel = tr.querySelector('select.pa-swap');
+            const opt = sel.options[sel.selectedIndex];
+            total += parseFloat(opt.dataset.price || 0);
+            orgs.add(opt.dataset.orgId || '');
+        });
+        card.querySelector('.js-total').textContent = moneyXOF(total);
+        card.querySelector('.js-centers').textContent = orgs.size;
+        const avgEl = card.querySelector('.js-avgdist');
+        if (avgEl) avgEl.textContent = '—';
+    }
+
+    async function loadAlternatives(select, acteId) {
+        const lat = document.getElementById('lat').value;
+        const lng = document.getElementById('lng').value;
+        let url = URL_ALT.replace('__ACTE__', String(acteId));
+        if (lat && lng) url += (url.indexOf('?') >= 0 ? '&' : '?') + 'lat=' + encodeURIComponent(lat) + '&lng=' + encodeURIComponent(lng);
+        const r = await fetch(url);
+        const j = await r.json();
+        const cur = select.value;
+        select.innerHTML = '';
+        j.alternatives.forEach(alt => {
+            const o = document.createElement('option');
+            o.value = String(alt.prestataire_acte_id);
+            o.textContent = alt.organisme_name + ' — ' + moneyXOF(alt.price);
+            o.dataset.price = String(alt.price);
+            o.dataset.orgId = String(alt.organisme_id);
+            o.dataset.slug = alt.organisme_slug || '';
+            select.appendChild(o);
+        });
+        if ([...select.options].some(o => o.value === cur)) select.value = cur;
+    }
+
+    function renderPlans(data) {
+        const root = document.getElementById('plans-root');
+        root.innerHTML = '';
+        state.plans = data.plans || [];
+        if (!state.plans.length) {
+            root.innerHTML = '<p class="text-center text-gray-500">Aucun scénario disponible (offres manquantes ?).</p>';
+            return;
+        }
+        state.plans.forEach((plan, idx) => {
+            const card = document.createElement('div');
+            card.className = 'rounded-2xl border border-gray-200 bg-white p-5 shadow-sm';
+            const kindBadge = plan.kind === 'single_center' ? 'Un seul centre' : plan.kind === 'multi_price' ? 'Prix mini' : plan.kind === 'multi_proximity' ? 'Proximité' : 'Équilibre';
+            card.innerHTML = `
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <span class="rounded-full bg-primary-50 px-2 py-0.5 text-xs font-semibold text-primary-700">${kindBadge}</span>
+                        <h3 class="mt-2 text-lg font-bold text-gray-900">${escapeHtml(plan.title)}</h3>
+                        <p class="mt-1 text-sm text-gray-500">${escapeHtml(plan.subtitle || '')}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-400">Total estimé</p>
+                        <p class="js-total text-2xl font-bold text-accent-600">${moneyXOF(plan.total_price)}</p>
+                        <p class="mt-1 text-xs text-gray-500"><span class="js-centers">${plan.center_count}</span> centre(s)</p>
+                        <p class="js-avgdist text-xs text-gray-400">${plan.avg_distance_km != null ? plan.avg_distance_km + ' km (moy.)' : '—'}</p>
+                    </div>
+                </div>
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full min-w-[520px] text-left text-sm">
+                        <thead><tr class="border-b border-gray-100 text-xs uppercase text-gray-400">
+                            <th class="py-2 pr-2">Examen</th><th class="py-2 pr-2">Centre & tarif</th><th class="py-2">Lien</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-3">
+                    ${IS_PATIENT ? `<button type="button" class="js-add-cart rounded-lg bg-accent-400 px-4 py-2 text-sm font-semibold text-white hover:bg-accent-500" data-plan="${idx}">Tout ajouter au panier</button>` : (!IS_AUTH ? `<button type="button" class="js-add-cart-guest rounded-lg bg-accent-400 px-4 py-2 text-sm font-semibold text-white hover:bg-accent-500" data-plan="${idx}">Tout ajouter au panier</button>` : `<span class="text-xs text-gray-500">Réservé aux comptes patient pour le panier en ligne.</span>`)}
+                </div>
+            `;
+            const tb = card.querySelector('tbody');
+            plan.lines.forEach(ln => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-50';
+                tr.innerHTML = `
+                    <td class="py-3 pr-2 font-medium text-gray-900">${escapeHtml(ln.acte_name)}</td>
+                    <td class="py-3 pr-2">
+                        <select class="pa-swap w-full max-w-xs rounded-lg border border-gray-200 px-2 py-1.5 text-sm" data-acte-id="${ln.acte_id}">
+                            <option value="${ln.prestataire_acte_id}" data-price="${ln.price}" data-org-id="${ln.organisme_id}" data-slug="${ln.organisme_slug}">${escapeHtml(ln.organisme_name)} — ${moneyXOF(ln.price)}</option>
+                        </select>
+                    </td>
+                    <td class="py-3"><a href="/healthcare/${ln.organisme_slug}/" class="text-xs font-medium text-accent-600 hover:text-accent-700">Fiche</a></td>
+                `;
+                tb.appendChild(tr);
+                const sel = tr.querySelector('select');
+                async function onFirstFocus() {
+                    if (sel.dataset.loaded === '1') return;
+                    await loadAlternatives(sel, ln.acte_id);
+                    sel.dataset.loaded = '1';
+                    sel.removeEventListener('focus', onFirstFocus);
+                }
+                sel.addEventListener('focus', onFirstFocus);
+                sel.addEventListener('change', () => {
+                    recalcPlanCard(card);
+                    const opt = sel.options[sel.selectedIndex];
+                    const a = tr.querySelector('a');
+                    if (a && opt && opt.dataset.slug) a.href = '/healthcare/' + opt.dataset.slug + '/';
+                });
+            });
+            root.appendChild(card);
+        });
+
+        root.querySelectorAll('.js-add-cart').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const idx = +btn.dataset.plan;
+                const card = btn.closest('.rounded-2xl');
+                const sels = card.querySelectorAll('select.pa-swap');
+                const ids = [...sels].map(s => +s.value);
+                const r = await fetch(URL_ADD_BUNDLE, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                    body: JSON.stringify({prestataire_acte_ids: ids}),
+                });
+                if (r.ok) {
+                    window.location.href = '/cart/';
+                } else {
+                    const j = await r.json().catch(() => ({}));
+                    alert(j.error || 'Erreur lors de l\'ajout au panier.');
+                }
+            });
+        });
+        root.querySelectorAll('.js-add-cart-guest').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.rounded-2xl');
+                const sels = card.querySelectorAll('select.pa-swap');
+                const ids = [...sels].map(s => +s.value);
+                if (window.MedcareGuestCart) {
+                    window.MedcareGuestCart.addBulkPaIds(ids);
+                    window.location.href = '/cart/';
+                }
+            });
+        });
+    }
+
+    document.getElementById('btn-plan').addEventListener('click', async () => {
+        if (state.actes.size === 0) return;
+        const btn = document.getElementById('btn-plan');
+        const load = document.getElementById('plan-loading');
+        const warn = document.getElementById('warnings');
+        btn.disabled = true;
+        load.classList.remove('hidden');
+        warn.classList.add('hidden');
+        const lat = document.getElementById('lat').value;
+        const lng = document.getElementById('lng').value;
+        const body = {acte_ids: [...state.actes.keys()], save_selection: true};
+        if (lat && lng) { body.lat = lat; body.lng = lng; }
+        try {
+            const r = await fetch(URL_PLAN, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+                body: JSON.stringify(body),
+            });
+            const j = await r.json();
+            if (j.error) {
+                warn.textContent = j.error;
+                warn.classList.remove('hidden');
+                document.getElementById('plans-root').innerHTML = '';
+                return;
+            }
+            if (j.warnings && j.warnings.length) {
+                warn.textContent = j.warnings.join(' ');
+                warn.classList.remove('hidden');
+            }
+            renderPlans(j);
+        } finally {
+            btn.disabled = false;
+            load.classList.add('hidden');
+        }
+    });
+
+    /* Init */
+    renderPresets();
+    setupSearch();
+    initialIds.forEach(id => {
+        if (!state.actes.has(id)) state.actes.set(id, 'Examen #' + id);
+    });
+    renderChips();
+})();
+</script>
+{% endblock %}

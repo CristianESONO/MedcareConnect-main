@@ -1,0 +1,76 @@
+{% extends "visitor_base.html" %}
+{% load static %}
+
+{% block title %}Contactez-nous - MedCare Connect{% endblock %}
+
+{% block page_content %}
+  <header class="mc-page-hero">
+    <div class="mc-container">
+      <h1>Parlons de votre santé.</h1>
+      <p>Une question ? Un partenariat ? Notre équipe est à votre écoute pour vous accompagner.</p>
+    </div>
+  </header>
+
+  <section class="mc-section">
+    <div class="mc-container">
+      <div class="mc-contact-grid">
+        <div class="mc-contact-info">
+          <h2>Nous sommes à votre <em>écoute</em></h2>
+          <p class="mc-section-lead" style="margin-bottom: 48px;">Que vous soyez un patient ayant besoin d'aide pour une recherche ou un professionnel souhaitant rejoindre notre réseau, n'hésitez pas à nous contacter.</p>
+
+          <div class="mc-contact-item">
+            <div class="mc-contact-icon"><i class="ti ti-mail"></i></div>
+            <div class="mc-contact-text">
+              <h4>Email de support</h4>
+              <p>contact@medcare.sn</p>
+              <p>Réponse sous 24h ouvrées.</p>
+            </div>
+          </div>
+          <div class="mc-contact-item">
+            <div class="mc-contact-icon"><i class="ti ti-brand-whatsapp"></i></div>
+            <div class="mc-contact-text">
+              <h4>WhatsApp Direct</h4>
+              <p>+221 78 167 31 89</p>
+              <p>Disponible du lundi au samedi.</p>
+            </div>
+          </div>
+          <div class="mc-contact-item">
+            <div class="mc-contact-icon"><i class="ti ti-map-pin"></i></div>
+            <div class="mc-contact-text">
+              <h4>Siège social</h4>
+              <p>Point E, Dakar</p>
+              <p>Sénégal</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mc-contact-form-card">
+          <form action="#">
+            <div class="mc-form-group">
+              <label class="mc-form-label" for="contact-nom">Nom complet</label>
+              <input type="text" id="contact-nom" class="mc-form-input" placeholder="Ex: Moussa Diop">
+            </div>
+            <div class="mc-form-group">
+              <label class="mc-form-label" for="contact-email">Adresse Email</label>
+              <input type="email" id="contact-email" class="mc-form-input" placeholder="votre@email.com">
+            </div>
+            <div class="mc-form-group">
+              <label class="mc-form-label" for="contact-type">Vous êtes</label>
+              <select id="contact-type" class="mc-form-input">
+                <option>Un Patient</option>
+                <option>Un Professionnel de santé</option>
+                <option>Un Partenaire (Assurance...)</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="mc-form-group">
+              <label class="mc-form-label" for="contact-message">Votre message</label>
+              <textarea id="contact-message" class="mc-form-input" rows="5" placeholder="Comment pouvons-nous vous aider ?"></textarea>
+            </div>
+            <button type="submit" class="mc-btn-primary mc-btn-primary--block">Envoyer le message →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

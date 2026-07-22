@@ -1,0 +1,26 @@
+{% load subscription_plans %}
+<ul class="mcc-sp-feat-list plan-feat-editor-list" id="plan-feat-editor-list">
+  {% for feature in subscription_features_all %}
+  <li class="plan-feat-editor-row">
+    <input
+      type="checkbox"
+      class="plan-feat-editor-cb sr-only"
+      name="included_features"
+      id="feat-{{ feature.pk }}"
+      value="{{ feature.pk }}"
+      data-code="{{ feature.code }}"
+      {% if feature.pk in included_feature_ids %}checked{% endif %}
+    >
+    <label class="plan-feat-editor-label" for="feat-{{ feature.pk }}" data-code="{{ feature.code }}">
+      <span class="plan-feat-editor-icon mcc-sp-feat-off" aria-hidden="true">–</span>
+      <span class="plan-feat-editor-text mcc-sp-feat-text is-off">
+        <strong>{{ feature.label }}</strong>
+        {% if feature.description %}<span class="plan-feat-editor-desc">{{ feature.description }}</span>{% endif %}
+        <span class="plan-feat-editor-state">Désactivé</span>
+      </span>
+    </label>
+  </li>
+  {% empty %}
+  <li class="text-sm text-gray-400">Aucun module. <a href="{% url 'dashboard:subscription_feature_create' %}" class="text-primary-600 hover:underline">Créer un module</a>.</li>
+  {% endfor %}
+</ul>

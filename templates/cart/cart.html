@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mon panier{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+    <h1 class="text-2xl font-bold text-gray-900">Mon panier</h1>
+
+    {% if items_with_coverage %}
+    <div class="mt-8 grid gap-6 lg:grid-cols-3">
+        <div class="lg:col-span-2 grid gap-6 lg:grid-cols-1">
+            <div class="rounded-xl border border-gray-200 bg-white divide-y divide-gray-100 order-last lg:order-first">
+                {% regroup items_with_coverage by item.prestataire_acte.organisme as org_groups %}
+                {% for org_group in org_groups %}
+                <div class="divide-y divide-gray-100">
+                {% for entry in org_group.list %}
+                {% with item=entry.item %}
+                <div class="flex items-start gap-4 px-5 py-4">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-gray-900">{{ item.prestataire_acte.acte.name }}</p>
+                        <p class="text-xs text-gray-400">{{ item.prestataire_acte.organisme.name }}</p>
+                        {% if entry.coverage_rate %}<p class="mt-1 text-xs mc-text-accent">Couverture assurance : {{ entry.coverage_rate|floatformat:0 }}%</p>{% endif %}
+                    </div>
+                    <div class="text-right">
+                        <form method="POST" action="{% url 'cart:cart_update_quantity' item.pk %}" class="flex items-center gap-2">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-16 rounded-lg border border-gray-200 px-2 py-1 text-center text-sm" onchange="this.form.submit()">
+                        </form>
+                        <p class="mt-1 text-sm font-bold text-primary-500">{{ item.subtotal|floatformat:0 }} XOF</p>
+                        {% if entry.coverage_rate %}<p class="text-xs mc-text-accent">→ {{ entry.patient_cost|floatformat:0 }} XOF</p>{% endif %}
+                    </div>
+                    <a href="{% url 'cart:cart_remove' item.pk %}" class="mt-1 text-gray-300 hover:text-red-400" title="Retirer">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                    </a>
+                </div>
+                {% endwith %}
+                {% endfor %}
+                <div class="bg-gray-50 px-5 py-3 text-right">
+                    <a href="{% url 'cart:generate_devis' %}?org={{ org_group.grouper.pk }}" class="inline-flex rounded-lg bg-accent-400 px-4 py-2 text-xs font-semibold text-white hover:bg-accent-500">Réserver mes actes chez {{ org_group.grouper.name }}</a>
+                </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-3 flex justify-between order-first lg:order-last">
+                <a href="{% url 'healthcare:search' %}" class="text-sm font-medium text-accent-500 hover:text-accent-600">← Continuer la recherche</a>
+                <a href="{% url 'cart:cart_clear' %}" class="text-sm font-medium text-red-400 hover:text-red-500" onclick="return confirm('Vider le panier ?')">Vider le panier</a>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-4">
+            <div class="rounded-xl border border-gray-200 bg-white p-5">
+                <h2 class="text-sm font-semibold text-gray-900">Simulation assurance</h2>
+                <form method="POST" action="{% url 'cart:cart_select_insurance' %}" class="mt-3 space-y-2">
+                    {% csrf_token %}
+                    {{ insurance_form.media }}
+                    {% if insurance_form.insurance.errors %}
+                    <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                        {% for e in insurance_form.insurance.errors %}<p>{{ e }}</p>{% endfor %}
+                    </div>
+                    {% endif %}
+                    <label for="id_insurance" class="sr-only">Simulation assurance</label>
+                    <select name="insurance" id="id_insurance" lang="fr"
+                        data-minimum-input-length="0" data-theme="default" data-allow-clear="true"
+                        data-placeholder="Rechercher une assurance…" data-minimum-results-for-search="0" data-width="100%"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:ring-2 focus:ring-accent-400/20 focus:outline-none medcare-cart-insurance-select2"
+                        onchange="this.form.submit()">
+                        <option value="" data-empty="1"{% if not cart.selected_insurance %} selected{% endif %}>Sans assurance</option>
+                        {% for segment_label, lst in assurances_grouped %}
+                        <optgroup label="{{ segment_label }}">
+                            {% for a in lst %}
+                            <option value="{{ a.pk }}"{% if cart.selected_insurance and cart.selected_insurance.pk == a.pk %} selected{% endif %}>{{ a.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% empty %}
+                        {% endfor %}
+                    </select>
+                    {% if not assurances_grouped %}
+                    <p class="text-xs text-gray-500">Aucune assurance active en catalogue. « Sans assurance » reste disponible.</p>
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-5">
+                <h2 class="text-sm font-semibold text-gray-900">Récapitulatif</h2>
+                <dl class="mt-3 space-y-2 text-sm">
+                    <div class="flex justify-between"><dt class="text-gray-500">Total brut</dt><dd class="font-medium text-gray-900">{{ cart.total_price|floatformat:0 }} XOF</dd></div>
+                    {% if cart.selected_insurance %}
+                    <div class="flex justify-between"><dt class="text-gray-500">Prise en charge</dt><dd class="font-medium mc-text-accent">-{{ cart.insurance_savings|floatformat:0 }} XOF</dd></div>
+                    <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Reste à charge</dt><dd class="font-bold text-primary-500">{{ cart.total_after_insurance|floatformat:0 }} XOF</dd></div>
+                    {% else %}
+                    <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Total</dt><dd class="font-bold text-primary-500">{{ cart.total_price|floatformat:0 }} XOF</dd></div>
+                    {% endif %}
+                </dl>
+                <p class="mt-4 text-xs text-gray-500">Un bouton par structure : les actes d’un même prestataire partent dans une seule discussion.</p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="mt-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+        <p class="mt-3 text-gray-500">Votre panier est vide.</p>
+        <a href="{% url 'healthcare:search' %}" class="mt-4 inline-block rounded-lg bg-accent-400 px-6 py-2.5 text-sm font-semibold text-white hover:bg-accent-500">Rechercher des soins</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if items_with_coverage %}
+{% include "cart/partials/insurance_optgroup_select2_js.html" with medcare_insurance_select2_id="id_insurance" %}
+{% endif %}
+{% endblock %}

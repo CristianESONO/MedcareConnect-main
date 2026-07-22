@@ -1,0 +1,22 @@
+{% comment %}Sélecteur assurance panier — mobile patient.{% endcomment %}
+<div class="panier-insurance-m">
+  <form method="POST" action="{% url 'cart:cart_select_insurance' %}">
+    {% csrf_token %}
+    <label for="cart-mobile-insurance">Estimation assurance</label>
+    <select name="insurance" id="cart-mobile-insurance" class="panier-insurance-select" onchange="this.form.submit()">
+      <option value=""{% if not cart_insurance %} selected{% endif %}>Sans assurance (paiement direct)</option>
+      {% for segment_label, lst in assurances_grouped %}
+      <optgroup label="{{ segment_label }}">
+        {% for a in lst %}
+        <option value="{{ a.pk }}"{% if cart_insurance and cart_insurance.pk == a.pk %} selected{% endif %}>{{ a.name }}</option>
+        {% endfor %}
+      </optgroup>
+      {% endfor %}
+    </select>
+    {% if profile_insurance and not cart_insurance %}
+    <p class="panier-insurance-hint">Votre assurance ({{ profile_insurance.name }}) n'est pas appliquée à cette estimation.</p>
+    {% elif profile_insurance and cart_insurance and cart_insurance.pk != profile_insurance.pk %}
+    <p class="panier-insurance-hint">Profil : {{ profile_insurance.name }} — autre assurance sélectionnée pour cette estimation.</p>
+    {% endif %}
+  </form>
+</div>

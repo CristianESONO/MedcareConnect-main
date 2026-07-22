@@ -1,0 +1,848 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+{% block title %}Catalogue des actes{% endblock %}
+
+{% block dash_extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=5">
+{% endblock %}
+
+{% block dash_content %}
+{{ prep_data|json_script:"cat-prep-data" }}
+<div class="cat-page-head">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Catalogue des actes</h1>
+    <p class="mt-0.5 text-sm text-gray-500">Gérez vos actes, tarifs et délais · Modifiez et sauvegardez directement</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-2">
+    <span id="save-ind" class="cat-save-ind" aria-live="polite">✓ Sauvegardé</span>
+    <button type="submit" form="catalogue-form" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700">💾 Sauvegarder</button>
+  </div>
+</div>
+
+{# ── Type de structure ── #}
+<div class="cat-card mt-6">
+  <div class="cat-card-body">
+    <p class="cat-section-label">Type de structure</p>
+    <div class="cat-type-chips">
+      {% for chip in type_chips %}
+      <span class="cat-type-chip{% if chip.active %} is-active{% endif %}">
+        <span>{{ chip.icon }}</span> {{ chip.label }}
+      </span>
+      {% endfor %}
+    </div>
+    <p class="cat-hint">{{ type_label }} — {{ type_desc }}</p>
+  </div>
+</div>
+
+{# ── Piliers ── #}
+<div class="cat-card">
+  <div class="cat-card-body">
+    <p class="cat-section-label">Pilier d'activité</p>
+    <div class="cat-pilier-tabs" id="pilier-tabs" role="tablist" aria-label="Piliers">
+      {% for block in catalog_by_pilier %}
+      <button type="button"
+        class="pilier-tab{% if not block.applicable %} is-disabled{% elif block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
+        data-pilier-panel="pilier-{{ block.pilier.pk }}"
+        data-pilier-slug="{{ block.pilier.slug }}"
+        data-pilier-label="{{ block.pilier.display_icon|default:'🏥' }} {{ block.pilier.name }}"
+        {% if not block.applicable %}disabled title="Non applicable à votre type de structure"{% endif %}>
+        <span class="pilier-tab-icon">{{ block.pilier.display_icon|default:"🏥" }}</span>
+        <span class="pilier-tab-label">{{ block.pilier.name }}</span>
+        <span class="pilier-tab-count{% if not block.applicable %} is-na{% endif %}">
+          {% if block.applicable %}{{ block.acte_count }} acte{{ block.acte_count|pluralize }}{% else %}Non applicable{% endif %}
+        </span>
+      </button>
+      {% endfor %}
+    </div>
+    <p class="cat-hint">Les piliers grisés ne correspondent pas au type de votre structure. Ils seront actifs pour les structures concernées.</p>
+  </div>
+</div>
+
+{# ── Prestations à domicile (biologie) ── #}
+{% if show_domicile_block %}
+<div id="bloc-domicile-wrapper" class="{% if first_applicable_pilier_slug != 'biologie-medicale' %}hidden{% endif %}">
+  <form method="post" id="domicile-form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save_domicile">
+    {% include "healthcare/prestataire/_actes_domicile_block.html" %}
+  </form>
+</div>
+{% endif %}
+
+<form method="post" id="catalogue-form" class="space-y-3">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="save_catalogue">
+
+  {% for block in catalog_by_pilier %}
+  <section id="pilier-{{ block.pilier.pk }}"
+    class="pilier-panel cat-card{% if block.pilier.pk != first_applicable_pilier_id %} hidden{% endif %}"
+    data-pilier-slug="{{ block.pilier.slug }}"
+    data-applicable="{{ block.applicable|yesno:'1,0' }}">
+    <div class="cat-card-body">
+      {% if not block.applicable %}
+      <p class="text-sm font-semibold text-amber-800">Pilier non applicable à votre type de structure.</p>
+      {% else %}
+      <div class="cat-toolbar">
+        <span class="cat-toolbar-pilier js-pilier-label">{{ block.pilier.display_icon|default:"🏥" }} {{ block.pilier.name }}</span>
+        <div class="flex-1"></div>
+        <input type="search" class="cat-search js-cat-search" placeholder="Rechercher un acte…" aria-label="Rechercher un acte">
+        <select class="cat-cat-select js-cat-cat" aria-label="Filtrer par catégorie">
+          <option value="">Toutes catégories</option>
+          {% for sg in block.subgroups %}
+          <option value="{{ sg.label }}">{{ sg.label }}</option>
+          {% endfor %}
+        </select>
+        <a href="{% url 'healthcare:acte_add' %}" class="whitespace-nowrap rounded-lg bg-primary-600 px-3 py-2 text-xs font-bold text-white hover:bg-primary-700">+ Ajouter un acte</a>
+        <a href="{% url 'healthcare:prestataire_rdv_reminder_list' %}" class="whitespace-nowrap rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">Rappels RDV</a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="catalogue-table js-cat-table">
+          <thead>
+            <tr>
+              <th>Acte</th>
+              <th>Catégorie</th>
+              <th>Tarif (FCFA)</th>
+              <th>Délai résultat</th>
+              <th style="text-align:center">Préparation</th>
+              <th>Actif</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sg in block.subgroups %}
+            {% for row in sg.rows %}
+            <tr class="js-cat-row" data-cat="{{ sg.label }}" data-search="{{ row.acte.name|lower }}">
+              <td>
+                <div class="cat-acte-name">{{ row.acte.name }}</div>
+                {% if row.acte.parent_service %}<div class="cat-acte-sub">{{ row.acte.parent_service.name }}</div>{% endif %}
+              </td>
+              <td class="text-gray-600">{{ sg.label }}</td>
+              <td>
+                <input type="number" min="0" step="500" name="price_{{ row.acte.pk }}" value="{{ row.price_val|floatformat:0 }}" class="cat-prix-input" {% if not block.applicable %}disabled{% endif %}>
+              </td>
+              <td>
+                <select name="delai_{{ row.acte.pk }}" class="cat-delai-select" {% if not block.applicable %}disabled{% endif %}>
+                  <option value="">—</option>
+                  {% for val, lbl in prestataire_delai_choices %}
+                  <option value="{{ val }}"{% if row.delai_val == val %} selected{% endif %}>{{ lbl }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td style="text-align:center" class="js-prep-cell" data-acte-id="{{ row.acte.pk }}">
+                {% if row.prep.configured %}
+                <button type="button" class="prep-btn ok js-prep-open" data-acte-id="{{ row.acte.pk }}">✓ Configurée</button>
+                <div class="prep-state js-prep-state">{% if row.prep.active %}🔔 Diffusée au patient{% else %}Non diffusée{% endif %}</div>
+                {% else %}
+                <button type="button" class="prep-btn todo js-prep-open" data-acte-id="{{ row.acte.pk }}">⚙️ À configurer</button>
+                {% endif %}
+              </td>
+              <td>
+                <label class="cat-toggle" title="Activer cet acte">
+                  <input type="checkbox" name="acte_ids" value="{{ row.acte.pk }}" class="js-acte-active" {% if row.acte.pk in selected_acte_ids %}checked{% endif %}{% if not block.applicable %} disabled{% endif %}>
+                  <span class="cat-toggle-track"></span>
+                </label>
+              </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <div class="cat-card">
+    <div class="cat-card-body">
+      <label for="catalogue_tarifs_delais" class="block text-sm font-semibold text-gray-900">Tarifs &amp; délais (texte libre)</label>
+      <p class="mt-0.5 text-xs text-gray-500">Informations complémentaires affichées sur votre fiche patient.</p>
+      <textarea id="catalogue_tarifs_delais" name="catalogue_tarifs_delais" rows="4" class="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm">{{ org.catalogue_tarifs_delais }}</textarea>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 pb-4">
+    <button type="submit" class="rounded-xl bg-primary-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-primary-700">Enregistrer le catalogue</button>
+    <a href="{% url 'healthcare:prestataire_dashboard' %}" class="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50">Annuler</a>
+  </div>
+</form>
+
+{# ── Panneau préparation / rappels (démo) ── #}
+<div class="prep-overlay" id="prep-overlay" aria-hidden="true"></div>
+<aside class="prep-panel" id="prep-panel" aria-hidden="true">
+  <div class="prep-panel-head">
+    <div>
+      <div class="pph-acte" id="prep-ph-acte">—</div>
+      <div class="pph-cat" id="prep-ph-cat">—</div>
+    </div>
+    <button type="button" class="prep-panel-close" id="prep-panel-close" aria-label="Fermer">✕</button>
+  </div>
+  <div class="prep-panel-body" id="prep-panel-body"></div>
+  <div class="prep-panel-foot">
+    <button type="button" class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50" id="prep-cancel">Annuler</button>
+    <button type="button" class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-bold text-white hover:bg-primary-700" id="prep-save">Enregistrer</button>
+  </div>
+</aside>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+window.MEDCARE_CATALOGUE_PREP = {
+  saveUrlTpl: "{{ prep_save_url_tpl|escapejs }}",
+  reminderAddUrlTpl: "{{ reminder_add_url_tpl|escapejs }}",
+  reminderDeleteUrlTpl: "{{ reminder_delete_url_tpl|escapejs }}",
+  orgName: "{{ org.name|escapejs }}"
+};
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var prepCfg = window.MEDCARE_CATALOGUE_PREP || {};
+  var prepData = {};
+  try {
+    var prepEl = document.getElementById('cat-prep-data');
+    if (prepEl) prepData = JSON.parse(prepEl.textContent || '{}');
+  } catch (e) {}
+
+  var saveInd = document.getElementById('save-ind');
+  var domiWrapper = document.getElementById('bloc-domicile-wrapper');
+  var tabs = document.querySelectorAll('.pilier-tab:not(.is-disabled)');
+  var panels = document.querySelectorAll('.pilier-panel');
+
+  function showSaveIndicator() {
+    if (!saveInd) return;
+    saveInd.classList.add('is-visible');
+    clearTimeout(saveInd._t);
+    saveInd._t = setTimeout(function () {
+      saveInd.classList.remove('is-visible');
+    }, 2200);
+  }
+
+  function updateDomicileVisibility(slug) {
+    if (!domiWrapper) return;
+    domiWrapper.classList.toggle('hidden', slug !== 'biologie-medicale');
+  }
+
+  function filterCataloguePanel(panel) {
+    if (!panel) return;
+    var q = ((panel.querySelector('.js-cat-search') || {}).value || '').toLowerCase().trim();
+    var cat = (panel.querySelector('.js-cat-cat') || {}).value || '';
+    panel.querySelectorAll('.js-cat-row').forEach(function (row) {
+      var name = row.getAttribute('data-search') || '';
+      var rowCat = row.getAttribute('data-cat') || '';
+      var okSearch = !q || name.indexOf(q) !== -1;
+      var okCat = !cat || rowCat === cat;
+      row.classList.toggle('cat-row-hidden', !(okSearch && okCat));
+    });
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var id = tab.getAttribute('data-pilier-panel');
+      var slug = tab.getAttribute('data-pilier-slug') || '';
+      tabs.forEach(function (t) { t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      panels.forEach(function (p) { p.classList.toggle('hidden', p.id !== id); });
+      updateDomicileVisibility(slug);
+    });
+  });
+
+  panels.forEach(function (panel) {
+    var search = panel.querySelector('.js-cat-search');
+    var catSel = panel.querySelector('.js-cat-cat');
+    if (search) search.addEventListener('input', function () { filterCataloguePanel(panel); });
+    if (catSel) catSel.addEventListener('change', function () { filterCataloguePanel(panel); });
+  });
+
+  var frm = document.getElementById('catalogue-form');
+  var saveTimer = null;
+  var saving = false;
+  var pendingSave = false;
+
+  function escapeHtml(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function scheduleAutoSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(autoSaveCatalogue, 700);
+  }
+
+  function autoSaveCatalogue() {
+    if (!frm) return;
+    if (saving) {
+      pendingSave = true;
+      return;
+    }
+    saving = true;
+    var fd = new FormData(frm);
+    fetch(window.location.href, {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      if (!res.ok) throw new Error('save failed');
+      return res.json();
+    }).then(function () {
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ }).finally(function () {
+      saving = false;
+      if (pendingSave) {
+        pendingSave = false;
+        scheduleAutoSave();
+      }
+    });
+  }
+
+  if (frm) {
+    frm.addEventListener('change', scheduleAutoSave);
+    frm.addEventListener('input', function (e) {
+      if (e.target.matches('input, select, textarea')) scheduleAutoSave();
+    });
+  }
+
+  /* ── Prestations à domicile ── */
+  var domiToggle = document.getElementById('toggle-domicile');
+  var domiDetails = document.getElementById('domicile-details');
+  var domiList = document.getElementById('zones-domicile-list');
+  var domiTimer = null;
+  var domiSaving = false;
+  var domiPending = false;
+  var domiPendingDelete = null;
+
+  function csrfToken() {
+    var el = document.querySelector('[name=csrfmiddlewaretoken]');
+    return el ? el.value : '';
+  }
+
+  function collectDomicileZones() {
+    var zones = [];
+    if (!domiList) return zones;
+    domiList.querySelectorAll('.js-domi-zone-row').forEach(function (row) {
+      var label = (row.querySelector('.js-domi-zone-label') || {}).value || '';
+      var forfait = (row.querySelector('.js-domi-zone-forfait') || {}).value || '0';
+      var pk = row.getAttribute('data-pk') || '';
+      if (!label.trim() && !pk) return;
+      zones.push({ pk: pk || null, label: label.trim(), forfait_fcfa: parseInt(forfait, 10) || 0 });
+    });
+    return zones;
+  }
+
+  function refreshDomicileEmptyState() {
+    if (!domiList) return;
+    var empty = domiList.querySelector('.js-domi-zones-empty');
+    var hasRows = domiList.querySelectorAll('.js-domi-zone-row').length > 0;
+    if (empty) empty.classList.toggle('hidden', hasRows);
+  }
+
+  function buildDomicileZoneRow(pk, label, forfait) {
+    var row = document.createElement('div');
+    row.className = 'js-domi-zone-row zone-prelevement-row';
+    row.setAttribute('data-pk', pk || '');
+    row.innerHTML =
+      '<input type="text" class="js-domi-zone-label js-domi-field domi-search-input" value="' + escapeHtml(label || '') + '" placeholder="Nom de la zone (ex : Mermoz, Plateau…)" style="font-size:11px">'
+      + '<div class="domi-zone-forfait-wrap"><input type="number" min="0" step="500" class="js-domi-zone-forfait js-domi-field domi-search-input" value="' + (forfait || 0) + '" placeholder="0 = gratuit" style="font-size:11px;padding-right:40px">'
+      + '<span class="domi-zone-fcfa">FCFA</span></div>'
+      + '<button type="button" class="js-domi-zone-remove domi-zone-remove" title="Supprimer">✕</button>';
+    return row;
+  }
+
+  function renderDomicileZones(zones) {
+    if (!domiList || !zones) return;
+    domiList.querySelectorAll('.js-domi-zone-row').forEach(function (r) { r.remove(); });
+    zones.forEach(function (z) {
+      domiList.appendChild(buildDomicileZoneRow(z.pk, z.label, z.forfait_fcfa));
+    });
+    bindDomicileZoneRows();
+    refreshDomicileEmptyState();
+  }
+
+  function saveDomicile(op, extra) {
+    return new Promise(function (resolve) {
+      if (!domiToggle) { resolve(false); return; }
+      clearTimeout(domiTimer);
+      if (domiSaving) {
+        if (op === 'delete_zone') domiPendingDelete = extra;
+        else domiPending = true;
+        resolve(false);
+        return;
+      }
+      domiSaving = true;
+      var fd = new FormData();
+      fd.append('csrfmiddlewaretoken', csrfToken());
+      fd.append('action', 'save_domicile');
+      fd.append('domicile_op', op || 'save');
+      fd.append('prises_sang_domicile', domiToggle.checked ? '1' : '0');
+      fd.append('zones_json', JSON.stringify(collectDomicileZones()));
+      var delaiEl = document.getElementById('domicile-delai');
+      var plagesEl = document.getElementById('domicile-plages');
+      if (delaiEl) fd.append('domicile_delai_intervention', delaiEl.value || '');
+      if (plagesEl) fd.append('domicile_plages_horaires', plagesEl.value || '');
+      if (extra && extra.zone_pk) fd.append('zone_pk', extra.zone_pk);
+      fetch(window.location.href, {
+        method: 'POST',
+        body: fd,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin',
+      }).then(function (res) {
+        if (!res.ok) throw new Error('domi save failed');
+        return res.json();
+      }).then(function (data) {
+        if (!data || !data.ok) throw new Error('domi save failed');
+        if (data.zones) renderDomicileZones(data.zones);
+        showSaveIndicator();
+        resolve(true);
+      }).catch(function () {
+        resolve(false);
+      }).finally(function () {
+        domiSaving = false;
+        if (domiPendingDelete) {
+          var pendingDel = domiPendingDelete;
+          domiPendingDelete = null;
+          saveDomicile('delete_zone', pendingDel);
+        } else if (domiPending) {
+          domiPending = false;
+          scheduleDomicileSave('save');
+        }
+      });
+    });
+  }
+
+  function scheduleDomicileSave(op) {
+    clearTimeout(domiTimer);
+    domiTimer = setTimeout(function () { saveDomicile(op || 'save'); }, 700);
+  }
+
+  function domiFieldInput() { scheduleDomicileSave('save'); }
+
+  function bindDomicileZoneRows() {
+    if (!domiList) return;
+    domiList.querySelectorAll('.js-domi-zone-row').forEach(function (row) {
+      row.querySelectorAll('.js-domi-field').forEach(function (inp) {
+        inp.removeEventListener('input', domiFieldInput);
+        inp.addEventListener('input', domiFieldInput);
+      });
+    });
+  }
+
+  function handleDomicileZoneRemove(btn) {
+    var row = btn.closest('.js-domi-zone-row');
+    if (!row) return;
+    clearTimeout(domiTimer);
+    var pk = row.getAttribute('data-pk');
+    if (!pk) {
+      row.remove();
+      refreshDomicileEmptyState();
+      scheduleDomicileSave('save');
+      return;
+    }
+    btn.disabled = true;
+    saveDomicile('delete_zone', { zone_pk: pk }).then(function (ok) {
+      btn.disabled = false;
+      if (ok) refreshDomicileEmptyState();
+    });
+  }
+
+  function parseDomiActeIds(raw) {
+    if (!raw || raw === 'all') {
+      var ids = [];
+      document.querySelectorAll('.js-domi-acte-tag[data-acte-ids]').forEach(function (tag) {
+        var v = tag.getAttribute('data-acte-ids') || '';
+        if (v && v !== 'all') {
+          v.split(',').forEach(function (id) {
+            id = parseInt(id, 10);
+            if (id) ids.push(id);
+          });
+        }
+      });
+      return ids;
+    }
+    return raw.split(',').map(function (id) { return parseInt(id, 10); }).filter(Boolean);
+  }
+
+  function setActeActive(acteId, on) {
+    var cb = document.querySelector('input[name="acte_ids"][value="' + acteId + '"]');
+    if (cb) cb.checked = !!on;
+  }
+
+  function refreshDomiActeTags() {
+    document.querySelectorAll('.js-domi-acte-tag').forEach(function (tag) {
+      var raw = tag.getAttribute('data-acte-ids') || '';
+      var cb = tag.querySelector('.js-domi-acte-cb');
+      if (!cb) return;
+      var ids = parseDomiActeIds(raw);
+      if (!ids.length) {
+        cb.checked = false;
+        return;
+      }
+      cb.checked = ids.every(function (id) {
+        var rowCb = document.querySelector('input[name="acte_ids"][value="' + id + '"]');
+        return rowCb && rowCb.checked;
+      });
+    });
+  }
+
+  if (domiToggle) {
+    domiToggle.addEventListener('change', function () {
+      if (domiDetails) {
+        domiDetails.classList.toggle('domicile-details--hidden', !domiToggle.checked);
+      }
+      saveDomicile('toggle');
+    });
+  }
+
+  ['domicile-delai', 'domicile-plages'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', domiFieldInput);
+      el.addEventListener('change', domiFieldInput);
+    }
+  });
+
+  var btnAddDomi = document.getElementById('btn-add-domi-zone');
+  if (btnAddDomi && domiList) {
+    btnAddDomi.addEventListener('click', function () {
+      domiList.appendChild(buildDomicileZoneRow('', '', 0));
+      bindDomicileZoneRows();
+      refreshDomicileEmptyState();
+      var rows = domiList.querySelectorAll('.js-domi-zone-row');
+      var last = rows[rows.length - 1];
+      if (last) {
+        var inp = last.querySelector('.js-domi-zone-label');
+        if (inp) inp.focus();
+      }
+    });
+    domiList.addEventListener('click', function (e) {
+      var btn = e.target.closest('.js-domi-zone-remove');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      handleDomicileZoneRemove(btn);
+    });
+  }
+
+  document.querySelectorAll('.js-domi-acte-tag').forEach(function (tag) {
+    tag.addEventListener('click', function (e) {
+      if (e.target.classList.contains('js-domi-acte-cb')) return;
+      var cb = tag.querySelector('.js-domi-acte-cb');
+      if (cb) cb.checked = !cb.checked;
+      tag.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    tag.addEventListener('change', function () {
+      var raw = tag.getAttribute('data-acte-ids') || '';
+      var cb = tag.querySelector('.js-domi-acte-cb');
+      var ids = parseDomiActeIds(raw);
+      var on = cb && cb.checked;
+      if (raw === 'all' && on) {
+        document.querySelectorAll('.js-domi-acte-tag:not([data-acte-ids="all"]) .js-domi-acte-cb').forEach(function (other) {
+          other.checked = true;
+        });
+        ids = parseDomiActeIds('all');
+      }
+      ids.forEach(function (id) { setActeActive(id, on); });
+      if (raw !== 'all') refreshDomiActeTags();
+      scheduleAutoSave();
+    });
+  });
+
+  bindDomicileZoneRows();
+  refreshDomicileEmptyState();
+  refreshDomiActeTags();
+
+  /* ── Panneau préparation / rappels ── */
+  var prepOverlay = document.getElementById('prep-overlay');
+  var prepPanel = document.getElementById('prep-panel');
+  var prepBody = document.getElementById('prep-panel-body');
+  var openPrepActeId = null;
+  var prepReference = '';
+
+  function escapeHtmlPrep(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function prepConfirmationText(acteName, prep) {
+    var p = (prep || '').trim();
+    if (!p) return '';
+    return 'Bonjour 👋\nVotre RDV pour un ' + acteName + ' est confirmé.\nPréparation : ' + p;
+  }
+
+  function extractPrepFromConfirmation(text) {
+    var raw = (text || '').trim();
+    if (!raw) return '';
+    var marker = 'Préparation :';
+    var idx = raw.indexOf(marker);
+    if (idx !== -1) return raw.slice(idx + marker.length).trim();
+    return raw;
+  }
+
+  function prepSuggestionHtml(data) {
+    var lines = data.reference_lines || [];
+    if (lines.length) {
+      return ''
+        + '<div class="prep-suggestion">'
+        + '<div class="ps-head">💡 Suggestion MedCare — conditions de référence</div>'
+        + '<ul>' + lines.map(function (p) {
+          return '<li><span>▪️</span><span>' + escapeHtmlPrep(p) + '</span></li>';
+        }).join('') + '</ul>'
+        + '<p class="ps-footer">Base de connaissances de l\'acte. Servez-vous-en pour rédiger les messages ci-dessous.</p>'
+        + '</div>';
+    }
+    return ''
+      + '<div class="prep-suggestion none">'
+      + '<div class="ps-head">📝 Aucune fiche de référence pour cet acte</div>'
+      + '<div class="prep-none-desc">Rédigez librement le message de confirmation que le patient recevra après la validation de son rendez-vous.</div>'
+      + '</div>';
+  }
+
+  function syncPrepPreview() {
+    var ta = document.getElementById('prep-notif');
+    var wa = document.getElementById('prep-wa-text');
+    if (!ta || !wa) return;
+    var text = ta.value.trim();
+    wa.textContent = text || '…';
+  }
+
+  function prepRemindersListHtml(reminders) {
+    if (!reminders || !reminders.length) {
+      return '<p class="prep-reminders-empty">Aucun rappel programmé pour le moment</p>';
+    }
+    return '<div class="prep-reminders-chips">' + reminders.map(function (r) {
+      return '<div class="prep-reminder-chip">'
+        + '<span>' + escapeHtmlPrep(r.display || r.label) + '</span>'
+        + '<button type="button" class="prep-rem-del js-prep-rem-del" data-pk="' + r.pk + '" aria-label="Supprimer">✕</button>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+
+  function prepRemindersSectionHtml(reminders) {
+    return ''
+      + '<hr class="prep-sep">'
+      + '<div class="prep-block-title">⏰ Rappels avant l\'examen</div>'
+      + '<div class="prep-block-desc">Messages courts envoyés à l\'approche du RDV (H-12, H-6…). Idéal pour les consignes de dernière minute : « ne mangez plus », « pensez à… ».</div>'
+      + '<div id="prep-reminders-list" class="prep-reminders-list">' + prepRemindersListHtml(reminders) + '</div>'
+      + '<div class="prep-reminders-quick">'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="12">+ H-12</button>'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="6">+ H-6</button>'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="2">+ H-2</button>'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="1">+ H-1</button>'
+      + '<span class="prep-rem-or">ou H-</span>'
+      + '<input type="number" class="prep-rem-input" id="prep-rem-custom" min="1" max="168" placeholder="ex 4" inputmode="numeric">'
+      + '<button type="button" class="prep-rem-add-btn" id="prep-rem-add-custom">+ Ajouter</button>'
+      + '</div>';
+  }
+
+  function renderPrepReminders(reminders) {
+    var list = document.getElementById('prep-reminders-list');
+    if (list) list.innerHTML = prepRemindersListHtml(reminders);
+  }
+
+  function reminderAddUrl() {
+    return (prepCfg.reminderAddUrlTpl || '').replace('ACTE_ID', openPrepActeId);
+  }
+
+  function reminderDeleteUrl(pk) {
+    return (prepCfg.reminderDeleteUrlTpl || '').replace('ACTE_ID', openPrepActeId).replace('SCHEDULE_PK', pk);
+  }
+
+  function addPrepReminder(hours) {
+    if (!openPrepActeId || !hours) return;
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', csrfToken());
+    fd.append('hours', String(hours));
+    fetch(reminderAddUrl(), {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (res) {
+      if (!res.ok || !res.j.ok) return;
+      var reminders = res.j.reminders || [];
+      prepData[String(openPrepActeId)] = Object.assign({}, prepData[String(openPrepActeId)] || {}, {
+        reminders: reminders,
+      });
+      renderPrepReminders(reminders);
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ });
+  }
+
+  function deletePrepReminder(pk) {
+    if (!openPrepActeId || !pk) return;
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', csrfToken());
+    fetch(reminderDeleteUrl(pk), {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (res) {
+      if (!res.ok || !res.j.ok) return;
+      var reminders = res.j.reminders || [];
+      prepData[String(openPrepActeId)] = Object.assign({}, prepData[String(openPrepActeId)] || {}, {
+        reminders: reminders,
+      });
+      renderPrepReminders(reminders);
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ });
+  }
+
+  function renderPrepCell(acteId, configured, active) {
+    document.querySelectorAll('.js-prep-cell[data-acte-id="' + acteId + '"]').forEach(function (cell) {
+      if (configured) {
+        cell.innerHTML =
+          '<button type="button" class="prep-btn ok js-prep-open" data-acte-id="' + acteId + '">✓ Configurée</button>'
+          + '<div class="prep-state js-prep-state">' + (active ? '🔔 Diffusée au patient' : 'Non diffusée') + '</div>';
+      } else {
+        cell.innerHTML =
+          '<button type="button" class="prep-btn todo js-prep-open" data-acte-id="' + acteId + '">⚙️ À configurer</button>';
+      }
+    });
+  }
+
+  function openPrepPanel(acteId) {
+    var data = prepData[String(acteId)];
+    if (!data || !prepBody) return;
+    openPrepActeId = acteId;
+    prepReference = data.reference || '';
+    var acteName = data.name || '—';
+    var pilierLabel = (data.pilier_icon ? data.pilier_icon + ' ' : '') + (data.pilier || '');
+    document.getElementById('prep-ph-acte').textContent = acteName;
+    document.getElementById('prep-ph-cat').textContent = pilierLabel + ' · ' + (data.category || '');
+
+    prepBody.innerHTML = prepSuggestionHtml(data)
+      + '<hr class="prep-sep">'
+      + '<div class="prep-block-title">📩 Message de confirmation</div>'
+      + '<div class="prep-block-desc">Envoyé une fois au patient, juste après la validation de son rendez-vous.</div>'
+      + '<div class="prep-message-toolbar">'
+      + '<span class="prep-msg-label">Texte du message</span>'
+      + '<button type="button" class="prep-suggest-btn" id="prep-use-ref">↺ Suggestion</button>'
+      + '</div>'
+      + '<div class="prep-edit">'
+      + '<textarea class="prep-text" id="prep-notif" placeholder="Bonjour 👋 Votre RDV pour un examen est confirmé.&#10;Préparation : …"></textarea>'
+      + '<div><div class="wa-label">📲 Aperçu WhatsApp</div>'
+      + '<div class="wa-frame"><div class="wa-bubble">'
+      + '<div class="wa-sender">🩺 MedCare · ' + escapeHtmlPrep(prepCfg.orgName || '') + '</div>'
+      + '<div class="wa-text" id="prep-wa-text">…</div>'
+      + '<div class="wa-time">à la confirmation <span class="wa-check">✓✓</span></div>'
+      + '</div></div></div></div>'
+      + prepRemindersSectionHtml(data.reminders || [])
+      + '<hr class="prep-sep">'
+      + '<div class="prep-diff-row"><div>'
+      + '<div class="pdr-t">Diffuser au patient</div>'
+      + '<div class="pdr-d">Active l\'envoi automatique du message de confirmation et des rappels.</div>'
+      + '</div><label class="prep-toggle"><input type="checkbox" id="prep-diffuse"' + (data.active ? ' checked' : '') + '><span class="prep-toggle-track"></span></label></div>';
+
+    var useBtn = document.getElementById('prep-use-ref');
+    if (useBtn) {
+      useBtn.addEventListener('click', function () {
+        var ta = document.getElementById('prep-notif');
+        if (ta && prepReference) {
+          ta.value = prepConfirmationText(acteName, prepReference);
+          syncPrepPreview();
+          showSaveIndicator();
+        }
+      });
+    }
+    var ta = document.getElementById('prep-notif');
+    if (ta) {
+      ta.value = prepConfirmationText(acteName, data.message || '');
+      ta.addEventListener('input', syncPrepPreview);
+    }
+    syncPrepPreview();
+
+    prepBody.querySelectorAll('.js-prep-rem-add').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        addPrepReminder(parseInt(btn.getAttribute('data-hours'), 10));
+      });
+    });
+    var customAdd = document.getElementById('prep-rem-add-custom');
+    if (customAdd) {
+      customAdd.addEventListener('click', function () {
+        var inp = document.getElementById('prep-rem-custom');
+        var h = inp ? parseInt(inp.value, 10) : 0;
+        if (h > 0) {
+          addPrepReminder(h);
+          if (inp) inp.value = '';
+        }
+      });
+    }
+    prepBody.addEventListener('click', function (e) {
+      var del = e.target.closest('.js-prep-rem-del');
+      if (del) {
+        e.preventDefault();
+        deletePrepReminder(del.getAttribute('data-pk'));
+      }
+    });
+
+    prepOverlay.classList.add('open');
+    prepPanel.classList.add('open');
+    prepOverlay.setAttribute('aria-hidden', 'false');
+    prepPanel.setAttribute('aria-hidden', 'false');
+  }
+
+  function closePrepPanel() {
+    openPrepActeId = null;
+    prepReference = '';
+    prepOverlay.classList.remove('open');
+    prepPanel.classList.remove('open');
+    prepOverlay.setAttribute('aria-hidden', 'true');
+    prepPanel.setAttribute('aria-hidden', 'true');
+  }
+
+  function savePrepPanel() {
+    if (!openPrepActeId) return;
+    var ta = document.getElementById('prep-notif');
+    var diffuse = document.getElementById('prep-diffuse');
+    var url = (prepCfg.saveUrlTpl || '').replace('ACTE_ID', openPrepActeId);
+    var prepOnly = extractPrepFromConfirmation(ta ? ta.value : '');
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', csrfToken());
+    fd.append('rdv_prerequisites', prepOnly);
+    fd.append('rdv_prerequisites_active', diffuse && diffuse.checked ? '1' : '0');
+    fetch(url, {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (res) {
+      if (!res.ok || !res.j.ok) return;
+      var msg = res.j.message || (ta ? ta.value : '');
+      var active = !!res.j.active;
+      var configured = !!res.j.configured;
+      prepData[String(openPrepActeId)] = Object.assign({}, prepData[String(openPrepActeId)] || {}, {
+        message: msg,
+        active: active,
+        configured: configured,
+      });
+      renderPrepCell(openPrepActeId, configured, active);
+      closePrepPanel();
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ });
+  }
+
+  document.addEventListener('click', function (e) {
+    var openBtn = e.target.closest('.js-prep-open');
+    if (openBtn) {
+      e.preventDefault();
+      openPrepPanel(openBtn.getAttribute('data-acte-id'));
+      return;
+    }
+  });
+
+  if (prepOverlay) prepOverlay.addEventListener('click', closePrepPanel);
+  document.getElementById('prep-panel-close') && document.getElementById('prep-panel-close').addEventListener('click', closePrepPanel);
+  document.getElementById('prep-cancel') && document.getElementById('prep-cancel').addEventListener('click', closePrepPanel);
+  document.getElementById('prep-save') && document.getElementById('prep-save').addEventListener('click', savePrepPanel);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && prepPanel && prepPanel.classList.contains('open')) closePrepPanel();
+  });
+})();
+</script>
+{% endblock %}

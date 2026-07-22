@@ -1,0 +1,296 @@
+{% extends "dashboard/base.html" %}
+{% load static subscription_plans %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/subscription_plans.css' %}">
+<style>
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  .plan-form-layout { display: grid; gap: 1.5rem; }
+  @media (min-width: 1100px) {
+    .plan-form-layout { grid-template-columns: 1fr 340px; align-items: start; }
+  }
+  .plan-feat-editor-list { margin: 0; }
+  .plan-feat-editor-row { border-bottom: 1px solid var(--mcc-sp-gray-100, #f3f4f6); }
+  .plan-feat-editor-row:last-child { border-bottom: none; }
+  .plan-feat-editor-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 6px 4px;
+    margin: 0 -4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.12s;
+    width: 100%;
+  }
+  .plan-feat-editor-label:hover { background: #f9fafb; }
+  .plan-feat-editor-icon { flex-shrink: 0; font-size: 11pt; width: 14px; text-align: center; }
+  .plan-feat-editor-text { flex: 1; min-width: 0; }
+  .plan-feat-editor-text strong { display: block; font-weight: 500; font-size: 12px; }
+  .plan-feat-editor-desc { font-size: 10px; color: #9ca3af; display: block; }
+  .plan-feat-editor-state { font-size: 10px; color: #9ca3af; display: block; }
+  .plan-feat-editor-label.is-on .plan-feat-editor-icon { color: #14b87a; font-weight: 700; }
+  .plan-feat-editor-label.is-on .plan-feat-editor-text { color: #4b5563; }
+  .plan-feat-editor-label.is-on .plan-feat-editor-text strong { color: #0d1b2a; }
+  .plan-feat-editor-label.is-on .plan-feat-editor-state { color: #14b87a; font-weight: 600; }
+  .plan-feat-editor-label.is-off .plan-feat-editor-icon { color: #d1d5db; }
+  .plan-feat-editor-label.is-addon .plan-feat-editor-icon { color: #d97706; font-weight: 700; }
+  .plan-feat-editor-label.is-addon .plan-feat-editor-text { color: #4b5563; }
+  .plan-feat-editor-label.is-addon .plan-feat-editor-text strong { color: #0d1b2a; }
+  .plan-feat-editor-label.is-addon .plan-feat-editor-state { color: #d97706; }
+  .plan-feat-compare-mini { margin-top: 1rem; }
+  .plan-feat-compare-mini .mcc-sp-feat-compare-table { min-width: 100%; font-size: 12px; }
+  .plan-feat-compare-mini .mcc-sp-feat-compare-table th { padding: 6px 8px; }
+  .plan-feat-compare-mini .mcc-sp-feat-compare-table td { padding: 5px 8px; }
+  .plan-preview-sticky { position: sticky; top: 1rem; }
+  .plan-preview-note { font-size: 11px; color: #9ca3af; margin-top: 8px; line-height: 1.4; }
+  .plan-struct-readonly { margin-bottom: 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-6xl">
+  <div class="mb-6 flex flex-wrap items-center gap-4">
+    <a href="{% url 'dashboard:subscription_plans_list' %}" class="text-sm font-medium text-gray-500 hover:text-primary-600">← Grille des formules</a>
+    <a href="{% url 'dashboard:subscription_features_list' %}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Référentiel des modules →</a>
+  </div>
+
+  <div class="mcc-sub-plans mb-6">
+    <div class="mcc-sp-title-block">
+      <div class="mcc-sp-doc-type">Configuration formule</div>
+      <div class="mcc-sp-doc-title">{{ title }}</div>
+      <div class="mcc-sp-doc-subtitle">Même contenu que la grille <a href="{% url 'dashboard:subscription_plans_list' %}" class="font-semibold text-primary-700 underline">Formules d'abonnement</a> — tarifs, cible, structures et droits (✓ / – / +).</div>
+    </div>
+  </div>
+
+  <form method="post" class="plan-form-layout">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="col-span-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="space-y-6">
+      <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 class="text-sm font-bold text-gray-900">Informations générales</h2>
+        <div class="mt-4 grid gap-5 sm:grid-cols-2">
+          {% for field in form %}
+            {% if field.name != "included_features" %}
+            <div class="{% if field.name == 'long_description' or field.name == 'short_description' %}sm:col-span-2{% endif %}">
+              <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+              {% if field.help_text %}<p class="mt-0.5 text-xs text-gray-400">{{ field.help_text }}</p>{% endif %}
+              <div class="mt-1">{{ field }}</div>
+              {% for e in field.errors %}<p class="mt-1 text-xs text-red-600">{{ e }}</p>{% endfor %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if preview_structures %}
+      <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm mcc-sub-plans">
+        <h2 class="text-sm font-bold text-gray-900">Structures · piliers inclus</h2>
+        <p class="mt-1 text-xs text-gray-500">Affiché sur la carte formule (défaut BIZ-ECO-003 selon le slug).</p>
+        <div class="plan-struct-readonly mt-4">
+          <ul class="mcc-sp-struct-list">
+            {% for s in preview_structures %}
+            <li>
+              <span class="mcc-sp-ico">{{ s.icon }}</span>
+              <div>
+                <div class="mcc-sp-sname">{{ s.name }}</div>
+                <div class="mcc-sp-chips">
+                  {% for label, cls in s.chips %}
+                  <span class="mcc-sp-pc mcc-sp-{{ cls }}">{{ label }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm mcc-sub-plans">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-gray-900">Fonctionnalités incluses</h2>
+            <p class="mt-1 text-xs text-gray-500">Cliquez une ligne pour activer/désactiver — même liste que sur la grille (ordre SaaS). Starter : MedPlaque décochée = add-on (+5 000 F/mois).</p>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" id="plan-feat-all" class="rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50">Tout activer</button>
+            <button type="button" id="plan-feat-none" class="rounded-md border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50">Tout désactiver</button>
+          </div>
+        </div>
+
+        {% if form.included_features.errors %}
+        <div class="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{{ form.included_features.errors }}</div>
+        {% endif %}
+
+        <div class="mt-4">
+          {% include "healthcare/partials/_subscription_plan_features_editor.html" %}
+        </div>
+
+        <div class="plan-feat-compare-mini">
+          <p class="mcc-sp-plan-section-label" style="margin-top:16px;">Tableau comparatif (aperçu formule)</p>
+          <div class="mcc-sp-compare-wrap">
+            <table class="mcc-sp-feat-compare-table">
+              <thead>
+                <tr>
+                  <th class="mcc-sp-left">Feature</th>
+                  <th id="plan-feat-compare-col">Cette formule</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for group_label, group_features in feature_groups %}
+                <tr class="mcc-sp-group-head"><td colspan="2">{{ group_label }}</td></tr>
+                {% for feature in group_features %}
+                <tr data-feat-row="{{ feature.code }}">
+                  <td class="mcc-sp-left">
+                    <strong>{{ feature.label }}</strong>
+                    {% if feature.description %}<br><span style="font-size:10px;color:#9ca3af;">{{ feature.description }}</span>{% endif %}
+                  </td>
+                  <td class="plan-feat-compare-cell" data-code="{{ feature.code }}"><span class="mcc-sp-ico-off">–</span></td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="rounded-lg bg-primary-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-600">Enregistrer</button>
+        <a href="{% url 'dashboard:subscription_plans_list' %}" class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">Annuler</a>
+      </div>
+    </div>
+
+    {% if preview_plan %}
+    <aside class="plan-preview-sticky mcc-sub-plans">
+      <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Aperçu carte (grille publique)</p>
+      {% include "healthcare/partials/_subscription_plan_card.html" with plan=preview_plan card_mode="preview" plan_included_map=preview_plan_included %}
+      <p class="plan-preview-note">L'aperçu se met à jour lorsque vous cochez/décochez les droits. Enregistrez pour appliquer tarif et libellés.</p>
+    </aside>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var slugInput = document.getElementById('id_slug');
+  var planSlug = slugInput ? (slugInput.value || '').toLowerCase() : '{{ preview_plan.slug|default:""|escapejs }}';
+
+  function isStarterMedplaqueAddon(code, checked) {
+    return planSlug === 'starter' && code === 'medplaque' && !checked;
+  }
+
+  function syncRow(cb) {
+    var label = document.querySelector('label.plan-feat-editor-label[for="' + cb.id + '"]');
+    if (!label) return;
+    var code = cb.dataset.code || label.dataset.code;
+    var icon = label.querySelector('.plan-feat-editor-icon');
+    var text = label.querySelector('.plan-feat-editor-text');
+    var state = label.querySelector('.plan-feat-editor-state');
+    label.classList.remove('is-on', 'is-off', 'is-addon');
+    text.classList.remove('is-off');
+
+    if (cb.checked) {
+      label.classList.add('is-on');
+      icon.textContent = '✓';
+      if (state) state.textContent = 'Inclus';
+    } else if (isStarterMedplaqueAddon(code, false)) {
+      label.classList.add('is-addon');
+      icon.textContent = '+';
+      if (state) state.textContent = 'Add-on optionnel · +5 000 FCFA/mois';
+    } else {
+      label.classList.add('is-off');
+      icon.textContent = '–';
+      text.classList.add('is-off');
+      if (state) state.textContent = 'Désactivé';
+    }
+
+    var cell = document.querySelector('.plan-feat-compare-cell[data-code="' + code + '"]');
+    if (cell) {
+      if (cb.checked) {
+        cell.innerHTML = '<span class="mcc-sp-ico-on">✓</span>';
+      } else if (isStarterMedplaqueAddon(code, false)) {
+        cell.innerHTML = '<span class="mcc-sp-ico-addon">+</span>';
+      } else {
+        cell.innerHTML = '<span class="mcc-sp-ico-off">–</span>';
+      }
+    }
+
+    syncPreviewCard(code, cb.checked);
+  }
+
+  function syncPreviewCard(code, checked) {
+    var preview = document.querySelector('.plan-preview-sticky .mcc-sp-feat-list');
+    if (!preview) return;
+    var li = preview.querySelector('li[data-feature-code="' + code + '"]');
+    if (!li) return;
+    var icon = li.querySelector('.mcc-sp-feat-on, .mcc-sp-feat-off, .mcc-sp-feat-addon');
+    var text = li.querySelector('.mcc-sp-feat-text');
+    if (!icon || !text) return;
+    icon.className = '';
+    text.className = 'mcc-sp-feat-text';
+    if (checked) {
+      icon.className = 'mcc-sp-feat-on';
+      icon.textContent = '✓';
+      var sub = text.querySelector('span');
+      if (sub && sub.textContent === 'Désactivé') {
+        sub.textContent = sub.dataset.desc || sub.textContent;
+      }
+    } else if (isStarterMedplaqueAddon(code, false)) {
+      icon.className = 'mcc-sp-feat-addon';
+      icon.textContent = '+';
+      var span = text.querySelector('span');
+      if (span) span.textContent = 'Add-on optionnel · +5 000 FCFA/mois';
+    } else {
+      icon.className = 'mcc-sp-feat-off';
+      icon.textContent = '–';
+      text.classList.add('is-off');
+      var span = text.querySelector('span');
+      if (span) span.textContent = 'Désactivé';
+    }
+  }
+
+  function boxes() {
+    return document.querySelectorAll('.plan-feat-editor-cb');
+  }
+
+  boxes().forEach(function(cb) {
+    cb.addEventListener('change', function() { syncRow(cb); });
+    syncRow(cb);
+  });
+
+  if (slugInput) {
+    slugInput.addEventListener('input', function() {
+      planSlug = (slugInput.value || '').toLowerCase();
+      boxes().forEach(syncRow);
+    });
+  }
+
+  var allBtn = document.getElementById('plan-feat-all');
+  var noneBtn = document.getElementById('plan-feat-none');
+  if (allBtn) allBtn.addEventListener('click', function() {
+    boxes().forEach(function(cb) { cb.checked = true; syncRow(cb); });
+  });
+  if (noneBtn) noneBtn.addEventListener('click', function() {
+    boxes().forEach(function(cb) { cb.checked = false; syncRow(cb); });
+  });
+
+  var compareCol = document.getElementById('plan-feat-compare-col');
+  var nameInput = document.getElementById('id_name');
+  if (compareCol && nameInput) {
+    compareCol.textContent = nameInput.value || 'Cette formule';
+    nameInput.addEventListener('input', function() {
+      compareCol.textContent = nameInput.value || 'Cette formule';
+    });
+  }
+})();
+</script>
+{% endblock %}

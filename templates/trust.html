@@ -1,0 +1,65 @@
+{% extends "visitor_base.html" %}
+{% load static %}
+
+{% block title %}Charte de Confiance - MedCare Connect{% endblock %}
+
+{% block page_content %}
+<div class="mc-page-wrap mc-trust-page">
+  <header class="mc-page-hero">
+    <div class="mc-container">
+      <h1>Votre confiance,<br>notre priorité.</h1>
+      <p>Découvrez comment nous garantissons la fiabilité et la sécurité de vos données de santé.</p>
+    </div>
+  </header>
+
+  <section class="mc-section">
+    <div class="mc-container">
+      <div class="mc-section-head">
+        <h2>Les piliers de notre engagement</h2>
+      </div>
+      <div class="mc-trust-page-grid">
+        <div class="mc-trust-page-card">
+          <div class="mc-trust-page-icon"><i class="ti ti-certificate"></i></div>
+          <h3>Vérification rigoureuse</h3>
+          <p>Chaque établissement de santé inscrit sur MedCare Connect doit fournir ses agréments officiels. Nos équipes vérifient manuellement l'existence légale de chaque centre avant toute publication.</p>
+        </div>
+        <div class="mc-trust-page-card">
+          <div class="mc-trust-page-icon"><i class="ti ti-refresh"></i></div>
+          <h3>Transparence des prix</h3>
+          <p>Les tarifs sont déclarés par les structures sous leur responsabilité. Nous exigeons une mise à jour régulière pour garantir que les devis reçus soient les plus précis possibles.</p>
+        </div>
+        <div class="mc-trust-page-card">
+          <div class="mc-trust-page-icon"><i class="ti ti-shield-lock"></i></div>
+          <h3>Protection des données</h3>
+          <p>Nous respectons scrupuleusement la loi sénégalaise sur la protection des données personnelles (CDP). Vos informations de santé ne sont jamais partagées sans votre accord.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mc-badge-section">
+    <div class="mc-container">
+      <div class="mc-badge-inner">
+        <div class="mc-badge-visual">
+          <i class="ti ti-rosette-check"></i>
+        </div>
+        <div class="mc-badge-text">
+          <h3>Le Badge « Vérifié » MedCare</h3>
+          <p>Ce badge est attribué aux structures ayant complété l'intégralité de leur profil, fourni tous leurs justificatifs légaux et dont les tarifs ont été mis à jour il y a moins de 3 mois. C'est notre garantie de qualité pour vous.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mc-section">
+    <div class="mc-container mc-section-narrow">
+      <div class="mc-section-head">
+        <h2>Une question sur nos processus ?</h2>
+        <p class="mc-section-sub">Notre équipe est à votre disposition pour vous apporter toutes les précisions nécessaires sur notre charte de confiance.</p>
+      </div>
+      <div class="mc-cta-row">
+        <a href="{% url 'contact' %}" class="mc-btn-primary mc-btn-primary--navy">Contacter le support</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

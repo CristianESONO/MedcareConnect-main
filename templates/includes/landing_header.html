@@ -1,0 +1,125 @@
+{% load static %}
+{% with rm=request.resolver_match %}
+<header class="mc-landing-header" id="header_pop">
+  <div class="mc-container mc-landing-header-bar">
+    <a href="{% url 'home' %}" class="mc-landing-header-logo" aria-label="MedCare — Accueil">
+      {% include "includes/_brand_logo.html" %}
+    </a>
+
+    <div class="mc-landing-header-actions">
+    <nav class="mc-landing-nav" aria-label="Navigation principale">
+      <ul class="mc-landing-nav-list">
+        <li><a href="{% url 'home' %}" class="mc-landing-nav-link{% if rm.url_name == 'landing' or rm.url_name == 'home' or rm.url_name == 'medcare_sn' %} is-active{% endif %}">Accueil</a></li>
+        <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">Annuaire</a></li>
+        <li class="mc-landing-nav-dropdown" id="mcNavAboutDropdown">
+          <button
+            type="button"
+            class="mc-landing-nav-link mc-landing-nav-dropdown-trigger{% if rm.url_name == 'about' or rm.url_name == 'how_it_works' or rm.url_name == 'contact' %} is-active{% endif %}"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="mcNavAboutMenu"
+            id="mcNavAboutTrigger"
+          >
+            À propos
+            <i class="ti ti-chevron-down mc-landing-nav-chevron" aria-hidden="true"></i>
+          </button>
+          <ul class="mc-landing-nav-dropdown-menu" id="mcNavAboutMenu" role="menu" aria-labelledby="mcNavAboutTrigger">
+            <li role="none"><a href="{% url 'about' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if rm.url_name == 'about' %} is-active{% endif %}">À propos</a></li>
+            <li role="none"><a href="{% url 'how_it_works' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if rm.url_name == 'how_it_works' %} is-active{% endif %}">Comment ça marche</a></li>
+            <li role="none"><a href="{% url 'contact' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if rm.url_name == 'contact' %} is-active{% endif %}">Contact</a></li>
+          </ul>
+        </li>
+        {% if user.is_authenticated and user.is_patient %}
+        <li class="mc-landing-nav-dropdown mc-landing-nav-dropdown--patient" id="mcNavPatientDropdown">
+          <button
+            type="button"
+            class="mc-landing-nav-link mc-landing-nav-dropdown-trigger{% if account_active %} is-active{% endif %}"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="mcNavPatientMenu"
+            id="mcNavPatientTrigger"
+          >
+            Mon espace
+            <i class="ti ti-chevron-down mc-landing-nav-chevron" aria-hidden="true"></i>
+          </button>
+          <ul class="mc-landing-nav-dropdown-menu mc-landing-nav-dropdown-menu--patient" id="mcNavPatientMenu" role="menu" aria-labelledby="mcNavPatientTrigger">
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='accueil' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'accueil' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="accueil" %} Tableau de bord</a></li>
+            <li role="none" class="mc-landing-nav-dropdown-sep" aria-hidden="true"></li>
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='chariot' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'chariot' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="chariot" %} Panier{% if cart_count %}<span class="mc-landing-nav-badge">{{ cart_count }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='devis' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'devis' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="devis" %} Mes devis</a></li>
+            <li role="none"><a href="{% url 'messaging:inbox' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'messages' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="messages" %} Messagerie{% if unread_messages %}<span class="mc-landing-nav-badge">{{ unread_messages }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='rdv' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'rdv' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="rdv" %} Mes RDV</a></li>
+            <li role="none"><a href="{% url 'messaging:notifications' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'notifications' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="notifications" %} Notifications{% if unread_notifications %}<span class="mc-landing-nav-badge">{{ unread_notifications }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'messaging:rappels' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'rappels' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="rappels" %} Rappels{% if unread_rappels %}<span class="mc-landing-nav-badge">{{ unread_rappels }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='recherches' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'recherches' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="recherches" %} Historique</a></li>
+            <li role="none" class="mc-landing-nav-dropdown-sep" aria-hidden="true"></li>
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='profil' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'profil' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="profil" %} Mes informations</a></li>
+            <li role="none"><a href="{% url 'users:patient_panel_tab' tab='assurance' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'assurance' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="assurance" %} Assurance</a></li>
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <div class="mc-landing-header-ctas">
+      {% if user.is_authenticated and user.is_patient %}
+      {% include "includes/_patient_header_quick_icons.html" %}
+      <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Trouver un service</a>
+      {% elif user.is_authenticated and user.is_prestataire %}
+      <a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-btn mc-landing-btn-ref">Espace pro</a>
+      <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Prestations</a>
+      {% else %}
+      <a href="{% url 'users:login' %}" class="mc-landing-btn mc-landing-btn-login">Connexion</a>
+      <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Trouver un service</a>
+      <a href="{% url 'users:register' %}" class="mc-landing-btn mc-landing-btn-join">Rejoindre MedCare</a>
+      {% endif %}
+    </div>
+    </div>
+
+    <button type="button" class="mc-landing-burger" id="mcLandingBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mcLandingDrawer">
+      <svg class="mc-landing-burger-open" viewBox="0 0 1000 1000" aria-hidden="true"><path d="M104 333H896C929 333 958 304 958 271S929 208 896 208H104C71 208 42 237 42 271S71 333 104 333ZM104 583H896C929 583 958 554 958 521S929 458 896 458H104C71 458 42 487 42 521S71 583 104 583ZM104 833H896C929 833 958 804 958 771S929 708 896 708H104C71 708 42 737 42 771S71 833 104 833Z"/></svg>
+      <svg class="mc-landing-burger-close" viewBox="0 0 1000 1000" aria-hidden="true"><path d="M742 167L500 408 258 167C246 154 233 150 217 150 196 150 179 158 167 167 154 179 150 196 150 212 150 229 154 242 171 254L408 500 167 742C138 771 138 800 167 829 196 858 225 858 254 829L496 587 738 829C750 842 767 846 783 846 800 846 817 842 829 829 842 817 846 804 846 783 846 767 842 750 829 737L588 500 833 258C863 229 863 200 833 171 804 137 775 137 742 167Z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="mc-landing-drawer-backdrop" id="mcLandingDrawerBackdrop" hidden aria-hidden="true"></div>
+<aside class="mc-landing-drawer" id="mcLandingDrawer" aria-hidden="true" aria-label="Menu navigation">
+  {% if user.is_authenticated and user.is_patient %}
+  {% include "includes/_patient_drawer_nav.html" %}
+  {% elif user.is_authenticated and user.is_prestataire %}
+  {% include "includes/_prestataire_drawer_nav.html" with show_drawer_close=True %}
+  {% else %}
+  <div class="mc-landing-drawer-header">
+    <button type="button" class="mc-landing-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
+      {% include "includes/_brand_logo.html" %}
+    </a>
+    <p class="mc-landing-drawer-tagline">L'infrastructure digitale<br>paraclinique du Sénégal</p>
+  </div>
+
+  <nav class="mc-landing-drawer-nav" aria-label="Menu mobile">
+    <ul>
+      <li><a href="{% url 'home' %}" class="mc-landing-drawer-link{% if rm.url_name == 'landing' or rm.url_name == 'home' or rm.url_name == 'medcare_sn' %} is-active{% endif %}"><i class="ti ti-home mc-landing-drawer-icon" aria-hidden="true"></i> Accueil</a></li>
+      <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}"><i class="ti ti-building-hospital mc-landing-drawer-icon" aria-hidden="true"></i> Annuaire</a></li>
+      <li class="mc-landing-drawer-group">
+        <span class="mc-landing-drawer-group-label"><i class="ti ti-info-circle mc-landing-drawer-icon" aria-hidden="true"></i> À propos</span>
+        <ul class="mc-landing-drawer-sublist">
+          <li><a href="{% url 'about' %}" class="mc-landing-drawer-link{% if rm.url_name == 'about' %} is-active{% endif %}">À propos</a></li>
+          <li><a href="{% url 'how_it_works' %}" class="mc-landing-drawer-link{% if rm.url_name == 'how_it_works' %} is-active{% endif %}">Comment ça marche</a></li>
+          <li><a href="{% url 'contact' %}" class="mc-landing-drawer-link{% if rm.url_name == 'contact' %} is-active{% endif %}">Contact</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="mc-landing-drawer-cta">
+    <a href="{% url 'users:login' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-login"><i class="ti ti-login" aria-hidden="true"></i> Connexion</a>
+    <a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-patient"><i class="ti ti-search" aria-hidden="true"></i> Trouver un service</a>
+    <a href="{% url 'users:register' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Rejoindre MedCare</a>
+  </div>
+  {% endif %}
+</aside>
+{% endwith %}

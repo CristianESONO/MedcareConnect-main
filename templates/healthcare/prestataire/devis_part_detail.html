@@ -1,0 +1,84 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load humanize %}
+{% block title %}Sous-devis {{ part.reference }}{% endblock %}
+
+{% block dash_content %}
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <a href="{% url 'healthcare:prestataire_devis_list' %}?status={{ status_filter }}" class="text-[11px] font-medium text-gray-400 hover:text-primary-600">← Devis WhatsApp</a>
+    <h1 class="mt-1 font-mono text-xl font-bold text-gray-900 sm:text-2xl">{{ part.reference }}</h1>
+    <p class="mt-0.5 text-xs text-gray-500">
+      Devis patient <span class="font-mono font-semibold text-primary-600">{{ devis.reference }}</span>
+      · {{ devis.patient.display_name|default:devis.patient.username }}
+      {% if devis.insurance %}· 🛡 {{ devis.insurance.name }}{% endif %}
+    </p>
+  </div>
+  <div class="flex flex-wrap items-center gap-2">
+    {% if row.is_accepted %}
+      <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800">✅ Accepté</span>
+    {% elif part.status == 'sent' %}
+      <span class="rounded-full mc-bg-accent-light px-3 py-1 text-xs font-semibold mc-text-accent-dark">🟢 Nouveau</span>
+    {% elif part.status == 'viewed' %}
+      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Consulté</span>
+    {% elif part.status == 'relanced' %}
+      <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Relancé {{ part.relance_count }}×</span>
+    {% elif part.status == 'expired' %}
+      <span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700">Expiré</span>
+    {% elif part.status == 'archived' %}
+      <span class="rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700">Archivé</span>
+    {% else %}
+      <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">{{ part.get_status_display }}</span>
+    {% endif %}
+  </div>
+</div>
+
+{% if row.creneau %}
+<div class="mt-4 rounded-xl border border-[var(--mc-border)] mc-bg-accent-light px-4 py-3 text-sm mc-text-accent-dark">
+  📅 Créneau souhaité : <strong>{{ row.creneau }}</strong>
+  {% if row.pending_rdv %}<span class="ml-2 text-xs mc-text-accent-dark">· en attente de votre confirmation</span>{% endif %}
+</div>
+{% elif part.status != 'archived' and not row.is_accepted %}
+<div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+  ⚠ Aucun créneau proposé par le patient — vous pouvez relancer via WhatsApp / messagerie.
+</div>
+{% endif %}
+
+<div class="mt-5 rounded-xl border border-gray-200 bg-white shadow-sm">
+  <div class="border-b border-gray-100 bg-gray-50/60 px-5 py-3">
+    <p class="text-xs font-medium uppercase text-gray-500">Actes concernant votre structure</p>
+  </div>
+  <div class="divide-y divide-gray-100">
+    {% for line in part.details %}
+    <div class="flex items-center justify-between px-5 py-3">
+      <div>
+        <p class="text-sm font-medium text-gray-900">{{ line.acte }}</p>
+        <p class="text-xs text-gray-400">Qté {{ line.quantity }}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-semibold text-primary-600">{{ line.subtotal }} XOF</p>
+        {% if line.coverage_rate %}<p class="text-xs mc-text-accent">Couv. {{ line.coverage_rate }}% → {{ line.patient_cost }} XOF</p>{% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <p class="px-5 py-8 text-center text-sm text-gray-400">Aucune ligne.</p>
+    {% endfor %}
+  </div>
+  <div class="border-t border-gray-200 bg-gray-50/60 px-5 py-4">
+    <dl class="flex flex-wrap justify-between gap-2 text-sm">
+      <div><dt class="text-gray-500">Total brut (votre part)</dt><dd class="font-bold text-gray-900">{{ part.total_brut|floatformat:0|intcomma }} XOF</dd></div>
+      {% if devis.insurance %}<div><dt class="text-gray-500">Reste patient (estim.)</dt><dd class="font-bold text-primary-600">{{ part.total_patient|floatformat:0|intcomma }} XOF</dd></div>{% endif %}
+    </dl>
+    {% if devis.valid_until %}
+    <p class="mt-2 text-[11px] text-gray-400">Devis valide jusqu'au {{ devis.valid_until|date:"d M Y" }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if part.status != 'archived' %}
+<div class="mt-5 rounded-xl border border-gray-200 bg-white p-4">
+  <p class="mb-3 text-[10px] font-bold uppercase tracking-wide text-gray-400">Actions</p>
+  {% include "healthcare/prestataire/_devis_actions.html" with r=row status_filter=status_filter compact=True %}
+  <p class="mt-3 text-[10px] text-gray-400">Règle plateforme : 2 relances max puis archivage automatique.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+{% comment %}
+Conversation de prise de RDV (style WhatsApp) — réutilisable.
+Variables : org, part, has_slots, book_data_json, reschedule_mode, rdv_ref, standalone_mode, success_url, intro_message
+{% endcomment %}
+{% if has_slots %}
+<div id="pac-book-root"
+     {% if standalone_mode %}data-mc-thread-book{% endif %}
+     data-book-url="{% if reschedule_mode %}{% url 'appointments:patient_reschedule' rdv_ref %}{% else %}{% url 'appointments:patient_book' part.reference %}{% endif %}"
+     data-csrf="{{ csrf_token }}"
+     {% if success_url %}data-success-url="{{ success_url }}"{% endif %}
+     data-intro="{{ intro_message|default:'Je souhaite prendre rendez-vous.' }}">
+  <script type="application/json" id="pac-book-data">{{ book_data_json|safe }}</script>
+
+  <div class="pac-wa">
+    {% if not hide_header %}
+    <div class="pac-wa-head">
+      <div class="pac-wa-av">{{ org.name|make_list|first|upper }}</div>
+      <div class="min-w-0">
+        <div class="pac-wa-hn">{{ org.name }}</div>
+        <div class="pac-wa-hs">{% if reschedule_mode %}Modifier le créneau{% else %}Secrétariat · Prise de rendez-vous{% endif %}</div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="pac-wa-chat" id="pac-chat" aria-live="polite"></div>
+    <div class="pac-wa-bar" id="pac-wbar">
+      <input type="text" class="pac-winp" id="pac-note-input" maxlength="200"
+             placeholder="Sélectionnez d'abord un créneau…" disabled>
+      <button type="button" class="pac-wsend" id="pac-wsend" disabled aria-label="Confirmer">➤</button>
+    </div>
+  </div>
+</div>
+{% if standalone_mode %}
+<script src="{% static 'messaging/js/thread_book.js' %}?v=1"></script>
+{% endif %}
+{% else %}
+<p class="pac-empty">
+  Aucun créneau en ligne pour cette structure pour le moment.<br>
+  <span style="font-size:11px;margin-top:6px;display:inline-block">Contactez-la directement via WhatsApp depuis le devis.</span>
+</p>
+{% endif %}

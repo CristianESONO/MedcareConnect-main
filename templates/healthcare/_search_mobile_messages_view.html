@@ -1,0 +1,39 @@
+{% comment %}Vue messagerie in-app (onglet bas — démo MOBILE PATIENT).{% endcomment %}
+{% load humanize %}
+<div id="sipn-view-messages" class="sipn-mobile-app-view sipn-messages-panel">
+  {% if user.is_authenticated and user.is_patient %}
+  <div class="mc-inbox-wrap sipn-inbox-embed">
+    <div class="mc-inbox-head sipn-msg-header">
+      <div class="mc-inbox-title">Messagerie</div>
+      <div class="mc-inbox-sub">
+        {% if search_conversations %}
+        Vos devis et rendez-vous · {{ search_conversations|length }} conversation{{ search_conversations|length|pluralize }}
+        {% else %}
+        Vos devis et rendez-vous
+        {% endif %}
+      </div>
+    </div>
+    {% if search_conversations %}
+    <div class="mc-conv-list">
+      <div class="mc-conv-section-lbl">Conversations · {{ search_conversations|length }}</div>
+      {% for conv in search_conversations %}
+      {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="mc-inbox-empty">
+      <div class="mc-inbox-empty-title">Aucun message pour l'instant</div>
+      <p class="mc-inbox-empty-sub">Ajoutez des actes à votre panier<br>puis cliquez sur <strong>Obtenir mon devis</strong>.</p>
+      <button type="button" class="mc-thread-act mc-thread-act--primary sipn-goto-prestations" style="display:inline-flex;margin-top:16px">Parcourir les prestations</button>
+    </div>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="sipn-guest-gate">
+    <div class="sipn-guest-gate-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="chat" class="sipn-ico sipn-ico--xl" %}</div>
+    <div class="sipn-guest-gate-title">Messagerie</div>
+    <p class="sipn-guest-gate-sub">Connectez-vous pour échanger avec les structures et valider vos devis.</p>
+    <a href="{% url 'users:login' %}?next={% url 'messaging:inbox' %}" class="sipn-guest-gate-cta">Se connecter</a>
+  </div>
+  {% endif %}
+</div>

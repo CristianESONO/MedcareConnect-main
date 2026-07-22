@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+{# Hauteur max + scroll : règles en dur (id + !important) pour ne pas dépendre du build Tailwind ni d’un output.css obsolète en cache / collectstatic #}
+<style>
+#centres-actes-list {
+  box-sizing: border-box !important;
+  max-height: 300px !important;
+  min-width: 100px;
+  width: 100%;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #aecde1 #eef5f9;
+}
+#centres-actes-list::-webkit-scrollbar { width: 8px; }
+#centres-actes-list::-webkit-scrollbar-track { background: #eef5f9; border-radius: 9999px; }
+#centres-actes-list::-webkit-scrollbar-thumb { background: #aecde1; border-radius: 9999px; }
+#centres-actes-list::-webkit-scrollbar-thumb:hover { background: #7badc9; }
+</style>
+{% endblock %}
+{% block title %}Centres de santé{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Centres &amp; prestataires</h1>
+            <p class="mt-1 text-sm text-gray-500">Établissements actifs — filtrez par acte ou recherchez par nom / ville.</p>
+        </div>
+        <a href="{% url 'healthcare:search' %}" class="text-sm font-semibold text-accent-500 hover:text-accent-600">Recherche prestations →</a>
+    </div>
+
+    <form method="get" class="mt-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div class="grid gap-4 lg:grid-cols-2 lg:items-start">
+            <div class="lg:col-span-1">
+                <label for="centres-q" class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Recherche</label>
+                {%comment%} <p class="mt-0.5 text-[11px] text-gray-500">Saisissez quelques lettres pour afficher la liste défilante, puis cochez les examens voulus. Les sélections apparaissent sous le champ sous forme de pastilles.</p> {%endcomment%}
+                <input type="search" name="q" id="centres-q" value="{{ search_q }}" placeholder="Nom, ville, quartier, adresse…"
+                    class="mt-1.5 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:border-accent-400 focus:bg-white focus:outline-none">
+            </div>
+            <div class="lg:col-span-1">
+                <span class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Examens / actes</span>
+                {%comment%} <p class="mt-0.5 text-[11px] text-gray-500">Saisissez quelques lettres pour afficher la liste défilante, puis cochez les examens voulus. Les sélections apparaissent sous le champ sous forme de pastilles.</p> {%endcomment%}
+                <div id="centres-actes-wrap" class="relative z-20 mt-2 rounded-xl bg-gradient-to-b from-gray-50/90 to-white shadow-inner">
+                <label class="sr-only" for="centres-actes-filter">Rechercher un examen dans la liste</label>
+                <input type="search" id="centres-actes-filter" autocomplete="off" placeholder="Ex. IRM, NFS, glycémie… (la liste s’affiche après saisie)"
+                    class="relative z-10 w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm shadow-sm transition focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-400/25"
+                    aria-autocomplete="list" aria-controls="centres-actes-list" aria-expanded="false">
+                <div id="centres-actes-pills" class="mt-3 flex flex-wrap gap-2 empty:hidden" aria-live="polite"></div>
+                <div id="centres-actes-list" role="listbox" class="absolute left-3 right-3 top-full z-50 mt-2 hidden rounded-lg border border-primary-100 bg-white shadow-xl ring-1 ring-primary-900/5" style="max-height:300px;overflow:auto;box-sizing:border-box;" style="max-height: 300px; overflow: auto;">
+                    {% regroup actes_for_filter by service_medical_category as acte_groups %}
+                    {% for g in acte_groups %}
+                    <div class="centres-acte-group">
+                        <p class="sticky top-0 z-[1] bg-primary-50 px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-primary-700 backdrop-blur-sm">{{ g.grouper.name }}</p>
+                        <div class="divide-y divide-gray-100">
+                            {% for a in g.list %}
+                            <label class="centres-acte-row flex cursor-pointer items-start gap-2.5 px-3 py-2.5 text-sm text-gray-800 transition hover:bg-accent-50/80" data-filter="{{ a.name|lower }}">
+                                <input type="checkbox" name="acte" value="{{ a.pk }}" class="mt-0.5 shrink-0 rounded border-gray-300 text-accent-500 focus:ring-2 focus:ring-accent-400" {% if a.pk in acte_ids %}checked{% endif %}>
+                                <span class="leading-snug">{{ a.name }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-3 lg:col-span-1">
+                <label class="flex cursor-pointer items-start gap-2 text-sm text-gray-700">
+                    <input type="checkbox" name="match_all" value="1" class="mt-1 rounded border-gray-300 text-accent-500 focus:ring-accent-400" {% if match_all %}checked{% endif %}>
+                    <span><strong>Tous</strong> les actes requis <span class="text-xs text-gray-400">(un seul centre doit tout proposer)</span></span>
+                </label>
+                <div class="flex flex-wrap gap-2">
+                    <button type="submit" class="rounded-xl bg-primary-500 px-4 py-2 text-sm font-bold text-white hover:bg-primary-600">Filtrer</button>
+                    <a href="{% url 'healthcare:centres_list' %}" class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Réinitialiser</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {% for org in page %}
+        <article class="flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div class="flex items-start gap-3">
+                {% if org.logo %}<img src="{{ org.logo.url }}" class="h-12 w-12 rounded-xl object-cover" alt="">
+                {% else %}<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-lg font-bold text-primary-500">{{ org.name|make_list|first|upper }}</div>{% endif %}
+                <div class="min-w-0 flex-1">
+                    <h2 class="font-semibold text-gray-900"><a href="{% url 'healthcare:organisme_detail' org.slug %}" class="hover:text-accent-500">{{ org.name }}</a></h2>
+                    <p class="text-xs text-gray-400">{{ org.type_organisme|default:"" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}</p>
+                </div>
+            </div>
+            {% if org.description %}<p class="mt-3 line-clamp-2 text-xs text-gray-500">{{ org.description }}</p>{% endif %}
+            <p class="mt-2 text-xs text-gray-500">{{ org.address }}</p>
+
+            <div class="mt-4 flex flex-wrap gap-2 border-t border-gray-100 pt-4">
+                <a href="{% url 'healthcare:organisme_detail' org.slug %}" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-600">Voir la fiche</a>
+                {% comment %} Messagerie interne masquée
+                {% if user.is_authenticated %}
+                <a href="{% url 'messaging:start_conversation' org.slug %}" class="rounded-lg border border-accent-200 bg-accent-50 px-3 py-1.5 text-xs font-medium text-accent-800 hover:bg-accent-100">Message</a>
+                {% else %}
+                <a href="{% url 'users:login' %}?{{ login_next_query }}" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-50">Connexion pour écrire</a>
+                {% endif %}
+                {% endcomment %}
+            </div>
+        </article>
+        {% empty %}
+        <p class="col-span-full rounded-xl border border-dashed border-gray-200 bg-gray-50 py-16 text-center text-gray-500">Aucun centre ne correspond à ces critères.</p>
+        {% endfor %}
+    </div>
+
+    {% if page.has_other_pages %}
+    <div class="mt-8 flex justify-center gap-2">
+        {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}{% if centres_query_string %}&{{ centres_query_string }}{% endif %}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">← Précédent</a>{% endif %}
+        <span class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}<a href="?page={{ page.next_page_number }}{% if centres_query_string %}&{{ centres_query_string }}{% endif %}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Suivant →</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function () {
+  var el = document.getElementById('centres-actes-filter');
+  var list = document.getElementById('centres-actes-list');
+  var wrap = document.getElementById('centres-actes-wrap');
+  var pillsWrap = document.getElementById('centres-actes-pills');
+  if (!el || !list || !wrap) return;
+  function norm(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  function filter() {
+    var q = norm(el.value.trim());
+    list.querySelectorAll('.centres-acte-row').forEach(function (row) {
+      var hay = norm(row.getAttribute('data-filter') || '');
+      row.style.display = !q || hay.indexOf(q) !== -1 ? '' : 'none';
+    });
+    list.querySelectorAll('.centres-acte-group').forEach(function (grp) {
+      var any = false;
+      grp.querySelectorAll('.centres-acte-row').forEach(function (row) {
+        if (row.style.display !== 'none') any = true;
+      });
+      grp.style.display = any ? '' : 'none';
+    });
+  }
+  function syncPanel() {
+    var open = el.value.trim().length >= 1;
+    list.classList.toggle('hidden', !open);
+    el.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) filter();
+  }
+  function syncPills() {
+    if (!pillsWrap) return;
+    pillsWrap.innerHTML = '';
+    wrap.querySelectorAll('input[name="acte"]:checked').forEach(function (cb) {
+      var row = cb.closest('.centres-acte-row');
+      var labelSpan = row ? row.querySelector('span') : null;
+      var name = labelSpan ? labelSpan.textContent.trim() : ('#' + cb.value);
+      var pill = document.createElement('span');
+      pill.className = 'inline-flex max-w-full items-center gap-1 rounded-full border border-primary-200 bg-white pl-2.5 p-2 text-xs font-medium text-primary-800 shadow-sm';
+      var txt = document.createElement('span');
+      txt.className = 'min-w-0 truncate';
+      txt.textContent = name;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'shrink-0 rounded-full p-0.5 text-primary-600 hover:bg-primary-200/80 focus:outline-none focus:ring-2 focus:ring-primary-400';
+      btn.setAttribute('aria-label', 'Retirer ' + name);
+      btn.textContent = '\u00D7';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        cb.checked = false;
+        syncPills();
+      });
+      pill.appendChild(txt);
+      pill.appendChild(btn);
+      pillsWrap.appendChild(pill);
+    });
+  }
+  el.addEventListener('input', syncPanel);
+  el.addEventListener('search', syncPanel);
+  el.addEventListener('focus', syncPanel);
+  wrap.addEventListener('change', function (ev) {
+    if (ev.target && ev.target.name === 'acte') syncPills();
+  });
+  document.addEventListener('click', function (ev) {
+    if (!wrap.contains(ev.target)) {
+      el.value = '';
+      syncPanel();
+    }
+  });
+  syncPanel();
+  syncPills();
+})();
+</script>
+{% endblock %}

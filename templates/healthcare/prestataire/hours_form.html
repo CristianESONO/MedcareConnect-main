@@ -1,0 +1,64 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% block title %}Horaires d'ouverture{% endblock %}
+
+{% block dash_content %}
+<div>
+  <h1 class="text-xl font-bold text-gray-900">Horaires d'ouverture</h1>
+  <p class="mt-0.5 text-sm text-gray-500">Format HH:MM (ex. 08:00). Cochez « Fermé » pour les jours sans activité.</p>
+</div>
+
+<div class="mt-6 max-w-2xl">
+  <form method="POST" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    {% csrf_token %}
+    <div class="space-y-2">
+      <div class="grid grid-cols-1 gap-3 border-b border-gray-100 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Lundi</span>
+        <div>{{ form.Lundi_open }}</div>
+        <div>{{ form.Lundi_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Lundi_closed }} Fermé</label>
+      </div>
+      <div class="grid grid-cols-1 gap-3 border-b border-gray-100 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Mardi</span>
+        <div>{{ form.Mardi_open }}</div>
+        <div>{{ form.Mardi_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Mardi_closed }} Fermé</label>
+      </div>
+      <div class="grid grid-cols-1 gap-3 border-b border-gray-100 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Mercredi</span>
+        <div>{{ form.Mercredi_open }}</div>
+        <div>{{ form.Mercredi_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Mercredi_closed }} Fermé</label>
+      </div>
+      <div class="grid grid-cols-1 gap-3 border-b border-gray-100 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Jeudi</span>
+        <div>{{ form.Jeudi_open }}</div>
+        <div>{{ form.Jeudi_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Jeudi_closed }} Fermé</label>
+      </div>
+      <div class="grid grid-cols-1 gap-3 border-b border-gray-100 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Vendredi</span>
+        <div>{{ form.Vendredi_open }}</div>
+        <div>{{ form.Vendredi_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Vendredi_closed }} Fermé</label>
+      </div>
+      <div class="grid grid-cols-1 gap-3 border-b border-gray-100 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Samedi</span>
+        <div>{{ form.Samedi_open }}</div>
+        <div>{{ form.Samedi_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Samedi_closed }} Fermé</label>
+      </div>
+      <div class="grid grid-cols-1 gap-3 py-3 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center">
+        <span class="text-sm font-medium text-gray-900">Dimanche</span>
+        <div>{{ form.Dimanche_open }}</div>
+        <div>{{ form.Dimanche_close }}</div>
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 whitespace-nowrap">{{ form.Dimanche_closed }} Fermé</label>
+      </div>
+    </div>
+
+    <div class="mt-6 flex gap-3 border-t border-gray-100 pt-5">
+      <a href="{% url 'healthcare:prestataire_dashboard' %}" class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50">Annuler</a>
+      <button type="submit" class="rounded-xl bg-accent-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-accent-600">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

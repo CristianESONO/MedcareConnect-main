@@ -1,0 +1,65 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Services médicaux{% endblock %}
+{% block page_title %}Services médicaux{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex justify-end">
+    <a href="{% url 'dashboard:service_create' %}" class="inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-600">+ Nouveau service</a>
+</div>
+<div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div class="overflow-x-auto max-w-full">
+    <table class="w-full min-w-[720px] text-left text-sm">
+        <thead class="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
+            <tr>
+                <th class="px-4 py-3 font-medium">Service</th>
+                <th class="px-4 py-3 font-medium">Icône</th>
+                <th class="px-4 py-3 font-medium">Actes</th>
+                <th class="px-4 py-3 font-medium">Ordre</th>
+                <th class="px-4 py-3 font-medium">Statut</th>
+                <th class="px-4 py-3 font-medium text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for s in services %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">
+                    <p class="font-medium text-gray-900">{{ s.name }}</p>
+                    {% if s.description %}
+                    <p class="mt-0.5 text-xs text-gray-400 line-clamp-1">{{ s.description }}</p>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 text-gray-500">{{ s.icon|default:"—" }}</td>
+                <td class="px-4 py-3">
+                    <span class="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">{{ s.actes_count }}</span>
+                </td>
+                <td class="px-4 py-3 text-gray-500">{{ s.order }}</td>
+                <td class="px-4 py-3">
+                    {% if s.is_active %}
+                    <span class="inline-flex items-center gap-1 rounded-full mc-bg-accent-light px-2 py-0.5 text-[11px] font-medium mc-text-accent-dark">
+                        <span class="h-1.5 w-1.5 rounded-full mc-bg-accent"></span> Actif
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-500">
+                        <span class="h-1.5 w-1.5 rounded-full bg-gray-400"></span> Inactif
+                    </span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-3 text-right whitespace-nowrap">
+                    <a href="{% url 'dashboard:actes_list' %}?service={{ s.pk }}" class="text-xs font-medium text-gray-600 hover:text-primary-600">Voir actes</a>
+                    <span class="mx-1 text-gray-300">|</span>
+                    <a href="{% url 'dashboard:service_edit' s.pk %}" class="text-xs font-medium text-primary-600 hover:text-primary-800">Modifier</a>
+                    <form method="post" action="{% url 'dashboard:service_delete' s.pk %}" class="inline" onsubmit="return confirm('Supprimer ce service et tous ses actes ? Cette action est irréversible.');">
+                        {% csrf_token %}
+                        <button type="submit" class="ml-2 text-xs font-medium text-red-600 hover:text-red-800">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="px-4 py-12 text-center text-gray-400">Aucun service médical enregistré.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}

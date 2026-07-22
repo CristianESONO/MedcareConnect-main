@@ -1,0 +1,12 @@
+{% if messages %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.MedcareUI) return;
+  {% for message in messages %}
+  MedcareUI.toast("{{ message|escapejs }}", {
+    level: "{% if 'success' in message.tags %}success{% elif 'error' in message.tags %}error{% elif 'warning' in message.tags %}warning{% else %}info{% endif %}"
+  });
+  {% endfor %}
+});
+</script>
+{% endif %}

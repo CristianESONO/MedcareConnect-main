@@ -1,0 +1,124 @@
+<script>
+(function() {
+  function fmtXof(n) {
+    var x = Math.round(Number(n) || 0);
+    return x.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' XOF';
+  }
+  function parsePct(v) {
+    if (v === '' || v === null || typeof v === 'undefined') return null;
+    var p = parseFloat(String(v).replace(',', '.'), 10);
+    if (isNaN(p)) return null;
+    return Math.min(100, Math.max(0, p));
+  }
+  function init() {
+    var root = document.getElementById('medcare-recap-root');
+    var sel = document.getElementById('id_insurance');
+    var wrap = document.getElementById('medcare-insurance-sim-wrap');
+    var pctIn = document.getElementById('medcare-insurance-pct');
+    var btnClear = document.getElementById('medcare-insurance-pct-clear');
+    if (!root || !sel || !wrap || !pctIn) return;
+
+    var totalBrut = parseFloat(String(root.getAttribute('data-total-brut') || '0').replace(',', '.'), 10) || 0;
+    var serverPec = root.getAttribute('data-server-pec');
+    var serverReste = root.getAttribute('data-server-reste');
+    var hasServer = serverPec !== null && serverPec !== '' && serverReste !== null && serverReste !== '';
+
+    var elBrut = document.getElementById('medcare-recap-brut');
+    var elPec = document.getElementById('medcare-recap-pec');
+    var elReste = document.getElementById('medcare-recap-reste');
+    var rowPec = document.getElementById('medcare-recap-row-pec');
+    var rowReste = document.getElementById('medcare-recap-row-reste');
+    var rowTotalSeul = document.getElementById('medcare-recap-row-total-seul');
+    var ddTotalSeul = document.getElementById('medcare-recap-total-seul-dd');
+    var lines = root.querySelectorAll('[data-medcare-line-subtotal]');
+
+    function insuranceSelected() {
+      var v = sel.value;
+      return v !== '' && v !== null && String(v).trim() !== '';
+    }
+
+    function apply() {
+      var hasIns = insuranceSelected();
+      var pct = parsePct(pctIn.value);
+      var sim = hasIns && pct !== null;
+
+      root.classList.toggle('medcare-pct-active', sim);
+
+      if (elBrut) elBrut.textContent = fmtXof(totalBrut);
+
+      lines.forEach(function(line) {
+        var sub = parseFloat(String(line.getAttribute('data-medcare-line-subtotal') || '0').replace(',', '.'), 10) || 0;
+        var brutEl = line.querySelector('.medcare-line-brut');
+        var simEl = line.querySelector('.medcare-line-sim');
+        if (brutEl) brutEl.textContent = fmtXof(sub);
+        if (simEl) {
+          if (sim) {
+            simEl.classList.remove('hidden');
+            simEl.textContent = '→ ' + fmtXof(sub * (1 - pct / 100));
+          } else {
+            simEl.classList.add('hidden');
+            simEl.textContent = '';
+          }
+        }
+      });
+
+      if (!hasIns) {
+        wrap.classList.add('hidden');
+        if (rowPec) rowPec.classList.add('hidden');
+        if (rowReste) rowReste.classList.add('hidden');
+        if (rowTotalSeul) rowTotalSeul.classList.remove('hidden');
+        if (ddTotalSeul) ddTotalSeul.textContent = fmtXof(totalBrut);
+        return;
+      }
+
+      wrap.classList.remove('hidden');
+
+      if (sim) {
+        var pec = totalBrut * (pct / 100);
+        var reste = totalBrut - pec;
+        if (rowPec) rowPec.classList.remove('hidden');
+        if (rowReste) rowReste.classList.remove('hidden');
+        if (rowTotalSeul) rowTotalSeul.classList.add('hidden');
+        if (elPec) elPec.textContent = '-' + fmtXof(pec);
+        if (elReste) elReste.textContent = fmtXof(reste);
+        return;
+      }
+
+      if (hasServer) {
+        if (rowPec) rowPec.classList.remove('hidden');
+        if (rowReste) rowReste.classList.remove('hidden');
+        if (rowTotalSeul) rowTotalSeul.classList.add('hidden');
+        var sp = parseFloat(String(serverPec).replace(',', '.'), 10) || 0;
+        var sr = parseFloat(String(serverReste).replace(',', '.'), 10) || 0;
+        if (elPec) elPec.textContent = '-' + fmtXof(sp);
+        if (elReste) elReste.textContent = fmtXof(sr);
+        return;
+      }
+
+      if (rowPec) rowPec.classList.add('hidden');
+      if (rowReste) rowReste.classList.add('hidden');
+      if (rowTotalSeul) rowTotalSeul.classList.remove('hidden');
+      if (ddTotalSeul) ddTotalSeul.textContent = fmtXof(totalBrut);
+    }
+
+    sel.addEventListener('change', apply);
+    pctIn.addEventListener('input', apply);
+    pctIn.addEventListener('change', apply);
+    if (btnClear) {
+      btnClear.addEventListener('click', function() {
+        pctIn.value = '';
+        apply();
+      });
+    }
+    if (window.jQuery && jQuery.fn && jQuery.fn.select2) {
+      jQuery(sel).on('select2:select select2:clear change', apply);
+    }
+    apply();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

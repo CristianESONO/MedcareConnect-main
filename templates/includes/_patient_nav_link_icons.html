@@ -1,0 +1,14 @@
+{% comment %}Icônes menu patient — include avec item=… {% endcomment %}
+{% if item == 'accueil' %}<i class="ti ti-layout-dashboard mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'chariot' %}<i class="ti ti-shopping-cart mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'devis' %}<i class="ti ti-file-text mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'messages' %}<i class="ti ti-messages mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'rdv' %}<i class="ti ti-calendar mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'notifications' %}<i class="ti ti-bell mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'rappels' %}<i class="ti ti-clock mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'recherches' %}<i class="ti ti-history mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'profil' %}<i class="ti ti-user mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'assurance' %}<i class="ti ti-shield mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'search' %}<i class="ti ti-search mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% elif item == 'annuaire' %}<i class="ti ti-building-hospital mc-landing-nav-item-icon" aria-hidden="true"></i>
+{% endif %}

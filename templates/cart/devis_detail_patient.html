@@ -1,0 +1,44 @@
+{% extends "users/patient_account_base.html" %}
+{% block title %}Mon compte — Devis {{ devis.reference }}{% endblock %}
+{% block account_content %}
+<p class="mb-4">
+  <a href="{% url 'cart:devis_list' %}" class="pac-btn-link">← Mes devis</a>
+</p>
+
+<div class="pac-devis-card">
+  <div class="pac-devis-head">
+    <div class="min-w-0">
+      <div class="pac-devis-struct">Devis {{ devis.reference }}</div>
+      <div class="pac-devis-ref">{{ devis.created_at|date:"d/m/Y · H:i" }} · Valide jusqu'au {{ devis.valid_until|date:"d/m/Y" }}</div>
+    </div>
+    {% if devis.status == 'expired' or devis.status == 'archived' %}
+    <span class="pac-badge pac-badge--expired">{{ devis.get_status_display }}</span>
+    {% else %}
+    <span class="pac-badge pac-badge--wait">{{ devis.get_status_display }}</span>
+    {% endif %}
+  </div>
+  <div class="pac-devis-body">
+    <div class="pac-actes-list">
+      {% for line in devis.details %}
+      <div class="pac-acte-item">
+        <span>{{ line.acte }}{% if line.organisme %} · {{ line.organisme }}{% endif %}</span>
+        <span>{{ line.subtotal|floatformat:0 }} F</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f3f4f6;font-size:11px">
+      <div class="flex justify-between py-0.5"><span class="text-gray-500">Total brut</span><span>{{ devis.total_brut|floatformat:0 }} FCFA</span></div>
+      {% if devis.insurance %}
+      <div class="flex justify-between py-0.5"><span class="text-gray-500">Assurance ({{ devis.insurance.name }})</span><span class="mc-text-accent-dark">−{{ devis.total_assurance|floatformat:0 }} FCFA</span></div>
+      {% endif %}
+      <div class="flex justify-between pt-1 font-bold text-primary-700"><span>Reste à charge</span><span>{{ devis.total_patient|floatformat:0 }} FCFA</span></div>
+    </div>
+  </div>
+</div>
+
+{% include "cart/partials/devis_parts_wa.html" %}
+
+<div class="mt-4 flex flex-wrap gap-2">
+  <button type="button" onclick="window.print()" class="pac-btn-save" style="width:auto;padding-left:16px;padding-right:16px">Imprimer / PDF</button>
+</div>
+{% endblock %}

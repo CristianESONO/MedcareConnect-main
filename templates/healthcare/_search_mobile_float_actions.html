@@ -1,0 +1,11 @@
+{% comment %}FAB mobile — Ma sélection + tout décocher (Prestations).{% endcomment %}
+<div class="sipn-mobile-fabs sipn-pilier-mobile-ui" aria-live="polite">
+  <button type="button" class="sipn-fab sipn-fab--selection" id="sipn-fab-go-results" hidden>
+    <span class="sipn-fab-label">Ma sélection</span>
+    <span class="sipn-fab-badge" id="sipn-fab-sel-count" hidden>0</span>
+  </button>
+  <button type="button" class="sipn-fab sipn-fab--clear" id="sipn-fab-clear-actes" hidden>
+    <span class="sipn-fab-ico" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="x" class="sipn-ico sipn-ico--sm" %}</span>
+    <span>Tout décocher</span>
+  </button>
+</div>

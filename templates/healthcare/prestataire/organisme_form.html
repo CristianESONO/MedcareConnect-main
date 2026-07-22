@@ -1,0 +1,389 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+{% block title %}Profil établissement{% endblock %}
+
+{% block dash_extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_organisme_form.css' %}?v=5">
+{% endblock %}
+
+{% block dash_content %}
+<div class="org-edit-admin">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="min-w-0">
+      <p class="text-[10px] font-bold uppercase tracking-widest text-primary-600">Mon établissement</p>
+      <h1 class="mt-1 text-xl font-bold sm:text-2xl">Profil établissement</h1>
+      <p class="org-edit-lead mt-1 max-w-2xl text-sm">
+        Informations affichées sur votre fiche patient : identité et localisation GPS. Les contacts servent à MedCare et ne sont pas visibles des patients.
+      </p>
+    </div>
+    <div class="org-edit-actions flex flex-shrink-0 flex-wrap items-center gap-2">
+      {% if org.is_active %}
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border border-primary-200 bg-primary-50 px-4 py-2.5 text-sm font-semibold text-primary-900 hover:bg-primary-100">
+        {% include "healthcare/_icon_svg.html" with icon="external" class="org-edit-ico org-edit-ico--sm" %} Voir ma fiche publique ↗
+      </a>
+      {% else %}
+      <a href="{% url 'healthcare:prestataire_profil_public' %}" class="inline-flex items-center gap-2 border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50">
+        {% include "healthcare/_icon_svg.html" with icon="external" class="org-edit-ico org-edit-ico--sm" %} Aperçu fiche publique
+      </a>
+      {% endif %}
+      <a href="{% url 'healthcare:organisme_hours' %}" class="inline-flex items-center gap-2 border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50">
+        {% include "healthcare/_icon_svg.html" with icon="clock" class="org-edit-ico org-edit-ico--sm" %} Horaires
+      </a>
+    </div>
+  </div>
+</div>
+
+{% if not org.is_active %}
+<div class="org-edit-alert" role="status">
+  <strong>Publication en attente.</strong> Complétez ce formulaire ; votre fiche sera visible des patients après validation MedCare.
+</div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" id="organisme-form" class="mt-5">
+  {% csrf_token %}
+
+  {% if form.errors %}
+  <div class="org-edit-alert org-edit-alert-errors mb-4" role="alert">
+    <p class="font-semibold">Corrigez les champs signalés ci-dessous.</p>
+  </div>
+  {% endif %}
+
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_252px] lg:items-start">
+    <div class="space-y-3 min-w-0">
+
+      <section id="sec-identite" class="org-edit-card scroll-mt-24">
+        <header class="org-edit-card-head">
+          <span class="org-edit-card-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="building" class="org-edit-ico" %}</span>
+          <div>
+            <h2 class="org-edit-card-title">Identité &amp; présentation</h2>
+            <p class="org-edit-card-sub">Enseigne, type, logo et texte « À propos ».</p>
+          </div>
+        </header>
+        <div class="org-edit-card-body">
+          <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_10.5rem] lg:items-start">
+            <div class="space-y-4">
+              <div>
+                <label for="{{ form.name.id_for_label }}" class="org-edit-label">Nom affiché <span class="text-rose-500">*</span></label>
+                {{ form.name }}
+                {{ form.name.errors }}
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label for="{{ form.raison_sociale.id_for_label }}" class="org-edit-label">Raison sociale</label>
+                  {{ form.raison_sociale }}
+                  {{ form.raison_sociale.errors }}
+                </div>
+                <div>
+                  <label for="{{ form.ninea.id_for_label }}" class="org-edit-label">NINEA</label>
+                  {{ form.ninea }}
+                  {{ form.ninea.errors }}
+                </div>
+              </div>
+              <div>
+                <label for="{{ form.type_organisme.id_for_label }}" class="org-edit-label">Type d&apos;établissement</label>
+                {{ form.type_organisme }}
+                {{ form.type_organisme.errors }}
+              </div>
+              <div>
+                <label for="{{ form.description.id_for_label }}" class="org-edit-label">Description</label>
+                {{ form.description }}
+                {{ form.description.errors }}
+                <p class="org-edit-hint">Visible sur la fiche publique — soyez concis.</p>
+              </div>
+            </div>
+            <aside class="org-edit-logo">
+              <p class="org-edit-label" style="margin-bottom:0">Logo</p>
+              <div class="org-edit-logo-preview-wrap">
+                {% if org.logo %}
+                <img id="org-logo-preview" src="{{ org.logo.url }}" alt="" class="org-edit-logo-preview">
+                {% else %}
+                <div id="org-logo-preview" class="org-edit-logo-fallback" aria-hidden="true">{{ org.name|make_list|first|upper }}</div>
+                {% endif %}
+              </div>
+              <div class="org-edit-logo-upload">
+                <label for="{{ form.logo.id_for_label }}" class="org-edit-logo-pick">
+                  <span class="org-edit-logo-pick-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="camera" class="org-edit-ico" %}</span>
+                  <span class="org-edit-logo-pick-label">{% if org.logo %}Changer l&apos;image{% else %}Ajouter une image{% endif %}</span>
+                  <span class="org-edit-logo-pick-hint">PNG ou JPG</span>
+                </label>
+                <input type="file" name="{{ form.logo.html_name }}" id="{{ form.logo.id_for_label }}" accept="image/*" class="org-edit-logo-input">
+                {% if org.logo %}
+                <button type="button" class="org-edit-logo-remove" id="org-logo-remove">Retirer</button>
+                <input type="checkbox" name="logo-clear" id="id_logo-clear" class="org-edit-logo-clear">
+                {% endif %}
+              </div>
+              <p class="org-edit-logo-filename" id="org-logo-filename" {% if not org.logo %}hidden{% endif %}>{% if org.logo %}Image enregistrée{% endif %}</p>
+              {{ form.logo.errors }}
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="sec-localisation" class="org-edit-card scroll-mt-24">
+        <header class="org-edit-card-head">
+          <span class="org-edit-card-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="org-edit-ico" %}</span>
+          <div>
+            <h2 class="org-edit-card-title">Localisation</h2>
+            <p class="org-edit-card-sub">GPS pour la recherche par distance et l&apos;itinéraire patient.</p>
+          </div>
+        </header>
+        <div class="org-edit-card-body space-y-4">
+          <div class="org-edit-geo">
+            <button type="button" id="org-btn-gps" class="org-edit-geo-btn">
+              {% include "healthcare/_icon_svg.html" with icon="map-pin" class="org-edit-ico org-edit-ico--sm" %} Ma position GPS
+            </button>
+            <div class="org-edit-geo-search">
+              <input type="search" id="org-geo-q" placeholder="Rechercher une adresse…" autocomplete="off" aria-label="Rechercher une adresse">
+              <button type="button" id="org-btn-geocode" class="org-edit-geo-submit">Rechercher</button>
+            </div>
+          </div>
+          <ul id="org-geo-sug" class="org-edit-geo-sug hidden" role="listbox"></ul>
+          <div id="org-map-preview" class="org-edit-map {% if not org.latitude or not org.longitude %}hidden{% endif %}">
+            <iframe id="org-map-iframe" title="Aperçu carte" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              {% if org.latitude and org.longitude %}src="https://maps.google.com/maps?q={{ org.latitude }},{{ org.longitude }}&amp;z=15&amp;hl=fr&amp;output=embed"{% endif %}></iframe>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+              <label for="{{ form.address.id_for_label }}" class="org-edit-label">Adresse</label>
+              {{ form.address }}
+              {{ form.address.errors }}
+            </div>
+            <div>
+              <label for="{{ form.quartier.id_for_label }}" class="org-edit-label">Quartier</label>
+              {{ form.quartier }}
+              {{ form.quartier.errors }}
+            </div>
+            <div>
+              <label for="{{ form.city.id_for_label }}" class="org-edit-label">Ville</label>
+              {{ form.city }}
+              {{ form.city.errors }}
+            </div>
+            <div class="sm:col-span-2">
+              <label for="{{ form.region.id_for_label }}" class="org-edit-label">Région</label>
+              {{ form.region }}
+              {{ form.region.errors }}
+            </div>
+            <div>
+              <label for="{{ form.latitude.id_for_label }}" class="org-edit-label">Latitude</label>
+              <div id="wrap-lat">{{ form.latitude }}</div>
+              {{ form.latitude.errors }}
+            </div>
+            <div>
+              <label for="{{ form.longitude.id_for_label }}" class="org-edit-label">Longitude</label>
+              <div id="wrap-lng">{{ form.longitude }}</div>
+              {{ form.longitude.errors }}
+            </div>
+          </div>
+          <p class="org-edit-hint">
+            <a id="org-osm-link" href="#" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary-600 hover:text-primary-800">Ouvrir sur OpenStreetMap ↗</a>
+          </p>
+        </div>
+      </section>
+
+      <section id="sec-contact" class="org-edit-card scroll-mt-24">
+        <header class="org-edit-card-head">
+          <span class="org-edit-card-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="phone" class="org-edit-ico" %}</span>
+          <div>
+            <h2 class="org-edit-card-title">Contact</h2>
+            <p class="org-edit-card-sub">Téléphone, WhatsApp et e-mail : usage interne, non affichés aux patients. Le site web reste visible sur la fiche.</p>
+          </div>
+        </header>
+        <div class="org-edit-card-body grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="{{ form.contact_phone.id_for_label }}" class="org-edit-label">Téléphone</label>
+            {{ form.contact_phone }}
+            {{ form.contact_phone.errors }}
+          </div>
+          <div>
+            <label for="{{ form.whatsapp_number.id_for_label }}" class="org-edit-label">WhatsApp</label>
+            {{ form.whatsapp_number }}
+            {{ form.whatsapp_number.errors }}
+            <p class="org-edit-hint">Numéro utilisé pour les devis WhatsApp.</p>
+          </div>
+          <div>
+            <label for="{{ form.contact_email.id_for_label }}" class="org-edit-label">E-mail</label>
+            {{ form.contact_email }}
+            {{ form.contact_email.errors }}
+          </div>
+          <div>
+            <label for="{{ form.website.id_for_label }}" class="org-edit-label">Site web</label>
+            {{ form.website }}
+            {{ form.website.errors }}
+          </div>
+        </div>
+      </section>
+
+      <div class="org-edit-mobile-bar">
+        <a href="{% url 'healthcare:prestataire_dashboard' %}" class="rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50">Annuler</a>
+        <button type="submit" class="mc-btn-primary flex-1 rounded-xl px-6 py-2.5 text-sm font-bold sm:flex-none">Enregistrer</button>
+      </div>
+    </div>
+
+    <aside class="hidden lg:block">
+      <div class="sticky top-4 space-y-3">
+        <div class="org-edit-aside-card">
+          <p class="org-edit-aside-title">Complétude du profil</p>
+          <div class="org-edit-progress-ring" aria-hidden="true">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" fill="none" stroke="var(--mc-border, #D4DEEE)" stroke-width="6"></circle>
+              <circle cx="36" cy="36" r="30" fill="none" stroke="var(--mc-accent, #4fa3c7)" stroke-width="6"
+                stroke-dasharray="188.5" stroke-dashoffset="{{ 188.5|add:profile_completion|default:0|floatformat:0 }}"
+                style="stroke-dashoffset: calc(188.5 - (188.5 * {{ profile_completion|default:0 }} / 100));"
+                stroke-linecap="round"></circle>
+            </svg>
+            <span class="org-edit-progress-val">{{ profile_completion|default:0 }}%</span>
+          </div>
+          <ul class="org-edit-checklist mt-3 space-y-1">
+            <li class="{% if org.name %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Nom affiché</li>
+            <li class="{% if org.logo %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Logo</li>
+            <li class="{% if org.description %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Description</li>
+            <li class="{% if org.latitude and org.longitude %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Coordonnées GPS</li>
+            <li class="{% if org.contact_phone %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Téléphone</li>
+            <li class="{% if org.whatsapp_number %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> WhatsApp</li>
+          </ul>
+        </div>
+
+        <div class="org-edit-save-card">
+          <button type="submit" class="mc-btn-primary mc-btn-primary--block w-full rounded-xl py-3 text-sm font-bold">
+            Enregistrer les modifications
+          </button>
+          <a href="{% url 'healthcare:prestataire_dashboard' %}" class="mt-2 block w-full rounded-xl border border-gray-200 bg-white py-2.5 text-center text-sm font-semibold text-gray-600 hover:bg-gray-50">
+            Annuler
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</form>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+(function() {
+  function latInput() { return document.querySelector('input[name="latitude"]'); }
+  function lngInput() { return document.querySelector('input[name="longitude"]'); }
+  function mapPreview() { return document.getElementById('org-map-preview'); }
+  function mapIframe() { return document.getElementById('org-map-iframe'); }
+
+  function setLL(lat, lng) {
+    var la = latInput(), lo = lngInput();
+    if (la) la.value = lat;
+    if (lo) lo.value = lng;
+    var link = document.getElementById('org-osm-link');
+    if (link && lat && lng) {
+      link.href = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng;
+    }
+    var prev = mapPreview(), iframe = mapIframe();
+    if (prev && iframe && lat && lng) {
+      iframe.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(lat) + ',' + encodeURIComponent(lng) + '&z=15&hl=fr&output=embed';
+      prev.classList.remove('hidden');
+    }
+  }
+
+  var gpsBtn = document.getElementById('org-btn-gps');
+  if (gpsBtn) {
+    gpsBtn.addEventListener('click', function() {
+      if (!navigator.geolocation) { alert('Géolocalisation non disponible sur cet appareil.'); return; }
+      gpsBtn.disabled = true;
+      gpsBtn.textContent = 'Localisation…';
+      navigator.geolocation.getCurrentPosition(function(p) {
+        setLL(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6));
+        gpsBtn.disabled = false;
+        gpsBtn.textContent = 'Ma position GPS';
+      }, function() {
+        alert('Impossible d\'obtenir la position. Vérifiez les autorisations du navigateur.');
+        gpsBtn.disabled = false;
+        gpsBtn.textContent = 'Ma position GPS';
+      }, { enableHighAccuracy: true, timeout: 15000 });
+    });
+  }
+
+  var sug = document.getElementById('org-geo-sug');
+  var geoBtn = document.getElementById('org-btn-geocode');
+  if (geoBtn && sug) {
+    geoBtn.addEventListener('click', function() {
+      var q = document.getElementById('org-geo-q').value.trim();
+      if (q.length < 2) return;
+      geoBtn.disabled = true;
+      fetch('{% url "healthcare:api_geocode" %}?q=' + encodeURIComponent(q))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          sug.innerHTML = '';
+          if (!data.results || !data.results.length) {
+            sug.classList.add('hidden');
+            return;
+          }
+          data.results.forEach(function(item) {
+            var li = document.createElement('li');
+            li.textContent = item.display_name;
+            li.addEventListener('click', function() {
+              setLL(String(item.lat), String(item.lon));
+              sug.classList.add('hidden');
+            });
+            sug.appendChild(li);
+          });
+          sug.classList.remove('hidden');
+        })
+        .finally(function() { geoBtn.disabled = false; });
+    });
+  }
+
+  var logoInput = document.querySelector('input[name="logo"]');
+  var logoFilename = document.getElementById('org-logo-filename');
+  var logoAside = document.querySelector('.org-edit-logo');
+  var logoRemove = document.getElementById('org-logo-remove');
+  var logoClear = document.getElementById('id_logo-clear');
+
+  function shortName(name) {
+    if (!name) return '';
+    return name.length > 28 ? name.slice(0, 14) + '…' + name.slice(-10) : name;
+  }
+
+  function setLogoFilename(text, hidden) {
+    if (!logoFilename) return;
+    logoFilename.textContent = text || '';
+    logoFilename.hidden = !!hidden;
+  }
+
+  if (logoInput) {
+    logoInput.addEventListener('change', function() {
+      var file = logoInput.files && logoInput.files[0];
+      if (logoClear) logoClear.checked = false;
+      if (logoAside) logoAside.classList.remove('is-pending-remove');
+      if (!file || !file.type.match(/^image\//)) return;
+      setLogoFilename(shortName(file.name), false);
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var el = document.getElementById('org-logo-preview');
+        if (!el) return;
+        if (el.tagName === 'IMG') {
+          el.src = e.target.result;
+        } else {
+          var img = document.createElement('img');
+          img.id = 'org-logo-preview';
+          img.className = 'org-edit-logo-preview';
+          img.alt = '';
+          img.src = e.target.result;
+          el.replaceWith(img);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (logoRemove && logoClear) {
+    logoRemove.addEventListener('click', function() {
+      logoClear.checked = true;
+      if (logoInput) logoInput.value = '';
+      if (logoAside) logoAside.classList.add('is-pending-remove');
+      setLogoFilename('Logo retiré — enregistrez pour confirmer', false);
+      var pickLabel = document.querySelector('.org-edit-logo-pick-label');
+      if (pickLabel) pickLabel.textContent = 'Ajouter une image';
+    });
+  }
+
+  var la = latInput(), lo = lngInput();
+  if (la && lo && la.value && lo.value) setLL(la.value, lo.value);
+})();
+</script>
+{% endblock %}

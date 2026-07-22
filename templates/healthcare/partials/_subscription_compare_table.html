@@ -1,0 +1,44 @@
+{% load subscription_plans humanize %}
+<div class="mcc-sp-compare-wrap">
+  <table class="mcc-sp-feat-compare-table">
+    <thead>
+      <tr>
+        <th class="mcc-sp-left" style="width:34%">Feature (nomenclature SaaS)</th>
+        {% for plan in plans %}
+        <th>
+          {{ plan.name }}
+          <small>
+            {% if plan.monthly_price_fcfa %}{{ plan.monthly_price_fcfa|floatformat:0|intcomma }} F/mois{% else %}Gratuit{% if plan.trial_months %} M0–M{{ plan.trial_months }}{% endif %}{% endif %}
+          </small>
+        </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for group_label, group_features in subscription_feature_groups %}
+      <tr class="mcc-sp-group-head"><td colspan="{{ plans|length|add:1 }}">{{ group_label }}</td></tr>
+      {% for feature in group_features %}
+      <tr>
+        <td class="mcc-sp-left">
+          <strong>{{ feature.label }}</strong>
+          {% if feature.description %}<br><span style="font-size:10px;color:var(--mcc-sp-gray-400);">{{ feature.description }}</span>{% endif %}
+        </td>
+        {% for plan in plans %}
+        {% with theme=plan|sub_plan_theme included=plan_included_map|sub_get_included:plan.pk %}
+        <td>
+          {% if feature.code == "medplaque" and theme == "starter" and feature.code not in included %}
+          <span class="mcc-sp-ico-addon">+</span>
+          {% elif feature.code in included %}
+          <span class="mcc-sp-ico-on">✓</span>
+          {% else %}
+          <span class="mcc-sp-ico-off">–</span>
+          {% endif %}
+        </td>
+        {% endwith %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

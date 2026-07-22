@@ -1,0 +1,32 @@
+{% comment %}
+Arbre actes démo : pilier (famille) → catégorie (label) → actes cochables (multi-sélection).
+Variable : acte_dem_families
+{% endcomment %}
+{% for fam in acte_dem_families %}
+<details class="dem-acte-family dem-acte-group nav-cat" {% if fam.open %}open{% endif %} data-dem-acte-group data-service-id="{{ fam.pk }}">
+  <summary class="dem-acte-group-sum dem-acte-family-sum nav-cat-head">
+    <span class="dem-acte-sum-inner">
+      <span class="dem-acte-chevron nav-cat-arrow" aria-hidden="true"></span>
+      <span class="dem-acte-sum-title">{{ fam.title }}</span>
+    </span>
+    <span class="dem-acte-count">{{ fam.count }}</span>
+  </summary>
+  <div class="dem-acte-family-body nav-sub">
+    {% for sub in fam.subgroups %}
+      {% if sub.title %}
+      <span class="nav-cat-label dem-acte-cat-label">{{ sub.title }}</span>
+      {% endif %}
+      {% for row in sub.rows %}
+      <label class="dem-acte-row dem-acte-row--multi {% if row.selected %}active{% endif %}" data-dem-acte-pk="{{ row.pk }}" data-dem-acte-name="{{ row.name|lower }}">
+        <input type="checkbox" class="dem-acte-chk sr-only" {% if row.selected %}checked{% endif %} aria-label="{{ row.name }}">
+        <span class="dem-acte-chk-box" aria-hidden="true"></span>
+        <span class="min-w-0 flex-1 truncate">{{ row.name }}</span>
+        <span class="dem-acte-count">{{ row.count }}</span>
+      </label>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</details>
+{% empty %}
+<p class="dem-acte-empty px-1 py-2 text-xs text-gray-500">Aucun acte à afficher pour cette famille.</p>
+{% endfor %}

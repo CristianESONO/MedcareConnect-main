@@ -1,0 +1,81 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Modération des avis{% endblock %}
+{% block page_title %}Modération des avis (plateforme MedCare){% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="flex gap-1 rounded-lg bg-gray-100 p-1 w-fit">
+    <a href="{% url 'dashboard:reviews_list' %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_status %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Tous</a>
+    <a href="?status=pending" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_status == 'pending' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">En attente</a>
+    <a href="?status=approved" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_status == 'approved' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Approuvés</a>
+</div>
+
+<div class="mt-4 space-y-3">
+    {% for r in page %}
+    <div class="rounded-xl border border-gray-200 bg-white p-5">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-50 text-xs font-bold text-primary-500">{{ r.patient.username|make_list|first|upper }}</div>
+                <div>
+                    <p class="text-sm font-medium text-gray-900">{{ r.patient.display_name }}</p>
+                    <p class="text-xs text-gray-400">Avis centralisé MedCare</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-0.5">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= r.rating %}
+                        <svg class="h-4 w-4 fill-current text-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 0 0 .951-.69l1.07-3.292Z"/></svg>
+                        {% else %}
+                        <svg class="h-4 w-4 fill-current text-gray-200" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 0 0 .951-.69l1.07-3.292Z"/></svg>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if r.is_approved %}
+                <span class="rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-green-700">Approuvé</span>
+                {% else %}
+                <span class="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">En attente</span>
+                {% endif %}
+            </div>
+        </div>
+        {% if r.actes.all %}
+        <p class="mt-3 text-xs font-medium uppercase tracking-wide text-gray-500">Actes concernés</p>
+        <ul class="mt-1 flex flex-wrap gap-1.5">
+            {% for a in r.actes.all %}
+            <li class="rounded-md bg-gray-100 px-2 py-0.5 text-xs text-gray-800">{{ a.name }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if r.tarifs_delais_comment %}
+        <p class="mt-3 text-sm text-gray-600"><span class="font-semibold text-gray-800">Tarifs &amp; délais :</span> {{ r.tarifs_delais_comment }}</p>
+        {% endif %}
+        <div class="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+            <span class="text-xs text-gray-400">{{ r.created_at|date:"d/m/Y à H:i" }}</span>
+            <div class="flex gap-2">
+                {% if not r.is_approved %}
+                <a href="{% url 'dashboard:review_approve' r.pk %}" class="rounded-md bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-100">Approuver</a>
+                {% endif %}
+                <a href="{% url 'dashboard:review_delete' r.pk %}" class="rounded-md bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100">Supprimer</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="py-12 text-center text-sm text-gray-400">Aucun avis à afficher.</div>
+    {% endfor %}
+</div>
+
+{% if page.has_other_pages %}
+<div class="mt-4 flex items-center justify-between">
+    <p class="text-xs text-gray-500">Page {{ page.number }} / {{ page.paginator.num_pages }}</p>
+    <div class="flex gap-1">
+        {% if page.has_previous %}
+        <a href="?page={{ page.previous_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}" class="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">Précédent</a>
+        {% endif %}
+        {% if page.has_next %}
+        <a href="?page={{ page.next_page_number }}{% if current_status %}&status={{ current_status }}{% endif %}" class="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">Suivant</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

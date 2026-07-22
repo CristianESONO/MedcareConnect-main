@@ -1,0 +1,102 @@
+{% load static %}
+<div data-pac-active="rdv">
+{% include "users/patient_panel/_messages.html" %}
+
+<div class="compte-section-title">RDV à venir</div>
+{% for rdv in rdv_upcoming %}
+<div class="pac-rdv-card">
+  <div class="pac-rdv-top">
+    <div class="min-w-0">
+      <div class="pac-rdv-struct">{{ rdv.organisme.name }}</div>
+      <div class="pac-rdv-slot">{{ rdv.start|date:"l j F · H\hi" }}</div>
+      <div class="pac-rdv-meta">
+        Lieu :
+        {% if rdv.organisme.quartier %}{{ rdv.organisme.quartier }} · {% endif %}
+        {% if rdv.organisme.city %}{{ rdv.organisme.city }}{% endif %}
+        {% if rdv.organisme.address %}<span class="block">{{ rdv.organisme.address }}</span>{% endif %}
+      </div>
+      <div class="pac-rdv-meta">{{ rdv.reference }} · {{ rdv.total_patient|floatformat:0 }} FCFA</div>
+    </div>
+    {% if rdv.status == 'confirmed' %}
+    <span class="pac-badge pac-badge--ok">Confirmé</span>
+    {% else %}
+    <span class="pac-badge pac-badge--wait">En attente</span>
+    {% endif %}
+  </div>
+  {% if rdv.actes_snapshot %}
+  <div class="pac-actes-list">
+    {% for line in rdv.actes_snapshot %}
+    <div class="pac-acte-item">
+      <span>{{ line.acte }}{% if line.quantity > 1 %} ×{{ line.quantity }}{% endif %}</span>
+      <span>{{ line.subtotal|floatformat:0 }} F</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% with prereq=rdv.get_prerequisites_display %}
+  {% if prereq %}
+  <div class="pac-rdv-prereq" style="margin-top:10px;padding:10px 12px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;font-size:12px;line-height:1.5;color:#92400e">
+    <strong style="display:block;margin-bottom:4px;font-size:11px">📋 Consignes avant le RDV</strong>
+    {{ prereq|linebreaksbr }}
+  </div>
+  {% endif %}
+  {% endwith %}
+  {% if rdv.status == 'requested' %}
+  <div class="pac-rdv-meta" style="margin-top:8px">En attente de confirmation par la structure.</div>
+  {% endif %}
+  <div class="pac-rdv-actions">
+    {% if rdv.thread_url %}
+    <a href="{{ rdv.thread_url }}" class="pac-btn-primary">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"/></svg>
+      <span class="pac-rdv-act-label">Conversation</span>
+    </a>
+    {% endif %}
+    {% if rdv.status == 'requested' and rdv.thread_url %}
+    <a href="{{ rdv.thread_url }}?reschedule=1" class="pac-btn-outline">
+      <span class="pac-rdv-act-label pac-rdv-act-label--short">Créneau</span>
+      <span class="pac-rdv-act-label pac-rdv-act-label--long">Modifier le créneau</span>
+    </a>
+    {% endif %}
+    <form method="post" action="{% url 'appointments:patient_cancel' rdv.reference %}" class="pac-rdv-cancel-form">
+      {% csrf_token %}
+      <button type="submit" class="pac-btn-cancel">
+        <span class="pac-rdv-act-label pac-rdv-act-label--short">Annuler rdv</span>
+        <span class="pac-rdv-act-label pac-rdv-act-label--long">Annuler ce RDV</span>
+      </button>
+    </form>
+  </div>
+</div>
+{% empty %}
+<div class="pac-empty-state">
+  <div class="pac-empty-state-icon">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+  </div>
+  <p>Aucun RDV à venir</p>
+  <p class="pac-empty-hint">Obtenez un devis depuis la recherche, puis demandez un créneau dans <button type="button" class="font-semibold text-[var(--mc-navy, #123a63)] underline js-pac-tab" data-pac-tab="devis">Mes devis</button>.</p>
+</div>
+{% endfor %}
+
+<div class="compte-section-title">Historique</div>
+{% for rdv in rdv_past %}
+<div class="pac-rdv-card pac-rdv-card--past">
+  <div class="pac-rdv-top">
+    <div class="min-w-0">
+      <div class="pac-rdv-struct">{{ rdv.organisme.name }}</div>
+      <div class="pac-rdv-slot">{{ rdv.start|date:"l j F · H\hi" }}</div>
+      <div class="pac-rdv-meta">
+        Lieu :
+        {% if rdv.organisme.quartier %}{{ rdv.organisme.quartier }} · {% endif %}
+        {% if rdv.organisme.city %}{{ rdv.organisme.city }}{% endif %}
+        {% if rdv.organisme.address %}<span class="block">{{ rdv.organisme.address }}</span>{% endif %}
+      </div>
+      <div class="pac-rdv-meta">{{ rdv.reference }}</div>
+    </div>
+    <span class="pac-badge pac-badge--{{ rdv.status_badge }}">{{ rdv.get_status_display }}</span>
+  </div>
+</div>
+{% empty %}
+<div class="pac-empty-state">
+  <p>Aucun rendez-vous passé pour le moment.</p>
+</div>
+{% endfor %}
+</div>

@@ -1,0 +1,101 @@
+{% extends "dashboard/base.html" %}
+{% load humanize %}
+{% block title %}Activité plateforme{% endblock %}
+{% block page_title %}Activité · Vue 360°{% endblock %}
+
+{% block content %}
+{% include "dashboard/partials/_activite_nav.html" %}
+
+<p class="mb-6 text-sm text-gray-600">Supervision consolidée du parcours patient : devis WhatsApp, rendez-vous et messagerie structure ↔ patient.</p>
+
+<div class="grid gap-4 lg:grid-cols-3">
+  <a href="{% url 'dashboard:devis_overview' %}" class="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-primary-300 hover:shadow-md">
+    <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Devis WhatsApp</p>
+    <p class="mt-2 text-3xl font-bold text-gray-900">{{ kpis.devis_total|intcomma }}</p>
+    <p class="mt-1 text-xs text-gray-500">{{ kpis.devis_pending|intcomma }} en attente · {{ kpis.devis_expired|intcomma }} expirés</p>
+    <p class="mt-2 text-sm font-semibold text-primary-600">{{ kpis.devis_valeur|floatformat:0|intcomma }} F cumulés</p>
+    <p class="mt-3 text-xs font-medium text-primary-500 group-hover:underline">Voir le registre →</p>
+  </a>
+
+  <a href="{% url 'dashboard:rdv_overview' %}" class="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-primary-300 hover:shadow-md">
+    <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Rendez-vous</p>
+    <p class="mt-2 text-3xl font-bold text-gray-900">{{ kpis.rdv_total|intcomma }}</p>
+    <p class="mt-1 text-xs text-gray-500">{{ kpis.rdv_requested|intcomma }} à confirmer · {{ kpis.rdv_confirmed_upcoming|intcomma }} confirmés à venir</p>
+    <p class="mt-2 text-sm text-gray-600">{{ kpis.rdv_completed_7d|intcomma }} honorés (7 j) · {{ kpis.rdv_no_show|intcomma }} absents</p>
+    <p class="mt-3 text-xs font-medium text-primary-500 group-hover:underline">Voir le registre →</p>
+  </a>
+
+  <a href="{% url 'dashboard:messaging_overview' %}" class="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-primary-300 hover:shadow-md">
+    <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Messagerie</p>
+    <p class="mt-2 text-3xl font-bold text-gray-900">{{ kpis.conv_total|intcomma }}</p>
+    <p class="mt-1 text-xs text-gray-500">{{ kpis.conv_active|intcomma }} actifs · {{ kpis.conv_waiting|intcomma }} en attente</p>
+    <p class="mt-2 text-sm text-gray-600">{{ kpis.messages_7d|intcomma }} messages (7 j) · {{ kpis.conv_devis|intcomma }} fils devis · {{ kpis.conv_rdv|intcomma }} fils RDV</p>
+    <p class="mt-3 text-xs font-medium text-primary-500 group-hover:underline">Superviser les fils →</p>
+  </a>
+</div>
+
+<div class="mt-8 grid gap-6 lg:grid-cols-3">
+  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="text-sm font-bold text-gray-900">Derniers devis</h2>
+      <a href="{% url 'dashboard:devis_overview' %}" class="text-xs font-medium text-primary-600 hover:underline">Tout voir</a>
+    </div>
+    <ul class="mt-3 divide-y divide-gray-50">
+      {% for d in recent_devis %}
+      <li class="flex items-center justify-between gap-2 py-2.5 text-sm">
+        <div class="min-w-0">
+          <p class="font-mono text-xs font-bold text-primary-600">{{ d.reference }}</p>
+          <p class="truncate text-xs text-gray-500">{{ d.patient.display_name|default:d.patient.username }}</p>
+        </div>
+        <span class="shrink-0 text-[10px] font-bold uppercase text-gray-400">{{ d.get_status_display }}</span>
+      </li>
+      {% empty %}
+      <li class="py-6 text-center text-xs text-gray-400">Aucun devis.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="text-sm font-bold text-gray-900">Derniers RDV</h2>
+      <a href="{% url 'dashboard:rdv_overview' %}" class="text-xs font-medium text-primary-600 hover:underline">Tout voir</a>
+    </div>
+    <ul class="mt-3 divide-y divide-gray-50">
+      {% for r in recent_rdv %}
+      <li class="py-2.5">
+        <a href="{% url 'dashboard:rdv_admin_detail' r.reference %}" class="flex items-center justify-between gap-2 text-sm hover:opacity-80">
+          <div class="min-w-0">
+            <p class="font-mono text-xs font-bold text-primary-600">{{ r.reference }}</p>
+            <p class="truncate text-xs text-gray-500">{{ r.patient_label }} · {{ r.organisme.name }}</p>
+          </div>
+          <span class="shrink-0 text-[10px] font-bold uppercase text-gray-400">{{ r.get_status_display }}</span>
+        </a>
+      </li>
+      {% empty %}
+      <li class="py-6 text-center text-xs text-gray-400">Aucun rendez-vous.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="text-sm font-bold text-gray-900">Dernières conversations</h2>
+      <a href="{% url 'dashboard:messaging_overview' %}" class="text-xs font-medium text-primary-600 hover:underline">Tout voir</a>
+    </div>
+    <ul class="mt-3 divide-y divide-gray-50">
+      {% for c in recent_conv %}
+      <li class="py-2.5">
+        <a href="{% url 'dashboard:messaging_admin_detail' c.pk %}" class="block text-sm hover:opacity-80">
+          <p class="truncate text-xs font-semibold text-gray-900">{{ c.dossier_label }}</p>
+          <p class="truncate text-[11px] text-gray-500">{{ c.patient.display_name|default:c.patient.username }} · {{ c.msg_count }} msg</p>
+        </a>
+      </li>
+      {% empty %}
+      <li class="py-6 text-center text-xs text-gray-400">Aucune conversation.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<p class="mt-6 text-[11px] text-gray-400">Accès supervision — lecture des fils réservée au support MedCare. Les structures gèrent l'opérationnel dans leur espace pro.</p>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "users/patient_account_base.html" %}
+{% load static humanize %}
+{% block title %}Messagerie{% endblock %}
+{% block account_page_title %}Messagerie{% endblock %}
+{% block account_extra_css %}
+<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=15">
+{% endblock %}
+{% block account_content %}
+<div class="mc-inbox-wrap">
+  <div class="mc-inbox-head">
+    <div class="mc-inbox-title">Messagerie</div>
+    <div class="mc-inbox-sub">
+      {% if devis_validate_banner %}
+        {{ devis_validate_pending_count }} structure{{ devis_validate_pending_count|pluralize }} à valider · devis {{ devis_validate_ref }}
+      {% elif conversations %}
+        Vos devis et rendez-vous · {{ conversations|length }} conversation{{ conversations|length|pluralize }}
+      {% else %}
+        Vos devis et rendez-vous
+      {% endif %}
+    </div>
+  </div>
+
+  {% if devis_validate_banner %}
+  <section class="mc-validate-banner" aria-label="Structures à valider">
+    <div class="mc-validate-banner-head">
+      <div class="mc-validate-banner-title">Validez vos demandes</div>
+      <p class="mc-validate-banner-sub">Votre panier concerne <strong>{{ devis_validate_pending_count }} structure{{ devis_validate_pending_count|pluralize }}</strong>. Ouvrez chaque conversation pour confirmer votre créneau ou votre demande.</p>
+    </div>
+    <div class="mc-validate-cards">
+      {% for row in devis_validate_pending %}
+      <a href="{{ row.url }}" class="mc-validate-card{% if row.needs_action %} mc-validate-card--pending{% endif %}">
+        <div class="mc-validate-card-top">
+          <span class="mc-validate-card-avatar" aria-hidden="true">{{ row.organisme.name|make_list|first|upper }}</span>
+          <div class="mc-validate-card-info">
+            <div class="mc-validate-card-name">{{ row.organisme.name }}</div>
+            <div class="mc-validate-card-actes">{{ row.acte_count }} acte{{ row.acte_count|pluralize }} · {{ row.acte_preview|truncatechars:48 }}</div>
+          </div>
+          <span class="mc-validate-card-pill">À faire</span>
+        </div>
+        <div class="mc-validate-card-foot">
+          <span class="mc-validate-card-total">{{ row.total_patient|floatformat:0|intcomma }} FCFA</span>
+          <span class="mc-validate-card-cta">{{ row.cta }} →</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if conversations_pending_validate or conversations_other or conversations %}
+  <div class="mc-conv-list">
+    {% if conversations_pending_validate %}
+    <div class="mc-conv-section-lbl">À valider · {{ conversations_pending_validate|length }}</div>
+    {% for conv in conversations_pending_validate %}
+    {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
+    {% endfor %}
+    {% endif %}
+
+    {% if conversations_other %}
+    <div class="mc-conv-section-lbl">{% if conversations_pending_validate %}Autres conversations{% else %}Conversations{% endif %}{% if conversations_other %} · {{ conversations_other|length }}{% endif %}</div>
+    {% for conv in conversations_other %}
+    {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+    {% endfor %}
+    {% elif not conversations_pending_validate %}
+    {% for conv in conversations %}
+    {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+    {% endfor %}
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="mc-inbox-empty">
+    <div class="mc-inbox-empty-title">Aucun message pour l'instant</div>
+    <p class="mc-inbox-empty-sub">Ajoutez des actes à votre panier<br>puis cliquez sur <strong>Réserver mes actes</strong>.</p>
+    <a href="{% url 'healthcare:search' %}" class="mc-thread-act mc-thread-act--primary" style="display:inline-flex;margin-top:16px">Parcourir les prestations</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

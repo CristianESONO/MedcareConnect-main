@@ -1,0 +1,5 @@
+{% extends "users/patient_account_base.html" %}
+{% block account_page_title %}{{ account_page_title|default:"Mon compte" }}{% endblock %}
+{% block account_content %}
+{% include panel_partial %}
+{% endblock %}

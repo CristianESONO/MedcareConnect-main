@@ -1,0 +1,88 @@
+{% comment %}Carte offre prestation — structure alignée démo desktop (grille actes).{% endcomment %}
+<article class="scard fade-in"
+  data-pa-id="{{ pa.pk }}"
+  data-pa-acte-pk="{{ pa.acte.pk }}"
+  data-pa-acte="{{ pa.acte.name|escape }}"
+  data-pa-org="{{ pa.organisme.name|escape }}"
+  data-pa-org-id="{{ pa.organisme.pk }}"
+  data-pa-price="{{ pa.price|floatformat:0 }}"
+  data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+  data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
+  data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+  data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}">
+
+  <div class="scard-top">
+    <div class="scard-left min-w-0">
+      <div class="scard-name">
+        <button type="button" class="org-preview-trigger scard-org-name" data-org-slug="{{ pa.organisme.slug }}" aria-haspopup="dialog">{{ pa.organisme.name }}</button>
+        {% if pa.organisme.subscription_plan and pa.organisme.subscription_plan.is_pioneer_offer %}<span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>{% endif %}
+      </div>
+      {% if pa.organisme.type_organisme %}
+      <div class="scard-type">{{ pa.organisme.type_organisme.name }}</div>
+      {% endif %}
+      <div class="scard-meta">
+        <span class="smeta sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %}
+          {{ pa.organisme.city }}{% if pa.organisme.quartier %}, {{ pa.organisme.quartier }}{% endif %}
+        </span>
+        {% if pa.dem_horaires_short %}
+        <span class="smeta sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %}
+          {{ pa.dem_horaires_short }}
+        </span>
+        {% elif pa.organisme.horaires_complement %}
+        <span class="smeta sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %}
+          {{ pa.organisme.horaires_complement|truncatechars:32 }}
+        </span>
+        {% endif %}
+        {% if pa.distance_km %}
+        <span class="smeta smeta--distance">≈ {{ pa.distance_km }} km</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="scard-actes">
+    <div class="scard-actes-title">
+      <span>Tarif pour cet acte</span>
+      {% if pa.dem_org_catalog_count %}
+      <span class="scard-actes-count">{{ pa.dem_org_catalog_count }} acte{{ pa.dem_org_catalog_count|pluralize }} au catalogue</span>
+      {% endif %}
+    </div>
+    <div class="acte-item" role="button" tabindex="0" aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
+      <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
+      <div class="ai-info min-w-0">
+        <div class="ai-nom">{{ pa.acte.name }}</div>
+        {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+        <div class="ai-cat">
+          {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% elif pa.acte.service_medical_category %}{{ pa.acte.service_medical_category.name }}{% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% if pa.delai %}
+      <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
+      {% endif %}
+      <div class="ai-prix">{{ pa.price|floatformat:0 }} FCFA</div>
+    </div>
+  </div>
+
+  <div class="scard-footer">
+    <div class="scard-footer-left min-w-0">
+      <div class="scard-ins sipn-ico-inline">
+        {% include "healthcare/_icon_svg.html" with icon="shield" class="sipn-ico sipn-ico--xs" %}
+        {% if pa.dem_insurance_names %}{{ pa.dem_insurance_names|slice:":3"|join:" · " }}{% if pa.dem_insurance_names|length > 3 %} +{{ pa.dem_insurance_names|length|add:"-3" }}{% endif %}{% else %}Assurances non renseignées{% endif %}
+      </div>
+      {% if pa.organisme.prises_sang_domicile %}
+      <div class="scard-domicile sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="home" class="sipn-ico sipn-ico--xs" %} Prestations à domicile disponibles</div>
+      {% endif %}
+      {% if current_assurances and pa.dem_insurance_match == False %}
+      <div class="scard-ins-warn">À confirmer avec votre mutuelle</div>
+      {% endif %}
+    </div>
+    <div class="scard-footer-actions">
+      <button type="button" class="scard-btn-secondary org-preview-trigger" data-org-slug="{{ pa.organisme.slug }}">Voir profil</button>
+      <div class="scard-total"><span class="scard-total-inner sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xs" %}<span class="scard-total-text"></span></span></div>
+    </div>
+  </div>
+</article>

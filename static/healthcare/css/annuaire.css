@@ -1,0 +1,413 @@
+/* Annuaire établissements — aligné DEMO_DESKTOP_PATIENT.html */
+
+.ann-page {
+  --ann-blue: #123a63;
+  --ann-blue-l: rgba(79, 163, 199, 0.12);
+  --ann-blue-m: #D4DEEE;
+  --ann-green: #4fa3c7;
+  --ann-green-l: rgba(79, 163, 199, 0.12);
+  --ann-green-d: #3d8fb3;
+  --ann-g50: #f9fafb;
+  --ann-g100: #f3f4f6;
+  --ann-g200: #e5e7eb;
+  --ann-g400: #9ca3af;
+  --ann-g600: #4b5563;
+  --ann-text: #0d1b2a;
+  --ann-r: 10px;
+  --ann-shadow: 0 2px 16px rgba(10, 92, 138, 0.09);
+  background: var(--ann-g50);
+  min-height: 60vh;
+}
+
+.ann-hero {
+  background: linear-gradient(rgba(18, 58, 99, 0.88), rgba(13, 27, 75, 0.78)),
+    url('https://medcare.sn/wp-content/uploads/2026/02/Bienvenue-.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 1.75rem 1.5rem 1.5rem;
+}
+.ann-hero-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.ann-hero-title {
+  font-family: Syne, system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0 0 0.35rem;
+}
+.ann-hero-sub {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ann-search-section {
+  background: #fff;
+  border-bottom: 1px solid var(--ann-g200);
+  padding: 14px 24px 12px;
+}
+.ann-search-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.ann-search-wrap {
+  position: relative;
+  margin-bottom: 10px;
+}
+.ann-search-emoji {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+}
+.ann-search-input {
+  width: 100%;
+  border: 2px solid var(--ann-blue);
+  border-radius: 11px;
+  padding: 12px 16px 12px 44px;
+  font-size: 14px;
+  outline: none;
+  color: var(--ann-text);
+  background: #fff;
+  transition: box-shadow 0.18s;
+}
+.ann-search-input:focus {
+  box-shadow: 0 0 0 3px rgba(10, 92, 138, 0.15);
+}
+
+.ann-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding-top: 2px;
+}
+.ann-filter-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ann-g400);
+  white-space: nowrap;
+}
+.ann-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--ann-g200);
+  border-radius: 20px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ann-g600);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  font-family: inherit;
+}
+.ann-filter-chip:hover {
+  border-color: var(--ann-blue);
+  color: var(--ann-blue);
+}
+.ann-filter-chip.active {
+  border-color: var(--ann-blue);
+  background: var(--ann-blue);
+  color: #fff;
+}
+.ann-sort-select {
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1.5px solid var(--ann-g200);
+  background: #fff;
+  color: var(--ann-g600);
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+}
+.ann-reset-btn {
+  display: none;
+  font-size: 10px;
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px 6px;
+  font-family: inherit;
+}
+.ann-reset-btn.visible {
+  display: inline;
+}
+
+.ann-panel {
+  display: none;
+  background: #fff;
+  border: 1.5px solid var(--ann-blue-m);
+  border-radius: var(--ann-r);
+  padding: 12px 16px;
+  margin-top: 8px;
+}
+.ann-panel.open {
+  display: block;
+}
+.ann-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ann-text);
+  margin: 0 0 8px;
+}
+.ann-panel-hint {
+  font-size: 10px;
+  color: var(--ann-g400);
+  margin: -4px 0 8px;
+}
+.ann-opt {
+  display: inline-flex;
+  font-size: 10px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1.5px solid var(--ann-g200);
+  background: #fff;
+  color: var(--ann-g600);
+  cursor: pointer;
+  transition: all 0.12s;
+  user-select: none;
+  font-family: inherit;
+}
+.ann-opt:hover {
+  border-color: var(--ann-blue);
+  color: var(--ann-blue);
+}
+.ann-opt.on {
+  background: var(--ann-blue);
+  color: #fff;
+  border-color: var(--ann-blue);
+}
+.ann-opt-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ann-results-wrap {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 14px 24px 60px;
+}
+.ann-count {
+  font-size: 11px;
+  color: var(--ann-g400);
+  margin-bottom: 10px;
+}
+.ann-count strong {
+  color: var(--ann-blue);
+}
+.ann-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ann-card {
+  background: #fff;
+  border-radius: var(--ann-r);
+  border: 1px solid var(--ann-g200);
+  padding: 14px 16px;
+  transition: border-color 0.15s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.ann-card:hover {
+  border-color: var(--ann-blue);
+}
+.ann-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ann-card-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  background: var(--ann-blue-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.ann-card-name {
+  font-family: Syne, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ann-text);
+  line-height: 1.3;
+}
+.ann-card-type {
+  font-size: 10px;
+  color: var(--ann-g400);
+  margin-top: 2px;
+}
+.ann-pioneer {
+  float: right;
+  background: var(--ann-green);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 8px;
+}
+.ann-card-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.ann-tag {
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: 500;
+}
+.ann-tag--muted {
+  background: var(--ann-g100);
+  color: var(--ann-g600);
+}
+.ann-tag--blue {
+  background: var(--ann-blue-l);
+  color: var(--ann-blue);
+}
+.ann-tag--green {
+  background: var(--ann-green-l);
+  color: var(--ann-green-d);
+}
+.ann-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 11px;
+  font-size: 10px;
+  color: var(--ann-g600);
+}
+.ann-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.ann-meta-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ann-card-footer {
+  display: flex;
+  gap: 7px;
+  border-top: 1px solid var(--ann-g100);
+  padding-top: 10px;
+}
+.ann-btn-fiche,
+.ann-btn-actes {
+  flex: 1;
+  padding: 7px 0;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ann-btn-fiche {
+  background: var(--ann-blue-l);
+  color: var(--ann-blue);
+}
+.ann-btn-fiche:hover {
+  background: var(--ann-blue);
+  color: #fff;
+}
+.ann-btn-actes {
+  background: var(--ann-green);
+  color: #fff;
+}
+.ann-btn-actes:hover {
+  filter: brightness(1.05);
+}
+
+.ann-empty {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fff;
+  border-radius: var(--ann-r);
+  border: 1px solid var(--ann-g200);
+  color: var(--ann-g400);
+}
+.ann-empty-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.ann-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+.ann-page-btn {
+  border-radius: 8px;
+  border: 1px solid var(--ann-g200);
+  background: #fff;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ann-g600);
+  text-decoration: none;
+}
+.ann-page-btn:hover {
+  border-color: var(--ann-blue);
+  color: var(--ann-blue);
+}
+.ann-page-num {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--ann-g600);
+}
+
+@media (max-width: 767px) {
+  .ann-hero {
+    padding: 1.25rem 1rem;
+  }
+  .ann-search-section,
+  .ann-results-wrap {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .ann-filter-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .ann-filter-row::-webkit-scrollbar {
+    display: none;
+  }
+  .ann-card-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+}

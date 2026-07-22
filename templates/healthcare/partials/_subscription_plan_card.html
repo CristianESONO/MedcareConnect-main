@@ -1,0 +1,122 @@
+{% load subscription_plans humanize %}
+{% with theme=plan|sub_plan_theme included=plan_included_map|sub_get_included:plan.pk %}
+<div class="mcc-sp-plan-wrap" id="plan-{{ plan.slug }}">
+  {% if card_mode == "current" %}
+  <span class="mcc-sp-status-badge mcc-sp-status-current">Actuelle</span>
+  {% elif card_mode == "selectable" %}
+  <span class="mcc-sp-status-badge mcc-sp-select-badge">Choisir</span>
+  {% endif %}
+
+  {% if card_mode == "selectable" %}
+  <label class="mcc-sp-selectable">
+    <input type="radio" name="requested_plan" value="{{ plan.pk }}" form="subscription-change-form"
+      {% if form.requested_plan.value|stringformat:"s" == plan.pk|stringformat:"s" %}checked{% endif %}
+      {% if first_requestable_plan_pk == plan.pk %}required{% endif %}
+      aria-label="Choisir la formule {{ plan.name }}">
+  {% endif %}
+
+  <article class="mcc-sp-plan-card is-{{ theme }}{% if card_mode == 'current' %} is-current{% elif card_mode == 'disabled' %} is-disabled{% endif %}">
+    <div class="mcc-sp-plan-head mcc-sp-ph-{{ theme }}">
+      <div class="mcc-sp-plan-badge mcc-sp-pb-{{ theme }}">
+        {% if theme == "pionnier" %}★ Pionnier{% else %}{{ plan.name }}{% endif %}
+      </div>
+      <div class="mcc-sp-plan-name">{{ plan.name }}</div>
+      <div class="mcc-sp-plan-target">{{ plan|sub_plan_target }}</div>
+      <div class="mcc-sp-plan-price mcc-sp-pp-{{ theme }}">
+        {% if plan.monthly_price_fcfa %}{{ plan.monthly_price_fcfa|floatformat:0|intcomma }}{% else %}Gratuit{% endif %}
+      </div>
+      <div class="mcc-sp-plan-unit">
+        {% if plan.monthly_price_fcfa %}FCFA / mois{% elif plan.trial_months %}M0–M{{ plan.trial_months }} · {{ plan.trial_months }} mois d'essai{% else %}Offre gratuite{% endif %}
+      </div>
+      {% if plan.monthly_price_fcfa %}
+      <div class="mcc-sp-plan-annual">{{ plan.monthly_price_fcfa|sub_annual_price|floatformat:0|intcomma }} F / an (−10 %)</div>
+      {% elif theme == "pionnier" %}
+      <div class="mcc-sp-plan-annual">Tarif post-période bloqué à vie</div>
+      {% endif %}
+    </div>
+
+    <div class="mcc-sp-plan-body">
+      {% with structures=plan|sub_plan_structures %}
+      {% if structures %}
+      <div class="mcc-sp-plan-section-label">Structures · pilier{% if structures|length > 1 %}s{% endif %} inclus</div>
+      <ul class="mcc-sp-struct-list">
+        {% for s in structures %}
+        <li>
+          <span class="mcc-sp-ico">{{ s.icon }}</span>
+          <div>
+            <div class="mcc-sp-sname">{{ s.name }}</div>
+            <div class="mcc-sp-chips">
+              {% for label, cls in s.chips %}
+              <span class="mcc-sp-pc mcc-sp-{{ cls }}">{{ label }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="mcc-sp-plan-divider"></div>
+      {% endif %}
+      {% endwith %}
+
+      <div class="mcc-sp-plan-section-label">Fonctionnalités incluses</div>
+      <ul class="mcc-sp-feat-list">
+        {% for feature in subscription_features_all %}
+        {% if feature.code == "medplaque" and theme == "starter" and feature.code not in included %}
+        <li data-feature-code="{{ feature.code }}">
+          <span class="mcc-sp-feat-addon">+</span>
+          <div class="mcc-sp-feat-text">
+            <strong>{{ feature.label }}</strong>
+            <span>Add-on optionnel · +5 000 FCFA/mois</span>
+          </div>
+        </li>
+        {% elif feature.code in included %}
+        <li data-feature-code="{{ feature.code }}">
+          <span class="mcc-sp-feat-on">✓</span>
+          <div class="mcc-sp-feat-text">
+            <strong>{{ feature.label }}</strong>
+            {% if feature.description %}<span>{{ feature.description }}</span>{% endif %}
+          </div>
+        </li>
+        {% else %}
+        <li data-feature-code="{{ feature.code }}">
+          <span class="mcc-sp-feat-off">–</span>
+          <div class="mcc-sp-feat-text is-off">
+            <strong>{{ feature.label }}</strong>
+            <span>Désactivé</span>
+          </div>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% if card_mode == "current" %}
+    <div class="mcc-sp-card-footer is-current">Vous êtes déjà sur cette formule</div>
+    {% elif card_mode == "selectable" %}
+    <div class="mcc-sp-card-footer is-selected">✓ Formule sélectionnée — validez ci-dessous</div>
+    {% endif %}
+  </article>
+
+  {% if card_mode == "selectable" %}
+  </label>
+  {% endif %}
+
+  {% if card_mode == "admin" %}
+  <div class="mcc-sp-admin-bar">
+    <div class="mcc-sp-admin-meta">
+      <strong>{{ plan.organismes_count|default:0 }}</strong> structure{{ plan.organismes_count|default:0|pluralize }}
+      · <span class="text-gray-400">{{ plan.slug }}</span>
+      {% if plan.is_default %}<span class="mcc-sp-pill mcc-sp-pill-gray ml-1">Défaut</span>{% endif %}
+      {% if not plan.is_public %}<span class="mcc-sp-pill mcc-sp-pill-gray ml-1">Non publique</span>{% endif %}
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'dashboard:subscription_plan_edit' plan.pk %}" class="rounded-md bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700 hover:bg-primary-100">Modifier</a>
+      <form method="post" action="{% url 'dashboard:subscription_plan_delete' plan.pk %}" class="inline" onsubmit="return confirm('Supprimer cette formule ? Impossible si des structures y sont encore rattachées.');">
+        {% csrf_token %}
+        <button type="submit" class="rounded-md bg-red-50 px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-100">Supprimer</button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endwith %}

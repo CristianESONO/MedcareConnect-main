@@ -1,0 +1,107 @@
+{% extends "dashboard/base.html" %}
+{% load humanize %}
+{% block title %}Rendez-vous{% endblock %}
+{% block page_title %}Activité · Rendez-vous{% endblock %}
+
+{% block content %}
+{% include "dashboard/partials/_activite_nav.html" %}
+
+<div class="grid gap-3 grid-cols-2 lg:grid-cols-5">
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Total RDV</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpis.rdv_total|intcomma }}</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">À confirmer</p>
+    <p class="mt-2 text-2xl font-bold text-amber-600">{{ kpis.rdv_requested|intcomma }}</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Confirmés à venir</p>
+    <p class="mt-2 text-2xl font-bold mc-text-accent">{{ kpis.rdv_confirmed_upcoming|intcomma }}</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Honorés (7 j)</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpis.rdv_completed_7d|intcomma }}</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Absents</p>
+    <p class="mt-2 text-2xl font-bold text-rose-600">{{ kpis.rdv_no_show|intcomma }}</p>
+  </div>
+</div>
+
+<div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+  <div class="inline-flex flex-wrap gap-1.5 rounded-xl border border-gray-200 bg-white p-1 text-xs font-semibold">
+    <a href="?status=all" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'all' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Tous <span class="ml-1 opacity-70">{{ counts.all }}</span></a>
+    <a href="?status=upcoming" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'upcoming' %}bg-blue-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">À venir <span class="ml-1 opacity-70">{{ counts.upcoming }}</span></a>
+    <a href="?status=requested" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'requested' %}bg-amber-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Demandé <span class="ml-1 opacity-70">{{ counts.requested }}</span></a>
+    <a href="?status=confirmed" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'confirmed' %}mc-bg-accent text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Confirmé <span class="ml-1 opacity-70">{{ counts.confirmed }}</span></a>
+    <a href="?status=completed" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'completed' %}bg-gray-700 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Honoré <span class="ml-1 opacity-70">{{ counts.completed }}</span></a>
+    <a href="?status=no_show" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'no_show' %}bg-rose-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Absent <span class="ml-1 opacity-70">{{ counts.no_show }}</span></a>
+    <a href="?status=cancelled" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'cancelled' %}bg-gray-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Annulé <span class="ml-1 opacity-70">{{ counts.cancelled }}</span></a>
+  </div>
+  <form method="get" class="flex flex-wrap gap-2">
+    <input type="hidden" name="status" value="{{ status_filter }}">
+    <input type="text" name="q" value="{{ search }}" placeholder="Réf., patient, devis…" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
+    <input type="text" name="org" value="{{ org_filter }}" placeholder="ID structure" class="w-24 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
+    <button type="submit" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-bold text-white">Filtrer</button>
+  </form>
+</div>
+
+<div class="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead class="border-b border-gray-100 text-xs uppercase tracking-wide text-gray-500">
+        <tr>
+          <th class="px-4 py-3 font-medium">Réf.</th>
+          <th class="px-4 py-3 font-medium">Patient</th>
+          <th class="px-4 py-3 font-medium">Structure</th>
+          <th class="px-4 py-3 font-medium">Créneau</th>
+          <th class="px-4 py-3 font-medium">Source</th>
+          <th class="px-4 py-3 font-medium">Devis lié</th>
+          <th class="px-4 py-3 font-medium">Statut</th>
+          <th class="px-4 py-3 font-medium"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for r in rows %}
+        <tr class="{% if r.status == 'requested' %}bg-amber-50/30{% elif r.status == 'no_show' %}bg-rose-50/30{% endif %}">
+          <td class="px-4 py-3 font-mono text-xs font-bold text-primary-600">{{ r.reference }}</td>
+          <td class="px-4 py-3">
+            <p class="text-sm font-medium text-gray-900">{{ r.patient_label }}</p>
+            {% if r.patient_phone %}<p class="text-[11px] text-gray-400">{{ r.patient_phone }}</p>{% endif %}
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-700">{{ r.organisme.name }}</td>
+          <td class="px-4 py-3 text-xs text-gray-600">{{ r.start|date:"d/m/Y H:i" }}</td>
+          <td class="px-4 py-3 text-xs">
+            {% if r.source == 'walk_in' %}<span class="rounded bg-gray-100 px-1.5 py-0.5">Sur place</span>{% else %}<span class="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">En ligne</span>{% endif %}
+          </td>
+          <td class="px-4 py-3 font-mono text-[11px] text-gray-500">{% if r.devis %}{{ r.devis.reference }}{% else %}—{% endif %}</td>
+          <td class="px-4 py-3">
+            {% if r.status == 'requested' %}<span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">Demandé</span>
+            {% elif r.status == 'confirmed' %}<span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Confirmé</span>
+            {% elif r.status == 'completed' %}<span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-700">Honoré</span>
+            {% elif r.status == 'no_show' %}<span class="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-700">Absent</span>
+            {% elif r.status == 'cancelled' %}<span class="rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-bold text-gray-600">Annulé</span>
+            {% elif r.status == 'declined' %}<span class="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-700">Refusé</span>
+            {% else %}<span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">{{ r.get_status_display }}</span>{% endif %}
+          </td>
+          <td class="px-4 py-3 text-right">
+            <a href="{% url 'dashboard:rdv_admin_detail' r.reference %}" class="text-xs font-semibold text-primary-600 hover:underline">Détail →</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="px-4 py-12 text-center text-sm text-gray-400">Aucun rendez-vous pour ce filtre.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if page.has_other_pages %}
+<nav class="mt-6 flex justify-center gap-2">
+  {% if page.has_previous %}<a href="?status={{ status_filter }}&q={{ search }}&org={{ org_filter }}&page={{ page.previous_page_number }}" class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700">← Précédent</a>{% endif %}
+  <span class="rounded-xl bg-gray-100 px-4 py-2 text-sm font-semibold">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a href="?status={{ status_filter }}&q={{ search }}&org={{ org_filter }}&page={{ page.next_page_number }}" class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700">Suivant →</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

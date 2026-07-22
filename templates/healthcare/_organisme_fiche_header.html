@@ -1,0 +1,82 @@
+{# En-tête fiche (mobile-first) — variables : org, hours_list, hours_meta, open_today, practical_chips, show_pioneer_badge, maps_url #}
+<header class="pp-header">
+  <span class="pp-header-glow pp-header-glow--1" aria-hidden="true"></span>
+  <span class="pp-header-glow pp-header-glow--2" aria-hidden="true"></span>
+  <div class="pp-cover{% if not org.logo %} pp-cover--empty{% endif %}">
+    {% if org.logo %}
+    <div class="pp-cover-shade" aria-hidden="true"></div>
+    {% else %}
+    <div class="pp-cover-shade" aria-hidden="true"></div>
+    <div class="pp-cover-empty">
+      {% include "healthcare/_icon_svg.html" with icon="building" class="pp-ico pp-ico--lg" %}
+    </div>
+    {% endif %}
+  </div>
+  <div class="pp-sheet">
+    <div class="pp-hero">
+      <div class="pp-hero-main">
+        {% if org.logo %}
+        <img src="{{ org.logo.url }}" alt="" class="pp-avatar" width="92" height="92">
+        {% else %}
+        <div class="pp-avatar-fallback" aria-hidden="true">{{ org.name|make_list|first|upper }}</div>
+        {% endif %}
+        <div class="pp-hero-text">
+          <div class="pp-title-row">
+            <h1 class="pp-name">{{ org.name }}</h1>
+            {% if show_pioneer_badge %}<span class="pp-title-badge pp-title-badge--pioneer">{% include "healthcare/_icon_svg.html" with icon="star" class="pp-ico pp-ico--xs" %} Pionnier</span>{% elif org.is_verified %}<span class="pp-title-badge pp-title-badge--verified">{% include "healthcare/_icon_svg.html" with icon="check" class="pp-ico pp-ico--xs" %} Vérifié</span>{% endif %}
+          </div>
+          <p class="pp-subtitle">
+            {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
+            <span class="pp-subtitle-loc"> · {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city }}</span>
+          </p>
+        </div>
+      </div>
+      {% if maps_url or profil_pillars %}
+      <div class="pp-cta-row">
+        {% if profil_pillars %}
+        <button type="button" class="pp-cta pp-cta--rdv js-scroll-to-actes" id="btn-pp-rdv">
+          <span class="pp-cta-icon">{% include "healthcare/_icon_svg.html" with icon="calendar" class="pp-ico" %}</span>
+          <span class="pp-cta-label pp-cta-label-long">Prendre rendez-vous</span>
+          <span class="pp-cta-label pp-cta-label-short">RDV</span>
+        </button>
+        {% endif %}
+        {% if maps_url %}
+        <a href="{{ maps_url }}" target="_blank" rel="noopener noreferrer" class="pp-cta pp-cta--map">
+          <span class="pp-cta-icon">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="pp-ico" %}</span>
+          <span class="pp-cta-label">GPS</span>
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="pp-infobar">
+      <button type="button" id="btn-pp-hours" class="pp-infobar-hours-btn" aria-expanded="false" aria-controls="pp-hours-card">
+        <span class="pp-infobar-hours-label">
+          {% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--sm" %}
+          {% if hours_meta_chunks %}
+          <span class="pp-hours-summary">
+            {% for chunk in hours_meta_chunks %}
+            <span class="pp-hours-chip">{{ chunk }}</span>
+            {% endfor %}
+          </span>
+          {% else %}
+          {{ hours_meta }}
+          {% endif %}
+        </span>
+        <span class="pp-infobar-chevron" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="chevron-down" class="pp-ico pp-ico--xs" %}</span>
+      </button>
+      {% if open_today == "open" %}
+      <span class="pp-status pp-status--open"><span class="pp-status-dot"></span> Ouvert</span>
+      {% elif open_today == "closed" %}
+      <span class="pp-status pp-status--closed"><span class="pp-status-dot"></span> Fermé</span>
+      {% endif %}
+    </div>
+    {% include "healthcare/_organisme_fiche_hours_card.html" %}
+    {% if practical_chips %}
+    <div class="pp-tags">
+      {% for chip in practical_chips %}<span class="pp-tag">{% include "healthcare/_icon_svg.html" with icon=chip.icon class="pp-ico pp-ico--xs" %} {{ chip.label }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if org.description %}<p class="pp-about">{{ org.description }}</p>{% endif %}
+  </div>
+</header>

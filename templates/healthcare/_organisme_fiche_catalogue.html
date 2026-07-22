@@ -1,0 +1,103 @@
+{# Catalogue actes + assurances — design démo (pp-body-panel) #}
+<div class="pp-body-panel" id="org-section-assurances">
+  <div class="flex flex-wrap items-center justify-between gap-2">
+    <p class="pp-section-label">Assurances acceptées</p>
+    {% if insurances_profil %}
+    <div class="flex flex-wrap gap-1" id="pp-ins-filters" role="group" aria-label="Filtrer les assurances">
+      <button type="button" class="pp-ins-filter active" data-filter="all">Toutes</button>
+      <button type="button" class="pp-ins-filter" data-filter="privee">Privées</button>
+      <button type="button" class="pp-ins-filter" data-filter="digitale">Digitales</button>
+      <button type="button" class="pp-ins-filter" data-filter="public">Publiques</button>
+      <button type="button" class="pp-ins-filter" data-filter="mutuelle">Mutuelles</button>
+      <button type="button" class="pp-ins-filter" data-filter="programme">Programmes</button>
+    </div>
+    {% endif %}
+  </div>
+  {% if insurances_profil %}
+  <div class="mt-2 flex flex-wrap gap-1.5" id="pp-ins-list">
+    {% for ins in insurances_profil %}
+    <span class="pp-ins-tag rounded-full px-2 py-0.5 text-[10px] font-semibold {% if ins.filter_key == 'privee' %}bg-blue-100 text-blue-900{% elif ins.filter_key == 'digitale' %}mc-bg-accent-light mc-text-accent-dark{% elif ins.filter_key == 'mutuelle' %}bg-violet-100 text-violet-900{% elif ins.filter_key == 'programme' %}bg-slate-100 text-slate-800{% else %}bg-amber-100 text-amber-900{% endif %}"
+      data-filter="{{ ins.filter_key }}">{{ ins.name }}</span>
+    {% endfor %}
+  </div>
+  <p id="pp-ins-empty" class="pp-ins-empty mt-1 hidden">Aucune assurance dans cette catégorie.</p>
+  {% else %}
+  <p class="mt-2 text-xs text-gray-500">Aucune assurance renseignée pour le moment.</p>
+  {% endif %}
+  {% if org.assurances_tarifs_delais %}
+  <p class="pp-section-label mt-3">Modalités assurances</p>
+  <p class="mt-1 whitespace-pre-line text-xs leading-relaxed text-gray-600">{{ org.assurances_tarifs_delais }}</p>
+  {% endif %}
+</div>
+
+<div class="pp-body-panel" id="org-section-actes">
+  <div class="flex flex-wrap items-center justify-between gap-2">
+    <p class="pp-section-label">Sélectionnez vos actes</p>
+    <p class="text-[9px] text-gray-400" id="panier-count">0 acte sélectionné</p>
+  </div>
+  {% if profil_pillars %}
+  <div class="mt-2 flex flex-wrap gap-1" id="pp-cat-filters" role="group" aria-label="Filtrer par pilier">
+    <button type="button" class="pp-cat-filter active" data-cat="all">Toutes</button>
+    {% for pillar in profil_pillars %}
+    <button type="button" class="pp-cat-filter" data-cat="{{ pillar.id }}">{{ pillar.name }}</button>
+    {% endfor %}
+  </div>
+  <div class="mt-3 flex flex-col gap-1" id="pp-actes-list">
+    {% for pillar in profil_pillars %}
+    <details class="pp-cat-group" data-cat="{{ pillar.id }}" open>
+      <summary class="pp-cat-head list-none cursor-pointer [&::-webkit-details-marker]:hidden">
+        <span>{{ pillar.name }} <span class="font-normal text-gray-400">({{ pillar.count }} acte{{ pillar.count|pluralize }})</span></span>
+        <span class="pp-cat-chevron text-gray-400" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="chevron-down" class="pp-ico pp-ico--sm" %}</span>
+      </summary>
+      <div class="border-t border-gray-100 bg-white px-2 py-1.5">
+        {% for pa in pillar.actes %}
+        <div class="pp-acte-row">
+          <label class="flex min-w-0 flex-1 cursor-pointer items-center gap-2">
+            <input type="checkbox" class="pp-acte-cb" data-id="pa-{{ pa.pk }}" data-nom="{{ pa.acte.name|escapejs }}" data-prix="{{ pa.price|floatformat:0 }}">
+            <span class="pp-acte-name">
+              {{ pa.acte.name }}
+              {% if pa.acte.parent_service %}<span class="block text-[9px] font-normal text-gray-400">{{ pa.acte.parent_service.name }}</span>{% endif %}
+            </span>
+          </label>
+          {% if pa.delai %}<span class="pp-acte-delai">{% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--xs" %} {{ pa.get_delai_display }}</span>{% endif %}
+          {% if show_public_prices|default:True %}<span class="pp-acte-prix">{{ pa.price|floatformat:0 }} F</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="mt-2 text-sm text-gray-500">Aucun acte disponible pour le moment.</p>
+  {% endif %}
+
+  <div id="panier-recap" class="pp-panier hidden">
+    <p class="pp-section-label text-primary-800">Votre sélection</p>
+    <div id="panier-items" class="mt-2 flex flex-wrap gap-1"></div>
+    <div class="mt-2 flex items-center justify-between">
+      <p class="font-extrabold text-primary-900" id="panier-total">0 FCFA</p>
+      <button type="button" id="btn-vider-panier" class="pp-btn-text-danger">{% include "healthcare/_icon_svg.html" with icon="x" class="pp-ico pp-ico--xs" %} Vider</button>
+    </div>
+  </div>
+
+  {% if org.catalogue_tarifs_delais %}
+  <p class="pp-section-label mt-4">Tarifs &amp; délais</p>
+  <p class="mt-1 whitespace-pre-line text-xs text-gray-600">{{ org.catalogue_tarifs_delais }}</p>
+  {% endif %}
+
+  {% if org.prises_sang_domicile %}
+  {% with active_zones=org.prelevement_zones.all %}
+  <p class="pp-section-label mt-4">Prestations à domicile</p>
+  {% if active_zones %}
+  <ul class="mt-2 space-y-1 text-xs">
+    {% for z in active_zones %}{% if z.is_active %}
+    <li class="pp-domi-row">
+      <span class="font-medium text-gray-800">{{ z.label }}</span>
+      <span class="font-bold text-gray-700">{% if z.forfait_fcfa %}+ {{ z.forfait_fcfa|floatformat:0 }} F{% else %}Gratuit{% endif %}</span>
+    </li>
+    {% endif %}{% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  {% endif %}
+</div>

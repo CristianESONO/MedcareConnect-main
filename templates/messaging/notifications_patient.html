@@ -1,0 +1,17 @@
+{% extends "users/patient_account_base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block account_page_title %}Notifications{% endblock %}
+{% block account_content %}
+<div class="pac-toolbar">
+  <p class="pac-lead" style="margin:0">Devis, messages et alertes liées à votre compte MedCare.</p>
+  {% if notifications %}
+  <form method="post" action="{% url 'messaging:mark_all_read' %}">
+    {% csrf_token %}
+    <input type="hidden" name="scope" value="inbox">
+    <button type="submit" class="pac-btn-outline">Tout marquer comme lu</button>
+  </form>
+  {% endif %}
+</div>
+
+{% include "messaging/_patient_notif_list.html" with empty_title="Aucune notification" empty_hint="Vous serez alerté ici lors d'un nouveau devis, d'un message ou d'une activité sur votre compte. Les rappels RDV sont dans Rappels." %}
+{% endblock %}

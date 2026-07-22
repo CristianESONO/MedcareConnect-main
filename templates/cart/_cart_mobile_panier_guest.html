@@ -1,0 +1,71 @@
+{% comment %}Panier mobile visiteur — démo MOBILE PATIENT.{% endcomment %}
+<div class="cart-mobile-panier" id="cart-mobile-panier">
+  <div class="panier-section-head">
+    <div class="psh-title">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--sm" %} Mon panier <span class="psh-count">{{ cart_items_count }}</span></div>
+    {% if guest_items %}
+    <form method="post" action="{% url 'cart:guest_cart_clear' %}" class="inline">
+      {% csrf_token %}
+      <button type="submit" class="psh-clear" onclick="return confirm('Vider le panier ?')">Vider le panier</button>
+    </form>
+    {% endif %}
+  </div>
+
+  <div id="panier-body-m">
+    {% include "cart/_cart_mobile_missing_actes.html" %}
+    {% if guest_items %}
+    {% if guest_org_groups|length > 1 %}
+    <div class="panier-multi-warn"><strong>{{ guest_org_groups|length }} structures</strong> — une demande de RDV par structure sera envoyée.</div>
+    {% endif %}
+
+    {% for group in guest_org_groups %}
+    <div class="panier-struct-group">
+      <div class="psg-head">
+        <div class="psg-name sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="building" class="sipn-ico sipn-ico--xs" %} {{ group.organisme.name }}</div>
+        <div class="psg-total">{{ group.total|floatformat:0 }} F</div>
+      </div>
+      {% for row in group.lines %}
+      <div class="citem-m">
+        <div class="ci-info-m">
+          <div class="ci-nom-m">{{ row.pa.acte.name }}{% if row.qty > 1 %} ×{{ row.qty }}{% endif %}</div>
+          {% if row.pa.delai %}
+          <div class="ci-delai-m sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ row.pa.get_delai_display }}</div>
+          {% endif %}
+        </div>
+        <div class="ci-prix-m">{{ row.subtotal|floatformat:0 }} F</div>
+        <form method="post" action="{% url 'cart:guest_cart_remove' row.pa.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="ci-del-m" aria-label="Retirer">{% include "healthcare/_icon_svg.html" with icon="x" class="sipn-ico sipn-ico--sm" %}</button>
+        </form>
+      </div>
+      {% endfor %}
+      <div class="psg-foot">
+        <button type="button"
+          class="psg-creneau-btn js-guest-auth-open"
+          data-org-name="{{ group.organisme.name|escape }}"
+          data-org-count="{{ group.lines|length }}"
+          data-org-total="{{ group.total|floatformat:0 }}">
+          {% include "healthcare/_icon_svg.html" with icon="calendar" class="sipn-ico sipn-ico--sm" %} Réserver mes actes
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+
+    <p class="panier-guest-note">Panier enregistré sur cet appareil. Connectez-vous pour synchroniser et réserver en ligne.</p>
+
+    <div class="panier-total-card">
+      <div class="ptc-row">
+        <span class="ptc-label">{{ cart_items_count }} acte{{ cart_items_count|pluralize }} · {{ guest_org_groups|length }} structure{{ guest_org_groups|length|pluralize }}</span>
+        <span class="ptc-value">{{ guest_total|floatformat:0 }} FCFA</span>
+      </div>
+      <button type="button" class="devis-btn-m js-guest-auth-open">{% include "healthcare/_icon_svg.html" with icon="calendar" class="sipn-ico sipn-ico--sm" %} Réserver mes actes{% if guest_org_groups|length > 1 %} ({{ guest_org_groups|length }} structures){% endif %}</button>
+      <a href="{% url 'users:register' %}?next={{ guest_auth_next|urlencode }}" class="devis-btn-m devis-btn-m--secondary">Créer un compte patient</a>
+    </div>
+    {% else %}
+    <div class="cart-empty-m">
+      <div class="cemi">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xl" %}</div>
+      <div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre parcours.</div>
+      <button type="button" class="cemt-cta" data-sipn-goto-tab="prestations">Rechercher des actes</button>
+    </div>
+    {% endif %}
+  </div>
+</div>

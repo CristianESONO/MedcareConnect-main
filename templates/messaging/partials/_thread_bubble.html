@@ -1,0 +1,39 @@
+{% comment %}Une bulle de fil — expéditeur, type et alignement cohérents.{% endcomment %}
+{% if msg.message_type == 'status_card' %}
+<div class="mc-wmsg mc-wmsg--r mc-wmsg--card{% if msg.payload.event == 'reminder' %} mc-wmsg--reminder{% endif %}">
+  <div class="mc-wmsg-sender mc-wmsg-sender--medcare">{{ msg.thread_sender|default:"MedCare" }}</div>
+  <div class="mc-rdv-card">
+    {% if msg.payload.event == 'reminder' %}
+    <div class="mc-rdv-card-title">🔔 Rappel{% if msg.payload.schedule_label %} — {{ msg.payload.schedule_label }}{% endif %}</div>
+    <div class="mc-rdv-card-body">{% firstof msg.payload.summary msg.content as reminder_summary %}{{ reminder_summary|linebreaksbr }}</div>
+    {% if msg.payload.prerequisites %}
+    <div class="mc-rdv-prereq">
+      <div class="mc-rdv-prereq-title">📋 Consignes importantes</div>
+      <div class="mc-rdv-prereq-body">{{ msg.payload.prerequisites|linebreaksbr }}</div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="mc-rdv-card-body">{{ msg.content|linebreaksbr }}</div>
+    {% endif %}
+  </div>
+  <div class="mc-wtime">{{ msg.timestamp|date:"H:i" }}</div>
+</div>
+{% elif msg.message_type == 'system' %}
+<div class="mc-wmsg mc-wmsg--sys">{{ msg.content|linebreaksbr }}</div>
+{% elif msg.bubble_class == 's' %}
+<div class="mc-wmsg mc-wmsg--s">
+  {% if user != conversation.patient and msg.thread_sender %}
+  <div class="mc-wmsg-sender mc-wmsg-sender--patient">{{ msg.thread_sender }}</div>
+  {% endif %}
+  {{ msg.content|linebreaksbr }}
+  <div class="mc-wtime">{{ msg.timestamp|date:"H:i" }}</div>
+</div>
+{% else %}
+<div class="mc-wmsg mc-wmsg--r">
+  {% if msg.thread_sender %}
+  <div class="mc-wmsg-sender{% if msg.thread_sender == 'MedCare' %} mc-wmsg-sender--medcare{% else %} mc-wmsg-sender--org{% endif %}">{{ msg.thread_sender }}</div>
+  {% endif %}
+  {{ msg.content|linebreaksbr }}
+  <div class="mc-wtime">{{ msg.timestamp|date:"H:i" }}</div>
+</div>
+{% endif %}

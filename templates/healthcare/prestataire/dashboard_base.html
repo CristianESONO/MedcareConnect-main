@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_extra_class %} mc-prestataire-dash{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Shell : sur desktop, hauteur viewport − navbar ; seul le panneau principal défile */
+  .dash-shell { display: flex; flex-direction: column; min-height: 0; }
+  @media (max-width: 767px) {
+    /* Un seul menu mobile : barre dashboard (pas le burger du site nav global) */
+    body.mc-prestataire-dash #medcare-site-nav {
+      display: none !important;
+    }
+    #dash-mobile-bar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+  }
+  @media (min-width: 768px) {
+    .dash-shell {
+      height: calc(100dvh - 4rem);
+      max-height: calc(100dvh - 4rem);
+      overflow: hidden;
+    }
+  }
+  #dash-sidebar { display: none; }
+  #dash-mobile-bar { display: flex; }
+  @media (min-width: 768px) {
+    #dash-sidebar {
+      display: flex;
+      flex-direction: column;
+      width: 260px;
+      flex-shrink: 0;
+      height: 100%;
+      max-height: 100%;
+      overflow: hidden;
+    }
+    #dash-mobile-bar { display: none; }
+    #dashAppDrawer,
+    #dashAppDrawerBackdrop { display: none !important; }
+    #dash-layout {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+    #dash-sidebar > nav.flex-1 { min-height: 0; }
+    #dash-main {
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+  #dash-sidebar .nav-link { display: flex; align-items: center; gap: .75rem; padding: .6rem .85rem;
+    border-radius: .5rem; font-size: .8125rem; font-weight: 500; color: #6b7280; transition: all .15s; }
+  #dash-sidebar .nav-link:hover { background: #f3f4f6; color: #111827; }
+  #dash-sidebar .nav-link.active { background: #edfbfc; color: #194667; font-weight: 600; }
+  #dash-sidebar .nav-link.active .nav-icon { color: #3998aa; }
+  #dash-sidebar .nav-icon { width: 20px; height: 20px; flex-shrink: 0; color: #9ca3af; }
+  #dash-sidebar .nav-badge { margin-left: auto; font-size: .65rem; font-weight: 700; background: #ef4444;
+    color: #fff; border-radius: 9999px; padding: 1px 7px; }
+  #dash-sidebar .nav-link.nav-disabled { opacity: .45; pointer-events: none; cursor: not-allowed; }
+</style>
+{% block dash_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="dash-shell">
+<div id="dash-layout">
+
+  <!-- ===== SIDEBAR DESKTOP ===== -->
+  <aside id="dash-sidebar" class="flex flex-col border-r border-gray-200 bg-white">
+    {% if org %}
+    <!-- Org header -->
+    <div class="border-b border-gray-100 px-5 py-5">
+      <div class="flex items-center gap-3">
+        {% if org.logo %}
+        <img src="{{ org.logo.url }}" alt="" class="h-10 w-10 rounded-lg object-cover">
+        {% else %}
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-lg font-bold text-primary-600">{{ org.name|first }}</div>
+        {% endif %}
+        <div class="min-w-0">
+          <p class="truncate text-sm font-bold text-gray-900">{{ org.name }}</p>
+          <p class="truncate text-[11px] text-gray-400">{% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Prestataire{% endif %}</p>
+        </div>
+      </div>
+      {% if org.is_active %}
+      <span class="mt-2 inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+        <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span> Actif
+      </span>
+      {% else %}
+      <span class="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+        <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> En attente
+      </span>
+      {% endif %}
+    </div>
+    {% else %}
+    <!-- Onboarding : pas encore d'établissement -->
+    <div class="border-b border-gray-100 px-5 py-5">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-50 text-lg font-bold text-accent-600">{{ user.username|first|upper }}</div>
+        <div class="min-w-0">
+          <p class="truncate text-sm font-bold text-gray-900">{{ user.display_name }}</p>
+          <p class="truncate text-[11px] text-gray-400">Espace prestataire</p>
+        </div>
+      </div>
+      <span class="mt-2 inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+        Étape 1 — Créer l'établissement
+      </span>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
+      <p class="mb-2 px-3 text-[10px] font-bold uppercase tracking-widest text-gray-300">Principal</p>
+
+      {% if org %}
+      <a href="{% url 'healthcare:prestataire_dashboard' %}" class="nav-link {% if dash_active == 'home' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z"/></svg>
+        Tableau de bord
+      </a>
+      <a href="{% url 'healthcare:prestataire_devis_list' %}" class="nav-link {% if dash_active == 'devis' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></svg>
+        Devis WhatsApp
+        {% if new_devis_count %}<span class="nav-badge">{{ new_devis_count }}</span>{% endif %}
+      </a>
+      <a href="{% url 'appointments:prestataire_rdv_list' %}" class="nav-link {% if dash_active == 'rdv' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+        Rendez-vous
+        {% if new_rdv_count %}<span class="nav-badge">{{ new_rdv_count }}</span>{% endif %}
+      </a>
+      {% else %}
+      <a href="{% url 'healthcare:organisme_create' %}" class="nav-link {% if dash_active == 'onboarding' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Créer mon établissement
+      </a>
+      {% endif %}
+
+      <p class="mb-2 mt-5 px-3 text-[10px] font-bold uppercase tracking-widest text-gray-300">Mon établissement</p>
+
+      {% if org %}
+      <a href="{% url 'healthcare:organisme_edit' %}" class="nav-link {% if dash_active == 'profile' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg>
+        Profil établissement
+      </a>
+      <a href="{% url 'healthcare:actes_list' %}" class="nav-link {% if dash_active == 'actes' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5"/></svg>
+        Catalogue d'actes
+      </a>
+      <a href="{% url 'healthcare:insurances_manage' %}" class="nav-link {% if dash_active == 'insurances' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+        Assurances
+      </a>
+      <a href="{% url 'healthcare:prestataire_zones_prelevement' %}" class="nav-link {% if dash_active == 'zones' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
+        Prestations à domicile
+        {% if org.prises_sang_domicile %}<span class="ml-auto rounded-full bg-emerald-100 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">Actif</span>{% endif %}
+      </a>
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" class="nav-link {% if dash_active == 'public_profile' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+        Profil public
+      </a>
+      <a href="{% url 'messaging:inbox' %}" class="nav-link {% if dash_active == 'messages' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+        Messagerie
+        {% if unread_messages %}<span class="nav-badge">{{ unread_messages }}</span>{% endif %}
+      </a>
+      <a href="{% url 'healthcare:prestataire_medplaque' %}" class="nav-link {% if dash_active == 'medplaque' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.875a1.125 1.125 0 0 1 2.25 0v8.219c.517.162 1.02.382 1.5.659V3.375a1.125 1.125 0 0 1 2.25 0v10.937a4.505 4.505 0 0 0-3.25 2.373 8.963 8.963 0 0 1 4-.935A.75.75 0 0 0 18 15v-2.266a3.368 3.368 0 0 1 .988-2.37 1.125 1.125 0 0 1 1.591 1.59 1.118 1.118 0 0 0-.329.79v3.006h-.005a6 6 0 0 1-1.752 4.007l-1.736 1.736a6 6 0 0 1-4.242 1.757H10.5a7.5 7.5 0 0 1-7.5-7.5V6.375a1.125 1.125 0 0 1 2.25 0v5.519c.46-.452.965-.832 1.5-1.141V3.375a1.125 1.125 0 0 1 2.25 0v6.526c.495-.1.997-.151 1.5-.151V1.875Z"/></svg>
+        MedPlaque NFC
+      </a>
+      <p class="mb-2 mt-5 px-3 text-[10px] font-bold uppercase tracking-widest text-gray-300">Compte</p>
+      <a href="{% url 'healthcare:prestataire_bilan' %}" class="nav-link {% if dash_active == 'bilan' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg>
+        Bilan KPI
+      </a>
+      {% comment %} Abonnement masqué pour l'instant — réactiver ci-dessous
+      <a href="{% url 'healthcare:prestataire_subscription' %}" class="nav-link {% if dash_active == 'subscription' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/></svg>
+        Abonnement
+        {% if pending_subscription_request %}<span class="nav-badge" style="background:#d97706">!</span>{% endif %}
+      </a>
+      {% endcomment %}
+      <a href="{% url 'healthcare:prestataire_settings' %}" class="nav-link {% if dash_active == 'settings' %}active{% endif %}">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+        Paramètres
+      </a>
+      {% else %}
+      <span class="nav-link nav-disabled" title="Créez d'abord votre établissement"><span class="nav-icon">🔒</span> Profil établissement</span>
+      <span class="nav-link nav-disabled" title="Créez d'abord votre établissement"><span class="nav-icon">🔒</span> Catalogue d'actes</span>
+      <span class="nav-link nav-disabled" title="Créez d'abord votre établissement"><span class="nav-icon">🔒</span> Assurances</span>
+      {% endif %}
+    </nav>
+
+    {% if org %}
+    <div class="border-t border-gray-100 px-3 py-3 space-y-2">
+      <a href="{% url 'healthcare:prestataire_bilan' %}" class="block rounded-xl border border-emerald-100 bg-emerald-50/50 px-3 py-2 text-[11px] font-semibold text-emerald-800 hover:border-emerald-200 hover:bg-emerald-50">
+        <span class="text-[9px] font-bold uppercase tracking-widest text-emerald-700">★ Pionnier · M4 / M6</span>
+        <div class="mt-1 h-1 overflow-hidden rounded-full bg-emerald-100">
+          <div class="h-full w-2/3 rounded-full bg-emerald-500"></div>
+        </div>
+        <p class="mt-1 text-[10px] font-medium text-emerald-700">Bilan KPI dans 30 jours</p>
+      </a>
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" class="nav-link" target="_blank">
+        <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+        Voir profil public
+      </a>
+    </div>
+    {% endif %}
+  </aside>
+
+  <!-- ===== MOBILE TOP BAR ===== -->
+  <div id="dash-mobile-bar" class="items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
+    <div class="flex items-center gap-2">
+      {% if org %}
+        {% if org.logo %}
+        <img src="{{ org.logo.url }}" alt="" class="h-8 w-8 rounded-lg object-cover">
+        {% else %}
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-sm font-bold text-primary-600">{{ org.name|first }}</div>
+        {% endif %}
+        <span class="text-sm font-bold text-gray-900 truncate max-w-[180px]">{{ org.name }}</span>
+      {% else %}
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-50 text-sm font-bold text-accent-600">{{ user.username|first|upper }}</div>
+        <span class="text-sm font-bold text-gray-900 truncate max-w-[160px]">Espace prestataire</span>
+      {% endif %}
+    </div>
+    <button type="button" id="dash-mob-toggle" class="mc-app-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="dashAppDrawer">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+    </button>
+  </div>
+
+  <!-- ===== MOBILE DRAWER (vitrine) ===== -->
+  {% include "includes/_prestataire_app_drawer.html" %}
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div id="dash-main" class="flex-1 bg-gray-50">
+    <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+      {% block dash_content %}{% endblock %}
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('dash-mob-toggle');
+  var drawer = document.getElementById('dashAppDrawer');
+  var backdrop = document.getElementById('dashAppDrawerBackdrop');
+  if (!btn || !drawer || !backdrop) return;
+
+  function setOpen(open) {
+    drawer.classList.toggle('is-open', open);
+    drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+    backdrop.hidden = !open;
+    backdrop.classList.toggle('is-visible', open);
+    backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('mc-app-drawer-open', open);
+  }
+
+  btn.addEventListener('click', function () {
+    setOpen(!drawer.classList.contains('is-open'));
+  });
+  backdrop.addEventListener('click', function () { setOpen(false); });
+  drawer.querySelectorAll('.js-visitor-drawer-close').forEach(function (btn) {
+    btn.addEventListener('click', function () { setOpen(false); });
+  });
+  drawer.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () { setOpen(false); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') setOpen(false);
+  });
+  window.addEventListener('resize', function () {
+    if (window.innerWidth >= 768) setOpen(false);
+  });
+})();
+</script>
+{% block dash_extra_js %}{% endblock %}
+{% endblock %}

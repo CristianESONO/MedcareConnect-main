@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Annuaire des établissements{% endblock %}
+{% block extra_css %}
+<link href="{% static 'healthcare/css/annuaire.css' %}?v=1" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<div class="ann-page">
+  <header class="ann-hero">
+    <div class="ann-hero-inner">
+      <h1 class="ann-hero-title">Annuaire des établissements</h1>
+      <p class="ann-hero-sub">Recherchez par nom, type ou quartier · Vérifiez la couverture assurance et les disponibilités</p>
+    </div>
+  </header>
+
+  <form method="get" id="ann-form" class="ann-search-section" aria-label="Recherche annuaire">
+    <div class="ann-search-inner">
+      <div class="ann-search-wrap">
+        <span class="ann-search-emoji" aria-hidden="true">🏥</span>
+        <input type="search" name="q" id="ann-search" value="{{ search_q }}" class="ann-search-input"
+          placeholder="Nom d'établissement, type (labo, imagerie…), quartier…" autocomplete="off">
+      </div>
+
+      <div class="ann-filter-row">
+        <span class="ann-filter-lbl">Filtrer :</span>
+
+        <button type="button" class="ann-filter-chip{% if current_type_cat and current_type_cat != 'all' %} active{% endif %}" data-ann-panel="type" id="ann-chip-type">
+          <span id="ann-lbl-type">
+            {% if current_type_cat and current_type_cat != 'all' %}
+              {% for key, label, icon in annuaire_categories %}
+                {% if current_type_cat == key %}{{ icon }} {{ label }}{% endif %}
+              {% endfor %}
+            {% else %}
+              🏥 Type de structure
+            {% endif %}
+          </span>
+          <span aria-hidden="true" style="font-size:8px">▼</span>
+        </button>
+        <button type="button" class="ann-filter-chip{% if current_zone %} active{% endif %}" data-ann-panel="zone" id="ann-chip-zone">
+          <span id="ann-lbl-zone">{% if current_zone %}📍 {{ current_zone }}{% else %}📍 Zone / Quartier{% endif %}</span>
+          <span aria-hidden="true" style="font-size:8px">▼</span>
+        </button>
+        <button type="button" class="ann-filter-chip{% if current_assurances %} active{% endif %}" data-ann-panel="ins" id="ann-chip-ins">
+          <span id="ann-lbl-ins">
+            {% if current_assurances %}🛡 {{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}🛡 Assurance{% endif %}
+          </span>
+          <span aria-hidden="true" style="font-size:8px">▼</span>
+        </button>
+        <button type="button" class="ann-filter-chip{% if current_delai %} active{% endif %}" data-ann-panel="rdv" id="ann-chip-rdv">
+          <span id="ann-lbl-rdv">
+            {% if current_delai %}⏱ {% for val, label in annuaire_delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}
+            {% else %}⏱ Disponibilité RDV{% endif %}
+          </span>
+          <span aria-hidden="true" style="font-size:8px">▼</span>
+        </button>
+
+        <span class="ann-filter-lbl" style="margin-left:4px">Trier :</span>
+        <select name="sort" id="ann-sort" class="ann-sort-select" aria-label="Trier les résultats">
+          {% for val, label in sort_choices %}
+          <option value="{{ val }}" {% if current_sort == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+
+        <a href="{% url 'healthcare:annuaire' %}" class="ann-reset-btn{% if active_filter_count or search_q %} visible{% endif %}" id="ann-reset-btn">✕ Réinitialiser</a>
+      </div>
+
+      <input type="hidden" name="type_cat" id="ann-inp-type" value="{{ current_type_cat|default:'all' }}">
+      <input type="hidden" name="zone" id="ann-inp-zone" value="{{ current_zone }}">
+      <input type="hidden" name="delai" id="ann-inp-delai" value="{{ current_delai }}">
+      <input type="hidden" name="geo_lat" id="ann-inp-geo-lat" value="{{ request.GET.geo_lat }}">
+      <input type="hidden" name="geo_lng" id="ann-inp-geo-lng" value="{{ request.GET.geo_lng }}">
+
+      <div class="ann-panel{% if request.GET.ann_open == 'type' %} open{% endif %}" id="ann-panel-type" data-ann-panel="type">
+        <p class="ann-panel-title">🏥 Type de structure</p>
+        <div class="ann-opt-wrap" id="ann-type-opts">
+          {% for key, label, icon in annuaire_categories %}
+          <button type="button" class="ann-opt{% if current_type_cat == key or not current_type_cat and key == 'all' %} on{% endif %}" data-ann-type="{{ key }}">{{ icon }} {{ label }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ann-panel" id="ann-panel-zone" data-ann-panel="zone">
+        <p class="ann-panel-title">📍 Zone / Quartier</p>
+        <div class="ann-opt-wrap" id="ann-zone-opts">
+          {% for z in zones %}
+          <button type="button" class="ann-opt{% if current_zone == z %} on{% endif %}" data-ann-zone="{{ z }}">{{ z }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ann-panel" id="ann-panel-ins" data-ann-panel="ins">
+        <p class="ann-panel-title">🛡 Couverture assurance</p>
+        <p class="ann-panel-hint">Cochez une ou plusieurs assurances acceptées par l'établissement.</p>
+        <div class="ann-opt-wrap" id="ann-ins-opts">
+          {% for a in all_assurances %}
+          <label class="ann-opt{% if a.pk|stringformat:'d' in current_assurances %} on{% endif %}" style="cursor:pointer">
+            <input type="checkbox" name="assurance" value="{{ a.pk }}" class="sr-only ann-ins-cb" {% if a.pk|stringformat:'d' in current_assurances %}checked{% endif %}>
+            {{ a.name }}
+          </label>
+          {% endfor %}
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button type="button" class="ann-opt" id="ann-ins-clear">Effacer</button>
+          <button type="submit" class="ann-opt on">Appliquer</button>
+        </div>
+      </div>
+
+      <div class="ann-panel" id="ann-panel-rdv" data-ann-panel="rdv">
+        <p class="ann-panel-title">⏱ Disponibilité / Délai RDV</p>
+        <div class="ann-opt-wrap" id="ann-rdv-opts">
+          {% for val, label in annuaire_delai_choices %}
+          <button type="button" class="ann-opt{% if current_delai == val %} on{% endif %}" data-ann-delai="{{ val }}">{{ label }}</button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% if geo_required %}
+  <div class="ann-geo-banner" id="ann-geo-banner" role="alert">
+    <span>📍 Activez la géolocalisation pour trier par distance.</span>
+    <button type="button" id="ann-geo-retry" class="ann-geo-retry-btn">Autoriser la position</button>
+    <style>
+      .ann-geo-banner { display:flex; align-items:center; gap:12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; font-size:14px; color:#1e40af; margin-bottom:16px; }
+      .ann-geo-retry-btn { background:#2563eb; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:600; cursor:pointer; }
+      .ann-geo-retry-btn:hover { background:#1d4ed8; }
+    </style>
+  </div>
+  {% endif %}
+  <div class="ann-results-wrap">
+    <p class="ann-count" id="ann-count">
+      <strong>{{ results_count }}</strong> établissement{{ results_count|pluralize }} trouvé{{ results_count|pluralize }}
+    </p>
+
+    <div class="ann-grid" id="ann-grid">
+      {% for row in rows %}
+      <article class="ann-card">
+        {% if row.is_pioneer %}<span class="ann-pioneer">⭐ Pionnier</span>{% endif %}
+        <div class="ann-card-top">
+          <div class="ann-card-av" aria-hidden="true">{{ row.icon }}</div>
+          <div style="flex:1;min-width:0">
+            <div class="ann-card-name">{{ row.org.name }}</div>
+            <div class="ann-card-type">{{ row.org.type_organisme|default:"Établissement de santé" }}</div>
+          </div>
+        </div>
+        <div class="ann-card-tags">
+          <span class="ann-tag ann-tag--muted">📍 {{ row.zone_label }}</span>
+          <span class="ann-tag ann-tag--blue">{{ row.acte_count }} acte{{ row.acte_count|pluralize }}</span>
+          {% for ins in row.matched_insurances|slice:":2" %}
+          <span class="ann-tag ann-tag--green">✓ {{ ins }}</span>
+          {% endfor %}
+          {% if row.matched_insurances|length > 2 %}
+          <span class="ann-tag ann-tag--green">+{{ row.matched_insurances|length|add:"-2" }}</span>
+          {% endif %}
+        </div>
+        <div class="ann-card-meta">
+          <div class="ann-meta-item">⏱ <span>{{ row.delai_label }}</span></div>
+          <div class="ann-meta-item">🕐 <span>{{ row.hours_short }}</span></div>
+          <div class="ann-meta-item">🛡 <span>{{ row.insurance_count }} assurance{{ row.insurance_count|pluralize }}</span></div>
+        </div>
+        <div class="ann-card-footer">
+          <a href="{% url 'healthcare:organisme_detail' row.org.slug %}?src=annuaire" class="ann-btn-fiche">Voir la fiche</a>
+          <a href="{% url 'healthcare:search' %}?q={{ row.org.name|urlencode }}&sort=price_asc" class="ann-btn-actes">Voir les actes</a>
+        </div>
+      </article>
+      {% empty %}
+      <div class="ann-empty">
+        <div class="ann-empty-icon" aria-hidden="true">🏥</div>
+        <p style="font-size:12px;line-height:1.6;margin:0">Aucun établissement ne correspond.<br>Modifiez vos filtres.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if page.has_other_pages %}
+    <nav class="ann-pagination" aria-label="Pagination">
+      {% if page.has_previous %}
+      <a href="?page={{ page.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="ann-page-btn">← Précédent</a>
+      {% endif %}
+      <span class="ann-page-num">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+      {% if page.has_next %}
+      <a href="?page={{ page.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="ann-page-btn">Suivant →</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  var form = document.getElementById('ann-form');
+  if (!form) return;
+
+  var inpType = document.getElementById('ann-inp-type');
+  var inpZone = document.getElementById('ann-inp-zone');
+  var inpDelai = document.getElementById('ann-inp-delai');
+  var openPanel = null;
+
+  var TYPE_LABELS = {
+    all: '🏥 Type de structure',
+    labo: '🧬 Laboratoire',
+    img: '🩻 Imagerie',
+    exp: '⚡ Explorations fonctionnelles',
+    dent: '🦷 Soins dentaires',
+    soins: '💉 Soins spécialisés',
+    amb: '🚑 Ambulance médicalisée'
+  };
+
+  function submitForm() {
+    if (typeof form.requestSubmit === 'function') form.requestSubmit();
+    else form.submit();
+  }
+
+  function closePanels() {
+    openPanel = null;
+    form.querySelectorAll('.ann-panel').forEach(function (p) { p.classList.remove('open'); });
+  }
+
+  function togglePanel(name) {
+    if (openPanel === name) { closePanels(); return; }
+    closePanels();
+    openPanel = name;
+    var panel = document.getElementById('ann-panel-' + name);
+    if (panel) panel.classList.add('open');
+  }
+
+  form.querySelectorAll('[data-ann-panel]').forEach(function (chip) {
+    if (chip.classList.contains('ann-filter-chip')) {
+      chip.addEventListener('click', function (e) {
+        e.preventDefault();
+        togglePanel(chip.getAttribute('data-ann-panel'));
+      });
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.ann-filter-chip') && !e.target.closest('.ann-panel')) closePanels();
+  });
+
+  form.querySelectorAll('[data-ann-type]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = btn.getAttribute('data-ann-type') || 'all';
+      if (inpType) inpType.value = v;
+      form.querySelectorAll('[data-ann-type]').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-ann-type') === v);
+      });
+      var lbl = document.getElementById('ann-lbl-type');
+      if (lbl) lbl.textContent = TYPE_LABELS[v] || TYPE_LABELS.all;
+      var chip = document.getElementById('ann-chip-type');
+      if (chip) chip.classList.toggle('active', v !== 'all');
+      closePanels();
+      submitForm();
+    });
+  });
+
+  form.querySelectorAll('[data-ann-zone]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var z = btn.getAttribute('data-ann-zone') || '';
+      var cur = inpZone ? inpZone.value : '';
+      if (inpZone) inpZone.value = (cur === z) ? '' : z;
+      form.querySelectorAll('[data-ann-zone]').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-ann-zone') === inpZone.value && inpZone.value);
+      });
+      var lbl = document.getElementById('ann-lbl-zone');
+      if (lbl) lbl.textContent = inpZone.value ? '📍 ' + inpZone.value : '📍 Zone / Quartier';
+      var chip = document.getElementById('ann-chip-zone');
+      if (chip) chip.classList.toggle('active', !!inpZone.value);
+      closePanels();
+      submitForm();
+    });
+  });
+
+  form.querySelectorAll('[data-ann-delai]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = btn.getAttribute('data-ann-delai') || '';
+      if (inpDelai) inpDelai.value = (inpDelai.value === v) ? '' : v;
+      form.querySelectorAll('[data-ann-delai]').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-ann-delai') === inpDelai.value && inpDelai.value);
+      });
+      var lbl = document.getElementById('ann-lbl-rdv');
+      if (lbl) {
+        var txt = btn.textContent.trim();
+        lbl.textContent = inpDelai.value ? '⏱ ' + txt : '⏱ Disponibilité RDV';
+      }
+      var chip = document.getElementById('ann-chip-rdv');
+      if (chip) chip.classList.toggle('active', !!inpDelai.value);
+      closePanels();
+      submitForm();
+    });
+  });
+
+  var insClear = document.getElementById('ann-ins-clear');
+  if (insClear) {
+    insClear.addEventListener('click', function () {
+      form.querySelectorAll('.ann-ins-cb').forEach(function (cb) { cb.checked = false; });
+      form.querySelectorAll('#ann-ins-opts .ann-opt').forEach(function (l) { l.classList.remove('on'); });
+    });
+  }
+
+  form.querySelectorAll('.ann-ins-cb').forEach(function (cb) {
+    cb.addEventListener('change', function () {
+      var label = cb.closest('.ann-opt');
+      if (label) label.classList.toggle('on', cb.checked);
+      var cnt = form.querySelectorAll('.ann-ins-cb:checked').length;
+      var lbl = document.getElementById('ann-lbl-ins');
+      if (lbl) lbl.textContent = cnt ? '🛡 ' + cnt + ' assurance' + (cnt > 1 ? 's' : '') : '🛡 Assurance';
+      var chip = document.getElementById('ann-chip-ins');
+      if (chip) chip.classList.toggle('active', cnt > 0);
+    });
+  });
+
+  var sortSel = document.getElementById('ann-sort');
+  var inpGeoLat = document.getElementById('ann-inp-geo-lat');
+  var inpGeoLng = document.getElementById('ann-inp-geo-lng');
+
+  function requestGeolocationAndSubmit() {
+    if (!navigator.geolocation) { submitForm(); return; }
+    navigator.geolocation.getCurrentPosition(
+      function (pos) {
+        if (inpGeoLat) inpGeoLat.value = pos.coords.latitude.toFixed(6);
+        if (inpGeoLng) inpGeoLng.value = pos.coords.longitude.toFixed(6);
+        submitForm();
+      },
+      function () {
+        // L'utilisateur a refusé — soumettre quand même (fallback alpha)
+        submitForm();
+      },
+      { enableHighAccuracy: false, timeout: 6000 }
+    );
+  }
+
+  if (sortSel) {
+    sortSel.addEventListener('change', function () {
+      if (sortSel.value === 'dist') {
+        requestGeolocationAndSubmit();
+      } else {
+        submitForm();
+      }
+    });
+  }
+
+  // Bouton "Autoriser la position" dans le bandeau geo_required
+  var geoRetryBtn = document.getElementById('ann-geo-retry');
+  if (geoRetryBtn) {
+    geoRetryBtn.addEventListener('click', function () {
+      requestGeolocationAndSubmit();
+    });
+  }
+
+  var searchInp = document.getElementById('ann-search');
+  var searchTimer;
+  if (searchInp) {
+    searchInp.addEventListener('input', function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(submitForm, 500);
+    });
+  }
+})();
+</script>
+{% endblock %}

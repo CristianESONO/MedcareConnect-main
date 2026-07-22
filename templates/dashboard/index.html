@@ -1,0 +1,380 @@
+{% extends "dashboard/base.html" %}
+{% load humanize %}
+
+{% block title %}Tableau de bord{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  .period-tab{padding:6px 14px;border-radius:9999px;border:1.5px solid #e5e7eb;background:#fff;font-size:11px;font-weight:600;color:#4b5563;cursor:pointer;transition:.15s}
+  .period-tab:hover{border-color:var(--mc-navy, #123a63);color:var(--mc-navy, #123a63)}
+  .period-tab.active{background:var(--mc-navy, #123a63);border-color:var(--mc-navy, #123a63);color:#fff}
+  .var-toggle{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;border:1.5px solid #e5e7eb;font-size:11px;font-weight:600;color:#4b5563;cursor:pointer;transition:.15s;background:#fff}
+  .var-toggle:hover{background:#f9fafb}
+  .var-toggle.active{background:#eff6ff;border-color:#3b82f6;color:#1e40af}
+  .var-dot{width:8px;height:8px;border-radius:9999px;display:inline-block}
+  .map-wrap{position:relative;border-radius:0 0 12px 12px;overflow:hidden;min-height:380px}
+  #senegal-map{height:380px;width:100%}
+  .map-loader{position:absolute;inset:0;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);transition:opacity .35s ease,visibility .35s ease}
+  .map-loader.map-loader--done{opacity:0;visibility:hidden;pointer-events:none}
+  .map-loader__spin{width:40px;height:40px;border-radius:50%;border:3px solid #e5e7eb;border-top-color:var(--mc-navy, #123a63);animation:mapSpin .85s linear infinite}
+  .map-loader__text{text-align:center;max-width:16rem;padding:0 12px}
+  .map-loader__title{font-size:13px;font-weight:700;color:#111827}
+  .map-loader__sub{margin-top:4px;font-size:11px;line-height:1.45;color:#6b7280}
+  @keyframes mapSpin{to{transform:rotate(360deg)}}
+  .legend-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#4b5563}
+  .legend-pill .d{width:10px;height:10px;border-radius:9999px;border:1px solid rgba(0,0,0,.05)}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ── Période ── -->
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <div>
+    <p class="text-xs text-gray-500">Vue globale de la plateforme · {{ period_label }}</p>
+  </div>
+  <form method="get" id="period-form" class="flex items-center gap-1.5">
+    {% for code, info in periods %}
+    <button type="submit" name="period" value="{{ code }}" class="period-tab {% if period == code %}active{% endif %}">
+      {% if code == "7j" %}7 jours{% elif code == "30j" %}30 jours{% else %}Depuis M0{% endif %}
+    </button>
+    {% endfor %}
+  </form>
+</div>
+
+<!-- ── KPIs période ── -->
+<div class="mt-4 grid gap-3 grid-cols-2 lg:grid-cols-5">
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Structures actives</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_structures_actives|intcomma }}</p>
+    <p class="text-[11px] mc-text-accent font-medium">+{{ kpi_structures_nouv }} sur la période</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Patients inscrits</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_patients|intcomma }}</p>
+    <p class="text-[11px] text-gray-500">sur la période</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Devis générés</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_devis|intcomma }}</p>
+    <p class="text-[11px] text-gray-500">{{ kpi_devis_total|intcomma }} au total</p>
+  </div>
+  <a href="{% url 'dashboard:rdv_overview' %}" class="rounded-xl border border-gray-200 bg-white p-4 block hover:border-primary-300 transition">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">RDV confirmés</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_rdv_confirmed|intcomma }}</p>
+    <p class="text-[11px] text-gray-500">
+      sur la période · {{ kpi_rdv_confirmed_upcoming|intcomma }} à venir
+      {% if kpi_rdv_no_show_pct %}<span class="text-gray-400">· {{ kpi_rdv_no_show_pct }} % no-show</span>{% endif %}
+    </p>
+  </a>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Valeur générée</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_valeur|floatformat:0|intcomma }}</p>
+    <p class="text-[11px] text-gray-500">FCFA estimés (devis)</p>
+  </div>
+</div>
+
+<!-- ── KPIs fixes ── -->
+<div class="mt-3 grid gap-3 grid-cols-2 lg:grid-cols-4">
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Actes référentiel</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_actes_total|intcomma }}</p>
+    <p class="text-[11px] text-gray-500">6 piliers</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Frais service (500F)</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">0</p>
+    <p class="text-[11px] text-gray-500">Actif à M6 · Gratuit M0–M6</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">Slots Pionniers</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_pioneer_restants }}</p>
+    <p class="text-[11px] text-gray-500">restants / {{ kpi_pioneer_target }} (CPP-2025)</p>
+  </div>
+  <div class="rounded-xl border border-gray-200 bg-white p-4">
+    <p class="text-[11px] font-medium uppercase tracking-wider text-gray-500">MRR actuel</p>
+    <p class="mt-2 text-2xl font-bold text-gray-900">{{ kpi_mrr_actuel|intcomma }}</p>
+    <p class="text-[11px] text-gray-500">FCFA · cumul des plans actifs</p>
+  </div>
+</div>
+
+<!-- ── Carte Sénégal ── -->
+<div class="mt-6 rounded-xl border border-gray-200 bg-white">
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-4">
+    <div>
+      <h3 class="text-sm font-semibold text-gray-900">Cartographie des structures</h3>
+      <p class="text-xs text-gray-500">Couverture MedCare · Sénégal · Données live</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <span class="legend-pill"><span class="d" style="background:var(--mc-accent)"></span>Actif ({{ map_count_active }})</span>
+      <span class="legend-pill"><span class="d" style="background:#f59e0b"></span>Onboarding ({{ map_count_pending }})</span>
+      <span class="legend-pill"><span class="d" style="background:#9ca3af;border-style:dashed"></span>Sans coordonnées</span>
+    </div>
+  </div>
+  <div class="map-wrap">
+    <div id="map-loader" class="map-loader" role="status" aria-live="polite" aria-busy="true">
+      <div class="map-loader__spin" aria-hidden="true"></div>
+      <div class="map-loader__text">
+        <p class="map-loader__title">Chargement de la carte…</p>
+        <p class="map-loader__sub" id="map-loader-sub">Préparation des tuiles et des marqueurs. Avec de nombreuses structures, cela peut prendre quelques secondes.</p>
+      </div>
+    </div>
+    <div id="senegal-map"></div>
+  </div>
+</div>
+
+<!-- ── Graph multi-variables + structures en attente ── -->
+<div class="mt-6 grid gap-6 lg:grid-cols-5">
+  <div class="rounded-xl border border-gray-200 bg-white p-5 lg:col-span-3 min-w-0">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900">Activité — {{ period_label }}</h3>
+        <p class="text-xs text-gray-500">Cliquez sur les variables pour les afficher / masquer.</p>
+      </div>
+      {% if show_bilan_btn %}
+      <a href="#" class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-[11px] font-bold text-gray-700 hover:bg-gray-100">📋 Obtenir le bilan</a>
+      {% else %}
+      <span class="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-[11px] font-bold text-gray-300" title="Disponible uniquement sur la période Depuis M0">📋 Obtenir le bilan</span>
+      {% endif %}
+    </div>
+    <div class="mt-3 flex flex-wrap gap-2" id="var-toggles">
+      <button type="button" class="var-toggle active" data-var="devis" data-color="#3b82f6"><span class="var-dot" style="background:#3b82f6"></span> Devis</button>
+      <button type="button" class="var-toggle" data-var="patients" data-color="#8b5cf6"><span class="var-dot" style="background:#8b5cf6"></span> Patients</button>
+      <button type="button" class="var-toggle" data-var="structures" data-color="#f59e0b"><span class="var-dot" style="background:#f59e0b"></span> Structures</button>
+      <button type="button" class="var-toggle" data-var="valeur" data-color="#ef4444"><span class="var-dot" style="background:#ef4444"></span> Valeur (FCFA)</button>
+    </div>
+    <div class="relative mt-4 h-72 w-full">
+      <canvas id="multiChart"></canvas>
+    </div>
+  </div>
+
+  <div class="rounded-xl border border-gray-200 bg-white p-5 lg:col-span-2">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-gray-900">Structures en attente</h3>
+      <a href="{% url 'dashboard:organismes_list' %}?status=pending" class="text-xs font-medium text-accent-500 hover:text-accent-600">Voir tout →</a>
+    </div>
+    <div class="mt-4 space-y-3">
+      {% for org in pending_organismes %}
+      <div class="flex items-center justify-between rounded-lg border border-gray-100 px-3 py-2.5">
+        <div class="flex items-center gap-3">
+          {% if org.logo %}
+          <img src="{{ org.logo.url }}" class="h-8 w-8 rounded-lg object-cover" alt="">
+          {% else %}
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-xs font-bold text-gray-500">{{ org.name|make_list|first|upper }}</div>
+          {% endif %}
+          <div>
+            <p class="text-sm font-medium text-gray-900">{{ org.name }}</p>
+            <p class="text-[11px] text-gray-400">{{ org.city }} · {{ org.type_organisme|default:"Non classé" }}</p>
+          </div>
+        </div>
+        <div class="flex gap-1">
+          <a href="{% url 'dashboard:organisme_approve' org.pk %}" class="mc-badge mc-badge--accent rounded-md px-2 py-1 text-[11px] font-medium hover:opacity-90">Approuver</a>
+          <a href="{% url 'dashboard:organisme_reject' org.pk %}" class="rounded-md bg-red-50 px-2 py-1 text-[11px] font-medium text-red-600 hover:bg-red-100">Rejeter</a>
+        </div>
+      </div>
+      {% empty %}
+      <p class="py-6 text-center text-sm text-gray-400">Aucune structure en attente</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- ── Derniers inscrits + Répartition par service ── -->
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <div class="rounded-xl border border-gray-200 bg-white p-5">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-gray-900">Derniers inscrits</h3>
+      <a href="{% url 'dashboard:users_list' %}" class="text-xs font-medium text-accent-500 hover:text-accent-600">Voir tout →</a>
+    </div>
+    <table class="mt-3 w-full text-left text-sm">
+      <thead>
+        <tr class="border-b border-gray-100 text-xs text-gray-500">
+          <th class="pb-2 font-medium">Utilisateur</th>
+          <th class="pb-2 font-medium">Type</th>
+          <th class="pb-2 font-medium">Date</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for u in recent_users %}
+        <tr>
+          <td class="py-2.5">
+            <div class="flex items-center gap-2">
+              <div class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-50 text-[11px] font-bold text-primary-500">{{ u.username|make_list|first|upper }}</div>
+              <div>
+                <p class="font-medium text-gray-900">{{ u.display_name }}</p>
+                <p class="text-[11px] text-gray-400">{{ u.email }}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-2.5">
+            <span class="rounded-full px-2 py-0.5 text-[11px] font-medium {% if u.user_type == 'prestataire' %}bg-blue-50 text-blue-700 {% elif u.user_type == 'admin' %}bg-purple-50 text-purple-700 {% else %}bg-gray-100 text-gray-600{% endif %}">
+              {{ u.get_user_type_display }}
+            </span>
+          </td>
+          <td class="py-2.5 text-xs text-gray-500">{{ u.date_joined|date:"d/m/Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rounded-xl border border-gray-200 bg-white p-5">
+    <h3 class="text-sm font-semibold text-gray-900">Répartition actes par service</h3>
+    <div class="mt-4 space-y-3">
+      {% for s in services_repartition %}
+      <div>
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-medium text-gray-700">{{ s.name }}</span>
+          <span class="text-gray-500">{{ s.n }} actes</span>
+        </div>
+        <div class="mt-1 h-1.5 w-full rounded-full bg-gray-100">
+          <div class="h-full rounded-full bg-accent-500" style="width: {% widthratio s.n services_repartition.0.n 100 %}%"></div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-sm text-gray-400">Aucun service.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+  // ── Persist period in submitted form (so we can stay on /?period=...) ──
+  document.querySelectorAll('#period-form button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      // default submit handles it; we just visually mark active
+      document.querySelectorAll('#period-form .period-tab').forEach(function(x){ x.classList.remove('active'); });
+      b.classList.add('active');
+    });
+  });
+
+  // ── Carte Sénégal ──
+  var orgs = {{ map_orgs_json|safe }};
+  var mapEl = document.getElementById('senegal-map');
+  var loaderEl = document.getElementById('map-loader');
+  var loaderSub = document.getElementById('map-loader-sub');
+
+  function hideMapLoader() {
+    if (!loaderEl) return;
+    loaderEl.classList.add('map-loader--done');
+    loaderEl.setAttribute('aria-busy', 'false');
+  }
+
+  if (mapEl && typeof L !== 'undefined') {
+    var nOrgs = orgs.length;
+    if (loaderSub) {
+      loaderSub.textContent = nOrgs > 0
+        ? 'Chargement des tuiles et placement de ' + nOrgs + ' structure' + (nOrgs > 1 ? 's' : '') + ' géolocalisée' + (nOrgs > 1 ? 's' : '') + '…'
+        : 'Chargement des tuiles… Aucune structure avec coordonnées GPS pour l’instant.';
+    }
+
+    var map = L.map('senegal-map', { zoomControl: true, scrollWheelZoom: false }).setView([14.4974, -14.4524], 7);
+    var tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
+      maxZoom: 20,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" rel="noopener">CARTO</a>'
+    });
+    // Écouteurs avant addTo pour ne pas rater un événement `load` immédiat (cache navigateur)
+    var hideLoaderTimer = null;
+    function scheduleHideMapLoader() {
+      clearTimeout(hideLoaderTimer);
+      hideLoaderTimer = setTimeout(hideMapLoader, 320);
+    }
+    tiles.on('load', scheduleHideMapLoader);
+    tiles.on('tileerror', scheduleHideMapLoader);
+    tiles.addTo(map);
+    setTimeout(hideMapLoader, 18000);
+
+    orgs.forEach(function(o) {
+      var color = o.active ? 'var(--mc-accent)' : '#f59e0b';
+      var marker = L.circleMarker([o.lat, o.lng], {
+        radius: 8, color: color, fillColor: color, fillOpacity: .55, weight: 2
+      }).addTo(map);
+      marker.bindTooltip(
+        '<strong>' + o.name + '</strong><br>' +
+        (o.type ? o.type + ' · ' : '') + (o.city || '') +
+        '<br><a href="' + o.url + '" target="_blank" style="color:#3b82f6">Voir profil →</a>',
+        { sticky: true, direction: 'top' }
+      );
+    });
+    if (orgs.length > 0) {
+      try {
+        var bounds = L.latLngBounds(orgs.map(function(o) { return [o.lat, o.lng]; }));
+        map.fitBounds(bounds.pad(0.4));
+      } catch(e) { scheduleHideMapLoader(); }
+    }
+  } else {
+    hideMapLoader();
+  }
+
+  // ── Graphique multi-variables ──
+  var labels = {{ chart_labels_json|safe }};
+  var DATA = {
+    devis:      { label: 'Devis',           data: {{ chart_devis_json|safe }},      color: '#3b82f6', yAxisID: 'y' },
+    patients:   { label: 'Patients',        data: {{ chart_patients_json|safe }},   color: '#8b5cf6', yAxisID: 'y' },
+    structures: { label: 'Structures',      data: {{ chart_structures_json|safe }}, color: '#f59e0b', yAxisID: 'y' },
+    valeur:     { label: 'Valeur (FCFA)',   data: {{ chart_valeur_json|safe }},     color: '#ef4444', yAxisID: 'y2' },
+  };
+  var active = new Set(['devis']);
+
+  function buildDatasets() {
+    var ds = [];
+    active.forEach(function(k) {
+      var s = DATA[k];
+      ds.push({
+        label: s.label,
+        data: s.data,
+        backgroundColor: s.color + '33',
+        borderColor: s.color,
+        borderWidth: 2,
+        tension: 0.25,
+        yAxisID: s.yAxisID,
+        fill: false,
+        pointRadius: 3,
+      });
+    });
+    return ds;
+  }
+
+  var ctx = document.getElementById('multiChart');
+  var chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: labels, datasets: buildDatasets() },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: {
+        y:  { beginAtZero: true, position: 'left',  grid: { color: '#f3f4f6' }, ticks: { font: { size: 11 } } },
+        y2: { beginAtZero: true, position: 'right', grid: { display: false },   ticks: { font: { size: 11 } }, title: { display: true, text: 'FCFA' } },
+        x:  { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } }
+      }
+    }
+  });
+
+  document.querySelectorAll('#var-toggles .var-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var k = btn.dataset.var;
+      if (active.has(k)) {
+        if (active.size > 1) {
+          active.delete(k);
+          btn.classList.remove('active');
+        }
+      } else {
+        active.add(k);
+        btn.classList.add('active');
+      }
+      chart.data.datasets = buildDatasets();
+      chart.update();
+    });
+  });
+})();
+</script>
+{% endblock %}

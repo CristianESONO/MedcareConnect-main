@@ -1,0 +1,44 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Fonctionnalités d'abonnement{% endblock %}
+{% block page_title %}Abonnements · Droits / modules{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <a href="{% url 'dashboard:subscription_plans_list' %}" class="text-sm font-medium text-gray-500 hover:text-primary-600">← Formules d'abonnement</a>
+  <a href="{% url 'dashboard:subscription_feature_create' %}" class="inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-600">+ Nouvelle fonctionnalité</a>
+</div>
+
+<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+  <table class="w-full text-left text-sm">
+    <thead class="border-b border-gray-100 bg-gray-50/60">
+      <tr>
+        <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">Code</th>
+        <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">Libellé</th>
+        <th class="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-400">Formules</th>
+        <th class="px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-400">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      {% for f in features %}
+      <tr class="hover:bg-gray-50/50">
+        <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ f.code }}</td>
+        <td class="px-4 py-3">
+          <p class="font-semibold text-gray-900">{{ f.label }}</p>
+          {% if f.description %}<p class="text-xs text-gray-500">{{ f.description|truncatechars:80 }}</p>{% endif %}
+        </td>
+        <td class="px-4 py-3 text-center text-gray-700">{{ f.plans_count }}</td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'dashboard:subscription_feature_edit' f.pk %}" class="rounded-md bg-primary-50 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-100">Modifier</a>
+          <form method="post" action="{% url 'dashboard:subscription_feature_delete' f.pk %}" class="inline" onsubmit="return confirm('Supprimer ce droit ? Il sera retiré de toutes les formules.');">
+            {% csrf_token %}
+            <button type="submit" class="rounded-md bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100">Supprimer</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="px-4 py-12 text-center text-sm text-gray-400">Aucune fonctionnalité. Créez-en une pour composer vos formules.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

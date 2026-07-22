@@ -1,0 +1,186 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Notifications — Configuration{% endblock %}
+{% block page_title %}Notifications · Configuration{% endblock %}
+
+{% block content %}
+{% include "notifications/admin/_nav.html" %}
+
+<div class="grid gap-5 lg:grid-cols-2">
+  {# ═════════ Email / SMTP ═════════ #}
+  <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="text-base font-bold text-gray-900">Email (SMTP)</h2>
+      {% if obj.email_enabled and obj.smtp_host %}
+        <span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Activé</span>
+      {% elif obj.smtp_host %}
+        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">Configuré · Désactivé</span>
+      {% else %}
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Non configuré</span>
+      {% endif %}
+    </div>
+    <p class="mt-1 text-xs text-gray-500">Hôte SMTP utilisé pour tous les emails sortants (notifications, alertes admin).</p>
+
+    <form method="post" class="mt-4 space-y-3">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="save_smtp">
+      {% if smtp_form.non_field_errors %}<div class="rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-800">{{ smtp_form.non_field_errors }}</div>{% endif %}
+
+      <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+        {{ smtp_form.email_enabled }} Activer l'envoi d'email
+      </label>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="block">
+          <span class="text-[11px] font-semibold text-gray-600">Hôte</span>
+          {{ smtp_form.smtp_host }}
+        </label>
+        <label class="block">
+          <span class="text-[11px] font-semibold text-gray-600">Port</span>
+          {{ smtp_form.smtp_port }}
+        </label>
+        <label class="block">
+          <span class="text-[11px] font-semibold text-gray-600">Utilisateur</span>
+          {{ smtp_form.smtp_user }}
+        </label>
+        <label class="block">
+          <span class="text-[11px] font-semibold text-gray-600">Mot de passe</span>
+          {{ smtp_form.smtp_password }}
+        </label>
+        <label class="flex items-center gap-2 text-xs text-gray-700">
+          {{ smtp_form.smtp_use_tls }} Utiliser TLS (recommandé · port 587)
+        </label>
+        <label class="flex items-center gap-2 text-xs text-gray-700">
+          {{ smtp_form.smtp_use_ssl }} Utiliser SSL (port 465)
+        </label>
+        <label class="block">
+          <span class="text-[11px] font-semibold text-gray-600">Email expéditeur</span>
+          {{ smtp_form.smtp_from_email }}
+        </label>
+        <label class="block">
+          <span class="text-[11px] font-semibold text-gray-600">Nom expéditeur</span>
+          {{ smtp_form.smtp_from_name }}
+        </label>
+        <label class="sm:col-span-2 block">
+          <span class="text-[11px] font-semibold text-gray-600">Reply-To (optionnel)</span>
+          {{ smtp_form.smtp_reply_to }}
+        </label>
+      </div>
+
+      <button type="submit" class="rounded-xl bg-primary-500 px-4 py-2 text-sm font-bold text-white hover:bg-primary-600">Enregistrer SMTP</button>
+    </form>
+
+    <details class="mt-5">
+      <summary class="cursor-pointer text-xs font-semibold text-gray-700">Envoyer un email de test</summary>
+      <form method="post" class="mt-3 space-y-2">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="test_email">
+        <label class="block text-[11px] font-semibold text-gray-600">{{ test_email_form.to_email.label }}</label>
+        {{ test_email_form.to_email }}
+        <button type="submit" class="rounded-lg mc-bg-accent px-3 py-1.5 text-xs font-bold text-white">Envoyer le test</button>
+      </form>
+    </details>
+  </section>
+
+  {# ═════════ WhatsApp Cloud ═════════ #}
+  <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <h2 class="text-base font-bold text-gray-900">WhatsApp Cloud API</h2>
+      {% if obj.whatsapp_enabled and obj.wa_access_token %}
+        <span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Activé</span>
+      {% elif obj.wa_access_token %}
+        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">Configuré · Désactivé</span>
+      {% else %}
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Non configuré</span>
+      {% endif %}
+    </div>
+    <p class="mt-1 text-xs text-gray-500">Compte business Meta requis. Le coût des messages dépend du tarif Meta.</p>
+
+    <div class="mt-3 rounded-lg border border-[var(--mc-border)] mc-bg-accent-light/80 px-3 py-2 text-xs mc-text-accent-dark">
+      <strong>Textes préremplis wa.me côté patient</strong> (fiche prestataire, fiche devis / sous-devis) : modifiables sous
+      <a href="{% url 'notifications:admin_patient_wa_messages' %}" class="font-semibold underline">Notifications → WhatsApp patient (wa.me)</a>.
+    </div>
+
+    <form method="post" class="mt-4 space-y-3">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="save_wa">
+      {% if wa_form.non_field_errors %}<div class="rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-800">{{ wa_form.non_field_errors }}</div>{% endif %}
+
+      <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+        {{ wa_form.whatsapp_enabled }} Activer WhatsApp Cloud API
+      </label>
+
+      <label class="block">
+        <span class="text-[11px] font-semibold text-gray-600">Phone number ID</span>
+        {{ wa_form.wa_phone_number_id }}
+      </label>
+      <label class="block">
+        <span class="text-[11px] font-semibold text-gray-600">Business account ID</span>
+        {{ wa_form.wa_business_account_id }}
+      </label>
+      <label class="block">
+        <span class="text-[11px] font-semibold text-gray-600">Access token (permanent)</span>
+        {{ wa_form.wa_access_token }}
+      </label>
+      <label class="block">
+        <span class="text-[11px] font-semibold text-gray-600">Version d'API</span>
+        {{ wa_form.wa_api_version }}
+      </label>
+
+      <button type="submit" class="rounded-xl bg-primary-500 px-4 py-2 text-sm font-bold text-white hover:bg-primary-600">Enregistrer WhatsApp</button>
+    </form>
+
+    <details class="mt-5">
+      <summary class="cursor-pointer text-xs font-semibold text-gray-700">Envoyer un message WhatsApp de test</summary>
+      <form method="post" class="mt-3 space-y-2">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="test_wa">
+        <label class="block text-[11px] font-semibold text-gray-600">{{ test_wa_form.to_number.label }}</label>
+        {{ test_wa_form.to_number }}
+        <label class="block text-[11px] font-semibold text-gray-600">{{ test_wa_form.message.label }}</label>
+        {{ test_wa_form.message }}
+        <button type="submit" class="rounded-lg mc-bg-accent px-3 py-1.5 text-xs font-bold text-white">Envoyer le test</button>
+      </form>
+    </details>
+  </section>
+</div>
+
+{# ═════════ Général ═════════ #}
+<section class="mt-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+  <h2 class="text-base font-bold text-gray-900">Réglages généraux</h2>
+  <form method="post" class="mt-4 grid gap-3 sm:grid-cols-2">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save_general">
+    <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
+      {{ general_form.in_app_enabled }} Activer les notifications in-app (cloche)
+    </label>
+    <label class="block sm:col-span-2">
+      <span class="text-[11px] font-semibold text-gray-600">URL « Avis Google » (page patient /healthcare/avis/google/)</span>
+      <p class="mb-1 text-[10px] text-gray-500">Laissez vide pour utiliser la variable d’environnement <code class="rounded bg-gray-100 px-0.5">MEDCARE_GOOGLE_REVIEWS_URL</code> en secours.</p>
+      {{ general_form.google_reviews_url }}
+      {% if general_form.google_reviews_url.errors %}<p class="mt-1 text-xs text-red-600">{{ general_form.google_reviews_url.errors.0 }}</p>{% endif %}
+    </label>
+    <div class="sm:col-span-2">
+      <button type="submit" class="rounded-xl bg-primary-500 px-4 py-2 text-sm font-bold text-white hover:bg-primary-600">Enregistrer</button>
+    </div>
+  </form>
+</section>
+
+{# ═════════ Vue d'ensemble canaux ═════════ #}
+<section class="mt-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+  <h2 class="text-base font-bold text-gray-900">Canaux disponibles</h2>
+  <p class="mt-1 text-xs text-gray-500">Activez ou désactivez globalement un canal depuis la <a href="/admin/notifications/notificationchannel/" class="text-primary-600 hover:underline">liste des canaux</a>.</p>
+  <ul class="mt-3 divide-y divide-gray-100">
+    {% for ch in channels %}
+    <li class="flex items-center justify-between py-2 text-sm">
+      <div>
+        <p class="font-semibold text-gray-800">{{ ch.label }} <span class="text-[11px] text-gray-400">{{ ch.code }}</span></p>
+        {% if ch.description %}<p class="text-xs text-gray-500">{{ ch.description }}</p>{% endif %}
+      </div>
+      <span class="rounded-full px-2 py-0.5 text-[10px] font-bold {% if ch.is_enabled %}mc-bg-accent-light mc-text-accent-dark{% else %}bg-rose-100 text-rose-700{% endif %}">
+        {% if ch.is_enabled %}Activé{% else %}Désactivé{% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

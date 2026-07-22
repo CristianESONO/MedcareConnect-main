@@ -1,0 +1,23 @@
+{% comment %}Colonne panier desktop — style maquette DEMO DESKTOP PATIENT (IDs JS conservés).{% endcomment %}
+<aside id="dem-right-rail" class="col-right sipn-col-cart" aria-label="Panier">
+  <div class="panier">
+    <div class="panier-head">
+      <div class="panier-title">
+        <span class="panier-title-txt sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--sm" %} Mon panier</span>
+        <span class="cart-count" id="cart-count" data-dem-cart-count>0</span>
+      </div>
+      <button type="button" class="cart-clear" id="dem-cart-clear-btn">Vider</button>
+    </div>
+    <div id="cart-body" data-dem-cart-body>
+      <div class="cart-empty">Cochez des actes dans les structures<br>pour construire votre devis.</div>
+    </div>
+    <div id="cart-footer" class="cart-footer" data-dem-cart-footer hidden>
+      <div class="cart-total-row">
+        <span class="ct-label">Total estimé</span>
+        <span class="ct-value" data-dem-cart-total id="cart-total-amount">0 FCFA</span>
+      </div>
+      <div id="cart-structs-info" class="cart-structs-info" data-dem-cart-structs-info></div>
+      <p class="cart-devis-hint">Un devis par acte — utilisez « Prendre un rendez-vous » sur chaque ligne.</p>
+    </div>
+  </div>
+</aside>

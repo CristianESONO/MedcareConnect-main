@@ -1,0 +1,8 @@
+{# Sous-navigation de la section Notifications dans l'espace admin #}
+<nav class="mb-5 flex flex-wrap gap-2 border-b border-gray-200 pb-2 text-xs font-semibold">
+  <a href="{% url 'notifications:admin_settings' %}" class="rounded-lg px-3 py-1.5 transition {% if notif_admin_active == 'settings' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">Configuration</a>
+  <a href="{% url 'notifications:admin_rules' %}" class="rounded-lg px-3 py-1.5 transition {% if notif_admin_active == 'rules' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">Règles (qui reçoit quoi)</a>
+  <a href="{% url 'notifications:admin_templates' %}" class="rounded-lg px-3 py-1.5 transition {% if notif_admin_active == 'templates' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">Templates d'événements</a>
+  <a href="{% url 'notifications:admin_patient_wa_messages' %}" class="rounded-lg px-3 py-1.5 transition {% if notif_admin_active == 'patient_whatsapp' %}mc-bg-accent text-white{% else %}mc-text-accent-dark hover:mc-bg-accent-light{% endif %}">WhatsApp patient (wa.me)</a>
+  <a href="{% url 'notifications:admin_logs' %}" class="rounded-lg px-3 py-1.5 transition {% if notif_admin_active == 'logs' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">Journal d'envois</a>
+</nav>

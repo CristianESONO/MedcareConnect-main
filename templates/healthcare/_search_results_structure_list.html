@@ -1,0 +1,22 @@
+{% comment %}Liste résultats par structure — partagée mobile + desktop.{% endcomment %}
+{% if pool_from_request %}
+  {% for block in mobile_results_by_org %}
+    {% include "healthcare/_search_card_mobile.html" %}
+  {% empty %}
+  <div class="empty-state-m">
+    <div class="empty-icon-m" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="search" class="sipn-ico sipn-ico--xl" %}</div>
+    <p class="empty-txt-m">Aucune structure ne correspond à ces critères</p>
+    <a href="{% url 'healthcare:search' %}" class="sipn-reset-link">Réinitialiser la recherche</a>
+  </div>
+  {% endfor %}
+{% else %}
+<div class="empty-state-m">
+  <div class="empty-icon-m" aria-hidden="true">👈</div>
+  <p class="empty-txt-m">Sélectionnez un acte dans le menu<br>pour voir toutes les structures qui le proposent.</p>
+  {% if list_variant == 'mobile' %}
+  <p class="empty-txt-m sipn-empty-hint-sub">Utilisez l'onglet <strong>Prestations</strong> pour parcourir les familles ou la barre de recherche.</p>
+  {% else %}
+  <p class="empty-txt-m sipn-empty-hint-sub">Parcourez une famille à gauche ou utilisez la recherche.</p>
+  {% endif %}
+</div>
+{% endif %}

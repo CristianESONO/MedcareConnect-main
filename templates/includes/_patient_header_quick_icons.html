@@ -1,0 +1,31 @@
+{% comment %}Icônes accès rapide patient — header desktop (complète Mon espace + /messaging/).{% endcomment %}
+<div class="mc-landing-header-icons" aria-label="Accès rapide">
+  <a href="{% url 'users:patient_panel_tab' tab='chariot' %}"
+    class="mc-landing-icon-btn{% if account_active == 'chariot' %} is-active{% endif %}"
+    aria-label="Panier{% if cart_count %} ({{ cart_count }}){% endif %}"
+    title="Panier">
+    <i class="ti ti-shopping-cart" aria-hidden="true"></i>
+    {% if cart_count %}<span class="mc-landing-icon-badge">{{ cart_count }}</span>{% endif %}
+  </a>
+  <a href="{% url 'messaging:inbox' %}"
+    class="mc-landing-icon-btn{% if account_active == 'messages' %} is-active{% endif %}"
+    aria-label="Messagerie{% if unread_messages %} ({{ unread_messages }} non lus){% endif %}"
+    title="Messagerie">
+    <i class="ti ti-messages" aria-hidden="true"></i>
+    {% if unread_messages %}<span class="mc-landing-icon-badge">{{ unread_messages }}</span>{% endif %}
+  </a>
+  <a href="{% url 'messaging:notifications' %}"
+    class="mc-landing-icon-btn{% if account_active == 'notifications' %} is-active{% endif %}"
+    aria-label="Notifications{% if unread_notifications %} ({{ unread_notifications }} non lues){% endif %}"
+    title="Notifications">
+    <i class="ti ti-bell" aria-hidden="true"></i>
+    {% if unread_notifications %}<span class="mc-landing-icon-badge">{{ unread_notifications }}</span>{% endif %}
+  </a>
+  <a href="{% url 'messaging:rappels' %}"
+    class="mc-landing-icon-btn{% if account_active == 'rappels' %} is-active{% endif %}"
+    aria-label="Rappels{% if unread_rappels %} ({{ unread_rappels }} non lus){% endif %}"
+    title="Rappels">
+    <i class="ti ti-clock" aria-hidden="true"></i>
+    {% if unread_rappels %}<span class="mc-landing-icon-badge">{{ unread_rappels }}</span>{% endif %}
+  </a>
+</div>

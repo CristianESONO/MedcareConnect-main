@@ -1,0 +1,80 @@
+{# Prestations à domicile — inline catalogue actes #}
+<div class="domicile-card" id="bloc-domicile">
+  <div class="domicile-card-body">
+    <div class="domicile-card-head">
+      <div>
+        <div class="domicile-card-title">🏠 Prestations à domicile</div>
+        <div class="domicile-card-sub">Votre structure propose-t-elle des prestations à domicile ?</div>
+      </div>
+      <label class="domi-toggle" title="Activer les prestations à domicile">
+        <input type="checkbox" id="toggle-domicile" class="js-domi-toggle" {% if org.prises_sang_domicile %}checked{% endif %}>
+        <div class="domi-toggle-track"></div>
+      </label>
+    </div>
+
+    <div id="domicile-details" class="domicile-details{% if not org.prises_sang_domicile %} domicile-details--hidden{% endif %}">
+      <div class="domicile-params-grid">
+        <div>
+          <label class="domi-field-label" for="domicile-delai">Délai d&apos;intervention</label>
+          <select id="domicile-delai" name="domicile_delai_intervention" class="domi-cat-select js-domi-field">
+            <option value="">— Choisir —</option>
+            {% for val, lbl in domicile_delai_choices %}
+            <option value="{{ val }}"{% if org.domicile_delai_intervention == val %} selected{% endif %}>{{ lbl }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="domi-field-label" for="domicile-plages">Plages horaires</label>
+          <input id="domicile-plages" name="domicile_plages_horaires" type="text"
+            class="domi-search-input js-domi-field" style="width:100%"
+            value="{{ org.domicile_plages_horaires|default:'' }}"
+            placeholder="Ex : 7h–10h Lun–Sam">
+        </div>
+      </div>
+
+      <div class="domicile-zones-block">
+        <div class="domicile-zones-head">
+          <label class="domi-field-label domi-field-label--inline">Zones de déplacement &amp; tarifs</label>
+          <button type="button" id="btn-add-domi-zone" class="domi-btn-outline">+ Ajouter une zone</button>
+        </div>
+        <div class="domicile-zones-hint">Définissez chaque zone géographique et son forfait de déplacement (0 FCFA = gratuit)</div>
+        <div id="zones-domicile-list" class="domicile-zones-list">
+          {% for z in domicile_zones %}
+          <div class="js-domi-zone-row zone-prelevement-row" data-pk="{{ z.pk }}">
+            <input type="text" class="js-domi-zone-label js-domi-field domi-search-input"
+              value="{{ z.label }}" placeholder="Nom de la zone (ex : Mermoz, Plateau…)" style="font-size:11px">
+            <div class="domi-zone-forfait-wrap">
+              <input type="number" min="0" step="500" class="js-domi-zone-forfait js-domi-field domi-search-input"
+                value="{{ z.forfait_fcfa }}" placeholder="0 = gratuit" style="font-size:11px;padding-right:40px">
+              <span class="domi-zone-fcfa">FCFA</span>
+            </div>
+            <button type="button" class="js-domi-zone-remove domi-zone-remove" title="Supprimer">✕</button>
+          </div>
+          {% empty %}
+          <p class="js-domi-zones-empty domicile-zones-empty">
+            Aucune zone définie — cliquez sur « + Ajouter une zone »
+          </p>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if domicile_subgroups %}
+      <div class="domicile-actes-block">
+        <label class="domi-field-label">Actes disponibles à domicile</label>
+        <div class="domicile-actes-tags">
+          {% for sg in domicile_subgroups %}
+          <label class="acte-domi-tag js-domi-acte-tag" data-acte-ids="{{ sg.acte_ids|join:',' }}">
+            <input type="checkbox" class="js-domi-acte-cb"{% if sg.all_active %} checked{% endif %}>
+            {{ sg.label }}
+          </label>
+          {% endfor %}
+          <label class="acte-domi-tag acte-domi-tag--all js-domi-acte-tag" data-acte-ids="all">
+            <input type="checkbox" class="js-domi-acte-cb" id="domi-all-actes"{% if domicile_all_active %} checked{% endif %}>
+            Tous les actes du catalogue
+          </label>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

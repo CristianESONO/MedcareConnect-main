@@ -1,0 +1,21 @@
+{% with badge=conv.status_badge %}
+<a href="{% url 'messaging:conversation_detail' conv.pk %}{% if highlight %}?book=1{% endif %}" class="mc-conv-item{% if highlight %} mc-conv-item--action{% endif %}">
+  <span class="mc-conv-avatar" aria-hidden="true">
+    {% if conv.organisme %}{{ conv.organisme.name|make_list|first|upper }}{% elif user == conv.patient %}{{ conv.prestataire.display_name|make_list|first|upper }}{% else %}{{ conv.patient.display_name|make_list|first|upper }}{% endif %}
+    {% if highlight %}<span class="mc-conv-avatar-dot" aria-hidden="true"></span>{% endif %}
+  </span>
+  <span class="mc-conv-info">
+    <span class="mc-conv-name">
+      {% if conv.organisme %}{{ conv.organisme.name }}{% elif user == conv.patient %}{{ conv.prestataire.display_name }}{% else %}{{ conv.patient.display_name }}{% endif %}
+    </span>
+    {% with last=conv.last_message %}
+    <span class="mc-conv-preview">{% if last %}{{ last.content|truncatechars:56 }}{% else %}{{ conv.dossier_label }}{% endif %}</span>
+    {% endwith %}
+  </span>
+  <span class="mc-conv-meta">
+    {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
+    <span class="mc-conv-pill mc-conv-pill--{% if badge.0 == 'wait' %}wait{% elif badge.0 == 'ok' %}rdv{% elif badge.0 == 'done' %}done{% else %}devis{% endif %}">{% if highlight %}À valider{% else %}{{ badge.1 }}{% endif %}</span>
+    {% if user == conv.patient %}{% with count=conv.unread_count_for_patient %}{% if count %}<span class="mc-conv-unread">{{ count }}</span>{% endif %}{% endwith %}{% else %}{% with count=conv.unread_count_for_prestataire %}{% if count %}<span class="mc-conv-unread">{{ count }}</span>{% endif %}{% endwith %}{% endif %}
+  </span>
+</a>
+{% endwith %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Chariot{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+    <h1 class="text-2xl font-bold text-gray-900">Votre chariot</h1>
+    <p class="mt-1 text-sm text-gray-500">Sans compte, vos articles sont enregistrés sur <strong>cet appareil</strong> uniquement. <a href="{% url 'users:login' %}?next={% url 'cart:cart_view' %}" class="text-accent-500 hover:text-accent-600">Connectez-vous</a> avec un compte <strong>patient</strong> pour les fusionner avec votre chariot en ligne et générer un devis.</p>
+
+    {% if guest_items %}
+    <div class="mt-8 grid gap-6 lg:grid-cols-3">
+        <div class="lg:col-span-2 grid gap-6 lg:grid-cols-1">
+            <div class="rounded-xl border border-gray-200 bg-white divide-y divide-gray-100 order-last lg:order-first">
+                {% for row in guest_items %}
+                <div class="medcare-cart-line flex items-start gap-4 px-5 py-4" data-medcare-line-subtotal="{{ row.subtotal }}">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-gray-900">{{ row.pa.acte.name }}</p>
+                        <p class="text-xs text-gray-400">{{ row.pa.organisme.name }}</p>
+                        <p class="mt-1 text-xs text-gray-400">{{ row.pa.acte.service_medical_category.name }}</p>
+                    </div>
+                    <div class="text-right">
+                        <form method="POST" action="{% url 'cart:guest_cart_update_quantity' row.pa.pk %}" class="flex items-center justify-end gap-2">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ row.qty }}" min="1" max="999" class="w-16 rounded-lg border border-gray-200 px-2 py-1 text-center text-sm" onchange="this.form.submit()">
+                        </form>
+                        <p class="mt-1 text-sm font-bold text-primary-500"><span class="medcare-line-brut">{{ row.subtotal|floatformat:0 }} XOF</span></p>
+                        <p class="medcare-line-sim mt-0.5 hidden text-xs font-medium text-amber-800" aria-live="polite"></p>
+                    </div>
+                    <form method="POST" action="{% url 'cart:guest_cart_remove' row.pa.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="mt-1 text-gray-300 hover:text-red-400" title="Retirer">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-3 flex flex-wrap justify-between gap-2 order-first lg:order-last">
+                <a href="{% url 'healthcare:search' %}" class="text-sm font-medium text-accent-500 hover:text-accent-600">← Continuer la recherche</a>
+                <form method="POST" action="{% url 'cart:guest_cart_clear' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-sm font-medium text-red-400 hover:text-red-500" onclick="return confirm('Vider le chariot ?')">Vider le chariot</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            {% include "cart/partials/wa_groups.html" %}
+
+            <div class="rounded-xl border border-gray-200 bg-white p-5">
+                <h2 class="text-sm font-semibold text-gray-900">Assurance (information)</h2>
+                <p class="mt-1 text-xs text-gray-500">Le devis final nécessite un compte patient. Votre sélection est mémorisée sur cet appareil.</p>
+                <form method="POST" action="{% url 'cart:guest_cart_select_insurance' %}" class="mt-3 space-y-2">
+                    {% csrf_token %}
+                    {{ guest_insurance_form.media }}
+                    {% if guest_insurance_form.insurance.errors %}
+                    <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+                        {% for e in guest_insurance_form.insurance.errors %}<p>{{ e }}</p>{% endfor %}
+                    </div>
+                    {% endif %}
+                    <label for="id_insurance" class="sr-only">Assurance (information)</label>
+                    <select name="insurance" id="id_insurance" lang="fr"
+                        data-minimum-input-length="0" data-theme="default" data-allow-clear="true"
+                        data-placeholder="Rechercher une assurance…" data-minimum-results-for-search="0" data-width="100%"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-400 focus:ring-2 focus:ring-accent-400/20 focus:outline-none medcare-guest-insurance-select2"
+                        onchange="this.form.submit()">
+                        <option value="" data-empty="1"{% if not guest_selected_insurance_pk %} selected{% endif %}>Sans assurance</option>
+                        {% for segment_label, lst in assurances_grouped %}
+                        <optgroup label="{{ segment_label }}">
+                            {% for a in lst %}
+                            <option value="{{ a.pk }}"{% if guest_selected_insurance_pk == a.pk %} selected{% endif %}>{{ a.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% empty %}
+                        {% endfor %}
+                    </select>
+                    {% if not assurances_grouped %}
+                    <p class="text-xs text-gray-500">Aucune assurance active en catalogue. La sélection « Sans assurance » reste disponible.</p>
+                    {% endif %}
+                </form>
+                {% include "cart/partials/cart_insurance_sim_controls.html" %}
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-5">
+                <h2 class="text-sm font-semibold text-gray-900">Récapitulatif</h2>
+                <dl id="medcare-recap-root" class="mt-3 space-y-2 text-sm" data-total-brut="{{ guest_total }}">
+                    <div class="flex justify-between">
+                        <dt class="text-gray-500">Total brut</dt>
+                        <dd id="medcare-recap-brut" class="font-medium text-gray-900">{{ guest_total|floatformat:0 }} XOF</dd>
+                    </div>
+                    <div id="medcare-recap-row-pec" class="hidden flex justify-between">
+                        <dt class="text-gray-500">Prise en charge <span class="text-gray-400">(simulation)</span></dt>
+                        <dd id="medcare-recap-pec" class="font-medium text-green-600"></dd>
+                    </div>
+                    <div id="medcare-recap-row-reste" class="hidden flex justify-between border-t border-gray-100 pt-2">
+                        <dt class="font-semibold text-gray-900">Reste à charge <span class="text-gray-400 font-normal">(simulation)</span></dt>
+                        <dd id="medcare-recap-reste" class="font-bold text-primary-500"></dd>
+                    </div>
+                    <div id="medcare-recap-row-total-seul" class="flex justify-between border-t border-gray-100 pt-2">
+                        <dt class="font-semibold text-gray-900">Total estimé</dt>
+                        <dd id="medcare-recap-total-seul-dd" class="font-bold text-primary-500">{{ guest_total|floatformat:0 }} XOF</dd>
+                    </div>
+                </dl>
+                <a href="{% url 'users:login' %}?next={% url 'cart:cart_view' %}" class="mt-4 block w-full rounded-lg bg-accent-400 py-2.5 text-center text-sm font-semibold text-white hover:bg-accent-500">Connexion pour finaliser (devis)</a>
+                <a href="{% url 'users:register' %}?next={% url 'cart:cart_view' %}" class="mt-2 block w-full rounded-lg border border-gray-200 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50">Créer un compte patient</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="mt-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 0 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+        <p class="mt-3 text-gray-500">Votre chariot est vide.</p>
+        <a href="{% url 'healthcare:search' %}" class="mt-4 inline-block rounded-lg bg-accent-400 px-6 py-2.5 text-sm font-semibold text-white hover:bg-accent-500">Rechercher des soins</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  if (!window.matchMedia('(max-width: 1023px)').matches) return;
+  window.location.replace('{% url "healthcare:search" %}#panier');
+})();
+</script>
+{% if guest_items %}
+{% include "cart/partials/insurance_optgroup_select2_js.html" with medcare_insurance_select2_id="id_insurance" %}
+{% include "cart/partials/cart_insurance_percent_sim_script.html" %}
+{% endif %}
+{% endblock %}

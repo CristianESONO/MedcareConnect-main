@@ -1,0 +1,31 @@
+{# Table partagée pour les préférences user — attend `events_rows` et `channels` dans le contexte. #}
+<div class="overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="border-b border-gray-100 bg-gray-50/60">
+      <tr>
+        <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">Événement</th>
+        {% for ch in channels %}
+        <th class="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ ch.label }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      {% for row in events_rows %}
+      <tr>
+        <td class="px-4 py-3">
+          <p class="font-semibold text-gray-800">{{ row.event.label }}</p>
+          {% if row.event.description %}<p class="text-[11px] text-gray-400">{{ row.event.description }}</p>{% endif %}
+        </td>
+        {% for cell in row.cells %}
+        <td class="px-4 py-3 text-center">
+          <label class="inline-flex items-center justify-center">
+            <input type="checkbox" name="pref-{{ row.event.pk }}-{{ cell.channel.pk }}" {% if cell.enabled %}checked{% endif %} class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+          </label>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="bg-amber-50 px-5 py-3 text-[11px] text-amber-800">Décocher une case ne supprime pas vos notifications passées et n'affecte pas les autres destinataires.</p>

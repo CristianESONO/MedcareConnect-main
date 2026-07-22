@@ -1,0 +1,221 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+{% block title %}Agenda · {{ org.name }}{% endblock %}
+
+{% block dash_extra_css %}
+<link rel="stylesheet" href="{% static 'appointments/css/prestataire_agenda.css' %}?v=2">
+{% endblock %}
+
+{% block dash_content %}
+{{ rdvs_data|json_script:"ag-rdv-data" }}
+
+<div class="ag-toolbar">
+  <div>
+    <h1 class="ag-toolbar-title">Agenda</h1>
+    <p class="ag-toolbar-sub">Vue calendrier : plusieurs rendez-vous peuvent partager le même créneau. Glissez-déposez un RDV ou cliquez <strong>+</strong> pour en ajouter un sur place.</p>
+  </div>
+  <div class="ag-view-toggle">
+    <span>Agenda</span>
+    <a href="{% url 'appointments:prestataire_rdv_list' %}">Liste</a>
+  </div>
+</div>
+
+<div class="ag-nav">
+  <a href="?date={{ prev_week }}" class="ag-nav-btn" aria-label="Semaine précédente">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+  </a>
+  <a href="?date={{ next_week }}" class="ag-nav-btn" aria-label="Semaine suivante">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+  </a>
+  <a href="?date={{ today_iso }}" class="ag-nav-btn {% if is_current_week %}opacity-50 pointer-events-none{% endif %}">Aujourd'hui</a>
+  <span class="ag-nav-range">{{ monday|date:"j" }} – {{ sunday|date:"j N Y" }}</span>
+  {% if new_rdv_count %}
+  <span class="ag-badge-pending">{{ new_rdv_count }} à confirmer</span>
+  {% endif %}
+</div>
+
+<div class="ag-legend">
+  <span class="ag-legend-item"><span class="ag-legend-dot ag-requested"></span>À confirmer</span>
+  <span class="ag-legend-item"><span class="ag-legend-dot ag-confirmed"></span>Confirmé</span>
+  <span class="ag-legend-item"><span class="ag-legend-dot ag-completed"></span>Honoré</span>
+  <span class="ag-legend-item"><span class="ag-legend-dot ag-no_show"></span>Absent</span>
+  <span class="ag-legend-item"><span class="ag-legend-dot" style="background:#fff;border-color:#e5e7eb"></span>Créneau · plusieurs RDV possibles</span>
+</div>
+
+<div class="ag-wrap">
+  <div class="ag-grid">
+    <div class="ag-corner"></div>
+    {% for day in week.days %}
+    <div class="ag-dayhead {% if day.is_today %}is-today{% endif %} {% if not day.is_open %}is-closed{% endif %}">
+      <span class="ag-dow">{{ day.weekday|slice:":3" }}</span>
+      <span class="ag-dnum">{{ day.date|date:"j" }}</span>
+    </div>
+    {% endfor %}
+
+    {% for row in week.rows %}
+    <div class="ag-time">{{ row.time }}</div>
+    {% for cell in row.cells %}
+      {% if not cell.in_hours %}
+      <div class="ag-cell ag-off"></div>
+      {% elif cell.is_past and not cell.rdvs %}
+      <div class="ag-cell ag-past"></div>
+      {% else %}
+      <div class="ag-slot{% if cell.rdvs %} ag-slot--busy{% endif %}" data-slot="{{ cell.value }}" data-label="{{ cell.label }}">
+        {% if cell.rdv_count > 1 %}
+        <span class="ag-slot-count">{{ cell.rdv_count }} RDV</span>
+        {% endif %}
+        {% for rdv in cell.rdvs %}
+        <button type="button"
+          class="ag-rdv ag-rdv--stacked ag-{{ rdv.status }}{% if rdv.status != 'requested' and rdv.status != 'confirmed' %} is-locked{% endif %}"
+          data-rdv="{{ rdv.reference }}"
+          data-slot="{{ cell.value }}"
+          data-status="{{ rdv.status }}"
+          {% if rdv.status == 'requested' or rdv.status == 'confirmed' %}draggable="true"{% endif %}>
+          <span class="ag-rdv-name">{{ rdv.patient_label }}</span>
+          {% if rdv.is_walk_in %}<span class="ag-tag">sur place</span>{% endif %}
+        </button>
+        {% endfor %}
+        {% if not cell.is_past %}
+        <button type="button" class="ag-free ag-free--inline" data-slot="{{ cell.value }}" data-label="{{ cell.label }}" aria-label="Ajouter un RDV — {{ cell.label }}">+</button>
+        {% endif %}
+      </div>
+      {% endif %}
+    {% endfor %}
+    {% empty %}
+    <div class="col-span-8 py-16 text-center text-sm text-gray-400" style="grid-column:1/-1">
+      Aucun horaire d'ouverture défini.
+      <a href="{% url 'healthcare:organisme_hours' %}" class="ml-1 font-semibold text-primary-600 hover:underline">Renseigner vos horaires</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<p class="ag-hint"><strong>Astuce :</strong> un même créneau peut accueillir plusieurs patients (cabinet, box, praticien). Déposez un RDV sur n'importe quel créneau ouvert.</p>
+
+<div id="ag-toast" class="ag-toast" role="status" aria-live="polite"></div>
+
+{# ── Modale : RDV sur place ── #}
+<div id="ag-add" class="ag-modal" aria-hidden="true">
+  <div class="ag-sheet">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <h3 class="text-base font-bold text-gray-900">Rendez-vous sur place</h3>
+        <p id="ag-add-when" class="mt-1 text-xs font-semibold text-primary-600"></p>
+      </div>
+      <button type="button" class="ag-close rounded-lg p-1.5 text-gray-400 hover:bg-gray-100" aria-label="Fermer">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form method="post" action="{% url 'appointments:prestataire_rdv_create' %}" class="mt-5 space-y-3">
+      {% csrf_token %}
+      <input type="hidden" name="slot" id="ag-add-slot">
+      <input type="hidden" name="date" value="{{ monday|date:'Y-m-d' }}">
+      <div>
+        <label class="mb-1 block text-xs font-semibold text-gray-700">Nom du patient <span class="text-rose-500">*</span></label>
+        <input type="text" name="name" required maxlength="120" placeholder="Ex. Awa Diop"
+          class="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20">
+      </div>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+          <label class="mb-1 block text-xs font-semibold text-gray-700">Téléphone</label>
+          <input type="tel" name="phone" maxlength="40" placeholder="77 000 00 00"
+            class="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20">
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-semibold text-gray-700">Motif</label>
+          <input type="text" name="motif" maxlength="200" placeholder="Ex. Consultation"
+            class="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20">
+        </div>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-semibold text-gray-700">Note interne</label>
+        <textarea name="note" rows="2" maxlength="400" placeholder="Visible uniquement par votre équipe"
+          class="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"></textarea>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" class="ag-close rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50">Annuler</button>
+        <button type="submit" class="rounded-xl bg-primary-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-primary-600">Ajouter le RDV</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ── Modale : détail RDV ── #}
+<div id="ag-detail" class="ag-modal" aria-hidden="true">
+  <div class="ag-sheet">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="ag-d-status" class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"></span>
+          <span id="ag-d-source" class="hidden rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-indigo-700">Sur place</span>
+        </div>
+        <h3 id="ag-d-name" class="mt-2 truncate text-base font-bold text-gray-900"></h3>
+        <p id="ag-d-when" class="text-xs font-semibold text-gray-500"></p>
+      </div>
+      <button type="button" class="ag-close rounded-lg p-1.5 text-gray-400 hover:bg-gray-100" aria-label="Fermer">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <dl class="mt-5 space-y-2.5 text-sm">
+      <div id="ag-d-phone-row" class="hidden flex items-center gap-2 text-gray-700">
+        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
+        <a id="ag-d-phone" href="#" class="font-semibold text-primary-600 hover:underline"></a>
+      </div>
+      <div id="ag-d-motif-row" class="hidden flex gap-2 text-gray-700"><span class="text-gray-400">Motif :</span><span id="ag-d-motif" class="font-medium"></span></div>
+      <div id="ag-d-actes-row" class="hidden flex flex-wrap gap-1.5"></div>
+      <div id="ag-d-devis-row" class="hidden text-xs text-gray-500">Devis lié : <span id="ag-d-devis" class="font-mono font-semibold text-gray-700"></span></div>
+      <div id="ag-d-total-row" class="hidden flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2.5">
+        <span class="text-xs font-medium text-gray-500">Montant patient</span>
+        <span><span id="ag-d-total" class="text-base font-extrabold text-primary-600"></span> <span class="text-xs font-semibold text-gray-400">F</span></span>
+      </div>
+      <div id="ag-d-note-row" class="hidden rounded-xl bg-gray-50 px-3 py-2.5 text-xs italic text-gray-600"></div>
+    </dl>
+
+    <form id="ag-d-reschedule" method="post" class="mt-4 hidden space-y-2 border-t border-gray-100 pt-4">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ this_url }}">
+      <p class="text-xs font-semibold text-gray-700">Changer le créneau</p>
+      <div class="flex flex-wrap items-end gap-2">
+        <input type="datetime-local" name="slot" id="ag-d-slot-input" required
+          class="min-w-0 flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20">
+        <button type="submit" class="rounded-xl border border-primary-200 bg-primary-50 px-3 py-2 text-xs font-bold text-primary-700 hover:bg-primary-100">Déplacer</button>
+      </div>
+    </form>
+
+    <div class="mt-5 flex flex-wrap gap-2 border-t border-gray-100 pt-4">
+      <form method="post" class="ag-act inline" data-act="confirm" data-show="requested">
+        {% csrf_token %}<input type="hidden" name="action" value="confirm"><input type="hidden" name="next" value="{{ this_url }}">
+        <button type="submit" class="mc-btn-primary mc-btn-primary--sm rounded-xl px-3 py-2 text-xs font-bold">Confirmer</button>
+      </form>
+      <form method="post" class="ag-act inline" data-act="decline" data-show="requested" onsubmit="return confirm('Refuser cette demande de RDV ?');">
+        {% csrf_token %}<input type="hidden" name="action" value="decline"><input type="hidden" name="next" value="{{ this_url }}">
+        <button type="submit" class="rounded-xl border border-gray-200 px-3 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Refuser</button>
+      </form>
+      <form method="post" class="ag-act inline" data-act="complete" data-show="confirmed">
+        {% csrf_token %}<input type="hidden" name="action" value="complete"><input type="hidden" name="next" value="{{ this_url }}">
+        <button type="submit" class="rounded-xl bg-blue-500 px-3 py-2 text-xs font-bold text-white hover:bg-blue-600">Honoré</button>
+      </form>
+      <form method="post" class="ag-act inline" data-act="no_show" data-show="confirmed">
+        {% csrf_token %}<input type="hidden" name="action" value="no_show"><input type="hidden" name="next" value="{{ this_url }}">
+        <button type="submit" class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100">Absent</button>
+      </form>
+      <form method="post" class="ag-act inline" data-act="cancel" data-show="confirmed" onsubmit="return confirm('Annuler ce RDV ?');">
+        {% csrf_token %}<input type="hidden" name="action" value="cancel"><input type="hidden" name="next" value="{{ this_url }}">
+        <button type="submit" class="rounded-xl border border-gray-200 px-3 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Annuler</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+window.MEDCARE_AGENDA = {
+  actionUrlTpl: "{{ action_url_tpl|escapejs }}",
+  moveUrlTpl: "{{ move_url_tpl|escapejs }}",
+  updateUrlTpl: "{{ update_url_tpl|escapejs }}",
+};
+</script>
+<script src="{% static 'appointments/js/prestataire_agenda.js' %}?v=3"></script>
+{% endblock %}

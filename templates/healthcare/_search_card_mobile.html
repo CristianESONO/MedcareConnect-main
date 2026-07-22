@@ -1,0 +1,84 @@
+{% comment %}Carte structure mobile — démo MOBILE PATIENT (scard-m).{% endcomment %}
+<article class="scard-m fade-in-m" id="sm-{{ block.org.pk }}" data-org-id="{{ block.org.pk }}"
+  {% if block.org.latitude %}data-org-lat="{{ block.org.latitude }}"{% endif %}
+  {% if block.org.longitude %}data-org-lng="{{ block.org.longitude }}"{% endif %}>
+  <div class="scard-m-head">
+    <div class="scard-m-head-row">
+      <div class="scard-m-name">
+        {{ block.org.name }}
+        {% if block.is_pioneer %}<span class="pioneer-badge-m">Pionnier</span>{% endif %}
+      </div>
+      {% if block.total_actes > 1 %}
+      <span class="scard-m-coverage{% if block.matching_count == block.total_actes %} scard-m-coverage--full{% else %} scard-m-coverage--partial{% endif %}">{{ block.matching_count }}/{{ block.total_actes }} actes</span>
+      {% endif %}
+    </div>
+    {% if block.org.type_organisme %}
+    <div class="scard-m-type">{{ block.org.type_organisme.name }}</div>
+    {% endif %}
+    <div class="scard-m-meta">
+      <span class="smeta-m sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %} {{ block.org.city }}{% if block.org.quartier %}, {{ block.org.quartier }}{% endif %}</span>
+      {% if block.hours_summary %}
+      <span class="smeta-m sipn-ico-inline scard-m-hours">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ block.hours_summary }}</span>
+      {% elif block.org.horaires_complement %}
+      <span class="smeta-m sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ block.org.horaires_complement|truncatechars:40 }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% for pa in block.items %}
+  <div class="scard-m-acte"
+    data-pa-id="{{ pa.pk }}"
+    data-pa-acte-pk="{{ pa.acte.pk }}"
+    data-pa-acte="{{ pa.acte.name|escape }}"
+    data-pa-org="{{ pa.organisme.name|escape }}"
+    data-pa-org-id="{{ pa.organisme.pk }}"
+    data-pa-price="{{ pa.price|floatformat:0 }}"
+    data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+    data-pa-delai-rank="{{ pa.delai_rank }}"
+    {% if pa.distance_km %}data-pa-distance-km="{{ pa.distance_km }}"{% endif %}
+    data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
+    data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+    data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}">
+    <input type="checkbox" class="scard-m-checkbox" aria-label="Sélectionner {{ pa.acte.name }} pour prendre rendez-vous">
+    <div class="scard-m-acte-info">
+      <div class="scard-m-acte-nom">{{ pa.acte.name }}</div>
+      {% if pa.delai or block.org.prises_sang_domicile %}
+      <div class="scard-m-acte-meta">
+        {% if pa.delai %}
+        <span class="scard-m-acte-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} Délai résultats : {{ pa.get_delai_display }}</span>
+        {% endif %}
+        {% if block.org.prises_sang_domicile %}
+        <span class="scard-m-acte-domicile sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="home" class="sipn-ico sipn-ico--xs" %} Prestations à domicile</span>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="scard-m-acte-prix">{{ pa.price|floatformat:0 }} F</div>
+  </div>
+  {% endfor %}
+
+  {% if block.missing_actes %}
+  <div class="scard-missing">
+    <div class="scm-title sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="warning" class="sipn-ico sipn-ico--xs" %} Actes non disponibles ici</div>
+    <div class="scm-actes">
+      {% for acte in block.missing_actes %}
+      <span class="scm-pill" data-acte-pk="{{ acte.pk }}">{{ acte.name }}</span>
+      {% endfor %}
+    </div>
+    <button type="button" class="scm-cta" data-sipn-open-comp-panel>Trouver où les faire →</button>
+  </div>
+  {% endif %}
+
+  <div class="scard-m-footer">
+    <div class="scard-m-ins sipn-ico-inline">
+      {% include "healthcare/_icon_svg.html" with icon="shield" class="sipn-ico sipn-ico--xs" %}
+      {% if block.insurance_names %}
+      {{ block.insurance_names|slice:":3"|join:" · " }}{% if block.insurance_names|length > 3 %} +{{ block.insurance_names|length|add:"-3" }}{% endif %}
+      {% else %}
+      Assurances non renseignées
+      {% endif %}
+    </div>
+    <a href="#" class="scard-m-profile-btn dem-profil-link" data-org-slug="{{ block.org.slug }}" data-org-url="{% url 'healthcare:organisme_detail' slug=block.org.slug %}" aria-label="Voir le profil de {{ block.org.name }}">Profil →</a>
+    <div class="scard-m-cart-badge sipn-ico-inline" data-scard-m-cart-badge hidden></div>
+  </div>
+</article>

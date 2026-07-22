@@ -1,0 +1,46 @@
+{% extends "users/patient_account_base.html" %}
+{% block title %}Mon compte — Mes devis{% endblock %}
+{% block account_content %}
+<div class="pac-section-title">Devis en cours &amp; historique</div>
+
+{% for d in devis_list %}
+{% with part=d.parts.first %}
+<div class="pac-devis-card">
+  <div class="pac-devis-head">
+    <div class="min-w-0">
+      <div class="pac-devis-struct">
+        {% if part %}{{ part.organisme.name }}{% elif d.details.0.organisme %}{{ d.details.0.organisme }}{% else %}Devis multi-structures{% endif %}
+      </div>
+      <div class="pac-devis-ref">Réf. {{ d.reference }} · {{ d.created_at|date:"d/m/Y · H:i" }}</div>
+    </div>
+    {% if d.status == 'expired' or d.status == 'archived' %}
+    <span class="pac-badge pac-badge--expired">✕ Expiré</span>
+    {% else %}
+    <span class="pac-badge pac-badge--wait">⏳ En attente</span>
+    {% endif %}
+  </div>
+  <div class="pac-devis-body">
+    <div class="pac-actes-list">
+      {% for line in d.details %}
+      <div class="pac-acte-item">
+        <span>{{ line.acte }}{% if line.quantity and line.quantity != 1 %} × {{ line.quantity }}{% endif %}</span>
+        <span>{{ line.subtotal|floatformat:0 }} F</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="pac-devis-footer" style="background:#fff;border-top:1px solid #f3f4f6;margin-top:8px;padding-top:8px;padding-left:0;padding-right:0;">
+      <div class="pac-devis-total">{{ d.total_patient|floatformat:0 }} FCFA</div>
+      {% if d.status != 'expired' and d.status != 'archived' %}
+      <a href="{% url 'cart:devis_detail' d.reference %}" class="pac-btn-wa">💬 Voir le devis</a>
+      {% else %}
+      <a href="{% url 'cart:devis_detail' d.reference %}" class="pac-btn-link">Détails →</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endwith %}
+{% empty %}
+<p class="pac-empty">Aucun devis généré.<br><span style="font-size:11px;margin-top:6px;display:inline-block">Ajoutez des actes au panier depuis la recherche, puis générez votre devis.</span></p>
+<a href="{% url 'healthcare:search' %}" class="pac-btn-save mt-3 inline-block text-center" style="text-decoration:none">Rechercher des prestations</a>
+{% endfor %}
+{% endblock %}

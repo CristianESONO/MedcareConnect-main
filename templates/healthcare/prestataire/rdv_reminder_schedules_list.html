@@ -1,0 +1,61 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% block title %}Rappels RDV{% endblock %}
+
+{% block dash_content %}
+<div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <div>
+    <a href="{% url 'healthcare:actes_list' %}" class="text-xs font-medium text-gray-400 hover:text-primary-600">← Catalogue actes</a>
+    <h1 class="mt-1 text-xl font-bold text-gray-900">Règles de rappel RDV</h1>
+    <p class="mt-1 text-sm text-gray-600">Délais d'envoi (J-3, J-1, 30 min…). Les consignes configurées par acte peuvent être incluses.</p>
+  </div>
+  <a href="{% url 'healthcare:prestataire_rdv_reminder_create' %}" class="inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+    + Nouvelle règle
+  </a>
+</div>
+
+<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
+        <tr>
+          <th class="px-4 py-3 font-medium">Règle</th>
+          <th class="px-4 py-3 font-medium">Délai</th>
+          <th class="px-4 py-3 font-medium">Prérequis</th>
+          <th class="px-4 py-3 font-medium">Actes</th>
+          <th class="px-4 py-3 font-medium">Statut</th>
+          <th class="px-4 py-3 font-medium text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for s in schedules %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 font-medium text-gray-900">{{ s.label }}</td>
+          <td class="px-4 py-3 text-gray-600">{{ s.offset_display }}</td>
+          <td class="px-4 py-3">
+            {% if s.include_prerequisites %}<span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-xs mc-text-accent-dark">Oui</span>{% else %}<span class="text-xs text-gray-400">Non</span>{% endif %}
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-500 max-w-[160px]">
+            {% with acts=s.actes.all %}
+            {% if acts %}{% for a in acts|slice:":2" %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if acts|length > 2 %}…{% endif %}
+            {% else %}<span class="text-gray-400">Tous les RDV</span>{% endif %}
+            {% endwith %}
+          </td>
+          <td class="px-4 py-3">
+            {% if s.is_active %}<span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-xs mc-text-accent-dark">Active</span>{% else %}<span class="text-xs text-gray-400">Inactive</span>{% endif %}
+          </td>
+          <td class="px-4 py-3 text-right whitespace-nowrap">
+            <a href="{% url 'healthcare:prestataire_rdv_reminder_edit' s.pk %}" class="text-xs font-medium text-primary-600">Modifier</a>
+            <form method="post" action="{% url 'healthcare:prestataire_rdv_reminder_delete' s.pk %}" class="inline" onsubmit="return confirm('Supprimer cette règle ?');">
+              {% csrf_token %}
+              <button type="submit" class="ml-2 text-xs font-medium text-red-600">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="px-4 py-12 text-center text-gray-400">Aucune règle. Les rappels plateforme s'appliquent toujours ; ajoutez vos propres délais ici.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

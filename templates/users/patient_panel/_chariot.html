@@ -1,0 +1,100 @@
+{% include "users/patient_panel/_messages.html" %}
+
+{% include "cart/_cart_mobile_panier_patient.html" %}
+
+<div class="pac-chariot-desktop">
+<div class="compte-section-title">Actes sélectionnés ({{ cart_items_count }})</div>
+
+{% if cart_groups %}
+{% include "cart/_cart_insurance_selector_mobile.html" %}
+
+{% if cart_insurance %}
+<div class="mb-4 rounded-xl border border-[var(--mc-border)] mc-bg-accent-light px-4 py-3 text-sm">
+  {% if insurance_use_in_estimates %}
+  <p class="font-medium mc-text-accent-dark">Assurance appliquée aux estimations : {{ cart_insurance.name }}</p>
+  <p class="mt-0.5 text-xs mc-text-accent-dark">Estimation selon les taux indicatifs par catégorie d'acte (structure compatible).</p>
+  {% else %}
+  <p class="font-medium text-gray-900">Tarifs bruts affichés</p>
+  <p class="mt-0.5 text-xs text-gray-600">Votre assurance <strong>{{ cart_insurance.name }}</strong> reste enregistrée pour filtrer les structures, mais n'est pas incluse dans les montants estimés.</p>
+  <p class="mt-1 text-[11px]"><a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="font-medium text-accent-600 hover:text-accent-700 js-pac-tab" data-pac-tab="assurance">Activer les estimations assurance →</a></p>
+  {% endif %}
+</div>
+{% else %}
+<div class="mb-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+  <p class="font-medium text-gray-900">Sans assurance pour cette estimation</p>
+  <p class="mt-0.5 text-xs text-gray-600">Les montants affichés correspondent au paiement direct (tarif brut).</p>
+</div>
+{% endif %}
+
+{% for group in cart_groups %}
+<div class="pac-rdv-card">
+  <div class="pac-rdv-top">
+    <div class="min-w-0">
+      <div class="pac-rdv-struct">{{ group.organisme.name }}</div>
+    </div>
+    <div class="pac-rdv-meta" style="font-weight:700;color:var(--mc-navy, #123a63);font-size:12px">
+      {% if insurance_use_in_estimates and cart_insurance and group.patient_subtotal != group.subtotal %}
+      {{ group.patient_subtotal|floatformat:0 }} FCFA
+      <span class="block text-[10px] font-normal text-gray-500 line-through">{{ group.subtotal|floatformat:0 }} F</span>
+      {% else %}
+      {{ group.subtotal|floatformat:0 }} FCFA
+      {% endif %}
+    </div>
+  </div>
+  <div class="pac-actes-list">
+    {% for entry in group.lines %}
+    {% with item=entry.item %}
+    <div class="pac-acte-item">
+      <div class="pac-acte-item-main">
+        <span>
+          {{ item.prestataire_acte.acte.name }}{% if item.quantity > 1 %} ×{{ item.quantity }}{% endif %}
+          {% if entry.coverage_rate %}<span class="ml-1 text-[10px] mc-text-accent-dark">({{ entry.coverage_rate|floatformat:0 }} %)</span>{% endif %}
+        </span>
+        <span>
+          {% if insurance_use_in_estimates and entry.coverage_rate and entry.patient_cost != item.subtotal %}
+          {{ entry.patient_cost|floatformat:0 }} F
+          {% else %}
+          {{ item.subtotal|floatformat:0 }} F
+          {% endif %}
+        </span>
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+  <div class="mt-3 border-t border-gray-100 pt-3">
+    <a href="{% url 'cart:generate_devis' %}?org={{ group.organisme.pk }}" class="pac-btn-primary pac-rdv-reserve-btn">
+      Réserver mes actes chez {{ group.organisme.name }}
+    </a>
+  </div>
+</div>
+{% endfor %}
+
+<div class="pac-cart-total-box">
+  <div class="min-w-0 flex-1">
+    <div class="pac-cart-total-lbl">Total brut</div>
+    <div class="pac-cart-total-val">{{ cart_total|floatformat:0 }} FCFA</div>
+    {% if insurance_use_in_estimates and cart_insurance and cart_total_assurance %}
+    <div class="mt-2 space-y-1 text-xs">
+      <div class="flex justify-between mc-text-accent-dark"><span>Prise en charge (estim.)</span><span>−{{ cart_total_assurance|floatformat:0 }} F</span></div>
+      <div class="flex justify-between font-semibold text-primary-700"><span>Reste à charge</span><span>{{ cart_total_patient|floatformat:0 }} FCFA</span></div>
+    </div>
+    {% elif cart_insurance %}
+    <p class="mt-1 text-[11px] text-gray-500">Aucun taux applicable pour ces actes ou structures non compatibles.</p>
+    {% else %}
+    <p class="mt-1 text-[11px] text-gray-500"><a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="font-medium text-accent-600 hover:text-accent-700">Renseignez votre assurance</a> pour une estimation.</p>
+    {% endif %}
+    <p class="mt-2 text-[11px] text-gray-500">Un bouton par structure : les actes d’un même prestataire partent dans une seule discussion.</p>
+  </div>
+</div>
+{% else %}
+<div class="pac-empty-state">
+  <div class="pac-empty-state-icon">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.036 1.657 11.772A2.25 2.25 0 0 1 18.165 22.5H5.835a2.25 2.25 0 0 1-2.247-2.264l1.657-11.772M8.25 10.5h7.5"/></svg>
+  </div>
+  <p>Votre panier est vide</p>
+  <p class="pac-empty-hint">Sélectionnez des actes depuis la page prestations.</p>
+  <a href="{% url 'healthcare:search' %}" class="pac-btn-primary mt-4" style="display:inline-flex">Parcourir les prestations</a>
+</div>
+{% endif %}
+</div>

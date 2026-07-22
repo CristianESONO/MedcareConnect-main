@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedCare — Guide des démos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0a5c8a;--blue-l:#e8f4fb;
+  --green:#14b87a;--green-d:#065f46;--green-l:#e8faf3;
+  --amber:#d97706;--amber-l:#fef3c7;
+  --g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g400:#9ca3af;--g600:#4b5563;--g800:#1f2937;
+  --text:#0d1b2a;--white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--text);min-height:100vh;padding:40px 24px 60px}
+.wrap{max-width:820px;margin:0 auto}
+
+.header{text-align:center;margin-bottom:44px}
+.logo{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--g800);letter-spacing:-.5px}
+.logo span{color:var(--green)}
+.header-sub{font-size:12px;color:var(--g400);margin-top:5px}
+
+.cards{display:flex;flex-direction:column;gap:22px}
+.card{background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(10,92,138,.07);border:1px solid var(--g200)}
+
+.band{padding:18px 24px;display:flex;align-items:center;gap:14px}
+.band.patient  {background:linear-gradient(135deg,#0a3d5e,#054a38)}
+.band.structure{background:linear-gradient(135deg,#0a5c8a,#084878)}
+.band.admin    {background:linear-gradient(135deg,#111827,#1f2937)}
+.band-icon{width:40px;height:40px;border-radius:9px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.band-info{flex:1}
+.band-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;margin-bottom:2px}
+.band-role{font-size:10px;color:rgba(255,255,255,.5)}
+.band-tag{font-size:9px;font-weight:700;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.6);padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+
+.card-body{padding:20px 24px}
+.purpose{font-size:13px;font-weight:500;color:var(--text);line-height:1.6;margin-bottom:18px;padding-left:12px;border-left:3px solid var(--green)}
+
+.steps{display:flex;flex-direction:column}
+.step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--g100)}
+.step:last-child{border-bottom:none;padding-bottom:0}
+.num{width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.num.green{background:var(--green-l);color:var(--green-d)}
+.num.blue {background:var(--blue-l);color:var(--blue)}
+.num.dark {background:var(--g100);color:var(--g800)}
+.step-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.step-desc{font-size:11px;color:var(--g600);line-height:1.55}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:5px}
+.tag.g{background:var(--green-l);color:var(--green-d)}
+.tag.b{background:var(--blue-l);color:var(--blue)}
+.tag.a{background:var(--amber-l);color:var(--amber)}
+
+.note{margin-top:32px;background:var(--white);border-radius:9px;padding:14px 18px;border:1px solid var(--g200);font-size:10.5px;color:var(--g600);line-height:1.6;text-align:center}
+.note strong{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo">Med<span>Care</span></div>
+    <div class="header-sub">Guide des démos · 3 interfaces · 3 rôles · Données mockées · Aucune connexion backend requise</div>
+  </div>
+
+  <div class="cards">
+
+    <!-- PATIENT -->
+    <div class="card">
+      <div class="band patient">
+        <div class="band-icon">🧑‍⚕️</div>
+        <div class="band-info">
+          <div class="band-title">DEMO_PATIENT.html</div>
+          <div class="band-role">Patient cherchant un acte paraclinique à Dakar</div>
+        </div>
+        <div class="band-tag">Interface publique</div>
+      </div>
+      <div class="card-body">
+        <div class="purpose">Montrer comment un patient trouve, compare et réserve ses actes médicaux sans jamais appeler une structure — du choix de l'acte à la confirmation du RDV.</div>
+        <div class="steps">
+
+          <div class="step">
+            <div class="num green">1</div>
+            <div>
+              <div class="step-title">Trouver un acte</div>
+              <div class="step-desc">Arbre 6 piliers → catégorie → acte, ou barre de recherche avec 6 modes : acte, structure, budget, assurance, délai, zone. Les structures disponibles s'affichent avec tarifs réels, délai et badge prélèvement à domicile.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num green">2</div>
+            <div>
+              <div class="step-title">Comparer les structures · Profil détaillé</div>
+              <div class="step-desc">Tri par prix ou délai, filtre par assurance avec taux de couverture par catégorie d'acte. Bouton "Voir profil" ouvre un panneau identique au profil public du dashboard structure : assurances compatibles surlignées, prélèvement à domicile avec zones et forfaits, catalogue complet sélectionnable.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num green">3</div>
+            <div>
+              <div class="step-title">Panier · Couverture assurance</div>
+              <div class="step-desc">Multi-actes, multi-structures. Le panier affiche le total et la part estimée prise en charge par l'assurance. Avertissement si plusieurs structures (un devis WA par structure).</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num green">4</div>
+            <div>
+              <div class="step-title">Compte patient · Devis WA · RDV</div>
+              <div class="step-desc">Inscription (nom, email, téléphone) déclenchée à la première demande de devis. Panel WhatsApp par structure avec devis pré-rempli, sélection de créneau, confirmation directe et rappel bulletin d'examen.</div>
+              <span class="tag g">📅 Frais 500 FCFA infrastructure prête — désactivés jusqu'à M6</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num green">5</div>
+            <div>
+              <div class="step-title">Mon compte</div>
+              <div class="step-desc">4 onglets : Mes RDV (à venir + historique avec références), Mes devis, Assurance (sélecteur groupé + simulateur taux de couverture + structures compatibles), Profil personnel.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- STRUCTURE -->
+    <div class="card">
+      <div class="band structure">
+        <div class="band-icon">🏥</div>
+        <div class="band-info">
+          <div class="band-title">DEMO_STRUCTURES.html</div>
+          <div class="band-role">Responsable d'une structure de santé partenaire</div>
+        </div>
+        <div class="band-tag">Dashboard SaaS</div>
+      </div>
+      <div class="card-body">
+        <div class="purpose">Montrer à une structure comment piloter sa présence sur MedCare — de la configuration du catalogue à la gestion des devis et réservations — zéro commission sur les actes.</div>
+        <div class="steps">
+
+          <div class="step">
+            <div class="num blue">1</div>
+            <div>
+              <div class="step-title">Type de structure → Piliers</div>
+              <div class="step-desc">Le type sélectionné (Laboratoire, Imagerie, Clinique, Ambulance…) déverrouille automatiquement les piliers d'activité correspondants parmi les 6 disponibles.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num blue">2</div>
+            <div>
+              <div class="step-title">Catalogue d'actes · Prélèvement à domicile</div>
+              <div class="step-desc">Activer les actes depuis le référentiel (segmentation 3 niveaux, 100+ actes par pilier), saisir les tarifs. Configurer les zones de prélèvement à domicile avec forfaits déplacement par quartier. Interface Ambulance dédiée.</div>
+              <span class="tag b">🧬 Biologie : 15 catégories · 100+ actes pré-chargés</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num blue">3</div>
+            <div>
+              <div class="step-title">Devis WhatsApp</div>
+              <div class="step-desc">Registre des devis reçus (nouveau / accepté / expiré). Confirmer un créneau ou relancer le patient — 2 relances max avant archivage automatique.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num blue">4</div>
+            <div>
+              <div class="step-title">Réservations</div>
+              <div class="step-desc">Vue liste et vue calendrier. Confirmer, honorer ou marquer no-show. Statut honoré semi-automatique 30 min après le créneau. Gestion des assurances acceptées par catégorie.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num blue">5</div>
+            <div>
+              <div class="step-title">Profil public · MedPlaque NFC · Bilan KPI</div>
+              <div class="step-desc">Aperçu exact de la page vue par le patient — identique à la vue profil de la démo patient. MedPlaque : scans NFC/QR, taux de conversion, roadmap CMU 3 étapes. Bilan KPI : signal vert/orange/rouge avec recommandation de plan à M6.</div>
+              <span class="tag b">⚙️ Paramètres — compte, utilisateurs, notifications, abonnement, zone de danger</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="card">
+      <div class="band admin">
+        <div class="band-icon">⚙️</div>
+        <div class="band-info">
+          <div class="band-title">DEMO_ADMIN.html</div>
+          <div class="band-role">Équipe MedCare — Rassoul / Abdoul</div>
+        </div>
+        <div class="band-tag">Back-office interne</div>
+      </div>
+      <div class="card-body">
+        <div class="purpose">Vue opérationnelle complète : piloter les abonnements, surveiller l'activité sur la carte, valider les structures et suivre la conversion des Pionniers vers les plans payants.</div>
+        <div class="steps">
+
+          <div class="step">
+            <div class="num dark">1</div>
+            <div>
+              <div class="step-title">Tableau de bord · Carte · Graphique d'activité</div>
+              <div class="step-desc">KPIs filtrables sur 3 périodes (7j / 30j / Depuis M0). Carte réelle du Sénégal avec dots animés — vert pulse (actif), amber (onboarding), gris (zone non couverte) — tooltip au survol de chaque structure. Graphique multi-variables : toggler individuellement Devis, RDV, Patients, Structures, Valeur.</div>
+              <span class="tag a">📋 "Obtenir le bilan" actif uniquement sur Depuis M0</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num dark">2</div>
+            <div>
+              <div class="step-title">Abonnements · Dropdown plan · Fonctionnalités</div>
+              <div class="step-desc">Tableau des structures abonnées avec dropdown plan inline par ligne — changer en un clic parmi Starter / Essentiel / Pro / Réseau / Pionnier / Désactiver. Alerte J−30 en rouge sur les échéances proches. En dessous : 5 cartes de configuration, une par plan, avec toggles on/off par fonctionnalité appliqués à toutes les structures du plan.</div>
+              <span class="tag b">💰 Finances & MRR juste en dessous — projections 3 scénarios</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num dark">3</div>
+            <div>
+              <div class="step-title">Valider les structures en attente</div>
+              <div class="step-desc">Section Prestataires — Approuver / Rejeter sur chaque fiche. Un clic Approuver active la structure et met à jour le tableau de bord et la carte en temps réel.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num dark">4</div>
+            <div>
+              <div class="step-title">Surveiller Devis & Réservations</div>
+              <div class="step-desc">Devis : registre consolidé plateforme avec bouton Relancer sur les en attente. Réservations : tableau consolidé (confirmé / honoré / no-show) avec colonne Frais 500 FCFA affichée "Gratuit M0–M6" pendant la période Pionniers.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num dark">5</div>
+            <div>
+              <div class="step-title">Référentiel · Pionniers · Conformité</div>
+              <div class="step-desc">Référentiel : actes médicaux (3 niveaux) et assurances (4 catégories) — données qui alimentent les deux autres démos. Pionniers CPP-2025 : scoring M5 signal vert/orange/rouge, plan recommandé M6. Conformité CDP : hébergement souverain, chiffrement, logs d'audit.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>Données mockées côté JS</strong> — aucune connexion backend. Les flux respectent les règles métier réelles : 2 relances max · honoré semi-auto 30 min · frais 500 FCFA actifs à M6 · zéro commission sur les actes médicaux.
+  </div>
+
+</div>
+</body>
+</html>

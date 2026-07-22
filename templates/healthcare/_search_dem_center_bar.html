@@ -1,0 +1,32 @@
+{% comment %}
+Barre tri + assurance (mode démo). Soumission tri au change ; assurance Select2 centre.
+{% endcomment %}
+{% if show_dem_service_acte_nav %}
+<div class="filters-bar fade-in mb-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5" role="region" aria-label="Tri et assurance">
+  <div class="flex w-full min-w-0 flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
+    <div class="min-w-0 flex-1 sm:max-w-xs">
+      <label for="id-sort-dem" class="fb-row-title">Tri des offres</label>
+      <select name="sort" id="id-sort-dem" class="sp-sort mt-1 w-full max-w-full" onchange="document.getElementById('search-form').submit()">
+        <option value="price_asc"  {% if current_sort == "price_asc" %}selected{% endif %}>Prix croissant</option>
+        <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
+        <option value="popular"    {% if current_sort == "popular" %}selected{% endif %}>Populaires</option>
+        <option value="recent_pa"  {% if current_sort == "recent_pa" %}selected{% endif %}>Récents</option>
+        <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>Nom A → Z</option>
+        <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>Délai le plus court</option>
+        <option value="delai_desc" {% if current_sort == "delai_desc" %}selected{% endif %}>Délai le plus long</option>
+        {% if has_coordinates %}<option value="distance" {% if current_sort == "distance" %}selected{% endif %}>Distance</option>{% endif %}
+      </select>
+    </div>
+    <div class="dem-ins-wrap flex min-w-0 flex-1 flex-col" style="min-width:min(100%,220px)">
+      <label for="id-assurance-dem-center" class="fb-row-title">Assurance</label>
+      <select name="assurance" id="id-assurance-dem-center" multiple class="s2-multi s2-multi-dem-center mt-1 w-full text-sm">
+        {% for label, group in assurances_grouped %}
+        <optgroup label="{{ label }}">
+          {% for a in group %}<option value="{{ a.pk }}" {% if a.pk|stringformat:'d' in current_assurances %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>
+{% endif %}

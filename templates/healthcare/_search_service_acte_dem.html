@@ -1,0 +1,121 @@
+{% comment %}
+Navigation Déméthior : piliers familles + panneau « Parcourir les actes ».
+Variables : service_dem_pills, acte_dem_families, current_acte, dem_clear_acte_url
+- section : absente ou "all" → piliers + actes (feuille mobile / filtres)
+- section : "piliers" → barre pastilles seule
+- section : "actes" → arbre actes seul (carte dédiée, ex. mobile seul)
+- section : "actes_embed" → corps actes sans carte externe (dans panneau unifié)
+- actes_embed_no_wrap : si vrai → seulement .nav-search + #nav-tree (sans .actes-nav externe ni .nav-head), pour coquille DEMO PATIENT
+- mode : "desktop" | "mobile" — hauteur max de l’arbre (section actes / all / actes_embed)
+{% endcomment %}
+{% if section == "piliers" %}
+<div class="piliers dem-piliers" role="navigation" aria-label="Familles de soins">
+  {% for p in service_dem_pills %}
+  <a href="{{ p.url }}" class="pbtn dem-pbtn {% if p.active %}active{% endif %}" data-service-id="{{ p.service_id|default:'' }}"><span class="dem-pbtn-ic" aria-hidden="true">{{ p.icon }}</span><span class="min-w-0 truncate">{{ p.label }}</span><span class="dem-pbtn-count">{{ p.count }}</span></a>
+  {% endfor %}
+</div>
+{% elif section == "actes" %}
+  {% if mode == "mobile" %}
+    {% with tree_mx="min(42vh, 320px)" %}
+<div class="dem-actes-nav">
+  <div class="dem-actes-head">
+    <div class="dem-actes-title">Parcourir les actes</div>
+    <div class="dem-actes-sub">Famille → Sous-famille → Acte</div>
+    {% if current_acte %}
+    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+    {% elif pool_from_request %}
+    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+    {% endif %}
+  </div>
+  <div class="dem-actes-search-wrap">
+    <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
+  </div>
+  <div class="dem-acte-browse">
+    <div class="dem-acte-tree" style="max-height: {{ tree_mx }}">
+      {% include "healthcare/_search_acte_dem_families_tree.html" %}
+    </div>
+  </div>
+</div>
+    {% endwith %}
+  {% else %}
+    {% with tree_mx="min(calc(100vh - 12rem), 520px)" %}
+<div class="dem-actes-nav">
+  <div class="dem-actes-head">
+    <div class="dem-actes-title">Parcourir les actes</div>
+    <div class="dem-actes-sub">Famille → Sous-famille → Acte</div>
+    {% if current_acte %}
+    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+    {% elif pool_from_request %}
+    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+    {% endif %}
+  </div>
+  <div class="dem-actes-search-wrap">
+    <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
+  </div>
+  <div class="dem-acte-browse">
+    <div class="dem-acte-tree" style="max-height: {{ tree_mx }}">
+      {% include "healthcare/_search_acte_dem_families_tree.html" %}
+    </div>
+  </div>
+</div>
+    {% endwith %}
+  {% endif %}
+{% elif section == "actes_embed" %}
+  {% if actes_embed_no_wrap %}
+    <div class="nav-search">
+      <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" id="nav-search-input" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
+    </div>
+    <div class="nav-tree" id="nav-tree">
+      <div class="dem-acte-browse">
+        <div class="dem-acte-tree dem-acte-tree-embed dem-acte-tree--no-max">
+          {% include "healthcare/_search_acte_dem_families_tree.html" %}
+        </div>
+      </div>
+    </div>
+  {% elif mode == "mobile" %}
+    {% with tree_mx="min(36vh, 260px)" %}
+<div class="dem-actes-embed actes-nav dem-actes-nav-parity">
+  <div class="nav-head">
+    <div class="nav-title">Parcourir les actes</div>
+    <div class="nav-sub-label">Famille → Sous-famille → Acte</div>
+    {% if current_acte or pool_from_request %}<a href="{{ dem_clear_acte_url }}" class="dem-nav-clear-link">Tous les actes</a>{% endif %}
+  </div>
+  <div class="nav-search">
+    <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
+  </div>
+  <div class="dem-acte-browse nav-tree">
+    <div class="dem-acte-tree dem-acte-tree-embed" style="max-height: {{ tree_mx }}">
+      {% include "healthcare/_search_acte_dem_families_tree.html" %}
+    </div>
+  </div>
+</div>
+    {% endwith %}
+  {% else %}
+    {% with tree_mx="min(300px, 42vh)" %}
+<div class="dem-actes-embed actes-nav dem-actes-nav-parity">
+  <div class="nav-head">
+    <div class="nav-title">Parcourir les actes</div>
+    <div class="nav-sub-label">Famille → Sous-famille → Acte</div>
+    {% if current_acte or pool_from_request %}<a href="{{ dem_clear_acte_url }}" class="dem-nav-clear-link">Tous les actes</a>{% endif %}
+  </div>
+  <div class="nav-search">
+    <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
+  </div>
+  <div class="dem-acte-browse nav-tree">
+    <div class="dem-acte-tree dem-acte-tree-embed" style="max-height: {{ tree_mx }}">
+      {% include "healthcare/_search_acte_dem_families_tree.html" %}
+    </div>
+  </div>
+</div>
+    {% endwith %}
+  {% endif %}
+{% else %}
+  {# section absente / "all" : feuille mobile — panneau unifié (via search.html) #}
+  <div class="space-y-4">
+    <div>
+      <label class="dem-filter-label">Famille de soins</label>
+      {% include "healthcare/_search_service_acte_dem.html" with section="piliers" %}
+    </div>
+    {% include "healthcare/_search_service_acte_dem.html" with section="actes" mode="mobile" %}
+  </div>
+{% endif %}

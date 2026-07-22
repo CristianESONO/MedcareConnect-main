@@ -1,0 +1,40 @@
+{% comment %}Bottom sheets filtres mobile — démo MOBILE PATIENT.{% endcomment %}
+<div class="sipn-m-sheet-overlay" id="sipn-m-sheet-overlay" hidden></div>
+<div class="sipn-m-sheet" id="sipn-m-sheet" hidden aria-modal="true" role="dialog" aria-labelledby="sipn-m-sheet-title">
+  <div class="sipn-m-sheet-handle" aria-hidden="true"></div>
+  <div class="sipn-m-sheet-head">
+    <div class="sipn-m-sheet-title" id="sipn-m-sheet-title">Filtrer</div>
+  </div>
+  <div class="sipn-m-sheet-body" id="sipn-m-sheet-body"></div>
+  <div class="sipn-m-sheet-footer">
+    <button type="button" class="sipn-m-sheet-apply" id="sipn-m-sheet-apply">Appliquer</button>
+  </div>
+</div>
+
+<script type="application/json" id="sipn-m-filter-meta">{
+  "sort": "{{ current_sort|default:'price_asc'|escapejs }}",
+  "city": "{{ current_city|escapejs }}",
+  "delai": "{{ current_delai|escapejs }}",
+  "priceMax": "{{ price_max_val|default:''|escapejs }}",
+  "priceMinGlobal": {{ global_price_min|default:0 }},
+  "priceMaxGlobal": {{ global_price_max|default:500000 }},
+  "assurances": [{% for aid in current_assurances %}"{{ aid }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "zones": [{% for c in top_cities %}"{{ c|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "delaiChoices": [
+    {% for val, label in delai_choices %}{"val":"{{ val|escapejs }}","lbl":"{{ label|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}
+  ]
+}</script>
+
+<script type="text/template" id="sipn-m-tpl-assurance">
+  {% for label, group in assurances_grouped %}
+  <div class="sipn-m-ins-grp">{{ label }}</div>
+  {% for a in group %}
+  <label class="sipn-m-ins-opt">
+    <input type="checkbox" class="sipn-m-ins-cb" value="{{ a.pk }}" {% if a.pk|stringformat:'d' in current_assurances %}checked{% endif %}>
+    <span>{{ a.name }}</span>
+  </label>
+  {% endfor %}
+  {% empty %}
+  <p class="sipn-m-sheet-empty">Aucune assurance disponible.</p>
+  {% endfor %}
+</script>

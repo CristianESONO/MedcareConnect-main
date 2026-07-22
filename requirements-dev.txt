@@ -1,0 +1,3 @@
+# Dépendances optionnelles pour le dev / smoke navigateur (hors prod).
+-r requirements.txt
+playwright>=1.49.0

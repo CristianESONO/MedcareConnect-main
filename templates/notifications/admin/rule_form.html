@@ -1,0 +1,117 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Règle — {{ event.label }} / {{ channel.label }}{% endblock %}
+{% block page_title %}Règle de notification{% endblock %}
+
+{% block content %}
+{% include "notifications/admin/_nav.html" %}
+
+<div class="mb-6 grid gap-4 lg:grid-cols-2">
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Événement</p>
+    <p class="mt-1 text-base font-bold text-gray-900">{{ event.label }} <span class="text-xs font-normal text-gray-400">{{ event.code }}</span></p>
+    {% if event.description %}<p class="mt-2 text-xs leading-relaxed text-gray-600">{{ event.description }}</p>{% endif %}
+  </div>
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+    <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Canal</p>
+    <p class="mt-1 text-base font-bold text-gray-900">{{ channel.label }} <span class="text-xs font-normal text-gray-400">{{ channel.code }}</span></p>
+    <p class="mt-2 text-[11px] text-gray-500">Ce couple événement × canal est fixé par l’URL ; seules les règles de diffusion ci-dessous sont modifiables.</p>
+  </div>
+</div>
+
+{% if not template %}
+<div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+  Aucun <strong>modèle de message</strong> n’existe pour ce couple — les destinataires définis ci-dessous ne recevront rien tant qu’un modèle n’aura pas été créé (<a href="/admin/notifications/notificationtemplate/add/" class="font-semibold underline">créer un modèle</a>).
+</div>
+{% endif %}
+
+<form method="post" class="space-y-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+  <div class="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <section>
+    <h2 class="text-sm font-bold text-gray-900">Rôles destinataires</h2>
+    <p class="mt-1 text-[11px] text-gray-500">Activez les interrupteurs pour inclure tous les comptes <strong>actifs</strong> du rôle (sauf désinscription individuelle dans les préférences).</p>
+    <div class="mt-3 grid gap-3 sm:grid-cols-1 lg:grid-cols-3">
+      {% for val, label in form.fields.target_roles.choices %}
+      <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3.5 shadow-sm transition hover:border-gray-300 hover:bg-white">
+        <div class="min-w-0">
+          <p class="text-sm font-semibold text-gray-900">{{ label }}</p>
+          {% if val == 'admin' %}<p class="mt-0.5 text-[11px] text-gray-500">Équipe MedCare (comptes admin)</p>
+          {% elif val == 'prestataire' %}<p class="mt-0.5 text-[11px] text-gray-500">Structures &amp; professionnels de santé</p>
+          {% elif val == 'patient' %}<p class="mt-0.5 text-[11px] text-gray-500">Comptes patients</p>{% endif %}
+        </div>
+        <span class="relative inline-flex h-8 w-14 shrink-0 items-center">
+          <input type="checkbox" name="target_roles" value="{{ val }}"
+            class="peer sr-only h-px w-px overflow-hidden border-0 p-0 opacity-0"
+            {% if val in role_selected %}checked{% endif %}>
+          <span class="pointer-events-none absolute inset-0 rounded-full bg-gray-300 transition-colors duration-200 peer-checked:bg-primary-500" aria-hidden="true"></span>
+          <span class="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full bg-white shadow ring-1 ring-black/5 transition-transform duration-200 ease-out will-change-transform peer-checked:translate-x-6" aria-hidden="true"></span>
+        </span>
+      </label>
+      {% endfor %}
+    </div>
+    {% if form.target_roles.errors %}<p class="mt-2 text-xs text-rose-600">{{ form.target_roles.errors.0 }}</p>{% endif %}
+  </section>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <section class="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+      <label class="flex cursor-pointer items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-gray-900">{{ form.notify_event_actor.label }}</p>
+          <p class="mt-1 text-[11px] leading-relaxed text-gray-500">Notifier l’utilisateur lié au contexte (organisme ou patient concerné par l’événement), lorsque c’est pertinent.</p>
+        </div>
+        <span class="relative mt-0.5 inline-flex h-8 w-14 shrink-0 items-center">
+          {{ form.notify_event_actor }}
+          <span class="pointer-events-none absolute inset-0 rounded-full bg-gray-300 transition-colors duration-200 peer-checked:bg-primary-500" aria-hidden="true"></span>
+          <span class="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full bg-white shadow ring-1 ring-black/5 transition-transform duration-200 ease-out peer-checked:translate-x-6" aria-hidden="true"></span>
+        </span>
+      </label>
+      {% if form.notify_event_actor.errors %}<p class="mt-2 text-xs text-rose-600">{{ form.notify_event_actor.errors.0 }}</p>{% endif %}
+    </section>
+
+    <section class="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+      <label class="flex cursor-pointer items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-gray-900">Règle active</p>
+          <p class="mt-1 text-[11px] leading-relaxed text-gray-500">Désactivez pour suspendre tous les envois sur ce canal pour cet événement, sans supprimer la configuration.</p>
+        </div>
+        <span class="relative mt-0.5 inline-flex h-8 w-14 shrink-0 items-center">
+          {{ form.is_active }}
+          <span class="pointer-events-none absolute inset-0 rounded-full bg-gray-300 transition-colors duration-200 peer-checked:mc-bg-accent" aria-hidden="true"></span>
+          <span class="pointer-events-none absolute left-1 top-1 h-6 w-6 rounded-full bg-white shadow ring-1 ring-black/5 transition-transform duration-200 ease-out peer-checked:translate-x-6" aria-hidden="true"></span>
+        </span>
+      </label>
+      {% if form.is_active.errors %}<p class="mt-2 text-xs text-rose-600">{{ form.is_active.errors.0 }}</p>{% endif %}
+    </section>
+  </div>
+
+  <section>
+    <h2 class="text-sm font-bold text-gray-900">Utilisateurs explicites</h2>
+    <p class="mt-1 text-[11px] text-gray-500">En complément des rôles : liste déroulante multi-lignes — maintenez <kbd class="rounded border border-gray-200 bg-gray-100 px-1">Ctrl</kbd> (Windows/Linux) ou <kbd class="rounded border border-gray-200 bg-gray-100 px-1">⌘</kbd> (Mac) pour sélectionner plusieurs comptes.</p>
+    <div class="mt-2 max-w-3xl">
+      {{ form.target_users }}
+    </div>
+    {% if form.target_users.errors %}<p class="mt-2 text-xs text-rose-600">{{ form.target_users.errors.0 }}</p>{% endif %}
+  </section>
+
+  <section>
+    <label for="{{ form.extra_emails.id_for_label }}" class="text-sm font-bold text-gray-900">{{ form.extra_emails.label }}</label>
+    <p class="mt-1 text-[11px] text-gray-500">Adresses supplémentaires (boîte partagée, partenaire). Séparez par des virgules ou des retours à la ligne.</p>
+    <div class="mt-2">{{ form.extra_emails }}</div>
+    {% if form.extra_emails.errors %}<p class="mt-2 text-xs text-rose-600">{{ form.extra_emails.errors.0 }}</p>{% endif %}
+  </section>
+
+  <section>
+    <label for="{{ form.note.id_for_label }}" class="text-sm font-bold text-gray-900">{{ form.note.label }}</label>
+    <div class="mt-2">{{ form.note }}</div>
+    {% if form.note.errors %}<p class="mt-2 text-xs text-rose-600">{{ form.note.errors.0 }}</p>{% endif %}
+  </section>
+
+  <div class="flex flex-wrap justify-end gap-2 border-t border-gray-100 pt-5">
+    <a href="{% url 'notifications:admin_rules' %}" class="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">Annuler</a>
+    <button type="submit" class="rounded-xl bg-primary-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-primary-600">Enregistrer la règle</button>
+  </div>
+</form>
+{% endblock %}

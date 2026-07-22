@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ org.name }}{% endblock %}
+{% block body_extra_class %} org-fiche-page{% if profil_pillars %} org-fiche-has-devis{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/organisme_fiche.css' %}?v=10">
+{% endblock %}
+
+{% block content %}
+<div class="org-fiche"
+  data-org-fiche
+  data-org-name="{{ org.name|escape }}"
+  data-org-address="{{ org.address|default:''|escape }}"
+  data-org-city="{{ org.city|default:''|escape }}"
+  data-org-url="{{ public_absolute_url|escape }}"
+  data-org-slug="{{ org.slug }}"
+  data-is-patient="{% if user.is_authenticated and user.is_patient %}true{% else %}false{% endif %}"
+  data-login-url="{% url 'users:login' %}?{{ visitor_return_query }}"
+  data-request-devis-url="{% url 'cart:cart_fiche_request_devis' %}">
+
+  <div class="org-fiche-mobile-top">
+    <a href="{% url 'healthcare:search' %}" class="org-fiche-back">
+      {% include "healthcare/_icon_svg.html" with icon="arrow-left" class="pp-ico pp-ico--sm" %} Retour
+    </a>
+    <div class="flex items-center gap-2">
+      {% if not user.is_authenticated %}
+      <a href="{% url 'users:login' %}?{{ visitor_return_query }}" class="org-fiche-back text-[11px]">Connexion</a>
+      {% elif user.is_authenticated %}
+      <a href="{% url 'healthcare:toggle_favorite' org.slug %}" class="org-fiche-fav{% if is_favorite %} is-active{% endif %}" title="{% if is_favorite %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}">
+        {% include "healthcare/_icon_svg.html" with icon="heart" class="pp-ico pp-ico--sm" %}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% include "healthcare/_organisme_fiche_header.html" %}
+
+  <nav id="org-fiche-mobile-nav" aria-label="Sections de la fiche">
+    <a href="#org-section-actes" data-org-section="actes" class="is-active">Actes &amp; devis</a>
+    <a href="#org-section-infos" data-org-section="infos">Infos pratiques</a>
+  </nav>
+
+  <div class="pp-body pp-body--fiche">
+    {% if not user.is_authenticated %}
+    <p class="mb-3 rounded-xl border border-dashed border-gray-200 bg-white px-3 py-2 text-center text-[11px] text-gray-600">
+      <a href="{% url 'users:login' %}?{{ visitor_return_query }}" class="font-semibold text-primary-700 hover:underline">Connectez-vous</a>
+      pour enregistrer vos favoris et demander un devis MedCare.
+    </p>
+    {% endif %}
+
+    {% include "healthcare/_organisme_fiche_catalogue.html" %}
+    {% include "healthcare/_organisme_fiche_infos.html" %}
+  </div>
+</div>
+
+{% if profil_pillars %}
+<div class="org-fiche-sticky" id="org-fiche-sticky-devis" aria-live="polite">
+  <div class="org-fiche-sticky__inner">
+    <div class="pp-devis-wrap pp-devis-wrap--float">
+      <p id="org-sticky-count" class="org-fiche-sticky__count hidden"></p>
+      <p id="org-sticky-total" class="org-fiche-sticky__total hidden"></p>
+      <button type="button" class="pp-devis-cta pp-devis-cta--medcare js-devis-cta">
+        <span class="pp-devis-cta__label">{% include "healthcare/_icon_svg.html" with icon="chat" class="pp-ico pp-ico--sm" %} Obtenir mon devis</span>
+      </button>
+      <p class="pp-devis-hint">Cochez des actes — devis et prise de RDV dans la messagerie MedCare.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<p id="org-fiche-toast" class="hidden" role="status"></p>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'healthcare/js/organisme_fiche.js' %}?v=5"></script>
+{% endblock %}

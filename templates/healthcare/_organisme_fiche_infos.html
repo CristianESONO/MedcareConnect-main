@@ -1,0 +1,34 @@
+{# Infos pratiques : adresse, carte (contacts non affichés — canal MedCare) #}
+<div class="pp-body-panel" id="org-section-infos">
+  <p class="pp-section-label">Adresse &amp; accès</p>
+  <p class="mt-2 text-sm leading-relaxed text-gray-700">
+    {{ org.address }}{% if org.quartier %}, {{ org.quartier }}{% endif %}<br>
+    <span class="font-semibold text-gray-900">{{ org.city }}</span>
+  </p>
+  {% if maps_url or waze_url %}
+  <div class="org-fiche-access-actions">
+    {% if maps_url %}
+    <a href="{{ maps_url }}" target="_blank" rel="noopener noreferrer" class="org-fiche-btn-primary inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-white">
+      {% include "healthcare/_icon_svg.html" with icon="map-pin" class="pp-ico pp-ico--sm" %} Itinéraire GPS
+    </a>
+    {% endif %}
+    {% if waze_url %}
+    <a href="{{ waze_url }}" target="_blank" rel="noopener noreferrer" class="org-fiche-btn-secondary inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-800 hover:bg-gray-50">
+      Waze
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% if org.latitude and org.longitude %}
+  {% with lat=org.latitude|stringformat:"f" lng=org.longitude|stringformat:"f" %}
+  <div class="org-fiche-map">
+    <iframe title="Carte — {{ org.name }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q={{ lat }},{{ lng }}&amp;z=15&amp;hl=fr&amp;output=embed"></iframe>
+  </div>
+  {% endwith %}
+  {% endif %}
+
+  {% if org.website %}
+  <p class="pp-section-label mt-4">Site web</p>
+  <a href="{{ org.website }}" target="_blank" rel="noopener noreferrer" class="mt-1 inline-block break-all text-sm font-semibold text-primary-700 hover:underline">{{ org.website }}</a>
+  {% endif %}
+</div>
