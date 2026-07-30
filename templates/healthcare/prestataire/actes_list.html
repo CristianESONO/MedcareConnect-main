@@ -25,12 +25,17 @@
     <p class="cat-section-label">Type de structure</p>
     <div class="cat-type-chips">
       {% for chip in type_chips %}
-      <span class="cat-type-chip{% if chip.active %} is-active{% endif %}">
+      <button type="button"
+        class="cat-type-chip js-type-chip{% if chip.active %} is-active{% endif %}"
+        data-key="{{ chip.key }}"
+        data-piliers="{{ chip.piliers }}"
+        data-label="{{ chip.label }}"
+        data-desc="{{ chip.desc }}">
         <span>{{ chip.icon }}</span> {{ chip.label }}
-      </span>
+      </button>
       {% endfor %}
     </div>
-    <p class="cat-hint">{{ type_label }} — {{ type_desc }}</p>
+    <p class="cat-hint" id="type-struct-desc">{{ type_label }} — {{ type_desc }}</p>
   </div>
 </div>
 
@@ -41,14 +46,15 @@
     <div class="cat-pilier-tabs" id="pilier-tabs" role="tablist" aria-label="Piliers">
       {% for block in catalog_by_pilier %}
       <button type="button"
-        class="pilier-tab{% if not block.applicable %} is-disabled{% elif block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
+        class="pilier-tab js-pilier-tab{% if not block.applicable %} is-disabled{% elif block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
         data-pilier-panel="pilier-{{ block.pilier.pk }}"
         data-pilier-slug="{{ block.pilier.slug }}"
         data-pilier-label="{{ block.pilier.display_icon|default:'🏥' }} {{ block.pilier.name }}"
+        data-count-text="{{ block.acte_count }} acte{{ block.acte_count|pluralize }}"
         {% if not block.applicable %}disabled title="Non applicable à votre type de structure"{% endif %}>
         <span class="pilier-tab-icon">{{ block.pilier.display_icon|default:"🏥" }}</span>
         <span class="pilier-tab-label">{{ block.pilier.name }}</span>
-        <span class="pilier-tab-count{% if not block.applicable %} is-na{% endif %}">
+        <span class="pilier-tab-count js-pilier-tab-count{% if not block.applicable %} is-na{% endif %}">
           {% if block.applicable %}{{ block.acte_count }} acte{{ block.acte_count|pluralize }}{% else %}Non applicable{% endif %}
         </span>
       </button>
@@ -92,7 +98,7 @@
           <option value="{{ sg.label }}">{{ sg.label }}</option>
           {% endfor %}
         </select>
-        <a href="{% url 'healthcare:acte_add' %}" class="whitespace-nowrap rounded-lg bg-primary-600 px-3 py-2 text-xs font-bold text-white hover:bg-primary-700">+ Ajouter un acte</a>
+        <button type="button" class="js-open-add-acte-modal whitespace-nowrap rounded-lg bg-primary-600 px-3 py-2 text-xs font-bold text-white hover:bg-primary-700 cursor-pointer">+ Ajouter un acte</button>
         <a href="{% url 'healthcare:prestataire_rdv_reminder_list' %}" class="whitespace-nowrap rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">Rappels RDV</a>
       </div>
 
@@ -183,6 +189,86 @@
     <button type="button" class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-bold text-white hover:bg-primary-700" id="prep-save">Enregistrer</button>
   </div>
 </aside>
+
+{# ── Modal Ajouter un acte ── #}
+<div id="add-acte-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-xs p-4 hidden opacity-0 transition-opacity duration-200" aria-hidden="true">
+  <div id="add-acte-modal" class="relative w-full max-w-lg transform rounded-2xl bg-white p-6 shadow-2xl transition-all duration-200 scale-95 border border-gray-100">
+    <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600 font-bold text-lg shadow-xs">
+          ➕
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-900">Ajouter un acte au catalogue</h3>
+          <p class="text-xs text-gray-500">Sélectionnez un acte du référentiel et définissez son tarif</p>
+        </div>
+      </div>
+      <button type="button" id="btn-close-add-acte-modal" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition cursor-pointer">
+        ✕
+      </button>
+    </div>
+
+    <form method="POST" action="{% url 'healthcare:acte_add' %}" class="mt-5 space-y-4">
+      {% csrf_token %}
+
+      <div>
+        <label for="modal_id_acte" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Acte proposé <span class="text-rose-500">*</span></label>
+        <p class="mt-0.5 text-[11px] text-gray-500 mb-1.5">Recherchez par nom d'acte ou catégorie</p>
+        <select name="acte" id="modal_id_acte" required
+          class="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none">
+          <option value="">— Sélectionnez un acte —</option>
+          {% for g in acte_option_groups %}
+          <optgroup label="{{ g.service_name }}">
+            {% for pk, label in g.options %}
+            <option value="{{ pk }}">{{ label }}</option>
+            {% endfor %}
+          </optgroup>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <div>
+          <label for="modal_id_price" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Prix (FCFA) <span class="text-rose-500">*</span></label>
+          <input type="number" min="0" step="500" name="price" id="modal_id_price" required placeholder="ex: 15000"
+            class="mt-1 w-full rounded-xl border border-gray-300 px-3.5 py-2 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none">
+        </div>
+        <div>
+          <label for="modal_id_delai" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Délai indicatif</label>
+          <select name="delai" id="modal_id_delai"
+            class="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none">
+            <option value="">— Aucun délai —</option>
+            {% for val, lbl in prestataire_delai_choices %}
+            <option value="{{ val }}">{{ lbl }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-1">
+        <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+          <input type="checkbox" name="is_available" value="true" checked class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+          <span>Disponible immédiatement au catalogue</span>
+        </label>
+      </div>
+
+      <div>
+        <label for="modal_id_notes" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Notes / Précisions</label>
+        <textarea name="notes" id="modal_id_notes" rows="2" placeholder="Précisions éventuelles sur la prise en charge..."
+          class="mt-1 w-full rounded-xl border border-gray-300 px-3.5 py-2 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none"></textarea>
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-2.5 border-t border-gray-100 pt-4">
+        <button type="button" id="btn-cancel-add-acte-modal" class="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition cursor-pointer">
+          Annuler
+        </button>
+        <button type="submit" class="rounded-xl bg-primary-600 px-5 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-700 transition cursor-pointer">
+          Ajouter au catalogue
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
 
 {% block dash_extra_js %}
@@ -237,11 +323,90 @@ window.MEDCARE_CATALOGUE_PREP = {
     });
   }
 
-  tabs.forEach(function (tab) {
+  // ── Types de structure interactifs & filtrage piliers ──
+  var typeChips = document.querySelectorAll('.js-type-chip');
+  var typeDescEl = document.getElementById('type-struct-desc');
+  var allPilierTabs = document.querySelectorAll('.js-pilier-tab');
+
+  function activatePilierBySlug(targetSlug) {
+    var found = false;
+    allPilierTabs.forEach(function (tab) {
+      var isTabDisabled = tab.classList.contains('is-disabled');
+      var slug = tab.getAttribute('data-pilier-slug') || '';
+      if (!isTabDisabled && !found && (slug === targetSlug || !targetSlug)) {
+        tab.classList.add('is-active');
+        var panelId = tab.getAttribute('data-pilier-panel');
+        panels.forEach(function (p) { p.classList.toggle('hidden', p.id !== panelId); });
+        updateDomicileVisibility(slug);
+        found = true;
+      } else {
+        tab.classList.remove('is-active');
+      }
+    });
+  }
+
+  function setStructureType(chip) {
+    if (!chip) return;
+    typeChips.forEach(function (c) { c.classList.remove('is-active'); });
+    chip.classList.add('is-active');
+
+    var label = chip.getAttribute('data-label') || '';
+    var desc = chip.getAttribute('data-desc') || '';
+    var piliersRaw = chip.getAttribute('data-piliers') || '';
+    var allowedPiliers = piliersRaw ? piliersRaw.split(',') : [];
+
+    if (typeDescEl) {
+      typeDescEl.textContent = label + ' — ' + desc;
+    }
+
+    var firstAllowedTab = null;
+
+    allPilierTabs.forEach(function (tab) {
+      var slug = tab.getAttribute('data-pilier-slug') || '';
+      var countSpan = tab.querySelector('.js-pilier-tab-count');
+      var originalCountText = tab.getAttribute('data-count-text') || '';
+
+      var isAllowed = allowedPiliers.length === 0 || allowedPiliers.indexOf(slug) !== -1;
+
+      if (isAllowed) {
+        tab.classList.remove('is-disabled');
+        tab.removeAttribute('disabled');
+        tab.removeAttribute('title');
+        if (countSpan) {
+          countSpan.classList.remove('is-na');
+          countSpan.textContent = originalCountText;
+        }
+        if (!firstAllowedTab) firstAllowedTab = tab;
+      } else {
+        tab.classList.add('is-disabled');
+        tab.classList.remove('is-active');
+        tab.setAttribute('disabled', 'disabled');
+        tab.setAttribute('title', 'Non applicable à ce type de structure');
+        if (countSpan) {
+          countSpan.classList.add('is-na');
+          countSpan.textContent = 'Non applicable';
+        }
+      }
+    });
+
+    if (firstAllowedTab) {
+      var firstSlug = firstAllowedTab.getAttribute('data-pilier-slug') || '';
+      activatePilierBySlug(firstSlug);
+    }
+  }
+
+  typeChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      setStructureType(chip);
+    });
+  });
+
+  allPilierTabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
+      if (tab.classList.contains('is-disabled')) return;
       var id = tab.getAttribute('data-pilier-panel');
       var slug = tab.getAttribute('data-pilier-slug') || '';
-      tabs.forEach(function (t) { t.classList.remove('is-active'); });
+      allPilierTabs.forEach(function (t) { t.classList.remove('is-active'); });
       tab.classList.add('is-active');
       panels.forEach(function (p) { p.classList.toggle('hidden', p.id !== id); });
       updateDomicileVisibility(slug);
@@ -840,8 +1005,58 @@ window.MEDCARE_CATALOGUE_PREP = {
   document.getElementById('prep-panel-close') && document.getElementById('prep-panel-close').addEventListener('click', closePrepPanel);
   document.getElementById('prep-cancel') && document.getElementById('prep-cancel').addEventListener('click', closePrepPanel);
   document.getElementById('prep-save') && document.getElementById('prep-save').addEventListener('click', savePrepPanel);
+  // ── Modal Ajouter un acte ──
+  var addActeOverlay = document.getElementById('add-acte-overlay');
+  var addActeModal = document.getElementById('add-acte-modal');
+  var openAddBtns = document.querySelectorAll('.js-open-add-acte-modal');
+  var closeAddBtn = document.getElementById('btn-close-add-acte-modal');
+  var cancelAddBtn = document.getElementById('btn-cancel-add-acte-modal');
+
+  function openAddModal() {
+    if (!addActeOverlay || !addActeModal) return;
+    addActeOverlay.classList.remove('hidden');
+    setTimeout(function() {
+      addActeOverlay.classList.remove('opacity-0');
+      addActeModal.classList.remove('scale-95');
+      addActeModal.classList.add('scale-100');
+    }, 10);
+
+    if (window.jQuery && jQuery.fn.select2) {
+      var $select = jQuery('#modal_id_acte');
+      if ($select.length && !$select.hasClass('select2-hidden-accessible')) {
+        $select.select2({
+          dropdownParent: jQuery('#add-acte-modal'),
+          placeholder: 'Rechercher un acte…',
+          allowClear: true
+        });
+      }
+    }
+  }
+
+  function closeAddModal() {
+    if (!addActeOverlay || !addActeModal) return;
+    addActeOverlay.classList.add('opacity-0');
+    addActeModal.classList.remove('scale-100');
+    addActeModal.classList.add('scale-95');
+    setTimeout(function() {
+      addActeOverlay.classList.add('hidden');
+    }, 200);
+  }
+
+  openAddBtns.forEach(function(btn) {
+    btn.addEventListener('click', openAddModal);
+  });
+  if (closeAddBtn) closeAddBtn.addEventListener('click', closeAddModal);
+  if (cancelAddBtn) cancelAddBtn.addEventListener('click', closeAddModal);
+  if (addActeOverlay) {
+    addActeOverlay.addEventListener('click', function(e) {
+      if (e.target === addActeOverlay) closeAddModal();
+    });
+  }
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && prepPanel && prepPanel.classList.contains('open')) closePrepPanel();
+    if (e.key === 'Escape' && addActeOverlay && !addActeOverlay.classList.contains('hidden')) {
+      closeAddModal();
+    }
   });
 })();
 </script>

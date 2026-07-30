@@ -1,7 +1,7 @@
 {% comment %}Liste résultats par structure — partagée mobile + desktop.{% endcomment %}
 {% if pool_from_request %}
   {% for block in mobile_results_by_org %}
-    {% include "healthcare/_search_card_mobile.html" %}
+    {% include "healthcare/_search_card_mobile.html" with block=block list_variant=list_variant %}
   {% empty %}
   <div class="empty-state-m">
     <div class="empty-icon-m" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="search" class="sipn-ico sipn-ico--xl" %}</div>

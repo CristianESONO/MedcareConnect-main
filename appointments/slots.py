@@ -46,6 +46,15 @@ def _taken_starts(organisme, day_start, day_end):
     )
 
 
+def _safe_day_hours(organisme, weekday_idx: int) -> dict:
+    raw = getattr(organisme, "opening_hours", None)
+    if isinstance(raw, dict):
+        return raw.get(JOURS[weekday_idx], {}) or {}
+    if weekday_idx < 6:
+        return {"open": "08:00", "close": "18:00", "closed": False}
+    return {"closed": True}
+
+
 def day_slots(
     organisme,
     the_date,
@@ -56,7 +65,7 @@ def day_slots(
 ):
     """Liste des créneaux pour une journée : [{value, label, available}]."""
     now = now or timezone.localtime()
-    hours = (organisme.opening_hours or {}).get(JOURS[the_date.weekday()], {})
+    hours = _safe_day_hours(organisme, the_date.weekday())
     if not hours or hours.get("closed"):
         return []
     open_t = _parse_hhmm(hours.get("open"))
@@ -146,9 +155,8 @@ def first_available_slot(
 
 def has_bookable_hours(organisme) -> bool:
     """Vrai si la structure a au moins un jour ouvré exploitable (prise de RDV en ligne possible)."""
-    hours = organisme.opening_hours or {}
-    for day in JOURS:
-        h = hours.get(day) or {}
+    for idx, day in enumerate(JOURS):
+        h = _safe_day_hours(organisme, idx)
         if h.get("closed"):
             continue
         open_t = _parse_hhmm(h.get("open"))
@@ -168,7 +176,7 @@ def is_slot_available(organisme, value, slot_minutes=DEFAULT_SLOT_MINUTES, exclu
         dt = timezone.make_aware(dt, timezone.get_current_timezone())
 
     loc = timezone.localtime(dt)
-    hours = (organisme.opening_hours or {}).get(JOURS[loc.weekday()], {})
+    hours = _safe_day_hours(organisme, loc.weekday())
     if not hours or hours.get("closed"):
         return False
     open_t = _parse_hhmm(hours.get("open"))

@@ -555,6 +555,385 @@
 
   /* Empêche le scroll body quand sheet ouvert */
   body.sheet-locked { overflow:hidden; }
+
+  /* ── Drawer profil structure (au-dessus du header visiteur z-index 500+) ── */
+  #profil-struct-overlay {
+    z-index: 1040 !important;
+  }
+  #profil-struct-modal {
+    z-index: 1041 !important;
+    display: none;
+    flex-direction: column;
+    font-family: 'DM Sans', sans-serif;
+    color: #0d1b2a;
+  }
+  #profil-struct-modal .profil-drawer-header {
+    background: linear-gradient(135deg, #0a4a72, #054a38);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    flex-shrink: 0;
+  }
+  #profil-struct-modal .profil-drawer-close-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 14px 0;
+  }
+  #profil-struct-modal .profil-drawer-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    color: rgba(255,255,255,0.85);
+    font-size: 15px;
+    cursor: pointer;
+  }
+  #profil-struct-modal .profil-drawer-head-body { padding: 2px 18px 16px; }
+  #profil-struct-modal .profil-drawer-identity {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  #profil-struct-modal .profil-drawer-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  #profil-struct-modal .profil-drawer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #profil-struct-modal .profil-drawer-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-drawer-name {
+    font-family: Syne, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #profil-struct-modal .profil-drawer-pioneer {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(244,208,63,0.18);
+    color: #f4d03f;
+    border: 1px solid rgba(244,208,63,0.35);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+  }
+  #profil-struct-modal .profil-drawer-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.68);
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-drawer-open-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-open-badge--open {
+    background: rgba(74,222,128,0.18);
+    color: #4ade80;
+  }
+  #profil-struct-modal .profil-drawer-open-badge--closed {
+    background: rgba(248,113,113,0.18);
+    color: #f87171;
+  }
+  #profil-struct-modal .profil-drawer-open-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  #profil-struct-modal .profil-drawer-actions {
+    display: flex;
+    gap: 8px;
+  }
+  #profil-struct-modal .profil-drawer-action-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.16);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 9px;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #profil-struct-modal .profil-drawer-horaires-pop {
+    margin-top: 8px;
+    background: #fff;
+    color: #0d1b2a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+  }
+  #profil-struct-modal .profil-drawer-horaires-pop[hidden] { display: none !important; }
+  #profil-struct-modal .profil-drawer-horaires-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a5c8a;
+    margin-bottom: 6px;
+  }
+  #profil-struct-modal .profil-drawer-horaires-line {
+    font-size: 12px;
+    color: #4b5563;
+    padding: 2px 0;
+  }
+  #profil-struct-modal .profil-drawer-horaires-status {
+    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  #profil-struct-modal .profil-drawer-horaires-status--open { color: #047857; }
+  #profil-struct-modal .profil-drawer-horaires-status--closed { color: #dc2626; }
+  #profil-struct-modal .profil-drawer-body {
+    padding: 16px;
+    background: #fff;
+    flex: 1;
+    overflow-y: auto;
+  }
+  #profil-struct-modal .profil-drawer-desc {
+    font-size: 12px;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+  #profil-struct-modal .profil-drawer-ins-match {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #047857;
+  }
+  #profil-struct-modal .profil-drawer-assur-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 11px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  #profil-struct-modal .profil-drawer-assur-list {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  #profil-struct-modal .profil-drawer-assur-list[hidden] { display: none !important; }
+  #profil-struct-modal .profil-drawer-assur-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 13px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 12px;
+  }
+  #profil-struct-modal .profil-drawer-assur-row--match {
+    background: #ecfdf5;
+    color: #047857;
+    font-weight: 600;
+  }
+  #profil-struct-modal .profil-drawer-assur-tag {
+    font-size: 9px;
+    font-weight: 700;
+    color: #047857;
+    white-space: nowrap;
+  }
+  #profil-struct-modal .profil-drawer-domicile {
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  #profil-struct-modal .profil-drawer-domicile-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a5c8a;
+    margin-bottom: 6px;
+  }
+  #profil-struct-modal .profil-drawer-domicile-sub {
+    font-size: 10px;
+    color: #4b5563;
+  }
+  #profil-struct-modal .profil-drawer-actes-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #9ca3af;
+    margin-bottom: 8px;
+  }
+  #profil-struct-modal .profil-drawer-actes-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  #profil-struct-modal .profil-drawer-actes-search input {
+    flex: 1;
+    font-size: 12px;
+    padding: 9px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  #profil-struct-modal .profil-drawer-actes-search button {
+    background: #0a5c8a;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 0 16px;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #profil-struct-modal .profil-drawer-cat {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  #profil-struct-modal .profil-drawer-cat-head {
+    padding: 7px 12px;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  #profil-struct-modal .profil-drawer-cat-count {
+    font-size: 9px;
+    background: #dbeafe;
+    color: #0a5c8a;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+  #profil-struct-modal .profil-pa-row {
+    margin: 2px 8px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  #profil-struct-modal .profil-pa-right { text-align: right; flex-shrink: 0; }
+  #profil-struct-modal .profil-panier-box {
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    padding: 10px 14px;
+    margin-top: 14px;
+  }
+  #profil-struct-modal .profil-panier-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #0a5c8a;
+    margin-bottom: 8px;
+  }
+  #profil-struct-modal .profil-panier-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  #profil-struct-modal .profil-panier-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  #profil-struct-modal .profil-panier-card-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #0d1b2a;
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-panier-card-price {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a5c8a;
+    white-space: nowrap;
+  }
+  #profil-struct-modal .profil-panier-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  #profil-struct-modal .profil-panier-total {
+    font-family: Syne, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0a5c8a;
+  }
+  #profil-struct-modal .profil-panier-clear {
+    font-size: 10px;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 3px 9px;
+    cursor: pointer;
+    color: #9ca3af;
+    font-family: inherit;
+  }
+  #profil-struct-modal .profil-drawer-devis-btn { margin-top: 10px; }
+  #search-form #dem-right-rail .cart-compact-hint {
+    font-size: 11px;
+    color: #6b7280;
+    text-align: center;
+    padding: 12px 8px;
+    line-height: 1.5;
+  }
 </style>
 {% endblock %}
 
@@ -869,6 +1248,10 @@
       <p class="text-gray-500">Chargement…</p>
     </div>
   </aside>
+
+  {# ───── Drawer profil structure (aligné DEMO_DESKTOP_PATIENT.html) ───── #}
+  <div id="profil-struct-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1040" aria-hidden="true"></div>
+  <div id="profil-struct-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;width:440px;max-width:96vw;background:#fff;z-index:1041;box-shadow:-8px 0 40px rgba(0,0,0,0.18);overflow-y:auto" role="dialog" aria-modal="true" aria-label="Profil structure"></div>
 
 </form>
 
@@ -2009,6 +2392,16 @@
       document.querySelectorAll('[data-bnav-dot="panier"]').forEach(function(el){
         el.classList.toggle('show', n > 0);
       });
+      document.querySelectorAll('.mc-landing-drawer-badge').forEach(function(el){
+        el.textContent = String(n);
+        el.classList.toggle('hidden', n === 0);
+      });
+      document.querySelectorAll('.sb-badge').forEach(function(el){
+        if (el.closest('.sb-link') && el.closest('.sb-link').textContent.includes('Panier')) {
+          el.textContent = String(n);
+          el.classList.toggle('hidden', n === 0);
+        }
+      });
     }
 
     var cart = new Map();
@@ -2738,6 +3131,12 @@
           if (mchk) mchk.checked = on;
           return;
         }
+        if (card.classList.contains('profil-pa-row')) {
+          card.classList.toggle('in-cart', on);
+          var pchk = card.querySelector('.ai-check');
+          if (pchk) pchk.checked = on;
+          return;
+        }
         if (!card.classList.contains('scard')) return;
         var chk = card.querySelector('.ai-check');
         var row = card.querySelector('.acte-item');
@@ -2749,6 +3148,89 @@
       updateStructCartTotals();
       refreshActeLocks();
       checkMissingAfterCartUpdate();
+      updateProfilCartRecap();
+    }
+
+    function getProfilDrawerOrgId(){
+      var modal = document.getElementById('profil-struct-modal');
+      return modal ? (modal.getAttribute('data-org-id') || '') : '';
+    }
+
+    function updateProfilCartRecap(){
+      var recap = document.getElementById('profil-panier-recap');
+      if (!recap) return;
+      var orgId = getProfilDrawerOrgId();
+      if (!orgId) { recap.innerHTML = ''; return; }
+      var items = Array.from(cart.values()).filter(function(it){ return String(it.orgId) === String(orgId); });
+      if (!items.length) { recap.innerHTML = ''; return; }
+      var total = items.reduce(function(s, it){ return s + it.price; }, 0);
+      recap.innerHTML =
+        '<div class="profil-panier-box">'
+        + '<div class="profil-panier-title">🛒 Sélection · ' + items.length + ' acte' + (items.length > 1 ? 's' : '') + '</div>'
+        + '<div class="profil-panier-cards">'
+        + items.map(function(it){
+            return '<div class="profil-panier-card">'
+              + '<div class="profil-panier-card-name">' + escapeHtml(it.acte) + '</div>'
+              + '<div class="profil-panier-card-price">' + fnum(it.price) + ' F</div>'
+              + '</div>';
+          }).join('')
+        + '</div>'
+        + '<div class="profil-panier-total-row">'
+        + '<div class="profil-panier-total">' + fnum(total) + ' FCFA estimé</div>'
+        + '<button type="button" class="profil-panier-clear" data-profil-clear-org="' + escapeHtml(orgId) + '">Vider</button>'
+        + '</div></div>';
+    }
+
+    function syncProfilDrawerFromCart(){
+      var modal = document.getElementById('profil-struct-modal');
+      if (!modal || modal.style.display !== 'flex') return;
+      modal.querySelectorAll('.profil-pa-row[data-pa-id]').forEach(function(row){
+        var id = String(row.getAttribute('data-pa-id'));
+        var on = cart.has(id);
+        row.classList.toggle('in-cart', on);
+        var chk = row.querySelector('.ai-check');
+        if (chk) chk.checked = on;
+      });
+      updateProfilCartRecap();
+    }
+
+    function togglePaFromElement(el){
+      if (!el) return;
+      var id = String(el.getAttribute('data-pa-id') || '');
+      if (!id) return;
+      if (cart.has(id)){
+        serverRemove(id, function(d){
+          cart.delete(id);
+          cardState(id);
+          applyCartCoverage(d);
+          renderCart();
+          if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
+        }, function(err){
+          cartRemoveErr(err);
+          cardState(id);
+        });
+        return;
+      }
+      if (isPaBlockedByOtherStructure(id, el.getAttribute('data-pa-acte-pk'))) {
+        sipnToast(acteConflictMessage(el), 'warning');
+        cardState(id);
+        return;
+      }
+      serverAdd(el, function(d){
+        cart.set(id, cartItemFromCard(el, id, d));
+        cardState(id);
+        applyCartCoverage(d);
+        renderCart();
+        if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
+      }, function(err){
+        if (err && err.detail && err.detail.error === 'acte_already_in_cart') {
+          sipnToast(err.detail.message || acteConflictMessage(el), 'warning');
+        } else {
+          sipnToast('Impossible d’ajouter au panier. Réessayez.', 'error');
+        }
+        refreshActeLocks();
+        cardState(id);
+      });
     }
 
     function renderCart(){
@@ -2802,19 +3284,24 @@
           + '</div>';
       }).join('');
       cartBodyEls.forEach(function(body){
-        body.innerHTML = '<div class="cart-items">' + warn + htmlItems + '</div>';
-        body.querySelectorAll('[data-cart-del]').forEach(function(btn){
-          btn.addEventListener('click', function(){
-            var delId = btn.getAttribute('data-cart-del');
-            serverRemove(delId, function(d){
-              cart.delete(delId);
-              cardState(delId);
-              applyCartCoverage(d);
-              renderCart();
-              if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
-          }, cartRemoveErr);
+        var desktopRail = body.closest('#dem-right-rail');
+        if (desktopRail && window.matchMedia('(min-width: 1024px)').matches) {
+          body.innerHTML = warn + '<div class="cart-compact-hint"><strong>' + items.length + ' acte' + (items.length > 1 ? 's' : '') + '</strong> sélectionné' + (items.length > 1 ? 's' : '') + '<br>Total estimé affiché ci-dessous.</div>';
+        } else {
+          body.innerHTML = '<div class="cart-items">' + warn + htmlItems + '</div>';
+          body.querySelectorAll('[data-cart-del]').forEach(function(btn){
+            btn.addEventListener('click', function(){
+              var delId = btn.getAttribute('data-cart-del');
+              serverRemove(delId, function(d){
+                cart.delete(delId);
+                cardState(delId);
+                applyCartCoverage(d);
+                renderCart();
+                if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
+              }, cartRemoveErr);
+            });
           });
-        });
+        }
       });
       if (cartFooterEls.length) {
         cartFooterEls.forEach(function(cartFooter){ cartFooter.hidden = false; });
@@ -2836,8 +3323,21 @@
         infoHtml += '<span>' + items.length + ' acte' + (items.length > 1 ? 's' : '') + ' · ' + nStructs + ' structure' + (nStructs > 1 ? 's' : '') + '</span>';
         cartInfoEls.forEach(function(el){ el.innerHTML = infoHtml; });
       }
+      var cartDevisBtn = document.getElementById('dem-cart-devis-btn');
+      if (cartDevisBtn) {
+        if (nStructs === 1 && orgNames.length === 1) {
+          var onlyOrgItems = byOrg[orgNames[0]];
+          var onlyOrgId = onlyOrgItems && onlyOrgItems[0] && onlyOrgItems[0].orgId;
+          cartDevisBtn.hidden = false;
+          cartDevisBtn.setAttribute('data-devis-org-id', onlyOrgId || '');
+        } else {
+          cartDevisBtn.hidden = true;
+          cartDevisBtn.removeAttribute('data-devis-org-id');
+        }
+      }
       updateStructCartTotals();
       renderMobilePanierBody(items, total);
+      syncProfilDrawerFromCart();
     }
 
     function hydrateCartFromServer(done){
@@ -2858,15 +3358,15 @@
           cart.clear();
           (d.items || []).forEach(function(it){
             var id = String(it.id);
-            var card = document.querySelector('.scard[data-pa-id="' + id + '"], .scard-m-acte[data-pa-id="' + id + '"]');
+            var card = document.querySelector('.scard[data-pa-id="' + id + '"], .scard-m-acte[data-pa-id="' + id + '"], #profil-struct-modal .profil-pa-row[data-pa-id="' + id + '"]');
             cart.set(id, {
               id: id,
-              acte: it.acte || '',
-              actePk: String(it.acte_pk || ''),
-              org: it.org || '',
+              acte: it.acte || (card ? card.getAttribute('data-pa-acte') : '') || '',
+              actePk: String(it.acte_pk || (card ? card.getAttribute('data-pa-acte-pk') : '') || ''),
+              org: it.org || (card ? card.getAttribute('data-pa-org') : '') || '',
               orgId: it.org_id ? String(it.org_id) : (card ? (card.getAttribute('data-pa-org-id') || '') : ''),
               delai: card ? (card.getAttribute('data-pa-delai') || '') : '',
-              price: parseFloat(it.price || '0'),
+              price: parseFloat(it.price || (card ? card.getAttribute('data-pa-price') : '0') || '0'),
               insOk: card ? card.getAttribute('data-pa-ins-match') !== '0' : it.insOk !== false,
               cartItemId: it.cart_item_id || null
             });
@@ -3062,6 +3562,9 @@
     window._sipnRenderCart = renderCart;
     window._sipnOpenCompPanel = openCompPanel;
     window._sipnCheckMissingCart = checkMissingAfterCartUpdate;
+    window._sipnTogglePaFromElement = togglePaFromElement;
+    window._sipnSyncProfilDrawer = syncProfilDrawerFromCart;
+    window._sipnUpdateProfilCartRecap = updateProfilCartRecap;
 
     window.addEventListener('resize', function(){
       if (!compVisible) return;
@@ -4050,6 +4553,8 @@
 
   document.addEventListener('keydown', function(e){
     if (e.key !== 'Escape') return;
+    var profilModal = document.getElementById('profil-struct-modal');
+    if (profilModal && profilModal.style.display === 'flex') { closeProfilStruct(); e.preventDefault(); return; }
     var op = $('#org-preview-panel');
     if (op && op.classList.contains('open')) { closeOrgPreview(); e.preventDefault(); return; }
     if (geoModal && geoModal.classList.contains('open')) { closeGeo(); e.preventDefault(); return; }
@@ -4214,47 +4719,57 @@
     } else {
       box.style.display = 'none';
     }
+  })();
+
   /* ── 1. Sélection pilier instantanée sans rechargement (Tâche 6 & 8) ── */
   (function initInstantPillars() {
+    function isAmbulancePillar(btn) {
+      return btn.getAttribute('data-is-ambulance') === '1';
+    }
+    function applyPillarUi(targetSid, ambActive) {
+      document.querySelectorAll('.dem-pbtn').forEach(function(b) {
+        var bSid = b.getAttribute('data-service-id');
+        b.classList.toggle('active', (targetSid ? bSid === targetSid : !bSid));
+      });
+      document.querySelectorAll('.dem-acte-family').forEach(function(fam) {
+        var famSid = fam.getAttribute('data-service-id');
+        if (!targetSid || famSid === targetSid) {
+          fam.style.display = '';
+          if (targetSid) fam.open = true;
+        } else {
+          fam.style.display = 'none';
+        }
+      });
+      var ambBanner = document.getElementById('dem-ambulance-banner');
+      if (ambBanner) ambBanner.style.display = ambActive ? 'block' : 'none';
+    }
     document.querySelectorAll('.dem-pbtn').forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         var targetSid = btn.getAttribute('data-service-id');
         e.preventDefault();
-        
-        document.querySelectorAll('.dem-pbtn').forEach(function(b) {
-          var bSid = b.getAttribute('data-service-id');
-          b.classList.toggle('active', (targetSid ? bSid === targetSid : !bSid));
-        });
-
-        document.querySelectorAll('.dem-acte-family').forEach(function(fam) {
-          var famSid = fam.getAttribute('data-service-id');
-          if (!targetSid || famSid === targetSid) {
-            fam.style.display = '';
-            fam.open = true;
-          } else {
-            fam.style.display = 'none';
-          }
-        });
-
-        var ambBanner = document.getElementById('dem-ambulance-banner');
-        var btnText = btn.textContent.toLowerCase();
-        if (ambBanner) {
-          if (btnText.indexOf('ambulance') !== -1) {
-            ambBanner.style.display = 'block';
-          } else {
-            ambBanner.style.display = 'none';
-          }
-        }
-
+        applyPillarUi(targetSid, isAmbulancePillar(btn));
         var u = new URL(window.location.href);
-        if (targetSid) {
-          u.searchParams.set('service', targetSid);
+        if (targetSid) u.searchParams.set('service', targetSid);
+        else u.searchParams.delete('service');
+        u.hash = targetSid ? 'sidebar-desktop' : '';
+        var hasActes = u.searchParams.getAll('acte').length > 0;
+        if (hasActes && history.replaceState) {
+          history.replaceState(null, '', u.toString());
         } else {
-          u.searchParams.delete('service');
+          window.location.assign(u.toString());
         }
-        window.location.assign(u.toString());
       });
     });
+    (function syncPillarFromUrl(){
+      var u = new URL(window.location.href);
+      var sid = u.searchParams.get('service') || '';
+      var activeBtn = null;
+      document.querySelectorAll('.dem-pbtn').forEach(function(b){
+        var bSid = b.getAttribute('data-service-id') || '';
+        if (sid ? bSid === sid : !bSid) activeBtn = b;
+      });
+      if (activeBtn) applyPillarUi(activeBtn.getAttribute('data-service-id') || '', isAmbulancePillar(activeBtn));
+    })();
   })();
 
   /* ── 2. Transmission des actes sélectionnés aux cartes Profil Établissement (Tâche 9) ── */
@@ -4264,7 +4779,19 @@
       var actParams = u.searchParams.getAll('acte');
       if (!actParams.length) return;
       
-      document.querySelectorAll('a[href*="/structure/"], a[href*="/organismes/"], a.dem-org-profile-link').forEach(function(link) {
+      document.querySelectorAll('a[href*="/structure/"], a[href*="/organismes/"], a.dem-org-profile-link, a.dem-profil-link').forEach(function(link) {
+        if (link.classList.contains('dem-profil-link')) {
+          var base = link.getAttribute('data-org-url');
+          if (!base) return;
+          try {
+            var profUrl = new URL(base, window.location.origin);
+            profUrl.searchParams.delete('acte');
+            actParams.forEach(function(id) { profUrl.searchParams.append('acte', id); });
+            link.setAttribute('data-org-url', profUrl.pathname + profUrl.search);
+            link.setAttribute('href', profUrl.pathname + profUrl.search);
+          } catch (err) {}
+          return;
+        }
         try {
           var targetUrl = new URL(link.href, window.location.origin);
           targetUrl.searchParams.delete('acte');
@@ -4341,6 +4868,202 @@
         if (tags.length) {
           searchInp.value = tags.join(', ');
         }
+      });
+    }
+  })();
+
+  /* ── 4. Drawer de profil structure ── */
+  (function initProfilDrawer() {
+    var drawerUrlTpl = '{% url "healthcare:organisme_profil_drawer" org_id=0 %}';
+    var cartDevisBaseUrl = '{% url "cart:generate_devis" %}';
+    {% url 'cart:generate_devis' as profil_devis_next %}
+    var cartLoginUrl = '{% url "users:login" %}?next={{ profil_devis_next|urlencode }}';
+    var userIsAuthed = {% if user.is_authenticated %}true{% else %}false{% endif %};
+
+    window.toggleHorairesPop = function() {
+      var pop = document.getElementById('horaires-pop');
+      if (!pop) return;
+      pop.hidden = !pop.hidden;
+    };
+
+    window.toggleAssurDrop = function() {
+      var list = document.getElementById('assur-list');
+      var caret = document.getElementById('assur-caret');
+      if (!list) return;
+      list.hidden = !list.hidden;
+      if (caret) caret.textContent = list.hidden ? '▼' : '▲';
+    };
+
+    window.filterProfilActes = function(q) {
+      q = (q || '').trim().toLowerCase();
+      document.querySelectorAll('#profil-struct-modal .pa-row').forEach(function(row) {
+        var nom = row.getAttribute('data-nom') || '';
+        row.style.display = (!q || nom.indexOf(q) !== -1) ? '' : 'none';
+      });
+      document.querySelectorAll('#profil-struct-modal .pa-cat').forEach(function(cat) {
+        var visible = Array.prototype.some.call(cat.querySelectorAll('.pa-row'), function(row) {
+          return row.style.display !== 'none';
+        });
+        cat.style.display = visible ? '' : 'none';
+      });
+    };
+
+    window.openMapsUrl = function(button) {
+      var url = button.getAttribute('data-maps-url');
+      if (url && url !== '#') window.open(url, '_blank');
+    };
+
+    function profilDrawerUrl(structId) {
+      var url = drawerUrlTpl.replace('/0/', '/' + encodeURIComponent(String(structId)) + '/');
+      try {
+        var built = new URL(url, window.location.origin);
+        new URLSearchParams(window.location.search).forEach(function(val, key) {
+          if (key === 'assurance') built.searchParams.append(key, val);
+        });
+        return built.toString();
+      } catch (e) {
+        return url;
+      }
+    }
+
+    function goProfilDevis(orgId) {
+      if (!orgId) return;
+      window.closeProfilStruct();
+      if (userIsAuthed) {
+        window.location.href = cartDevisBaseUrl + '?org=' + encodeURIComponent(String(orgId));
+        return;
+      }
+      var guestBtn = document.querySelector('.js-guest-auth-open');
+      if (guestBtn) { guestBtn.click(); return; }
+      window.location.href = cartLoginUrl;
+    }
+
+    window.closeProfilStruct = function() {
+      var modal = document.getElementById('profil-struct-modal');
+      var overlay = document.getElementById('profil-struct-overlay');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.removeAttribute('data-org-id');
+      }
+      if (overlay) overlay.style.display = 'none';
+      document.body.style.overflow = '';
+      if (window._sipnRenderCart) window._sipnRenderCart();
+    };
+
+    window.openProfilStruct = function(structId) {
+      var modal = document.getElementById('profil-struct-modal');
+      var overlay = document.getElementById('profil-struct-overlay');
+      if (!modal || !overlay || !structId) return;
+
+      modal.setAttribute('data-org-id', String(structId));
+      modal.style.display = 'flex';
+      overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      modal.innerHTML = '<div style="padding:24px;color:#6b7280;font-size:13px">Chargement…</div>';
+
+      /* Hydrater le panier JS depuis le serveur avant d'ouvrir le drawer */
+      if (window._sipnHydrateCart) {
+        window._sipnHydrateCart(function() {
+          loadProfilDrawerContent(structId, modal);
+        });
+      } else {
+        loadProfilDrawerContent(structId, modal);
+      }
+    };
+
+    function loadProfilDrawerContent(structId, modal) {
+      fetch(profilDrawerUrl(structId), { credentials: 'same-origin' })
+        .then(function(response) {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.text();
+        })
+        .then(function(html) {
+          modal.innerHTML = html;
+          modal.scrollTop = 0;
+          var searchInp = document.getElementById('profil-acte-search');
+          if (searchInp) {
+            searchInp.addEventListener('input', function() {
+              window.filterProfilActes(searchInp.value);
+            });
+          }
+          if (window._sipnSyncProfilDrawer) window._sipnSyncProfilDrawer();
+        })
+        .catch(function(error) {
+          console.error('Error loading profile:', error);
+          modal.innerHTML = '<div style="padding:24px;color:#dc2626;font-size:13px">Impossible de charger ce profil.</div>';
+        });
+    }
+
+    var overlay = document.getElementById('profil-struct-overlay');
+    if (overlay) overlay.addEventListener('click', window.closeProfilStruct);
+
+    document.addEventListener('click', function(e) {
+      var t = e.target;
+      if (!t || !t.closest) return;
+
+      var profilBtn = t.closest('.profil-drawer-trigger');
+      if (profilBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        var orgId = profilBtn.getAttribute('data-org-id');
+        if (orgId) window.openProfilStruct(orgId);
+        return;
+      }
+
+      var modal = document.getElementById('profil-struct-modal');
+      if (!modal || modal.style.display !== 'flex') return;
+
+      if (t.closest('[data-profil-devis]')) {
+        e.preventDefault();
+        goProfilDevis(t.closest('[data-profil-devis]').getAttribute('data-org-id'));
+        return;
+      }
+
+      if (t.closest('[data-profil-clear-org]')) {
+        e.preventDefault();
+        var clearOrg = t.closest('[data-profil-clear-org]').getAttribute('data-profil-clear-org');
+        if (!clearOrg || !window._sipnTogglePaFromElement) return;
+        var toRemove = [];
+        document.querySelectorAll('#profil-struct-modal .profil-pa-row.in-cart[data-pa-id]').forEach(function(row) {
+          if (String(row.getAttribute('data-pa-org-id')) === String(clearOrg)) {
+            toRemove.push(row);
+          }
+        });
+        toRemove.forEach(function(row) { window._sipnTogglePaFromElement(row); });
+        return;
+      }
+
+      if (t.closest('[data-profil-focus-rdv]')) {
+        e.preventDefault();
+        var recap = document.getElementById('profil-panier-recap');
+        if (recap) recap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      var paRow = t.closest('#profil-struct-modal .profil-pa-row');
+      if (paRow) {
+        if (t.closest('.ai-check')) {
+          e.preventDefault();
+          e.stopPropagation();
+        } else {
+          e.preventDefault();
+        }
+        if (window._sipnTogglePaFromElement) window._sipnTogglePaFromElement(paRow);
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      var row = e.target && e.target.closest ? e.target.closest('#profil-struct-modal .profil-pa-row') : null;
+      if (!row || (e.key !== 'Enter' && e.key !== ' ')) return;
+      e.preventDefault();
+      if (window._sipnTogglePaFromElement) window._sipnTogglePaFromElement(row);
+    });
+
+    var cartDevisBtn = document.getElementById('dem-cart-devis-btn');
+    if (cartDevisBtn) {
+      cartDevisBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        goProfilDevis(cartDevisBtn.getAttribute('data-devis-org-id'));
       });
     }
   })();

@@ -51,7 +51,8 @@ class OrganismeForm(forms.ModelForm):
     class Meta:
         model = OrganismeDeSante
         fields = (
-            "name", "raison_sociale", "ninea", "type_organisme", "address", "quartier", "city", "region",
+            "name", "raison_sociale", "ninea", "type_organisme", "profession",
+            "address", "quartier", "city", "region",
             "latitude", "longitude", "contact_email", "contact_phone",
             "whatsapp_number", "description", "website", "logo",
         )

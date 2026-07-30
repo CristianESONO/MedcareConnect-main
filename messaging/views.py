@@ -182,18 +182,17 @@ def _thread_context(request, conv: Conversation) -> dict:
         })
 
     elif is_patient and part and not live_rdv:
-        if slot_engine.has_bookable_hours(org):
-            if request.GET.get("book"):
-                show_book = True
-                payload, has_slots = book_data_json(org, part)
-                book_ctx = {
-                    "org": org,
-                    "part": part,
-                    "has_slots": has_slots,
-                    "book_data_json": payload,
-                    "success_url": conv_url,
-                }
-            # Boutons « Prendre RDV » : mc-thread-footer dans le template
+        if request.GET.get("book"):
+            show_book = True
+            payload, has_slots = book_data_json(org, part)
+            book_ctx = {
+                "org": org,
+                "part": part,
+                "has_slots": has_slots,
+                "book_data_json": payload,
+                "success_url": conv_url,
+            }
+        # Boutons « Prendre RDV » : mc-thread-footer dans le template
 
     if is_presta and display_rdv:
         if display_rdv.status == RendezVous.STATUS_REQUESTED:

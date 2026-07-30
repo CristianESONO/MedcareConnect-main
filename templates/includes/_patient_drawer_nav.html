@@ -14,13 +14,6 @@
 <nav class="mc-landing-drawer-nav" aria-label="Navigation compte">
   <ul>
     <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-search mc-landing-drawer-icon" aria-hidden="true"></i> Parcourir</span>
-      <ul class="mc-landing-drawer-sublist">
-        <li><a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="search" %} Trouver un service</a></li>
-        <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="annuaire" %} Annuaire des structures</a></li>
-      </ul>
-    </li>
-    <li class="mc-landing-drawer-group">
       <span class="mc-landing-drawer-group-label"><i class="ti ti-layout-dashboard mc-landing-drawer-icon" aria-hidden="true"></i> Vue d'ensemble</span>
       <ul class="mc-landing-drawer-sublist">
         <li><a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'accueil' %} is-active{% endif %}" data-pac-tab="accueil">{% include "includes/_patient_nav_link_icons.html" with item="accueil" %} Tableau de bord</a></li>
@@ -80,7 +73,6 @@
 </nav>
 
 <div class="mc-landing-drawer-cta">
-  <a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-patient"><i class="ti ti-search" aria-hidden="true"></i> Trouver un service</a>
   <a href="{% url 'users:logout' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Déconnexion</a>
 </div>
 {% endwith %}

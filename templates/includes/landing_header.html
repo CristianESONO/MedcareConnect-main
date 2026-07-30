@@ -11,6 +11,7 @@
       <ul class="mc-landing-nav-list">
         <li><a href="{% url 'home' %}" class="mc-landing-nav-link{% if rm.url_name == 'landing' or rm.url_name == 'home' or rm.url_name == 'medcare_sn' %} is-active{% endif %}">Accueil</a></li>
         <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">Annuaire</a></li>
+        <li><a href="{% url 'healthcare:search' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">Prestations</a></li>
         <li class="mc-landing-nav-dropdown" id="mcNavAboutDropdown">
           <button
             type="button"
@@ -55,6 +56,47 @@
             <li role="none" class="mc-landing-nav-dropdown-sep" aria-hidden="true"></li>
             <li role="none"><a href="{% url 'users:patient_panel_tab' tab='profil' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'profil' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="profil" %} Mes informations</a></li>
             <li role="none"><a href="{% url 'users:patient_panel_tab' tab='assurance' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if account_active == 'assurance' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="assurance" %} Assurance</a></li>
+            <li role="none" class="mc-landing-nav-dropdown-sep" aria-hidden="true"></li>
+            <li role="none">
+              <form method="post" action="{% url 'users:logout' %}" role="menuitem">
+                {% csrf_token %}
+                <button type="submit" class="mc-landing-nav-link mc-landing-nav-dropdown-link mc-landing-nav-dropdown-link--logout">
+                  {% include "includes/_patient_nav_link_icons.html" with item="logout" %}
+                  Déconnexion
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        {% elif user.is_authenticated and user.is_prestataire %}
+        <li class="mc-landing-nav-dropdown mc-landing-nav-dropdown--patient" id="mcNavPrestataireDropdown">
+          <button
+            type="button"
+            class="mc-landing-nav-link mc-landing-nav-dropdown-trigger{% if dash_active %} is-active{% endif %}"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="mcNavPrestataireMenu"
+            id="mcNavPrestataireTrigger"
+          >
+            Mon espace
+            <i class="ti ti-chevron-down mc-landing-nav-chevron" aria-hidden="true"></i>
+          </button>
+          <ul class="mc-landing-nav-dropdown-menu mc-landing-nav-dropdown-menu--patient" id="mcNavPrestataireMenu" role="menu" aria-labelledby="mcNavPrestataireTrigger">
+            <li role="none"><a href="{% url 'healthcare:prestataire_dashboard' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if dash_active == 'home' %} is-active{% endif %}">Tableau de bord</a></li>
+            <li role="none"><a href="{% url 'healthcare:prestataire_devis_list' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if dash_active == 'devis' %} is-active{% endif %}">Devis WhatsApp{% if new_devis_count %}<span class="mc-landing-nav-badge">{{ new_devis_count }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'appointments:prestataire_rdv_list' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if dash_active == 'rdv' %} is-active{% endif %}">Rendez-vous{% if new_rdv_count %}<span class="mc-landing-nav-badge">{{ new_rdv_count }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'messaging:inbox' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if dash_active == 'messages' %} is-active{% endif %}">Messagerie{% if unread_messages %}<span class="mc-landing-nav-badge">{{ unread_messages }}</span>{% endif %}</a></li>
+            <li role="none"><a href="{% url 'healthcare:organisme_edit' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if dash_active == 'profile' %} is-active{% endif %}">Profil établissement</a></li>
+            <li role="none"><a href="{% url 'healthcare:actes_list' %}" role="menuitem" class="mc-landing-nav-link mc-landing-nav-dropdown-link{% if dash_active == 'actes' %} is-active{% endif %}">Catalogue d'actes</a></li>
+            <li role="none" class="mc-landing-nav-dropdown-sep" aria-hidden="true"></li>
+            <li role="none">
+              <form method="post" action="{% url 'users:logout' %}" role="menuitem">
+                {% csrf_token %}
+                <button type="submit" class="mc-landing-nav-link mc-landing-nav-dropdown-link mc-landing-nav-dropdown-link--logout">
+                  Déconnexion
+                </button>
+              </form>
+            </li>
           </ul>
         </li>
         {% endif %}
@@ -66,8 +108,11 @@
       {% include "includes/_patient_header_quick_icons.html" %}
       <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Trouver un service</a>
       {% elif user.is_authenticated and user.is_prestataire %}
-      <a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-btn mc-landing-btn-ref">Espace pro</a>
-      <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Prestations</a>
+      {% include "includes/_prestataire_header_quick_icons.html" %}
+      <form method="post" action="{% url 'users:logout' %}" class="inline-block">
+        {% csrf_token %}
+        <button type="submit" class="mc-landing-btn mc-landing-btn-login">Déconnexion</button>
+      </form>
       {% else %}
       <a href="{% url 'users:login' %}" class="mc-landing-btn mc-landing-btn-login">Connexion</a>
       <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Trouver un service</a>

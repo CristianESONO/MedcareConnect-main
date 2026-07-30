@@ -17,12 +17,19 @@ Variable : acte_dem_families
       <span class="nav-cat-label dem-acte-cat-label">{{ sub.title }}</span>
       {% endif %}
       {% for row in sub.rows %}
+      {% if row.pk %}
       <label class="dem-acte-row dem-acte-row--multi {% if row.selected %}active{% endif %}" data-dem-acte-pk="{{ row.pk }}" data-dem-acte-name="{{ row.name|lower }}">
         <input type="checkbox" class="dem-acte-chk sr-only" {% if row.selected %}checked{% endif %} aria-label="{{ row.name }}">
         <span class="dem-acte-chk-box" aria-hidden="true"></span>
         <span class="min-w-0 flex-1 truncate">{{ row.name }}</span>
         <span class="dem-acte-count">{{ row.count }}</span>
       </label>
+      {% else %}
+      <div class="dem-acte-row dem-acte-row--catalog-only" data-dem-acte-name="{{ row.name|lower }}" title="Acte catalogue — aucune offre pour l'instant">
+        <span class="min-w-0 flex-1 truncate opacity-60">{{ row.name }}</span>
+        <span class="dem-acte-count opacity-50">0</span>
+      </div>
+      {% endif %}
       {% endfor %}
     {% endfor %}
   </div>

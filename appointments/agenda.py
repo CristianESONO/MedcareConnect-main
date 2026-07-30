@@ -47,11 +47,13 @@ def build_week(org, monday: date, slot_minutes: int = DEFAULT_SLOT_MINUTES) -> d
     now = timezone.localtime()
     today = now.date()
 
+    from .slots import _safe_day_hours
+
     days, day_hours = [], []
     min_open = max_close = None
     for i in range(7):
         d = monday + timedelta(days=i)
-        hours = (org.opening_hours or {}).get(JOURS[d.weekday()], {})
+        hours = _safe_day_hours(org, d.weekday())
         open_t = close_t = None
         if hours and not hours.get("closed"):
             open_t = _parse_hhmm(hours.get("open"))
@@ -153,7 +155,7 @@ def validate_walkin_slot(org, value, slot_minutes: int = DEFAULT_SLOT_MINUTES):
 
     loc = timezone.localtime(dt)
     d, t = loc.date(), loc.time()
-    hours = (org.opening_hours or {}).get(JOURS[d.weekday()], {})
+    hours = _safe_day_hours(org, d.weekday())
     if not hours or hours.get("closed"):
         return None
     open_t = _parse_hhmm(hours.get("open"))

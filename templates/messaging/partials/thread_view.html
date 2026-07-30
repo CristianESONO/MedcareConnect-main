@@ -3,7 +3,7 @@
 
 <div class="mc-thread"
   {% if org %}data-org-name="{{ org.name|escape }}"{% endif %}
-  {% if show_book and book_ctx.has_slots %}
+  {% if show_book %}
   id="pac-book-root"
   data-mc-thread-book
   data-book-url="{% url 'appointments:patient_book' book_ctx.part.reference %}"
@@ -52,7 +52,7 @@
   {% endif %}
 
   <div class="mc-thread-chat" id="mc-thread-chat"
-    {% if show_book and book_ctx.has_slots or show_reschedule and reschedule_ctx.has_slots %}aria-live="polite"{% endif %}>
+    {% if show_book or show_reschedule and reschedule_ctx.has_slots %}aria-live="polite"{% endif %}>
 
     {% if conversation.devis_part %}
     <div class="mc-wmsg mc-wmsg--sys">{{ devis_open_date_label }}</div>
@@ -75,7 +75,7 @@
       {% endif %}
     {% endfor %}
 
-    {% if show_book and book_ctx.has_slots or show_reschedule and reschedule_ctx.has_slots %}
+    {% if show_book or show_reschedule and reschedule_ctx.has_slots %}
     <div class="mc-thread-section mc-thread-section--booking" id="mc-book-section">
       <div class="mc-thread-section__head">
         <span class="mc-thread-section__icon" aria-hidden="true">📅</span>
@@ -112,7 +112,7 @@
     {% endif %}
   {% endif %}
 
-  {% if show_book and book_ctx.has_slots or show_reschedule and reschedule_ctx.has_slots %}
+  {% if show_book or show_reschedule and reschedule_ctx.has_slots %}
   <script type="application/json" id="pac-book-data">{% if show_reschedule %}{{ reschedule_ctx.book_data_json|safe }}{% else %}{{ book_ctx.book_data_json|safe }}{% endif %}</script>
   <div class="mc-thread-bar" id="pac-wbar">
     <input type="text" class="mc-thread-inp" id="pac-note-input" maxlength="200"
@@ -121,7 +121,7 @@
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
     </button>
   </div>
-  <script src="{% static 'messaging/js/thread_book.js' %}?v=9"></script>
+  <script src="{% static 'messaging/js/thread_book.js' %}?v=11"></script>
   {% elif conversation.thread_status != 'closed' and user == conversation.prestataire %}
   <form method="post" class="mc-thread-bar">
     {% csrf_token %}

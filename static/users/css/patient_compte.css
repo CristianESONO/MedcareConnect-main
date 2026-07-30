@@ -224,6 +224,30 @@ body.pac-page-open > main {
   background: var(--mc-accent, #4fa3c7);
 }
 
+.pac-sidebar-footer {
+  padding: 12px 18px 20px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: auto;
+}
+
+.sb-link--logout {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.sb-link--logout:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.sb-link--logout .sb-icon {
+  color: #dc2626;
+}
+
+.sb-link--logout:hover .sb-icon {
+  color: #b91c1c;
+}
+
 /* ── Zone contenu ── */
 .pac-main {
   flex: 1 1 0%;

@@ -84,6 +84,15 @@
                 {{ form.type_organisme }}
                 {{ form.type_organisme.errors }}
               </div>
+              <div id="profession-row" class="{% if org.type_organisme.name != 'Praticien indépendant' %}hidden{% endif %}">
+                <label for="{{ form.profession.id_for_label }}" class="org-edit-label">
+                  Profession <span class="text-rose-500">*</span>
+                  <span class="ml-1 text-[10px] font-normal text-gray-400">(praticiens indépendants uniquement)</span>
+                </label>
+                {{ form.profession }}
+                {{ form.profession.errors }}
+                <p class="org-edit-hint">Paramédical uniquement — conformité Art. 17 et 19.</p>
+              </div>
               <div>
                 <label for="{{ form.description.id_for_label }}" class="org-edit-label">Description</label>
                 {{ form.description }}
@@ -384,6 +393,26 @@
 
   var la = latInput(), lo = lngInput();
   if (la && lo && la.value && lo.value) setLL(la.value, lo.value);
+
+  // ── Affichage conditionnel du champ Profession ──
+  var typeSelect = document.querySelector('select[name="type_organisme"]');
+  var profRow = document.getElementById('profession-row');
+  var profSelect = document.querySelector('select[name="profession"]');
+
+  function updateProfessionVisibility() {
+    if (!typeSelect || !profRow) return;
+    var selectedText = typeSelect.options[typeSelect.selectedIndex]
+                       ? typeSelect.options[typeSelect.selectedIndex].text.trim()
+                       : '';
+    var isPraticien = selectedText === 'Praticien indépendant';
+    profRow.classList.toggle('hidden', !isPraticien);
+    if (!isPraticien && profSelect) profSelect.value = '';
+  }
+
+  if (typeSelect) {
+    typeSelect.addEventListener('change', updateProfessionVisibility);
+    updateProfessionVisibility();
+  }
 })();
 </script>
 {% endblock %}

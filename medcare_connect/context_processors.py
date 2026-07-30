@@ -20,6 +20,26 @@ def global_context(request):
         ),
     }
     ctx["footer_pillars"] = get_footer_pillars()
+
+    # Déterminer dash_active pour les prestataires basé sur l'URL
+    if getattr(request.user, "is_prestataire", False):
+        rm = request.resolver_match
+        if rm:
+            if rm.namespace == "healthcare" and rm.url_name == "prestataire_dashboard":
+                ctx["dash_active"] = "home"
+            elif rm.namespace == "healthcare" and rm.url_name == "prestataire_devis_list":
+                ctx["dash_active"] = "devis"
+            elif rm.namespace == "appointments" and rm.url_name == "prestataire_rdv_list":
+                ctx["dash_active"] = "rdv"
+            elif rm.namespace == "messaging" and rm.url_name == "inbox":
+                ctx["dash_active"] = "messages"
+            elif rm.namespace == "healthcare" and rm.url_name == "organisme_edit":
+                ctx["dash_active"] = "profile"
+            elif rm.namespace == "healthcare" and rm.url_name == "actes_list":
+                ctx["dash_active"] = "actes"
+            else:
+                ctx["dash_active"] = None
+
     if request.user.is_authenticated:
         inbox = Notification.queryset_inbox(request.user)
         rappels = Notification.queryset_rappels(request.user)

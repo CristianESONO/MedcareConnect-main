@@ -5,7 +5,7 @@
 <div class="flex flex-wrap items-center justify-between gap-4">
   <div>
     <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">MedPlaque NFC</h1>
-    <p class="mt-0.5 text-sm text-gray-500">Votre pont physique-digital · {{ mp.reference }}{% if org.created_at %} · Activée le {{ org.created_at|date:"d M Y" }}{% endif %}</p>
+    <p class="mt-0.5 text-sm text-gray-500">Votre pont physique-digital · {{ mp.reference }}{% if org.created_at %} · Activée le {{ org.created_at|date:"d F Y" }}{% endif %}</p>
   </div>
   {% if mp.nfc_active %}
   <span class="inline-flex items-center gap-1.5 rounded-full mc-bg-accent-light px-3 py-1 text-[11px] font-bold mc-text-accent-dark">

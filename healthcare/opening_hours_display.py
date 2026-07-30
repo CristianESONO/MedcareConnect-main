@@ -26,6 +26,14 @@ def hours_list_from_org(org) -> list[dict]:
     """Liste ordonnée Lundi→Dimanche pour une structure."""
     rows: list[dict] = []
     raw = org.opening_hours or {}
+    
+    # Si opening_hours est une chaîne (format importé), retourner une liste vide
+    # ou essayer de la parser si nécessaire
+    if isinstance(raw, str):
+        # Pour l'instant, retourner une liste vide pour éviter l'erreur
+        # On pourrait améliorer cela en parsant la chaîne plus tard
+        return rows
+    
     if not raw:
         return rows
     for day in JOURS_FR:

@@ -486,9 +486,9 @@ def prestataire_rdv_list(request):
     except OrganismeDeSante.DoesNotExist:
         return redirect("healthcare:organisme_create")
 
-    status_filter = request.GET.get("status", "upcoming")
+    status_filter = request.GET.get("status", "all")
     if status_filter not in _PRESTA_FILTERS:
-        status_filter = "upcoming"
+        status_filter = "all"
 
     base = RendezVous.objects.filter(organisme=org).select_related(
         "patient", "devis", "devis_part"

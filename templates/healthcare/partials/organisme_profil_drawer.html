@@ -1,0 +1,140 @@
+{% comment %}Drawer profil structure — aligné DEMO_DESKTOP_PATIENT (sans contact).{% endcomment %}
+<div class="profil-drawer-header" data-org-id="{{ org.id }}">
+  <div class="profil-drawer-close-row">
+    <button type="button" class="profil-drawer-close" onclick="closeProfilStruct()" aria-label="Fermer">✕</button>
+  </div>
+  <div class="profil-drawer-head-body">
+    <div class="profil-drawer-identity">
+      <div class="profil-drawer-avatar">
+        {% if org.logo %}
+          <img src="{{ org.logo.url }}" alt="{{ org.name }}">
+        {% else %}
+          🏥
+        {% endif %}
+      </div>
+      <div class="profil-drawer-titles min-w-0">
+        <div class="profil-drawer-name-row">
+          <span class="profil-drawer-name">{{ org.name }}</span>
+          {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% endif %}
+        </div>
+        <div class="profil-drawer-meta-row">
+          <span class="profil-drawer-sub">{{ org.type_organisme.name|default:"Structure de santé" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}</span>
+          {% if open_today %}
+          <span class="profil-drawer-open-badge profil-drawer-open-badge--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
+            <span class="profil-drawer-open-dot"></span>{% if open_today == 'open' %}Ouvert{% else %}Fermé{% endif %}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="profil-drawer-actions">
+      <button type="button" class="profil-drawer-action-btn" data-profil-focus-rdv>📅 RDV</button>
+      <button type="button" class="profil-drawer-action-btn" data-maps-url="{{ maps_url|default:'#' }}" onclick="openMapsUrl(this)">📍 GPS</button>
+      <button type="button" class="profil-drawer-action-btn" onclick="toggleHorairesPop()">🕐 Horaires</button>
+    </div>
+    <div id="horaires-pop" class="profil-drawer-horaires-pop" hidden>
+      <div class="profil-drawer-horaires-title">🕐 Horaires d'ouverture</div>
+      {% for hour in hours_list %}
+        <div class="profil-drawer-horaires-line">{{ hour.days }} · {{ hour.hours }}</div>
+      {% empty %}
+        <div class="profil-drawer-horaires-line">{{ hours_meta|default:"Horaires non renseignés" }}</div>
+      {% endfor %}
+      {% if open_today %}
+      <div class="profil-drawer-horaires-status profil-drawer-horaires-status--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
+        {% if open_today == 'open' %}● Ouvert maintenant{% else %}● Fermé actuellement{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="profil-drawer-body">
+  {% if org.description %}
+  <p class="profil-drawer-desc">{{ org.description }}</p>
+  {% endif %}
+
+  {% if patient_insurance_match %}
+  <div class="profil-drawer-ins-match">
+    <span aria-hidden="true">✅</span>
+    <span>Votre assurance <strong>{{ patient_insurance_match }}</strong> est acceptée ici.</span>
+  </div>
+  {% endif %}
+
+  {% if insurances_profil %}
+  <button type="button" class="profil-drawer-assur-toggle" onclick="toggleAssurDrop()">
+    <span>🛡 Assurances acceptées ({{ insurances_profil|length }})</span>
+    <span id="assur-caret">▼</span>
+  </button>
+  <div id="assur-list" class="profil-drawer-assur-list" hidden>
+    {% for ins in insurances_profil %}
+    <div class="profil-drawer-assur-row{% if ins.patient_match %} profil-drawer-assur-row--match{% endif %}">
+      <span>{% if ins.patient_match %}✓ {% endif %}{{ ins.name }}</span>
+      {% if ins.patient_match %}<span class="profil-drawer-assur-tag">Acceptée pour vous</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if org.prises_sang_domicile %}
+  <div class="profil-drawer-domicile">
+    <div class="profil-drawer-domicile-title">🏠 Prélèvement à domicile disponible</div>
+    {% if org.horaires_complement %}
+    <div class="profil-drawer-domicile-sub">{{ org.horaires_complement|truncatechars:120 }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="profil-drawer-actes-label">Actes disponibles</div>
+  <div class="profil-drawer-actes-search">
+    <input id="profil-acte-search" type="search" placeholder="Rechercher un acte…" autocomplete="off">
+    <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)">🔍</button>
+  </div>
+
+  <div class="profil-drawer-actes-list">
+    {% for pillar in profil_pillars %}
+    <div class="pa-cat profil-drawer-cat">
+      <div class="profil-drawer-cat-head">
+        <span>{{ pillar.icon }} {{ pillar.name }}</span>
+        <span class="profil-drawer-cat-count">{{ pillar.count }}</span>
+      </div>
+      {% for pa in pillar.actes %}
+      <div class="acte-item pa-row profil-pa-row"
+        data-pa-id="{{ pa.pk }}"
+        data-nom="{{ pa.acte.name|lower }}"
+        data-pa-acte-pk="{{ pa.acte.pk }}"
+        data-pa-acte="{{ pa.acte.name|escape }}"
+        data-pa-org="{{ org.name|escape }}"
+        data-pa-org-id="{{ org.pk }}"
+        data-pa-price="{{ pa.price|floatformat:0 }}"
+        data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+        data-pa-ins-match="1"
+        data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+        data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
+        role="button" tabindex="0">
+        <input type="checkbox" class="ai-check" aria-label="Sélectionner {{ pa.acte.name }}">
+        <div class="ai-info">
+          <div class="ai-nom">{{ pa.acte.name }}</div>
+          {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+          <div class="ai-cat">
+            {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% else %}{{ pa.acte.service_medical_category.name }}{% endif %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="profil-pa-right">
+          {% if pa.delai %}<div class="ai-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+          <div class="ai-prix">{{ pa.price|floatformat:0 }} F</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% empty %}
+    <p class="profil-drawer-empty">Aucun acte publié pour cette structure.</p>
+    {% endfor %}
+  </div>
+
+  <div id="profil-panier-recap" class="profil-panier-recap" aria-live="polite"></div>
+
+  <button type="button" class="devis-btn profil-drawer-devis-btn" data-profil-devis data-org-id="{{ org.id }}">
+    💬 Obtenir mon devis WhatsApp
+  </button>
+</div>

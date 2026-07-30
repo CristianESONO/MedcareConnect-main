@@ -159,6 +159,30 @@
   padding: 10px 20px;
 }
 
+.mc-landing-nav-dropdown-link--logout {
+  color: #dc2626;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.mc-landing-nav-dropdown-link--logout:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.mc-landing-nav-dropdown-link--logout .mc-landing-nav-item-icon {
+  color: #dc2626;
+}
+
+.mc-landing-nav-dropdown-link--logout:hover .mc-landing-nav-item-icon {
+  color: #b91c1c;
+}
+
 .mc-landing-header-ctas {
   display: flex;
   align-items: center;

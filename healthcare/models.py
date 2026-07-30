@@ -80,6 +80,27 @@ class OrganismeDeSante(models.Model):
         blank=True,
         related_name="organismes",
     )
+    PROFESSION_CHOICES = [
+        ("",                          "— Sélectionnez votre profession —"),
+        ("kinesitherapeute",          "Kinésithérapeute"),
+        ("infirmier",                 "Infirmier(ère)"),
+        ("sage_femme",                "Sage-femme"),
+        ("orthophoniste",             "Orthophoniste"),
+        ("psychomotricien",           "Psychomotricien(ne)"),
+        ("psychologue",               "Psychologue"),
+        ("dieteticien",               "Diététicien(ne)-nutritionniste"),
+        ("orthoptiste",               "Orthoptiste"),
+        ("ergotherapeute",            "Ergothérapeute"),
+        ("pedicure_podologue",        "Pédicure-podologue"),
+    ]
+    profession = models.CharField(
+        max_length=50,
+        blank=True,
+        default="",
+        choices=PROFESSION_CHOICES,
+        verbose_name="Profession",
+        help_text="Uniquement pour les praticiens indépendants paramédicaux.",
+    )
     address = models.CharField(max_length=255)
     quartier = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, default="Dakar")

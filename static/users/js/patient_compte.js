@@ -222,7 +222,11 @@
         } else {
           var tab = btn.getAttribute('data-pac-tab');
           var url = panelUrl(tab);
-          if (url) window.location.href = url;
+          if (url) {
+            /* Supprimer le paramètre pac_partial pour la navigation normale */
+            var navUrl = url.replace('?pac_partial=1', '').replace('&pac_partial=1', '');
+            window.location.href = navUrl;
+          }
         }
       });
     });

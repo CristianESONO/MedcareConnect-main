@@ -39,7 +39,7 @@
 </div>
 {% elif part.status != 'archived' and not row.is_accepted %}
 <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-  ⚠ Aucun créneau proposé par le patient — vous pouvez relancer via WhatsApp / messagerie.
+  ⚠ Aucun créneau choisi par le patient — vous pouvez relancer via WhatsApp / messagerie.
 </div>
 {% endif %}
 
@@ -69,7 +69,7 @@
       {% if devis.insurance %}<div><dt class="text-gray-500">Reste patient (estim.)</dt><dd class="font-bold text-primary-600">{{ part.total_patient|floatformat:0|intcomma }} XOF</dd></div>{% endif %}
     </dl>
     {% if devis.valid_until %}
-    <p class="mt-2 text-[11px] text-gray-400">Devis valide jusqu'au {{ devis.valid_until|date:"d M Y" }}</p>
+    <p class="mt-2 text-[11px] text-gray-400">Devis valide jusqu'au {{ devis.valid_until|date:"d F Y" }}</p>
     {% endif %}
   </div>
 </div>

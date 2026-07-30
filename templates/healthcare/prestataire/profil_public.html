@@ -12,20 +12,60 @@
     background: var(--mc-white, #fff);
     padding: 1.25rem 1.35rem;
     box-shadow: var(--mc-shadow-sm, 0 1px 4px rgba(18, 58, 99, 0.08));
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  .pp-admin h1 {
+  .pp-admin-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .pp-admin-title {
     font-family: var(--mc-font-display, 'Syne', sans-serif);
+    font-size: 1rem;
+    font-weight: 800;
     color: var(--mc-text, #0A1535);
     letter-spacing: -0.02em;
   }
-  .pp-admin-lead { color: var(--mc-text-body, #374872); }
-  .pp-admin-actions a,
-  .pp-admin-actions button {
-    border-radius: var(--mc-radius, 14px);
-    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  .pp-admin-lead { color: var(--mc-text-body, #374872); font-size: 0.75rem; }
+  .pp-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    flex-shrink: 0;
   }
-  .pp-admin-actions a:hover,
-  .pp-admin-actions button:hover { transform: translateY(-1px); }
+  .pp-admin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.625rem;
+    border: 1px solid var(--mc-border, #D4DEEE);
+    background: var(--mc-white, #fff);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--mc-text, #0A1535);
+    white-space: nowrap;
+    transition: transform 0.12s, background 0.12s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .pp-admin-btn:hover { background: var(--mc-bg, #F4F7FB); transform: translateY(-1px); }
+  .pp-admin-btn--primary {
+    background: var(--mc-primary, #0a5c8a);
+    border-color: transparent;
+    color: #fff;
+  }
+  .pp-admin-btn--primary:hover { background: var(--mc-navy, #123a63); }
+  .pp-admin-btn--light {
+    background: rgba(10, 92, 138, 0.07);
+    border-color: rgba(10, 92, 138, 0.2);
+    color: var(--mc-primary, #0a5c8a);
+  }
+  .pp-admin-btn--light:hover { background: rgba(10, 92, 138, 0.14); }
   .pp-admin-url {
     margin-top: 1rem;
     border-radius: var(--mc-radius, 14px);
@@ -40,7 +80,7 @@
   .pp-feedback { font-size: 0.875rem; font-weight: 600; }
   .pp-feedback--ok { color: var(--mc-success, #00B87A); }
   .pp-feedback--warn { color: #b45309; }
-  .pp-preview-wrap { position: relative; margin-top: 1.5rem; }
+  .pp-preview-wrap { position: relative; margin-top: 1.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
   .pp-preview-wrap:has(.pp-preview-devis-sticky) {
     padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
@@ -212,16 +252,10 @@
   }
   .pp-hero {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
     gap: 1rem;
-  }
-  @media (min-width: 768px) {
-    .pp-hero {
-      flex-direction: row;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
   }
   .pp-hero-main {
     display: flex;
@@ -232,15 +266,12 @@
   }
   .pp-avatar,
   .pp-avatar-fallback {
-    width: 5.25rem;
-    height: 5.25rem;
+    width: 4rem;
+    height: 4rem;
     flex-shrink: 0;
-    border-radius: 1rem;
+    border-radius: 0.875rem;
     border: 3px solid rgba(255, 255, 255, 0.92);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
-  }
-  @media (min-width: 640px) {
-    .pp-avatar, .pp-avatar-fallback { width: 5.75rem; height: 5.75rem; }
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
   }
   .pp-avatar { object-fit: cover; background: #fff; }
   .pp-avatar-fallback {
@@ -249,7 +280,7 @@
     justify-content: center;
     background: linear-gradient(135deg, var(--mc-accent, #4fa3c7) 0%, var(--mc-navy, #123a63) 100%);
     font-family: var(--mc-font-display, 'Syne', sans-serif);
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     font-weight: 800;
     letter-spacing: -0.03em;
     color: #fff;
@@ -263,12 +294,12 @@
   }
   .pp-name {
     font-family: var(--mc-font-display, 'Syne', sans-serif);
-    font-size: 1.25rem;
+    font-size: 0.95rem;
     font-weight: 800;
     line-height: 1.2;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.02em;
   }
-  @media (min-width: 640px) { .pp-name { font-size: 1.5rem; } }
+  @media (min-width: 640px) { .pp-name { font-size: 1.05rem; } }
   .pp-title-badge {
     font-size: 0.5625rem;
     font-weight: 700;
@@ -289,50 +320,31 @@
   .pp-subtitle-loc { color: rgba(255, 255, 255, 0.9); font-weight: 500; }
   .pp-cta-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.4rem;
-    width: 100%;
-  }
-  @media (min-width: 768px) {
-    .pp-cta-row {
-      width: auto;
-      min-width: 11.5rem;
-      grid-template-columns: 1fr;
-      gap: 0.45rem;
-    }
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    width: auto;
+    min-width: 7.5rem;
+    flex-shrink: 0;
   }
   .pp-cta {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 0.15rem;
-    padding: 0.5rem 0.35rem;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    padding: 0.45rem 0.65rem;
     border-radius: 0.625rem;
-    font-size: 0.5625rem;
+    font-size: 0.6rem;
     font-weight: 700;
     line-height: 1.2;
-    text-align: center;
+    text-align: left;
     transition: transform 0.12s, background 0.15s, border-color 0.15s;
-  }
-  @media (min-width: 768px) {
-    .pp-cta {
-      flex-direction: row;
-      justify-content: flex-start;
-      gap: 0.5rem;
-      padding: 0.55rem 0.75rem;
-      font-size: 0.6875rem;
-      text-align: left;
-    }
+    white-space: nowrap;
   }
   .pp-cta:hover { transform: translateY(-1px); }
-  .pp-cta-icon { font-size: 1rem; line-height: 1; }
-  @media (min-width: 768px) { .pp-cta-icon { font-size: 0.875rem; } }
-  .pp-cta-label-long { display: none; }
-  @media (min-width: 768px) {
-    .pp-cta-label-short { display: none; }
-    .pp-cta-label-long { display: inline; }
-  }
+  .pp-cta-icon { font-size: 0.875rem; line-height: 1; flex-shrink: 0; }
+  .pp-cta-label-short { display: none; }
+  .pp-cta-label-long { display: inline; }
   .pp-cta--wa {
     background: #25d366;
     color: #fff;
@@ -690,7 +702,7 @@
       font-size: 0.625rem;
       padding: 0.75rem;
     }
-    .pp-preview-wrap { margin-top: 1.25rem; }
+    .pp-preview-wrap { margin-top: 1.25rem; margin-left: auto; margin-right: auto; }
     .pp-preview {
       border-radius: 1rem;
       border-left: none;
@@ -826,21 +838,19 @@
 
 {% block dash_content %}
 <div class="pp-admin">
-  <div class="flex flex-wrap items-start justify-between gap-4">
+  <div class="pp-admin-inner">
     <div class="min-w-0">
-      <h1 class="text-xl font-bold sm:text-2xl">Profil public</h1>
-      <p class="pp-admin-lead mt-1 max-w-2xl text-sm">
+      <h1 class="pp-admin-title">Profil public</h1>
+      <p class="pp-admin-lead mt-1">
         Aperçu de votre page telle que les patients la voient sur MedCare.
       </p>
     </div>
-    <div class="pp-admin-actions flex flex-shrink-0 flex-wrap items-center gap-2">
-      <a href="{% url 'healthcare:organisme_edit' %}" class="inline-flex items-center gap-2 border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50">{% include "healthcare/_icon_svg.html" with icon="pencil" class="pp-ico pp-ico--sm" %} Modifier les infos</a>
-      <a href="{% url 'healthcare:organisme_hours' %}" class="inline-flex items-center gap-2 border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50">{% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--sm" %} Horaires</a>
-      <button type="button" id="btn-copy-public-url" data-url="{{ public_absolute_url|escape }}"
-        class="inline-flex items-center gap-2 bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">{% include "healthcare/_icon_svg.html" with icon="link" class="pp-ico pp-ico--sm" %} Copier le lien</button>
+    <div class="pp-admin-actions">
+      <a href="{% url 'healthcare:organisme_edit' %}" class="pp-admin-btn">{% include "healthcare/_icon_svg.html" with icon="pencil" class="pp-ico pp-ico--sm" %} Modifier</a>
+      <a href="{% url 'healthcare:organisme_hours' %}" class="pp-admin-btn">{% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--sm" %} Horaires</a>
+      <button type="button" id="btn-copy-public-url" data-url="{{ public_absolute_url|escape }}" class="pp-admin-btn pp-admin-btn--primary">{% include "healthcare/_icon_svg.html" with icon="link" class="pp-ico pp-ico--sm" %} Copier</button>
       {% if org.is_active %}
-      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 border border-primary-200 bg-primary-50 px-4 py-2.5 text-sm font-semibold text-primary-900 hover:bg-primary-100">{% include "healthcare/_icon_svg.html" with icon="external" class="pp-ico pp-ico--sm" %} Ouvrir la fiche patient</a>
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="pp-admin-btn pp-admin-btn--light">{% include "healthcare/_icon_svg.html" with icon="external" class="pp-ico pp-ico--sm" %} Voir fiche</a>
       {% endif %}
     </div>
   </div>

@@ -73,6 +73,7 @@ urlpatterns = [
     path("prestataire/abonnement/", views.prestataire_subscription, name="prestataire_subscription"),
 
     # Fiche organisme (doit rester en dernier parmi les patterns « racine »)
+    path("organisme/<int:org_id>/profil-drawer/", views.organisme_profil_drawer, name="organisme_profil_drawer"),
     path("<slug:slug>/", views.organisme_detail, name="organisme_detail"),
     path("<slug:slug>/favorite/", views.toggle_favorite, name="toggle_favorite"),
 ]

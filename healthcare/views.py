@@ -332,67 +332,51 @@ def _build_mobile_piliers_payload(acte_offer_counts: dict[int, int]) -> list[dic
     """Arbre actes par pilier pour la grille mobile (checkboxes, style démo)."""
     from healthcare.service_icons import icon_for_service_medical, mobile_labels_for_service
 
-    offered_acte_ids = PrestataireActe.objects.filter(
-        is_available=True,
-        organisme__is_active=True,
-    ).values_list("acte_id", flat=True).distinct()
-    actes = (
-        ActeMedical.objects.filter(
-            is_active=True,
-            level=3,
-            pk__in=offered_acte_ids,
-        )
-        .select_related("parent_service", "service_medical_category")
-        .order_by("service_medical_category__order", "service_medical_category__name", "name")
+    actes = ActeMedical.objects.filter(is_active=True, level=3).select_related(
+        "parent_service", "service_medical_category"
     )
-    by_svc: OrderedDict[int, dict] = OrderedDict()
-    for a in actes:
-        sid = a.service_medical_category_id
-        if sid is None:
+    by_svc_cat, by_exact = _build_acte_nav_indexes(actes)
+
+    piliers: list[dict] = []
+    for svc in ServiceMedical.objects.filter(is_active=True).order_by("order", "name"):
+        p_info = _actes_order_for_service_name(svc.name)
+        if not p_info:
             continue
-        if sid not in by_svc:
-            svc = a.service_medical_category
-            short, sub = mobile_labels_for_service(svc.name)
-            by_svc[sid] = {
-                "id": str(sid),
+        cats_out: list[dict] = []
+        for cat_name in p_info["categories"]:
+            actes_out: list[dict] = []
+            seen_pks: set[int] = set()
+            for act_name in p_info["acts"].get(cat_name, []):
+                a = _resolve_acte_for_nav(
+                    svc.pk, cat_name, act_name, by_svc_cat, by_exact
+                )
+                pk = a.pk if a else None
+                if pk and pk in seen_pks:
+                    continue
+                if pk:
+                    seen_pks.add(pk)
+                actes_out.append(
+                    {
+                        "pk": pk,
+                        "name": act_name,
+                        "count": int(acte_offer_counts.get(pk, 0)) if pk else 0,
+                    }
+                )
+            if actes_out:
+                cats_out.append({"name": cat_name, "actes": actes_out})
+        if not cats_out:
+            continue
+        short, sub = mobile_labels_for_service(svc.name)
+        piliers.append(
+            {
+                "id": str(svc.pk),
                 "icon": icon_for_service_medical(svc),
                 "label": short,
                 "sub": sub,
                 "title": svc.name,
-                "cats_od": OrderedDict(),
-            }
-        cat_key = a.parent_service_id or 0
-        cats = by_svc[sid]["cats_od"]
-        if cat_key not in cats:
-            cats[cat_key] = {
-                "name": a.parent_service.name if a.parent_service_id else "Autres",
-                "actes": [],
-            }
-        cats[cat_key]["actes"].append(
-            {
-                "pk": a.pk,
-                "name": a.name,
-                "count": int(acte_offer_counts.get(a.pk, 0)),
+                "cats": cats_out,
             }
         )
-
-    piliers: list[dict] = []
-    for data in by_svc.values():
-        cats_out: list[dict] = []
-        for cat in data["cats_od"].values():
-            actes_sorted = sorted(cat["actes"], key=lambda x: x["name"].lower())
-            cats_out.append({"name": cat["name"], "actes": actes_sorted})
-        if cats_out:
-            piliers.append(
-                {
-                    "id": data["id"],
-                    "icon": data["icon"],
-                    "label": data["label"],
-                    "sub": data["sub"],
-                    "title": data["title"],
-                    "cats": cats_out,
-                }
-            )
     return piliers
 
 
@@ -460,6 +444,394 @@ def _search_org_card_icon(org: OrganismeDeSante) -> str:
     if any(k in blob for k in ("kiné", "kine", "soin")):
         return "💉"
     return "🏥"
+
+ACTES_ORDER = {
+    "Biologie médicale": {
+        "categories": [
+            "Hématologie", "Hémostase / Coagulation", "Biochimie & Ionogramme",
+            "Immunologie & Auto-immunité", "Sérologie & Virologie", "Bactériologie",
+            "Parasitologie & Mycologie", "Endocrinologie", "Fertilité / AMP",
+            "Gaz du sang & Acido-basique", "Anatomopathologie", "Cytologie",
+            "Biologie moléculaire / PCR", "Toxicologie", "Marqueurs tumoraux"
+        ],
+        "acts": {
+            "Hématologie": [
+                "NFS / Hémogramme", "Réticulocytes", "VS", "Frottis sanguin",
+                "Groupe ABO/Rhésus", "RAI", "Test de Coombs direct", "Test de Coombs indirect",
+                "Électrophorèse de l'hémoglobine", "Vitamine B12", "Folates (B9)",
+                "Fer sérique", "Ferritine", "Transferrine / CST"
+            ],
+            "Hémostase / Coagulation": [
+                "TP / INR", "TCA", "Fibrinogène", "D-Dimères", "Temps de thrombine (TT)",
+                "Activité anti-Xa", "Dosage facteur VIII", "Dosage facteur IX"
+            ],
+            "Biochimie & Ionogramme": [
+                "Glycémie à jeun", "HbA1c", "Urée sanguine", "Créatininémie", "Natrémie",
+                "Kaliémie", "Chlorémie", "Calcémie", "Phosphorémie", "Magnésémie",
+                "ASAT", "ALAT", "GGT", "PAL", "Bilirubine totale", "Bilirubine conjuguée",
+                "Albumine", "Protéines totales", "Électrophorèse des protéines",
+                "Lipase", "Amylase", "CRP", "Procalcitonine", "Cholestérol total",
+                "HDL", "LDL", "Triglycérides", "Apolipoprotéines A/B", "Lactates"
+            ],
+            "Immunologie & Auto-immunité": [
+                "ANA / AAN", "FR (facteur rhumatoïde)", "Anti-CCP", "Complément C3",
+                "Complément C4", "IgG / IgA / IgM", "Anti-dsDNA", "Anti-Sm",
+                "Anti-RNP", "Anti-SSA / SSB", "Anticoagulant lupique",
+                "Anticardiolipines IgG/IgM", "Anti-β2GP1", "ANCA MPO/PR3"
+            ],
+            "Sérologie & Virologie": [
+                "VIH Ag/Ac", "Charge virale VIH", "HBsAg", "Anti-HBs", "Anti-HBc total",
+                "Anti-HBc IgM", "HBeAg / Anti-HBe", "ADN VHB (charge virale HBV)",
+                "Anti-VHC", "ARN VHC (charge virale HCV)", "Syphilis VDRL",
+                "Syphilis TPHA", "Dengue NS1/IgM/IgG", "Chikungunya IgM/IgG",
+                "Toxoplasmose IgG/IgM", "Rubéole IgG/IgM", "CMV IgG/IgM", "EBV (Epstein-Barr)"
+            ],
+            "Bactériologie": [
+                "ECBU + antibiogramme", "Coproculture", "Hémocultures", "ECB plaies / pus",
+                "Prélèvement vaginal / cervico-vaginal", "ECBE / expectorations",
+                "Culture crachats", "Recherche BK / BAAR"
+            ],
+            "Parasitologie & Mycologie": [
+                "Goutte épaisse / TDR paludisme", "Examen parasitologique des selles",
+                "Filariose sanguine", "Bilharziose (urines/selles)",
+                "Examen mycologique peau/ongles", "Recherche Candida"
+            ],
+            "Endocrinologie": [
+                "TSH", "FT4", "FT3", "Anti-TPO", "Anti-Thyroglobuline", "Aldostéronémie",
+                "Rénine", "Cortisol", "Prolactine", "FSH", "LH", "Estradiol",
+                "Progestérone", "Testostérone", "AMH"
+            ],
+            "Fertilité / AMP": [
+                "Spermogramme", "Spermocytogramme", "Test de migration-survie (TMS)",
+                "Spermoculture + antibiogramme", "AMH (réserve ovarienne)"
+            ],
+            "Gaz du sang & Acido-basique": [
+                "Gaz du sang artériel", "Gaz du sang capillaire", "Lactates artériels"
+            ],
+            "Anatomopathologie": [
+                "Examen anapath. pièce opératoire", "Examen anapath. biopsie",
+                "Immunohistochimie", "Immunofluorescence directe"
+            ],
+            "Cytologie": [
+                "Cytologie liquide pleural", "Cytologie ascite", "Cytologie LCR",
+                "Cytologie urinaire", "Frottis cervico-vaginal (FCV)", "Cytoponction thyroïde",
+                "Cytoponction ganglion"
+            ],
+            "Biologie moléculaire / PCR": [
+                "PCR Chlamydia / Gonocoque", "PCR HPV (génotypage)", "PCR BK",
+                "GeneXpert MTB/RIF", "PCR respiratoires multiplex"
+            ],
+            "Toxicologie": [
+                "Drogues urinaires (panel)", "Alcoolémie", "Paracétamol plasmatique",
+                "Carboxyhémoglobine", "Métaux lourds"
+            ],
+            "Marqueurs tumoraux": [
+                "PSA total", "PSA libre", "CEA", "AFP", "CA 125", "CA 19-9",
+                "CA 15-3", "βHCG quantitatif"
+            ]
+        }
+    },
+    "Imagerie médicale": {
+        "categories": [
+            "Radiographie", "Échographie", "Échodoppler", "Scanner (TDM)", "IRM",
+            "Biopsies guidées", "Ponctions guidées", "Drainages guidés"
+        ],
+        "acts": {
+            "Radiographie": [
+                "Radio thorax", "Radio abdomen (ASP)", "Radio rachis cervical",
+                "Radio rachis dorsal", "Radio rachis lombaire", "Radio bassin",
+                "Radio membre — genou", "Radio membre — épaule",
+                "Radio membre — cheville / pied", "Radio crâne"
+            ],
+            "Échographie": [
+                "Échographie abdominale", "Échographie pelvienne", "Échographie endovaginale",
+                "Échographie obstétricale T1", "Échographie morphologique T2",
+                "Échographie T3 (biométrie)", "Échographie thyroïdienne",
+                "Échographie testiculaire", "Échographie parties molles", "Mammographie"
+            ],
+            "Échodoppler": [
+                "Échodoppler veineux membres inférieurs", "Échodoppler artériel membres inférieurs",
+                "Échodoppler carotidien + vertébral", "Écho-cœur (échocardiographie transthoracique)"
+            ],
+            "Scanner (TDM)": [
+                "Scanner cérébral sans injection", "Scanner cérébral avec injection",
+                "Scanner thoracique", "Scanner TAP (thoraco-abdomino-pelvien)",
+                "Scanner sinus", "Angio-TDM cérébral"
+            ],
+            "IRM": [
+                "IRM cérébrale sans injection", "IRM cérébrale avec injection",
+                "IRM rachis cervical", "IRM rachis lombaire", "IRM abdomen / pelvis",
+                "IRM prostate", "IRM cardiaque"
+            ],
+            "Biopsies guidées": [
+                "Biopsie hépatique (écho-guidée)", "Biopsie mammaire (écho-guidée)",
+                "Biopsie rénale (écho-guidée)", "Biopsie pulmonaire (scanner-guidée)",
+                "Biopsie thyroïdienne (écho-guidée)", "Biopsie ganglionnaire",
+                "Biopsie osseuse (scanner-guidée)"
+            ],
+            "Ponctions guidées": [
+                "Ponction pleurale (écho-guidée)", "Ponction abdominale / ascite",
+                "Ponction articulaire genou", "Ponction articulaire épaule / hanche",
+                "Ponction mammaire diagnostique"
+            ],
+            "Drainages guidés": [
+                "Drainage pleural (thoracique)", "Drainage abdominal / abcès",
+                "Drainage biliaire", "Néphrostomie (drainage urinaire)"
+            ]
+        }
+    },
+    "Explorations fonctionnelles": {
+        "categories": [
+            "Cardiologie", "Pneumologie", "Gastro-entérologie", "Neurologie", "ORL",
+            "Ophtalmologie", "Dermatologie", "Gynécologie", "Urologie",
+            "Andrologie / Fertilité", "Hématologie clinique"
+        ],
+        "acts": {
+            "Cardiologie": [
+                "ECG standard 12 dérivations", "Épreuve d'effort (test effort cardiaque)",
+                "Holter ECG 24h", "Holter tensionnel MAPA 24h", "Tilt test (table basculante)",
+                "Test de marche 6 minutes"
+            ],
+            "Pneumologie": [
+                "EFR / Spirométrie standard", "Spirométrie + bronchodilatateur",
+                "Pléthysmographie corps entier", "Test de diffusion DLCO",
+                "Oxymétrie nocturne", "Polygraphie ventilatoire (apnées du sommeil)"
+            ],
+            "Gastro-entérologie": [
+                "FOGD (fibroscopie gastrique)", "Coloscopie", "Rectosigmoïdoscopie",
+                "Manométrie œsophagienne", "pH-métrie œsophagienne", "Test respiratoire à l'hydrogène"
+            ],
+            "Neurologie": [
+                "EEG standard", "EEG de sommeil", "EMG (électromyogramme)",
+                "Potentiels évoqués visuels (PEV)", "Potentiels évoqués auditifs (PEA)",
+                "Potentiels évoqués somesthésiques (PES)"
+            ],
+            "ORL": [
+                "Audiométrie tonale", "Audiométrie vocale", "Impédancemétrie (tympanométrie)",
+                "Tests vestibulaires VNG", "Fibroscopie ORL"
+            ],
+            "Ophtalmologie": [
+                "Acuité visuelle + réfraction", "Fond d'œil", "OCT (tomographie optique cohérente)",
+                "Champ visuel automatisé", "Pachymétrie cornéenne", "Topographie cornéenne",
+                "Biométrie oculaire"
+            ],
+            "Dermatologie": [
+                "Dermoscopie", "Cartographie des nævus", "Tests allergologiques cutanés"
+            ],
+            "Gynécologie": [
+                "Hystérosalpingographie (HSG)", "Hystéroscopie diagnostique", "Colposcopie",
+                "Monitoring ovulatoire"
+            ],
+            "Urologie": [
+                "Débitmétrie urinaire", "Bilan urodynamique complet"
+            ],
+            "Andrologie / Fertilité": [
+                "Spermogramme (exploration fonctionnelle)", "Spermocytogramme",
+                "Test de migration-survie", "Bilan infertilité masculine"
+            ],
+            "Hématologie clinique": [
+                "Myélogramme", "Biopsie ostéo-médullaire", "Test de fragilité osmotique"
+            ]
+        }
+    },
+    "Ambulance médicalisée": {
+        "categories": [
+            "Transport sanitaire", "Rapatriement", "Couverture & assistance"
+        ],
+        "acts": {
+            "Transport sanitaire": [
+                "Ambulance simple", "Ambulance médicalisée avec infirmier",
+                "Ambulance médicalisée avec médecin", "Transport réanimatoire", "Évacuation sanitaire"
+            ],
+            "Rapatriement": [
+                "Rapatriement national", "Rapatriement international"
+            ],
+            "Couverture & assistance": [
+                "Couverture médicale sportive", "Couverture médicale de manifestation publique",
+                "Assistance médicale sur site"
+            ]
+        }
+    },
+    "Soins spécialisés": {
+        "categories": [
+            "Médecine générale", "Cardiologie", "ORL", "Ophtalmologie", "Dermatologie",
+            "Gynécologie", "Urologie", "Soins infirmiers", "Rhumatologie / Orthopédie",
+            "Pédiatrie", "Kinésithérapie", "Dialyse / Néphrologie", "Psychologie",
+            "Psychiatrie", "Oncologie / Radiothérapie"
+        ],
+        "acts": {
+            "Médecine générale": [
+                "Suture plaie simple", "Suture plaie complexe", "Incision & drainage abcès cutané",
+                "Nébulisation thérapeutique", "Oxygénothérapie"
+            ],
+            "Cardiologie": [
+                "ECG à domicile", "Pose / retrait Holter ECG", "Surveillance post-urgence cardiaque"
+            ],
+            "ORL": [
+                "Lavage d'oreille", "Extraction bouchon de cérumen", "Ablation corps étranger ORL",
+                "Cautérisation épistaxis", "Pose / retrait mèche nasale"
+            ],
+            "Ophtalmologie": [
+                "Retrait corps étranger oculaire", "Lavage oculaire médical", "Laser YAG",
+                "Laser rétinien", "Injection intravitréenne"
+            ],
+            "Dermatologie": [
+                "Cryothérapie cutanée", "Exérèse lésion cutanée bénigne", "Électrocoagulation",
+                "Biopsie cutanée", "Peeling médical", "Laser dermatologique"
+            ],
+            "Gynécologie": [
+                "Pose DIU (stérilet)", "Retrait DIU", "Pose implant contraceptif",
+                "Retrait implant", "Biopsie gynécologique", "Cryothérapie cervicale",
+                "Aspiration endo-utérine"
+            ],
+            "Urologie": [
+                "Sondage vésical", "Changement de sonde", "Instillation vésicale"
+            ],
+            "Soins infirmiers": [
+                "Pansement simple", "Pansement complexe", "Perfusion IV", "Injection IM / SC",
+                "Surveillance glycémique", "Soins de plaies chroniques", "Nursing médicalisé"
+            ],
+            "Rhumatologie / Orthopédie": [
+                "Infiltration articulaire genou", "Infiltration articulaire épaule",
+                "Viscosupplémentation", "Injection PRP", "Ponction articulaire évacuatrice",
+                "Immobilisation orthopédique"
+            ],
+            "Pédiatrie": [
+                "Nébulisation pédiatrique", "Lavage nasal médicalisé", "Soins plaies pédiatriques",
+                "Réhydratation orale supervisée", "Perfusion pédiatrique"
+            ],
+            "Kinésithérapie": [
+                "Rééducation post-traumatique", "Rééducation post-opératoire genou",
+                "Rééducation lombalgie / cervicalgie", "Kiné respiratoire adulte",
+                "Kiné respiratoire pédiatrique", "Rééducation post-AVC",
+                "Rééducation périnéale post-partum", "Drainage lymphatique manuel",
+                "Kinésithérapie à domicile"
+            ],
+            "Dialyse / Néphrologie": [
+                "Hémodialyse chronique", "Hémodialyse aiguë", "Dialyse péritonéale",
+                "Soins cathéter de dialyse"
+            ],
+            "Psychologie": [
+                "Consultation de psychologie initiale", "Séance de psychologie de suivi",
+                "Thérapie individuelle", "Thérapie de couple", "Thérapie familiale",
+                "Téléconsultation psychologique"
+            ],
+            "Psychiatrie": [
+                "Consultation psychiatrique initiale", "Consultation psychiatrique de suivi",
+                "Évaluation psychiatrique diagnostique", "Ajustement traitement psychotrope",
+                "Téléconsultation psychiatrique"
+            ],
+            "Oncologie / Radiothérapie": [
+                "Consultation d'oncologie médicale", "Administration chimiothérapie ambulatoire",
+                "Séance de radiothérapie", "Soins palliatifs ambulatoires"
+            ]
+        }
+    },
+    "Soins dentaires": {
+        "categories": [
+            "Consultations dentaires", "Soins conservateurs", "Endodontie",
+            "Chirurgie dentaire", "Prothèses", "Implantologie", "Orthodontie",
+            "Esthétique dentaire"
+        ],
+        "acts": {
+            "Consultations dentaires": [
+                "Consultation dentaire standard", "Consultation dentaire spécialisée",
+                "Consultation d'urgence dentaire", "Bilan bucco-dentaire complet"
+            ],
+            "Soins conservateurs": [
+                "Détartrage complet", "Détartrage + polissage + fluoration",
+                "Traitement carie (composite)", "Obturation amalgame"
+            ],
+            "Endodontie": [
+                "Traitement endodontique mono-radiculaire", "Traitement endodontique bi-radiculaire",
+                "Traitement endodontique multi-radiculaire", "Reprise endodontique"
+            ],
+            "Chirurgie dentaire": [
+                "Extraction simple", "Extraction chirurgicale", "Extraction dent de sagesse incluse",
+                "Drainage abcès dentaire"
+            ],
+            "Prothèses": [
+                "Couronne céramique / zirconium", "Bridge 3 éléments",
+                "Prothèse amovible partielle", "Prothèse complète"
+            ],
+            "Implantologie": [
+                "Consultation implantaire", "Pose d'implant dentaire", "Greffe osseuse",
+                "Couronne sur implant"
+            ],
+            "Orthodontie": [
+                "Appareil orthodontique fixe (arcade)", "Appareil amovible",
+                "Gouttières transparentes (aligneurs)", "Contention post-orthodontie"
+            ],
+            "Esthétique dentaire": [
+                "Blanchiment dentaire professionnel", "Facette céramique (par dent)",
+                "Smile design (consultation + plan)"
+            ]
+        }
+    }
+}
+
+
+def _normalize_catalog_label(name: str) -> str:
+    if not name:
+        return ""
+    return (
+        name.replace("'", "’")
+        .replace("'", "’")
+        .replace(" ", "")
+        .lower()
+    )
+
+
+def _actes_order_for_service_name(service_name: str) -> dict | None:
+    sn = _normalize_catalog_label(service_name)
+    for key, info in ACTES_ORDER.items():
+        if _normalize_catalog_label(key) == sn:
+            return info
+    return None
+
+
+def _acte_labels_match(canonical: str, db_name: str) -> bool:
+    nc = _normalize_catalog_label(canonical)
+    nd = _normalize_catalog_label(db_name)
+    if nc == nd:
+        return True
+    if len(nc) >= 3 and (nd.startswith(nc) or nc.startswith(nd)):
+        return True
+    return False
+
+
+def _build_acte_nav_indexes(actes_qs):
+    by_svc_cat: dict[tuple[int, str], list] = defaultdict(list)
+    by_exact: dict[tuple[int, str, str], ActeMedical] = {}
+    for a in actes_qs:
+        if a.level != 3:
+            continue
+        sid = a.service_medical_category_id
+        if sid is None:
+            continue
+        cat_norm = _normalize_catalog_label(
+            a.parent_service.name if a.parent_service_id else ""
+        )
+        by_svc_cat[(sid, cat_norm)].append(a)
+        by_exact[(sid, cat_norm, _normalize_catalog_label(a.name))] = a
+    return by_svc_cat, by_exact
+
+
+def _resolve_acte_for_nav(
+    service_id: int,
+    cat_name: str,
+    act_name: str,
+    by_svc_cat,
+    by_exact,
+):
+    cat_norm = _normalize_catalog_label(cat_name)
+    key = (service_id, cat_norm, _normalize_catalog_label(act_name))
+    if key in by_exact:
+        return by_exact[key]
+    for a in by_svc_cat.get((service_id, cat_norm), []):
+        if _acte_labels_match(act_name, a.name):
+            return a
+    return None
 
 
 @ensure_csrf_cookie
@@ -566,7 +938,8 @@ def search(request):
             q_filter |= Q(acte__code__icontains=q)
         pa_qs = pa_qs.filter(q_filter)
 
-    if service_id:
+    # Pilier actif : filtre les résultats seulement en navigation (sans acte/lot explicite).
+    if service_id and not acte_ids_clean and not lot_ids_clean:
         pa_qs = pa_qs.filter(acte__service_medical_category_id=service_id)
 
     # Même périmètre que les résultats mais **sans** filtre acte(s) : compteurs nav / pastilles.
@@ -824,15 +1197,7 @@ def search(request):
     # Ne restreindre le sélecteur « Acte » au pool que si acte/lot sont dans l’URL.
     # Sinon une session « parcours » avec d’autres examens croisait la famille choisie → liste vide.
 
-    offered_acte_ids = (
-        PrestataireActe.objects.filter(
-            is_available=True,
-            organisme__is_active=True,
-        )
-        .values_list("acte_id", flat=True)
-        .distinct()
-    )
-    actes_for_browse_nav = acte_base.filter(pk__in=offered_acte_ids).order_by(
+    actes_for_browse_nav = acte_base.filter(level=3).order_by(
         "service_medical_category__order", "level", "name"
     )
 
@@ -949,6 +1314,7 @@ def search(request):
                     "active": str(s.pk) == str(service_id or ""),
                     "count": svc_offer_counts.get(int(s.pk), 0),
                     "service_id": str(s.pk),
+                    "is_ambulance": "ambulance" in s.name.lower(),
                 }
             )
         acte_nav_qs = actes_for_browse_nav.select_related(
@@ -960,51 +1326,83 @@ def search(request):
             "parent_service__name",
             "name",
         )
-        # Ne pas filtrer acte_nav_qs par service_id pour inclure tous les piliers dans l'arbre client
-        fam_od: OrderedDict[int, dict] = OrderedDict()
         selected_set = frozenset(pool_for_pills)
-        for a in acte_nav_qs:
-            if a.level != 3:
-                continue
-            fid = a.service_medical_category_id
-            if fid is None:
-                continue
-            if fid not in fam_od:
-                fam_od[fid] = {
-                    "title": a.service_medical_category.name,
-                    "sub_od": OrderedDict(),
-                }
-            sub_id = a.parent_service_id or 0
-            sub_title = a.parent_service.name if a.parent_service_id else None
-            if sub_id not in fam_od[fid]["sub_od"]:
-                fam_od[fid]["sub_od"][sub_id] = {"title": sub_title, "acts": []}
-            fam_od[fid]["sub_od"][sub_id]["acts"].append(a)
+        by_svc_cat, by_exact = _build_acte_nav_indexes(acte_nav_qs)
 
         for s in services_for_sidebar:
-            fid = s.pk
-            if fid not in fam_od:
-                continue
-            fam = fam_od[fid]
+            p_info = _actes_order_for_service_name(s.name)
             subgroups_out: list[dict] = []
-            for sub in fam["sub_od"].values():
-                rows = []
-                for x in sub["acts"]:
-                    rows.append(
+            if p_info:
+                for cat_name in p_info["categories"]:
+                    rows: list[dict] = []
+                    seen_pks: set[int] = set()
+                    for act_name in p_info["acts"].get(cat_name, []):
+                        act_obj = _resolve_acte_for_nav(
+                            s.pk, cat_name, act_name, by_svc_cat, by_exact
+                        )
+                        pk = act_obj.pk if act_obj else None
+                        if pk and pk in seen_pks:
+                            continue
+                        if pk:
+                            seen_pks.add(pk)
+                        rows.append(
+                            {
+                                "pk": pk,
+                                "name": act_name,
+                                "selected": pk in selected_set if pk else False,
+                                "count": int(acte_offer_counts.get(pk, 0))
+                                if pk
+                                else 0,
+                            }
+                        )
+                    cat_norm = _normalize_catalog_label(cat_name)
+                    for act_obj in by_svc_cat.get((s.pk, cat_norm), []):
+                        if act_obj.pk in seen_pks:
+                            continue
+                        seen_pks.add(act_obj.pk)
+                        rows.append(
+                            {
+                                "pk": act_obj.pk,
+                                "name": act_obj.name,
+                                "selected": act_obj.pk in selected_set,
+                                "count": int(
+                                    acte_offer_counts.get(act_obj.pk, 0)
+                                ),
+                            }
+                        )
+                    subgroups_out.append(
                         {
-                            "pk": x.pk,
-                            "name": x.name,
-                            "selected": x.pk in selected_set,
-                            "count": int(acte_offer_counts.get(x.pk, 0)),
+                            "title": cat_name,
+                            "rows": rows,
+                            "count": sum(r["count"] for r in rows),
                         }
                     )
-                grp_count = sum(r["count"] for r in rows)
-                subgroups_out.append(
-                    {
-                        "title": sub["title"],
-                        "rows": rows,
-                        "count": grp_count,
-                    }
-                )
+            else:
+                for a in acte_nav_qs.filter(service_medical_category_id=s.pk):
+                    cat_title = (
+                        a.parent_service.name if a.parent_service_id else "Autres"
+                    )
+                    sub = next(
+                        (g for g in subgroups_out if g["title"] == cat_title),
+                        None,
+                    )
+                    if sub is None:
+                        sub = {"title": cat_title, "rows": [], "count": 0}
+                        subgroups_out.append(sub)
+                    sub["rows"].append(
+                        {
+                            "pk": a.pk,
+                            "name": a.name,
+                            "selected": a.pk in selected_set,
+                            "count": int(acte_offer_counts.get(a.pk, 0)),
+                        }
+                    )
+                for sub in subgroups_out:
+                    sub["count"] = sum(r["count"] for r in sub["rows"])
+
+            if not subgroups_out:
+                continue
+
             fam_total = sum(sg["count"] for sg in subgroups_out)
             is_fam_open = bool(
                 (service_id and str(s.pk) == str(service_id))
@@ -1017,7 +1415,7 @@ def search(request):
             acte_dem_families.append(
                 {
                     "pk": s.pk,
-                    "title": fam["title"],
+                    "title": s.name,
                     "subgroups": subgroups_out,
                     "count": fam_total,
                     "open": is_fam_open,
@@ -1565,6 +1963,11 @@ def _opening_hours_list(org):
     hours_list = []
     _jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
     _today_fr = _jours[datetime.now().weekday()]
+    
+    # Si opening_hours est une chaîne (format importé), retourner une liste vide
+    if isinstance(org.opening_hours, str):
+        return hours_list
+    
     if org.opening_hours:
         for day in _jours:
             info = org.opening_hours.get(day, {})
@@ -1650,18 +2053,90 @@ def organisme_detail(request, slug):
     return render(request, "healthcare/organisme_detail.html", context)
 
 
+def organisme_profil_drawer(request, org_id):
+    """Vue AJAX pour charger le contenu du drawer de profil structure"""
+    from .models import Assurance
+
+    org = get_object_or_404(OrganismeDeSante, id=org_id, is_active=True)
+
+    actes = list(
+        PrestataireActe.objects.filter(
+            organisme=org, is_available=True,
+        ).select_related(
+            "acte__service_medical_category", "acte__parent_service",
+        ).order_by(
+            "acte__service_medical_category__order", "acte__level", "acte__name",
+        )
+    )
+
+    insurances = PriseEnChargeAssurance.objects.filter(
+        organisme=org, is_active=True,
+    ).select_related("assurance").order_by("assurance__segment", "assurance__name")
+
+    hours_list = _opening_hours_list(org)
+
+    from .organisme_fiche import build_insurances_profil, fiche_context_for_org
+    fiche_ctx = fiche_context_for_org(org, actes, hours_list, request)
+
+    assurance_ids_int: list[int] = []
+    for x in request.GET.getlist("assurance"):
+        try:
+            assurance_ids_int.append(int(x))
+        except (TypeError, ValueError):
+            continue
+    patient_insurance_names = list(
+        Assurance.objects.filter(pk__in=assurance_ids_int)
+        .order_by("name")
+        .values_list("name", flat=True),
+    )
+    org_insurance_names = {
+        pec.assurance.name for pec in insurances
+    }
+    patient_match_names = [
+        n for n in patient_insurance_names if n in org_insurance_names
+    ]
+    insurances_profil = build_insurances_profil(insurances)
+    patient_match_set = set(patient_match_names)
+    for row in insurances_profil:
+        row["patient_match"] = row["name"] in patient_match_set
+
+    is_favorite = False
+    if request.user.is_authenticated:
+        is_favorite = Favoris.objects.filter(patient=request.user, organisme=org).exists()
+
+    context = {
+        "org": org,
+        "actes": actes,
+        "insurances": insurances,
+        "insurances_profil": insurances_profil,
+        "patient_insurance_match": patient_match_names[0] if patient_match_names else "",
+        "is_favorite": is_favorite,
+        "hours_list": hours_list,
+        **fiche_ctx,
+    }
+
+    return render(request, "healthcare/partials/organisme_profil_drawer.html", context)
+
+
 def service_detail(request, slug):
     service = get_object_or_404(ServiceMedical, slug=slug, is_active=True)
-    actes = ActeMedical.objects.filter(
+    
+    search_query = request.GET.get('search', '').strip()
+    actes_qs = ActeMedical.objects.filter(
         service_medical_category=service, is_active=True,
-    ).order_by("level", "name")
+    )
+    
+    if search_query:
+        actes_qs = actes_qs.filter(name__icontains=search_query)
+    
+    actes = actes_qs.order_by("level", "name")
 
     providers = OrganismeDeSante.objects.filter(
         prestataire_actes__acte__service_medical_category=service,
         is_active=True,
     ).distinct().select_related("type_organisme")[:20]
 
-    context = {"service": service, "actes": actes, "providers": providers}
+    context = {"service": service, "actes": actes, "providers": providers, "search_query": search_query}
     return render(request, "healthcare/service_detail.html", context)
 
 
@@ -2633,11 +3108,16 @@ def actes_list(request):
         show_domicile_block,
     )
 
+    from healthcare.forms import PrestataireActeForm
+    add_form = PrestataireActeForm(organisme=org)
+
     applicable_slugs_raw = applicable_pilier_slugs(org)
     domicile_subgroups, domicile_all_acte_ids = domicile_subgroups_from_catalog(catalog_by_pilier)
     ctx.update(
         {
             "org": org,
+            "add_form": add_form,
+            **_presta_acte_form_ui(add_form.fields["acte"].queryset),
             "catalog_by_pilier": catalog_by_pilier,
             "selected_acte_ids": selected_acte_ids,
             "prestataire_delai_choices": PrestataireActe.DELAI_CHOICES,

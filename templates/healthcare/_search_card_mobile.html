@@ -78,7 +78,11 @@
       Assurances non renseignées
       {% endif %}
     </div>
+    {% if list_variant == "desktop" %}
+    <button type="button" class="scard-m-profile-btn profil-drawer-trigger" data-org-id="{{ block.org.pk }}" aria-label="Voir le profil de {{ block.org.name }}">Voir profil</button>
+    {% else %}
     <a href="#" class="scard-m-profile-btn dem-profil-link" data-org-slug="{{ block.org.slug }}" data-org-url="{% url 'healthcare:organisme_detail' slug=block.org.slug %}" aria-label="Voir le profil de {{ block.org.name }}">Profil →</a>
+    {% endif %}
     <div class="scard-m-cart-badge sipn-ico-inline" data-scard-m-cart-badge hidden></div>
   </div>
 </article>

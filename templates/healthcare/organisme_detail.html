@@ -70,8 +70,38 @@
 {% endif %}
 
 <p id="org-fiche-toast" class="hidden" role="status"></p>
+
+<!-- MODAL PROFIL STRUCTURE (drawer) -->
+<div id="profil-struct-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:400" onclick="closeProfilStruct()"></div>
+<div id="profil-struct-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;width:440px;max-width:96vw;background:#fff;z-index:401;box-shadow:-8px 0 40px rgba(0,0,0,0.18);overflow-y:auto;flex-direction:column"></div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'healthcare/js/organisme_fiche.js' %}?v=5"></script>
+<script>
+function openProfilStruct(structId) {
+  const modal = document.getElementById('profil-struct-modal');
+  const overlay = document.getElementById('profil-struct-overlay');
+  
+  // Charger le contenu du profil structure via AJAX
+  fetch('/healthcare/organisme/' + structId + '/profil-drawer/')
+    .then(response => response.text())
+    .then(html => {
+      modal.innerHTML = html;
+      modal.style.display = 'flex';
+      overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    })
+    .catch(error => console.error('Error loading profile:', error));
+}
+
+function closeProfilStruct() {
+  const modal = document.getElementById('profil-struct-modal');
+  const overlay = document.getElementById('profil-struct-overlay');
+  
+  modal.style.display = 'none';
+  overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+</script>
 {% endblock %}

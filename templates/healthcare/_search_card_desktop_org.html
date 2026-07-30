@@ -1,0 +1,121 @@
+﻿{% comment %}
+Carte structure desktop — vue groupée par organisme (scard).
+Variables : block (org, items, matching_count, total_actes, missing_actes, insurance_names, is_pioneer, hours_summary)
+{% endcomment %}
+<article class="scard fade-in" id="sd-{{ block.org.pk }}"
+  data-org-id="{{ block.org.pk }}"
+  {% if block.org.latitude %}data-org-lat="{{ block.org.latitude }}"{% endif %}
+  {% if block.org.longitude %}data-org-lng="{{ block.org.longitude }}"{% endif %}>
+
+  {# ── En-tête structure ── #}
+  <div class="scard-top">
+    <div class="scard-left min-w-0">
+      <div class="scard-name">
+        <button type="button" class="org-preview-trigger scard-org-name"
+          data-org-slug="{{ block.org.slug }}"
+          aria-haspopup="dialog">{{ block.org.name }}</button>
+        {% if block.is_pioneer %}<span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>{% endif %}
+      </div>
+      {% if block.org.type_organisme %}
+      <div class="scard-type">{{ block.org.type_organisme.name }}</div>
+      {% endif %}
+      <div class="scard-meta">
+        <span class="smeta sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %}
+          {{ block.org.city }}{% if block.org.quartier %}, {{ block.org.quartier }}{% endif %}
+        </span>
+        {% if block.hours_summary %}
+        <span class="smeta sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %}
+          {{ block.hours_summary }}
+        </span>
+        {% elif block.org.horaires_complement %}
+        <span class="smeta sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %}
+          {{ block.org.horaires_complement|truncatechars:40 }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+    {% if block.total_actes > 1 %}
+    <span class="scard-coverage {% if block.matching_count == block.total_actes %}scard-coverage--full{% else %}scard-coverage--partial{% endif %}">
+      {{ block.matching_count }}/{{ block.total_actes }} acte{{ block.total_actes|pluralize }}
+    </span>
+    {% endif %}
+  </div>
+
+  {# ── Liste des actes proposés ── #}
+  <div class="scard-actes">
+    <div class="scard-actes-title">
+      <span>Tarif{{ block.items|length|pluralize }} proposé{{ block.items|length|pluralize }}</span>
+    </div>
+    {% for pa in block.items %}
+    <div class="acte-item"
+      data-pa-id="{{ pa.pk }}"
+      data-pa-acte-pk="{{ pa.acte.pk }}"
+      data-pa-acte="{{ pa.acte.name|escape }}"
+      data-pa-org="{{ pa.organisme.name|escape }}"
+      data-pa-org-id="{{ pa.organisme.pk }}"
+      data-pa-price="{{ pa.price|floatformat:0 }}"
+      data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+      data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
+      data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+      data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
+      role="button" tabindex="0"
+      aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
+      <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
+      <div class="ai-info min-w-0">
+        <div class="ai-nom">{{ pa.acte.name }}</div>
+        {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+        <div class="ai-cat">
+          {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% elif pa.acte.service_medical_category %}{{ pa.acte.service_medical_category.name }}{% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% if pa.delai %}
+      <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
+      {% endif %}
+      <div class="ai-prix">{{ pa.price|floatformat:0 }} F</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {# ── Actes manquants ── #}
+  {% if block.missing_actes %}
+  <div class="scard-missing">
+    <div class="scm-title sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="warning" class="sipn-ico sipn-ico--xs" %} Actes non disponibles ici</div>
+    <div class="scm-actes">
+      {% for acte in block.missing_actes %}
+      <span class="scm-pill" data-acte-pk="{{ acte.pk }}">{{ acte.name }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── Pied de carte ── #}
+  <div class="scard-footer">
+    <div class="scard-footer-left min-w-0">
+      <div class="scard-ins sipn-ico-inline">
+        {% include "healthcare/_icon_svg.html" with icon="shield" class="sipn-ico sipn-ico--xs" %}
+        {% if block.insurance_names %}
+          {{ block.insurance_names|slice:":3"|join:" · " }}{% if block.insurance_names|length > 3 %} +{{ block.insurance_names|length|add:"-3" }}{% endif %}
+        {% else %}
+          Assurances non renseignées
+        {% endif %}
+      </div>
+      {% if block.org.prises_sang_domicile %}
+      <div class="scard-domicile sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="home" class="sipn-ico sipn-ico--xs" %} Prestations à domicile disponibles</div>
+      {% endif %}
+    </div>
+    <div class="scard-footer-actions">
+      <button type="button" class="scard-btn-secondary profil-drawer-trigger"
+        data-org-id="{{ block.org.pk }}">Voir profil</button>
+      <div class="scard-total">
+        <span class="scard-total-inner sipn-ico-inline">
+          {% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xs" %}
+          <span class="scard-total-text"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</article>

@@ -33,42 +33,44 @@
 </div>
 
 {# ───── Filtres par statut ───── #}
-<div class="mt-4 inline-flex flex-wrap gap-1.5 rounded-xl border border-gray-200 bg-white p-1 text-xs font-semibold shadow-sm">
-  <a href="?status=active" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'active' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    Actifs <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'active' %}bg-white/30 text-white{% endif %}">{{ counts.active }}</span>
-  </a>
-  <a href="?status=sent" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'sent' %}bg-emerald-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    Nouveau <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'sent' %}bg-white/30 text-white{% endif %}">{{ counts.sent }}</span>
-  </a>
-  <a href="?status=viewed" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'viewed' %}bg-blue-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    Consulté <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'viewed' %}bg-white/30 text-white{% endif %}">{{ counts.viewed }}</span>
-  </a>
-  <a href="?status=accepted" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'accepted' %}bg-amber-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    Acceptés <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'accepted' %}bg-white/30 text-white{% endif %}">{{ counts.accepted }}</span>
-  </a>
-  <a href="?status=relanced" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'relanced' %}bg-amber-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    Relancé <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'relanced' %}bg-white/30 text-white{% endif %}">{{ counts.relanced }}</span>
-  </a>
-  <a href="?status=expired" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'expired' %}bg-rose-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    Expiré <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'expired' %}bg-white/30 text-white{% endif %}">{{ counts.expired }}</span>
-  </a>
-  <a href="?status=archived" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'archived' %}bg-gray-700 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-    📁 Archivés <span class="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] {% if status_filter == 'archived' %}bg-white/30 text-white{% endif %}">{{ counts.archived }}</span>
-  </a>
+<div class="mt-4 w-full overflow-x-auto">
+  <div class="flex min-w-max gap-1.5 rounded-xl border border-gray-200 bg-white p-1 text-xs font-semibold shadow-sm">
+    <a href="?status=active" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'active' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      Actifs <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'active' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.active }}</span>
+    </a>
+    <a href="?status=sent" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'sent' %}bg-emerald-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      Nouveau <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'sent' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.sent }}</span>
+    </a>
+    <a href="?status=viewed" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'viewed' %}bg-blue-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      Consulté <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'viewed' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.viewed }}</span>
+    </a>
+    <a href="?status=accepted" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'accepted' %}bg-amber-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      Acceptés <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'accepted' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.accepted }}</span>
+    </a>
+    <a href="?status=relanced" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'relanced' %}bg-amber-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      Relancé <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'relanced' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.relanced }}</span>
+    </a>
+    <a href="?status=expired" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'expired' %}bg-rose-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      Expiré <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'expired' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.expired }}</span>
+    </a>
+    <a href="?status=archived" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'archived' %}bg-gray-700 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
+      📁 Archivés <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'archived' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.archived }}</span>
+    </a>
+  </div>
 </div>
 
 {# ───── Cartes devis ───── #}
 <div class="mt-5 space-y-3">
   {% for r in rows %}
   {% with p=r.part d=r.devis %}
-  <article class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-accent-200 hover:shadow-md sm:p-5 {% if p.status == 'archived' %}opacity-75{% elif p.status == 'relanced' %}border-amber-300 bg-amber-50/30{% endif %}">
+  <article class="rounded-2xl bg-white p-4 shadow-sm transition hover:shadow-md sm:p-5 {% if p.status == 'sent' %}border-2 border-emerald-500 bg-emerald-50/20 ring-2 ring-emerald-100{% elif p.status == 'archived' %}border border-gray-200 opacity-75{% elif p.status == 'relanced' %}border border-amber-300 bg-amber-50/30{% else %}border border-gray-200{% endif %}">
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div class="min-w-0 flex-1">
         <div class="flex flex-wrap items-center gap-2">
           <span class="font-mono text-[10px] font-bold text-gray-500">Devis {{ d.reference }}</span>
           <span class="font-mono text-xs font-bold text-primary-600">{{ p.reference }}</span>
           {% if p.status == 'sent' %}
-            <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700">● Nouveau</span>
+            <span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800">● Nouveau</span>
           {% elif p.status == 'viewed' %}
             <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700">● Consulté</span>
           {% elif p.status == 'relanced' %}
@@ -81,14 +83,23 @@
             <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-600">{{ p.get_status_display }}</span>
           {% endif %}
           {% if d.valid_until %}
-            <span class="text-[11px] text-gray-400">valide jusqu'au {{ d.valid_until|date:"d M Y" }}</span>
+            <span class="text-[11px] text-gray-400">valide jusqu'au {{ d.valid_until|date:"d F Y" }}</span>
           {% endif %}
         </div>
         <p class="mt-1.5 text-sm font-semibold text-gray-900">
           {{ d.patient.display_name|default:d.patient.username }}
           {% if d.insurance %}<span class="ml-1 text-xs font-medium text-gray-500">· {{ d.insurance.name }}</span>{% endif %}
         </p>
-        <p class="text-[11px] text-gray-400">sous-devis {{ p.created_at|date:"d M Y, H:i" }}{% if p.last_relanced_at %} · dernière relance {{ p.last_relanced_at|date:"d M Y, H:i" }}{% endif %}{% if p.archived_at %} · archivé {{ p.archived_at|date:"d M Y, H:i" }}{% endif %}</p>
+        <p class="text-[11px] text-gray-400">sous-devis {{ p.created_at|date:"d F Y, H:i" }}{% if p.last_relanced_at %} · dernière relance {{ p.last_relanced_at|date:"d F Y, H:i" }}{% endif %}{% if p.archived_at %} · archivé {{ p.archived_at|date:"d F Y, H:i" }}{% endif %}</p>
+        {% if r.creneau %}
+        <div class="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+          📅 Créneau souhaité : <strong>{{ r.creneau }}</strong>
+        </div>
+        {% else %}
+        <div class="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800">
+          ⚠️ Aucun créneau choisi par le patient
+        </div>
+        {% endif %}
       </div>
       <div class="text-right">
         <p class="text-xs text-gray-400">votre part</p>

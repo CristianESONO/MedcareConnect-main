@@ -53,8 +53,8 @@
         + '<div class="mc-wmsg-sender mc-wmsg-sender--org">' + orgName + '</div>'
         + inner + '<div class="mc-wtime">' + gtime() + '</div></div>';
     }
-    function msgS(inner) {
-      return '<div class="mc-wmsg mc-wmsg--s mc-book-flow">' + inner + '<div class="mc-wtime">' + gtime() + '</div></div>';
+    function msgS(inner, extraClass) {
+      return '<div class="mc-wmsg mc-wmsg--s mc-book-flow' + (extraClass ? ' ' + extraClass : '') + '">' + inner + '<div class="mc-wtime">' + gtime() + '</div></div>';
     }
 
     try { data = JSON.parse(dataEl.textContent); } catch (e) { return; }
@@ -120,7 +120,7 @@
       state.slotLabel = '';
       state.asap = false;
       disableInput();
-      qsa('.mc-book-flow', flowRoot).forEach(function (el) { el.remove(); });
+      qsa('.mc-book-flow:not(.mc-book-intro)', flowRoot).forEach(function (el) { el.remove(); });
       var chips = data.days.map(function (d, i) {
         return '<button type="button" class="pac-wchip pac-wchip--day" data-day="' + i + '"><span>' + d.short + '</span></button>';
       }).join('');
@@ -235,17 +235,22 @@
     });
 
     if (embed) {
-      if (hasDevisRequest) {
-        chatAppend(flowRoot, msgS('📅 Je souhaite prendre rendez-vous'));
-      }
-      setTimeout(renderDays, hasDevisRequest ? 350 : 200);
+      /* Afficher le message d'introduction seulement après clic sur Prendre RDV */
+      chatAppend(flowRoot, msgS('📅 Je souhaite prendre rendez-vous', 'mc-book-intro'));
+      setTimeout(renderDays, 350);
     } else {
-      chatAppend(flowRoot, msgS(intro));
+      chatAppend(flowRoot, msgS(intro, 'mc-book-intro'));
       setTimeout(renderDays, 250);
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function boot() {
     qsa('[data-mc-thread-book]').forEach(initRoot);
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();

@@ -9,6 +9,7 @@ from django.db.models import Count, Q
 from healthcare.data.catalog_pillars import PILLARS_FROM_DOCS
 from healthcare.data.structure_types_demo import (
     DEMO_STRUCTURE_TYPES,
+    PILIER_KEY_TO_SLUG,
     demo_key_for_type_name,
     demo_structure_for_type_name,
     pilier_slugs_for_demo_key,
@@ -30,18 +31,21 @@ def applicable_pilier_slugs(org: OrganismeDeSante) -> set[str] | None:
 
 
 def type_structure_context(org: OrganismeDeSante) -> dict:
-    """Bandeau « type de structure » (lecture seule, ordre et libellés démo)."""
+    """Bandeau « type de structure » (ordre et libellés démo)."""
     current_name = org.type_organisme.name if org.type_organisme_id else ""
-    current_demo_key = demo_key_for_type_name(current_name)
+    current_demo_key = demo_key_for_type_name(current_name) or "labo"
     current_demo = demo_structure_for_type_name(current_name)
 
     chips = []
     for row in DEMO_STRUCTURE_TYPES:
+        slugs = [PILIER_KEY_TO_SLUG[k] for k in row["pilier_keys"] if k in PILIER_KEY_TO_SLUG]
         chips.append(
             {
                 "key": row["key"],
                 "icon": row["icon"],
                 "label": row["label"],
+                "desc": row["desc"],
+                "piliers": ",".join(slugs),
                 "active": row["key"] == current_demo_key,
             }
         )
