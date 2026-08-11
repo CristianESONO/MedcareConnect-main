@@ -2624,8 +2624,8 @@
           html += '<div class="psg-foot"><a href="' + cartDevisBaseUrl + '?org=' + encodeURIComponent(orgItems[0].orgId) + '" class="psg-creneau-btn">' +
             sipnIconSvg('calendar', 'sipn-ico sipn-ico--sm') + ' Réserver mes actes</a></div>';
         } else if (!cartChariotUrl && !orgItems[0].cartItemId) {
-          var orgDevisUrl = cartDevisBaseUrl ? (cartDevisBaseUrl + '?org=' + encodeURIComponent(orgItems[0].orgId)) : '/cart/';
-          var loginNext = '/users/login/?next=' + encodeURIComponent(orgDevisUrl);
+          var orgDevisUrl = cartDevisBaseUrl ? (cartDevisBaseUrl + '?org=' + encodeURIComponent(orgItems[0].orgId)) : '{% url "cart:cart_view" %}';
+          var loginNext = '{% url "users:login" %}?next=' + encodeURIComponent(orgDevisUrl);
           html += '<div class="psg-foot"><a href="' + loginNext + '" class="psg-creneau-btn js-guest-auth-open" data-org-id="' + escapeHtml(orgItems[0].orgId) + '">' +
             sipnIconSvg('calendar', 'sipn-ico sipn-ico--sm') + ' Réserver mes actes</a></div>';
         } else {
@@ -2653,7 +2653,7 @@
       if (cartChariotUrl) {
         html += '<p class="text-[11px] text-gray-500 mt-2">Les actes d’une même structure sont envoyés dans une seule discussion.</p>';
       } else {
-        var cartLoginTarget = '/users/login/?next=' + encodeURIComponent('/cart/');
+        var cartLoginTarget = '{% url "users:login" %}?next=' + encodeURIComponent('{% url "cart:cart_view" %}');
         html += '<a href="' + cartLoginTarget + '" class="devis-btn-m js-guest-auth-open">' + sipnIconSvg('calendar', 'sipn-ico sipn-ico--sm') + ' Réserver mes actes' +
           (nStructs > 1 ? ' (' + nStructs + ' structures)' : '') + '</a>';
       }
@@ -4957,8 +4957,8 @@
         window.location.href = cartDevisBaseUrl + '?org=' + encodeURIComponent(String(orgId));
         return;
       }
-      var devisTarget = cartDevisBaseUrl ? (cartDevisBaseUrl + '?org=' + encodeURIComponent(String(orgId))) : ('/cart/generate-devis/?org=' + encodeURIComponent(String(orgId)));
-      window.location.href = '/users/login/?next=' + encodeURIComponent(devisTarget);
+      var devisTarget = cartDevisBaseUrl ? (cartDevisBaseUrl + '?org=' + encodeURIComponent(String(orgId))) : ('{% url "cart:generate_devis" %}?org=' + encodeURIComponent(String(orgId)));
+      window.location.href = '{% url "users:login" %}?next=' + encodeURIComponent(devisTarget);
     }
 
     window.closeProfilStruct = function() {
