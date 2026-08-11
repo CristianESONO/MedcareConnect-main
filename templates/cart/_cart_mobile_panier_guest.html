@@ -39,13 +39,14 @@
       </div>
       {% endfor %}
       <div class="psg-foot">
-        <button type="button"
+        <a href="{% url 'users:login' %}?next={% url 'cart:generate_devis' %}?org={{ group.organisme.pk }}"
           class="psg-creneau-btn js-guest-auth-open"
+          data-org-id="{{ group.organisme.pk }}"
           data-org-name="{{ group.organisme.name|escape }}"
           data-org-count="{{ group.lines|length }}"
           data-org-total="{{ group.total|floatformat:0 }}">
           {% include "healthcare/_icon_svg.html" with icon="calendar" class="sipn-ico sipn-ico--sm" %} Réserver mes actes
-        </button>
+        </a>
       </div>
     </div>
     {% endfor %}
@@ -57,7 +58,7 @@
         <span class="ptc-label">{{ cart_items_count }} acte{{ cart_items_count|pluralize }} · {{ guest_org_groups|length }} structure{{ guest_org_groups|length|pluralize }}</span>
         <span class="ptc-value">{{ guest_total|floatformat:0 }} FCFA</span>
       </div>
-      <button type="button" class="devis-btn-m js-guest-auth-open">{% include "healthcare/_icon_svg.html" with icon="calendar" class="sipn-ico sipn-ico--sm" %} Réserver mes actes{% if guest_org_groups|length > 1 %} ({{ guest_org_groups|length }} structures){% endif %}</button>
+      <a href="{% url 'users:login' %}?next={{ guest_auth_next|urlencode }}" class="devis-btn-m js-guest-auth-open">{% include "healthcare/_icon_svg.html" with icon="calendar" class="sipn-ico sipn-ico--sm" %} Réserver mes actes{% if guest_org_groups|length > 1 %} ({{ guest_org_groups|length }} structures){% endif %}</a>
       <a href="{% url 'users:register' %}?next={{ guest_auth_next|urlencode }}" class="devis-btn-m devis-btn-m--secondary">Créer un compte patient</a>
     </div>
     {% else %}

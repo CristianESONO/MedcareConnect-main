@@ -111,13 +111,16 @@
     var bookRoot = qs('#pac-book-root', ctx);
     if (!bookRoot) return;
     var chat = qs('#pac-chat', bookRoot);
+    if (!chat) return;
     var dataEl = qs('#pac-book-data', bookRoot);
+    if (!dataEl) return;
     var data;
     try { data = JSON.parse(dataEl.textContent); } catch (e) { return; }
     var bookUrl = bookRoot.getAttribute('data-book-url');
     var csrf = bookRoot.getAttribute('data-csrf');
     var noteInput = qs('#pac-note-input', bookRoot);
     var sendBtn = qs('#pac-wsend', bookRoot);
+    if (!noteInput || !sendBtn) return;
     var state = { slot: null };
 
     function disableInput() {

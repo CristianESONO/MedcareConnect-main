@@ -33,16 +33,32 @@ SERVICE_MOBILE_SHORT: dict[str, tuple[str, str]] = {
 }
 
 
+import unicodedata as _ud
+
+
+def strip_leading_emoji(text: str) -> str:
+    """Retire les emojis/symboles Unicode en début de chaîne."""
+    if not text:
+        return ""
+    return "".join(
+        c for c in text
+        if _ud.category(c) not in ("So", "Sm", "Sk", "Sc", "Cs", "Co", "Cn")
+    ).strip()
+
+
 def mobile_labels_for_service(name: str) -> tuple[str, str]:
     """Retourne (label court, sous-titre) pour la grille mobile."""
     if not name:
         return ("Famille", "")
+    clean = strip_leading_emoji(name)
+    if clean in SERVICE_MOBILE_SHORT:
+        return SERVICE_MOBILE_SHORT[clean]
     if name in SERVICE_MOBILE_SHORT:
         return SERVICE_MOBILE_SHORT[name]
-    short = name.split(" médicale")[0].split(" médicalisée")[0].strip()
+    short = clean.split(" médicale")[0].split(" médicalisée")[0].strip()
     if len(short) > 14:
         short = short[:12].rstrip() + "…"
-    return (short or name, "")
+    return (short or clean or name, "")
 
 # Sous-familles (types niveau 2) — pastille tableau catalogue
 _SUBFAMILY_KEYWORDS: tuple[tuple[tuple[str, ...], str], ...] = (
@@ -91,9 +107,12 @@ def _normalize_name(name: str) -> str:
 def icon_for_service_name(name: str) -> str:
     if not name:
         return DEFAULT_SERVICE_ICON
+    clean = strip_leading_emoji(name)
+    if clean in SERVICE_MEDICAL_ICONS:
+        return SERVICE_MEDICAL_ICONS[clean]
     if name in SERVICE_MEDICAL_ICONS:
         return SERVICE_MEDICAL_ICONS[name]
-    low = _normalize_name(name)
+    low = _normalize_name(clean)
     if low in _SERVICE_ALIASES:
         return SERVICE_MEDICAL_ICONS.get(_SERVICE_ALIASES[low], DEFAULT_SERVICE_ICON)
     for pillar_name, icon in SERVICE_MEDICAL_ICONS.items():

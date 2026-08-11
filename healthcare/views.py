@@ -376,16 +376,21 @@ def _build_mobile_piliers_payload(acte_offer_counts: dict[int, int]) -> list[dic
                 actes_out.sort(key=sort_key)
                 cats_out.append({"name": cat_name, "actes": actes_out})
         # Categories are already in correct order from p_info["categories"]
-        if not cats_out:
-            continue
-        short, sub = mobile_labels_for_service(svc.name)
+        from healthcare.service_icons import (
+            icon_for_service_medical,
+            mobile_labels_for_service,
+            strip_leading_emoji,
+        )
+
+        clean_title = strip_leading_emoji(svc.name)
+        short, sub = mobile_labels_for_service(clean_title)
         piliers.append(
             {
                 "id": str(svc.pk),
                 "icon": icon_for_service_medical(svc),
                 "label": short,
                 "sub": sub,
-                "title": svc.name,
+                "title": clean_title,
                 "cats": cats_out,
             }
         )
