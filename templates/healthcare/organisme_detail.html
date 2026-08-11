@@ -1,107 +1,843 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ org.name }}{% endblock %}
-{% block body_extra_class %} org-fiche-page{% if profil_pillars %} org-fiche-has-devis{% endif %}{% endblock %}
+
+{% block title %}{{ org.name }} — MedCare{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'healthcare/css/organisme_fiche.css' %}?v=10">
+<style>
+/* Page container & card styled like DEMO drawer */
+.org-fiche-page-bg {
+  background: #eef3f7;
+  min-height: calc(100vh - 120px);
+  padding: 24px 16px 60px;
+  font-family: 'DM Sans', sans-serif;
+  color: #0d1b2a;
+}
+.org-fiche-card {
+  max-width: 680px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 28px rgba(10, 92, 138, 0.12);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* Header gradient section */
+.profil-drawer-header {
+  background: linear-gradient(135deg, #0a4a72 0%, #054a38 100%);
+  color: #fff;
+  padding: 16px 20px 20px;
+  position: relative;
+}
+.profil-drawer-close-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.profil-drawer-back-btn {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.profil-drawer-back-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+  color: #fff;
+}
+.profil-drawer-fav-btn {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s;
+}
+.profil-drawer-fav-btn.is-active {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.profil-drawer-head-body {
+  padding: 0;
+}
+.profil-drawer-identity {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.profil-drawer-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.profil-drawer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profil-drawer-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.profil-drawer-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+.profil-drawer-pioneer {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  background: rgba(244, 208, 63, 0.18);
+  color: #f4d03f;
+  border: 1px solid rgba(244, 208, 63, 0.35);
+  border-radius: 20px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.profil-drawer-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+.profil-drawer-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+}
+.profil-drawer-open-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+.profil-drawer-open-badge--open {
+  background: rgba(74, 222, 128, 0.18);
+  color: #4ade80;
+}
+.profil-drawer-open-badge--closed {
+  background: rgba(248, 113, 113, 0.18);
+  color: #f87171;
+}
+.profil-drawer-open-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* 4 Action buttons */
+.profil-drawer-actions {
+  display: flex;
+  gap: 8px;
+}
+.profil-drawer-action-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 9px;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: background 0.15s;
+}
+.profil-drawer-action-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+/* Popups */
+.profil-drawer-horaires-pop {
+  margin-top: 10px;
+  background: #fff;
+  color: #0d1b2a;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+.profil-drawer-horaires-pop[hidden] {
+  display: none !important;
+}
+.profil-drawer-horaires-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a5c8a;
+  margin-bottom: 6px;
+}
+.profil-drawer-horaires-line {
+  font-size: 12px;
+  color: #4b5563;
+  padding: 2px 0;
+}
+.profil-drawer-horaires-status {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.profil-drawer-horaires-status--open { color: #047857; }
+.profil-drawer-horaires-status--closed { color: #dc2626; }
+
+.profil-drawer-contact-card {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #fff;
+}
+.profil-drawer-contact-card[hidden] {
+  display: none !important;
+}
+
+/* Body */
+.profil-drawer-body {
+  padding: 20px 24px;
+  background: #fff;
+}
+.profil-drawer-desc {
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+/* Assurances */
+.profil-drawer-ins-match {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #e8faf3;
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #065f46;
+}
+.profil-drawer-assur-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0d1b2a;
+}
+.profil-drawer-assur-list {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.profil-drawer-assur-list[hidden] {
+  display: none !important;
+}
+.profil-drawer-assur-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 12px;
+}
+.profil-drawer-assur-row:last-child {
+  border-bottom: none;
+}
+.profil-drawer-assur-row--match {
+  background: #e8faf3;
+  color: #065f46;
+  font-weight: 600;
+}
+.profil-drawer-assur-tag {
+  font-size: 9px;
+  font-weight: 700;
+  color: #065f46;
+  white-space: nowrap;
+}
+
+/* Domicile */
+.profil-drawer-domicile {
+  background: #e8f4fb;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.profil-drawer-domicile-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a5c8a;
+  margin-bottom: 4px;
+}
+.profil-drawer-domicile-sub {
+  font-size: 11px;
+  color: #4b5563;
+}
+
+/* Actes Section */
+.profil-drawer-actes-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+.profil-drawer-actes-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.profil-drawer-actes-search input {
+  flex: 1;
+  font-size: 13px;
+  padding: 10px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.profil-drawer-actes-search input:focus {
+  border-color: #0a5c8a;
+}
+.profil-drawer-actes-search button {
+  background: #0a5c8a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0 18px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Category & Act Rows */
+.profil-drawer-cat {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.profil-drawer-cat-head {
+  padding: 9px 14px;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0d1b2a;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s;
+}
+.profil-drawer-cat-head:hover {
+  background: #f3f4f6;
+}
+.profil-drawer-cat-arrow {
+  font-size: 9px;
+  color: #9ca3af;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.profil-drawer-cat-head.is-collapsed .profil-drawer-cat-arrow {
+  transform: rotate(-90deg);
+}
+.profil-drawer-cat-body {
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+.profil-drawer-cat-body.is-collapsed {
+  display: none;
+}
+.profil-drawer-cat-count {
+  font-size: 10px;
+  background: #e8f4fb;
+  color: #0a5c8a;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.profil-pa-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+}
+.profil-pa-row:last-child {
+  border-bottom: none;
+}
+.profil-pa-row:hover {
+  background: #f9fafb;
+}
+.profil-pa-row.is-selected {
+  background: #e8faf3;
+}
+.profil-pa-row input[type="checkbox"] {
+  accent-color: #14b87a;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.profil-pa-info {
+  flex: 1;
+  min-width: 0;
+}
+.profil-pa-nom {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0d1b2a;
+  line-height: 1.3;
+}
+.profil-pa-cat-label {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+.profil-pa-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.profil-pa-delai {
+  font-size: 10px;
+  color: #9ca3af;
+}
+.profil-pa-prix {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0a5c8a;
+}
+
+/* Cart Recap Box */
+.profil-panier-recap-box {
+  background: #e8f4fb;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 16px;
+}
+.profil-panier-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0a5c8a;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.profil-panier-item-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #1f2937;
+  padding: 3px 0;
+}
+.profil-panier-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #bfdbfe;
+}
+
+/* Devis CTA Button */
+.profil-devis-btn {
+  width: 100%;
+  background: #14b87a;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  box-shadow: 0 4px 14px rgba(20, 184, 122, 0.25);
+  transition: all 0.18s;
+  text-decoration: none;
+}
+.profil-devis-btn:hover {
+  background: #0ea870;
+  transform: translateY(-1px);
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="org-fiche"
-  data-org-fiche
-  data-org-name="{{ org.name|escape }}"
-  data-org-address="{{ org.address|default:''|escape }}"
-  data-org-city="{{ org.city|default:''|escape }}"
-  data-org-url="{{ public_absolute_url|escape }}"
-  data-org-slug="{{ org.slug }}"
-  data-is-patient="{% if user.is_authenticated and user.is_patient %}true{% else %}false{% endif %}"
-  data-login-url="{% url 'users:login' %}?{{ visitor_return_query }}"
-  data-request-devis-url="{% url 'cart:cart_fiche_request_devis' %}">
+<div class="org-fiche-page-bg">
+  <div class="org-fiche-card">
 
-  <div class="org-fiche-mobile-top">
-    <a href="{% url 'healthcare:search' %}" class="org-fiche-back">
-      {% include "healthcare/_icon_svg.html" with icon="arrow-left" class="pp-ico pp-ico--sm" %} Retour
-    </a>
-    <div class="flex items-center gap-2">
-      {% if not user.is_authenticated %}
-      <a href="{% url 'users:login' %}?{{ visitor_return_query }}" class="org-fiche-back text-[11px]">Connexion</a>
-      {% elif user.is_authenticated %}
-      <a href="{% url 'healthcare:toggle_favorite' org.slug %}" class="org-fiche-fav{% if is_favorite %} is-active{% endif %}" title="{% if is_favorite %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}">
-        {% include "healthcare/_icon_svg.html" with icon="heart" class="pp-ico pp-ico--sm" %}
-      </a>
+    <!-- Header Gradient Banner -->
+    <div class="profil-drawer-header">
+      <div class="profil-drawer-close-row">
+        <a href="{% if request.GET.src == 'annuaire' %}{% url 'healthcare:annuaire' %}{% else %}{% url 'healthcare:search' %}{% endif %}" class="profil-drawer-back-btn">
+          ← Retour
+        </a>
+        <div style="display:flex;align-items:center;gap:8px">
+          {% if user.is_authenticated %}
+          <a href="{% url 'healthcare:toggle_favorite' org.slug %}" class="profil-drawer-fav-btn{% if is_favorite %} is-active{% endif %}" title="{% if is_favorite %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}">
+            {% if is_favorite %}❤️ Favori{% else %}🤍 Favoris{% endif %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="profil-drawer-head-body">
+        <div class="profil-drawer-identity">
+          <div class="profil-drawer-avatar">
+            {% if org.logo %}
+              <img src="{{ org.logo.url }}" alt="{{ org.name }}">
+            {% else %}
+              🏥
+            {% endif %}
+          </div>
+          <div style="min-width:0;flex:1">
+            <div class="profil-drawer-name-row">
+              <span class="profil-drawer-name">{{ org.name }}</span>
+              {% if show_pioneer_badge %}
+              <span class="profil-drawer-pioneer">⭐ Pionnier</span>
+              {% endif %}
+            </div>
+            <div class="profil-drawer-meta-row">
+              <span class="profil-drawer-sub">
+                {{ org.type_organisme.name|default:"Structure de santé" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}
+              </span>
+              {% if open_today %}
+              <span class="profil-drawer-open-badge profil-drawer-open-badge--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
+                <span class="profil-drawer-open-dot"></span>
+                {% if open_today == 'open' %}Ouvert{% else %}Fermé{% endif %}
+              </span>
+              {% endif %}
+            </div>
+            <div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:4px">
+              <span>🕐</span>
+              <span>{% if hours_meta %}{{ hours_meta }}{% else %}Lun–Sam : 07h00–19h00 · Dim : 08h00–13h00{% endif %}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="profil-drawer-actions">
+          <button type="button" class="profil-drawer-action-btn" onclick="scrollToActesSection()">📅 RDV</button>
+          <button type="button" class="profil-drawer-action-btn" onclick="openGpsMaps()">📍 GPS</button>
+          <button type="button" class="profil-drawer-action-btn" onclick="toggleHorairesPop()">🕐 Horaires</button>
+        </div>
+
+        <!-- Horaires Popover -->
+        <div id="horaires-pop" class="profil-drawer-horaires-pop" hidden>
+          <div style="font-weight:700;color:#1a3a6e;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+            <span class="profil-drawer-horaires-title" style="margin-bottom:0">🕐 Horaires d'ouverture</span>
+            <span onclick="toggleHorairesPop()" style="cursor:pointer;color:#9ca3af;font-weight:bold;font-size:14px">&times;</span>
+          </div>
+          {% for hour in hours_list %}
+            <div class="profil-drawer-horaires-line" style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;{% if hour.is_today %}font-weight:bold;color:#0a5c8a;{% endif %}">
+              <span>{{ hour.day_label|default:hour.day }} {% if hour.is_today %}<span style="font-size:9px;background:#e8f4fb;padding:1px 5px;border-radius:10px;color:#0a5c8a">Aujourd'hui</span>{% endif %}</span>
+              <span>{% if hour.closed %}Fermé{% else %}{{ hour.hours }}{% endif %}</span>
+            </div>
+          {% empty %}
+            <div class="profil-drawer-horaires-line">{{ hours_meta|default:"Horaires non renseignés" }}</div>
+          {% endfor %}
+          {% if open_today %}
+          <div class="profil-drawer-horaires-status profil-drawer-horaires-status--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
+            {% if open_today == 'open' %}● Ouvert maintenant{% else %}● Fermé actuellement{% endif %}
+          </div>
+          {% endif %}
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- Body Section -->
+    <div class="profil-drawer-body">
+      {% if org.description %}
+      <p class="profil-drawer-desc">{{ org.description }}</p>
       {% endif %}
-    </div>
-  </div>
 
-  {% include "healthcare/_organisme_fiche_header.html" %}
+      {% if patient_insurance_match %}
+      <div class="profil-drawer-ins-match">
+        <span aria-hidden="true">✅</span>
+        <span>Votre assurance <strong>{{ patient_insurance_match }}</strong> est acceptée ici.</span>
+      </div>
+      {% endif %}
 
-  <nav id="org-fiche-mobile-nav" aria-label="Sections de la fiche">
-    <a href="#org-section-actes" data-org-section="actes" class="is-active">Actes &amp; devis</a>
-    <a href="#org-section-infos" data-org-section="infos">Infos pratiques</a>
-  </nav>
-
-  <div class="pp-body pp-body--fiche">
-    {% if not user.is_authenticated %}
-    <p class="mb-3 rounded-xl border border-dashed border-gray-200 bg-white px-3 py-2 text-center text-[11px] text-gray-600">
-      <a href="{% url 'users:login' %}?{{ visitor_return_query }}" class="font-semibold text-primary-700 hover:underline">Connectez-vous</a>
-      pour enregistrer vos favoris et demander un devis MedCare.
-    </p>
-    {% endif %}
-
-    {% include "healthcare/_organisme_fiche_catalogue.html" %}
-    {% include "healthcare/_organisme_fiche_infos.html" %}
-  </div>
-</div>
-
-{% if profil_pillars %}
-<div class="org-fiche-sticky" id="org-fiche-sticky-devis" aria-live="polite">
-  <div class="org-fiche-sticky__inner">
-    <div class="pp-devis-wrap pp-devis-wrap--float">
-      <p id="org-sticky-count" class="org-fiche-sticky__count hidden"></p>
-      <p id="org-sticky-total" class="org-fiche-sticky__total hidden"></p>
-      <button type="button" class="pp-devis-cta pp-devis-cta--medcare js-devis-cta">
-        <span class="pp-devis-cta__label">{% include "healthcare/_icon_svg.html" with icon="chat" class="pp-ico pp-ico--sm" %} Obtenir mon devis</span>
+      {% if insurances_profil %}
+      <button type="button" class="profil-drawer-assur-toggle" onclick="toggleAssurDrop()">
+        <span>🛡 Assurances acceptées ({{ insurances_profil|length }})</span>
+        <span id="assur-caret">▼</span>
       </button>
-      <p class="pp-devis-hint">Cochez des actes — devis et prise de RDV dans la messagerie MedCare.</p>
+      <div id="assur-list" class="profil-drawer-assur-list" hidden>
+        {% for ins in insurances_profil %}
+        <div class="profil-drawer-assur-row{% if ins.patient_match %} profil-drawer-assur-row--match{% endif %}">
+          <span>{% if ins.patient_match %}✓ {% endif %}{{ ins.name }}</span>
+          {% if ins.patient_match %}<span class="profil-drawer-assur-tag">Acceptée pour vous</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if org.prises_sang_domicile %}
+      <div class="profil-drawer-domicile">
+        <div class="profil-drawer-domicile-title">🏠 Prélèvement à domicile disponible</div>
+        {% if org.horaires_complement %}
+        <div class="profil-drawer-domicile-sub">{{ org.horaires_complement }}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Actes disponibles -->
+      <div id="actes-section" class="profil-drawer-actes-label">Actes disponibles</div>
+      <div class="profil-drawer-actes-search">
+        <input id="profil-acte-search" type="search" placeholder="Rechercher un acte…" autocomplete="off" oninput="filterProfilActes(this.value)">
+        <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)">🔍</button>
+      </div>
+
+      <div class="profil-drawer-actes-list">
+        {% for pillar in profil_pillars %}
+        <div class="pa-cat profil-drawer-cat">
+          <div class="profil-drawer-cat-head" onclick="togglePillarCollapse(this)">
+            <span>{% if pillar.icon and pillar.icon not in pillar.name %}{{ pillar.icon }} {% endif %}{{ pillar.name }}</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="profil-drawer-cat-count">{{ pillar.count }}</span>
+              <span class="profil-drawer-cat-arrow">▼</span>
+            </div>
+          </div>
+          <div class="profil-drawer-cat-body">
+          {% for pa in pillar.actes %}
+          <div class="pa-row profil-pa-row"
+            data-nom="{{ pa.acte.name|lower }}"
+            data-acte-name="{{ pa.acte.name|escape }}"
+            data-price="{{ pa.price|floatformat:0 }}"
+            onclick="toggleActeSelection(this)">
+            <input type="checkbox" class="pa-check" onclick="event.stopPropagation(); toggleActeSelection(this.closest('.pa-row'))" aria-label="Sélectionner {{ pa.acte.name }}">
+            <div class="profil-pa-info">
+              <div class="profil-pa-nom">{{ pa.acte.name }}</div>
+              {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+              <div class="profil-pa-cat-label">
+                {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% else %}{{ pa.acte.service_medical_category.name }}{% endif %}
+              </div>
+              {% endif %}
+            </div>
+            <div class="profil-pa-right">
+              {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+              <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} FCFA</div>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+        </div>
+        {% empty %}
+        <p style="padding: 20px; text-align: center; color: #9ca3af; font-size: 13px;">Aucun acte publié pour cette structure.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Recap Box (Dynamic) -->
+      <div id="profil-panier-recap" class="profil-panier-recap-box" style="display:none;">
+        <div class="profil-panier-title">🛒 Sélection (0 acte)</div>
+        <div id="profil-panier-items"></div>
+        <div class="profil-panier-total-row">
+          <span style="font-size: 12px; font-weight: 600; color: #0a5c8a;">Total estimé</span>
+          <span id="profil-panier-total" style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #0a5c8a;">0 FCFA</span>
+        </div>
+      </div>
+
+      <!-- WhatsApp Devis Button -->
+      <button type="button" class="profil-devis-btn" onclick="sendWhatsappDevis()">
+        💬 Obtenir mon devis WhatsApp
+      </button>
     </div>
+
   </div>
 </div>
-{% endif %}
-
-<p id="org-fiche-toast" class="hidden" role="status"></p>
-
-<!-- MODAL PROFIL STRUCTURE (drawer) -->
-<div id="profil-struct-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:400" onclick="closeProfilStruct()"></div>
-<div id="profil-struct-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;width:440px;max-width:96vw;background:#fff;z-index:401;box-shadow:-8px 0 40px rgba(0,0,0,0.18);overflow-y:auto;flex-direction:column"></div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'healthcare/js/organisme_fiche.js' %}?v=5"></script>
 <script>
-function openProfilStruct(structId) {
-  const modal = document.getElementById('profil-struct-modal');
-  const overlay = document.getElementById('profil-struct-overlay');
-  
-  // Charger le contenu du profil structure via AJAX
-  fetch('/healthcare/organisme/' + structId + '/profil-drawer/')
-    .then(response => response.text())
-    .then(html => {
-      modal.innerHTML = html;
-      modal.style.display = 'flex';
-      overlay.style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    })
-    .catch(error => console.error('Error loading profile:', error));
+// Toggle Pillar Collapse/Expand
+function togglePillarCollapse(headEl) {
+  headEl.classList.toggle('is-collapsed');
+  const body = headEl.nextElementSibling;
+  if (body) body.classList.toggle('is-collapsed');
 }
 
-function closeProfilStruct() {
-  const modal = document.getElementById('profil-struct-modal');
-  const overlay = document.getElementById('profil-struct-overlay');
+// Toggle Horaires Popover
+function toggleHorairesPop() {
+  const p = document.getElementById('horaires-pop');
+  if (p) p.hidden = !p.hidden;
+}
+
+// Toggle Contact Card
+function toggleContactProfil() {
+  const c = document.getElementById('profil-contact-card');
+  if (c) c.hidden = !c.hidden;
+}
+
+// Toggle Assurances Dropdown
+function toggleAssurDrop() {
+  const l = document.getElementById('assur-list');
+  const c = document.getElementById('assur-caret');
+  if (!l) return;
+  const isHidden = l.hidden;
+  l.hidden = !isHidden;
+  if (c) c.textContent = isHidden ? '▲' : '▼';
+}
+
+// Search Filter
+function filterProfilActes(q) {
+  q = (q || '').trim().toLowerCase();
+  document.querySelectorAll('.profil-pa-row').forEach(row => {
+    const nom = row.getAttribute('data-nom') || '';
+    row.style.display = (!q || nom.includes(q)) ? '' : 'none';
+  });
+  document.querySelectorAll('.profil-drawer-cat').forEach(cat => {
+    const visible = [...cat.querySelectorAll('.profil-pa-row')].some(r => r.style.display !== 'none');
+    cat.style.display = visible ? '' : 'none';
+  });
+}
+
+// Scroll to Actes
+function scrollToActesSection() {
+  const sec = document.getElementById('actes-section');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+}
+
+// GPS / Maps URL
+function openGpsMaps() {
+  const mapsUrl = "{{ maps_url|default:'' }}";
+  if (mapsUrl && mapsUrl !== '#') {
+    window.open(mapsUrl, '_blank');
+  } else {
+    alert("Localisation GPS : {{ org.address|default:org.city|escapejs }}");
+  }
+}
+
+// Actes selection & Cart calculation
+let selectedActes = [];
+
+function toggleActeSelection(row) {
+  const chk = row.querySelector('.pa-check');
+  const acteName = row.getAttribute('data-acte-name');
+  const price = parseInt(row.getAttribute('data-price') || '0', 10);
   
-  modal.style.display = 'none';
-  overlay.style.display = 'none';
-  document.body.style.overflow = '';
+  if (event.target !== chk) {
+    chk.checked = !chk.checked;
+  }
+  
+  if (chk.checked) {
+    row.classList.add('is-selected');
+    if (!selectedActes.some(a => a.name === acteName)) {
+      selectedActes.push({ name: acteName, price: price });
+    }
+  } else {
+    row.classList.remove('is-selected');
+    selectedActes = selectedActes.filter(a => a.name !== acteName);
+  }
+  
+  updateCartRecap();
+}
+
+function updateCartRecap() {
+  const box = document.getElementById('profil-panier-recap');
+  const itemsContainer = document.getElementById('profil-panier-items');
+  const totalEl = document.getElementById('profil-panier-total');
+  const titleEl = box.querySelector('.profil-panier-title');
+  
+  if (selectedActes.length === 0) {
+    box.style.display = 'none';
+    return;
+  }
+  
+  box.style.display = 'block';
+  titleEl.textContent = `🛒 Sélection (${selectedActes.length} acte${selectedActes.length > 1 ? 's' : ''})`;
+  
+  let total = 0;
+  itemsContainer.innerHTML = selectedActes.map(a => {
+    total += a.price;
+    return `<div class="profil-panier-item-row">
+      <span>• ${a.name}</span>
+      <span style="font-weight:700;">${a.price.toLocaleString('fr-FR')} FCFA</span>
+    </div>`;
+  }).join('');
+  
+  totalEl.textContent = `${total.toLocaleString('fr-FR')} FCFA`;
+}
+
+// WhatsApp Devis sender
+function sendWhatsappDevis() {
+  const phone = "{{ org.whatsapp_number|default:org.contact_phone|default:'' }}".replace(/[^0-9]/g, '');
+  const targetPhone = phone || "221781673189";
+  
+  let msg = `Bonjour {{ org.name }},\nJe souhaite obtenir des informations sur vos prestations sur MedCare.`;
+  
+  if (selectedActes.length > 0) {
+    msg = `Bonjour {{ org.name }},\nJe souhaite obtenir un devis pour les actes suivants :\n`;
+    let total = 0;
+    selectedActes.forEach(a => {
+      msg += `• ${a.name} : ${a.price.toLocaleString('fr-FR')} FCFA\n`;
+      total += a.price;
+    });
+    msg += `\nTotal estimé : ${total.toLocaleString('fr-FR')} FCFA\nMerci !`;
+  }
+  
+  const waUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, '_blank');
 }
 </script>
 {% endblock %}

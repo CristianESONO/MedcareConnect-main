@@ -6,10 +6,12 @@
 {% endblock %}
 {% block dash_content %}
 <div class="mc-thread-page max-w-3xl">
-  <a href="{% url 'messaging:inbox' %}" class="mc-thread-back inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600">
-    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-    Messages
-  </a>
+  <div class="flex items-center justify-between mb-4">
+    <a href="{% url 'messaging:inbox' %}" class="mc-thread-back inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+      Messages
+    </a>
+  </div>
   <div class="mt-4">
     {% include "messaging/partials/thread_view.html" %}
   </div>

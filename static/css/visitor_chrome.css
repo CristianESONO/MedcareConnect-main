@@ -103,12 +103,17 @@
   -webkit-appearance: none;
   line-height: 1.2;
   vertical-align: baseline;
+  transition: color 0.2s ease;
+}
+
+.mc-landing-nav-dropdown-trigger:hover {
+  color: var(--mc-accent, #4fa3c7);
 }
 
 .mc-landing-nav-chevron {
   font-size: 0.85em;
   line-height: 1;
-  transition: transform 0.2s;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mc-landing-nav-dropdown.is-open .mc-landing-nav-chevron {
@@ -117,32 +122,34 @@
 
 .mc-landing-nav-dropdown-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 12px);
   left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  min-width: 220px;
+  transform: translateX(-50%) translateY(-12px);
+  min-width: 240px;
   margin: 0;
-  padding: 8px 0;
+  padding: 6px;
   list-style: none;
   background: #fff;
-  border: 1px solid rgba(18, 58, 99, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(18, 58, 99, 0.14), 0 2px 8px rgba(18, 58, 99, 0.06);
+  border: 1px solid rgba(18, 58, 99, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(18, 58, 99, 0.16), 0 4px 12px rgba(18, 58, 99, 0.08);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.22s ease, visibility 0.22s, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.28s ease, visibility 0.28s, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 600;
   overflow: hidden;
 }
 
 .mc-landing-nav-dropdown-menu::before {
   content: '';
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--mc-accent, #4fa3c7), var(--mc-navy, #123a63));
-  border-radius: 3px 3px 0 0;
-  margin-bottom: 4px;
+  border-radius: 16px 16px 0 0;
 }
 
 .mc-landing-nav-dropdown.is-open .mc-landing-nav-dropdown-menu {
@@ -155,8 +162,16 @@
 .mc-landing-nav-dropdown-link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.mc-landing-nav-dropdown-link:hover {
+  background: linear-gradient(135deg, rgba(79, 163, 199, 0.08), rgba(18, 58, 99, 0.06));
+  transform: translateX(4px);
 }
 
 .mc-landing-nav-dropdown-link--logout {
@@ -388,6 +403,161 @@
 /* Header vitrine : burger masqué par défaut (PC / tablette) */
 .mc-landing-burger {
   display: none !important;
+}
+
+/* Horizontal delay filter pills */
+.dem-filter-pills-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+  width: 100%;
+  animation: fadeInDown 0.2s ease;
+}
+
+.dem-filter-pills-inline.hidden {
+  display: none;
+}
+
+.dem-filter-pill-inline {
+  padding: 6px 14px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dem-filter-pill-inline:hover {
+  border-color: var(--mc-accent, #4fa3c7);
+  color: var(--mc-accent, #4fa3c7);
+  background: rgba(79, 163, 199, 0.05);
+}
+
+.dem-filter-pill-inline.on {
+  background: var(--mc-accent, #4fa3c7);
+  border-color: var(--mc-accent, #4fa3c7);
+  color: #fff;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Trajet configurator styles */
+:root {
+  --blue: #0ea5e9;
+  --blue-l: #f0fdfa;
+  --blue-m: #bae6fd;
+  --green-d: #059669;
+  --text: #1e293b;
+  --g100: #f1f5f9;
+  --g200: #e2e8f0;
+  --g400: #94a3b8;
+  --g600: #475569;
+  --red: #c0392b;
+  --red-l: #fde8e8;
+}
+
+.trajet-config-container {
+  background: var(--blue-l);
+  border: 1.5px solid var(--blue-m);
+  border-radius: 12px;
+  margin: 12px 0;
+  overflow: hidden;
+  animation: fadeInDown 0.3s ease-out;
+}
+
+.trajet-config-container.hidden {
+  display: none;
+}
+
+.trajet-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(14, 165, 233, 0.1);
+  border-bottom: 1px solid var(--blue-m);
+}
+
+.trajet-config-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.trajet-config-close {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--g600);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.trajet-config-close:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--red);
+}
+
+#trajet-config-content- {
+  padding: 14px;
+}
+
+.scard-btn-trajet {
+  font-size: 11px;
+  font-weight: 700;
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: DM Sans, sans-serif;
+  transition: all 0.2s;
+}
+
+.scard-btn-trajet:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+}
+
+.csr-trajet-btn {
+  font-size: 10px;
+  font-weight: 600;
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.2s;
+}
+
+.csr-trajet-btn:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
 }
 
 /* Burger app : visible seulement dans les barres mobile (pas sur PC) */

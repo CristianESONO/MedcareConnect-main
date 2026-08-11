@@ -1,32 +1,54 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Messagerie{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=1">
+{% endblock %}
 {% block content %}
 <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-    <h1 class="text-2xl font-bold text-gray-900">Messagerie</h1>
-    <div class="mt-6 rounded-xl border border-gray-200 bg-white divide-y divide-gray-100">
-        {% for conv in conversations %}
-        <a href="{% url 'messaging:conversation_detail' conv.pk %}" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-sm font-bold text-primary-500">
-                {% if user == conv.patient %}{{ conv.prestataire.display_name|make_list|first|upper }}{% else %}{{ conv.patient.display_name|make_list|first|upper }}{% endif %}
-            </div>
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center justify-between">
-                    <p class="truncate font-medium text-gray-900">{% if user == conv.patient %}{{ conv.prestataire.display_name }}{% else %}{{ conv.patient.display_name }}{% endif %}</p>
-                    {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
-                </div>
-                {% if conv.subject %}<p class="truncate text-xs text-gray-500">{{ conv.subject }}</p>{% endif %}
-                {% with last=conv.last_message %}{% if last %}<p class="mt-0.5 truncate text-xs text-gray-400">{{ last.content|truncatechars:60 }}</p>{% endif %}{% endwith %}
-            </div>
-            {% if user == conv.patient %}
-            {% with count=conv.unread_count_for_patient %}{% if count %}<span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-400 px-1.5 text-xs font-bold text-white">{{ count }}</span>{% endif %}{% endwith %}
-            {% endif %}
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Messagerie</h1>
+        <a href="{% url 'healthcare:search' %}" class="pac-btn-primary" style="display:inline-flex;align-items:center;gap:6px">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+          Retour aux prestations
         </a>
-        {% empty %}
-        <div class="px-5 py-16 text-center">
-            <p class="text-gray-400">Aucune conversation.</p>
-            <a href="{% url 'healthcare:search' %}" class="mt-2 inline-block text-sm font-medium text-accent-500 hover:text-accent-600">Rechercher un prestataire pour démarrer</a>
-        </div>
-        {% endfor %}
+    </div>
+    <div class="mt-6 space-y-4">
+        {% if grouped_conversations %}
+          {% for group in grouped_conversations %}
+          <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+            <div class="bg-gray-50/90 px-5 py-2 text-xs font-bold text-gray-600 border-b border-gray-100 flex items-center gap-2">
+              <span>📅</span>
+              <span>{{ group.label }}</span>
+            </div>
+            <div class="divide-y divide-gray-100">
+              {% for conv in group.items %}
+              <a href="{% url 'messaging:conversation_detail' conv.pk %}" class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-sm font-bold text-primary-500">
+                      {% if user == conv.patient %}{{ conv.prestataire.display_name|make_list|first|upper }}{% else %}{{ conv.patient.display_name|make_list|first|upper }}{% endif %}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                          <p class="truncate font-medium text-gray-900">{% if user == conv.patient %}{{ conv.prestataire.display_name }}{% else %}{{ conv.patient.display_name }}{% endif %}</p>
+                          {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
+                      </div>
+                      {% if conv.subject %}<p class="truncate text-xs text-gray-500">{{ conv.subject }}</p>{% endif %}
+                      {% with last=conv.last_message %}{% if last %}<p class="mt-0.5 truncate text-xs text-gray-400">{{ last.content|truncatechars:60 }}</p>{% endif %}{% endwith %}
+                  </div>
+                  {% if user == conv.patient %}
+                  {% with count=conv.unread_count_for_patient %}{% if count %}<span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-400 px-1.5 text-xs font-bold text-white">{{ count }}</span>{% endif %}{% endwith %}
+                  {% endif %}
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="rounded-xl border border-gray-200 bg-white px-5 py-16 text-center">
+              <p class="text-gray-400">Aucune conversation.</p>
+              <a href="{% url 'healthcare:search' %}" class="mt-2 inline-block text-sm font-medium text-accent-500 hover:text-accent-600">Rechercher un prestataire pour démarrer</a>
+          </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

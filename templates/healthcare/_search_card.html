@@ -81,6 +81,17 @@
       {% endif %}
     </div>
     <div class="scard-footer-actions">
+      {% if pa.organisme.is_ambulance_service %}
+      <button type="button" class="scard-btn-trajet" onclick="event.stopPropagation();openTrajetConfig('{{ pa.organisme.pk }}', '{{ pa.acte.name|escapejs }}')">
+        {% if 'couverture' in query|lower or 'événement' in query|lower or 'evenement' in query|lower or 'assistance' in query|lower or 'manifestation' in query|lower or 'couverture' in pa.acte.name|lower %}
+          🩺 Configurer ma couverture
+        {% elif 'rapatriement' in query|lower or 'évacuation' in query|lower or 'evacuation' in query|lower or 'rapatriement' in pa.acte.name|lower %}
+          🌍 Organiser le rapatriement
+        {% else %}
+          🚑 Configurer mon trajet
+        {% endif %}
+      </button>
+      {% endif %}
       <button type="button" class="scard-btn-secondary profil-drawer-trigger" data-org-id="{{ pa.organisme.pk }}">Voir profil</button>
       <div class="scard-total"><span class="scard-total-inner sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xs" %}<span class="scard-total-text"></span></span></div>
     </div>

@@ -175,6 +175,7 @@ _SEARCH_SORT_CHOICES = frozenset(
         "distance",
         "delai_asc",
         "delai_desc",
+        "delai_rdv_asc",
     }
 )
 
@@ -332,6 +333,7 @@ def _build_mobile_piliers_payload(acte_offer_counts: dict[int, int]) -> list[dic
     """Arbre actes par pilier pour la grille mobile (checkboxes, style démo)."""
     from healthcare.service_icons import icon_for_service_medical, mobile_labels_for_service
 
+
     actes = ActeMedical.objects.filter(is_active=True, level=3).select_related(
         "parent_service", "service_medical_category"
     )
@@ -363,7 +365,17 @@ def _build_mobile_piliers_payload(acte_offer_counts: dict[int, int]) -> list[dic
                     }
                 )
             if actes_out:
+                # Sort actes_out to match demo order: actes from ACTES_ORDER first, then others by name
+                demo_acts = p_info["acts"].get(cat_name, [])
+                def sort_key(row):
+                    try:
+                        idx = demo_acts.index(row["name"])
+                        return (0, idx)
+                    except ValueError:
+                        return (1, row["name"])
+                actes_out.sort(key=sort_key)
                 cats_out.append({"name": cat_name, "actes": actes_out})
+        # Categories are already in correct order from p_info["categories"]
         if not cats_out:
             continue
         short, sub = mobile_labels_for_service(svc.name)
@@ -774,11 +786,19 @@ ACTES_ORDER = {
 def _normalize_catalog_label(name: str) -> str:
     if not name:
         return ""
+    import unicodedata as _ud
+    # Retirer les emojis/symboles Unicode (So, Sm, Sk, Sc, Cs, Co, Cn)
+    # Ex: "🧬 Biologie medicale" -> "Biologie medicale"
+    cleaned = "".join(
+        c for c in name
+        if _ud.category(c) not in ("So", "Sm", "Sk", "Sc", "Cs", "Co", "Cn")
+    )
     return (
-        name.replace("'", "’")
-        .replace("'", "’")
+        cleaned.replace("’", "'")
+        .replace("‘", "'")
         .replace(" ", "")
         .lower()
+        .strip()
     )
 
 
@@ -868,7 +888,7 @@ def search(request):
     pool_for_pills = list(
         dict.fromkeys([*acte_ids_clean, *acte_ids_from_lots]),
     )
-    pool_from_request = bool(acte_ids_clean or lot_ids_clean or service_id or q)
+    pool_from_request = bool(acte_ids_clean or lot_ids_clean or q)
     if len(acte_ids_clean) == 1:
         acte_id = str(acte_ids_clean[0])
     elif len(pool_for_pills) == 1:
@@ -949,6 +969,7 @@ def search(request):
         if len(acte_ids_clean) == 1:
             pa_qs = pa_qs.filter(acte_id=acte_ids_clean[0])
         else:
+            # Recherche groupée : filtrer les structures proposant AU MOINS UN des actes sélectionnés (union)
             pa_qs = pa_qs.filter(acte_id__in=acte_ids_clean)
 
     def _apply_level_price_location_filters(qs):
@@ -1071,6 +1092,8 @@ def search(request):
             pa_qs = pa_qs.order_by("_delai_sort", "price", "acte__name", "organisme__name")
         elif sort == "delai_desc":
             pa_qs = pa_qs.order_by("-_delai_sort", "price", "acte__name", "organisme__name")
+        elif sort == "delai_rdv_asc":
+            pa_qs = pa_qs.order_by("_delai_sort", "price", "acte__name", "organisme__name")
         else:
             # price_asc par défaut (comportement « e-commerce »)
             pa_qs = pa_qs.order_by("price", "acte__name", "organisme__name")
@@ -1181,6 +1204,8 @@ def search(request):
         )
 
     services_all = ServiceMedical.objects.filter(is_active=True).order_by("order")
+    # Filter to only include main pillars (services that have a definition in ACTES_ORDER)
+    services_for_sidebar = [s for s in services_all if _actes_order_for_service_name(s.name)]
     # Pastilles « examens » : actes du périmètre (lot/session), pas les familles de soins.
     acte_base = ActeMedical.objects.filter(is_active=True).select_related(
         "service_medical_category",
@@ -1216,8 +1241,6 @@ def search(request):
         )
     else:
         actes_for_filter = actes_for_browse_nav
-
-    services_for_sidebar = services_all
 
     acte_keep_query = ""
     if pool_for_pills:
@@ -1298,12 +1321,20 @@ def search(request):
             }
         )
         from .service_icons import icon_for_service_medical
+        import unicodedata as _ud
+
+        def _strip_leading_emoji(text: str) -> str:
+            """Retire les emojis/symboles Unicode en début de chaîne."""
+            return "".join(
+                c for c in text
+                if _ud.category(c) not in ("So", "Sm", "Sk", "Sc", "Cs", "Co", "Cn")
+            ).strip()
 
         for s in services_for_sidebar:
             ic = icon_for_service_medical(s)
             service_dem_pills.append(
                 {
-                    "label": s.name,
+                    "label": _strip_leading_emoji(s.name),
                     "icon": ic[:12],
                     "url": _search_url_mutate(
                         request,
@@ -1333,9 +1364,19 @@ def search(request):
             p_info = _actes_order_for_service_name(s.name)
             subgroups_out: list[dict] = []
             if p_info:
+                # Get all categories from database for this service
+                db_categories = {}
+                for a in acte_nav_qs.filter(service_medical_category_id=s.pk):
+                    cat_title = a.parent_service.name if a.parent_service_id else "Autres"
+                    if cat_title not in db_categories:
+                        db_categories[cat_title] = []
+                    db_categories[cat_title].append(a)
+                
+                # Process categories in demo order
                 for cat_name in p_info["categories"]:
                     rows: list[dict] = []
                     seen_pks: set[int] = set()
+                    # First add acts from demo order
                     for act_name in p_info["acts"].get(cat_name, []):
                         act_obj = _resolve_acte_for_nav(
                             s.pk, cat_name, act_name, by_svc_cat, by_exact
@@ -1355,8 +1396,10 @@ def search(request):
                                 else 0,
                             }
                         )
+                    # Then add remaining acts from this category from database
                     cat_norm = _normalize_catalog_label(cat_name)
-                    for act_obj in by_svc_cat.get((s.pk, cat_norm), []):
+                    matched_acts = by_svc_cat.get((s.pk, cat_norm), [])
+                    for act_obj in matched_acts:
                         if act_obj.pk in seen_pks:
                             continue
                         seen_pks.add(act_obj.pk)
@@ -1370,13 +1413,47 @@ def search(request):
                                 ),
                             }
                         )
-                    subgroups_out.append(
-                        {
-                            "title": cat_name,
-                            "rows": rows,
-                            "count": sum(r["count"] for r in rows),
-                        }
-                    )
+                    # Sort rows to match demo order
+                    demo_acts = p_info["acts"].get(cat_name, [])
+                    def sort_key(row):
+                        try:
+                            idx = demo_acts.index(row["name"])
+                            return (0, idx)
+                        except ValueError:
+                            return (1, row["name"])
+                    rows.sort(key=sort_key)
+                    if rows:
+                        subgroups_out.append(
+                            {
+                                "title": cat_name,
+                                "rows": rows,
+                                "count": sum(r["count"] for r in rows),
+                            }
+                        )
+                # Add categories from database that are not in demo
+                for cat_title, acts in db_categories.items():
+                    cat_norm = _normalize_catalog_label(cat_title)
+                    # Check if this category is already in subgroups_out
+                    if any(_normalize_catalog_label(sg["title"]) == cat_norm for sg in subgroups_out):
+                        continue
+                    rows: list[dict] = []
+                    for a in acts:
+                        rows.append(
+                            {
+                                "pk": a.pk,
+                                "name": a.name,
+                                "selected": a.pk in selected_set,
+                                "count": int(acte_offer_counts.get(a.pk, 0)),
+                            }
+                        )
+                    if rows:
+                        subgroups_out.append(
+                            {
+                                "title": cat_title,
+                                "rows": rows,
+                                "count": sum(r["count"] for r in rows),
+                            }
+                        )
             else:
                 for a in acte_nav_qs.filter(service_medical_category_id=s.pk):
                     cat_title = (
@@ -1399,6 +1476,11 @@ def search(request):
                     )
                 for sub in subgroups_out:
                     sub["count"] = sum(r["count"] for r in sub["rows"])
+
+            # When p_info exists, categories are already in correct order from p_info["categories"]
+            # Only sort when p_info is None (fallback to database order)
+            if not p_info:
+                subgroups_out.sort(key=lambda sg: sg["title"])
 
             if not subgroups_out:
                 continue
@@ -1708,10 +1790,9 @@ def search(request):
             (s.name for s in services_for_sidebar if str(s.pk) == str(service_id or "")),
             "",
         ),
-        "is_ambulance_service": any(
-            "ambulance" in s.name.lower()
-            for s in services_for_sidebar
-            if str(s.pk) == str(service_id or "")
+        "is_ambulance_service": (
+            any("ambulance" in s.name.lower() for s in services_for_sidebar if str(s.pk) == str(service_id or ""))
+            or any(k in (q or "").lower() for k in ["ambulance", "ambu", "smur", "rapatriement", "transport"])
         ),
     }
     if show_dem_service_acte_nav:
@@ -1963,15 +2044,48 @@ def _opening_hours_list(org):
     hours_list = []
     _jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
     _today_fr = _jours[datetime.now().weekday()]
-    
-    # Si opening_hours est une chaîne (format importé), retourner une liste vide
-    if isinstance(org.opening_hours, str):
-        return hours_list
-    
-    if org.opening_hours:
-        for day in _jours:
-            info = org.opening_hours.get(day, {})
-            hours_list.append({"day": day, "is_today": day == _today_fr, **info})
+
+    raw = org.opening_hours
+    if isinstance(raw, str):
+        raw = None
+
+    default_hours = {
+        "Lundi": {"open": "07:00", "close": "19:00", "closed": False},
+        "Mardi": {"open": "07:00", "close": "19:00", "closed": False},
+        "Mercredi": {"open": "07:00", "close": "19:00", "closed": False},
+        "Jeudi": {"open": "07:00", "close": "19:00", "closed": False},
+        "Vendredi": {"open": "07:00", "close": "19:00", "closed": False},
+        "Samedi": {"open": "07:00", "close": "19:00", "closed": False},
+        "Dimanche": {"open": "08:00", "close": "13:00", "closed": False},
+    }
+
+    source = raw if (raw and isinstance(raw, dict) and any(bool(v) for v in raw.values())) else default_hours
+
+    for day in _jours:
+        info = source.get(day, {})
+        if not isinstance(info, dict):
+            info = {}
+        is_closed = info.get("closed", False) or (not info.get("open") and not info.get("close"))
+        open_val = (info.get("open") or "").replace(":", "h") if info.get("open") else ""
+        close_val = (info.get("close") or "").replace(":", "h") if info.get("close") else ""
+
+        display_h = "Fermé"
+        if not is_closed and (open_val or close_val):
+            display_h = f"{open_val} – {close_val}" if (open_val and close_val) else (open_val or close_val)
+
+        hours_list.append({
+            "day": day,
+            "day_label": day,
+            "days": day,
+            "hours": display_h,
+            "is_today": day == _today_fr,
+            "open": info.get("open", ""),
+            "close": info.get("close", ""),
+            "open_time": open_val or info.get("open", ""),
+            "close_time": close_val or info.get("close", ""),
+            "closed": is_closed,
+            "display_hours": display_h,
+        })
     return hours_list
 
 
@@ -2120,15 +2234,15 @@ def organisme_profil_drawer(request, org_id):
 
 def service_detail(request, slug):
     service = get_object_or_404(ServiceMedical, slug=slug, is_active=True)
-    
+
     search_query = request.GET.get('search', '').strip()
     actes_qs = ActeMedical.objects.filter(
         service_medical_category=service, is_active=True,
-    )
-    
+    ).select_related("parent_service")
+
     if search_query:
         actes_qs = actes_qs.filter(name__icontains=search_query)
-    
+
     actes = actes_qs.order_by("level", "name")
 
     providers = OrganismeDeSante.objects.filter(
@@ -2236,8 +2350,11 @@ def _dashboard_period(request, org=None):
 
 def _dashboard_completion(org, actes_count, insurances_count):
     """Liste de check-points de complétion du profil prestataire."""
-    hours_ok = bool(org.opening_hours) and any(
-        bool(v) for v in (org.opening_hours or {}).values()
+    raw_oh = org.opening_hours
+    if isinstance(raw_oh, str):
+        raw_oh = None
+    hours_ok = bool(raw_oh) and any(
+        bool(v) for v in (raw_oh or {}).values()
     )
     return [
         {"key": "profile", "label": "Identité", "ok": bool(org.name and org.city)},

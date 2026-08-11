@@ -2064,7 +2064,7 @@
       function executeReset(e){
         if (e) e.preventDefault();
         var u = new URL(window.location.href);
-        var keep = ['service', 'acte'];
+        var keep = ['service'];
         var newU = new URL(window.location.origin + window.location.pathname);
         keep.forEach(function(k){
           u.searchParams.getAll(k).forEach(function(v){
@@ -2810,8 +2810,11 @@
         ? root.querySelectorAll('.scard-m-acte[data-pa-acte-pk="' + actePk + '"]')
         : document.querySelectorAll('.scard-m-acte[data-pa-acte-pk="' + actePk + '"]');
       return Array.from(rows).map(function(row){
+        var cardContainer = row.closest('[data-org-id]');
+        var orgId = row.getAttribute('data-pa-org-id') || (cardContainer ? cardContainer.getAttribute('data-org-id') : '');
         return {
           paId: row.getAttribute('data-pa-id'),
+          orgId: orgId,
           orgName: row.getAttribute('data-pa-org') || '',
           price: parseFloat(row.getAttribute('data-pa-price') || '0'),
           delai: row.getAttribute('data-pa-delai') || '',
@@ -2987,17 +2990,35 @@
         var rowsHtml = offers.map(function(o, idx){
           var isSel = String(chosenId) === String(o.paId);
           var tags = compOfferTags(o, idx);
+          var acteNameLow = (getActeName(actePk) || '').toLowerCase();
+          var isAmbulanceActe = (
+            acteNameLow.includes('ambulance') || 
+            acteNameLow.includes('transport') || 
+            acteNameLow.includes('rapatriement') || 
+            acteNameLow.includes('couverture') || 
+            acteNameLow.includes('evacuation') || 
+            acteNameLow.includes('évacuation')
+          );
+          var btnTxt = '🚑 Configurer mon trajet';
+          if (acteNameLow.includes('couverture') || acteNameLow.includes('événement') || acteNameLow.includes('evenement') || acteNameLow.includes('assistance') || acteNameLow.includes('manifestation')) {
+            btnTxt = '🩺 Configurer ma couverture';
+          } else if (acteNameLow.includes('rapatriement') || acteNameLow.includes('évacuation') || acteNameLow.includes('evacuation')) {
+            btnTxt = '🌍 Organiser le rapatriement';
+          }
+          var trajetBtn = isAmbulanceActe ? '<button type="button" class="csr-trajet-btn" onclick="event.stopPropagation();openTrajetConfig(\'' + escapeHtml(String(o.orgId || '')) + '\', \'' + escapeHtml(actePk) + '\', true)">' + btnTxt + '</button>' : '';
           return '<div class="comp-struct-row' + (isSel ? ' sel' : '') + '" data-comp-acte="' + escapeHtml(actePk) + '" data-comp-pa="' + escapeHtml(o.paId) + '">' +
             '<input type="radio" class="csr-radio" name="comp-' + escapeHtml(actePk) + '"' + (isSel ? ' checked' : '') + ' aria-label="' + escapeHtml(o.orgName) + '">' +
             '<div class="csr-info"><div class="csr-name">' + escapeHtml(o.orgName) + '</div>' +
             (tags ? '<div class="csr-tags">' + tags + '</div>' : '') + '</div>' +
             '<div class="csr-right"><div class="csr-prix">' + fnum(o.price) + ' F</div>' +
             (o.delai ? '<div class="csr-delai">' + escapeHtml(o.delai) + '</div>' : '') +
+            trajetBtn +
             '</div></div>';
         }).join('');
         return '<div class="comp-acte-section"><div class="comp-acte-lbl">' +
           '<div class="cal-dot"></div><div class="cal-name">' + escapeHtml(getActeName(actePk)) + '</div>' +
-          '<div class="cal-cnt">' + offers.length + ' option' + (offers.length > 1 ? 's' : '') + '</div></div>' + rowsHtml + '</div>';
+          '<div class="cal-cnt">' + offers.length + ' option' + (offers.length > 1 ? 's' : '') + '</div></div>' + rowsHtml +
+          '<div id="trajet-config-comp-' + actePk + '" class="trajet-config-container hidden"></div></div>';
       }).join('');
 
       var nbChoix = Object.keys(compChoices).length;
@@ -4987,6 +5008,15 @@
             });
           }
           if (window._sipnSyncProfilDrawer) window._sipnSyncProfilDrawer();
+          if (window.initTrajetConfig) {
+            window.initTrajetConfig(structId);
+            // After init, focus the specific acte if one was set via openTrajetConfig
+            if (window.curActe && window.focusTrajetActe) {
+              setTimeout(function() {
+                window.focusTrajetActe(window.curActe, structId);
+              }, 80);
+            }
+          }
         })
         .catch(function(error) {
           console.error('Error loading profile:', error);
@@ -5066,6 +5096,831 @@
         goProfilDevis(cartDevisBtn.getAttribute('data-devis-org-id'));
       });
     }
+  })();
+
+  /* ─── Tokenized Tag Input for Multi-Act Search ─ */
+  (function(){
+    if (!document.body.classList.contains('sipn-prestations')) return;
+    
+    var searchInput = document.getElementById('search-q');
+    if (!searchInput) return;
+    
+    // Create token container
+    var tokenContainer = document.createElement('div');
+    tokenContainer.className = 'tokenized-input-container';
+    tokenContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px;border:1.5px solid #e5e7eb;border-radius:12px;background:#fff;min-height:48px;position:relative;';
+    
+    var inputWrapper = searchInput.parentElement;
+    if (inputWrapper) {
+      // Move the search icon into the token container
+      var searchIcon = inputWrapper.querySelector('svg');
+      if (searchIcon) {
+        searchIcon.style.position = 'absolute';
+        searchIcon.style.left = '12px';
+        searchIcon.style.top = '50%';
+        searchIcon.style.transform = 'translateY(-50%)';
+        searchIcon.style.zIndex = '1';
+      }
+      
+      inputWrapper.insertBefore(tokenContainer, searchInput);
+      tokenContainer.appendChild(searchInput);
+      if (searchIcon) tokenContainer.appendChild(searchIcon);
+      searchInput.style.cssText = 'flex:1;min-width:120px;border:none;padding:4px 4px 4px 40px;margin:0;font-size:14px;';
+    }
+    
+    // Create autocomplete dropdown
+    var autocompleteDropdown = document.createElement('div');
+    autocompleteDropdown.className = 'autocomplete-dropdown';
+    autocompleteDropdown.style.cssText = 'position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);max-height:200px;overflow-y:auto;z-index:100;display:none;margin-top:4px;';
+    tokenContainer.appendChild(autocompleteDropdown);
+    
+    var tags = [];
+    
+    function createTag(text, value) {
+      var tag = document.createElement('span');
+      tag.className = 'token-tag';
+      tag.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:#edfbfc;border:1px solid #a8e9f0;border-radius:20px;font-size:12px;font-weight:600;color:#0a5c8a;';
+      tag.innerHTML = '<span>' + text + '</span><button type="button" class="token-remove" style="background:none;border:none;color:#0a5c8a;cursor:pointer;font-size:14px;padding:0;line-height:1;">&times;</button>';
+      tag.dataset.value = value;
+      
+      tag.querySelector('.token-remove').addEventListener('click', function() {
+        removeTag(tag);
+      });
+      
+      return tag;
+    }
+    
+    function addTag(text, value) {
+      if (tags.some(function(t) { return t.dataset.value === value; })) return;
+      
+      var tag = createTag(text, value);
+      tags.push(tag);
+      tokenContainer.insertBefore(tag, searchInput);
+      
+      // Sync with acte checkboxes
+      syncTagsWithCheckboxes();
+      
+      // Don't auto-trigger search - wait for button click
+    }
+    
+    function removeTag(tag) {
+      var index = tags.indexOf(tag);
+      if (index > -1) {
+        tags.splice(index, 1);
+        tag.remove();
+        syncTagsWithCheckboxes();
+        // Don't auto-trigger search - wait for button click
+      }
+    }
+    
+    function syncTagsWithCheckboxes() {
+      var acteIds = tags.map(function(t) { return t.dataset.value; });
+      
+      // Update checkboxes in sidebar
+      document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
+        var pk = row.getAttribute('data-dem-acte-pk');
+        var isActive = acteIds.indexOf(pk) !== -1;
+        row.classList.toggle('active', isActive);
+        var chk = row.querySelector('.dem-acte-chk-box');
+        if (chk) {
+          chk.checked = isActive;
+        }
+      });
+    }
+    
+    function triggerSearchUpdate() {
+      var form = document.getElementById('search-form');
+      if (!form) return;
+      
+      var acteIds = tags.map(function(t) { return t.dataset.value; });
+      
+      // Update hidden acte inputs
+      form.querySelectorAll('input[name="acte"]').forEach(function(inp) {
+        inp.remove();
+      });
+      
+      acteIds.forEach(function(id) {
+        var hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'acte';
+        hidden.value = id;
+        form.appendChild(hidden);
+      });
+      
+      // Trigger form submission with debounce
+      if (window.__tokenSearchDebounce) {
+        clearTimeout(window.__tokenSearchDebounce);
+      }
+      window.__tokenSearchDebounce = setTimeout(function() {
+        var u = new URL(form.action || window.location.href);
+        var fd = new FormData(form);
+        u.search = '';
+        fd.forEach(function(v, k) {
+          if (v !== '' && v != null) u.searchParams.append(k, v);
+        });
+        updatePageContent(u.toString());
+      }, 500);
+    }
+    
+    // Handle input for live autocomplete
+    searchInput.addEventListener('input', function(e) {
+      var text = searchInput.value.trim().toLowerCase();
+      if (text.length < 2) {
+        autocompleteDropdown.style.display = 'none';
+        return;
+      }
+      
+      var matches = [];
+      document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
+        var acteName = (row.getAttribute('data-dem-acte-name') || '').toLowerCase();
+        var pk = row.getAttribute('data-dem-acte-pk');
+        if (acteName.indexOf(text) !== -1 && !tags.some(function(t) { return t.dataset.value === pk; })) {
+          matches.push({ name: row.getAttribute('data-dem-acte-name'), pk: pk });
+        }
+      });
+      
+      if (matches.length > 0) {
+        autocompleteDropdown.innerHTML = matches.slice(0, 8).map(function(m) {
+          return '<div class="autocomplete-item" data-pk="' + m.pk + '" data-name="' + m.name + '" style="padding:8px 12px;cursor:pointer;font-size:12px;color:#4b5563;border-bottom:1px solid #f3f4f6;">' + m.name + '</div>';
+        }).join('');
+        autocompleteDropdown.style.display = 'block';
+        
+        // Add click handlers to autocomplete items
+        autocompleteDropdown.querySelectorAll('.autocomplete-item').forEach(function(item) {
+          item.addEventListener('click', function() {
+            addTag(item.getAttribute('data-name'), item.getAttribute('data-pk'));
+            searchInput.value = '';
+            autocompleteDropdown.style.display = 'none';
+          });
+        });
+      } else {
+        autocompleteDropdown.style.display = 'none';
+      }
+    });
+    
+    // Hide autocomplete on blur
+    searchInput.addEventListener('blur', function() {
+      setTimeout(function() { autocompleteDropdown.style.display = 'none'; }, 200);
+    });
+    
+    // Search button click handler
+    var searchButton = document.querySelector('.sipn-search-go');
+    if (searchButton) {
+      searchButton.addEventListener('click', function() {
+        triggerSearchUpdate();
+      });
+    }
+    
+    // Handle input for token creation (Enter and comma)
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        var text = searchInput.value.trim();
+        if (text) {
+          // Try to find matching acte
+          var matchingActe = findActeByName(text);
+          if (matchingActe) {
+            addTag(matchingActe.name, matchingActe.pk);
+            searchInput.value = '';
+          }
+        }
+      } else if (e.key === 'Backspace' && searchInput.value === '' && tags.length > 0) {
+        removeTag(tags[tags.length - 1]);
+      }
+    });
+    
+    searchInput.addEventListener('blur', function() {
+      var text = searchInput.value.trim();
+      if (text) {
+        var matchingActe = findActeByName(text);
+        if (matchingActe) {
+          addTag(matchingActe.name, matchingActe.pk);
+          searchInput.value = '';
+        }
+      }
+    });
+    
+    function findActeByName(name) {
+      var lowerName = name.toLowerCase();
+      var acteRow = Array.from(document.querySelectorAll('.dem-acte-row--multi')).find(function(row) {
+        var acteName = (row.getAttribute('data-dem-acte-name') || '').toLowerCase();
+        return acteName === lowerName || acteName.indexOf(lowerName) !== -1;
+      });
+      
+      if (acteRow) {
+        return {
+          pk: acteRow.getAttribute('data-dem-acte-pk'),
+          name: acteRow.getAttribute('data-dem-acte-name')
+        };
+      }
+      return null;
+    }
+    
+    // Sync from checkbox clicks to tags
+    document.addEventListener('click', function(e) {
+      var row = e.target.closest('.dem-acte-row--multi');
+      if (row) {
+        var pk = row.getAttribute('data-dem-acte-pk');
+        var name = row.getAttribute('data-dem-acte-name');
+        var isActive = row.classList.contains('active');
+        
+        if (isActive) {
+          addTag(name, pk);
+        } else {
+          var tagToRemove = tags.find(function(t) { return t.dataset.value === pk; });
+          if (tagToRemove) removeTag(tagToRemove);
+        }
+      }
+    });
+    
+    // Initialize from URL parameters
+    function initFromUrl() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var acteIds = urlParams.getAll('acte');
+      
+      acteIds.forEach(function(id) {
+        var row = document.querySelector('.dem-acte-row--multi[data-dem-acte-pk="' + id + '"]');
+        if (row) {
+          var name = row.getAttribute('data-dem-acte-name');
+          addTag(name, id);
+        }
+      });
+    }
+    
+    // Delay initialization to ensure DOM is ready
+    setTimeout(initFromUrl, 300);
+  })();
+
+  /* ─── AJAX Navigation for Pillars and Acts (no page refresh) ─ */
+  (function(){
+    if (!document.body.classList.contains('sipn-prestations')) return;
+    
+    function updatePageContent(url) {
+      fetch(url, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-Fetch-Mode': 'partial'
+        }
+      })
+      .then(function(response) {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.text();
+      })
+      .then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        
+        // Update sidebar (including piliers to get correct offer counts)
+        var newSidebar = doc.getElementById('sidebar-desktop');
+        var oldSidebar = document.getElementById('sidebar-desktop');
+        if (newSidebar && oldSidebar) {
+          oldSidebar.innerHTML = newSidebar.innerHTML;
+        }
+        
+        // Update results desktop
+        var newResults = doc.querySelector('.sipn-results-desktop-wrap');
+        var oldResults = document.querySelector('.sipn-results-desktop-wrap');
+        if (newResults && oldResults) {
+          oldResults.innerHTML = newResults.innerHTML;
+        }
+        
+        // Update mobile results
+        var newMobileResults = doc.querySelector('.sipn-mobile-results-view');
+        var oldMobileResults = document.querySelector('.sipn-mobile-results-view');
+        if (newMobileResults && oldMobileResults) {
+          oldMobileResults.innerHTML = newMobileResults.innerHTML;
+        }
+        
+        // Update URL without reload
+        history.pushState({}, '', url);
+        
+        // Re-initialize event listeners for new content
+        reinitActeMultiSelect();
+      })
+      .catch(function(error) {
+        console.error('AJAX navigation error:', error);
+        // Fallback to regular navigation on error
+        window.location.href = url;
+      });
+    }
+    window.updatePageContent = updatePageContent;
+    
+    function reinitActeMultiSelect() {
+      // Re-attach click handlers for acte rows
+      var _clickLock = false;
+      document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
+        row.removeEventListener('click', handleActeRowClick);
+        row.addEventListener('click', handleActeRowClick);
+      });
+    }
+    
+    function handleActeRowClick(e) {
+      var row = e.currentTarget;
+      if (_clickLock) return;
+      _clickLock = true;
+      setTimeout(function(){ _clickLock = false; }, 150);
+      
+      var pk = row.getAttribute('data-dem-acte-pk');
+      if (!pk) return;
+      
+      var u = new URL(window.location.href);
+      var ids = u.searchParams.getAll('acte');
+      var idx = ids.indexOf(pk);
+      if (idx === -1) {
+        ids.push(pk);
+        row.classList.add('active');
+      } else {
+        ids.splice(idx, 1);
+        row.classList.remove('active');
+      }
+      
+      u.searchParams.delete('acte');
+      ids.forEach(function(id){ u.searchParams.append('acte', String(id)); });
+      u.searchParams.delete('page');
+      
+      // Show results if actes are selected
+      if (ids.length > 0) {
+        showResultsArea();
+      } else {
+        hideResultsArea();
+      }
+      
+      // Use AJAX to update without page refresh
+      updatePageContent(u.toString());
+    }
+    
+    function handleFilterChange(e) {
+      if (window.__suppressAutoFilterSubmit) return;
+      var el = e.target;
+      if (!el || !el.name) return;
+      if (el.tagName === 'SELECT') {
+        if (el.classList.contains('s2-multi') || el.classList.contains('s2-multi-mob') || el.classList.contains('s2-multi-dem-bar')) return;
+        schedSubmit();
+      }
+      if (el.tagName === 'INPUT' && el.type === 'checkbox' && el.name === 'domicile') schedSubmit();
+    }
+    
+    // Intercept pillar clicks
+    document.addEventListener('click', function(e) {
+      var pillarBtn = e.target.closest('.dem-pbtn');
+      if (pillarBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // If already active, don't do anything
+        if (pillarBtn.classList.contains('active')) return;
+        
+        var url = pillarBtn.getAttribute('href');
+        if (url) {
+          // Hide results when switching pillars (no acte selected yet)
+          hideResultsArea();
+          updatePageContent(url);
+        }
+      }
+    });
+    
+    function hideResultsArea() {
+      var resultsDesktop = document.querySelector('.sipn-results-desktop-wrap');
+      var resultsMobile = document.querySelector('.sipn-mobile-results-view');
+      if (resultsDesktop) resultsDesktop.style.display = 'none';
+      if (resultsMobile) resultsMobile.style.display = 'none';
+    }
+    
+    function showResultsArea() {
+      var resultsDesktop = document.querySelector('.sipn-results-desktop-wrap');
+      var resultsMobile = document.querySelector('.sipn-mobile-results-view');
+      if (resultsDesktop) resultsDesktop.style.display = '';
+      if (resultsMobile) resultsMobile.style.display = '';
+    }
+    
+    // Check if any actes are selected and show/hide results accordingly
+    function checkAndToggleResults() {
+      var selectedActes = document.querySelectorAll('.dem-acte-row--multi.active');
+      if (selectedActes.length > 0) {
+        showResultsArea();
+      } else {
+        hideResultsArea();
+      }
+    }
+    
+    // Ambulance trajet configurator - exact demo implementation
+    var TRAJET_DATA = {};
+    var TRAJET_STATE = null;
+    var curActe = null;
+    
+    function initAmbulanceTrajetConfig() {
+      document.querySelectorAll('.trajet-config-container').forEach(function(container) {
+        var orgId = container.getAttribute('data-org-id');
+        if (orgId) {
+          TRAJET_DATA[orgId] = {
+            distance_defaut: 10,
+            tarif_km: 500,
+            tarif_escale: 2000,
+            tarif_km_long: 800,
+            suppl_aerien: 50000,
+            tarif_heure: 8000,
+            tarif_soignant: 15000,
+            actes: {
+              'Ambulance simple': {flow: 'trajet', base: 10000, medic: 'Chauffeur ambulancier'},
+              'Ambulance médicalisée avec infirmier': {flow: 'trajet', base: 25000, medic: 'Infirmier à bord'},
+              'Ambulance médicalisée avec médecin': {flow: 'trajet', base: 45000, medic: 'Médecin à bord', urgence: true},
+              'Transport réanimatoire': {flow: 'trajet', base: 90000, medic: 'Équipe de réanimation', urgence: true},
+              'Rapatriement national': {flow: 'rapatriement', base: 200000, scope: 'national'},
+              'Rapatriement international': {flow: 'rapatriement', base: 500000, scope: 'international', surDevis: true},
+              'Couverture événement': {flow: 'evenement', base: 50000, evt: 'Événement sportif/culturel'}
+            }
+          };
+        }
+      });
+    }
+    
+    function resolveTrajetActe(structId, candidate) {
+      var sId = String(structId);
+      var cfg = TRAJET_DATA[sId] || TRAJET_DATA[structId];
+      if (!cfg || !cfg.actes) return 'Ambulance simple';
+      var keys = Object.keys(cfg.actes);
+      
+      if (candidate && cfg.actes[candidate]) return candidate;
+      
+      var resolvedName = (typeof getActeName === 'function' ? getActeName(candidate) : '') || String(candidate || '');
+      var low = resolvedName.toLowerCase();
+      
+      if (low) {
+        for (var i = 0; i < keys.length; i++) {
+          var k = keys[i];
+          var kLow = k.toLowerCase();
+          if (kLow.includes(low) || low.includes(kLow)) {
+            return k;
+          }
+        }
+        if (low.includes('rapatriement') || low.includes('évacuation') || low.includes('evacuation')) {
+          var rMatch = keys.find(function(k) { return cfg.actes[k].flow === 'rapatriement'; });
+          if (rMatch) return rMatch;
+        }
+        if (low.includes('couverture') || low.includes('événement') || low.includes('evenement') || low.includes('assistance') || low.includes('manifestation') || low.includes('sportive')) {
+          var cMatch = keys.find(function(k) { return cfg.actes[k].flow === 'evenement'; });
+          if (cMatch) return cMatch;
+        }
+      }
+      
+      var urlParams = new URLSearchParams(window.location.search);
+      var q = (urlParams.get('q') || '').toLowerCase();
+      var serv = (urlParams.get('service') || '').toLowerCase();
+      
+      if (q.includes('rapatriement') || q.includes('évacuation') || q.includes('evacuation') || serv.includes('rapatriement')) {
+        return keys.find(function(k) { return cfg.actes[k].flow === 'rapatriement'; }) || keys[0];
+      }
+      if (q.includes('couverture') || q.includes('événement') || q.includes('evenement') || q.includes('assistance') || q.includes('manifestation') || q.includes('sportive') || serv.includes('couverture')) {
+        return keys.find(function(k) { return cfg.actes[k].flow === 'evenement'; }) || keys[0];
+      }
+      
+      return keys[0];
+    }
+
+    function initTrajetConfig(structId) {
+      if (!structId) return;
+      var sId = String(structId);
+      if (!TRAJET_DATA[sId]) {
+        TRAJET_DATA[sId] = {
+          distance_defaut: 10,
+          tarif_km: 600,
+          tarif_escale: 3000,
+          tarif_km_long: 450,
+          suppl_aerien: 400000,
+          tarif_heure: 15000,
+          tarif_soignant: 25000,
+          actes: {
+            'Ambulance simple': {flow: 'trajet', base: 10000, medic: 'Chauffeur ambulancier'},
+            'Ambulance médicalisée avec infirmier': {flow: 'trajet', base: 25000, medic: 'Infirmier à bord'},
+            'Ambulance médicalisée avec médecin': {flow: 'trajet', base: 45000, medic: 'Médecin à bord', urgence: true},
+            'Transport réanimatoire': {flow: 'trajet', base: 90000, medic: 'Équipe de réanimation', urgence: true},
+            'Évacuation sanitaire': {flow: 'trajet', base: 120000, medic: 'Équipe médicalisée', urgence: true},
+            'Rapatriement national': {flow: 'rapatriement', base: 200000, scope: 'national'},
+            'Rapatriement international': {flow: 'rapatriement', base: 0, scope: 'international', surDevis: true},
+            'Couverture médicale sportive': {flow: 'evenement', base: 75000, evt: 'Événement sportif'},
+            'Couverture médicale de manifestation publique': {flow: 'evenement', base: 90000, evt: 'Manifestation publique'},
+            'Assistance médicale sur site': {flow: 'evenement', base: 60000, evt: 'Assistance sur site'}
+          }
+        };
+      }
+      TRAJET_DATA[structId] = TRAJET_DATA[sId];
+      var cfg = TRAJET_DATA[sId];
+      if (!cfg) return;
+      var startActe = resolveTrajetActe(sId, curActe);
+      TRAJET_STATE = {
+        structId: sId,
+        acte: startActe,
+        depart: '', etapes: [], arrivee: '', allerRetour: false, distance: cfg.distance_defaut,
+        villeDep: '', paysDep: 'Sénégal', villeArr: '', paysArr: '', mode: 'routier', dateR: '', etatPatient: 'Stable, allongé', accompagnant: false,
+        lieu: '', dateE: '', duree: 6, effectif: 500, equipe: {infirmier: true, medecin: false, ambulance: true, poste: false},
+        nuit: false
+      };
+      renderTrajetConfig();
+    }
+    
+    function acteCfg() {
+      var sId = String(TRAJET_STATE.structId);
+      var cfg = TRAJET_DATA[sId] || TRAJET_DATA[TRAJET_STATE.structId];
+      return cfg.actes[TRAJET_STATE.acte] || cfg.actes[Object.keys(cfg.actes)[0]];
+    }
+    
+    function computeTrajet() {
+      var st = TRAJET_STATE, sId = String(st.structId), cfg = TRAJET_DATA[sId] || TRAJET_DATA[st.structId], ac = acteCfg();
+      var nuit = st.nuit ? 8000 : 0;
+      if (ac.flow === 'trajet') {
+        var km = st.allerRetour ? st.distance * 2 : st.distance;
+        var coutKm = Math.round(km * cfg.tarif_km);
+        var coutEscales = st.etapes.length * cfg.tarif_escale;
+        return {flow: 'trajet', surDevis: false, km: km, base: ac.base, coutKm: coutKm, coutEscales: coutEscales, nuit: nuit, total: ac.base + coutKm + coutEscales + nuit};
+      }
+      if (ac.flow === 'rapatriement') {
+        if (ac.surDevis) return {flow: 'rapatriement', surDevis: true, total: null};
+        var coutKm = Math.round(st.distance * cfg.tarif_km_long);
+        var aerien = st.mode === 'aérien' ? cfg.suppl_aerien : 0;
+        return {flow: 'rapatriement', surDevis: false, km: st.distance, base: ac.base, coutKm: coutKm, aerien: aerien, nuit: nuit, total: ac.base + coutKm + aerien + nuit};
+      }
+      var coutHeures = Math.round(st.duree * cfg.tarif_heure);
+      var extra = (st.equipe.medecin ? 1 : 0) + (st.equipe.poste ? 1 : 0);
+      var coutEquipe = extra * cfg.tarif_soignant;
+      var majEffectif = st.effectif > 2000 ? 100000 : (st.effectif > 1000 ? 50000 : 0);
+      return {flow: 'evenement', surDevis: false, base: ac.base, coutHeures: coutHeures, coutEquipe: coutEquipe, majEffectif: majEffectif, total: ac.base + coutHeures + coutEquipe + majEffectif};
+    }
+    
+    function useMyLocation(target, idx) {
+      var label = '📍 Ma position GPS (Dakar)';
+      if (target === 'depart') TRAJET_STATE.depart = label;
+      else if (target === 'arrivee') TRAJET_STATE.arrivee = label;
+      else if (target === 'lieu') TRAJET_STATE.lieu = label;
+      else if (target === 'etape') TRAJET_STATE.etapes[idx] = label;
+      renderTrajetConfig();
+    }
+    
+    function addrField(ph, value, onin, locTarget, locIdx) {
+      return '<div style="display:flex;gap:6px;align-items:center">' +
+        '<input type="text" placeholder="' + ph + '" value="' + (value || '').replace(/"/g, '&quot;') + '" ' +
+        'oninput="' + onin + ';updateTrajetRecap()" style="flex:1;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
+        '<button onclick="useMyLocation(\'' + locTarget + '\'' + (locIdx !== undefined ? ',' + locIdx : '') + ')" title="Utiliser ma position" ' +
+        'style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--blue)">📍</button></div>';
+    }
+    
+    function fLabel(t) { return '<label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)">' + t + '</label>'; }
+    function txtField(ph, value, onin) { return '<input type="text" placeholder="' + ph + '" value="' + (value || '').replace(/"/g, '&quot;') + '" oninput="' + onin + ';updateTrajetRecap()" style="width:100%;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box">'; }
+    function numField(value, onin, min) { return '<input type="number" min="' + (min || 0) + '" value="' + value + '" oninput="' + onin + ';updateTrajetRecap()" style="width:120px;font-size:11px;padding:6px 9px;border:1.5px solid var(--g200);border-radius:7px;background:#fff">'; }
+    
+    function renderTrajetConfig() {
+      if (!TRAJET_STATE) return;
+      var sId = String(TRAJET_STATE.structId);
+      var contentId = 'trajet-config-content-' + sId;
+      var wrap = document.getElementById(contentId);
+      if (!wrap) {
+        var compWrap = document.getElementById('trajet-config-comp-' + curActe);
+        if (compWrap) wrap = compWrap;
+      }
+      if (!wrap) return;
+      var st = TRAJET_STATE;
+      var cfg = TRAJET_DATA[sId] || TRAJET_DATA[st.structId];
+      if (!cfg || !cfg.actes) return;
+      var ac = acteCfg();
+      var acteNames = Object.keys(cfg.actes);
+      var titleByFlow = {trajet: '🚑 Composez votre trajet', rapatriement: '🌍 Détails du rapatriement', evenement: '🩺 Détails de la couverture médicale'};
+      var body = '';
+      if (ac.flow === 'trajet') body = flowTrajet(st, ac);
+      else if (ac.flow === 'rapatriement') body = flowRapatriement(st, ac);
+      else body = flowEvenement(st, cfg, ac);
+      wrap.innerHTML =
+        '<div style="background:var(--blue-l,#e8f4fb);border:1.5px solid var(--blue-m,#bfdbfe);border-radius:9px;padding:12px 14px;margin-bottom:12px">' +
+        '<div style="font-size:12px;font-weight:800;color:var(--blue,#0a5c8a);margin-bottom:8px">' + titleByFlow[ac.flow] + '</div>' +
+        fLabel('Service demandé') +
+        '<select onchange="TRAJET_STATE.acte=this.value;renderTrajetConfig()" style="width:100%;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue,#0a5c8a);border-radius:7px;margin:3px 0 6px;background:#fff;font-weight:600;color:#1f2937">' +
+        acteNames.map(function(n) { return '<option value="' + n + '"' + (n === st.acte ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
+        '</select>' +
+        (ac.medic ? '<div style="font-size:10px;color:var(--blue,#0a5c8a);margin-bottom:10px;font-weight:600">🩺 ' + ac.medic + (ac.urgence ? ' · ⚡ prise en charge d\'urgence' : '') + '</div>' : '<div style="margin-bottom:8px"></div>') +
+        body +
+        '<div id="trajet-recap-' + sId + '"></div>' +
+        '<button onclick="obtenirDevisTrajet()" style="width:100%;margin-top:10px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">💬 Obtenir mon devis</button>' +
+        '<div style="font-size:8px;color:var(--g400,#9ca3af);margin-top:6px;line-height:1.5">Estimation indicative. Le devis final vous sera confirmé par la structure après vérification des informations.</div>' +
+        '</div>';
+      updateTrajetRecap();
+    }
+    
+    function flowTrajet(st, ac) {
+      return fLabel('📍 Point de départ') +
+        '<div style="margin:3px 0 8px">' + addrField('Adresse de départ...', st.depart, 'TRAJET_STATE.depart=this.value', 'depart') + '</div>' +
+        st.etapes.map(function(e, i) {
+          return fLabel('🛑 Étape ' + (i + 1)) +
+            '<div style="display:flex;gap:6px;align-items:center;margin:3px 0 8px">' +
+            '<div style="flex:1">' + addrField('Adresse de l\'étape...', e, 'TRAJET_STATE.etapes[' + i + ']=this.value', 'etape', i) + '</div>' +
+            '<button onclick="removeEtape(' + i + ')" style="background:var(--red-l,#fde8e8);border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:12px;color:var(--red,#c0392b);flex-shrink:0">✕</button></div>';
+        }).join('') +
+        '<button onclick="addEtape()" style="font-size:10px;background:#fff;color:var(--blue);border:1.5px dashed var(--blue-m);border-radius:7px;padding:6px 10px;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">+ Ajouter une étape sur le trajet</button>' +
+        fLabel('🏁 Point d\'arrivée') +
+        '<div style="margin:3px 0 8px">' + addrField('Adresse d\'arrivée...', st.arrivee, 'TRAJET_STATE.arrivee=this.value', 'arrivee') + '</div>' +
+        '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:10px"><input type="checkbox"' + (st.allerRetour ? ' checked' : '') + ' onchange="TRAJET_STATE.allerRetour=this.checked;updateTrajetRecap()"> 🔁 Retour au point de départ (aller-retour)</label>' +
+        fLabel('Distance estimée (km)') +
+        '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 10px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>' +
+        supplNuit(st);
+    }
+    
+    function flowRapatriement(st, ac) {
+      var intl = ac.scope === 'international';
+      return '<div style="display:grid;grid-template-columns:' + (intl ? '1fr 1fr' : '1fr') + ';gap:8px;margin-bottom:8px">' +
+        '<div>' + fLabel('Ville de départ') + txtField('Ex : Dakar', st.villeDep, 'TRAJET_STATE.villeDep=this.value') + '</div>' +
+        (intl ? '<div>' + fLabel('Pays de départ') + txtField('Ex : Sénégal', st.paysDep, 'TRAJET_STATE.paysDep=this.value') + '</div>' : '') +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:' + (intl ? '1fr 1fr' : '1fr') + ';gap:8px;margin-bottom:8px">' +
+        '<div>' + fLabel('Ville d\'arrivée') + txtField('Ex : ' + (intl ? 'Paris' : 'Saint-Louis'), st.villeArr, 'TRAJET_STATE.villeArr=this.value') + '</div>' +
+        (intl ? '<div>' + fLabel('Pays d\'arrivée') + txtField('Ex : France', st.paysArr, 'TRAJET_STATE.paysArr=this.value') + '</div>' : '') +
+        '</div>' +
+        fLabel('Mode de transport') +
+        '<div style="display:flex;gap:6px;margin:3px 0 8px">' +
+        modePill('routier', '🚑 Routier', st) + modePill('aérien', '✈️ Aérien', st) +
+        '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
+        '<div>' + fLabel('Date souhaitée') + '<input type="date" value="' + st.dateR + '" onchange="TRAJET_STATE.dateR=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
+        '<div>' + fLabel('État du patient') + '<select onchange="TRAJET_STATE.etatPatient=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
+        ['Stable, allongé', 'Sous oxygène', 'Soins intensifs / ventilé', 'Isolé (contagieux)'].map(function(o) { return '<option' + (o === st.etatPatient ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
+        '</select></div></div>' +
+        '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:8px"><input type="checkbox"' + (st.accompagnant ? ' checked' : '') + ' onchange="TRAJET_STATE.accompagnant=this.checked;updateTrajetRecap()"> 👥 Présence d\'un accompagnant</label>' +
+        (intl ? '<div style="font-size:9px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-bottom:8px">📄 Documents requis : passeport, autorisation médicale de vol, coordination avec l\'assurance. Devis personnalisé selon destination.</div>' :
+        fLabel('Distance estimée (km)') + '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 8px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>') +
+        supplNuit(st);
+    }
+    
+    function modePill(m, txt, st) {
+      return '<button onclick="TRAJET_STATE.mode=\'' + m + '\';renderTrajetConfig()" style="flex:1;font-size:11px;font-weight:600;padding:7px;border-radius:7px;cursor:pointer;border:1.5px solid ' +
+        (st.mode === m ? 'var(--blue);background:var(--blue);color:#fff' : 'var(--blue-m);background:#fff;color:var(--blue)') + '">' + txt + '</button>';
+    }
+    
+    function flowEvenement(st, cfg, ac) {
+      var eq = function(cle, txt) {
+        return '<label style="display:flex;align-items:center;gap:5px;font-size:10px;background:#fff;border:1.5px solid var(--g200);border-radius:7px;padding:4px 9px;cursor:pointer"><input type="checkbox"' + (st.equipe[cle] ? ' checked' : '') + ' onchange="TRAJET_STATE.equipe.' + cle + '=this.checked;updateTrajetRecap()"> ' + txt + '</label>';
+      };
+      return '<div style="font-size:10px;color:var(--blue);margin-bottom:8px">📋 Type : ' + ac.evt + '</div>' +
+        fLabel('📍 Lieu / site de l\'évènement') +
+        '<div style="margin:3px 0 8px">' + addrField('Adresse du site...', st.lieu, 'TRAJET_STATE.lieu=this.value', 'lieu') + '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
+        '<div>' + fLabel('Date') + '<input type="date" value="' + st.dateE + '" onchange="TRAJET_STATE.dateE=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
+        '<div>' + fLabel('Durée (heures)') + numField(st.duree, 'TRAJET_STATE.duree=parseFloat(this.value)||0', 1) + '</div>' +
+        '</div>' +
+        fLabel('Effectif attendu (personnes)') +
+        '<div style="margin:3px 0 8px">' + numField(st.effectif, 'TRAJET_STATE.effectif=parseInt(this.value)||0', 0) + '</div>' +
+        fLabel('Dispositif médical souhaité') +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px">' +
+        eq('infirmier', 'Infirmier') + eq('medecin', 'Médecin') + eq('ambulance', 'Ambulance sur place') + eq('poste', 'Poste de secours') +
+        '</div>' +
+        supplNuit(st);
+    }
+    
+    function supplNuit(st) {
+      return '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:4px"><input type="checkbox"' + (st.nuit ? ' checked' : '') + ' onchange="TRAJET_STATE.nuit=this.checked;updateTrajetRecap()"> 🌙 Intervention de nuit / week-end (+8 000 F)</label>';
+    }
+    
+    function addEtape() {
+      TRAJET_STATE.etapes.push('');
+      renderTrajetConfig();
+    }
+    
+    function removeEtape(idx) {
+      TRAJET_STATE.etapes.splice(idx, 1);
+      renderTrajetConfig();
+    }
+    
+    function money(n) { return n.toLocaleString('fr-FR') + ' F'; }
+    
+    function recapLine(label, val, strong) {
+      return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:var(--g600)">' + label + '</span><span style="' + (strong ? 'font-weight:800;color:var(--green-d)' : 'font-weight:600;color:var(--text)') + '">' + val + '</span></div>';
+    }
+    
+    function updateTrajetRecap() {
+      if (!TRAJET_STATE) return;
+      var box = document.getElementById('trajet-recap-' + TRAJET_STATE.structId);
+      if (!box) return;
+      var st = TRAJET_STATE, cfg = TRAJET_DATA[st.structId], ac = acteCfg();
+      var r = computeTrajet();
+      var itin = '', lines = '';
+      
+      if (r.flow === 'trajet') {
+        var pts = [{r: 'Départ', v: st.depart || '(à définir)'}].concat(st.etapes.map(function(e, i) { return {r: 'Étape ' + (i + 1), v: e || '(à définir)'}; })).concat([{r: 'Arrivée', v: st.arrivee || '(à définir)'}]);
+        if (st.allerRetour) pts.push({r: 'Retour', v: st.depart || '(point de départ)'});
+        itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Itinéraire · ' + r.km + ' km' + (st.allerRetour ? ' (aller-retour)' : '') + '</div>' +
+          pts.map(function(p) { return '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">' + p.r + ' :</span> ' + p.v + '</div>'; }).join('');
+        lines = recapLine('Prix de base (' + st.acte + ')', money(r.base)) +
+          recapLine('Distance (' + r.km + ' km × ' + money(cfg.tarif_km) + ')', money(r.coutKm)) +
+          (st.etapes.length ? recapLine(st.etapes.length + ' étape' + (st.etapes.length > 1 ? 's' : '') + ' × ' + money(cfg.tarif_escale), money(r.coutEscales)) : '') +
+          (r.nuit ? recapLine('Nuit / week-end', money(r.nuit)) : '');
+      }
+      else if (r.flow === 'rapatriement') {
+        itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Rapatriement ' + (ac.scope === 'international' ? 'international' : 'national') + '</div>' +
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">De :</span> ' + (st.villeDep || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysDep || 'Sénégal') : '') + '</div>' +
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">À :</span> ' + (st.villeArr || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysArr || '(à définir)') : '') + '</div>' +
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Mode :</span> ' + (st.mode === 'aérien' ? '✈️ Aérien' : '🚑 Routier') + '</div>';
+        lines = recapLine('Prix de base', money(r.base)) +
+          recapLine('Distance (' + r.km + ' km × ' + money(cfg.tarif_km_long) + ')', money(r.coutKm)) +
+          (r.aerien ? recapLine('Supplément aérien', money(r.aerien)) : '') +
+          (r.nuit ? recapLine('Nuit / week-end', money(r.nuit)) : '');
+      }
+      else {
+        itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Couverture médicale</div>' +
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Lieu :</span> ' + (st.lieu || '(à définir)') + '</div>' +
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Date :</span> ' + (st.dateE || '(à définir)') + ' · Durée : ' + st.duree + 'h</div>' +
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Effectif :</span> ' + st.effectif + ' personnes</div>';
+        lines = recapLine('Prix de base', money(r.base)) +
+          recapLine('Durée (' + st.duree + 'h × ' + money(cfg.tarif_heure) + ')', money(r.coutHeures)) +
+          (r.coutEquipe ? recapLine('Équipe médicale', money(r.coutEquipe)) : '') +
+          (r.majEffectif ? recapLine('Majoration effectif', money(r.majEffectif)) : '') +
+          (r.nuit ? recapLine('Nuit / week-end', money(r.nuit)) : '');
+      }
+      
+      box.innerHTML = itin + '<div style="margin-top:8px">' + lines + '</div>' +
+        (r.surDevis ? '<div style="font-size:10px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-top:8px">📋 Ce service nécessite un devis personnalisé. Contactez la structure pour une estimation précise.</div>' :
+        '<div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-top:1px solid var(--g200);margin-top:6px"><span style="font-weight:700;color:var(--g600)">Total estimé</span><span style="font-extrabold;color:var(--green-d)">' + money(r.total) + '</span></div>');
+    }
+    
+    function obtenirDevisTrajet() {
+      alert('Devis demandé - fonctionnalité à connecter au backend');
+    }
+    
+    function openTrajetConfig(orgId, acteName, isCompPanel) {
+      curActe = acteName;
+      window.curActe = acteName; // keep window-level in sync for cross-IIFE access
+      if (window.openProfilStruct) {
+        // openProfilStruct loads content async; focusTrajetActe is called
+        // from loadProfilDrawerContent after the fetch completes
+        window.openProfilStruct(orgId);
+      } else {
+        // Fallback: direct init without modal
+        initTrajetConfig(orgId);
+        if (acteName) focusTrajetActe(acteName, orgId);
+        var containerId = isCompPanel ? 'trajet-config-comp-' + acteName : 'trajet-config-' + orgId;
+        var container = document.getElementById(containerId);
+        if (container) {
+          container.classList.remove('hidden');
+          container.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+      }
+    }
+    
+    function closeTrajetConfig(orgId) {
+      var container = document.getElementById('trajet-config-' + orgId);
+      if (container) container.classList.add('hidden');
+      TRAJET_STATE = null;
+      curActe = null;
+      window.curActe = null;
+    }
+    
+    function focusTrajetActe(acte, structId) {
+      // Auto-init if TRAJET_STATE not yet set
+      var sid = structId || (TRAJET_STATE ? TRAJET_STATE.structId : null);
+      if (!TRAJET_STATE && sid) {
+        initTrajetConfig(sid);
+      }
+      if (!TRAJET_STATE) return;
+      // Resolve acte name (may be a numeric PK from URL, or an act name string)
+      var resolvedActe = acte;
+      if (TRAJET_DATA[String(TRAJET_STATE.structId)] && TRAJET_DATA[String(TRAJET_STATE.structId)].actes) {
+        var acteKeys = Object.keys(TRAJET_DATA[String(TRAJET_STATE.structId)].actes);
+        // If acte is not a direct key, try resolveTrajetActe for fuzzy matching
+        if (!TRAJET_DATA[String(TRAJET_STATE.structId)].actes[acte]) {
+          resolvedActe = resolveTrajetActe(TRAJET_STATE.structId, acte) || acteKeys[0];
+        }
+      }
+      TRAJET_STATE.acte = resolvedActe;
+      renderTrajetConfig();
+      // Scroll to configurator
+      var el = document.getElementById('trajet-config-content-' + TRAJET_STATE.structId) ||
+               document.getElementById('trajet-config-' + TRAJET_STATE.structId) ||
+               document.getElementById('trajet-config-comp-' + acte);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function toggleContactProfil() {
+      var card = document.getElementById('profil-contact-card');
+      if (card) card.style.display = (card.style.display === 'none' ? 'block' : 'none');
+    }
+
+    // Expose globally
+    window.TRAJET_DATA = TRAJET_DATA;
+    window.TRAJET_STATE = TRAJET_STATE;
+    window.curActe = curActe; // exposed so cross-IIFE callbacks (e.g. loadProfilDrawerContent) can read it
+    window.openTrajetConfig = openTrajetConfig;
+    window.closeTrajetConfig = closeTrajetConfig;
+    window.renderTrajetConfig = renderTrajetConfig;
+    window.updateTrajetRecap = updateTrajetRecap;
+    window.focusTrajetActe = focusTrajetActe;
+    window.toggleContactProfil = toggleContactProfil;
+    window.addEtape = addEtape;
+    window.removeEtape = removeEtape;
+    window.useMyLocation = useMyLocation;
+    window.obtenirDevisTrajet = obtenirDevisTrajet;
+    window.initTrajetConfig = initTrajetConfig;
+    window.resolveTrajetActe = resolveTrajetActe;
+    
+    // Initial setup
+    reinitActeMultiSelect();
+    initAmbulanceTrajetConfig();
+    
+    // Check initial state and hide results if no actes selected
+    checkAndToggleResults();
   })();
 
 })();

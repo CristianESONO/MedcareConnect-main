@@ -1,4 +1,4 @@
-﻿{% comment %}
+{% comment %}
 Carte structure desktop — vue groupée par organisme (scard).
 Variables : block (org, items, matching_count, total_actes, missing_actes, insurance_names, is_pioneer, hours_summary)
 {% endcomment %}
@@ -60,7 +60,7 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
       data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
       data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
       data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
-      data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
+      data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk }}"
       role="button" tabindex="0"
       aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
       <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
@@ -79,6 +79,17 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
     </div>
     {% endfor %}
   </div>
+
+  {# ── Configurateur de trajet (ambulance) ── #}
+  {% if block.org.is_ambulance_service %}
+  <div id="trajet-config-{{ block.org.pk }}" class="trajet-config-container hidden" data-org-id="{{ block.org.pk }}">
+    <div class="trajet-config-header">
+      <span class="trajet-config-title">🚑 Configurer votre trajet</span>
+      <button type="button" class="trajet-config-close" onclick="closeTrajetConfig({{ block.org.pk }})">✕</button>
+    </div>
+    <div id="trajet-config-content-{{ block.org.pk }}"></div>
+  </div>
+  {% endif %}
 
   {# ── Actes manquants ── #}
   {% if block.missing_actes %}
@@ -108,6 +119,17 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
       {% endif %}
     </div>
     <div class="scard-footer-actions">
+      {% if block.org.is_ambulance_service %}
+      <button type="button" class="scard-btn-trajet" onclick="event.stopPropagation();openTrajetConfig('{{ block.org.pk }}', '{{ current_service_name|escapejs }}')">
+        {% if 'couverture' in query|lower or 'événement' in query|lower or 'evenement' in query|lower or 'assistance' in query|lower or 'manifestation' in query|lower or 'couverture' in current_service_name|lower %}
+          🩺 Configurer ma couverture
+        {% elif 'rapatriement' in query|lower or 'évacuation' in query|lower or 'evacuation' in query|lower or 'rapatriement' in current_service_name|lower %}
+          🌍 Organiser le rapatriement
+        {% else %}
+          🚑 Configurer mon trajet
+        {% endif %}
+      </button>
+      {% endif %}
       <button type="button" class="scard-btn-secondary profil-drawer-trigger"
         data-org-id="{{ block.org.pk }}">Voir profil</button>
       <div class="scard-total">

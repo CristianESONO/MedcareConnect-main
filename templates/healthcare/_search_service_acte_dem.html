@@ -9,9 +9,9 @@ Variables : service_dem_pills, acte_dem_families, current_acte, dem_clear_acte_u
 - mode : "desktop" | "mobile" — hauteur max de l’arbre (section actes / all / actes_embed)
 {% endcomment %}
 {% if section == "piliers" %}
-<div class="piliers dem-piliers" role="navigation" aria-label="Familles de soins">
+<div class="piliers dem-piliers sipn-piliers-in-search" role="navigation" aria-label="Familles de soins">
   {% for p in service_dem_pills %}
-  <a href="{{ p.url }}" class="pbtn dem-pbtn {% if p.active %}active{% endif %}" data-service-id="{{ p.service_id|default:'' }}" data-is-ambulance="{% if p.is_ambulance %}1{% else %}0{% endif %}"><span class="dem-pbtn-ic" aria-hidden="true">{{ p.icon }}</span><span class="min-w-0 truncate">{{ p.label }}</span><span class="dem-pbtn-count">{{ p.count }}</span></a>
+  <a href="{{ p.url }}" class="pbtn dem-pbtn {% if p.active %}active{% endif %}" data-service-id="{{ p.service_id|default:'' }}" data-is-ambulance="{% if p.is_ambulance %}1{% else %}0{% endif %}" data-ajax-nav="1"><span class="dem-pbtn-ic" aria-hidden="true">{{ p.icon }}</span><span class="min-w-0 truncate">{{ p.label }}</span><span class="dem-pbtn-count">{{ p.count }}</span></a>
   {% endfor %}
 </div>
 {% elif section == "actes" %}

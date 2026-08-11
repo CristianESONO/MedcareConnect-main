@@ -1,0 +1,371 @@
+{# Block Configuration Services d'Ambulance — aligné démo DEMO_STRUCTURES.html #}
+<div class="cat-card mb-6" id="bloc-ambulance">
+  <div class="cat-card-body">
+    <div class="flex flex-wrap items-center justify-between border-b border-gray-100 pb-4 mb-5 gap-2">
+      <div>
+        <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+          <span>🚑</span> Configuration Services d'Ambulance
+        </h2>
+        <p class="text-xs text-gray-500 mt-0.5">Définissez vos prestations de transport médicalisé, vos zones, vos équipements et vos grilles tarifaires</p>
+      </div>
+      <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200">
+        Disponibilité 24h/7j &amp; Évacuation
+      </span>
+    </div>
+
+    <div class="space-y-6">
+      {# 1. Types de service proposés #}
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Types de service proposés</label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/70 p-4 rounded-xl border border-gray-100">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Transport sanitaire</div>
+            <div class="space-y-1.5 text-xs text-gray-700">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Ambulance simple</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Ambulance médicalisée avec infirmier</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Ambulance médicalisée avec médecin</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Transport réanimatoire</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Évacuation sanitaire</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Rapatriement</div>
+            <div class="space-y-1.5 text-xs text-gray-700">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Rapatriement national</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Rapatriement international</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Couverture &amp; assistance</div>
+            <div class="space-y-1.5 text-xs text-gray-700">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Couverture médicale sportive</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Couverture médicale de manifestation publique</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-gray-900">
+                <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                <span>Assistance médicale sur site</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# 2. Disponibilité #}
+      <div class="border-t border-gray-100 pt-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-1.5">
+          <span>🕒</span> Disponibilité
+        </label>
+        <div class="flex flex-wrap items-center gap-4 bg-gray-50/70 p-3.5 rounded-xl border border-gray-100 text-xs">
+          <label class="flex items-center gap-2 cursor-pointer font-semibold text-gray-800">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span>24h/24 – 7j/7</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer font-medium text-gray-700">
+            <input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span>Horaires limités</span>
+          </label>
+          <input type="text" placeholder="Plages horaires (ex : 7h–19h Lun–Ven)" value="24h/24 – 7j/7"
+            class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs w-full max-w-xs focus:border-primary-500 focus:outline-none">
+        </div>
+      </div>
+
+      {# 3. Zones couvertes #}
+      <div class="border-t border-gray-100 pt-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-1.5">
+          <span>🌍</span> Zones couvertes
+        </label>
+        <div class="flex flex-wrap gap-2.5">
+          <label class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2 text-xs font-semibold text-gray-800 cursor-pointer hover:border-emerald-300">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span>Urbaine (Dakar &amp; banlieue)</span>
+          </label>
+          <label class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2 text-xs font-semibold text-gray-800 cursor-pointer hover:border-emerald-300">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span>Régionale (Thiès, Mbour, Saint-Louis…)</span>
+          </label>
+          <label class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2 text-xs font-semibold text-gray-800 cursor-pointer hover:border-emerald-300">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span>Nationale (Toutes régions du Sénégal)</span>
+          </label>
+          <label class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2 text-xs font-semibold text-gray-800 cursor-pointer hover:border-emerald-300">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span>Internationale (Sous-région &amp; Monde)</span>
+          </label>
+        </div>
+      </div>
+
+      {# 4. Ressources humaines #}
+      <div class="border-t border-gray-100 pt-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-1.5">
+          <span>👨‍⚕️</span> Ressources humaines disponibles
+        </label>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+          <label class="flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 p-2.5 cursor-pointer">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span class="font-medium text-gray-800">Chauffeur ambulancier certifié</span>
+          </label>
+          <label class="flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 p-2.5 cursor-pointer">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span class="font-medium text-gray-800">Infirmier diplômé</span>
+          </label>
+          <label class="flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 p-2.5 cursor-pointer">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span class="font-medium text-gray-800">Médecin généraliste</span>
+          </label>
+          <label class="flex items-center gap-2 rounded-lg border border-gray-100 bg-gray-50 p-2.5 cursor-pointer">
+            <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+            <span class="font-medium text-gray-800">Médecin urgentiste / réanimateur</span>
+          </label>
+        </div>
+      </div>
+
+      {# 5. Matériel embarqué #}
+      <div class="border-t border-gray-100 pt-4">
+        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-1.5">
+          <span>🧰</span> Matériel embarqué
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs text-gray-700">
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Oxygène médical</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Aspirateur de mucosités</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Défibrillateur (DSA/DAE)</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Scope multiparamétrique</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Ventilateur de transport</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Pousse-seringue électrique</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Kit intubation / voie aérienne</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Matériel de perfusion &amp; solutés</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Pharmacie d'urgence embarquée</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="h-3.5 w-3.5 rounded text-emerald-600"><span>Matelas à dépression / Immobilisation</span></label>
+        </div>
+      </div>
+
+      {# 6. Tarification des trajets et services #}
+      <div class="border-t border-gray-100 pt-4">
+        <div class="mb-3">
+          <label class="block text-sm font-bold text-gray-900 flex items-center gap-1.5">
+            <span>💰</span> Tarification des trajets et services
+          </label>
+          <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+            Vous fixez librement chaque tarif ci-dessous. Le patient compose son trajet ou son évènement depuis son interface, le prix se calcule automatiquement :
+            <strong class="text-gray-800">prix de base du service + distance × tarif au km</strong> (ou durée × tarif horaire pour l'évènementiel). Ces montants sont modifiables à tout moment.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Prix de base par service (FCFA)</h4>
+            <div class="divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Ambulance simple</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="10000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500 js-amb-base-input">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Ambulance médicalisée avec infirmier</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="25000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Ambulance médicalisée avec médecin</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="45000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Transport réanimatoire</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="90000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Évacuation sanitaire</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="120000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Rapatriement national</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="200000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Rapatriement international</span>
+                <label class="flex items-center gap-2 text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200 cursor-pointer">
+                  <input type="checkbox" checked class="h-3.5 w-3.5 text-amber-600 rounded">
+                  <span>Sur devis</span>
+                </label>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Couverture médicale sportive</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="75000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Couverture médicale de manifestation publique</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="90000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3">
+                <span class="text-xs font-medium text-gray-800">Assistance médicale sur site</span>
+                <div class="flex items-center gap-2">
+                  <input type="number" value="60000" min="0" step="500" class="w-28 rounded-lg border border-gray-300 px-2.5 py-1 text-right text-xs font-bold text-primary-600 focus:outline-none focus:border-primary-500">
+                  <span class="text-xs font-semibold text-gray-500">FCFA</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Distance et suppléments</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 bg-gray-50 p-4 rounded-xl border border-gray-100">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tarif au km · urbain/régional (FCFA/km)</label>
+                <input type="number" id="amb-tarif-km" value="600" min="0" step="50" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900 js-amb-km-input">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tarif au km · longue distance (FCFA/km)</label>
+                <input type="number" value="450" min="0" step="50" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Supplément par escale (FCFA)</label>
+                <input type="number" value="3000" min="0" step="500" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Supplément mode aérien (FCFA)</label>
+                <input type="number" value="400000" min="0" step="10000" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Supplément nuit / week-end (FCFA)</label>
+                <input type="number" value="8000" min="0" step="500" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900">
+              </div>
+              <div class="flex items-end pb-1">
+                <label class="flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+                  <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600">
+                  <span>Facturer l'aller-retour</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Tarification évènementielle (couverture &amp; assistance)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 bg-gray-50 p-4 rounded-xl border border-gray-100">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tarif horaire de présence (FCFA/h)</label>
+                <input type="number" value="15000" min="0" step="500" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tarif par soignant supplémentaire (FCFA)</label>
+                <input type="number" value="25000" min="0" step="500" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-bold text-gray-900">
+              </div>
+            </div>
+          </div>
+
+          <div id="amb-tarif-preview" class="rounded-xl border border-dashed border-emerald-300 bg-emerald-50/60 p-3.5 text-xs text-emerald-900">
+            💡 Exemple (Ambulance simple, 12 km) : <span id="amb-calc-base">10 000</span> FCFA (base) + 12 × <span id="amb-calc-km">600</span> FCFA = <strong id="amb-calc-total" class="text-emerald-700 font-bold text-sm">17 200 FCFA</strong> <span class="text-gray-500 font-normal">(hors escales et suppléments)</span>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Suppléments applicables</h4>
+            <div class="flex flex-wrap gap-2.5 text-xs">
+              <div class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
+                <label class="flex items-center gap-1.5 font-semibold text-gray-800 cursor-pointer">
+                  <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600">
+                  <span>Urgence</span>
+                </label>
+                <input type="number" value="15000" min="0" step="500" class="w-20 rounded-md border border-gray-300 px-2 py-0.5 text-right font-bold text-xs">
+                <span class="text-[10px] text-gray-500">FCFA</span>
+              </div>
+
+              <div class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
+                <label class="flex items-center gap-1.5 font-semibold text-gray-800 cursor-pointer">
+                  <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600">
+                  <span>Médicalisation</span>
+                </label>
+                <input type="number" value="25000" min="0" step="500" class="w-20 rounded-md border border-gray-300 px-2 py-0.5 text-right font-bold text-xs">
+                <span class="text-[10px] text-gray-500">FCFA</span>
+              </div>
+
+              <div class="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
+                <label class="flex items-center gap-1.5 font-semibold text-gray-800 cursor-pointer">
+                  <input type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600">
+                  <span>Nuit / week-end</span>
+                </label>
+                <input type="number" value="8000" min="0" step="500" class="w-20 rounded-md border border-gray-300 px-2 py-0.5 text-right font-bold text-xs">
+                <span class="text-[10px] text-gray-500">FCFA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  function updateAmbCalc() {
+    var baseInput = document.querySelector('.js-amb-base-input');
+    var kmInput = document.querySelector('.js-amb-km-input');
+    var calcBase = document.getElementById('amb-calc-base');
+    var calcKm = document.getElementById('amb-calc-km');
+    var calcTotal = document.getElementById('amb-calc-total');
+
+    if (!baseInput || !kmInput || !calcBase || !calcKm || !calcTotal) return;
+
+    var base = parseInt(baseInput.value, 10) || 0;
+    var km = parseInt(kmInput.value, 10) || 0;
+    var total = base + (12 * km);
+
+    calcBase.textContent = base.toLocaleString('fr-FR');
+    calcKm.textContent = km.toLocaleString('fr-FR');
+    calcTotal.textContent = total.toLocaleString('fr-FR') + ' FCFA';
+  }
+
+  document.addEventListener('input', function(e) {
+    if (e.target.matches('.js-amb-base-input, .js-amb-km-input')) {
+      updateAmbCalc();
+    }
+  });
+})();
+</script>

@@ -21,11 +21,4 @@
     <i class="ti ti-bell" aria-hidden="true"></i>
     {% if unread_notifications %}<span class="mc-landing-icon-badge">{{ unread_notifications }}</span>{% endif %}
   </a>
-  <a href="{% url 'messaging:rappels' %}"
-    class="mc-landing-icon-btn{% if account_active == 'rappels' %} is-active{% endif %}"
-    aria-label="Rappels{% if unread_rappels %} ({{ unread_rappels }} non lus){% endif %}"
-    title="Rappels">
-    <i class="ti ti-clock" aria-hidden="true"></i>
-    {% if unread_rappels %}<span class="mc-landing-icon-badge">{{ unread_rappels }}</span>{% endif %}
-  </a>
 </div>

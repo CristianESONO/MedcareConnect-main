@@ -80,22 +80,34 @@ def open_today_from_hours(hours_list) -> str | None:
     return None
 
 
-def build_profil_pillars(actes) -> tuple[list[dict], dict]:
+def build_profil_pillars(actes, is_ambulance: bool = False) -> tuple[list[dict], dict]:
     """Retourne (profil_pillars, services_with_actes)."""
     services_with_actes: dict = {}
-    for pa in actes:
-        svc = pa.acte.service_medical_category
-        svc_name = svc.name if svc else "Autres"
-        services_with_actes.setdefault(svc_name, []).append(pa)
+    if is_ambulance:
+        for pa in actes:
+            name_low = (pa.acte.name or "").lower()
+            if "rapatriement" in name_low:
+                cat_name = "Rapatriement"
+            elif any(k in name_low for k in ["couverture", "assistance", "manifestation", "événement", "evenement", "sportive"]):
+                cat_name = "Couverture & assistance"
+            else:
+                cat_name = "Transport sanitaire"
+            services_with_actes.setdefault(cat_name, []).append(pa)
+    else:
+        for pa in actes:
+            svc = pa.acte.service_medical_category
+            svc_name = svc.name if svc else "Autres"
+            services_with_actes.setdefault(svc_name, []).append(pa)
 
     pillars = []
     for idx, (svc_name, group) in enumerate(services_with_actes.items(), start=1):
         svc = group[0].acte.service_medical_category if group else None
+        icon = "🚑" if is_ambulance else (svc.display_icon if svc else "🏥")
         pillars.append(
             {
                 "id": f"p{idx}",
                 "name": svc_name,
-                "icon": svc.display_icon if svc else "🏥",
+                "icon": icon,
                 "actes": group,
                 "count": len(group),
             }
@@ -122,7 +134,8 @@ def build_insurances_profil(insurances_qs) -> list[dict]:
 
 def fiche_context_for_org(org, actes, hours_list, request) -> dict:
     """Contexte template commun (hors auth / favoris / wa sur actes)."""
-    profil_pillars, services_with_actes = build_profil_pillars(actes)
+    is_amb = getattr(org, "is_ambulance_service", False)
+    profil_pillars, services_with_actes = build_profil_pillars(actes, is_ambulance=is_amb)
     public_path = reverse("healthcare:organisme_detail", kwargs={"slug": org.slug})
     show_pioneer = bool(
         getattr(getattr(org, "subscription_plan", None), "is_pioneer_offer", False)

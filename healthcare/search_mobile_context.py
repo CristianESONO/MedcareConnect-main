@@ -9,8 +9,10 @@ def build_search_mobile_app_context(request):
         from messaging.models import Conversation
         from users.patient_panel import _chariot_ctx
 
+        from messaging.views import _group_by_day
+
         ctx = _chariot_ctx(user)
-        ctx["search_conversations"] = (
+        search_convs = (
             Conversation.objects.filter(patient=user)
             .select_related(
                 "patient",
@@ -20,6 +22,8 @@ def build_search_mobile_app_context(request):
             )
             .order_by("-updated_at")
         )
+        ctx["search_conversations"] = search_convs
+        ctx["grouped_search_conversations"] = _group_by_day(search_convs)
         return ctx
 
     if not user.is_authenticated:

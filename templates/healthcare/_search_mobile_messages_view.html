@@ -16,9 +16,20 @@
     {% if search_conversations %}
     <div class="mc-conv-list">
       <div class="mc-conv-section-lbl">Conversations · {{ search_conversations|length }}</div>
-      {% for conv in search_conversations %}
-      {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
-      {% endfor %}
+      {% if grouped_search_conversations %}
+        {% for group in grouped_search_conversations %}
+        <div class="mc-conv-day-group">
+          <div class="mc-conv-day-hdr">{{ group.label }}</div>
+          {% for conv in group.items %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      {% else %}
+        {% for conv in search_conversations %}
+        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+        {% endfor %}
+      {% endif %}
     </div>
     {% else %}
     <div class="mc-inbox-empty">

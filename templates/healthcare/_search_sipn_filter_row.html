@@ -8,8 +8,9 @@ Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _searc
   <select name="sort" id="id-sort-dem" class="dem-sort-select" aria-label="Trier les résultats">
     <option value="price_asc"  {% if current_sort == "price_asc" or not current_sort %}selected{% endif %}>💰 Prix croissant</option>
     <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>💰 Prix décroissant</option>
-    <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>⏱ Délai court</option>
-    <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>📍 Par zone</option>
+    <option value="delai_rdv_asc" {% if current_sort == "delai_rdv_asc" %}selected{% endif %}>📅 RDV disponible le plus vite</option>
+    <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>⏱ Délai de réponse le plus court</option>
+    <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>📍 Par zone / quartier</option>
     <option value="distance" {% if current_sort == "distance" %}selected{% endif %}>📍 Proximité</option>
   </select>
 
@@ -31,12 +32,25 @@ Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _searc
     <span id="fc-budget-lbl">{% if price_max_val %}💰 {{ price_max_val|floatformat:0 }} F{% else %}💰 Budget{% endif %}</span>
     <span class="dem-filter-arr" aria-hidden="true">▼</span>
   </div>
-  <div class="filter-chip{% if current_delai %} active{% endif %}" id="fc-delai" data-dem-filter-drop="delai" role="button" tabindex="0">
+  <div class="filter-chip{% if current_delai %} active{% endif %}" id="fc-delai" role="button" tabindex="0" onclick="document.getElementById('fc-delai-pills').classList.toggle('hidden')">
     <span id="fc-delai-lbl">{% if current_delai %}⏱ {% for val, label in delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}{% else %}⏱ Délai{% endif %}</span>
-    <span class="dem-filter-arr" aria-hidden="true">▼</span>
   </div>
 
   <button type="button" id="fc-reset" class="filter-chip filter-chip--reset dem-filter-reset{% if active_filter_count or query %} visible{% endif %}" title="Réinitialiser les filtres">✕ Réinitialiser</button>
+
+  <div id="fc-delai-pills" class="dem-filter-pills-inline hidden">
+    {% for val, label in delai_choices %}
+    <button type="button" class="dem-filter-pill-inline{% if current_delai == val %} on{% endif %}" data-dem-delai-pill="{{ val }}" onclick="
+      document.getElementById('sipn-filter-delai').value = '{{ val }}';
+      document.querySelectorAll('.dem-filter-pill-inline').forEach(function(p){p.classList.remove('on')});
+      this.classList.add('on');
+      document.getElementById('fc-delai-lbl').textContent = '⏱ {{ label }}';
+      document.getElementById('fc-delai').classList.add('active');
+      document.getElementById('fc-delai-pills').classList.add('hidden');
+      document.getElementById('search-form').submit();
+    ">{{ label }}</button>
+    {% endfor %}
+  </div>
 
   <div id="sipn-filter-dropdown" class="sipn-filter-dropdown hidden sipn-desktop-filter-only" hidden aria-live="polite">
     <div class="sipn-filter-panel" data-sipn-panel="assurance" hidden>

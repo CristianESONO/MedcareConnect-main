@@ -244,6 +244,29 @@ def _thread_context(request, conv: Conversation) -> dict:
     }
 
 
+def _group_by_day(items, datetime_attr="updated_at"):
+    """
+    Regroupe une liste d'objets (conversations/messages) par jour selon datetime_attr.
+    """
+    groups = []
+    current_group = None
+    for item in items:
+        dt = getattr(item, datetime_attr, None)
+        if not dt:
+            continue
+        local_dt = timezone.localtime(dt)
+        day = local_dt.date()
+        if not current_group or current_group["date"] != day:
+            current_group = {
+                "date": day,
+                "label": _date_separator_label(dt),
+                "items": []
+            }
+            groups.append(current_group)
+        current_group["items"].append(item)
+    return groups
+
+
 @login_required
 def inbox(request):
     if request.user.is_prestataire:
@@ -286,6 +309,12 @@ def inbox(request):
                     ctx["conversations_other"] = [
                         c for c in conv_list if c.pk not in highlight_ids
                     ]
+
+    if "conversations_pending_validate" in ctx:
+        ctx["grouped_pending"] = _group_by_day(ctx["conversations_pending_validate"])
+    if "conversations_other" in ctx:
+        ctx["grouped_other"] = _group_by_day(ctx["conversations_other"])
+    ctx["grouped_conversations"] = _group_by_day(ctx["conversations"])
 
     if request.user.is_prestataire:
         ctx.update(_presta_ctx(request.user))
@@ -458,7 +487,13 @@ def notifications_list(request):
 def rappels_list(request):
     if not getattr(request.user, "is_patient", False):
         return redirect("messaging:notifications")
-    notifs = Notification.queryset_rappels(request.user).order_by("-created_at")[:50]
+    notifs = (
+        Notification.objects.filter(user=request.user)
+        .filter(notification_type__in=["rappel", "prelevement", "preparation"])
+        .exclude(title__icontains="confirmé")
+        .exclude(title__icontains="devis")
+        .order_by("-created_at")[:50]
+    )
     ctx = {
         "notifications": notifs,
         "notif_scope": "rappels",

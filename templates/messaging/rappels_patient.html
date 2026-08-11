@@ -1,17 +1,156 @@
 {% extends "users/patient_account_base.html" %}
-{% block title %}Rappels{% endblock %}
-{% block account_page_title %}Rappels{% endblock %}
+{% load static %}
+{% block title %}Rappels & Bilans recommandés{% endblock %}
+{% block account_page_title %}Rappels & Bilans recommandés{% endblock %}
+
 {% block account_content %}
-<div class="pac-toolbar">
-  <p class="pac-lead" style="margin:0">Confirmations de RDV, consignes avant vos examens et rappels de soins programmés.</p>
-  {% if notifications %}
-  <form method="post" action="{% url 'messaging:mark_all_read' %}">
-    {% csrf_token %}
-    <input type="hidden" name="scope" value="rappels">
-    <button type="submit" class="pac-btn-outline">Tout marquer comme lu</button>
-  </form>
-  {% endif %}
+{# Bandeau principal Rappels - Style exact démo DEMO_DESKTOP_PATIENT.html #}
+<div style="background:linear-gradient(135deg, #0a5c8a, #0891b2);border-radius:12px;padding:18px 20px;margin-bottom:20px;color:#ffffff">
+  <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#ffffff;margin-bottom:4px;display:flex;align-items:center;gap:8px">
+    <span>🔔</span> Rappels &amp; Bilans recommandés
+  </div>
+  <div style="font-size:11.5px;color:rgba(255,255,255,0.9);line-height:1.6">
+    Suggestions personnalisées basées sur votre profil et les recommandations médicales internationales (OMS, HAS). Bientôt connecté à votre blog de santé MedCare.
+  </div>
 </div>
 
-{% include "messaging/_patient_notif_list.html" with empty_title="Aucun rappel pour le moment" empty_hint="Les confirmations de rendez-vous, préparatifs d'actes et rappels programmés s'affichent ici — distincts des notifications de devis." %}
+{# ── 1. Rappels de proximité RDV & Consignes de préparation ── #}
+{% if notifications %}
+<div style="margin-bottom:24px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;display:flex;align-items:center;gap:6px">
+      <span>⏰</span> Rappels de proximité &amp; Consignes de préparation
+    </div>
+    <form method="post" action="{% url 'messaging:mark_all_read' %}">
+      {% csrf_token %}
+      <input type="hidden" name="scope" value="rappels">
+      <button type="submit" style="font-size:11px;font-weight:600;color:#0a5c8a;background:none;border:none;cursor:pointer">Tout marquer comme lu</button>
+    </form>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    {% for n in notifications %}
+    <div style="display:flex;align-items:flex-start;gap:12px;background:#fffbeb;border:1.5px solid #fef3c7;border-left:4px solid #d97706;border-radius:10px;padding:12px 14px">
+      <div style="width:32px;height:32px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#92400e">
+        ⏰
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <span style="font-size:12px;font-weight:700;color:#1f2937">{{ n.title }}</span>
+          <span style="font-size:10px;color:#6b7280;white-space:nowrap">{{ n.created_at|timesince }}</span>
+        </div>
+        {% if n.content %}
+        <p style="font-size:11px;color:#374151;margin-top:3px;line-height:1.5;font-weight:500">{{ n.content }}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{# ── 2. Bilans recommandés (Style exact cartes DEMO_DESKTOP_PATIENT.html) ── #}
+<div style="margin-bottom:24px">
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;margin-bottom:12px;display:flex;align-items:center;gap:6px">
+    <span>🔬</span> Bilans de santé recommandés
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+    {# Bilan 1 : Bilan de santé général #}
+    <div style="background:#ffffff;border:1.5px solid #a7f3d0;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#065f46;display:flex;align-items:center;gap:6px">
+          <span>🩺</span> Bilan de santé général
+        </div>
+        <span style="font-size:9px;font-weight:600;padding:3px 9px;border-radius:20px;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;flex-shrink:0">Recommandé</span>
+      </div>
+      <div style="font-size:11px;color:#4b5563;line-height:1.6;margin-bottom:10px">
+        NFS, glycémie à jeun, bilan lipidique, créatinine — bilan annuel de contrôle pour suivre vos constantes vitales.
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46">NFS / Hémogramme</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46">Glycémie à jeun</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46">Bilan lipidique</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46">Créatinémie</span>
+      </div>
+      <a href="{% url 'healthcare:search' %}?q=Bilan+de+sant%C3%A9" style="display:block;width:100%;background:#059669;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+        🔬 Rechercher ces actes →
+      </a>
+    </div>
+
+    {# Bilan 2 : Bilan prénuptial & Préconception #}
+    <div style="background:#ffffff;border:1.5px solid #bfdbfe;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0a5c8a;display:flex;align-items:center;gap:6px">
+          <span>💍</span> Bilan prénuptial &amp; Préconception
+        </div>
+        <span style="font-size:9px;font-weight:600;padding:3px 9px;border-radius:20px;background:#e8f4fb;color:#0a5c8a;border:1px solid #bfdbfe;flex-shrink:0">Avant mariage</span>
+      </div>
+      <div style="font-size:11px;color:#4b5563;line-height:1.6;margin-bottom:10px">
+        Groupe ABO/Rhésus, VIH, hépatites B et C, électrophorèse de l'hémoglobine (drépanocytose) — recommandé avant mariage au Sénégal.
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">Groupe ABO/Rhésus</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">Électrophorèse Hb</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">VIH Ag/Ac</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">HBsAg</span>
+      </div>
+      <a href="{% url 'healthcare:search' %}?q=Bilan+pr%C3%A9nuptial" style="display:block;width:100%;background:#0a5c8a;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+        🔬 Rechercher ces actes →
+      </a>
+    </div>
+
+    {# Bilan 3 : Suivi grossesse #}
+    <div style="background:#ffffff;border:1.5px solid #fde68a;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#d97706;display:flex;align-items:center;gap:6px">
+          <span>🤰</span> Suivi grossesse &amp; Obstétrique
+        </div>
+        <span style="font-size:9px;font-weight:600;padding:3px 9px;border-radius:20px;background:#fef3c7;color:#d97706;border:1px solid #fde68a;flex-shrink:0">Par trimestre</span>
+      </div>
+      <div style="font-size:11px;color:#4b5563;line-height:1.6;margin-bottom:10px">
+        Bilan prénatal T1, sérologies toxoplasmose &amp; rubéole, échographies obstétricales T1/T2/T3 pour le suivi de croissance fœtale.
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Échographie T1</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Toxoplasmose</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Rubéole</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Échographie T2</span>
+      </div>
+      <a href="{% url 'healthcare:search' %}?q=%C3%89chographie+obst%C3%A9tricale" style="display:block;width:100%;background:#d97706;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+        🔬 Rechercher ces actes →
+      </a>
+    </div>
+
+    {# Bilan 4 : Bilans OMS recommandés #}
+    <div style="background:#ffffff;border:1.5px solid #a5f3fc;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0891b2;display:flex;align-items:center;gap:6px">
+          <span>🫁</span> Bilans OMS recommandés
+        </div>
+        <span style="font-size:9px;font-weight:600;padding:3px 9px;border-radius:20px;background:#ecfeff;color:#0891b2;border:1px solid #a5f3fc;flex-shrink:0">Tous les 2 ans</span>
+      </div>
+      <div style="font-size:11px;color:#4b5563;line-height:1.6;margin-bottom:10px">
+        Dépistage diabète &amp; HTA (glycémie, HbA1c), bilan cardiovasculaire et dépistage IST recommandé par l'OMS.
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">Glycémie à jeun</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">HbA1c</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">ECG 12 dérivations</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">Dépistage IST</span>
+      </div>
+      <a href="{% url 'healthcare:search' %}?q=Glyc%C3%A9mie" style="display:block;width:100%;background:#0891b2;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+        🔬 Rechercher ces actes →
+      </a>
+    </div>
+  </div>
+</div>
+
+{# ── 3. Blog santé MedCare · À venir ── #}
+<div style="background:#f9fafb;border:1px dashed #d1d5db;border-radius:12px;padding:18px;text-align:center;margin-top:10px">
+  <div style="font-size:22px;margin-bottom:6px">📖</div>
+  <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#111827;margin-bottom:4px">Blog santé MedCare · À venir</div>
+  <div style="font-size:11px;color:#6b7280;line-height:1.6;max-width:440px;margin:0 auto">
+    Articles, guides et rappels personnalisés rédigés par nos médecins partenaires — directement dans votre espace patient.
+  </div>
+</div>
 {% endblock %}

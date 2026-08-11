@@ -52,7 +52,10 @@ def use_visitor_chrome(request):
 
 
 def get_footer_pillars():
-    """Services actifs pour la colonne Services du footer visiteur."""
+    """Services actifs pour la colonne Services du footer visiteur.
+    On ne garde que les 6 piliers principaux (order <= 10),
+    pas les sous-catégories (Hématologie, Hémostase… order=100+).
+    """
     return list(
-        ServiceMedical.objects.filter(is_active=True).order_by("order")[:8]
+        ServiceMedical.objects.filter(is_active=True, order__lte=10).order_by("order")
     )

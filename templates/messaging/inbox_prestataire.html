@@ -1,31 +1,57 @@
 {% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
 {% block title %}Messages{% endblock %}
+{% block dash_extra_css %}
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=1">
+{% endblock %}
 {% block dash_content %}
 <div class="max-w-3xl">
-  <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Messages</h1>
-  <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Fil de discussion par patient et par dossier (devis / RDV).</p>
-  <div class="mt-5 divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-200 bg-white">
-    {% for conv in conversations %}
-    {% with badge=conv.status_badge %}
-    <a href="{% url 'messaging:conversation_detail' conv.pk %}" class="flex items-center gap-4 px-5 py-4 transition hover:bg-gray-50">
-      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-sm font-bold text-primary-500">{{ conv.patient.display_name|make_list|first|upper }}</span>
-      <span class="min-w-0 flex-1">
-        <span class="flex items-center justify-between gap-2">
-          <span class="truncate font-medium text-gray-900">{{ conv.patient.display_name }}</span>
-          {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
-        </span>
-        <span class="mt-0.5 flex flex-wrap items-center gap-2">
-          <span class="font-mono text-[10px] text-gray-400">{{ conv.dossier_label }}</span>
-          <span class="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide {% if badge.0 == 'wait' %}bg-amber-100 text-amber-800{% elif badge.0 == 'ok' %}mc-bg-accent-light mc-text-accent-dark{% elif badge.0 == 'done' %}bg-blue-50 text-blue-700{% else %}bg-gray-100 text-gray-600{% endif %}">{{ badge.1 }}</span>
-        </span>
-        {% with last=conv.last_message %}{% if last %}<span class="mt-0.5 block truncate text-xs text-gray-400">{{ last.content|truncatechars:72 }}</span>{% endif %}{% endwith %}
-      </span>
-      {% with count=conv.unread_count_for_prestataire %}{% if count %}<span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white">{{ count }}</span>{% endif %}{% endwith %}
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Messages</h1>
+      <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Fil de discussion par patient et par dossier (devis / RDV).</p>
+    </div>
+    <a href="{% url 'healthcare:search' %}" class="pac-btn-primary" style="display:inline-flex;align-items:center;gap:6px">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+      Retour aux prestations
     </a>
-    {% endwith %}
-    {% empty %}
-    <div class="px-5 py-16 text-center text-sm text-gray-400">Aucun fil pour l'instant. Les demandes de devis et RDV apparaîtront ici.</div>
-    {% endfor %}
+  </div>
+  <div class="mt-5 space-y-4">
+    {% if grouped_conversations %}
+      {% for group in grouped_conversations %}
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <div class="bg-gray-50/90 px-5 py-2 text-xs font-bold text-gray-600 border-b border-gray-100 flex items-center gap-2">
+          <span>📅</span>
+          <span>{{ group.label }}</span>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for conv in group.items %}
+          {% with badge=conv.status_badge %}
+          <a href="{% url 'messaging:conversation_detail' conv.pk %}" class="flex items-center gap-4 px-5 py-4 transition hover:bg-gray-50">
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-sm font-bold text-primary-500">{{ conv.patient.display_name|make_list|first|upper }}</span>
+            <span class="min-w-0 flex-1">
+              <span class="flex items-center justify-between gap-2">
+                <span class="truncate font-medium text-gray-900">{{ conv.patient.display_name }}</span>
+                {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
+              </span>
+              <span class="mt-0.5 flex flex-wrap items-center gap-2">
+                <span class="font-mono text-[10px] text-gray-400">{{ conv.dossier_label }}</span>
+                <span class="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide {% if badge.0 == 'wait' %}bg-amber-100 text-amber-800{% elif badge.0 == 'ok' %}mc-bg-accent-light mc-text-accent-dark{% elif badge.0 == 'done' %}bg-blue-50 text-blue-700{% else %}bg-gray-100 text-gray-600{% endif %}">{{ badge.1 }}</span>
+              </span>
+              {% with last=conv.last_message %}{% if last %}<span class="mt-0.5 block truncate text-xs text-gray-400">{{ last.content|truncatechars:72 }}</span>{% endif %}{% endwith %}
+            </span>
+            {% with count=conv.unread_count_for_prestataire %}{% if count %}<span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white">{{ count }}</span>{% endif %}{% endwith %}
+          </a>
+          {% endwith %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <div class="px-5 py-16 text-center text-sm text-gray-400">Aucun fil pour l'instant. Les demandes de devis et RDV apparaîtront ici.</div>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

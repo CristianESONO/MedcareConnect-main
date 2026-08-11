@@ -17,6 +17,10 @@ urlpatterns = [
         "pro/agenda/liste/",
         RedirectView.as_view(pattern_name="appointments:prestataire_rdv_list", permanent=False),
     ),
+    path(
+        "pro/agenda/ticket/",
+        RedirectView.as_view(url="/rdv/pro/agenda/?view=ticket", permanent=False),
+    ),
     path("pro/walk-in/", views.prestataire_rdv_create, name="prestataire_rdv_create"),
     path("pro/<str:ref>/move/", views.prestataire_rdv_move, name="prestataire_rdv_move"),
     path("pro/<str:ref>/update/", views.prestataire_rdv_update, name="prestataire_rdv_update"),

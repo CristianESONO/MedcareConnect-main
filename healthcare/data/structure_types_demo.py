@@ -89,6 +89,7 @@ _DEMO_BY_KEY: dict[str, dict] = {row["key"]: row for row in DEMO_STRUCTURE_TYPES
 
 # TypeOrganisme.name (base) → clé démo
 ORG_TYPE_TO_DEMO_KEY: dict[str, str] = {
+    # Noms génériques (anciens)
     "Laboratoire": "labo",
     "Centre d'imagerie": "imagerie",
     "Cabinet médical": "cabinet",
@@ -102,6 +103,25 @@ ORG_TYPE_TO_DEMO_KEY: dict[str, str] = {
     "Hôpital": "hopital",
     "Centre de santé": "multi",
     "Pharmacie": "multi",
+    # Noms détaillés (base de démo actuelle)
+    "Ambulance médicalisée — Transport & SMUR": "ambulance",
+    "Laboratoire d'analyses médicales": "labo",
+    "Laboratoire — Fertilité, Immunologie & PCR": "labo",
+    "Laboratoire spécialisé — Anapath & Cytologie": "labo",
+    "Laboratoire d'analyses médicales — Centre hospitalier": "labo",
+    "Laboratoire hospitalier privé": "labo",
+    "Imagerie — Écho · Radio · Scanner · IRM": "imagerie",
+    "Centre d'imagerie médicale": "imagerie",
+    "Centre d'imagerie interventionnelle": "imagerie",
+    "Explorations fonctionnelles — Cardiologie & Pneumologie": "cabinet",
+    "Explorations fonctionnelles — Neurologie, ORL, Ophtalmo": "cabinet",
+    "Centre d'exploration fonctionnelle": "cabinet",
+    "Kinésithérapie & rééducation fonctionnelle": "cabinet",
+    "Centre de santé mentale": "cabinet",
+    "Cabinet ou centre dentaire": "dentaire",
+    "Cabinet dentaire — Soins complets & Esthétique": "dentaire",
+    "Clinique E2E": "clinique",
+    "Clinique privée — Soins spécialisés pluridisciplinaires": "clinique",
 }
 
 

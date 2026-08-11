@@ -3,1327 +3,495 @@
 {% block title %}Profil public{% endblock %}
 
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'healthcare/css/organisme_fiche.css' %}?v=9">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Profil public — aligné charte MedCare (visitor_charte.css) */
-  .pp-admin {
-    border-radius: var(--mc-radius-lg, 24px);
-    border: 1px solid var(--mc-border, #D4DEEE);
-    background: var(--mc-white, #fff);
-    padding: 1.25rem 1.35rem;
-    box-shadow: var(--mc-shadow-sm, 0 1px 4px rgba(18, 58, 99, 0.08));
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
+  .profil-page-wrap {
+    font-family: 'DM Sans', sans-serif;
+    color: #0d1b2a;
   }
-  .pp-admin-inner {
+  .profil-section-head {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
+    margin-bottom: 20px;
     flex-wrap: wrap;
+    gap: 12px;
   }
-  .pp-admin-title {
-    font-family: var(--mc-font-display, 'Syne', sans-serif);
-    font-size: 1rem;
+  .profil-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
     font-weight: 800;
-    color: var(--mc-text, #0A1535);
-    letter-spacing: -0.02em;
+    color: #0d1b2a;
   }
-  .pp-admin-lead { color: var(--mc-text-body, #374872); font-size: 0.75rem; }
-  .pp-admin-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    flex-shrink: 0;
+  .profil-section-sub {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
   }
-  .pp-admin-btn {
+  .pp-btn {
+    padding: 8px 16px;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all .18s;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.65rem;
-    border-radius: 0.625rem;
-    border: 1px solid var(--mc-border, #D4DEEE);
-    background: var(--mc-white, #fff);
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--mc-text, #0A1535);
-    white-space: nowrap;
-    transition: transform 0.12s, background 0.12s;
-    cursor: pointer;
+    gap: 6px;
     text-decoration: none;
   }
-  .pp-admin-btn:hover { background: var(--mc-bg, #F4F7FB); transform: translateY(-1px); }
-  .pp-admin-btn--primary {
-    background: var(--mc-primary, #0a5c8a);
-    border-color: transparent;
-    color: #fff;
+  .pp-btn-primary {
+    background: #0a5c8a;
+    color: #fff !important;
   }
-  .pp-admin-btn--primary:hover { background: var(--mc-navy, #123a63); }
-  .pp-admin-btn--light {
-    background: rgba(10, 92, 138, 0.07);
-    border-color: rgba(10, 92, 138, 0.2);
-    color: var(--mc-primary, #0a5c8a);
+  .pp-btn-primary:hover {
+    background: #08496e;
   }
-  .pp-admin-btn--light:hover { background: rgba(10, 92, 138, 0.14); }
-  .pp-admin-url {
-    margin-top: 1rem;
-    border-radius: var(--mc-radius, 14px);
-    border: 1px solid var(--mc-border, #D4DEEE);
-    background: var(--mc-bg, #F4F7FB);
-    padding: 0.65rem 0.85rem;
-    font-family: ui-monospace, monospace;
-    font-size: 0.6875rem;
-    color: var(--mc-text-muted, #7A89B0);
-    word-break: break-all;
+  .pp-btn-outline {
+    background: #fff;
+    color: #0a5c8a !important;
+    border: 1.5px solid #0a5c8a;
   }
-  .pp-feedback { font-size: 0.875rem; font-weight: 600; }
-  .pp-feedback--ok { color: var(--mc-success, #00B87A); }
-  .pp-feedback--warn { color: #b45309; }
-  .pp-preview-wrap { position: relative; margin-top: 1.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
-  .pp-preview-wrap:has(.pp-preview-devis-sticky) {
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  .pp-btn-outline:hover {
+    background: #e8f4fb;
   }
-  @media (min-width: 768px) {
-    .pp-preview-wrap:has(.pp-preview-devis-sticky) {
-      padding-bottom: 0;
-    }
-    .pp-preview-devis-sticky {
-      position: static !important;
-      margin-top: 1rem;
-      padding: 0 !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      transform: none !important;
-      width: 100% !important;
-      max-width: none !important;
-    }
-    .pp-preview-devis-sticky .pp-devis-wrap--float {
-      margin-top: 0;
-      padding-top: 1rem;
-      border-top: 1px solid var(--mc-border, #D4DEEE);
-    }
+  .pp-btn-light {
+    background: rgba(10, 92, 138, 0.08);
+    color: #0a5c8a !important;
+    border: 1px solid rgba(10, 92, 138, 0.2);
   }
-  .pp-preview-badge {
-    position: absolute;
-    top: -0.65rem;
-    left: 1.25rem;
-    z-index: 5;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.28rem 0.75rem;
-    border-radius: 9999px;
-    border: 1px solid rgba(79, 163, 199, 0.35);
-    background: var(--mc-white, #fff);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--mc-navy, #123a63);
-    box-shadow: var(--mc-shadow-sm);
+  .pp-btn-light:hover {
+    background: rgba(10, 92, 138, 0.15);
   }
-  .pp-section-label {
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--mc-text-muted, #7A89B0);
-  }
-  .pp-body { background: var(--mc-bg, #F4F7FB); }
-  .pp-body.pp-body--fiche {
-    padding: 1rem 0.85rem 1.25rem;
-  }
-  @media (min-width: 640px) {
-    .pp-body.pp-body--fiche { padding: 1.25rem 1.35rem; }
-  }
-  .pp-body-panel {
-    border-radius: var(--mc-radius, 14px);
-    border: 1px solid var(--mc-border, #D4DEEE);
-    background: var(--mc-white, #fff);
-    padding: 1rem 1.1rem;
-    box-shadow: var(--mc-shadow-sm);
-  }
-  .pp-body-panel + .pp-body-panel { margin-top: 0.85rem; }
 
-  .pp-ico { width: 1.125rem; height: 1.125rem; flex-shrink: 0; }
-  .pp-ico--xs { width: 0.875rem; height: 0.875rem; }
-  .pp-ico--sm { width: 1rem; height: 1rem; }
-  .pp-ico--lg { width: 2rem; height: 2rem; opacity: 0.85; }
-  .pp-cta-icon { display: inline-flex; align-items: center; justify-content: center; }
-  .pp-tag, .pp-title-badge, .pp-infobar-hours-label, .pp-contact-item, .pp-contact-save {
-    display: inline-flex; align-items: center; gap: 0.35rem;
+  /* Preview Card Container - CENTERED */
+  .profil-preview-container {
+    max-width: 480px;
+    margin: 0 auto;
   }
-  .pp-contact-item { align-items: flex-start; }
-  .pp-acte-delai { display: inline-flex; align-items: center; gap: 0.2rem; }
-  .pp-cat-chevron { display: inline-flex; transition: transform 0.2s ease; }
-  .pp-cat-group[open] .pp-cat-chevron { transform: rotate(180deg); }
-  .pp-devis-cta__label { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-  .pp-btn-text-danger {
-    display: inline-flex; align-items: center; gap: 0.25rem;
-    font-size: 0.625rem; font-weight: 600; color: #6b7280;
-    background: none; border: none; cursor: pointer; padding: 0;
-  }
-  .pp-btn-text-danger:hover { color: #111827; }
-  .pp-cover-add { display: inline-flex; align-items: center; gap: 0.35rem; }
-  .pp-panier-remove {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 1rem; height: 1rem; padding: 0; border: none; background: transparent;
-    font-size: 0.875rem; line-height: 1; color: #9ca3af; cursor: pointer;
-  }
-  .pp-panier-remove:hover { color: #dc2626; }
-  .pp-preview {
-    overflow: hidden;
-    border-radius: var(--mc-radius-lg, 24px);
-    border: 1px solid rgba(79, 163, 199, 0.28);
-    background: var(--mc-white, #fff);
-    box-shadow: var(--mc-shadow-md, 0 6px 20px rgba(18, 58, 99, 0.12));
-  }
-  .pp-header {
+
+  .profil-card-frame {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(26, 58, 110, 0.10);
+    background: #fff;
     position: relative;
+  }
+
+  .profil-card-header {
+    background: linear-gradient(135deg, #1a9e9e, #1a3a6e);
+    padding: 20px 18px 16px;
     color: #fff;
-    background: linear-gradient(rgba(18, 58, 99, 0.9), rgba(13, 27, 75, 0.84));
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
-  }
-  .pp-header-glow {
-    pointer-events: none;
-    position: absolute;
-    border-radius: 9999px;
-    filter: blur(48px);
-  }
-  .pp-header-glow--1 { top: -2rem; right: -2rem; width: 10rem; height: 10rem; background: rgba(79, 163, 199, 0.28); }
-  .pp-header-glow--2 { bottom: 0; left: 8%; width: 8rem; height: 8rem; background: rgba(126, 200, 227, 0.18); }
-  .pp-cover {
     position: relative;
-    height: 9rem;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .profil-photo-box {
+    width: 58px;
+    height: 58px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    flex-shrink: 0;
     overflow: hidden;
   }
-  .pp-cover--empty { height: 6rem; }
-  .pp-cover-img {
-    position: absolute;
-    inset: 0;
+
+  .profil-photo-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.55;
   }
-  .pp-cover-shade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(18, 58, 99, 0.12) 0%, rgba(13, 27, 75, 0.82) 100%);
-  }
-  .pp-cover-empty {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    text-align: center;
-  }
-  .pp-cover-add {
-    margin-top: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background: rgba(255, 255, 255, 0.12);
-    font-size: 0.625rem;
-    font-weight: 700;
-    color: #fff;
-    transition: background 0.15s;
-  }
-  .pp-cover-add:hover { background: rgba(255, 255, 255, 0.22); }
-  .pp-sheet {
-    position: relative;
-    z-index: 2;
-    margin-top: -2.75rem;
-    padding: 0 1.25rem 1.25rem;
-  }
-  @media (min-width: 640px) {
-    .pp-sheet { padding: 0 1.5rem 1.375rem; margin-top: -3rem; }
-  }
-  .pp-hero {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .pp-hero-main {
-    display: flex;
-    min-width: 0;
-    flex: 1;
-    gap: 1rem;
-    align-items: flex-end;
-  }
-  .pp-avatar,
-  .pp-avatar-fallback {
-    width: 4rem;
-    height: 4rem;
-    flex-shrink: 0;
-    border-radius: 0.875rem;
-    border: 3px solid rgba(255, 255, 255, 0.92);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
-  }
-  .pp-avatar { object-fit: cover; background: #fff; }
-  .pp-avatar-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--mc-accent, #4fa3c7) 0%, var(--mc-navy, #123a63) 100%);
-    font-family: var(--mc-font-display, 'Syne', sans-serif);
-    font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: #fff;
-  }
-  .pp-hero-text { min-width: 0; flex: 1; padding-bottom: 0.15rem; }
-  .pp-title-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 0.5rem;
-  }
-  .pp-name {
-    font-family: var(--mc-font-display, 'Syne', sans-serif);
-    font-size: 0.95rem;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-  @media (min-width: 640px) { .pp-name { font-size: 1.05rem; } }
-  .pp-title-badge {
-    font-size: 0.5625rem;
-    font-weight: 700;
-    padding: 0.15rem 0.45rem;
-    border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.12);
-    white-space: nowrap;
-  }
-  .pp-title-badge--verified { color: #bae6fd; border-color: rgba(125, 211, 252, 0.4); }
-  .pp-title-badge--pioneer { color: #fef08a; border-color: rgba(253, 224, 71, 0.35); background: rgba(234, 179, 8, 0.15); }
-  .pp-subtitle {
-    margin-top: 0.25rem;
-    font-size: 0.75rem;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.72);
-  }
-  .pp-subtitle-loc { color: rgba(255, 255, 255, 0.9); font-weight: 500; }
-  .pp-cta-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.45rem;
-    width: auto;
-    min-width: 7.5rem;
-    flex-shrink: 0;
-  }
-  .pp-cta {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.45rem;
-    padding: 0.45rem 0.65rem;
-    border-radius: 0.625rem;
-    font-size: 0.6rem;
-    font-weight: 700;
-    line-height: 1.2;
-    text-align: left;
-    transition: transform 0.12s, background 0.15s, border-color 0.15s;
-    white-space: nowrap;
-  }
-  .pp-cta:hover { transform: translateY(-1px); }
-  .pp-cta-icon { font-size: 0.875rem; line-height: 1; flex-shrink: 0; }
-  .pp-cta-label-short { display: none; }
-  .pp-cta-label-long { display: inline; }
-  .pp-cta--wa {
-    background: #25d366;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
-  }
-  .pp-cta--wa:hover { background: #1ebe5c; }
-  .pp-cta--map {
-    background: rgba(255, 255, 255, 0.14);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    backdrop-filter: blur(4px);
-  }
-  .pp-cta--map:hover { background: rgba(255, 255, 255, 0.22); }
-  .pp-cta--contact {
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-  }
-  .pp-cta--contact:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
-  .pp-cta.is-disabled,
-  .pp-cta:disabled { opacity: 0.45; pointer-events: none; transform: none; }
-  .pp-cta--contact[aria-expanded="true"] {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-  }
-  .pp-infobar {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.55rem 0.7rem;
-    border-radius: 0.625rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(0, 0, 0, 0.12);
-    backdrop-filter: blur(8px);
-  }
-  .pp-infobar-hours-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex: 1 1 auto;
-    min-width: 0;
-    width: 100%;
-    padding: 0;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    text-align: left;
-    font: inherit;
-    color: inherit;
-  }
-  .pp-infobar-hours-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .pp-infobar-chevron {
-    display: inline-flex;
-    flex-shrink: 0;
-    opacity: 0.75;
-    transition: transform 0.2s ease;
-  }
-  .pp-infobar-hours-btn[aria-expanded="true"] .pp-infobar-chevron { transform: rotate(180deg); }
-  .pp-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.625rem;
-    font-weight: 700;
-    padding: 0.2rem 0.55rem;
-    border-radius: 9999px;
-    white-space: nowrap;
-  }
-  .pp-status-dot {
-    width: 0.375rem;
-    height: 0.375rem;
-    border-radius: 9999px;
-    flex-shrink: 0;
-  }
-  .pp-status--open {
-    background: rgba(79, 163, 199, 0.22);
-    color: var(--mc-cyan, #7ec8e3);
-    border: 1px solid rgba(79, 163, 199, 0.4);
-  }
-  .pp-status--open .pp-status-dot { background: var(--mc-accent, #4fa3c7); box-shadow: 0 0 6px rgba(79, 163, 199, 0.75); }
-  .pp-status--closed {
-    background: rgba(244, 63, 94, 0.18);
-    color: #fecdd3;
-    border: 1px solid rgba(251, 113, 133, 0.35);
-  }
-  .pp-status--closed .pp-status-dot { background: #fb7185; }
-  .pp-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-top: 0.65rem;
-  }
-  .pp-tag {
-    font-size: 0.625rem;
-    font-weight: 500;
-    padding: 0.18rem 0.5rem;
-    border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.07);
-    color: rgba(255, 255, 255, 0.88);
-  }
-  .pp-about {
-    margin-top: 0.75rem;
-    font-size: 0.75rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .pp-note-inline {
-    margin-top: 0.5rem;
-    font-size: 0.625rem;
-    color: rgba(255, 255, 255, 0.55);
-    font-style: italic;
-  }
-  .pp-contact-card {
-    margin-top: 0.875rem;
-    padding: 0.875rem 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(6px);
-  }
-  .pp-contact-card-title {
-    font-size: 0.625rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  .pp-contact-grid {
-    margin-top: 0.65rem;
-    display: grid;
-    gap: 0.45rem 1rem;
-  }
-  @media (min-width: 480px) {
-    .pp-contact-grid { grid-template-columns: 1fr 1fr; }
-  }
-  .pp-contact-item {
-    font-size: 0.6875rem;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.9);
-  }
-  .pp-contact-item--full { grid-column: 1 / -1; }
-  .pp-contact-save {
-    margin-top: 0.75rem;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.1);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .pp-contact-save:hover { background: rgba(255, 255, 255, 0.18); }
 
-  .pp-ins-filter.active,
-  .pp-cat-filter.active {
-    background: var(--mc-navy, #123a63);
-    border-color: var(--mc-navy, #123a63);
-    color: #fff;
-    box-shadow: var(--mc-shadow-sm);
+  .profil-action-btns {
+    display: flex;
+    gap: 7px;
+    margin-top: 14px;
   }
-  .pp-ins-filter,
-  .pp-cat-filter {
-    border: 1.5px solid var(--mc-border, #D4DEEE);
-    background: var(--mc-white, #fff);
-    color: var(--mc-text-body, #374872);
-    font-size: 0.65rem;
+
+  .profil-action-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff !important;
+    border-radius: 20px;
+    padding: 8px 4px;
+    font-size: 11px;
     font-weight: 600;
-    padding: 0.25rem 0.6rem;
-    border-radius: 9999px;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.15s;
   }
-  .pp-ins-filter:hover:not(.active),
-  .pp-cat-filter:hover:not(.active) {
-    border-color: var(--mc-accent, #4fa3c7);
-    color: var(--mc-navy, #123a63);
-    background: var(--mc-accent-light, rgba(79, 163, 199, 0.12));
+
+  .profil-action-btn:hover {
+    background: rgba(255, 255, 255, 0.24);
   }
-  .pp-cat-group {
-    border: 1px solid var(--mc-border, #D4DEEE);
-    border-radius: var(--mc-radius, 14px);
+
+  .profil-hours-popover {
+    display: none;
+    position: absolute;
+    top: calc(100% - 10px);
+    right: 18px;
+    background: #fff;
+    color: #0d1b2a;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+    padding: 14px 16px;
+    width: 240px;
+    z-index: 50;
+    font-size: 11.5px;
+    border: 1px solid #e5e7eb;
+  }
+
+  .profil-card-body {
+    padding: 18px;
+    background: #fff;
+  }
+
+  .profil-assurances-box {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 16px;
     overflow: hidden;
-    margin-bottom: 0.45rem;
-    background: var(--mc-white, #fff);
-    box-shadow: var(--mc-shadow-sm);
   }
-  .pp-cat-head {
-    padding: 0.6rem 0.85rem;
-    background: var(--mc-surface, #EBF0F8);
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--mc-text, #0A1535);
+
+  .profil-assurances-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 11px 14px;
     cursor: pointer;
     user-select: none;
-  }
-  .pp-cat-head:hover { background: var(--mc-accent-light, rgba(79, 163, 199, 0.12)); }
-  .pp-acte-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.6rem;
-    border-radius: 0.5rem;
-    font-size: 0.72rem;
+    background: #fff;
     transition: background 0.12s;
   }
-  .pp-acte-row:hover { background: var(--mc-bg, #F4F7FB); }
-  .pp-acte-name { flex: 1; min-width: 0; color: var(--mc-text, #0A1535); font-weight: 500; }
-  .pp-acte-delai { font-size: 0.6rem; color: var(--mc-text-muted, #7A89B0); white-space: nowrap; }
-  .pp-acte-prix {
-    font-size: 0.72rem;
-    font-weight: 800;
-    font-family: var(--mc-font-display, 'Syne', sans-serif);
-    color: var(--mc-navy, #123a63);
-    white-space: nowrap;
+
+  .profil-assurances-head:hover {
+    background: #f9fafb;
   }
-  .pp-panier {
-    margin-top: 0.875rem;
-    background: linear-gradient(135deg, rgba(79, 163, 199, 0.1) 0%, rgba(18, 58, 99, 0.04) 100%);
-    border: 1.5px solid rgba(79, 163, 199, 0.35);
-    border-radius: var(--mc-radius, 14px);
-    padding: 0.85rem 1rem;
-    box-shadow: var(--mc-shadow-sm);
+
+  .profil-assurances-body {
+    display: none;
+    padding: 0 14px 12px;
+    border-top: 1px solid #f3f4f6;
   }
-  .pp-panier-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.625rem;
-    padding: 0.22rem 0.6rem;
-    border-radius: 9999px;
-    background: var(--mc-navy, #123a63);
-    color: #fff;
+
+  .profil-acte-pillar-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: #fff;
   }
-  .pp-panier-tag button {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.75);
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
+
+  .profil-acte-pillar-card summary::-webkit-details-marker {
+    display: none;
   }
-  .pp-acte-row input[type="checkbox"] {
-    accent-color: var(--mc-accent, #4fa3c7);
-    width: 0.9rem;
-    height: 0.9rem;
-    flex-shrink: 0;
-    cursor: pointer;
+
+  .profil-acte-pillar-card summary {
+    list-style: none;
   }
-  .pp-ins-empty { font-size: 0.6875rem; color: var(--mc-text-muted, #7A89B0); }
-  .pp-domi-row {
+
+  .profil-acte-pillar-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(79, 163, 199, 0.25);
-    background: var(--mc-accent-light, rgba(79, 163, 199, 0.12));
-    padding: 0.35rem 0.55rem;
-    font-size: 0.75rem;
-  }
-  .pp-devis-wrap {
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--mc-border, #D4DEEE);
-  }
-  .pp-devis-cta {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.9rem 1rem;
-    border: none;
-    border-radius: var(--mc-radius, 14px);
-    background: #25d366;
-    color: #fff !important;
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 1.3;
+    background: #f9fafb;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e7eb;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
-    transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
-  }
-  .pp-devis-cta:hover {
-    background: #1ebe5c;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
-  }
-  .pp-devis-cta--disabled {
-    background: #6b7280;
-    box-shadow: none;
-    cursor: not-allowed;
-    transform: none;
-    opacity: 0.9;
-  }
-  .pp-devis-cta--disabled:hover {
-    background: #6b7280;
-    transform: none;
-    box-shadow: none;
-  }
-  .pp-devis-hint {
-    margin-top: 0.5rem;
-    text-align: center;
-    font-size: 0.625rem;
-    color: var(--mc-text-muted, #7A89B0);
+    user-select: none;
+    transition: background 0.12s;
   }
 
-  @media (max-width: 767px) {
-    .pp-preview-devis-sticky.org-fiche-sticky {
-      position: sticky !important;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 460;
-      margin-top: 0.75rem;
-    }
-    .pp-admin {
-      padding: 1rem;
-      border-radius: 1rem;
-    }
-    .pp-admin h1 { font-size: 1.125rem; }
-    .pp-admin-lead { font-size: 0.8125rem; line-height: 1.5; }
-    .pp-admin-actions {
-      width: 100%;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .pp-admin-actions a,
-    .pp-admin-actions button {
-      width: 100%;
-      justify-content: center;
-      min-height: 2.75rem;
-    }
-    .pp-admin-url {
-      font-size: 0.625rem;
-      padding: 0.75rem;
-    }
-    .pp-preview-wrap { margin-top: 1.25rem; margin-left: auto; margin-right: auto; }
-    .pp-preview {
-      border-radius: 1rem;
-      border-left: none;
-      border-right: none;
-    }
-    .pp-preview-badge {
-      left: 0.85rem;
-      font-size: 0.5625rem;
-    }
-    .pp-cover { height: 7.5rem; }
-    .pp-cover--empty { height: 5.5rem; }
-    .pp-sheet {
-      margin-top: -2.35rem;
-      padding: 0 1rem 1.35rem;
-    }
-    .pp-hero { gap: 1.15rem; }
-    .pp-hero-main {
-      align-items: flex-start;
-      gap: 0.85rem;
-    }
-    .pp-avatar,
-    .pp-avatar-fallback {
-      width: 4.25rem;
-      height: 4.25rem;
-      border-width: 2px;
-      border-radius: 0.875rem;
-    }
-    .pp-name {
-      font-size: 1.125rem;
-      line-height: 1.25;
-    }
-    .pp-subtitle {
-      margin-top: 0.35rem;
-      font-size: 0.8125rem;
-      line-height: 1.5;
-    }
-    .pp-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      width: 100%;
-    }
-    .pp-cta {
-      flex: 1 1 calc(50% - 0.25rem);
-      min-height: 2.75rem;
-      padding: 0.7rem 0.55rem;
-      font-size: 0.6875rem;
-      flex-direction: row;
-      justify-content: center;
-      gap: 0.4rem;
-      border-radius: 0.75rem;
-    }
-    .pp-cta--contact { flex: 1 1 100%; }
-    .pp-cta-label-short { display: inline; }
-    .pp-infobar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.55rem;
-      margin-top: 1.1rem;
-      padding: 0.75rem 0.85rem;
-    }
-    .pp-infobar-hours-label { font-size: 0.75rem; line-height: 1.45; }
-    .pp-tags { gap: 0.4rem; margin-top: 0.9rem; }
-    .pp-tag { font-size: 0.6875rem; padding: 0.28rem 0.55rem; }
-    .pp-about {
-      margin-top: 0.9rem;
-      font-size: 0.8125rem;
-      line-height: 1.65;
-    }
-    .pp-contact-card {
-      margin-top: 1rem;
-      padding: 1rem;
-    }
-    .pp-body {
-      padding: 1rem 0.85rem 1.25rem !important;
-    }
-    .pp-body-panel {
-      padding: 1.15rem 1rem;
-      border-radius: 1rem;
-    }
-    .pp-body-panel + .pp-body-panel { margin-top: 1rem; }
-    .pp-section-label {
-      font-size: 0.6875rem;
-      letter-spacing: 0.06em;
-    }
-    #pp-ins-filters,
-    #pp-cat-filters {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      max-width: 100%;
-      gap: 0.4rem;
-      padding-bottom: 0.15rem;
-    }
-    #pp-ins-filters::-webkit-scrollbar,
-    #pp-cat-filters::-webkit-scrollbar { display: none; }
-    .pp-ins-filter,
-    .pp-cat-filter {
-      flex-shrink: 0;
-      padding: 0.35rem 0.7rem;
-      font-size: 0.6875rem;
-    }
-    .pp-cat-head {
-      padding: 0.8rem 0.85rem;
-      font-size: 0.8125rem;
-    }
-    .pp-cat-group { margin-bottom: 0.65rem; }
-    .pp-acte-row {
-      align-items: flex-start;
-      gap: 0.65rem;
-      min-height: 2.75rem;
-      padding: 0.7rem 0.55rem;
-      font-size: 0.8125rem;
-    }
-    .pp-acte-row input[type="checkbox"] {
-      width: 1.125rem;
-      height: 1.125rem;
-      margin-top: 0.1rem;
-    }
-    .pp-acte-prix { font-size: 0.8125rem; }
-    .pp-panier {
-      margin-top: 1rem;
-      padding: 1rem;
-    }
-    .pp-devis-wrap {
-      margin-top: 1.15rem;
-      padding-top: 1.1rem;
-    }
+  .profil-acte-pillar-head:hover {
+    background: #f3f4f6;
+  }
+
+  .profil-pillar-chev {
+    display: inline-block;
+    color: #9ca3af;
+    font-size: 11px;
+    transition: transform 0.2s ease;
+  }
+
+  .profil-acte-pillar-card[open] .profil-pillar-chev {
+    transform: rotate(180deg);
+  }
+
+  .profil-acte-pillar-card:not([open]) .profil-pillar-chev {
+    transform: rotate(0deg);
+  }
+
+  .profil-acte-row-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 9px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .profil-acte-row-item:last-child {
+    border-bottom: none;
+  }
+
+  .pp-copy-toast {
+    display: none;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #14b87a;
   }
 </style>
 {% endblock %}
 
 {% block dash_content %}
-<div class="pp-admin">
-  <div class="pp-admin-inner">
-    <div class="min-w-0">
-      <h1 class="pp-admin-title">Profil public</h1>
-      <p class="pp-admin-lead mt-1">
-        Aperçu de votre page telle que les patients la voient sur MedCare.
-      </p>
+<div class="profil-page-wrap">
+  <!-- En-tête de section -->
+  <div class="profil-section-head">
+    <div>
+      <h1 class="profil-section-title">Profil public</h1>
+      <p class="profil-section-sub">Aperçu de votre page telle que les patients la voient sur MedCare</p>
     </div>
-    <div class="pp-admin-actions">
-      <a href="{% url 'healthcare:organisme_edit' %}" class="pp-admin-btn">{% include "healthcare/_icon_svg.html" with icon="pencil" class="pp-ico pp-ico--sm" %} Modifier</a>
-      <a href="{% url 'healthcare:organisme_hours' %}" class="pp-admin-btn">{% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--sm" %} Horaires</a>
-      <button type="button" id="btn-copy-public-url" data-url="{{ public_absolute_url|escape }}" class="pp-admin-btn pp-admin-btn--primary">{% include "healthcare/_icon_svg.html" with icon="link" class="pp-ico pp-ico--sm" %} Copier</button>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <a href="{% url 'healthcare:organisme_edit' %}" class="pp-btn pp-btn-outline">✏️ Modifier les infos</a>
+      <a href="{% url 'healthcare:organisme_hours' %}" class="pp-btn pp-btn-outline">🕐 Horaires</a>
+      <button type="button" class="pp-btn pp-btn-primary" id="btn-copy-public-url" data-url="{{ public_absolute_url|escape }}">🔗 Copier le lien</button>
       {% if org.is_active %}
-      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="pp-admin-btn pp-admin-btn--light">{% include "healthcare/_icon_svg.html" with icon="external" class="pp-ico pp-ico--sm" %} Voir fiche</a>
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="pp-btn pp-btn-light">👁️ Voir la fiche</a>
       {% endif %}
     </div>
   </div>
 
-  <p id="copy-url-feedback" class="pp-feedback pp-feedback--ok mt-3 hidden" role="status"></p>
+  <p id="copy-feedback" class="pp-copy-toast"></p>
 
   {% if not org.is_active %}
-  <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-    <strong>Fiche non publiée.</strong> Les patients ne peuvent pas encore ouvrir votre page publique.
+  <div class="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+    <strong>Fiche non publiée.</strong> Les patients ne peuvent pas encore ouvrir votre page publique dans l'annuaire.
   </div>
   {% endif %}
 
-  <p class="pp-admin-url">
-    <span class="font-semibold">Lien public :</span> {{ public_absolute_url }}
-  </p>
-</div>
+  <!-- Conteneur centré du Profil Public (Design DEMO_STRUCTURES.html) -->
+  <div class="profil-preview-container">
+    <div class="profil-card-frame">
 
-{# ── Aperçu fiche patient ── #}
-<div class="pp-preview-wrap">
-  <span class="pp-preview-badge">{% include "healthcare/_icon_svg.html" with icon="external" class="pp-ico pp-ico--xs" %} Aperçu patient</span>
-  <div class="pp-preview overflow-hidden">
-
-  <header class="pp-header">
-    <span class="pp-header-glow pp-header-glow--1" aria-hidden="true"></span>
-    <span class="pp-header-glow pp-header-glow--2" aria-hidden="true"></span>
-
-    <div class="pp-cover{% if not org.logo %} pp-cover--empty{% endif %}">
-      {% if org.logo %}
-      <!-- <img src="z{{ org.logo.url }}" alt="" class="pp-cover-img"> -->
-      <div class="pp-cover-shade" aria-hidden="true"></div>
-      {% else %}
-      <div class="pp-cover-shade" aria-hidden="true"></div>
-      <div class="pp-cover-empty">
-        {% include "healthcare/_icon_svg.html" with icon="building" class="pp-ico pp-ico--lg" %}
-        <p class="mt-1 text-[10px] text-white/55">Ajoutez une photo pour personnaliser votre fiche</p>
-        <a href="{% url 'healthcare:organisme_edit' %}" class="pp-cover-add">{% include "healthcare/_icon_svg.html" with icon="camera" class="pp-ico pp-ico--xs" %} Ajouter une photo</a>
-      </div>
-      {% endif %}
-    </div>
-
-    <div class="pp-sheet">
-      <div class="pp-hero">
-        <div class="pp-hero-main">
-          {% if org.logo %}
-          <img src="{{ org.logo.url }}" alt="" class="pp-avatar" width="92" height="92">
-          {% else %}
-          <div class="pp-avatar-fallback" aria-hidden="true">{{ org.name|make_list|first|upper }}</div>
-          {% endif %}
-          <div class="pp-hero-text">
-            <div class="pp-title-row">
-              <h2 class="pp-name">{{ org.name }}</h2>
-              {% if show_pioneer_badge %}<span class="pp-title-badge pp-title-badge--pioneer">{% include "healthcare/_icon_svg.html" with icon="star" class="pp-ico pp-ico--xs" %} Pionnier</span>{% elif org.is_verified %}<span class="pp-title-badge pp-title-badge--verified">{% include "healthcare/_icon_svg.html" with icon="check" class="pp-ico pp-ico--xs" %} Vérifié</span>{% endif %}
+      <!-- EN-TETE DEGRADE (identique démo) -->
+      <div class="profil-card-header">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div class="profil-photo-zone">
+            {% if org.logo %}
+            <img src="{{ org.logo.url }}" alt="{{ org.name }}" class="profil-photo-img">
+            {% else %}
+            <div class="profil-photo-box">🏥</div>
+            {% endif %}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;line-height:1.15">{{ org.name }}</span>
+              {% if show_pioneer_badge %}
+              <span style="font-size:10px;font-weight:700;background:#f5c451;color:#5a4300;border-radius:20px;padding:2px 9px;white-space:nowrap">★ Pionnier</span>
+              {% elif org.is_verified %}
+              <span style="font-size:10px;font-weight:700;background:#38bdf8;color:#0369a1;border-radius:20px;padding:2px 9px;white-space:nowrap">✓ Vérifié</span>
+              {% endif %}
             </div>
-            <p class="pp-subtitle">
-              {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
-              <span class="pp-subtitle-loc"> · {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city }}</span>
-            </p>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px">
+              <span style="font-size:11.5px;color:rgba(255,255,255,.85)">
+                {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
+                · {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city }}
+              </span>
+              {% if open_today == "open" %}
+              <span style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Ouvert</span>
+              {% elif open_today == "closed" %}
+              <span style="font-size:10px;font-weight:700;background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Fermé</span>
+              {% endif %}
+            </div>
+            <div style="margin-top:6px;font-size:10.5px;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:4px">
+              <span>🕐</span>
+              <span>{% if hours_meta %}{{ hours_meta }}{% else %}Lun–Sam : 07h00–19h00 · Dim : 08h00–13h00{% endif %}</span>
+            </div>
           </div>
         </div>
 
-        {% if maps_url or profil_pillars %}
-        <div class="pp-cta-row">
+        <div class="profil-action-btns">
           {% if profil_pillars %}
-          <button type="button" class="pp-cta pp-cta--rdv js-scroll-to-actes" id="btn-pp-rdv">
-            <span class="pp-cta-icon">{% include "healthcare/_icon_svg.html" with icon="calendar" class="pp-ico" %}</span>
-            <span class="pp-cta-label pp-cta-label-long">Prendre rendez-vous</span>
-            <span class="pp-cta-label pp-cta-label-short">RDV</span>
-          </button>
+          <a href="#actes-section" class="profil-action-btn">📅 RDV</a>
           {% endif %}
           {% if maps_url %}
-          <a href="{{ maps_url }}" target="_blank" rel="noopener noreferrer" class="pp-cta pp-cta--map">
-            <span class="pp-cta-icon">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="pp-ico" %}</span>
-            <span class="pp-cta-label">GPS</span>
-          </a>
+          <a href="{{ maps_url }}" target="_blank" rel="noopener noreferrer" class="profil-action-btn">📍 GPS</a>
           {% endif %}
+          <button type="button" class="profil-action-btn" id="btn-toggle-hours">🕐 Horaires</button>
         </div>
-        {% endif %}
-      </div>
 
-      <div class="pp-infobar">
-        <button type="button" id="btn-pp-hours" class="pp-infobar-hours-btn" aria-expanded="false" aria-controls="pp-hours-card">
-          <span class="pp-infobar-hours-label">
-            {% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--sm" %}
-            {% if hours_meta_chunks %}
-            <span class="pp-hours-summary">
-              {% for chunk in hours_meta_chunks %}
-              <span class="pp-hours-chip">{{ chunk }}</span>
-              {% endfor %}
-            </span>
-            {% else %}
-            {{ hours_meta }}
-            {% endif %}
-          </span>
-          <span class="pp-infobar-chevron" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="chevron-down" class="pp-ico pp-ico--xs" %}</span>
-        </button>
-        {% if open_today == "open" %}
-        <span class="pp-status pp-status--open"><span class="pp-status-dot"></span> Ouvert</span>
-        {% elif open_today == "closed" %}
-        <span class="pp-status pp-status--closed"><span class="pp-status-dot"></span> Fermé</span>
-        {% endif %}
-      </div>
-
-      {% include "healthcare/_organisme_fiche_hours_card.html" %}
-
-      {% if practical_chips %}
-      <div class="pp-tags">
-        {% for chip in practical_chips %}
-        <span class="pp-tag">{% include "healthcare/_icon_svg.html" with icon=chip.icon class="pp-ico pp-ico--xs" %} {{ chip.label }}</span>
-        {% endfor %}
-      </div>
-      {% endif %}
-
-      {% if org.description %}
-      <p class="pp-about line-clamp-3">{{ org.description }}</p>
-      {% endif %}
-    </div>
-  </header>
-
-  <div class="pp-body pp-body--fiche">
-
-    <div class="pp-body-panel">
-    {# Assurances #}
-    <div class="flex flex-wrap items-center justify-between gap-2">
-      <p class="pp-section-label">Assurances acceptées</p>
-      {% if insurances_profil %}
-      <div class="flex flex-wrap gap-1" id="pp-ins-filters" role="group" aria-label="Filtrer les assurances">
-        <button type="button" class="pp-ins-filter active" data-filter="all">Toutes</button>
-        <button type="button" class="pp-ins-filter" data-filter="privee">Privées</button>
-        <button type="button" class="pp-ins-filter" data-filter="digitale">Digitales</button>
-        <button type="button" class="pp-ins-filter" data-filter="public">Publiques</button>
-        <button type="button" class="pp-ins-filter" data-filter="mutuelle">Mutuelles</button>
-        <button type="button" class="pp-ins-filter" data-filter="programme">Programmes</button>
-      </div>
-      {% endif %}
-    </div>
-    {% if insurances_profil %}
-    <div class="mt-2 flex flex-wrap gap-1.5" id="pp-ins-list">
-      {% for ins in insurances_profil %}
-      <span class="pp-ins-tag rounded-full px-2 py-0.5 text-[10px] font-semibold {% if ins.filter_key == 'privee' %}bg-blue-100 text-blue-900{% elif ins.filter_key == 'digitale' %}bg-green-100 text-green-800{% elif ins.filter_key == 'mutuelle' %}bg-violet-100 text-violet-900{% elif ins.filter_key == 'programme' %}bg-slate-100 text-slate-800{% else %}bg-amber-100 text-amber-900{% endif %}"
-        data-filter="{{ ins.filter_key }}">{{ ins.name }}</span>
-      {% endfor %}
-    </div>
-    <p id="pp-ins-empty" class="pp-ins-empty mt-1 hidden">Aucune assurance dans cette catégorie.</p>
-    {% else %}
-    <p class="mt-2 text-xs text-gray-500">Aucune assurance affichée. <a href="{% url 'healthcare:insurances_manage' %}" class="font-semibold text-primary-700 hover:underline">Configurer</a></p>
-    {% endif %}
-    {% if org.assurances_tarifs_delais %}
-    <p class="pp-section-label mt-3">Modalités assurances</p>
-    <p class="mt-1 whitespace-pre-line text-xs leading-relaxed text-gray-600">{{ org.assurances_tarifs_delais }}</p>
-    {% endif %}
-    </div>
-
-    <div class="pp-body-panel" id="org-section-actes">
-    {# Actes — sélection patient (démo) #}
-    <div class="flex flex-wrap items-center justify-between gap-2">
-      <p class="pp-section-label">Sélectionnez vos actes</p>
-      <p class="text-[9px] text-gray-400" id="panier-count">0 acte sélectionné</p>
-    </div>
-    {% if profil_pillars %}
-    <div class="mt-2 flex flex-wrap gap-1" id="pp-cat-filters" role="group" aria-label="Filtrer par pilier">
-      <button type="button" class="pp-cat-filter active" data-cat="all">Toutes</button>
-      {% for pillar in profil_pillars %}
-      <button type="button" class="pp-cat-filter" data-cat="{{ pillar.id }}">{{ pillar.name }}</button>
-      {% endfor %}
-    </div>
-    <div class="mt-3 flex flex-col gap-1" id="pp-actes-list">
-      {% for pillar in profil_pillars %}
-      <details class="pp-cat-group" data-cat="{{ pillar.id }}" open>
-        <summary class="pp-cat-head list-none cursor-pointer [&::-webkit-details-marker]:hidden">
-          <span>{{ pillar.name }} <span class="font-normal text-gray-400">({{ pillar.count }} acte{{ pillar.count|pluralize }})</span></span>
-          <span class="pp-cat-chevron text-gray-400" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="chevron-down" class="pp-ico pp-ico--sm" %}</span>
-        </summary>
-        <div class="border-t border-gray-100 bg-white px-2 py-1.5">
-          {% for pa in pillar.actes %}
-          <label class="pp-acte-row cursor-pointer">
-            <input type="checkbox" class="pp-acte-cb" data-id="pa-{{ pa.pk }}" data-nom="{{ pa.acte.name|escapejs }}" data-prix="{{ pa.price|floatformat:0 }}" data-pilier="{{ pillar.id }}">
-            <span class="pp-acte-name">
-              {{ pa.acte.name }}
-              {% if pa.acte.parent_service %}<span class="block text-[9px] font-normal text-gray-400">{{ pa.acte.parent_service.name }}</span>{% endif %}
-            </span>
-            {% if pa.delai %}<span class="pp-acte-delai">{% include "healthcare/_icon_svg.html" with icon="clock" class="pp-ico pp-ico--xs" %} {{ pa.get_delai_display }}</span>{% endif %}
-            {% if show_public_prices %}<span class="pp-acte-prix">{{ pa.price|floatformat:0 }} F</span>{% endif %}
-          </label>
+        <div id="prev-hor" class="profil-hours-popover">
+          <div style="font-weight:700;color:#1a3a6e;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+            <span>🕐 Horaires d'ouverture</span>
+            <span id="btn-close-hours" style="cursor:pointer;color:#9ca3af;font-weight:bold;font-size:14px">&times;</span>
+          </div>
+          {% for h in hours_list %}
+          <div style="display:flex;justify-content:space-between;padding:4px 0;{% if not forloop.last %}border-bottom:1px solid #f3f4f6{% endif %};{% if h.is_today %}font-weight:bold;color:#0a5c8a;{% endif %}">
+            <span>{{ h.day_label }} {% if h.is_today %}<span style="font-size:9px;background:#e8f4fb;padding:1px 5px;border-radius:10px;color:#0a5c8a">Aujourd'hui</span>{% endif %}</span>
+            <span>{% if h.closed %}Fermé{% else %}{{ h.display_hours }}{% endif %}</span>
+          </div>
+          {% empty %}
+          <div style="color:#6b7280;font-size:10px">Horaires non renseignés</div>
           {% endfor %}
         </div>
-      </details>
-      {% endfor %}
-    </div>
-    {% else %}
-    <p class="mt-2 text-xs text-gray-500">Aucun acte visible. <a href="{% url 'healthcare:actes_list' %}" class="font-semibold text-primary-700 hover:underline">Catalogue actes</a></p>
-    {% endif %}
+      </div>
 
-    <div id="panier-recap" class="pp-panier hidden">
-      <p class="pp-section-label text-primary-800">Votre sélection</p>
-      <div id="panier-items" class="mt-2 flex flex-wrap gap-1"></div>
-      <div class="mt-2 flex items-center justify-between">
-        <p class="font-extrabold text-primary-900" id="panier-total">0 FCFA</p>
-        <button type="button" id="btn-vider-panier" class="pp-btn-text-danger">{% include "healthcare/_icon_svg.html" with icon="x" class="pp-ico pp-ico--xs" %} Vider</button>
+      <!-- CORPS DU CARD PREVIEW -->
+      <div class="profil-card-body">
+        {% if org.description %}
+        <div style="font-size:12px;color:#4b5563;line-height:1.55;margin-bottom:13px">{{ org.description }}</div>
+        {% endif %}
+
+        <!-- Assurances acceptées -->
+        <div class="profil-assurances-box">
+          <div id="prev-assur-toggle" class="profil-assurances-head">
+            <span style="font-size:12.5px;font-weight:700;color:#1a3a6e">🛡 Assurances acceptées ({% if insurances_profil %}{{ insurances_profil|length }}{% else %}0{% endif %})</span>
+            <span id="prev-assur-chev" style="color:#9ca3af">▾</span>
+          </div>
+          <div id="prev-assur" class="profil-assurances-body">
+            {% if insurances_profil %}
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+              {% for ins in insurances_profil %}
+              <span style="font-size:11px;background:#f3f4f6;color:#374151;border-radius:20px;padding:3px 10px;font-weight:500">{{ ins.name }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p style="font-size:11px;color:#9ca3af;margin-top:6px">Aucune assurance spécifiée.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Actes disponibles -->
+        <div style="font-size:11px;font-weight:700;letter-spacing:.04em;color:#9ca3af;text-transform:uppercase;margin-bottom:8px" id="actes-section">
+          Actes disponibles · {{ actes_visible_count }} acte{{ actes_visible_count|pluralize }}
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <input type="text" id="input-search-actes" placeholder="Rechercher un acte…" style="flex:1;border:1px solid #e5e7eb;border-radius:9px;padding:9px 12px;font-size:12px;outline:none">
+          <button type="button" style="background:#0a5c8a;color:#fff;border:none;border-radius:9px;padding:0 15px;cursor:pointer;font-size:13px">🔍</button>
+        </div>
+
+        <div id="actes-pillars-container">
+          {% for pillar in profil_pillars %}
+          <details class="profil-acte-pillar-card" data-pillar-id="{{ pillar.id }}" open>
+            <summary class="profil-acte-pillar-head">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="profil-pillar-chev">▾</span>
+                <span style="font-size:12px;font-weight:700;color:#1a3a6e">
+                  {% if pillar.icon and pillar.icon not in pillar.name %}{{ pillar.icon }} {% endif %}{{ pillar.name }}
+                </span>
+              </div>
+              <span style="font-size:11px;color:#14b87a;font-weight:700">{{ pillar.count }} acte{{ pillar.count|pluralize }}</span>
+            </summary>
+            <div style="padding:2px 14px">
+              {% for pa in pillar.actes %}
+              <div class="profil-acte-row-item" data-name="{{ pa.acte.name|lower }}">
+                <div>
+                  <div style="font-size:12.5px;color:#0d1b2a;font-weight:500">{{ pa.acte.name }}</div>
+                  {% if pa.delai %}
+                  <div style="font-size:10.5px;color:#6b7280">⏱ Delai : {{ pa.get_delai_display }}</div>
+                  {% endif %}
+                </div>
+                <div style="text-align:right">
+                  {% if show_public_prices %}
+                  <div style="font-size:13px;font-weight:700;color:#1a3a6e">{{ pa.price|floatformat:0 }} F</div>
+                  {% endif %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </details>
+          {% empty %}
+          <p style="font-size:12px;color:#6b7280;text-align:center;padding:16px">Aucun acte affiché pour le moment.</p>
+          {% endfor %}
+        </div>
+
       </div>
     </div>
-
-    {% if org.catalogue_tarifs_delais %}
-    <p class="pp-section-label mt-4">Tarifs &amp; délais (complément)</p>
-    <p class="mt-1 whitespace-pre-line text-xs leading-relaxed text-gray-600">{{ org.catalogue_tarifs_delais }}</p>
-    {% endif %}
-
-    {% if org.prises_sang_domicile %}
-    {% with active_zones=org.prelevement_zones.all %}
-    <p class="pp-section-label mt-4">Prestations à domicile</p>
-    {% if active_zones %}
-    <ul class="mt-2 space-y-1 text-xs">
-      {% for z in active_zones %}{% if z.is_active %}
-      <li class="pp-domi-row">
-        <span class="font-medium text-gray-800">{{ z.label }}</span>
-        <span class="font-bold text-gray-700">{% if z.forfait_fcfa %}+ {{ z.forfait_fcfa|floatformat:0 }} F{% else %}Gratuit{% endif %}</span>
-      </li>
-      {% endif %}{% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    {% endif %}
-    </div>
-
   </div>
-</div>
-
-<div class="org-fiche-sticky pp-preview-devis-sticky" aria-live="polite">
-  <div class="org-fiche-sticky__inner">
-    <div class="pp-devis-wrap pp-devis-wrap--float">
-      {% if wa_general_url %}
-      <button type="button" id="btn-obtenir-devis" class="pp-devis-cta"
-        data-wa-url="{{ wa_general_url|escape }}">
-        <span class="pp-devis-cta__label">{% include "healthcare/_icon_svg.html" with icon="chat" class="pp-ico pp-ico--sm" %} Obtenir mon devis WhatsApp</span>
-      </button>
-      <p class="pp-devis-hint">Cochez des actes ci-dessus pour préremplir le message WhatsApp.</p>
-      {% else %}
-      <button type="button" class="pp-devis-cta pp-devis-cta--disabled" disabled
-        title="Renseignez un numéro WhatsApp sur votre fiche">
-        <span class="pp-devis-cta__label">{% include "healthcare/_icon_svg.html" with icon="chat" class="pp-ico pp-ico--sm" %} Obtenir mon devis WhatsApp</span>
-      </button>
-      <p class="pp-devis-hint">
-        <a href="{% url 'healthcare:organisme_edit' %}" class="font-semibold text-primary-700 hover:underline">Ajoutez un numéro WhatsApp</a>
-        pour activer ce bouton sur la fiche patient.
-      </p>
-      {% endif %}
-    </div>
-  </div>
-</div>
 </div>
 
 <script>
 (function () {
-  var profilPanier = [];
+  // Horaires popover toggle
+  var btnHor = document.getElementById('btn-toggle-hours');
+  var popHor = document.getElementById('prev-hor');
+  var btnCloseHor = document.getElementById('btn-close-hours');
+  if (btnHor && popHor) {
+    btnHor.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isVisible = popHor.style.display === 'block';
+      popHor.style.display = isVisible ? 'none' : 'block';
+    });
+    if (btnCloseHor) {
+      btnCloseHor.addEventListener('click', function (e) {
+        e.stopPropagation();
+        popHor.style.display = 'none';
+      });
+    }
+    document.addEventListener('click', function (e) {
+      if (popHor && !popHor.contains(e.target) && e.target !== btnHor) {
+        popHor.style.display = 'none';
+      }
+    });
+  }
 
+  // Assurances toggle
+  var btnAssur = document.getElementById('prev-assur-toggle');
+  var bodyAssur = document.getElementById('prev-assur');
+  var chevAssur = document.getElementById('prev-assur-chev');
+  if (btnAssur && bodyAssur) {
+    btnAssur.addEventListener('click', function () {
+      var isOpen = bodyAssur.style.display === 'block';
+      bodyAssur.style.display = isOpen ? 'none' : 'block';
+      if (chevAssur) chevAssur.textContent = isOpen ? '▾' : '▴';
+    });
+  }
+
+  // Actes live filter
+  var searchInp = document.getElementById('input-search-actes');
+  if (searchInp) {
+    searchInp.addEventListener('input', function () {
+      var q = searchInp.value.toLowerCase().trim();
+      document.querySelectorAll('.profil-acte-row-item').forEach(function (row) {
+        var name = row.getAttribute('data-name') || '';
+        row.style.display = (q === '' || name.indexOf(q) !== -1) ? '' : 'none';
+      });
+
+      document.querySelectorAll('.profil-acte-pillar-card').forEach(function (card) {
+        var visibleItems = card.querySelectorAll('.profil-acte-row-item:not([style*="display: none"])');
+        var hasMatch = (q === '' || visibleItems.length > 0);
+        card.style.display = hasMatch ? '' : 'none';
+        if (q !== '' && visibleItems.length > 0) {
+          card.open = true;
+        }
+      });
+    });
+  }
+
+  // Copier le lien
   var btnCopy = document.getElementById('btn-copy-public-url');
-  var fb = document.getElementById('copy-url-feedback');
-  if (btnCopy && fb) {
+  var copyFb = document.getElementById('copy-feedback');
+  if (btnCopy && copyFb) {
     btnCopy.addEventListener('click', function () {
       var url = btnCopy.getAttribute('data-url') || '';
-      function ok() {
-        fb.textContent = 'Lien copié dans le presse-papiers.';
-        fb.classList.remove('hidden', 'pp-feedback--warn');
-        fb.classList.add('pp-feedback--ok');
-        setTimeout(function () { fb.classList.add('hidden'); }, 3500);
-      }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(ok).catch(function () {
-          fb.textContent = 'Copie impossible — sélectionnez le lien ci-dessus.';
-          fb.classList.remove('hidden');
+        navigator.clipboard.writeText(url).then(function () {
+          copyFb.textContent = '✓ Lien public copié dans le presse-papiers !';
+          copyFb.style.display = 'block';
+          setTimeout(function () { copyFb.style.display = 'none'; }, 3000);
         });
       }
     });
   }
-
-  function getFicheScrollOffset() {
-    var topBar = document.querySelector('.org-fiche-mobile-top');
-    var nav = document.getElementById('org-fiche-mobile-nav');
-    var offset = 12;
-    if (topBar) offset += topBar.offsetHeight;
-    if (nav) offset += nav.offsetHeight;
-    return offset;
-  }
-
-  function scrollToActesAccordion(opts) {
-    opts = opts || {};
-    var target = document.getElementById('org-section-actes') || document.getElementById('pp-actes-list');
-    if (!target) return;
-
-    document.querySelectorAll('.pp-cat-group').forEach(function (el) {
-      el.open = true;
-    });
-
-    var y = target.getBoundingClientRect().top + window.pageYOffset - getFicheScrollOffset();
-    window.scrollTo({ top: Math.max(0, y), behavior: opts.instant ? 'auto' : 'smooth' });
-
-    var list = document.getElementById('pp-actes-list');
-    if (list) {
-      list.classList.remove('pp-actes-list--highlight');
-      window.requestAnimationFrame(function () {
-        list.classList.add('pp-actes-list--highlight');
-        window.setTimeout(function () {
-          list.classList.remove('pp-actes-list--highlight');
-        }, 1200);
-      });
-    }
-
-    var nav = document.getElementById('org-fiche-mobile-nav');
-    if (nav) {
-      nav.querySelectorAll('[data-org-section]').forEach(function (link) {
-        link.classList.toggle('is-active', link.getAttribute('data-org-section') === 'actes');
-      });
-    }
-  }
-
-  document.querySelectorAll('.js-scroll-to-actes').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      scrollToActesAccordion();
-    });
-  });
-
-  if (window.location.hash === '#actes' || window.location.hash === '#org-section-actes') {
-    window.setTimeout(function () { scrollToActesAccordion(); }, 350);
-  }
-
-  var btnHours = document.getElementById('btn-pp-hours');
-  var cardHours = document.getElementById('pp-hours-card');
-  if (btnHours && cardHours) {
-    btnHours.addEventListener('click', function () {
-      var open = cardHours.classList.toggle('hidden');
-      btnHours.setAttribute('aria-expanded', open ? 'false' : 'true');
-    });
-  }
-
-  function updateInsEmpty(filterVal) {
-    var emptyEl = document.getElementById('pp-ins-empty');
-    var listEl = document.getElementById('pp-ins-list');
-    if (!emptyEl || !listEl) return;
-    var visible = 0;
-    listEl.querySelectorAll('.pp-ins-tag').forEach(function (tag) {
-      if (tag.style.display !== 'none') visible += 1;
-    });
-    if (filterVal === 'all' || visible > 0) {
-      emptyEl.classList.add('hidden');
-      listEl.classList.remove('hidden');
-    } else {
-      emptyEl.classList.remove('hidden');
-      listEl.classList.add('hidden');
-    }
-  }
-
-  document.querySelectorAll('.pp-ins-filter').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.pp-ins-filter').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var val = btn.getAttribute('data-filter') || 'all';
-      document.querySelectorAll('.pp-ins-tag').forEach(function (el) {
-        var v = el.getAttribute('data-filter') || '';
-        el.style.display = (val === 'all' || v === val) ? '' : 'none';
-      });
-      updateInsEmpty(val);
-    });
-  });
-
-  document.querySelectorAll('.pp-cat-filter').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.pp-cat-filter').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var val = btn.getAttribute('data-cat') || 'all';
-      document.querySelectorAll('.pp-cat-group').forEach(function (el) {
-        var v = el.getAttribute('data-cat') || '';
-        el.style.display = (val === 'all' || v === val) ? '' : 'none';
-      });
-    });
-  });
-
-  function syncCheckboxes() {
-    document.querySelectorAll('.pp-acte-cb').forEach(function (cb) {
-      var id = cb.getAttribute('data-id');
-      cb.checked = profilPanier.some(function (p) { return p.id === id; });
-    });
-  }
-
-  function updatePanier() {
-    var count = profilPanier.length;
-    var total = profilPanier.reduce(function (s, p) { return s + p.prix; }, 0);
-    var countEl = document.getElementById('panier-count');
-    var recapEl = document.getElementById('panier-recap');
-    var itemsEl = document.getElementById('panier-items');
-    var totalEl = document.getElementById('panier-total');
-    if (countEl) {
-      countEl.textContent = count + ' acte' + (count > 1 ? 's' : '') + ' sélectionné' + (count > 1 ? 's' : '');
-    }
-    if (recapEl) recapEl.classList.toggle('hidden', count === 0);
-    if (itemsEl) {
-      itemsEl.innerHTML = profilPanier.map(function (p) {
-        return '<span class="pp-panier-tag">' + p.nom
-          + '<button type="button" class="pp-panier-remove" data-remove="' + p.id + '" aria-label="Retirer">&times;</button></span>';
-      }).join('');
-      itemsEl.querySelectorAll('[data-remove]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var rid = btn.getAttribute('data-remove');
-          profilPanier = profilPanier.filter(function (x) { return x.id !== rid; });
-          updatePanier();
-          syncCheckboxes();
-        });
-      });
-    }
-    if (totalEl) {
-      totalEl.textContent = total.toLocaleString('fr-FR') + ' FCFA estimé';
-    }
-  }
-
-  document.querySelectorAll('.pp-acte-cb').forEach(function (cb) {
-    cb.addEventListener('change', function () {
-      var id = cb.getAttribute('data-id');
-      var nom = cb.getAttribute('data-nom') || '';
-      var prix = parseInt(cb.getAttribute('data-prix') || '0', 10) || 0;
-      var pilier = cb.getAttribute('data-pilier') || '';
-      if (cb.checked) {
-        if (!profilPanier.some(function (p) { return p.id === id; })) {
-          profilPanier.push({ id: id, nom: nom, prix: prix, pilier: pilier });
-        }
-      } else {
-        profilPanier = profilPanier.filter(function (p) { return p.id !== id; });
-      }
-      updatePanier();
-    });
-  });
-
-  var btnVider = document.getElementById('btn-vider-panier');
-  if (btnVider) {
-    btnVider.addEventListener('click', function () {
-      profilPanier = [];
-      updatePanier();
-      syncCheckboxes();
-    });
-  }
-
-  var btnDevis = document.getElementById('btn-obtenir-devis');
-  if (btnDevis) {
-    btnDevis.addEventListener('click', function () {
-      if (profilPanier.length === 0) {
-        if (fb) {
-          fb.textContent = 'Sélectionnez au moins un acte pour obtenir un devis.';
-          fb.classList.remove('hidden', 'text-emerald-700');
-          fb.classList.add('pp-feedback--warn');
-          setTimeout(function () { fb.classList.add('hidden'); }, 3500);
-        }
-        return;
-      }
-      var base = btnDevis.getAttribute('data-wa-url') || '';
-      var actes = profilPanier.map(function (p) { return p.nom; }).join(', ');
-      var total = profilPanier.reduce(function (s, p) { return s + p.prix; }, 0);
-      var extra = '\n\nActes sélectionnés : ' + actes + '\nTotal estimé : ' + total.toLocaleString('fr-FR') + ' FCFA';
-      var sep = base.indexOf('?') >= 0 ? '&' : '?';
-      var textParam = base.match(/[?&]text=([^&]*)/);
-      var url = base;
-      if (textParam) {
-        try {
-          var decoded = decodeURIComponent(textParam[1].replace(/\+/g, ' '));
-          url = base.replace(textParam[0], 'text=' + encodeURIComponent(decoded + extra));
-        } catch (e) {
-          url = base + sep + 'text=' + encodeURIComponent(extra.trim());
-        }
-      } else {
-        url = base + sep + 'text=' + encodeURIComponent(extra.trim());
-      }
-      window.open(url, '_blank', 'noopener,noreferrer');
-    });
-  }
-
-  updatePanier();
 })();
 </script>
 {% endblock %}

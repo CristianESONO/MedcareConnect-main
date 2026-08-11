@@ -61,11 +61,10 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
 
       <div class="quick-results hidden" id="quick-results"></div>
 
-      <!-- Bannière / Interface Ambulance Médicalisée Premium (Patient) -->
-      <!-- Bannière / Interface Ambulance Médicalisée Light Premium (Patient) -->
+      <!-- Advanced Ambulance Configurator -->
       <div id="dem-ambulance-banner" class="dem-ambulance-card relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-cyan-50/30 p-5 shadow-sm border border-cyan-100 mt-4" style="{% if is_ambulance_service %}display:block;{% else %}display:none;{% endif %}">
         <div class="relative z-10">
-          <!-- En-tête -->
+          <!-- Header -->
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3 mb-4">
             <div class="flex items-center gap-3">
               <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 text-2xl border border-cyan-100">🚑</div>
@@ -79,96 +78,277 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
                 <p class="text-[11px] text-slate-500">Ambulances équipées · Médecins réanimateurs &amp; Infirmiers diplômés d'État</p>
               </div>
             </div>
-            <div class="text-[11px] font-semibold text-cyan-700 bg-cyan-50 px-2.5 py-1 rounded-lg border border-cyan-100">
-              ⏱️ Arrivée estimée : <strong>10 à 15 min</strong>
-            </div>
           </div>
 
-          <!-- Grille des champs de saisie -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <!-- Lieu de départ -->
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1 flex items-center gap-1">
-                <span>📍</span> Prise en charge
-              </label>
-              <input type="text" id="amb-depart" placeholder="Quartier, adresse ou point GPS" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition">
-            </div>
-
-            <!-- Destination / Hôpital -->
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1 flex items-center gap-1">
-                <span>🏥</span> Destination
-              </label>
-              <input type="text" id="amb-destination" placeholder="Hôpital, clinique ou domicile" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition">
-            </div>
-
-            <!-- Type d'ambulance -->
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1 flex items-center gap-1">
-                <span>🚑</span> Médicalisation
-              </label>
-              <select id="amb-type" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition cursor-pointer">
-                <option value="simple">Ambulance simple (Transport allongé)</option>
-                <option value="infirmier">Médicalisée + Infirmier d'urgence</option>
-                <option value="medecin">SAMU + Médecin Réanimateur</option>
-              </select>
-            </div>
-
-            <!-- Téléphone d'urgence -->
-            <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1 flex items-center gap-1">
-                <span>📞</span> Contact d'urgence
-              </label>
-              <input type="tel" id="amb-phone" placeholder="+221 77 000 00 00" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition">
-            </div>
+          <!-- Service Type Selector -->
+          <div class="mb-4">
+            <label class="block text-[11px] font-bold text-slate-600 mb-2">Type de service</label>
+            <select id="amb-service-type" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition cursor-pointer">
+              <option value="trajet">🚑 Transport de trajet (point A → point B)</option>
+              <option value="rapatriement">🌍 Rapatriement (national/international)</option>
+              <option value="evenement">🩺 Couverture d'événement</option>
+            </select>
           </div>
 
-          <!-- Degré d'urgence & Action -->
-          <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] font-semibold text-slate-500">Urgence :</span>
-              <div class="inline-flex rounded-lg bg-slate-50 p-0.5 border border-slate-200">
-                <label class="cursor-pointer rounded px-2.5 py-1 text-[10px] font-bold text-slate-500 hover:text-slate-700 transition [&:has(input:checked)]:bg-emerald-500/10 [&:has(input:checked)]:text-emerald-700">
-                  <input type="radio" name="amb-urgency" value="programme" class="sr-only" checked>
-                  🟢 Programmé
-                </label>
-                <label class="cursor-pointer rounded px-2.5 py-1 text-[10px] font-bold text-slate-500 hover:text-slate-700 transition [&:has(input:checked)]:bg-amber-500/10 [&:has(input:checked)]:text-amber-700">
-                  <input type="radio" name="amb-urgency" value="modere" class="sr-only">
-                  Subie
-                </label>
-                <label class="cursor-pointer rounded px-2.5 py-1 text-[10px] font-bold text-slate-500 hover:text-slate-700 transition [&:has(input:checked)]:bg-rose-500/10 [&:has(input:checked)]:text-rose-700">
-                  <input type="radio" name="amb-urgency" value="critique" class="sr-only">
-                  🔴 Vitale
-                </label>
-              </div>
-            </div>
+          <!-- Dynamic Form Container -->
+          <div id="amb-config-container" class="mb-4"></div>
 
-            <!-- Bouton d'action principal -->
-            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-700 hover:bg-cyan-800 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition cursor-pointer">
-              <span>Lancer la recherche d'ambulances</span>
-              <span class="text-sm">→</span>
-            </button>
+          <!-- Live Recap -->
+          <div id="amb-recap" class="bg-slate-50 rounded-lg p-3 mb-4 border border-slate-200 hidden">
+            <div class="text-[10px] font-bold text-slate-600 mb-2 uppercase tracking-wide">Récapitulatif</div>
+            <div id="amb-recap-content"></div>
           </div>
+
+          <!-- Action Button -->
+          <button type="button" id="amb-submit-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-700 hover:bg-cyan-800 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition cursor-pointer">
+            <span>💬 Obtenir mon devis</span>
+            <span class="text-sm">→</span>
+          </button>
         </div>
       </div>
-      <!-- Script : afficher/masquer le module ambulance au clic sur un pilier -->
+
+      <!-- Advanced Ambulance Configurator Script -->
       <script>
       (function(){
         var ambIds = {{ ambulance_service_ids_json|safe }};
         var banner = document.getElementById('dem-ambulance-banner');
+        var configContainer = document.getElementById('amb-config-container');
+        var serviceTypeSelect = document.getElementById('amb-service-type');
+        var recapContainer = document.getElementById('amb-recap');
+        var recapContent = document.getElementById('amb-recap-content');
+        
         if (!banner || !ambIds || !ambIds.length) return;
-        function updateBannerFromUrl(){
-          var sp = new URLSearchParams(window.location.search);
-          var svc = sp.get('service') || '';
-          banner.style.display = (svc && ambIds.indexOf(svc) !== -1) ? 'block' : 'none';
+
+        // State
+        var ambState = {
+          serviceType: 'trajet',
+          trajet: {
+            depart: '',
+            arrivee: '',
+            etapes: [],
+            allerRetour: false,
+            distance: 10
+          },
+          rapatriement: {
+            villeDep: '',
+            paysDep: 'Sénégal',
+            villeArr: '',
+            paysArr: '',
+            mode: 'routier',
+            dateR: '',
+            etatPatient: 'Stable, allongé',
+            accompagnant: false,
+            distance: 50
+          },
+          evenement: {
+            lieu: '',
+            dateE: '',
+            duree: 6,
+            effectif: 500,
+            equipe: {infirmier: true, medecin: false, ambulance: true, poste: false}
+          },
+          nuit: false
+        };
+
+        // Pricing constants (mockup)
+        var PRICING = {
+          trajet: { base: 10000, tarif_km: 500, tarif_escale: 2000 },
+          rapatriement: { base: 200000, tarif_km_long: 800, suppl_aerien: 50000 },
+          evenement: { base: 50000, tarif_heure: 8000, tarif_soignant: 15000 }
+        };
+
+        function renderConfig() {
+          var type = ambState.serviceType;
+          var html = '';
+          
+          if (type === 'trajet') {
+            html = renderTrajetForm();
+          } else if (type === 'rapatriement') {
+            html = renderRapatriementForm();
+          } else {
+            html = renderEvenementForm();
+          }
+          
+          configContainer.innerHTML = html;
+          updateRecap();
         }
-        document.querySelectorAll('.pbtn[data-service-id], .dem-pbtn[data-service-id]').forEach(function(btn){
-          btn.addEventListener('click', function(){
-            var sid = btn.getAttribute('data-service-id') || '';
-            banner.style.display = (sid && ambIds.indexOf(sid) !== -1) ? 'block' : 'none';
-          });
+
+        function renderTrajetForm() {
+          var st = ambState.trajet;
+          return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">📍 Point de départ</label>' +
+              '<input type="text" id="amb-depart" value="' + (st.depart || '') + '" placeholder="Adresse de départ..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.depart=this.value;window.updateAmbRecap()">' +
+            '</div>' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">🏁 Point d\'arrivée</label>' +
+              '<input type="text" id="amb-arrivee" value="' + (st.arrivee || '') + '" placeholder="Adresse d\'arrivée..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.arrivee=this.value;window.updateAmbRecap()">' +
+            '</div>' +
+          '</div>' +
+          '<div class="mt-3">' +
+            '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
+              '<input type="checkbox" ' + (st.allerRetour ? 'checked' : '') + ' onchange="window.ambState.trajet.allerRetour=this.checked;window.updateAmbRecap()"> 🔁 Aller-retour (retour au point de départ)' +
+            '</label>' +
+          '</div>' +
+          '<div class="mt-3">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Distance estimée (km)</label>' +
+            '<input type="number" id="amb-distance" value="' + st.distance + '" min="0" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.distance=parseFloat(this.value)||0;window.updateAmbRecap()">' +
+            '<span class="text-[9px] text-slate-400 ml-2">🛰 Calculée par GPS en production</span>' +
+          '</div>' +
+          renderNuitCheckbox();
+        }
+
+        function renderRapatriementForm() {
+          var st = ambState.rapatriement;
+          return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Ville de départ</label>' +
+              '<input type="text" value="' + (st.villeDep || '') + '" placeholder="Ex : Dakar" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.rapatriement.villeDep=this.value;window.updateAmbRecap()">' +
+            '</div>' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Ville d\'arrivée</label>' +
+              '<input type="text" value="' + (st.villeArr || '') + '" placeholder="Ex : Saint-Louis" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.rapatriement.villeArr=this.value;window.updateAmbRecap()">' +
+            '</div>' +
+          '</div>' +
+          '<div class="mt-3">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-2">Mode de transport</label>' +
+            '<div class="flex gap-2">' +
+              '<button type="button" onclick="window.ambState.rapatriement.mode=\'routier\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'routier' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '">🚑 Routier</button>' +
+              '<button type="button" onclick="window.ambState.rapatriement.mode=\'aérien\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'aérien' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '">✈️ Aérien</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Date souhaitée</label>' +
+              '<input type="date" value="' + (st.dateR || '') + '" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.rapatriement.dateR=this.value;window.updateAmbRecap()">' +
+            '</div>' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">État du patient</label>' +
+              '<select class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.rapatriement.etatPatient=this.value;window.updateAmbRecap()">' +
+                '<option ' + (st.etatPatient === 'Stable, allongé' ? 'selected' : '') + '>Stable, allongé</option>' +
+                '<option ' + (st.etatPatient === 'Sous oxygène' ? 'selected' : '') + '>Sous oxygène</option>' +
+                '<option ' + (st.etatPatient === 'Soins intensifs / ventilé' ? 'selected' : '') + '>Soins intensifs / ventilé</option>' +
+                '<option ' + (st.etatPatient === 'Isolé (contagieux)' ? 'selected' : '') + '>Isolé (contagieux)</option>' +
+              '</select>' +
+            '</div>' +
+          '</div>' +
+          '<div class="mt-3">' +
+            '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
+              '<input type="checkbox" ' + (st.accompagnant ? 'checked' : '') + ' onchange="window.ambState.rapatriement.accompagnant=this.checked;window.updateAmbRecap()"> 👥 Présence d\'un accompagnant' +
+            '</label>' +
+          '</div>' +
+          renderNuitCheckbox();
+        }
+
+        function renderEvenementForm() {
+          var st = ambState.evenement;
+          var eq = function(key, label) {
+            return '<label class="flex items-center gap-2 text-[10px] bg-white border border-slate-200 rounded-lg px-3 py-2 cursor-pointer">' +
+              '<input type="checkbox" ' + (st.equipe[key] ? 'checked' : '') + ' onchange="window.ambState.evenement.equipe.' + key + '=this.checked;window.updateAmbRecap()"> ' + label +
+            '</label>';
+          };
+          
+          return '<div>' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">📍 Lieu / site de l\'événement</label>' +
+            '<input type="text" value="' + (st.lieu || '') + '" placeholder="Adresse du site..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition mb-3" oninput="window.ambState.evenement.lieu=this.value;window.updateAmbRecap()">' +
+          '</div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Date</label>' +
+              '<input type="date" value="' + (st.dateE || '') + '" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.evenement.dateE=this.value;window.updateAmbRecap()">' +
+            '</div>' +
+            '<div>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Durée (heures)</label>' +
+              '<input type="number" value="' + st.duree + '" min="1" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.evenement.duree=parseFloat(this.value)||0;window.updateAmbRecap()">' +
+            '</div>' +
+          '</div>' +
+          '<div class="mt-3">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Effectif attendu (personnes)</label>' +
+            '<input type="number" value="' + st.effectif + '" min="0" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.evenement.effectif=parseInt(this.value)||0;window.updateAmbRecap()">' +
+          '</div>' +
+          '<div class="mt-3">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-2">Dispositif médical souhaité</label>' +
+            '<div class="flex flex-wrap gap-2">' +
+              eq('infirmier', 'Infirmier') +
+              eq('medecin', 'Médecin') +
+              eq('ambulance', 'Ambulance sur place') +
+              eq('poste', 'Poste de secours') +
+            '</div>' +
+          '</div>' +
+          renderNuitCheckbox();
+        }
+
+        function renderNuitCheckbox() {
+          return '<div class="mt-3">' +
+            '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
+              '<input type="checkbox" ' + (ambState.nuit ? 'checked' : '') + ' onchange="window.ambState.nuit=this.checked;window.updateAmbRecap()"> 🌙 Intervention de nuit / week-end (+8 000 F)' +
+            '</label>' +
+          '</div>';
+        }
+
+        function updateRecap() {
+          var type = ambState.serviceType;
+          var total = 0;
+          var lines = '';
+          
+          if (type === 'trajet') {
+            var st = ambState.trajet;
+            var km = st.allerRetour ? st.distance * 2 : st.distance;
+            var base = PRICING.trajet.base;
+            var coutKm = Math.round(km * PRICING.trajet.tarif_km);
+            total = base + coutKm;
+            
+            lines = '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Prix de base</span><span class="font-semibold text-slate-800">' + base.toLocaleString('fr-FR') + ' F</span></div>' +
+              '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Distance (' + km + ' km)</span><span class="font-semibold text-slate-800">' + coutKm.toLocaleString('fr-FR') + ' F</span></div>';
+          } else if (type === 'rapatriement') {
+            var st = ambState.rapatriement;
+            var base = PRICING.rapatriement.base;
+            var coutKm = Math.round(st.distance * PRICING.rapatriement.tarif_km_long);
+            var aerien = st.mode === 'aérien' ? PRICING.rapatriement.suppl_aerien : 0;
+            total = base + coutKm + aerien;
+            
+            lines = '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Prix de base</span><span class="font-semibold text-slate-800">' + base.toLocaleString('fr-FR') + ' F</span></div>' +
+              '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Distance</span><span class="font-semibold text-slate-800">' + coutKm.toLocaleString('fr-FR') + ' F</span></div>' +
+              (aerien ? '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Supplément aérien</span><span class="font-semibold text-slate-800">' + aerien.toLocaleString('fr-FR') + ' F</span></div>' : '');
+          } else {
+            var st = ambState.evenement;
+            var base = PRICING.evenement.base;
+            var coutHeures = Math.round(st.duree * PRICING.evenement.tarif_heure);
+            var extra = (st.equipe.medecin ? 1 : 0) + (st.equipe.poste ? 1 : 0);
+            var coutEquipe = extra * PRICING.evenement.tarif_soignant;
+            var majEffectif = st.effectif > 2000 ? 100000 : (st.effectif > 1000 ? 50000 : 0);
+            total = base + coutHeures + coutEquipe + majEffectif;
+            
+            lines = '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Prix de base</span><span class="font-semibold text-slate-800">' + base.toLocaleString('fr-FR') + ' F</span></div>' +
+              '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Durée (' + st.duree + 'h)</span><span class="font-semibold text-slate-800">' + coutHeures.toLocaleString('fr-FR') + ' F</span></div>' +
+              (coutEquipe ? '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Équipe médicale</span><span class="font-semibold text-slate-800">' + coutEquipe.toLocaleString('fr-FR') + ' F</span></div>' : '') +
+              (majEffectif ? '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Majoration effectif</span><span class="font-semibold text-slate-800">' + majEffectif.toLocaleString('fr-FR') + ' F</span></div>' : '');
+          }
+          
+          if (ambState.nuit) {
+            total += 8000;
+            lines += '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Nuit / week-end</span><span class="font-semibold text-slate-800">8 000 F</span></div>';
+          }
+          
+          lines += '<div class="flex justify-between text-[11px] py-2 border-t border-slate-200 mt-2"><span class="font-bold text-slate-700">Total estimé</span><span class="font-extrabold text-emerald-600">' + total.toLocaleString('fr-FR') + ' F</span></div>';
+          
+          recapContainer.classList.remove('hidden');
+          recapContent.innerHTML = lines;
+        }
+
+        // Event listeners
+        serviceTypeSelect.addEventListener('change', function() {
+          ambState.serviceType = this.value;
+          renderConfig();
         });
-        updateBannerFromUrl();
+
+        // Expose functions globally
+        window.ambState = ambState;
+        window.renderAmbConfig = renderConfig;
+        window.updateAmbRecap = updateRecap;
+
+        // Initialize
+        renderConfig();
       })();
       </script>
 

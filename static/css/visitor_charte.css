@@ -274,7 +274,7 @@ body.mc-vitrine-page .mc-page-wrap {
     url('https://medcare.sn/wp-content/uploads/2026/02/Bienvenue-.jpg');
   background-size: cover;
   background-position: center;
-  padding: 100px 0 120px;
+  padding: 70px 0 80px;
   text-align: center;
   color: #fff;
 }
@@ -672,7 +672,7 @@ input:checked + .mc-toggle-track {
 
 /* Comment ça marche */
 .mc-how-hero.mc-page-hero {
-  padding-bottom: 56px;
+  padding-bottom: 40px;
 }
 
 .mc-how-kicker {
@@ -738,7 +738,7 @@ input:checked + .mc-toggle-track {
 }
 
 .mc-how-switch {
-  padding: 28px 0 8px;
+  padding: 16px 0 4px;
   text-align: center;
 }
 
@@ -763,23 +763,27 @@ input:checked + .mc-toggle-track {
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   background: transparent;
   color: var(--mc-navy);
   font-size: 14px;
   font-family: var(--mc-font-ui);
+  position: relative;
+  overflow: hidden;
 }
 
 .mc-how-switch .mc-toggle-btn.active {
   background: var(--mc-accent);
   color: #fff;
   box-shadow: var(--mc-shadow-teal);
+  transform: scale(1.05);
 }
 
 .mc-how-switch .mc-toggle-btn--struct.active {
   background: var(--mc-navy);
   box-shadow: var(--mc-shadow-md);
+  transform: scale(1.05);
 }
 
 .mc-toggle-emoji {
@@ -787,16 +791,14 @@ input:checked + .mc-toggle-track {
   line-height: 1;
 }
 
-.mc-how-flow {
-  /* visibilité gérée par [data-profile-content] */
-}
+/* .mc-how-flow visibilité gérée par [data-profile-content] */
 
 .mc-how-flow.active {
   animation: mc-fade-in 0.4s ease;
 }
 
 .mc-how-flow-intro {
-  padding: 24px 0 8px;
+  padding: 16px 0 4px;
   text-align: center;
 }
 
@@ -835,11 +837,11 @@ input:checked + .mc-toggle-track {
 }
 
 .mc-how-steps {
-  padding: 4px 0 16px;
+  padding: 4px 0 8px;
 }
 
 .mc-how-step {
-  padding: 20px 0 28px;
+  padding: 16px 0 20px;
   scroll-margin-top: 88px;
   opacity: 0;
   transform: translateY(18px);
@@ -873,16 +875,19 @@ input:checked + .mc-toggle-track {
   font-size: 15px;
   font-weight: 800;
   color: #fff;
+  animation: mc-pulse-subtle 2s ease-in-out infinite;
 }
 
 .mc-how-flow--patient .mc-how-step-num {
   background: linear-gradient(135deg, var(--mc-accent), var(--mc-accent-dark));
   box-shadow: 0 8px 20px rgba(79, 163, 199, 0.3);
+  animation: mc-pulse-accent 2.5s ease-in-out infinite;
 }
 
 .mc-how-flow--struct .mc-how-step-num {
   background: linear-gradient(135deg, var(--mc-navy), var(--mc-navy-mid));
   box-shadow: 0 8px 20px rgba(18, 58, 99, 0.25);
+  animation: mc-pulse-navy 2.5s ease-in-out infinite;
 }
 
 .mc-how-step-label {
@@ -993,6 +998,13 @@ input:checked + .mc-toggle-track {
   border: 1px solid var(--mc-border);
   background: var(--mc-white);
   box-shadow: var(--mc-shadow-md);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.mc-how-shot:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 24px 48px rgba(18, 58, 99, 0.2);
+  border-color: var(--mc-accent);
 }
 
 .mc-how-flow--struct .mc-how-shot {
@@ -1032,14 +1044,14 @@ input:checked + .mc-toggle-track {
 .mc-how-band {
   background: linear-gradient(135deg, var(--mc-navy-deep) 0%, var(--mc-navy) 100%);
   color: #fff;
-  padding: 64px 0;
+  padding: 32px 0;
   text-align: center;
 }
 
 .mc-how-band h2 {
   font-family: var(--mc-font-display);
   font-size: clamp(1.4rem, 3vw, 1.85rem);
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   color: #fff;
 }
 
@@ -1047,12 +1059,12 @@ input:checked + .mc-toggle-track {
   max-width: 680px;
   margin: 0 auto;
   color: rgba(255, 255, 255, 0.72);
-  line-height: 1.65;
-  font-size: 15px;
+  line-height: 1.6;
+  font-size: 14.5px;
 }
 
 .mc-how-band-badge {
-  margin-top: 18px !important;
+  margin-top: 14px !important;
   font-size: 13px !important;
   font-weight: 600;
   color: var(--mc-cyan) !important;
@@ -1060,7 +1072,7 @@ input:checked + .mc-toggle-track {
 
 .mc-how-cta {
   background: linear-gradient(135deg, var(--mc-navy) 0%, var(--mc-navy-deep) 100%);
-  padding: 72px 0;
+  padding: 36px 0;
   text-align: center;
   color: #fff;
 }
@@ -1176,13 +1188,30 @@ input:checked + .mc-toggle-track {
 .mc-section.mc-faq {
   background: var(--mc-surface);
   margin-top: 0;
+  padding: 28px 0 36px;
+}
+
+.mc-section.mc-faq .mc-section-tag {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 760px;
+  width: fit-content;
+}
+
+.mc-section.mc-faq h2 {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 760px;
 }
 
 .mc-faq-grid {
   max-width: 760px;
   margin: 0 auto;
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .mc-faq-item {
@@ -1190,34 +1219,52 @@ input:checked + .mc-toggle-track {
   border: 1px solid var(--mc-border);
   border-radius: var(--mc-radius);
   overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mc-faq-item:hover {
+  border-color: var(--mc-accent);
+  box-shadow: 0 4px 16px rgba(79, 163, 199, 0.12);
 }
 
 .mc-faq-question {
-  padding: 24px;
+  padding: 18px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15.5px;
   font-family: var(--mc-font-ui);
   color: var(--mc-navy);
+  user-select: none;
+}
+
+.mc-faq-question .ti-chevron-down {
+  transition: transform 0.3s ease, color 0.3s ease;
+  font-size: 14px;
 }
 
 .mc-faq-answer {
-  padding: 0 24px 24px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 24px;
   color: var(--mc-text-body);
-  font-size: 15px;
+  font-size: 14.5px;
   line-height: 1.6;
-  display: none;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
 }
 
 .mc-faq-item.active .mc-faq-answer {
-  display: block;
+  max-height: 240px;
+  opacity: 1;
+  padding: 0 24px 20px;
 }
 
 .mc-faq-item.active .ti-chevron-down {
   transform: rotate(180deg);
+  color: var(--mc-accent);
 }
 
 [data-profile-content] {
@@ -1232,6 +1279,21 @@ input:checked + .mc-toggle-track {
 @keyframes mc-fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mc-pulse-subtle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes mc-pulse-accent {
+  0%, 100% { box-shadow: 0 8px 20px rgba(79, 163, 199, 0.3); transform: scale(1); }
+  50% { box-shadow: 0 12px 28px rgba(79, 163, 199, 0.5); transform: scale(1.05); }
+}
+
+@keyframes mc-pulse-navy {
+  0%, 100% { box-shadow: 0 8px 20px rgba(18, 58, 99, 0.25); transform: scale(1); }
+  50% { box-shadow: 0 12px 28px rgba(18, 58, 99, 0.4); transform: scale(1.05); }
 }
 
 /* Page charte confiance */

@@ -49,11 +49,11 @@
         class="pilier-tab js-pilier-tab{% if not block.applicable %} is-disabled{% elif block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
         data-pilier-panel="pilier-{{ block.pilier.pk }}"
         data-pilier-slug="{{ block.pilier.slug }}"
-        data-pilier-label="{{ block.pilier.display_icon|default:'🏥' }} {{ block.pilier.name }}"
+        data-pilier-label="{{ block.pilier.display_icon|default:'🏥' }} {{ block.pilier.display_name }}"
         data-count-text="{{ block.acte_count }} acte{{ block.acte_count|pluralize }}"
         {% if not block.applicable %}disabled title="Non applicable à votre type de structure"{% endif %}>
         <span class="pilier-tab-icon">{{ block.pilier.display_icon|default:"🏥" }}</span>
-        <span class="pilier-tab-label">{{ block.pilier.name }}</span>
+        <span class="pilier-tab-label">{{ block.pilier.display_name }}</span>
         <span class="pilier-tab-count js-pilier-tab-count{% if not block.applicable %} is-na{% endif %}">
           {% if block.applicable %}{{ block.acte_count }} acte{{ block.acte_count|pluralize }}{% else %}Non applicable{% endif %}
         </span>
@@ -88,8 +88,11 @@
       {% if not block.applicable %}
       <p class="text-sm font-semibold text-amber-800">Pilier non applicable à votre type de structure.</p>
       {% else %}
+      {% if 'ambulance' in block.pilier.slug or 'Ambulance' in block.pilier.name %}
+      {% include "healthcare/prestataire/_actes_ambulance_block.html" %}
+      {% endif %}
       <div class="cat-toolbar">
-        <span class="cat-toolbar-pilier js-pilier-label">{{ block.pilier.display_icon|default:"🏥" }} {{ block.pilier.name }}</span>
+        <span class="cat-toolbar-pilier js-pilier-label">{{ block.pilier.display_icon|default:"🏥" }} {{ block.pilier.display_name }}</span>
         <div class="flex-1"></div>
         <input type="search" class="cat-search js-cat-search" placeholder="Rechercher un acte…" aria-label="Rechercher un acte">
         <select class="cat-cat-select js-cat-cat" aria-label="Filtrer par catégorie">

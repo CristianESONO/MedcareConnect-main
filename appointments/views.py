@@ -517,6 +517,10 @@ def prestataire_rdv_list(request):
         for k, label in _PRESTA_FILTERS.items()
     ]
 
+    view_mode = request.GET.get("view", "list")
+    if view_mode not in ("list", "ticket"):
+        view_mode = "list"
+
     ctx = {
         "org": org,
         "dash_active": "rdv",
@@ -524,6 +528,7 @@ def prestataire_rdv_list(request):
         "status_filter": status_filter,
         "filter_tabs": filter_tabs,
         "new_rdv_count": counts["requested"],
+        "view_mode": view_mode,
     }
     return render(request, "appointments/prestataire/rdv_list.html", ctx)
 

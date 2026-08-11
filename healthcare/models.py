@@ -278,6 +278,20 @@ class OrganismeDeSante(models.Model):
         return "tel:" + "".join(c for c in self.contact_phone if c.isdigit() or c == "+")
 
     @property
+    def is_ambulance_service(self) -> bool:
+        """Indique si la structure est principalement un service d'ambulance / transport médicalisé.
+        Ne se base que sur le nom et le type d'organisme — pas sur les actes proposés,
+        car un hôpital généraliste peut avoir un acte ambulance sans être un ambulancier."""
+        name_low = (self.name or "").lower()
+        if "ambu" in name_low or "ambulance" in name_low or "smur" in name_low:
+            return True
+        if self.type_organisme:
+            t_low = (self.type_organisme.name or "").lower()
+            if "ambulance" in t_low or "smur" in t_low or "transport médical" in t_low:
+                return True
+        return False
+
+    @property
     def accepted_insurances(self):
         return Assurance.objects.filter(
             prises_en_charge__organisme=self
@@ -339,6 +353,26 @@ class ServiceMedical(models.Model):
         from healthcare.service_icons import icon_for_service_medical
 
         return icon_for_service_medical(self)
+
+    @property
+    def display_name(self):
+        """Nom du pilier sans l'émoji initial (évite les doublons d'affichage)."""
+        import unicodedata
+        name = self.name or ""
+        # Supprimer les caractères emoji/symboles en début de chaîne
+        clean = name.lstrip()
+        words = clean.split()
+        if not words:
+            return name
+        first = words[0]
+        # Si le premier "mot" est un emoji (catégorie So ou Sm ou Sk dans Unicode)
+        if first and all(
+            unicodedata.category(ch) in ("So", "Sm", "Sk", "Po", "Ps", "Pe", "Zs")
+            or ord(ch) > 0x2000
+            for ch in first
+        ):
+            return " ".join(words[1:]).strip() or name
+        return name
 
     @property
     def provider_count(self):
