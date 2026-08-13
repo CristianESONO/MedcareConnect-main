@@ -1,0 +1,504 @@
+{% comment %}Configurateur ambulance — partagé recherche drawer + fiche annuaire.{% endcomment %}
+<script>
+(function() {
+// Ambulance trajet configurator - exact demo implementation
+var TRAJET_DATA = {};
+var TRAJET_STATE = null;
+var curActe = null;
+
+function initAmbulanceTrajetConfig() {
+  document.querySelectorAll('.trajet-config-container').forEach(function(container) {
+    var orgId = container.getAttribute('data-org-id');
+    if (orgId) {
+      TRAJET_DATA[orgId] = {
+        distance_defaut: 10,
+        tarif_km: 500,
+        tarif_escale: 2000,
+        tarif_km_long: 800,
+        suppl_aerien: 50000,
+        tarif_heure: 8000,
+        tarif_soignant: 15000,
+        actes: {
+          'Ambulance simple': {flow: 'trajet', base: 10000, medic: 'Chauffeur ambulancier'},
+          'Ambulance médicalisée avec infirmier': {flow: 'trajet', base: 25000, medic: 'Infirmier à bord'},
+          'Ambulance médicalisée avec médecin': {flow: 'trajet', base: 45000, medic: 'Médecin à bord', urgence: true},
+          'Transport réanimatoire': {flow: 'trajet', base: 90000, medic: 'Équipe de réanimation', urgence: true},
+          'Rapatriement national': {flow: 'rapatriement', base: 200000, scope: 'national'},
+          'Rapatriement international': {flow: 'rapatriement', base: 500000, scope: 'international', surDevis: true},
+          'Couverture événement': {flow: 'evenement', base: 50000, evt: 'Événement sportif/culturel'}
+        }
+      };
+    }
+  });
+}
+
+function resolveTrajetActe(structId, candidate) {
+  var sId = String(structId);
+  var cfg = TRAJET_DATA[sId] || TRAJET_DATA[structId];
+  if (!cfg || !cfg.actes) return 'Ambulance simple';
+  var keys = Object.keys(cfg.actes);
+  
+  if (candidate && cfg.actes[candidate]) return candidate;
+  
+  var resolvedName = (typeof getActeName === 'function' ? getActeName(candidate) : '') || String(candidate || '');
+  var low = resolvedName.toLowerCase();
+  
+  if (low) {
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      var kLow = k.toLowerCase();
+      if (kLow.includes(low) || low.includes(kLow)) {
+        return k;
+      }
+    }
+    if (low.includes('rapatriement') || low.includes('évacuation') || low.includes('evacuation')) {
+      var rMatch = keys.find(function(k) { return cfg.actes[k].flow === 'rapatriement'; });
+      if (rMatch) return rMatch;
+    }
+    if (low.includes('couverture') || low.includes('événement') || low.includes('evenement') || low.includes('assistance') || low.includes('manifestation') || low.includes('sportive')) {
+      var cMatch = keys.find(function(k) { return cfg.actes[k].flow === 'evenement'; });
+      if (cMatch) return cMatch;
+    }
+  }
+  
+  var urlParams = new URLSearchParams(window.location.search);
+  var q = (urlParams.get('q') || '').toLowerCase();
+  var serv = (urlParams.get('service') || '').toLowerCase();
+  
+  if (q.includes('rapatriement') || q.includes('évacuation') || q.includes('evacuation') || serv.includes('rapatriement')) {
+    return keys.find(function(k) { return cfg.actes[k].flow === 'rapatriement'; }) || keys[0];
+  }
+  if (q.includes('couverture') || q.includes('événement') || q.includes('evenement') || q.includes('assistance') || q.includes('manifestation') || q.includes('sportive') || serv.includes('couverture')) {
+    return keys.find(function(k) { return cfg.actes[k].flow === 'evenement'; }) || keys[0];
+  }
+  
+  return keys[0];
+}
+
+function initTrajetConfig(structId) {
+  if (!structId) return;
+  var sId = String(structId);
+  if (!TRAJET_DATA[sId]) {
+    TRAJET_DATA[sId] = {
+      distance_defaut: 10,
+      tarif_km: 600,
+      tarif_escale: 3000,
+      tarif_km_long: 450,
+      suppl_aerien: 400000,
+      tarif_heure: 15000,
+      tarif_soignant: 25000,
+      actes: {
+        'Ambulance simple': {flow: 'trajet', base: 10000, medic: 'Chauffeur ambulancier'},
+        'Ambulance médicalisée avec infirmier': {flow: 'trajet', base: 25000, medic: 'Infirmier à bord'},
+        'Ambulance médicalisée avec médecin': {flow: 'trajet', base: 45000, medic: 'Médecin à bord', urgence: true},
+        'Transport réanimatoire': {flow: 'trajet', base: 90000, medic: 'Équipe de réanimation', urgence: true},
+        'Évacuation sanitaire': {flow: 'trajet', base: 120000, medic: 'Équipe médicalisée', urgence: true},
+        'Rapatriement national': {flow: 'rapatriement', base: 200000, scope: 'national'},
+        'Rapatriement international': {flow: 'rapatriement', base: 0, scope: 'international', surDevis: true},
+        'Couverture médicale sportive': {flow: 'evenement', base: 75000, evt: 'Événement sportif'},
+        'Couverture médicale de manifestation publique': {flow: 'evenement', base: 90000, evt: 'Manifestation publique'},
+        'Assistance médicale sur site': {flow: 'evenement', base: 60000, evt: 'Assistance sur site'}
+      }
+    };
+  }
+  TRAJET_DATA[structId] = TRAJET_DATA[sId];
+  var cfg = TRAJET_DATA[sId];
+  if (!cfg) return;
+  var startActe = resolveTrajetActe(sId, curActe);
+  TRAJET_STATE = {
+    structId: sId,
+    acte: startActe,
+    depart: '', etapes: [], arrivee: '', allerRetour: false, distance: cfg.distance_defaut,
+    villeDep: '', paysDep: 'Sénégal', villeArr: '', paysArr: '', mode: 'routier', dateR: '', etatPatient: 'Stable, allongé', accompagnant: false,
+    lieu: '', dateE: '', duree: 6, effectif: 500, equipe: {infirmier: true, medecin: false, ambulance: true, poste: false},
+    nuit: false
+  };
+  renderTrajetConfig();
+}
+
+function acteCfg() {
+  var sId = String(TRAJET_STATE.structId);
+  var cfg = TRAJET_DATA[sId] || TRAJET_DATA[TRAJET_STATE.structId];
+  return cfg.actes[TRAJET_STATE.acte] || cfg.actes[Object.keys(cfg.actes)[0]];
+}
+
+function computeTrajet() {
+  var st = TRAJET_STATE, sId = String(st.structId), cfg = TRAJET_DATA[sId] || TRAJET_DATA[st.structId], ac = acteCfg();
+  var nuit = st.nuit ? 8000 : 0;
+  if (ac.flow === 'trajet') {
+    var km = st.allerRetour ? st.distance * 2 : st.distance;
+    var coutKm = Math.round(km * cfg.tarif_km);
+    var coutEscales = st.etapes.length * cfg.tarif_escale;
+    return {flow: 'trajet', surDevis: false, km: km, base: ac.base, coutKm: coutKm, coutEscales: coutEscales, nuit: nuit, total: ac.base + coutKm + coutEscales + nuit};
+  }
+  if (ac.flow === 'rapatriement') {
+    if (ac.surDevis) return {flow: 'rapatriement', surDevis: true, total: null};
+    var coutKm = Math.round(st.distance * cfg.tarif_km_long);
+    var aerien = st.mode === 'aérien' ? cfg.suppl_aerien : 0;
+    return {flow: 'rapatriement', surDevis: false, km: st.distance, base: ac.base, coutKm: coutKm, aerien: aerien, nuit: nuit, total: ac.base + coutKm + aerien + nuit};
+  }
+  var coutHeures = Math.round(st.duree * cfg.tarif_heure);
+  var extra = (st.equipe.medecin ? 1 : 0) + (st.equipe.poste ? 1 : 0);
+  var coutEquipe = extra * cfg.tarif_soignant;
+  var majEffectif = st.effectif > 2000 ? 100000 : (st.effectif > 1000 ? 50000 : 0);
+  return {flow: 'evenement', surDevis: false, base: ac.base, coutHeures: coutHeures, coutEquipe: coutEquipe, majEffectif: majEffectif, total: ac.base + coutHeures + coutEquipe + majEffectif};
+}
+
+function useMyLocation(target, idx) {
+  var label = '📍 Ma position GPS (Dakar)';
+  if (target === 'depart') TRAJET_STATE.depart = label;
+  else if (target === 'arrivee') TRAJET_STATE.arrivee = label;
+  else if (target === 'lieu') TRAJET_STATE.lieu = label;
+  else if (target === 'etape') TRAJET_STATE.etapes[idx] = label;
+  renderTrajetConfig();
+}
+
+function addrField(ph, value, onin, locTarget, locIdx) {
+  return '<div style="display:flex;gap:6px;align-items:center">' +
+    '<input type="text" placeholder="' + ph + '" value="' + (value || '').replace(/"/g, '&quot;') + '" ' +
+    'oninput="' + onin + ';updateTrajetRecap()" style="flex:1;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
+    '<button onclick="useMyLocation(\'' + locTarget + '\'' + (locIdx !== undefined ? ',' + locIdx : '') + ')" title="Utiliser ma position" ' +
+    'style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--blue)">📍</button></div>';
+}
+
+function fLabel(t) { return '<label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)">' + t + '</label>'; }
+function txtField(ph, value, onin) { return '<input type="text" placeholder="' + ph + '" value="' + (value || '').replace(/"/g, '&quot;') + '" oninput="' + onin + ';updateTrajetRecap()" style="width:100%;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box">'; }
+function numField(value, onin, min) { return '<input type="number" min="' + (min || 0) + '" value="' + value + '" oninput="' + onin + ';updateTrajetRecap()" style="width:120px;font-size:11px;padding:6px 9px;border:1.5px solid var(--g200);border-radius:7px;background:#fff">'; }
+
+function renderTrajetConfig() {
+  if (!TRAJET_STATE) return;
+  var sId = String(TRAJET_STATE.structId);
+  var contentId = 'trajet-config-content-' + sId;
+  var wrap = document.getElementById(contentId);
+  if (!wrap) {
+    var compWrap = document.getElementById('trajet-config-comp-' + curActe);
+    if (compWrap) wrap = compWrap;
+  }
+  if (!wrap) return;
+  var st = TRAJET_STATE;
+  var cfg = TRAJET_DATA[sId] || TRAJET_DATA[st.structId];
+  if (!cfg || !cfg.actes) return;
+  var ac = acteCfg();
+  var acteNames = Object.keys(cfg.actes);
+  var titleByFlow = {trajet: '🚑 Composez votre trajet', rapatriement: '🌍 Détails du rapatriement', evenement: '🩺 Détails de la couverture médicale'};
+  var body = '';
+  if (ac.flow === 'trajet') body = flowTrajet(st, ac);
+  else if (ac.flow === 'rapatriement') body = flowRapatriement(st, ac);
+  else body = flowEvenement(st, cfg, ac);
+  wrap.innerHTML =
+    '<div style="background:var(--blue-l,#e8f4fb);border:1.5px solid var(--blue-m,#bfdbfe);border-radius:9px;padding:12px 14px;margin-bottom:12px">' +
+    '<div style="font-size:12px;font-weight:800;color:var(--blue,#0a5c8a);margin-bottom:8px">' + titleByFlow[ac.flow] + '</div>' +
+    fLabel('Service demandé') +
+    '<select onchange="TRAJET_STATE.acte=this.value;renderTrajetConfig()" style="width:100%;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue,#0a5c8a);border-radius:7px;margin:3px 0 6px;background:#fff;font-weight:600;color:#1f2937">' +
+    acteNames.map(function(n) { return '<option value="' + n + '"' + (n === st.acte ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
+    '</select>' +
+    (ac.medic ? '<div style="font-size:10px;color:var(--blue,#0a5c8a);margin-bottom:10px;font-weight:600">🩺 ' + ac.medic + (ac.urgence ? ' · ⚡ prise en charge d\'urgence' : '') + '</div>' : '<div style="margin-bottom:8px"></div>') +
+    body +
+    '<div id="trajet-recap-' + sId + '"></div>' +
+    '<button onclick="obtenirDevisTrajet()" style="width:100%;margin-top:10px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">💬 Obtenir mon devis</button>' +
+    '<div style="font-size:8px;color:var(--g400,#9ca3af);margin-top:6px;line-height:1.5">Estimation indicative. Le devis final vous sera confirmé par la structure après vérification des informations.</div>' +
+    '</div>';
+  updateTrajetRecap();
+}
+
+function flowTrajet(st, ac) {
+  return fLabel('📍 Point de départ') +
+    '<div style="margin:3px 0 8px">' + addrField('Adresse de départ...', st.depart, 'TRAJET_STATE.depart=this.value', 'depart') + '</div>' +
+    st.etapes.map(function(e, i) {
+      return fLabel('🛑 Étape ' + (i + 1)) +
+        '<div style="display:flex;gap:6px;align-items:center;margin:3px 0 8px">' +
+        '<div style="flex:1">' + addrField('Adresse de l\'étape...', e, 'TRAJET_STATE.etapes[' + i + ']=this.value', 'etape', i) + '</div>' +
+        '<button onclick="removeEtape(' + i + ')" style="background:var(--red-l,#fde8e8);border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:12px;color:var(--red,#c0392b);flex-shrink:0">✕</button></div>';
+    }).join('') +
+    '<button onclick="addEtape()" style="font-size:10px;background:#fff;color:var(--blue);border:1.5px dashed var(--blue-m);border-radius:7px;padding:6px 10px;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">+ Ajouter une étape sur le trajet</button>' +
+    fLabel('🏁 Point d\'arrivée') +
+    '<div style="margin:3px 0 8px">' + addrField('Adresse d\'arrivée...', st.arrivee, 'TRAJET_STATE.arrivee=this.value', 'arrivee') + '</div>' +
+    '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:10px"><input type="checkbox"' + (st.allerRetour ? ' checked' : '') + ' onchange="TRAJET_STATE.allerRetour=this.checked;updateTrajetRecap()"> 🔁 Retour au point de départ (aller-retour)</label>' +
+    fLabel('Distance estimée (km)') +
+    '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 10px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>' +
+    supplNuit(st);
+}
+
+function flowRapatriement(st, ac) {
+  var intl = ac.scope === 'international';
+  return '<div style="display:grid;grid-template-columns:' + (intl ? '1fr 1fr' : '1fr') + ';gap:8px;margin-bottom:8px">' +
+    '<div>' + fLabel('Ville de départ') + txtField('Ex : Dakar', st.villeDep, 'TRAJET_STATE.villeDep=this.value') + '</div>' +
+    (intl ? '<div>' + fLabel('Pays de départ') + txtField('Ex : Sénégal', st.paysDep, 'TRAJET_STATE.paysDep=this.value') + '</div>' : '') +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:' + (intl ? '1fr 1fr' : '1fr') + ';gap:8px;margin-bottom:8px">' +
+    '<div>' + fLabel('Ville d\'arrivée') + txtField('Ex : ' + (intl ? 'Paris' : 'Saint-Louis'), st.villeArr, 'TRAJET_STATE.villeArr=this.value') + '</div>' +
+    (intl ? '<div>' + fLabel('Pays d\'arrivée') + txtField('Ex : France', st.paysArr, 'TRAJET_STATE.paysArr=this.value') + '</div>' : '') +
+    '</div>' +
+    fLabel('Mode de transport') +
+    '<div style="display:flex;gap:6px;margin:3px 0 8px">' +
+    modePill('routier', '🚑 Routier', st) + modePill('aérien', '✈️ Aérien', st) +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
+    '<div>' + fLabel('Date souhaitée') + '<input type="date" value="' + st.dateR + '" onchange="TRAJET_STATE.dateR=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
+    '<div>' + fLabel('État du patient') + '<select onchange="TRAJET_STATE.etatPatient=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
+    ['Stable, allongé', 'Sous oxygène', 'Soins intensifs / ventilé', 'Isolé (contagieux)'].map(function(o) { return '<option' + (o === st.etatPatient ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
+    '</select></div></div>' +
+    '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:8px"><input type="checkbox"' + (st.accompagnant ? ' checked' : '') + ' onchange="TRAJET_STATE.accompagnant=this.checked;updateTrajetRecap()"> 👥 Présence d\'un accompagnant</label>' +
+    (intl ? '<div style="font-size:9px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-bottom:8px">📄 Documents requis : passeport, autorisation médicale de vol, coordination avec l\'assurance. Devis personnalisé selon destination.</div>' :
+    fLabel('Distance estimée (km)') + '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 8px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>') +
+    supplNuit(st);
+}
+
+function modePill(m, txt, st) {
+  return '<button onclick="TRAJET_STATE.mode=\'' + m + '\';renderTrajetConfig()" style="flex:1;font-size:11px;font-weight:600;padding:7px;border-radius:7px;cursor:pointer;border:1.5px solid ' +
+    (st.mode === m ? 'var(--blue);background:var(--blue);color:#fff' : 'var(--blue-m);background:#fff;color:var(--blue)') + '">' + txt + '</button>';
+}
+
+function flowEvenement(st, cfg, ac) {
+  var eq = function(cle, txt) {
+    return '<label style="display:flex;align-items:center;gap:5px;font-size:10px;background:#fff;border:1.5px solid var(--g200);border-radius:7px;padding:4px 9px;cursor:pointer"><input type="checkbox"' + (st.equipe[cle] ? ' checked' : '') + ' onchange="TRAJET_STATE.equipe.' + cle + '=this.checked;updateTrajetRecap()"> ' + txt + '</label>';
+  };
+  return '<div style="font-size:10px;color:var(--blue);margin-bottom:8px">📋 Type : ' + ac.evt + '</div>' +
+    fLabel('📍 Lieu / site de l\'évènement') +
+    '<div style="margin:3px 0 8px">' + addrField('Adresse du site...', st.lieu, 'TRAJET_STATE.lieu=this.value', 'lieu') + '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
+    '<div>' + fLabel('Date') + '<input type="date" value="' + st.dateE + '" onchange="TRAJET_STATE.dateE=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
+    '<div>' + fLabel('Durée (heures)') + numField(st.duree, 'TRAJET_STATE.duree=parseFloat(this.value)||0', 1) + '</div>' +
+    '</div>' +
+    fLabel('Effectif attendu (personnes)') +
+    '<div style="margin:3px 0 8px">' + numField(st.effectif, 'TRAJET_STATE.effectif=parseInt(this.value)||0', 0) + '</div>' +
+    fLabel('Dispositif médical souhaité') +
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px">' +
+    eq('infirmier', 'Infirmier') + eq('medecin', 'Médecin') + eq('ambulance', 'Ambulance sur place') + eq('poste', 'Poste de secours') +
+    '</div>' +
+    supplNuit(st);
+}
+
+function supplNuit(st) {
+  return '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:4px"><input type="checkbox"' + (st.nuit ? ' checked' : '') + ' onchange="TRAJET_STATE.nuit=this.checked;updateTrajetRecap()"> 🌙 Intervention de nuit / week-end (+8 000 F)</label>';
+}
+
+function addEtape() {
+  TRAJET_STATE.etapes.push('');
+  renderTrajetConfig();
+}
+
+function removeEtape(idx) {
+  TRAJET_STATE.etapes.splice(idx, 1);
+  renderTrajetConfig();
+}
+
+function money(n) { return n.toLocaleString('fr-FR') + ' F'; }
+
+function recapLine(label, val, strong) {
+  return '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:var(--g600)">' + label + '</span><span style="' + (strong ? 'font-weight:800;color:var(--green-d)' : 'font-weight:600;color:var(--text)') + '">' + val + '</span></div>';
+}
+
+function updateTrajetRecap() {
+  if (!TRAJET_STATE) return;
+  var box = document.getElementById('trajet-recap-' + TRAJET_STATE.structId);
+  if (!box) return;
+  var st = TRAJET_STATE, cfg = TRAJET_DATA[st.structId], ac = acteCfg();
+  var r = computeTrajet();
+  var itin = '', lines = '';
+  
+  if (r.flow === 'trajet') {
+    var pts = [{r: 'Départ', v: st.depart || '(à définir)'}].concat(st.etapes.map(function(e, i) { return {r: 'Étape ' + (i + 1), v: e || '(à définir)'}; })).concat([{r: 'Arrivée', v: st.arrivee || '(à définir)'}]);
+    if (st.allerRetour) pts.push({r: 'Retour', v: st.depart || '(point de départ)'});
+    itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Itinéraire · ' + r.km + ' km' + (st.allerRetour ? ' (aller-retour)' : '') + '</div>' +
+      pts.map(function(p) { return '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">' + p.r + ' :</span> ' + p.v + '</div>'; }).join('');
+    lines = recapLine('Prix de base (' + st.acte + ')', money(r.base)) +
+      recapLine('Distance (' + r.km + ' km × ' + money(cfg.tarif_km) + ')', money(r.coutKm)) +
+      (st.etapes.length ? recapLine(st.etapes.length + ' étape' + (st.etapes.length > 1 ? 's' : '') + ' × ' + money(cfg.tarif_escale), money(r.coutEscales)) : '') +
+      (r.nuit ? recapLine('Nuit / week-end', money(r.nuit)) : '');
+  }
+  else if (r.flow === 'rapatriement') {
+    itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Rapatriement ' + (ac.scope === 'international' ? 'international' : 'national') + '</div>' +
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">De :</span> ' + (st.villeDep || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysDep || 'Sénégal') : '') + '</div>' +
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">À :</span> ' + (st.villeArr || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysArr || '(à définir)') : '') + '</div>' +
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Mode :</span> ' + (st.mode === 'aérien' ? '✈️ Aérien' : '🚑 Routier') + '</div>';
+    lines = recapLine('Prix de base', money(r.base)) +
+      recapLine('Distance (' + r.km + ' km × ' + money(cfg.tarif_km_long) + ')', money(r.coutKm)) +
+      (r.aerien ? recapLine('Supplément aérien', money(r.aerien)) : '') +
+      (r.nuit ? recapLine('Nuit / week-end', money(r.nuit)) : '');
+  }
+  else {
+    itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Couverture médicale</div>' +
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Lieu :</span> ' + (st.lieu || '(à définir)') + '</div>' +
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Date :</span> ' + (st.dateE || '(à définir)') + ' · Durée : ' + st.duree + 'h</div>' +
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Effectif :</span> ' + st.effectif + ' personnes</div>';
+    lines = recapLine('Prix de base', money(r.base)) +
+      recapLine('Durée (' + st.duree + 'h × ' + money(cfg.tarif_heure) + ')', money(r.coutHeures)) +
+      (r.coutEquipe ? recapLine('Équipe médicale', money(r.coutEquipe)) : '') +
+      (r.majEffectif ? recapLine('Majoration effectif', money(r.majEffectif)) : '') +
+      (r.nuit ? recapLine('Nuit / week-end', money(r.nuit)) : '');
+  }
+  
+  box.innerHTML = itin + '<div style="margin-top:8px">' + lines + '</div>' +
+    (r.surDevis ? '<div style="font-size:10px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-top:8px">📋 Ce service nécessite un devis personnalisé. Contactez la structure pour une estimation précise.</div>' :
+    '<div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-top:1px solid var(--g200);margin-top:6px"><span style="font-weight:700;color:var(--g600)">Total estimé</span><span style="font-extrabold;color:var(--green-d)">' + money(r.total) + '</span></div>');
+}
+
+function trajetToast(msg, level) {
+  if (window._sipnToast) window._sipnToast(msg, level);
+  else if (window.MedcareUI && typeof MedcareUI.toast === 'function') MedcareUI.toast(msg, { level: level || 'info' });
+  else alert(msg);
+}
+
+function obtenirDevisTrajet() {
+  if (!TRAJET_STATE) {
+    trajetToast('Configurez d\'abord votre trajet.', 'warning');
+    return;
+  }
+  var st = TRAJET_STATE;
+  var ac = acteCfg();
+  var r = computeTrajet();
+  var lines = [];
+  var configParts = [];
+
+  if (r.flow === 'trajet') {
+    var resume = (st.depart || 'Départ') + ' → ' + (st.arrivee || 'Arrivée') + ' · ' + r.km + ' km' + (st.allerRetour ? ' (A/R)' : '');
+    configParts.push(resume);
+    lines.push({ nom: st.acte + ' · ' + resume, price: r.base });
+    lines.push({ nom: 'Distance ' + r.km + ' km', price: r.coutKm });
+    if (r.coutEscales) lines.push({ nom: st.etapes.length + ' étape(s)', price: r.coutEscales });
+    if (r.nuit) lines.push({ nom: 'Nuit / week-end', price: r.nuit });
+  } else if (r.flow === 'rapatriement') {
+    var rapResume = (st.villeDep || 'Départ') + ' → ' + (st.villeArr || 'Arrivée') + ' · ' + st.mode + ' · ' + st.etatPatient;
+    configParts.push(rapResume);
+    if (r.surDevis) {
+      lines.push({ nom: st.acte + ' · ' + rapResume, price: 0 });
+    } else {
+      lines.push({ nom: st.acte + ' · ' + rapResume, price: r.base });
+      lines.push({ nom: 'Distance ' + r.km + ' km', price: r.coutKm });
+      if (r.aerien) lines.push({ nom: 'Supplément aérien', price: r.aerien });
+      if (r.nuit) lines.push({ nom: 'Nuit / week-end', price: r.nuit });
+    }
+  } else {
+    var dispo = Object.keys(st.equipe).filter(function(k){ return st.equipe[k]; }).join(', ');
+    var evtResume = (st.lieu || 'Site') + ' · ' + (st.dateE || 'date à définir') + ' · ' + st.duree + 'h · ' + st.effectif + ' pers.';
+    configParts.push(evtResume + (dispo ? ' · ' + dispo : ''));
+    lines.push({ nom: st.acte + ' · ' + evtResume, price: r.base });
+    lines.push({ nom: 'Présence ' + st.duree + 'h', price: r.coutHeures });
+    if (r.coutEquipe) lines.push({ nom: 'Renfort équipe médicale', price: r.coutEquipe });
+    if (r.majEffectif) lines.push({ nom: 'Majoration grand public', price: r.majEffectif });
+  }
+
+  var isAuthed = {% if user.is_authenticated %}true{% else %}false{% endif %};
+  if (!isAuthed) {
+    var loginNext = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = '{% url "users:login" %}?next=' + loginNext;
+    return;
+  }
+
+  var csrf = (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value || '';
+  fetch('{% url "cart:ambulance_trajet_devis" %}', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-CSRFToken': csrf,
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({
+      org_id: st.structId,
+      acte_name: st.acte,
+      lines: lines,
+      total_patient: r.surDevis ? 0 : (r.total || 0),
+      sur_devis: !!r.surDevis,
+      config_summary: configParts.join(' · ')
+    })
+  })
+    .then(function(resp){ return resp.json().then(function(data){ return { ok: resp.ok, data: data }; }); })
+    .then(function(result){
+      if (!result.ok || !result.data || !result.data.ok) {
+        var err = (result.data && result.data.error) || 'Impossible d\'envoyer la demande de devis.';
+        trajetToast(err, 'error');
+        return;
+      }
+      if (window.closeProfilStruct) window.closeProfilStruct();
+      window.location.href = result.data.redirect;
+    })
+    .catch(function(){
+      trajetToast('Erreur réseau. Réessayez.', 'error');
+    });
+}
+
+function openTrajetConfig(orgId, acteName, isCompPanel) {
+  curActe = acteName;
+  window.curActe = acteName; // keep window-level in sync for cross-IIFE access
+  if (window.openProfilStruct) {
+    // openProfilStruct loads content async; focusTrajetActe is called
+    // from loadProfilDrawerContent after the fetch completes
+    window.openProfilStruct(orgId);
+  } else {
+    // Fallback: direct init without modal
+    initTrajetConfig(orgId);
+    if (acteName) focusTrajetActe(acteName, orgId);
+    var containerId = isCompPanel ? 'trajet-config-comp-' + acteName : 'trajet-config-' + orgId;
+    var container = document.getElementById(containerId);
+    if (container) {
+      container.classList.remove('hidden');
+      container.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+  }
+}
+
+function closeTrajetConfig(orgId) {
+  var container = document.getElementById('trajet-config-' + orgId);
+  if (container) container.classList.add('hidden');
+  TRAJET_STATE = null;
+  curActe = null;
+  window.curActe = null;
+}
+
+function focusTrajetActe(acte, structId) {
+  // Auto-init if TRAJET_STATE not yet set
+  var sid = structId || (TRAJET_STATE ? TRAJET_STATE.structId : null);
+  if (!TRAJET_STATE && sid) {
+    initTrajetConfig(sid);
+  }
+  if (!TRAJET_STATE) return;
+  // Resolve acte name (may be a numeric PK from URL, or an act name string)
+  var resolvedActe = acte;
+  if (TRAJET_DATA[String(TRAJET_STATE.structId)] && TRAJET_DATA[String(TRAJET_STATE.structId)].actes) {
+    var acteKeys = Object.keys(TRAJET_DATA[String(TRAJET_STATE.structId)].actes);
+    // If acte is not a direct key, try resolveTrajetActe for fuzzy matching
+    if (!TRAJET_DATA[String(TRAJET_STATE.structId)].actes[acte]) {
+      resolvedActe = resolveTrajetActe(TRAJET_STATE.structId, acte) || acteKeys[0];
+    }
+  }
+  TRAJET_STATE.acte = resolvedActe;
+  renderTrajetConfig();
+  // Scroll to configurator
+  var el = document.getElementById('trajet-config-content-' + TRAJET_STATE.structId) ||
+           document.getElementById('trajet-config-' + TRAJET_STATE.structId) ||
+           document.getElementById('trajet-config-comp-' + acte);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleContactProfil() {
+  var card = document.getElementById('profil-contact-card');
+  if (card) card.style.display = (card.style.display === 'none' ? 'block' : 'none');
+}
+
+// Expose globally
+window.TRAJET_DATA = TRAJET_DATA;
+window.TRAJET_STATE = TRAJET_STATE;
+window.curActe = curActe; // exposed so cross-IIFE callbacks (e.g. loadProfilDrawerContent) can read it
+window.openTrajetConfig = openTrajetConfig;
+window.closeTrajetConfig = closeTrajetConfig;
+window.renderTrajetConfig = renderTrajetConfig;
+window.updateTrajetRecap = updateTrajetRecap;
+window.focusTrajetActe = focusTrajetActe;
+window.toggleContactProfil = toggleContactProfil;
+window.addEtape = addEtape;
+window.removeEtape = removeEtape;
+window.useMyLocation = useMyLocation;
+window.obtenirDevisTrajet = obtenirDevisTrajet;
+window.initTrajetConfig = initTrajetConfig;
+window.resolveTrajetActe = resolveTrajetActe;
+
+
+  initAmbulanceTrajetConfig();
+{% if auto_init_org_id %}
+  initTrajetConfig('{{ auto_init_org_id }}');
+{% endif %}
+})();
+</script>

@@ -1,0 +1,61 @@
+{% comment %}En-tête fiche (identité + actions + horaires) — partagé drawer + page annuaire.{% endcomment %}
+<div class="profil-drawer-head-body">
+  <div class="profil-drawer-identity">
+    <div class="profil-drawer-avatar">
+      {% if org.logo %}
+        <img src="{{ org.logo.url }}" alt="{{ org.name }}">
+      {% else %}
+        🏥
+      {% endif %}
+    </div>
+    <div class="profil-drawer-titles min-w-0">
+      <div class="profil-drawer-name-row">
+        <span class="profil-drawer-name">{{ org.name }}</span>
+        {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% endif %}
+      </div>
+      <div class="profil-drawer-meta-row">
+        <span class="profil-drawer-sub">{{ org.type_organisme.name|default:"Structure de santé" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}</span>
+        {% if open_today %}
+        <span class="profil-drawer-open-badge profil-drawer-open-badge--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
+          <span class="profil-drawer-open-dot"></span>{% if open_today == 'open' %}Ouvert{% else %}Fermé{% endif %}
+        </span>
+        {% endif %}
+      </div>
+      {% if hours_meta %}
+      <div class="profil-drawer-hours-inline">
+        <span aria-hidden="true">🕐</span>
+        <span>{{ hours_meta }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="profil-drawer-actions">
+    {% if fiche_embedded %}
+    <button type="button" class="profil-drawer-action-btn" data-profil-focus-rdv>📅 RDV</button>
+    <button type="button" class="profil-drawer-action-btn" data-maps-url="{{ maps_url|default:'#' }}" onclick="openMapsUrl(this)">📍 GPS</button>
+    {% else %}
+    <button type="button" class="profil-drawer-action-btn" onclick="scrollToActesSection()">📅 RDV</button>
+    <button type="button" class="profil-drawer-action-btn" onclick="openGpsMaps()">📍 GPS</button>
+    {% endif %}
+    <button type="button" class="profil-drawer-action-btn" onclick="toggleHorairesPop()">🕐 Horaires</button>
+  </div>
+  <div id="horaires-pop" class="profil-drawer-horaires-pop" hidden>
+    <div class="profil-drawer-horaires-title-row">
+      <span class="profil-drawer-horaires-title">🕐 Horaires d'ouverture</span>
+      <button type="button" class="profil-drawer-horaires-close" onclick="toggleHorairesPop()" aria-label="Fermer">&times;</button>
+    </div>
+    {% for hour in hours_list %}
+    <div class="profil-drawer-horaires-line{% if hour.is_today %} profil-drawer-horaires-line--today{% endif %}">
+      <span>{{ hour.day_label|default:hour.days|default:hour.day }}{% if hour.is_today %} <span class="profil-drawer-today-tag">Aujourd'hui</span>{% endif %}</span>
+      <span>{% if hour.closed %}Fermé{% else %}{{ hour.hours }}{% endif %}</span>
+    </div>
+    {% empty %}
+    <div class="profil-drawer-horaires-line">{{ hours_meta|default:"Horaires non renseignés" }}</div>
+    {% endfor %}
+    {% if open_today %}
+    <div class="profil-drawer-horaires-status profil-drawer-horaires-status--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
+      {% if open_today == 'open' %}● Ouvert maintenant{% else %}● Fermé actuellement{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>

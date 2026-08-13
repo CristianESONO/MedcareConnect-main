@@ -1,0 +1,176 @@
+{% comment %}
+Corps fiche structure — partagé drawer recherche + page annuaire.
+Variables : org, profil_pillars, insurances_profil, patient_insurance_match, request
+Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
+{% endcomment %}
+{% load healthcare_display %}
+<div class="profil-drawer-body">
+  {% if org.description %}
+  <p class="profil-drawer-desc">{{ org.description }}</p>
+  {% endif %}
+
+  {% if patient_insurance_match %}
+  <div class="profil-drawer-ins-match">
+    <span aria-hidden="true">✅</span>
+    <span>Votre assurance <strong>{{ patient_insurance_match }}</strong> est acceptée ici.</span>
+  </div>
+  {% endif %}
+
+  {% if insurances_profil %}
+  <button type="button" class="profil-drawer-assur-toggle" onclick="toggleAssurDrop()">
+    <span>🛡 Assurances acceptées ({{ insurances_profil|length }})</span>
+    <span id="assur-caret">▼</span>
+  </button>
+  <div id="assur-list" class="profil-drawer-assur-list" hidden>
+    {% for ins in insurances_profil %}
+    <div class="profil-drawer-assur-row{% if ins.patient_match %} profil-drawer-assur-row--match{% endif %}">
+      <span>{% if ins.patient_match %}✓ {% endif %}{{ ins.name }}</span>
+      {% if ins.patient_match %}<span class="profil-drawer-assur-tag">Acceptée pour vous</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if org.prises_sang_domicile %}
+  <div class="profil-drawer-domicile">
+    <div class="profil-drawer-domicile-title">🏠 Prélèvement à domicile disponible</div>
+    {% if org.horaires_complement %}
+    <div class="profil-drawer-domicile-sub">{{ org.horaires_complement|truncatechars:120 }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if org.is_ambulance_service %}
+  <div id="trajet-config-{{ org.pk }}" class="profil-drawer-trajet-config trajet-config-container"
+       data-org-id="{{ org.pk }}">
+    <div id="trajet-config-content-{{ org.pk }}"></div>
+  </div>
+  {% endif %}
+
+  <div id="actes-section" class="profil-drawer-actes-label">
+    {% if org.is_ambulance_service %}Services &amp; tarifs indicatifs{% else %}Actes disponibles{% endif %}
+  </div>
+
+  {% if org.is_ambulance_service %}
+  <div class="profil-drawer-amb-hint">
+    🚑 Les montants ci-dessous sont des points de départ. Le prix final dépend du trajet. Cliquez sur un service, puis configurez votre trajet pour obtenir votre devis.
+  </div>
+  {% endif %}
+
+  <div class="profil-drawer-actes-search">
+    <input id="profil-acte-search" type="search" placeholder="Rechercher un acte…" autocomplete="off"
+      {% if not fiche_embedded %}oninput="filterProfilActes(this.value)"{% endif %}>
+    <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)">🔍</button>
+  </div>
+
+  <div class="profil-drawer-actes-list">
+    {% for pillar in profil_pillars %}
+    <div class="pa-cat profil-drawer-cat">
+      <div class="profil-drawer-cat-head" onclick="togglePillarCollapse(this)">
+        <span>{% if pillar.icon and pillar.icon not in pillar.name %}{{ pillar.icon }} {% endif %}{{ pillar.name }}</span>
+        <div class="profil-drawer-cat-head-right">
+          <span class="profil-drawer-cat-count">{{ pillar.count }}</span>
+          <span class="profil-drawer-cat-arrow">▼</span>
+        </div>
+      </div>
+      <div class="profil-drawer-cat-body">
+        {% for pa in pillar.actes %}
+          {% if org.is_ambulance_service %}
+          {% ambulance_sur_devis_for pa.acte.name pa.price as amb_sur_devis %}
+          <div class="pa-row profil-pa-row profil-pa-row--ambulance"
+            data-ambulance-acte="1"
+            data-nom="{{ pa.acte.name|lower }}"
+            onclick="focusTrajetActe('{{ pa.acte.name|escapejs }}', '{{ org.pk }}')">
+            <div class="profil-pa-info">
+              <div class="profil-pa-nom">{{ pa.acte.name }}</div>
+              <div class="profil-pa-amb-note">🚑 Tarif selon le trajet, à configurer</div>
+            </div>
+            <div class="profil-pa-right">
+              {% if amb_sur_devis %}
+              <div class="profil-pa-prix profil-pa-prix--amb">Sur devis</div>
+              {% else %}
+              <div class="profil-pa-prix profil-pa-prix--amb">À partir de {{ pa.price|floatformat:0 }} F</div>
+              {% endif %}
+              <div class="profil-pa-delai profil-pa-delai--amb">{% ambulance_configure_short_for pa.acte.name pa.price %}</div>
+            </div>
+          </div>
+          {% elif fiche_embedded %}
+          <div class="pa-row profil-pa-row"
+            data-pa-id="{{ pa.pk }}"
+            data-nom="{{ pa.acte.name|lower }}"
+            data-pa-acte-pk="{{ pa.acte.pk }}"
+            data-pa-acte="{{ pa.acte.name|escape }}"
+            data-pa-org="{{ org.name|escape }}"
+            data-pa-org-id="{{ org.pk }}"
+            data-pa-price="{{ pa.price|floatformat:0 }}"
+            data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+            data-pa-ins-match="1"
+            data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+            data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
+            role="button" tabindex="0">
+            <input type="checkbox" class="ai-check" aria-label="Sélectionner {{ pa.acte.name }}">
+            <div class="profil-pa-info">
+              <div class="profil-pa-nom">{{ pa.acte.name }}</div>
+              {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+              <div class="profil-pa-cat-label">
+                {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% else %}{{ pa.acte.service_medical_category.name }}{% endif %}
+              </div>
+              {% endif %}
+            </div>
+            <div class="profil-pa-right">
+              {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+              <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} FCFA</div>
+            </div>
+          </div>
+          {% else %}
+          <div class="pa-row profil-pa-row"
+            data-pa-id="{{ pa.pk }}"
+            data-nom="{{ pa.acte.name|lower }}"
+            data-acte-name="{{ pa.acte.name|escape }}"
+            data-pa-acte-pk="{{ pa.acte.pk }}"
+            data-price="{{ pa.price|floatformat:0 }}"
+            onclick="toggleActeSelection(this)">
+            <input type="checkbox" class="pa-check" onclick="event.stopPropagation(); toggleActeSelection(this.closest('.pa-row'))" aria-label="Sélectionner {{ pa.acte.name }}">
+            <div class="profil-pa-info">
+              <div class="profil-pa-nom">{{ pa.acte.name }}</div>
+              {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+              <div class="profil-pa-cat-label">
+                {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% else %}{{ pa.acte.service_medical_category.name }}{% endif %}
+              </div>
+              {% endif %}
+            </div>
+            <div class="profil-pa-right">
+              {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+              <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} FCFA</div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% empty %}
+    <p class="profil-drawer-empty">Aucun acte publié pour cette structure.</p>
+    {% endfor %}
+  </div>
+
+  {% if fiche_embedded %}
+  <div id="profil-panier-recap" class="profil-panier-recap" aria-live="polite"></div>
+  <button type="button" class="devis-btn profil-drawer-devis-btn" data-profil-devis data-org-id="{{ org.id }}">
+    💬 Obtenir mon devis WhatsApp
+  </button>
+  {% elif org.is_ambulance_service %}
+  {# Devis ambulance : bouton dans le configurateur trajet / couverture #}
+  {% else %}
+  <div id="profil-panier-recap" class="profil-panier-recap-box" style="display:none;">
+    <div class="profil-panier-title">🛒 Sélection (0 acte)</div>
+    <div id="profil-panier-items"></div>
+    <div class="profil-panier-total-row">
+      <span style="font-size: 12px; font-weight: 600; color: #0a5c8a;">Total estimé</span>
+      <span id="profil-panier-total" style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #0a5c8a;">0 FCFA</span>
+    </div>
+  </div>
+  <button type="button" class="profil-devis-btn" onclick="requestFicheDevis()">
+    💬 Obtenir mon devis WhatsApp
+  </button>
+  {% endif %}
+</div>

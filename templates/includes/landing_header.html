@@ -40,8 +40,8 @@
         </li>
         {% elif user.is_authenticated and user.is_prestataire %}
         <li>
-          <a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-nav-link{% if dash_active == 'home' %} is-active{% endif %}">
-            {{ user.organisme.name|default:user.username }}
+          <a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-nav-link{% if dash_active %} is-active{% endif %}">
+            {{ prestataire_org.name|default:user.healthcare_provider_profile.name|default:user.username }}
           </a>
         </li>
         {% endif %}

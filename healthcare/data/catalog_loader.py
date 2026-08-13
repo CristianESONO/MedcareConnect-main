@@ -70,6 +70,9 @@ def load_assurances_from_docs() -> dict[str, Assurance]:
 
 def load_pillars_from_docs() -> None:
     """Crée les 6 piliers, types (niveau 2) et actes (niveau 3)."""
+    from healthcare.prestataire_catalogue import reset_catalog_order_cache
+
+    reset_catalog_order_cache()
     for pillar in PILLARS_FROM_DOCS:
         svc, _ = ServiceMedical.objects.update_or_create(
             name=pillar["name"],

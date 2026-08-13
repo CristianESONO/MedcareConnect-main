@@ -1012,3 +1012,137 @@ def cart_history(request):
     if request.user.is_patient:
         return redirect(panel_redirect("rdv"))
     return render(request, "cart/history.html", ctx)
+
+
+@login_required
+@require_POST
+def ambulance_trajet_devis(request):
+    """Devis ambulance configuré (trajet / rapatriement / événement) → fil messagerie patient."""
+    if not getattr(request.user, "is_patient", False):
+        return JsonResponse(
+            {"ok": False, "error": "Seuls les patients peuvent demander un devis via MedCare."},
+            status=403,
+        )
+
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse({"ok": False, "error": "Requête invalide."}, status=400)
+
+    try:
+        org_id = int(payload.get("org_id") or 0)
+    except (TypeError, ValueError):
+        org_id = 0
+    if not org_id:
+        return JsonResponse({"ok": False, "error": "Structure introuvable."}, status=400)
+
+    from healthcare.models import OrganismeDeSante
+
+    org = get_object_or_404(
+        OrganismeDeSante,
+        pk=org_id,
+        is_active=True,
+        is_ambulance_service=True,
+    )
+
+    acte_name = (payload.get("acte_name") or "").strip()
+    lines_in = payload.get("lines") or []
+    if not acte_name and not lines_in:
+        return JsonResponse(
+            {"ok": False, "error": "Configurez votre trajet avant de demander un devis."},
+            status=400,
+        )
+
+    sur_devis = bool(payload.get("sur_devis"))
+    details: list[dict] = []
+    total_brut = Decimal("0")
+    for row in lines_in:
+        label = (row.get("nom") or row.get("acte") or acte_name or "Service ambulance").strip()
+        try:
+            cost = Decimal(str(row.get("price", 0) or 0))
+        except Exception:
+            cost = Decimal("0")
+        details.append(
+            {
+                "acte": label,
+                "organisme": org.name,
+                "quantity": 1,
+                "unit_price": str(cost),
+                "subtotal": str(cost),
+                "patient_cost": str(cost),
+                "coverage_rate": None,
+            }
+        )
+        total_brut += cost
+
+    if not details:
+        details.append(
+            {
+                "acte": acte_name or "Demande ambulance",
+                "organisme": org.name,
+                "quantity": 1,
+                "unit_price": "0",
+                "subtotal": "0",
+                "patient_cost": "0",
+                "coverage_rate": None,
+            }
+        )
+
+    if sur_devis:
+        total_patient = Decimal("0")
+    else:
+        try:
+            total_patient = Decimal(str(payload.get("total_patient", total_brut)))
+        except Exception:
+            total_patient = total_brut
+
+    config_note = (payload.get("config_summary") or "").strip()
+    notes = config_note or None
+
+    from notifications.dispatcher import dispatch as _notify
+    from messaging.thread import ensure_devis_thread, thread_url
+    from users.patient_panel import redirect_url_after_devis_generated
+
+    cart = Cart.get_active_cart(request.user)
+    insurance = resolve_estimation_insurance(cart, request.user)
+
+    with transaction.atomic():
+        devis = Devis.objects.create(
+            cart=cart,
+            patient=request.user,
+            insurance=insurance,
+            total_brut=total_brut,
+            total_assurance=Decimal("0"),
+            total_patient=total_patient,
+            details=details,
+            notes=notes,
+            valid_until=timezone.now().date() + timedelta(days=30),
+            status="sent",
+        )
+        part = DevisPart.objects.create(
+            devis=devis,
+            organisme=org,
+            details=details,
+            total_brut=total_brut,
+            total_assurance=Decimal("0"),
+            total_patient=total_patient,
+            status="sent",
+        )
+        conv, _ = ensure_devis_thread(part)
+        link_patient = thread_url(conv)
+        _notify(
+            "devis.created",
+            context={
+                "devis": devis,
+                "devis_part": part,
+                "patient": request.user,
+                "organisme": org,
+                "link": link_patient,
+                "link_patient": link_patient,
+                "link_prestataire": link_patient,
+            },
+            actor=getattr(org, "user", None),
+        )
+
+    redirect_url = redirect_url_after_devis_generated(devis, prefer_organisme_id=org.pk)
+    return JsonResponse({"ok": True, "redirect": redirect_url, "devis_ref": devis.reference})

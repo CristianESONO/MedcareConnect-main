@@ -53,7 +53,7 @@
         data-count-text="{{ block.acte_count }} acte{{ block.acte_count|pluralize }}"
         {% if not block.applicable %}disabled title="Non applicable à votre type de structure"{% endif %}>
         <span class="pilier-tab-icon">{{ block.pilier.display_icon|default:"🏥" }}</span>
-        <span class="pilier-tab-label">{{ block.pilier.display_name }}</span>
+        <span class="pilier-tab-label">{{ block.pilier.display_name|upper }}</span>
         <span class="pilier-tab-count js-pilier-tab-count{% if not block.applicable %} is-na{% endif %}">
           {% if block.applicable %}{{ block.acte_count }} acte{{ block.acte_count|pluralize }}{% else %}Non applicable{% endif %}
         </span>

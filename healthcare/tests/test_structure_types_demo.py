@@ -49,7 +49,24 @@ class StructureTypesDemoTests(TestCase):
     def test_merge_catalog_marks_non_applicable_piliers(self):
         org = _org_with_type(self.type_labo)
         blocks = merge_catalog_blocks([], org)
+        self.assertEqual(len(blocks), 6)
         bio = next(b for b in blocks if b["pilier"].slug == "biologie-medicale")
         img = next(b for b in blocks if b["pilier"].slug == "imagerie-medicale")
         self.assertTrue(bio["applicable"])
         self.assertFalse(img["applicable"])
+
+    def test_merge_catalog_official_pilier_order(self):
+        org = _org_with_type(self.type_hopital)
+        blocks = merge_catalog_blocks([], org)
+        slugs = [b["pilier"].slug for b in blocks]
+        self.assertEqual(
+            slugs,
+            [
+                "biologie-medicale",
+                "imagerie-medicale",
+                "explorations-fonctionnelles",
+                "ambulance-medicalisee",
+                "soins-specialises",
+                "soins-dentaires",
+            ],
+        )

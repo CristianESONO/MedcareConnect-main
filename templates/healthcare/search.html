@@ -3556,98 +3556,89 @@
         .finally(function(){ if (typeof done === 'function') done(); });
     }
 
-    var cards = document.querySelectorAll('.scard[data-pa-id], .scard-m-acte[data-pa-id], .acte-item[data-pa-id]');
-    cards.forEach(function(card){
-      var id = card.getAttribute('data-pa-id');
-      function toggle(e){
-        if (e) e.preventDefault();
-        if (cart.has(id)){
-          serverRemove(id, function(d){
-            cart.delete(id);
-            cardState(id);
-            applyCartCoverage(d);
-            renderCart();
-            if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
-          }, function(err){
-            cartRemoveErr(err);
-            cardState(id);
-          });
-        } else {
-          if (isPaBlockedByOtherStructure(id, card.getAttribute('data-pa-acte-pk'))) {
-            sipnToast(acteConflictMessage(card), 'warning');
-            cardState(id);
-            return;
-          }
-          serverAdd(card, function(d){
-            cart.set(id, cartItemFromCard(card, id, d));
-            cardState(id);
-            applyCartCoverage(d);
-            renderCart();
-            if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
-          }, function(err){
-            if (err && err.detail && err.detail.error === 'acte_already_in_cart') {
-              sipnToast(err.detail.message || acteConflictMessage(card), 'warning');
-            } else {
-              sipnToast('Impossible d’ajouter au panier. Réessayez ou ouvrez la fiche offre.', 'error');
-            }
-            refreshActeLocks();
-            cardState(id);
-          });
+    function toggleCartFromCard(card){
+      var id = String(card.getAttribute('data-pa-id') || '');
+      if (!id) return;
+      if (cart.has(id)){
+        serverRemove(id, function(d){
+          cart.delete(id);
+          cardState(id);
+          applyCartCoverage(d);
+          renderCart();
+          if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
+        }, function(err){
+          cartRemoveErr(err);
+          cardState(id);
+        });
+      } else {
+        if (isPaBlockedByOtherStructure(id, card.getAttribute('data-pa-acte-pk'))) {
+          sipnToast(acteConflictMessage(card), 'warning');
+          cardState(id);
+          return;
         }
-      }
-      if (card.classList.contains('scard-m-acte')) {
-        card.addEventListener('click', function(e){
-          if (e.target.closest('.scard-m-checkbox')) return;
-          if (isPaBlockedByOtherStructure(id, card.getAttribute('data-pa-acte-pk')) && !cart.has(id)) {
-            e.preventDefault();
-            sipnToast(acteConflictMessage(card), 'warning');
-            return;
+        serverAdd(card, function(d){
+          cart.set(id, cartItemFromCard(card, id, d));
+          cardState(id);
+          applyCartCoverage(d);
+          renderCart();
+          if (typeof d.cart_count !== 'undefined') syncCartBadges(d.cart_count);
+        }, function(err){
+          if (err && err.detail && err.detail.error === 'acte_already_in_cart') {
+            sipnToast(err.detail.message || acteConflictMessage(card), 'warning');
+          } else {
+            sipnToast('Impossible d’ajouter au panier. Réessayez ou ouvrez la fiche offre.', 'error');
           }
-          toggle(e);
+          refreshActeLocks();
+          cardState(id);
         });
-        var mchk = card.querySelector('.scard-m-checkbox');
-        if (mchk) {
-          mchk.addEventListener('click', function(e){ e.stopPropagation(); });
-          mchk.addEventListener('change', function(e){
-            e.stopPropagation();
-            if (isPaBlockedByOtherStructure(id, card.getAttribute('data-pa-acte-pk')) && !cart.has(id)) {
-              mchk.checked = false;
-              sipnToast(acteConflictMessage(card), 'warning');
-              return;
-            }
-            toggle(e);
-          });
+      }
+    }
+
+    function syncAllCartCardStates(){
+      document.querySelectorAll('.scard[data-pa-id], .scard-m-acte[data-pa-id], .acte-item[data-pa-id]').forEach(function(card){
+        var id = card.getAttribute('data-pa-id');
+        if (id) cardState(id);
+      });
+    }
+
+    function initCartCardDelegation(){
+      var root = document.getElementById('layout-body');
+      if (!root || root.getAttribute('data-sipn-cart-delegation') === '1') return;
+      root.setAttribute('data-sipn-cart-delegation', '1');
+      root.addEventListener('click', function(e){
+        var t = e.target;
+        if (!t || !t.closest) return;
+        if (t.closest('.profil-drawer-trigger, .scard-m-profile-btn, .scard-btn-trajet, .scard-btn-secondary, .org-preview-trigger, .scm-cta, [data-sipn-open-comp-panel], .scard-btn-trajet--inline')) return;
+        var card = t.closest('.scard-m-acte[data-pa-id], .scard[data-pa-id], .acte-item[data-pa-id]');
+        if (!card || card.getAttribute('data-ambulance-acte') === '1') return;
+        if (t.closest('.scard-m-checkbox, .ai-check')) return;
+        var paId = card.getAttribute('data-pa-id');
+        if (isPaBlockedByOtherStructure(paId, card.getAttribute('data-pa-acte-pk')) && !cart.has(String(paId))) {
+          e.preventDefault();
+          sipnToast(acteConflictMessage(card), 'warning');
+          return;
         }
-        cardState(id);
-        return;
-      }
-      var chk = card.querySelector('.ai-check');
-      var acteRow = card.querySelector('.acte-item');
-      if (acteRow) {
-        acteRow.addEventListener('click', function(e){
-          if (e.target.classList.contains('ai-check')) return;
-          if (isPaBlockedByOtherStructure(id, card.getAttribute('data-pa-acte-pk')) && !cart.has(id)) {
-            e.preventDefault();
-            sipnToast(acteConflictMessage(card), 'warning');
-            return;
-          }
-          toggle(e);
-        });
-      }
-      if (chk) {
-        chk.addEventListener('click', function(e){ e.stopPropagation(); });
-        chk.addEventListener('change', function(e){
-          e.stopPropagation();
-          if (isPaBlockedByOtherStructure(id, card.getAttribute('data-pa-acte-pk')) && !cart.has(id)) {
-            chk.checked = false;
-            sipnToast(acteConflictMessage(card), 'warning');
-            return;
-          }
-          toggle(e);
-        });
-      }
-      cardState(id);
-    });
+        e.preventDefault();
+        toggleCartFromCard(card);
+      });
+      root.addEventListener('change', function(e){
+        var t = e.target;
+        if (!t || (!t.classList.contains('scard-m-checkbox') && !t.classList.contains('ai-check'))) return;
+        var card = t.closest('.scard-m-acte[data-pa-id], .scard[data-pa-id], .acte-item[data-pa-id]');
+        if (!card || card.getAttribute('data-ambulance-acte') === '1') return;
+        var paId = card.getAttribute('data-pa-id');
+        if (isPaBlockedByOtherStructure(paId, card.getAttribute('data-pa-acte-pk')) && !cart.has(String(paId))) {
+          t.checked = false;
+          sipnToast(acteConflictMessage(card), 'warning');
+          return;
+        }
+        e.stopPropagation();
+        toggleCartFromCard(card);
+      });
+    }
+
+    initCartCardDelegation();
+    syncAllCartCardStates();
     var cartClearBtn = document.getElementById('dem-cart-clear-btn');
     if (cartClearBtn) {
       cartClearBtn.addEventListener('click', function(e){
@@ -3754,6 +3745,7 @@
       checkMissingAfterCartUpdate();
     });
     window._sipnHydrateCart = hydrateCartFromServer;
+    window._sipnSyncCartCardStates = syncAllCartCardStates;
     window._sipnGetCartCount = function(){ return cart.size; };
     window._sipnRenderCart = renderCart;
     window._sipnOpenCompPanel = openCompPanel;
@@ -5587,6 +5579,11 @@
           oldMobileResults.innerHTML = newMobileResults.innerHTML;
         }
         
+        if (resultsWrap) {
+          resultsWrap.style.opacity = '';
+          resultsWrap.style.pointerEvents = '';
+        }
+        
         /* Mettre à jour l'URL seulement si ce n'est pas déjà fait (navigateActePool fait déjà pushState) */
         if (window.location.href !== url) {
           history.pushState({}, '', url);
@@ -5594,6 +5591,14 @@
         
         /* Réinitialiser les event listeners pour le nouveau contenu */
         reinitActeMultiSelect();
+        if (window._sipnHydrateCart) {
+          window._sipnHydrateCart(function(){
+            if (window._sipnSyncCartCardStates) window._sipnSyncCartCardStates();
+            if (window._sipnCheckMissingCart) window._sipnCheckMissingCart();
+          });
+        } else if (window._sipnSyncCartCardStates) {
+          window._sipnSyncCartCardStates();
+        }
       })
       .catch(function(error) {
         console.error('AJAX navigation error:', error);
@@ -6031,8 +6036,82 @@
         '<div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-top:1px solid var(--g200);margin-top:6px"><span style="font-weight:700;color:var(--g600)">Total estimé</span><span style="font-extrabold;color:var(--green-d)">' + money(r.total) + '</span></div>');
     }
     
+    function trajetToast(msg, level) {
+      if (window._sipnToast) window._sipnToast(msg, level);
+      else if (window.MedcareUI && typeof MedcareUI.toast === 'function') MedcareUI.toast(msg, { level: level || 'info' });
+      else alert(msg);
+    }
+
     function obtenirDevisTrajet() {
-      alert('Devis demandé - fonctionnalité à connecter au backend');
+      if (!TRAJET_STATE) {
+        trajetToast('Configurez d\'abord votre trajet.', 'warning');
+        return;
+      }
+      var st = TRAJET_STATE;
+      var r = computeTrajet();
+      var lines = [];
+      var configParts = [];
+      if (r.flow === 'trajet') {
+        var resume = (st.depart || 'Départ') + ' → ' + (st.arrivee || 'Arrivée') + ' · ' + r.km + ' km' + (st.allerRetour ? ' (A/R)' : '');
+        configParts.push(resume);
+        lines.push({ nom: st.acte + ' · ' + resume, price: r.base });
+        lines.push({ nom: 'Distance ' + r.km + ' km', price: r.coutKm });
+        if (r.coutEscales) lines.push({ nom: st.etapes.length + ' étape(s)', price: r.coutEscales });
+        if (r.nuit) lines.push({ nom: 'Nuit / week-end', price: r.nuit });
+      } else if (r.flow === 'rapatriement') {
+        var rapResume = (st.villeDep || 'Départ') + ' → ' + (st.villeArr || 'Arrivée') + ' · ' + st.mode + ' · ' + st.etatPatient;
+        configParts.push(rapResume);
+        if (r.surDevis) {
+          lines.push({ nom: st.acte + ' · ' + rapResume, price: 0 });
+        } else {
+          lines.push({ nom: st.acte + ' · ' + rapResume, price: r.base });
+          lines.push({ nom: 'Distance ' + r.km + ' km', price: r.coutKm });
+          if (r.aerien) lines.push({ nom: 'Supplément aérien', price: r.aerien });
+          if (r.nuit) lines.push({ nom: 'Nuit / week-end', price: r.nuit });
+        }
+      } else {
+        var dispo = Object.keys(st.equipe).filter(function(k){ return st.equipe[k]; }).join(', ');
+        var evtResume = (st.lieu || 'Site') + ' · ' + (st.dateE || 'date à définir') + ' · ' + st.duree + 'h · ' + st.effectif + ' pers.';
+        configParts.push(evtResume + (dispo ? ' · ' + dispo : ''));
+        lines.push({ nom: st.acte + ' · ' + evtResume, price: r.base });
+        lines.push({ nom: 'Présence ' + st.duree + 'h', price: r.coutHeures });
+        if (r.coutEquipe) lines.push({ nom: 'Renfort équipe médicale', price: r.coutEquipe });
+        if (r.majEffectif) lines.push({ nom: 'Majoration grand public', price: r.majEffectif });
+      }
+      var isAuthed = {% if user.is_authenticated %}true{% else %}false{% endif %};
+      if (!isAuthed) {
+        window.location.href = '{% url "users:login" %}?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+        return;
+      }
+      var csrf = (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value || '';
+      fetch('{% url "cart:ambulance_trajet_devis" %}', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRFToken': csrf,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+          org_id: st.structId,
+          acte_name: st.acte,
+          lines: lines,
+          total_patient: r.surDevis ? 0 : (r.total || 0),
+          sur_devis: !!r.surDevis,
+          config_summary: configParts.join(' · ')
+        })
+      })
+        .then(function(resp){ return resp.json().then(function(data){ return { ok: resp.ok, data: data }; }); })
+        .then(function(result){
+          if (!result.ok || !result.data || !result.data.ok) {
+            trajetToast((result.data && result.data.error) || 'Impossible d\'envoyer la demande de devis.', 'error');
+            return;
+          }
+          if (window.closeProfilStruct) window.closeProfilStruct();
+          window.location.href = result.data.redirect;
+        })
+        .catch(function(){ trajetToast('Erreur réseau. Réessayez.', 'error'); });
     }
     
     function openTrajetConfig(orgId, acteName, isCompPanel) {

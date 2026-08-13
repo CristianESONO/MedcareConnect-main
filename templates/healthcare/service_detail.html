@@ -1,43 +1,62 @@
 {% extends "base.html" %}
-{% block title %}{{ service.name }}{% endblock %}
+{% load static %}
+{% block title %}{{ service.display_icon }} {{ service.display_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=6">
+<link rel="stylesheet" href="{% static 'healthcare/css/service_catalog_public.css' %}?v=1">
+{% endblock %}
+
 {% block content %}
-<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <h1 class="text-2xl font-bold text-gray-900">{{ service.name }}</h1>
-    {% if service.description %}<p class="mt-2 text-gray-500">{{ service.description }}</p>{% endif %}
-
-    <div class="mt-8 grid gap-8 lg:grid-cols-3">
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 svc-catalog-page">
+    <div class="grid gap-8 lg:grid-cols-3">
         <div class="lg:col-span-2">
-            <h2 class="text-lg font-semibold text-gray-900">Actes disponibles</h2>
-
-            <form method="GET" class="mt-4">
-                <div class="relative">
-                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    <input
-                        type="text"
-                        name="search"
-                        value="{{ search_query|default:'' }}"
-                        placeholder="Rechercher un acte..."
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                    >
-                </div>
-            </form>
-
-            <div class="mt-4 rounded-xl border border-gray-200 bg-white divide-y divide-gray-100">
-                {% for acte in actes %}
-                <div class="px-5 py-3">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-900">{{ acte.name }}</p>
-                        <span class="rounded-full bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-600">
-                            {% if acte.parent_service %}{{ acte.parent_service.name }}{% else %}{{ acte.get_level_display }}{% endif %}
+            <div class="cat-card">
+                <div class="cat-card-body">
+                    <div class="cat-toolbar svc-catalog-toolbar">
+                        <span class="cat-toolbar-pilier svc-catalog-pilier-title">
+                            {{ service.display_icon }} {{ service.display_name|upper }}
                         </span>
+                        <div class="flex-1"></div>
+                        <input type="search" class="cat-search js-svc-search" placeholder="Rechercher un acte…" aria-label="Rechercher un acte">
+                        <select class="cat-cat-select js-svc-cat" aria-label="Filtrer par catégorie">
+                            <option value="">Toutes catégories</option>
+                            {% for cat in category_options %}
+                            <option value="{{ cat }}">{{ cat }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    {% if acte.description %}<p class="mt-0.5 text-xs text-gray-400">{{ acte.description }}</p>{% endif %}
+
+                    <div class="overflow-x-auto">
+                        <table class="catalogue-table js-svc-table">
+                            <thead>
+                                <tr>
+                                    <th>Acte</th>
+                                    <th>Catégorie</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in acte_rows %}
+                                <tr class="js-svc-row" data-cat="{{ row.category }}" data-search="{{ row.display_name|default:row.acte.name|lower }}">
+                                    <td>
+                                        <div class="cat-acte-name">{{ row.display_name|default:row.acte.name }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="cat-cat-badge">{{ row.category }}</span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="py-8 text-center text-sm text-gray-400">Aucun acte enregistré pour ce pilier.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {% empty %}<p class="px-5 py-8 text-center text-sm text-gray-400">Aucun acte enregistré.</p>{% endfor %}
             </div>
         </div>
+
         <div>
             <h2 class="text-lg font-semibold text-gray-900">Prestataires</h2>
             <div class="mt-4 space-y-3">
@@ -46,9 +65,30 @@
                     <p class="font-medium text-gray-900">{{ org.name }}</p>
                     <p class="text-xs text-gray-400">{{ org.city }}</p>
                 </a>
-                {% empty %}<p class="text-sm text-gray-400">Aucun prestataire pour ce service.</p>{% endfor %}
+                {% empty %}
+                <p class="text-sm text-gray-400">Aucun prestataire pour ce service.</p>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
+<script>
+(function(){
+  var search = document.querySelector('.js-svc-search');
+  var catSel = document.querySelector('.js-svc-cat');
+  var rows = document.querySelectorAll('.js-svc-row');
+  function applyFilter(){
+    var q = (search && search.value || '').toLowerCase().trim();
+    var cat = catSel ? catSel.value : '';
+    rows.forEach(function(row){
+      var okQ = !q || (row.getAttribute('data-search') || '').indexOf(q) !== -1;
+      var okC = !cat || row.getAttribute('data-cat') === cat;
+      row.hidden = !(okQ && okC);
+    });
+  }
+  if (search) search.addEventListener('input', applyFilter);
+  if (catSel) catSel.addEventListener('change', applyFilter);
+})();
+</script>
 {% endblock %}

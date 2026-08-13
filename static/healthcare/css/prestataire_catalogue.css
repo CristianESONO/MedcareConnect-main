@@ -115,6 +115,9 @@
 .pilier-tab-label {
   margin-top: 4px;
   line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 10px;
 }
 .pilier-tab-count {
   margin-top: 4px;

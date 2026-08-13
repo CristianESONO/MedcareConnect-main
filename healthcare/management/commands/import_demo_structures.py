@@ -791,9 +791,8 @@ class Command(BaseCommand):
             if user.user_type != 'prestataire':
                 user.user_type = 'prestataire'
                 user.save(update_fields=['user_type'])
-            if user_created:
-                user.set_password('demo123')
-                user.save()
+            user.set_password('medcare2024')
+            user.save(update_fields=['password'])
 
             # Créer ou mettre à jour l'organisme
             org, created = OrganismeDeSante.objects.update_or_create(

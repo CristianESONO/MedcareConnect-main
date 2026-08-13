@@ -132,6 +132,53 @@
   margin-top: 5px;
   flex-wrap: wrap;
 }
+.profil-drawer-hours-inline {
+  margin-top: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.profil-drawer-cat-head-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.profil-drawer-horaires-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.profil-drawer-horaires-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.profil-drawer-horaires-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 11px;
+}
+.profil-drawer-horaires-line--today {
+  font-weight: 700;
+  color: #0a5c8a;
+}
+.profil-drawer-today-tag {
+  font-size: 9px;
+  background: #e8f4fb;
+  padding: 1px 5px;
+  border-radius: 10px;
+  color: #0a5c8a;
+  font-weight: 600;
+}
 .profil-drawer-sub {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.72);
@@ -517,6 +564,44 @@
   background: #0ea870;
   transform: translateY(-1px);
 }
+
+/* Ambulance — fiche annuaire (alignée drawer recherche) */
+.profil-drawer-amb-hint {
+  font-size: 10px;
+  color: #0a5c8a;
+  background: #e8f4fb;
+  border: 1px solid #bfdbfe;
+  border-radius: 7px;
+  padding: 7px 10px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.profil-drawer-trajet-config {
+  margin-bottom: 14px;
+}
+.profil-pa-row--ambulance:hover {
+  background: #e8f4fb;
+}
+.profil-pa-amb-note {
+  font-size: 9px;
+  color: #0a5c8a;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.profil-pa-prix--amb {
+  color: #0a5c8a;
+}
+.profil-pa-delai--amb {
+  color: #0891b2;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.profil-drawer-empty {
+  padding: 20px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
 </style>
 {% endblock %}
 
@@ -540,169 +625,11 @@
       </div>
 
       <div class="profil-drawer-head-body">
-        <div class="profil-drawer-identity">
-          <div class="profil-drawer-avatar">
-            {% if org.logo %}
-              <img src="{{ org.logo.url }}" alt="{{ org.name }}">
-            {% else %}
-              🏥
-            {% endif %}
-          </div>
-          <div style="min-width:0;flex:1">
-            <div class="profil-drawer-name-row">
-              <span class="profil-drawer-name">{{ org.name }}</span>
-              {% if show_pioneer_badge %}
-              <span class="profil-drawer-pioneer">⭐ Pionnier</span>
-              {% endif %}
-            </div>
-            <div class="profil-drawer-meta-row">
-              <span class="profil-drawer-sub">
-                {{ org.type_organisme.name|default:"Structure de santé" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}
-              </span>
-              {% if open_today %}
-              <span class="profil-drawer-open-badge profil-drawer-open-badge--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
-                <span class="profil-drawer-open-dot"></span>
-                {% if open_today == 'open' %}Ouvert{% else %}Fermé{% endif %}
-              </span>
-              {% endif %}
-            </div>
-            <div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:4px">
-              <span>🕐</span>
-              <span>{% if hours_meta %}{{ hours_meta }}{% else %}Lun–Sam : 07h00–19h00 · Dim : 08h00–13h00{% endif %}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="profil-drawer-actions">
-          <button type="button" class="profil-drawer-action-btn" onclick="scrollToActesSection()">📅 RDV</button>
-          <button type="button" class="profil-drawer-action-btn" onclick="openGpsMaps()">📍 GPS</button>
-          <button type="button" class="profil-drawer-action-btn" onclick="toggleHorairesPop()">🕐 Horaires</button>
-        </div>
-
-        <!-- Horaires Popover -->
-        <div id="horaires-pop" class="profil-drawer-horaires-pop" hidden>
-          <div style="font-weight:700;color:#1a3a6e;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
-            <span class="profil-drawer-horaires-title" style="margin-bottom:0">🕐 Horaires d'ouverture</span>
-            <span onclick="toggleHorairesPop()" style="cursor:pointer;color:#9ca3af;font-weight:bold;font-size:14px">&times;</span>
-          </div>
-          {% for hour in hours_list %}
-            <div class="profil-drawer-horaires-line" style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;{% if hour.is_today %}font-weight:bold;color:#0a5c8a;{% endif %}">
-              <span>{{ hour.day_label|default:hour.day }} {% if hour.is_today %}<span style="font-size:9px;background:#e8f4fb;padding:1px 5px;border-radius:10px;color:#0a5c8a">Aujourd'hui</span>{% endif %}</span>
-              <span>{% if hour.closed %}Fermé{% else %}{{ hour.hours }}{% endif %}</span>
-            </div>
-          {% empty %}
-            <div class="profil-drawer-horaires-line">{{ hours_meta|default:"Horaires non renseignés" }}</div>
-          {% endfor %}
-          {% if open_today %}
-          <div class="profil-drawer-horaires-status profil-drawer-horaires-status--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
-            {% if open_today == 'open' %}● Ouvert maintenant{% else %}● Fermé actuellement{% endif %}
-          </div>
-          {% endif %}
-        </div>
-
-
+        {% include "healthcare/partials/organisme_fiche_header_inner.html" with fiche_embedded=False %}
       </div>
     </div>
 
-    <!-- Body Section -->
-    <div class="profil-drawer-body">
-      {% if org.description %}
-      <p class="profil-drawer-desc">{{ org.description }}</p>
-      {% endif %}
-
-      {% if patient_insurance_match %}
-      <div class="profil-drawer-ins-match">
-        <span aria-hidden="true">✅</span>
-        <span>Votre assurance <strong>{{ patient_insurance_match }}</strong> est acceptée ici.</span>
-      </div>
-      {% endif %}
-
-      {% if insurances_profil %}
-      <button type="button" class="profil-drawer-assur-toggle" onclick="toggleAssurDrop()">
-        <span>🛡 Assurances acceptées ({{ insurances_profil|length }})</span>
-        <span id="assur-caret">▼</span>
-      </button>
-      <div id="assur-list" class="profil-drawer-assur-list" hidden>
-        {% for ins in insurances_profil %}
-        <div class="profil-drawer-assur-row{% if ins.patient_match %} profil-drawer-assur-row--match{% endif %}">
-          <span>{% if ins.patient_match %}✓ {% endif %}{{ ins.name }}</span>
-          {% if ins.patient_match %}<span class="profil-drawer-assur-tag">Acceptée pour vous</span>{% endif %}
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-
-      {% if org.prises_sang_domicile %}
-      <div class="profil-drawer-domicile">
-        <div class="profil-drawer-domicile-title">🏠 Prélèvement à domicile disponible</div>
-        {% if org.horaires_complement %}
-        <div class="profil-drawer-domicile-sub">{{ org.horaires_complement }}</div>
-        {% endif %}
-      </div>
-      {% endif %}
-
-      <!-- Actes disponibles -->
-      <div id="actes-section" class="profil-drawer-actes-label">Actes disponibles</div>
-      <div class="profil-drawer-actes-search">
-        <input id="profil-acte-search" type="search" placeholder="Rechercher un acte…" autocomplete="off" oninput="filterProfilActes(this.value)">
-        <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)">🔍</button>
-      </div>
-
-      <div class="profil-drawer-actes-list">
-        {% for pillar in profil_pillars %}
-        <div class="pa-cat profil-drawer-cat">
-          <div class="profil-drawer-cat-head" onclick="togglePillarCollapse(this)">
-            <span>{% if pillar.icon and pillar.icon not in pillar.name %}{{ pillar.icon }} {% endif %}{{ pillar.name }}</span>
-            <div style="display:flex;align-items:center;gap:8px">
-              <span class="profil-drawer-cat-count">{{ pillar.count }}</span>
-              <span class="profil-drawer-cat-arrow">▼</span>
-            </div>
-          </div>
-          <div class="profil-drawer-cat-body">
-          {% for pa in pillar.actes %}
-          <div class="pa-row profil-pa-row"
-            data-nom="{{ pa.acte.name|lower }}"
-            data-acte-name="{{ pa.acte.name|escape }}"
-            data-price="{{ pa.price|floatformat:0 }}"
-            onclick="toggleActeSelection(this)">
-            <input type="checkbox" class="pa-check" onclick="event.stopPropagation(); toggleActeSelection(this.closest('.pa-row'))" aria-label="Sélectionner {{ pa.acte.name }}">
-            <div class="profil-pa-info">
-              <div class="profil-pa-nom">{{ pa.acte.name }}</div>
-              {% if pa.acte.parent_service or pa.acte.service_medical_category %}
-              <div class="profil-pa-cat-label">
-                {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% else %}{{ pa.acte.service_medical_category.name }}{% endif %}
-              </div>
-              {% endif %}
-            </div>
-            <div class="profil-pa-right">
-              {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
-              <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} FCFA</div>
-            </div>
-          </div>
-          {% endfor %}
-          </div>
-        </div>
-        {% empty %}
-        <p style="padding: 20px; text-align: center; color: #9ca3af; font-size: 13px;">Aucun acte publié pour cette structure.</p>
-        {% endfor %}
-      </div>
-
-      <!-- Recap Box (Dynamic) -->
-      <div id="profil-panier-recap" class="profil-panier-recap-box" style="display:none;">
-        <div class="profil-panier-title">🛒 Sélection (0 acte)</div>
-        <div id="profil-panier-items"></div>
-        <div class="profil-panier-total-row">
-          <span style="font-size: 12px; font-weight: 600; color: #0a5c8a;">Total estimé</span>
-          <span id="profil-panier-total" style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #0a5c8a;">0 FCFA</span>
-        </div>
-      </div>
-
-      <!-- WhatsApp Devis Button -->
-      <button type="button" class="profil-devis-btn" onclick="sendWhatsappDevis()">
-        💬 Obtenir mon devis WhatsApp
-      </button>
-    </div>
+    {% include "healthcare/partials/organisme_fiche_body.html" with fiche_embedded=False %}
 
   </div>
 </div>
@@ -819,25 +746,66 @@ function updateCartRecap() {
   totalEl.textContent = `${total.toLocaleString('fr-FR')} FCFA`;
 }
 
-// WhatsApp Devis sender
-function sendWhatsappDevis() {
-  const phone = "{{ org.whatsapp_number|default:org.contact_phone|default:'' }}".replace(/[^0-9]/g, '');
-  const targetPhone = phone || "221781673189";
-  
-  let msg = `Bonjour {{ org.name }},\nJe souhaite obtenir des informations sur vos prestations sur MedCare.`;
-  
-  if (selectedActes.length > 0) {
-    msg = `Bonjour {{ org.name }},\nJe souhaite obtenir un devis pour les actes suivants :\n`;
-    let total = 0;
-    selectedActes.forEach(a => {
-      msg += `• ${a.name} : ${a.price.toLocaleString('fr-FR')} FCFA\n`;
-      total += a.price;
-    });
-    msg += `\nTotal estimé : ${total.toLocaleString('fr-FR')} FCFA\nMerci !`;
+// WhatsApp Devis → panier patient (chariot)
+function getCsrfToken() {
+  var el = document.querySelector('[name=csrfmiddlewaretoken]');
+  return el ? el.value : '';
+}
+
+function requestFicheDevis() {
+  var checked = document.querySelectorAll('.profil-pa-row .pa-check:checked');
+  var paIds = [];
+  checked.forEach(function(chk) {
+    var row = chk.closest('.profil-pa-row');
+    if (row && row.getAttribute('data-pa-id')) {
+      paIds.push(row.getAttribute('data-pa-id'));
+    }
+  });
+  if (!paIds.length) {
+    alert('Sélectionnez au moins un acte pour demander un devis.');
+    return;
   }
-  
-  const waUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`;
-  window.open(waUrl, '_blank');
+  {% if not user.is_authenticated %}
+  window.location.href = '{% url "users:login" %}?next={{ request.get_full_path|urlencode }}';
+  return;
+  {% elif not user.is_patient %}
+  alert('Seuls les comptes patient peuvent demander un devis via MedCare.');
+  return;
+  {% endif %}
+  var formData = new FormData();
+  formData.append('org_slug', '{{ org.slug }}');
+  paIds.forEach(function(id) { formData.append('actes', id); });
+  var btn = document.querySelector('.profil-devis-btn');
+  if (btn) btn.disabled = true;
+  fetch('{% url "cart:cart_fiche_request_devis" %}', {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCsrfToken(),
+      'X-Requested-With': 'XMLHttpRequest',
+      Accept: 'application/json',
+    },
+    body: formData,
+    credentials: 'same-origin',
+  })
+    .then(function(resp) {
+      return resp.json().then(function(data) {
+        if (!resp.ok || !data.ok) {
+          throw new Error((data && data.error) || 'Impossible de préparer votre devis.');
+        }
+        if (data.redirect) {
+          window.location.href = data.redirect;
+          return;
+        }
+        throw new Error('Réponse inattendue du serveur.');
+      });
+    })
+    .catch(function(err) {
+      if (btn) btn.disabled = false;
+      alert(err.message || 'Une erreur est survenue.');
+    });
 }
 </script>
+{% if org.is_ambulance_service %}
+{% include "healthcare/partials/ambulance_trajet_config_script.html" with auto_init_org_id=org.pk %}
+{% endif %}
 {% endblock %}

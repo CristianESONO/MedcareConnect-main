@@ -2240,22 +2240,26 @@ def organisme_profil_drawer(request, org_id):
 def service_detail(request, slug):
     service = get_object_or_404(ServiceMedical, slug=slug, is_active=True)
 
-    search_query = request.GET.get('search', '').strip()
-    actes_qs = ActeMedical.objects.filter(
-        service_medical_category=service, is_active=True,
-    ).select_related("parent_service")
+    from healthcare.prestataire_catalogue import (
+        service_actes_catalog_rows,
+        service_actes_catalog_subgroups,
+    )
 
-    if search_query:
-        actes_qs = actes_qs.filter(name__icontains=search_query)
-
-    actes = actes_qs.order_by("level", "name")
+    acte_subgroups = service_actes_catalog_subgroups(service)
+    acte_rows = service_actes_catalog_rows(service)
+    category_options = [sg["label"] for sg in acte_subgroups]
 
     providers = OrganismeDeSante.objects.filter(
         prestataire_actes__acte__service_medical_category=service,
         is_active=True,
     ).distinct().select_related("type_organisme")[:20]
 
-    context = {"service": service, "actes": actes, "providers": providers, "search_query": search_query}
+    context = {
+        "service": service,
+        "acte_rows": acte_rows,
+        "category_options": category_options,
+        "providers": providers,
+    }
     return render(request, "healthcare/service_detail.html", context)
 
 

@@ -6,10 +6,10 @@ from __future__ import annotations
 # Nom exact des piliers MedCare (catalog_pillars.PILLARS_FROM_DOCS)
 SERVICE_MEDICAL_ICONS: dict[str, str] = {
     "Biologie médicale": "🧬",
-    "Imagerie médicale": "🩻",
+    "Imagerie médicale": "🖥",
     "Explorations fonctionnelles": "⚡",
     "Ambulance médicalisée": "🚑",
-    "Soins spécialisés": "💉",
+    "Soins spécialisés": "🩺",
     "Soins dentaires": "🦷",
 }
 
@@ -21,6 +21,16 @@ _SERVICE_ALIASES: dict[str, str] = {
 }
 
 DEFAULT_SERVICE_ICON = "🏥"
+
+# Slugs des 6 piliers — icônes affichage (prioritaires sur le champ DB)
+OFFICIAL_PILIER_ICONS_BY_SLUG: dict[str, str] = {
+    "biologie-medicale": "🧬",
+    "imagerie-medicale": "🖥",
+    "explorations-fonctionnelles": "⚡",
+    "ambulance-medicalisee": "🚑",
+    "soins-specialises": "🩺",
+    "soins-dentaires": "🦷",
+}
 
 # Libellés compacts grille mobile (démo MOBILE PATIENT)
 SERVICE_MOBILE_SHORT: dict[str, tuple[str, str]] = {
@@ -122,9 +132,12 @@ def icon_for_service_name(name: str) -> str:
 
 
 def icon_for_service_medical(service) -> str:
-    """Retourne l'icône DB si renseignée, sinon le mapping pilier MedCare."""
+    """Retourne l'icône pilier officielle (slug), sinon DB, sinon mapping nom."""
     if service is None:
         return DEFAULT_SERVICE_ICON
+    slug = (getattr(service, "slug", None) or "").strip()
+    if slug in OFFICIAL_PILIER_ICONS_BY_SLUG:
+        return OFFICIAL_PILIER_ICONS_BY_SLUG[slug]
     stored = (getattr(service, "icon", None) or "").strip()
     if stored:
         return stored[:12]

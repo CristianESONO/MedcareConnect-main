@@ -12,6 +12,7 @@ urlpatterns = [
     path("add/<int:pk>/", views.cart_add, name="cart_add"),
     path("add-bundle/", views.cart_add_bundle, name="cart_add_bundle"),
     path("fiche-devis/", views.cart_fiche_request_devis, name="cart_fiche_request_devis"),
+    path("ambulance-trajet-devis/", views.ambulance_trajet_devis, name="ambulance_trajet_devis"),
     path("remove-pa/<int:pa_id>/", views.cart_remove_pa, name="cart_remove_pa"),
     path("guest/remove/<int:pa_id>/", views.guest_cart_remove, name="guest_cart_remove"),
     path("guest/update/<int:pa_id>/", views.guest_cart_update_quantity, name="guest_cart_update_quantity"),

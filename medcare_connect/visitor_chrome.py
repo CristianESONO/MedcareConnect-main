@@ -42,13 +42,7 @@ def is_prestataire_search_request(request):
 
 def use_visitor_chrome(request):
     """Chrome medcare.sn (header drawer + footer vitrine)."""
-    if not request.user.is_authenticated:
-        return True
-    if getattr(request.user, "is_patient", False):
-        return True
-    if is_prestataire_search_request(request):
-        return True
-    return is_vitrine_request(request)
+    return True
 
 
 def get_footer_pillars():
