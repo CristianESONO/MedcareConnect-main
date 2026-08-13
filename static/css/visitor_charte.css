@@ -892,17 +892,17 @@ input:checked + .mc-toggle-track {
 
 .mc-how-step-label {
   display: block;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mc-text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .mc-how-step-heading h3 {
   font-family: var(--mc-font-display);
-  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+  font-size: clamp(1.3rem, 2.8vw, 1.75rem);
   font-weight: 700;
   color: var(--mc-navy);
   margin: 0;
@@ -912,15 +912,15 @@ input:checked + .mc-toggle-track {
 .mc-how-step-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px 50px;
+  gap: 32px 36px;
   align-items: center;
 }
 
 .mc-how-step-text p {
-  color: var(--mc-text-body);
-  font-size: 15px;
-  line-height: 1.65;
-  margin: 18px 0 0;
+  color: var(--mc-navy);
+  font-size: 16.5px;
+  line-height: 1.7;
+  margin: 16px 0 0;
 }
 
 .mc-how-feats {
@@ -936,10 +936,10 @@ input:checked + .mc-toggle-track {
   display: flex;
   gap: 11px;
   align-items: flex-start;
-  font-size: 14.5px;
-  color: var(--mc-text);
-  font-weight: 500;
-  line-height: 1.45;
+  font-size: 16px;
+  color: var(--mc-navy);
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .mc-how-feat-check {

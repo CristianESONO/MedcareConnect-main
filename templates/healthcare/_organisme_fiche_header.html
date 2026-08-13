@@ -70,6 +70,7 @@
       {% elif open_today == "closed" %}
       <span class="pp-status pp-status--closed"><span class="pp-status-dot"></span> Fermé</span>
       {% endif %}
+      {% if show_pioneer_badge %}<span class="pioneer-badge sipn-ico-inline" style="margin-left: 6px;">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>{% endif %}
     </div>
     {% include "healthcare/_organisme_fiche_hours_card.html" %}
     {% if practical_chips %}

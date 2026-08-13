@@ -40,9 +40,9 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           <div id="search-input-inner" class="sipn-search-input-wrap" data-dem-slot="acte">
             <div id="ac-box" class="sipn-ac-box">
               <span class="sipn-search-emoji" aria-hidden="true">🔬</span>
-              <input type="search" name="q" id="search-q" value="{{ query }}" autocomplete="off" inputmode="search"
+              <input type="text" name="q" id="search-q" value="{{ query }}" autocomplete="off" inputmode="search"
                 placeholder="NFS, Scanner cérébral, Échographie, Spermogramme…"
-                class="sipn-search-input"
+                class="sipn-search-input border-0 outline-none focus:outline-none focus:ring-0 focus:border-transparent shadow-none"
                 aria-label="Rechercher un acte médical">
               {% if query %}
               <button type="button" id="btn-clear-q" class="sipn-search-clear" title="Effacer" aria-label="Effacer la recherche">

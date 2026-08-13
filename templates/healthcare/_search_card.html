@@ -1,5 +1,7 @@
 {% comment %}Carte offre prestation — structure alignée démo desktop (grille actes).{% endcomment %}
+{% load healthcare_display %}
 <article class="scard fade-in"
+  {% if not pa.organisme.is_ambulance_service %}
   data-pa-id="{{ pa.pk }}"
   data-pa-acte-pk="{{ pa.acte.pk }}"
   data-pa-acte="{{ pa.acte.name|escape }}"
@@ -9,7 +11,10 @@
   data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
   data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
   data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
-  data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}">
+  data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
+  {% else %}
+  data-org-id="{{ pa.organisme.pk }}"
+  {% endif %}>
 
   <div class="scard-top">
     <div class="scard-left min-w-0">
@@ -44,6 +49,15 @@
   </div>
 
   <div class="scard-actes">
+    {% if pa.organisme.is_ambulance_service %}
+    <div class="scard-actes-title">
+      <span>Tarif indicatif</span>
+      {% if pa.dem_org_catalog_count %}
+      <span class="scard-actes-count">{{ pa.dem_org_catalog_count }} service{{ pa.dem_org_catalog_count|pluralize }} au catalogue</span>
+      {% endif %}
+    </div>
+    {% include "healthcare/_ambulance_acte_desktop.html" with org=pa.organisme show_configure_btn=False %}
+    {% else %}
     <div class="scard-actes-title">
       <span>Tarif pour cet acte</span>
       {% if pa.dem_org_catalog_count %}
@@ -65,6 +79,7 @@
       {% endif %}
       <div class="ai-prix">{{ pa.price|floatformat:0 }} FCFA</div>
     </div>
+    {% endif %}
   </div>
 
   <div class="scard-footer">
@@ -83,17 +98,12 @@
     <div class="scard-footer-actions">
       {% if pa.organisme.is_ambulance_service %}
       <button type="button" class="scard-btn-trajet" onclick="event.stopPropagation();openTrajetConfig('{{ pa.organisme.pk }}', '{{ pa.acte.name|escapejs }}')">
-        {% if 'couverture' in query|lower or 'événement' in query|lower or 'evenement' in query|lower or 'assistance' in query|lower or 'manifestation' in query|lower or 'couverture' in pa.acte.name|lower %}
-          🩺 Configurer ma couverture
-        {% elif 'rapatriement' in query|lower or 'évacuation' in query|lower or 'evacuation' in query|lower or 'rapatriement' in pa.acte.name|lower %}
-          🌍 Organiser le rapatriement
-        {% else %}
-          🚑 Configurer mon trajet
-        {% endif %}
+        {{ pa.acte.name|ambulance_btn_label }}
       </button>
-      {% endif %}
+      {% else %}
       <button type="button" class="scard-btn-secondary profil-drawer-trigger" data-org-id="{{ pa.organisme.pk }}">Voir profil</button>
       <div class="scard-total"><span class="scard-total-inner sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xs" %}<span class="scard-total-text"></span></span></div>
+      {% endif %}
     </div>
   </div>
 </article>

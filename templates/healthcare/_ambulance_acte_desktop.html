@@ -1,0 +1,46 @@
+{% load healthcare_display %}
+{% comment %}
+Ligne acte ambulance — sans panier, ouvre le drawer configurateur.
+Variables : pa, org (Organisme)
+{% endcomment %}
+{% ambulance_sur_devis_for pa.acte.name pa.price as amb_sur_devis %}
+<div class="acte-item acte-item--ambulance"
+  data-ambulance-acte="1"
+  data-pa-id="{{ pa.pk }}"
+  data-pa-acte-pk="{{ pa.acte.pk }}"
+  data-pa-acte="{{ pa.acte.name|escape }}"
+  data-pa-org="{{ org.name|escape }}"
+  data-pa-org-id="{{ org.pk }}"
+  data-pa-price="{{ pa.price|floatformat:0 }}"
+  data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+  role="button" tabindex="0"
+  aria-label="{{ pa.acte.name|ambulance_btn_label }}">
+  <div class="ai-info min-w-0">
+    <div class="ai-nom">{{ pa.acte.name }}</div>
+    {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+    <div class="ai-cat">
+      {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% elif pa.acte.service_medical_category %}{{ pa.acte.service_medical_category.name }}{% endif %}
+    </div>
+    {% endif %}
+    <div class="amb-acte-sub">🚑 Tarif selon le trajet, à configurer</div>
+  </div>
+  {% if pa.delai %}
+  <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
+  {% endif %}
+  <div class="ai-prix ai-prix--amb">
+    {% if amb_sur_devis %}
+    <span class="amb-price-lbl">Tarif</span>Sur devis
+    {% else %}
+    <span class="amb-price-lbl">À partir de</span>{{ pa.price|floatformat:0 }} FCFA
+    {% endif %}
+  </div>
+  {% if show_configure_btn|default:True %}
+  <button type="button" class="scard-btn-trajet scard-btn-trajet--inline"
+    onclick="event.stopPropagation();openTrajetConfig('{{ org.pk }}', '{{ pa.acte.name|escapejs }}')">
+    {{ pa.acte.name|ambulance_btn_label }}
+  </button>
+  {% endif %}
+</div>
+<div class="amb-acte-hint amb-acte-hint--{{ pa.acte.name|ambulance_flow }}">
+  🛰 {{ pa.acte.name|ambulance_hint }}
+</div>

@@ -1,0 +1,34 @@
+{% load healthcare_display %}
+{% comment %}Ligne acte ambulance mobile — sans panier.{% endcomment %}
+{% ambulance_sur_devis_for pa.acte.name pa.price as amb_sur_devis %}
+<div class="scard-m-acte--ambulance"
+  data-ambulance-acte="1"
+  data-pa-id="{{ pa.pk }}"
+  data-pa-acte-pk="{{ pa.acte.pk }}"
+  data-pa-acte="{{ pa.acte.name|escape }}"
+  data-pa-org="{{ org.name|escape }}"
+  data-pa-org-id="{{ org.pk }}"
+  data-pa-price="{{ pa.price|floatformat:0 }}"
+  data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+  data-pa-delai-rank="{{ pa.delai_rank }}"
+  {% if pa.distance_km %}data-pa-distance-km="{{ pa.distance_km }}"{% endif %}
+  data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}">
+  <div class="scard-m-acte-info">
+    <div class="scard-m-acte-nom">{{ pa.acte.name }}</div>
+    <div class="amb-acte-sub">🚑 Tarif selon le trajet, à configurer</div>
+    {% if pa.delai %}
+    <div class="scard-m-acte-meta">
+      <span class="scard-m-acte-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} Délai : {{ pa.get_delai_display }}</span>
+    </div>
+    {% endif %}
+  </div>
+  <div class="scard-m-acte-right">
+    <div class="scard-m-acte-prix scard-m-acte-prix--amb">
+      {% if amb_sur_devis %}Sur devis{% else %}À partir de {{ pa.price|floatformat:0 }} F{% endif %}
+    </div>
+    <button type="button" class="scard-btn-trajet scard-btn-trajet--mobile"
+      onclick="event.stopPropagation();openTrajetConfig('{{ org.pk }}', '{{ pa.acte.name|escapejs }}')">
+      {{ pa.acte.name|ambulance_btn_label }}
+    </button>
+  </div>
+</div>

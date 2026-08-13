@@ -11,7 +11,9 @@
       <ul class="mc-landing-nav-list">
         <li><a href="{% url 'home' %}" class="mc-landing-nav-link{% if rm.url_name == 'landing' or rm.url_name == 'home' or rm.url_name == 'medcare_sn' %} is-active{% endif %}">Accueil</a></li>
         <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">Annuaire</a></li>
+        {% if user.is_authenticated %}
         <li><a href="{% url 'healthcare:search' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">Prestations</a></li>
+        {% endif %}
         <li class="mc-landing-nav-dropdown" id="mcNavAboutDropdown">
           <button
             type="button"

@@ -26,8 +26,11 @@
   }
 
   function setTabActive(tab) {
-    qsa('.js-pac-nav').forEach(function (link) {
-      link.classList.toggle('active', link.getAttribute('data-pac-tab') === tab);
+    qsa('.pac-sidebar .sb-link, .mc-landing-drawer-link, .mc-landing-icon-btn, .mc-landing-nav-link').forEach(function (el) {
+      el.classList.remove('active', 'is-active');
+    });
+    qsa('.js-pac-nav[data-pac-tab="' + tab + '"]').forEach(function (link) {
+      link.classList.add('active', 'is-active');
     });
   }
 

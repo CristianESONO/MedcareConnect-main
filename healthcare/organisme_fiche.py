@@ -102,7 +102,7 @@ def build_profil_pillars(actes, is_ambulance: bool = False) -> tuple[list[dict],
     pillars = []
     for idx, (svc_name, group) in enumerate(services_with_actes.items(), start=1):
         svc = group[0].acte.service_medical_category if group else None
-        icon = "🚑" if is_ambulance else (svc.display_icon if svc else "🏥")
+        icon = "" if is_ambulance else (svc.display_icon if svc else "🏥")
         pillars.append(
             {
                 "id": f"p{idx}",

@@ -1,4 +1,5 @@
 {% comment %}Drawer profil structure — aligné DEMO_DESKTOP_PATIENT (sans contact).{% endcomment %}
+{% load healthcare_display %}
 <div class="profil-drawer-header" data-org-id="{{ org.id }}">
   <div class="profil-drawer-close-row">
     <button type="button" class="profil-drawer-close" onclick="closeProfilStruct()" aria-label="Fermer">✕</button>
@@ -31,7 +32,6 @@
       <button type="button" class="profil-drawer-action-btn" data-profil-focus-rdv>📅 RDV</button>
       <button type="button" class="profil-drawer-action-btn" data-maps-url="{{ maps_url|default:'#' }}" onclick="openMapsUrl(this)">📍 GPS</button>
       <button type="button" class="profil-drawer-action-btn" onclick="toggleHorairesPop()">🕐 Horaires</button>
-      <button type="button" class="profil-drawer-action-btn" onclick="toggleContactProfil()" id="contact-toggle-btn">📋 Contact</button>
     </div>
     <div id="horaires-pop" class="profil-drawer-horaires-pop" hidden>
       <div class="profil-drawer-horaires-title">🕐 Horaires d'ouverture</div>
@@ -45,12 +45,6 @@
         {% if open_today == 'open' %}● Ouvert maintenant{% else %}● Fermé actuellement{% endif %}
       </div>
       {% endif %}
-    </div>
-    <div id="profil-contact-card" style="display:none;margin-top:10px;background:rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;border:1px solid rgba(255,255,255,.18);font-size:11px;color:#fff">
-      <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:6px">Contact · {{ org.name }}</div>
-      {% if org.phone %}<div style="margin-bottom:3px">📞 {{ org.phone }}</div>{% endif %}
-      {% if org.whatsapp_number %}<div style="margin-bottom:3px">📱 {{ org.whatsapp_number }} (WhatsApp)</div>{% endif %}
-      {% if org.website %}<div>🌐 {{ org.website }}</div>{% endif %}
     </div>
   </div>
 </div>
@@ -92,22 +86,22 @@
   {% endif %}
 
   {% if org.is_ambulance_service %}
-  {# ── Configurateur de trajet (ambulance) ── #}
-  {# Build a JSON list of real act names from DB for JS to use #}
-  {% with ambulance_actes=actes %}
-  <div id="trajet-config-{{ org.pk }}" class="trajet-config-container mb-4"
-       data-org-id="{{ org.pk }}"
-       data-actes-json="[{% for pa in ambulance_actes %}&quot;{{ pa.acte.name|escapejs }}&quot;{% if not forloop.last %},{% endif %}{% endfor %}]">
+  <div id="trajet-config-{{ org.pk }}" class="profil-drawer-trajet-config trajet-config-container"
+       data-org-id="{{ org.pk }}">
     <div id="trajet-config-content-{{ org.pk }}"></div>
-  </div>
-  {% endwith %}
-
-  <div style="font-size:10.5px;color:#0a5c8a;background:#e8f4fb;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;margin-bottom:12px;line-height:1.4">
-    🚑 Les montants ci-dessous sont des points de départ. Le prix final dépend du trajet. Choisissez un service, puis configurez votre trajet ci-dessus pour obtenir votre devis.
   </div>
   {% endif %}
 
-  <div class="profil-drawer-actes-label">Actes disponibles</div>
+  <div class="profil-drawer-actes-label">
+    {% if org.is_ambulance_service %}Services &amp; tarifs indicatifs{% else %}Actes disponibles{% endif %}
+  </div>
+
+  {% if org.is_ambulance_service %}
+  <div class="profil-drawer-amb-hint">
+    🚑 Les montants ci-dessous sont des points de départ. Le prix final dépend du trajet. Cliquez sur un service, puis configurez votre trajet pour obtenir votre devis.
+  </div>
+  {% endif %}
+
   <div class="profil-drawer-actes-search">
     <input id="profil-acte-search" type="search" placeholder="Rechercher un acte…" autocomplete="off">
     <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)">🔍</button>
@@ -117,31 +111,31 @@
     {% for pillar in profil_pillars %}
     <div class="pa-cat profil-drawer-cat">
       <div class="profil-drawer-cat-head">
-        <span>{{ pillar.name }}</span>
+        <span>{% if pillar.icon %}{{ pillar.icon }} {% endif %}{{ pillar.name }}</span>
         <span class="profil-drawer-cat-count">{{ pillar.count }}</span>
       </div>
       {% for pa in pillar.actes %}
       {% if org.is_ambulance_service %}
-      <div class="acte-item pa-row profil-pa-row"
+      {% ambulance_sur_devis_for pa.acte.name pa.price as amb_sur_devis %}
+      <div class="pa-row profil-pa-row profil-pa-row--ambulance"
+        data-ambulance-acte="1"
         data-nom="{{ pa.acte.name|lower }}"
-        style="cursor:pointer;padding:10px 12px;border-bottom:1px solid #f3f4f6"
         onclick="focusTrajetActe('{{ pa.acte.name|escapejs }}', '{{ org.pk }}')">
-        <div class="ai-info">
-          <div class="ai-nom" style="font-weight:600;font-size:12px">{{ pa.acte.name }}</div>
-          <div style="font-size:10px;color:#0a5c8a;font-weight:600;margin-top:2px">🚑 Tarif selon le trajet, à configurer</div>
+        <div class="profil-pa-info">
+          <div class="profil-pa-nom">{{ pa.acte.name }}</div>
+          <div class="profil-pa-amb-note">🚑 Tarif selon le trajet, à configurer</div>
         </div>
-        <div style="text-align:right;flex-shrink:0">
-          {% if pa.price == 0 or "international" in pa.acte.name|lower %}
-          <div class="ai-prix" style="color:#0a5c8a;font-weight:700;font-size:12px">Sur devis</div>
-          <div class="ai-delai" style="color:#0891b2;font-weight:700;font-size:10px;margin-top:2px">Devis personnalisé →</div>
+        <div class="profil-pa-right">
+          {% if amb_sur_devis %}
+          <div class="profil-pa-prix profil-pa-prix--amb">Sur devis</div>
           {% else %}
-          <div class="ai-prix" style="color:#0a5c8a;font-weight:700;font-size:12px">À partir de {{ pa.price|floatformat:0 }} F</div>
-          <div class="ai-delai" style="color:#0891b2;font-weight:700;font-size:10px;margin-top:2px">Configurer →</div>
+          <div class="profil-pa-prix profil-pa-prix--amb">À partir de {{ pa.price|floatformat:0 }} F</div>
           {% endif %}
+          <div class="profil-pa-delai profil-pa-delai--amb">{% ambulance_configure_short_for pa.acte.name pa.price %}</div>
         </div>
       </div>
       {% else %}
-      <div class="acte-item pa-row profil-pa-row"
+      <div class="pa-row profil-pa-row"
         data-pa-id="{{ pa.pk }}"
         data-nom="{{ pa.acte.name|lower }}"
         data-pa-acte-pk="{{ pa.acte.pk }}"
@@ -155,17 +149,17 @@
         data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
         role="button" tabindex="0">
         <input type="checkbox" class="ai-check" aria-label="Sélectionner {{ pa.acte.name }}">
-        <div class="ai-info">
-          <div class="ai-nom">{{ pa.acte.name }}</div>
+        <div class="profil-pa-info">
+          <div class="profil-pa-nom">{{ pa.acte.name }}</div>
           {% if pa.acte.parent_service or pa.acte.service_medical_category %}
-          <div class="ai-cat">
+          <div class="profil-pa-cat-label">
             {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% else %}{{ pa.acte.service_medical_category.name }}{% endif %}
           </div>
           {% endif %}
         </div>
         <div class="profil-pa-right">
-          {% if pa.delai %}<div class="ai-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
-          <div class="ai-prix">{{ pa.price|floatformat:0 }} F</div>
+          {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+          <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} F</div>
         </div>
       </div>
       {% endif %}

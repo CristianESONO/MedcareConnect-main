@@ -26,6 +26,9 @@
   </div>
 
   {% for pa in block.items %}
+    {% if block.org.is_ambulance_service %}
+      {% include "healthcare/_ambulance_acte_mobile.html" with org=block.org %}
+    {% else %}
   <div class="scard-m-acte"
     data-pa-id="{{ pa.pk }}"
     data-pa-acte-pk="{{ pa.acte.pk }}"
@@ -55,6 +58,7 @@
     </div>
     <div class="scard-m-acte-prix">{{ pa.price|floatformat:0 }} F</div>
   </div>
+    {% endif %}
   {% endfor %}
 
   {% if block.missing_actes %}
@@ -83,6 +87,8 @@
     {% else %}
     <a href="#" class="scard-m-profile-btn dem-profil-link" data-org-slug="{{ block.org.slug }}" data-org-url="{% url 'healthcare:organisme_detail' slug=block.org.slug %}" aria-label="Voir le profil de {{ block.org.name }}">Profil →</a>
     {% endif %}
+    {% if not block.org.is_ambulance_service %}
     <div class="scard-m-cart-badge sipn-ico-inline" data-scard-m-cart-badge hidden></div>
+    {% endif %}
   </div>
 </article>

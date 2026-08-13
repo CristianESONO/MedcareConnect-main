@@ -47,49 +47,47 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
   {# ── Liste des actes proposés ── #}
   <div class="scard-actes">
     <div class="scard-actes-title">
+      {% if block.org.is_ambulance_service %}
+      <span>Tarif indicatif</span>
+      <span class="scard-actes-count">{{ block.items|length }} service{{ block.items|length|pluralize }} au catalogue</span>
+      {% else %}
       <span>Tarif{{ block.items|length|pluralize }} proposé{{ block.items|length|pluralize }}</span>
+      {% endif %}
     </div>
     {% for pa in block.items %}
-    <div class="acte-item"
-      data-pa-id="{{ pa.pk }}"
-      data-pa-acte-pk="{{ pa.acte.pk }}"
-      data-pa-acte="{{ pa.acte.name|escape }}"
-      data-pa-org="{{ pa.organisme.name|escape }}"
-      data-pa-org-id="{{ pa.organisme.pk }}"
-      data-pa-price="{{ pa.price|floatformat:0 }}"
-      data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
-      data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
-      data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
-      data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk }}"
-      role="button" tabindex="0"
-      aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
-      <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
-      <div class="ai-info min-w-0">
-        <div class="ai-nom">{{ pa.acte.name }}</div>
-        {% if pa.acte.parent_service or pa.acte.service_medical_category %}
-        <div class="ai-cat">
-          {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% elif pa.acte.service_medical_category %}{{ pa.acte.service_medical_category.name }}{% endif %}
+      {% if block.org.is_ambulance_service %}
+        {% include "healthcare/_ambulance_acte_desktop.html" with org=block.org %}
+      {% else %}
+      <div class="acte-item"
+        data-pa-id="{{ pa.pk }}"
+        data-pa-acte-pk="{{ pa.acte.pk }}"
+        data-pa-acte="{{ pa.acte.name|escape }}"
+        data-pa-org="{{ pa.organisme.name|escape }}"
+        data-pa-org-id="{{ pa.organisme.pk }}"
+        data-pa-price="{{ pa.price|floatformat:0 }}"
+        data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+        data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
+        data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+        data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
+        role="button" tabindex="0"
+        aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
+        <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
+        <div class="ai-info min-w-0">
+          <div class="ai-nom">{{ pa.acte.name }}</div>
+          {% if pa.acte.parent_service or pa.acte.service_medical_category %}
+          <div class="ai-cat">
+            {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% elif pa.acte.service_medical_category %}{{ pa.acte.service_medical_category.name }}{% endif %}
+          </div>
+          {% endif %}
         </div>
+        {% if pa.delai %}
+        <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
         {% endif %}
+        <div class="ai-prix">{{ pa.price|floatformat:0 }} F</div>
       </div>
-      {% if pa.delai %}
-      <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
       {% endif %}
-      <div class="ai-prix">{{ pa.price|floatformat:0 }} F</div>
-    </div>
     {% endfor %}
   </div>
-
-  {# ── Configurateur de trajet (ambulance) ── #}
-  {% if block.org.is_ambulance_service %}
-  <div id="trajet-config-{{ block.org.pk }}" class="trajet-config-container hidden" data-org-id="{{ block.org.pk }}">
-    <div class="trajet-config-header">
-      <span class="trajet-config-title">🚑 Configurer votre trajet</span>
-      <button type="button" class="trajet-config-close" onclick="closeTrajetConfig({{ block.org.pk }})">✕</button>
-    </div>
-    <div id="trajet-config-content-{{ block.org.pk }}"></div>
-  </div>
-  {% endif %}
 
   {# ── Actes manquants ── #}
   {% if block.missing_actes %}
@@ -119,25 +117,16 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
       {% endif %}
     </div>
     <div class="scard-footer-actions">
-      {% if block.org.is_ambulance_service %}
-      <button type="button" class="scard-btn-trajet" onclick="event.stopPropagation();openTrajetConfig('{{ block.org.pk }}', '{{ current_service_name|escapejs }}')">
-        {% if 'couverture' in query|lower or 'événement' in query|lower or 'evenement' in query|lower or 'assistance' in query|lower or 'manifestation' in query|lower or 'couverture' in current_service_name|lower %}
-          🩺 Configurer ma couverture
-        {% elif 'rapatriement' in query|lower or 'évacuation' in query|lower or 'evacuation' in query|lower or 'rapatriement' in current_service_name|lower %}
-          🌍 Organiser le rapatriement
-        {% else %}
-          🚑 Configurer mon trajet
-        {% endif %}
-      </button>
-      {% endif %}
       <button type="button" class="scard-btn-secondary profil-drawer-trigger"
         data-org-id="{{ block.org.pk }}">Voir profil</button>
+      {% if not block.org.is_ambulance_service %}
       <div class="scard-total">
         <span class="scard-total-inner sipn-ico-inline">
           {% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xs" %}
           <span class="scard-total-text"></span>
         </span>
       </div>
+      {% endif %}
     </div>
   </div>
 </article>

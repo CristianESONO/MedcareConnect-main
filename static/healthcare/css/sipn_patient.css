@@ -398,34 +398,97 @@ body.sipn-prestations #search-form .ct-value {
 }
 .sipn-search-input-wrap {
   display: block;
-  width: 100%;
+  width: 100% !important;
   min-width: 0;
 }
 .sipn-ac-box {
   position: relative;
-  width: 100%;
+  width: 100% !important;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 48px;
 }
 .sipn-search-emoji {
   position: absolute;
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1;
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
+}
+.tokenized-input-container {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 8px 4px 44px !important;
+  min-height: 48px;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  position: relative !important;
+}
+
+/* Supprimer toute bordure/outline/ring grise interne dans la zone de recherche */
+.sipn-search-input-zone .dem-field,
+.sipn-search-input-zone input,
+.sipn-search-input-zone select,
+.sipn-search-input-zone .select2-container--default .select2-selection--single,
+.sipn-search-input-zone .select2-container--default .select2-selection--multiple,
+.sipn-search-input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#search-tags-list {
+  padding-left: 44px !important;
+  flex: 0 0 auto;
+}
+#search-tags-list:not(:empty) + #search-q {
+  padding-left: 12px !important;
+}
+
+.sipn-search-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* Liste autocomplete positionnée sous le champ */
+.sipn-ac-box #ac-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: -2px;
+  right: -2px;
+  z-index: 120;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,.18);
+  max-height: 380px;
+  overflow-y: auto;
+  display: none;
 }
 body.sipn-prestations #search-form.search-page--dem #search-q.sipn-search-input,
 body.sipn-prestations #search-form.search-page--dem .sipn-search-input {
   display: block;
-  width: 100%;
+  flex: 1 1 0px !important;
+  width: 100% !important;
+  min-width: 140px !important;
   border: none !important;
   border-radius: 11px;
-  padding: 13px 40px 13px 44px;
+  padding: 13px 40px 13px 48px !important;
   font-size: 14px;
   line-height: 1.35;
-  outline: none;
+  outline: none !important;
   color: var(--sipn-text);
   background: transparent;
   box-shadow: none !important;
@@ -1788,7 +1851,7 @@ body.sipn-prestations #search-form .scard-actes-count {
   color: var(--sipn-g400);
   white-space: nowrap;
 }
-body.sipn-prestations #search-form .acte-item {
+body.sipn-prestations #search-form .scard-actes .acte-item {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1799,13 +1862,13 @@ body.sipn-prestations #search-form .acte-item {
   transition: background 0.1s;
   margin: 0;
 }
-body.sipn-prestations #search-form .acte-item:last-child {
+body.sipn-prestations #search-form .scard-actes .acte-item:last-child {
   border-bottom: none;
 }
-body.sipn-prestations #search-form .acte-item:hover {
+body.sipn-prestations #search-form .scard-actes .acte-item:hover {
   background: #fff;
 }
-body.sipn-prestations #search-form .acte-item.in-cart {
+body.sipn-prestations #search-form .scard-actes .acte-item.in-cart {
   background: var(--sipn-green-l);
 }
 body.sipn-prestations #search-form .ai-check {
@@ -2134,4 +2197,182 @@ body.pac-drawer-open .pac-info-banner {
 }
 body.pac-drawer-open .pac-content {
   background: #eef3f7;
+}
+
+/* ── Pied de carte & actes ambulance (recherche patient — scope strict) ── */
+body.sipn-prestations #search-form .scard-footer-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+body.sipn-prestations #search-form .scard-btn-secondary {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: auto;
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--sipn-g100, #f3f4f6);
+  color: var(--sipn-g600, #4b5563);
+  border: 1px solid var(--sipn-g200, #e5e7eb);
+  border-radius: 6px;
+  padding: 4px 9px;
+  cursor: pointer;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+body.sipn-prestations #search-form .scard-btn-secondary:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+body.sipn-prestations #search-form .scard-btn-trajet {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: auto;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--sipn-blue, #0a5c8a);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 1.3;
+  white-space: nowrap;
+  transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+}
+
+body.sipn-prestations #search-form .scard-btn-trajet:hover {
+  background: var(--sipn-blue-d, #084a70);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(10, 92, 138, 0.25);
+}
+
+body.sipn-prestations #search-form .csr-trajet-btn {
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--sipn-blue, #0a5c8a);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+body.sipn-prestations #search-form .acte-item--ambulance {
+  cursor: pointer;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid #bfdbfe;
+  background: #f8fcff;
+  margin-bottom: 0;
+}
+
+body.sipn-prestations #search-form .acte-item--ambulance:hover {
+  border-color: #0ea5e9;
+  background: #e8f4fb;
+}
+
+body.sipn-prestations #search-form .acte-item--ambulance .ai-prix--amb {
+  text-align: right;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #0a5c8a;
+  min-width: 72px;
+}
+
+body.sipn-prestations #search-form .amb-price-lbl {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body.sipn-prestations #search-form .amb-acte-sub {
+  font-size: 10px;
+  color: #0a5c8a;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+body.sipn-prestations #search-form .amb-acte-hint {
+  font-size: 10px;
+  color: #0a5c8a;
+  background: #e8f4fb;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 6px 9px;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+body.sipn-prestations #search-form .scard-btn-trajet--inline {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 6px 10px;
+}
+
+body.sipn-prestations #search-form .scard-m-acte--ambulance {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--sipn-g100, #f3f4f6);
+  background: #f8fcff;
+}
+
+body.sipn-prestations #search-form .scard-m-acte--ambulance:last-of-type {
+  border-bottom: none;
+}
+
+body.sipn-prestations #search-form .scard-m-acte-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+body.sipn-prestations #search-form .scard-m-acte-prix--amb {
+  font-weight: 700;
+  color: #0a5c8a;
+  font-size: 12px;
+  text-align: right;
+}
+
+body.sipn-prestations #search-form .scard-btn-trajet--mobile {
+  font-size: 10px;
+  padding: 6px 10px;
+}
+
+@media (max-width: 479px) {
+  body.sipn-prestations #search-form .scard-footer-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  body.sipn-prestations #search-form .scard-btn-secondary,
+  body.sipn-prestations #search-form .scard-btn-trajet {
+    width: auto;
+    flex: 0 0 auto;
+  }
 }
