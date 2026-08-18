@@ -91,23 +91,30 @@
   content: '';
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -2px;
   width: 100%;
-  height: 2px;
+  height: 3px;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--mc-accent, #4fa3c7) 0%, var(--mc-navy, #123a63) 100%);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.28s ease;
+  transition: transform 0.28s ease, opacity 0.18s ease;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .mc-landing-nav-link:hover::after,
 .mc-landing-nav-link.is-active::after,
+.mc-landing-nav-link:focus-visible::after,
 .mc-landing-nav-dropdown-trigger:hover::after,
 .mc-landing-nav-dropdown-trigger[aria-expanded="true"]::after,
+.mc-landing-nav-dropdown-trigger:focus-visible::after,
 .mc-landing-nav-dropdown-link:hover::after,
-.mc-landing-nav-dropdown-link.is-active::after {
+.mc-landing-nav-dropdown-link.is-active::after,
+.mc-landing-nav-dropdown-link:focus-visible::after {
   transform: scaleX(1);
+  opacity: 1;
 }
 
 .mc-landing-nav-link:hover,
