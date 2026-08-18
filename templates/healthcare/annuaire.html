@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Annuaire des établissements{% endblock %}
 {% block extra_css %}
-<link href="{% static 'healthcare/css/annuaire.css' %}?v=1" rel="stylesheet" />
+<link href="{% static 'healthcare/css/annuaire.css' %}?v=2" rel="stylesheet" />
 {% endblock %}
 {% block content %}
 <div class="ann-page">
@@ -135,7 +135,7 @@
     <div class="ann-grid" id="ann-grid">
       {% for row in rows %}
       <article class="ann-card">
-        {% if row.is_pioneer %}<span class="ann-pioneer">⭐ Pionnier</span>{% endif %}
+        {% if row.is_pioneer %}<span class="ann-pioneer">⭐ Pionnier</span>{% elif row.is_verified %}<span class="ann-pioneer ann-verified">✓ Vérifié</span>{% endif %}
         <div class="ann-card-top">
           <div class="ann-card-av" aria-hidden="true">{{ row.icon }}</div>
           <div style="flex:1;min-width:0">

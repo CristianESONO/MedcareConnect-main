@@ -408,7 +408,7 @@ body.sipn-prestations #search-form .ct-value {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  min-height: 48px;
+  min-height: 36px;
 }
 .sipn-search-emoji {
   position: absolute;
@@ -425,8 +425,8 @@ body.sipn-prestations #search-form .ct-value {
   box-sizing: border-box !important;
   border: none !important;
   background: transparent !important;
-  padding: 4px 8px 4px 44px !important;
-  min-height: 48px;
+  padding: 2px 8px 2px 44px !important;
+  min-height: 36px;
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: center !important;
@@ -485,9 +485,9 @@ body.sipn-prestations #search-form.search-page--dem .sipn-search-input {
   min-width: 140px !important;
   border: none !important;
   border-radius: 11px;
-  padding: 13px 40px 13px 48px !important;
-  font-size: 14px;
-  line-height: 1.35;
+  padding: 8px 40px 8px 48px !important;
+  font-size: 13px;
+  line-height: 1.3;
   outline: none !important;
   color: var(--sipn-text);
   background: transparent;
@@ -525,14 +525,14 @@ body.sipn-prestations #search-form.search-page--dem #ac-box #ac-list {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
   background: var(--sipn-blue);
   color: #fff;
   border: none;
   border-radius: 11px;
-  padding: 0 1rem;
-  min-width: 44px;
-  font-size: 13px;
+  padding: 0 0.75rem;
+  min-width: auto;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -540,11 +540,11 @@ body.sipn-prestations #search-form.search-page--dem #ac-box #ac-list {
 .sipn-search-go:hover { background: #084a72; }
 @media (max-width: 639px) {
   .sipn-search-go-label { display: none; }
-  .sipn-search-go { padding: 0 0.85rem; }
+  .sipn-search-go { padding: 0 0.65rem; }
 }
 @media (min-width: 640px) {
   .sipn-search-go-ic { display: none; }
-  .sipn-search-go { min-width: 7.5rem; }
+  .sipn-search-go { min-width: auto; }
 }
 
 /* Select2 / champs dans la zone mode (budget, assurance…) */

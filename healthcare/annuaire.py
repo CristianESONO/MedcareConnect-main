@@ -335,6 +335,7 @@ def build_annuaire_context(request) -> dict:
                     org.subscription_plan
                     and getattr(org.subscription_plan, "is_pioneer_offer", False)
                 ),
+                "is_verified": org.is_verified,
             }
         )
 

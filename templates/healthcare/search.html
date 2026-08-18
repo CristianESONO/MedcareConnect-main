@@ -7,7 +7,7 @@
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=33" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=34" rel="stylesheet" />
 <link href="{% static 'healthcare/css/sipn_structure_results.css' %}?v=2" rel="stylesheet" />
 <link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=42" rel="stylesheet" />
 <link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=5" rel="stylesheet" />
@@ -636,6 +636,16 @@
     background: rgba(244,208,63,0.18);
     color: #f4d03f;
     border: 1px solid rgba(244,208,63,0.35);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-verified {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(2,132,199,0.18);
+    color: #0284c7;
+    border: 1px solid rgba(2,132,199,0.35);
     border-radius: 20px;
     padding: 2px 8px;
   }

@@ -11,7 +11,7 @@
     <div class="profil-drawer-titles min-w-0">
       <div class="profil-drawer-name-row">
         <span class="profil-drawer-name">{{ org.name }}</span>
-        {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% endif %}
+        {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% elif org.is_verified %}<span class="profil-drawer-verified">✓ Vérifié</span>{% endif %}
       </div>
       <div class="profil-drawer-meta-row">
         <span class="profil-drawer-sub">{{ org.type_organisme.name|default:"Structure de santé" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}</span>
