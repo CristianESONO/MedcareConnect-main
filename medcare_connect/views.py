@@ -11,6 +11,25 @@ PILLAR_ACT_SAMPLES = {
     "specialise": "Dialyse, Kinésithérapie, Psychiatrie, Soins infirmiers",
 }
 
+EXCLUDED_PILLAR_LABELS = (
+    "hematologie",
+    "hemostase",
+    "hématologie",
+    "hémostase",
+    "hematologie clinique",
+    "hématologie clinique",
+)
+
+
+def is_excluded_pillar_service(service):
+    combined = " ".join(
+        part for part in (
+            getattr(service, "name", "") or "",
+            getattr(service, "slug", "") or "",
+        ) if part
+    ).lower()
+    return any(label in combined for label in EXCLUDED_PILLAR_LABELS)
+
 
 def _pillar_sample_key(service):
     slug = (service.slug or "").lower()
@@ -39,9 +58,6 @@ def _home_vitrine_context():
         prestataire_actes__organisme__is_active=True,
     )
 
-    # Slugs/noms à exclure de l'affichage des piliers
-    EXCLUDED_PILLAR_SLUGS = ["hematologie", "hemostase", "hématologie", "hémostase"]
-
     services_qs = (
         ServiceMedical.objects.filter(is_active=True)
         .annotate(act_count=Count("acts", filter=Q(acts__level=3, acts__is_active=True)))
@@ -49,10 +65,7 @@ def _home_vitrine_context():
     )
     pillars = []
     for service in services_qs:
-        slug_lower = (service.slug or "").lower()
-        name_lower = (service.name or "").lower()
-        # Exclure hématologie et hémostase
-        if any(excl in slug_lower or excl in name_lower for excl in EXCLUDED_PILLAR_SLUGS):
+        if is_excluded_pillar_service(service):
             continue
         key = _pillar_sample_key(service)
         pillars.append({
