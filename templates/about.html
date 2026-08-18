@@ -203,13 +203,29 @@
     margin-bottom: 48px;
   }
   .mc-about-section-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ab-accent);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    padding: 6px 16px;
+    border: 1px solid rgba(79,163,199,0.35);
+    border-radius: 999px;
+    background: rgba(79,163,199,0.08);
+    backdrop-filter: blur(4px);
+  }
+  .mc-about-section-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ab-accent);
+    flex-shrink: 0;
+    animation: ab-pulse 1.8s ease-in-out infinite;
   }
   .mc-about-values-header h2 {
     font-family: var(--mc-font-display, 'DM Sans', sans-serif);
@@ -241,6 +257,10 @@
     transition: transform 0.22s ease, box-shadow 0.22s ease;
     position: relative;
     overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .mc-about-value-card::after {
     content: '';
@@ -266,7 +286,7 @@
     background: linear-gradient(135deg, rgba(79,163,199,0.12), rgba(18,58,99,0.08));
     display: grid;
     place-items: center;
-    margin-bottom: 20px;
+    margin: 0 auto 20px auto;
     font-size: 22px;
     color: var(--ab-navy);
   }
@@ -276,6 +296,7 @@
     font-weight: 700;
     color: var(--ab-navy);
     margin: 0 0 10px;
+    text-align: center;
   }
   .mc-about-value-card p {
     font-size: 14px;

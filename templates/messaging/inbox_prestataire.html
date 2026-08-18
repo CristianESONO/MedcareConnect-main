@@ -5,16 +5,10 @@
 <link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=1">
 {% endblock %}
 {% block dash_content %}
-<div class="max-w-3xl">
-  <div class="flex items-center justify-between mb-4">
-    <div>
-      <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Messages</h1>
-      <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Fil de discussion par patient et par dossier (devis / RDV).</p>
-    </div>
-    <a href="{% url 'healthcare:search' %}" class="pac-btn-primary" style="display:inline-flex;align-items:center;gap:6px">
-      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
-      Retour aux prestations
-    </a>
+<div class="w-full">
+  <div class="mb-4">
+    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Messages</h1>
+    <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Fil de discussion par patient et par dossier (devis / RDV).</p>
   </div>
   <div class="mt-5 space-y-4">
     {% if grouped_conversations %}

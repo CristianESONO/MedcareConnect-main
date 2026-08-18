@@ -78,7 +78,36 @@
   color: #123a63;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 6px;
+}
+
+.mc-landing-nav-link::after,
+.mc-landing-nav-dropdown-trigger::after,
+.mc-landing-nav-dropdown-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--mc-accent, #4fa3c7) 0%, var(--mc-navy, #123a63) 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.28s ease;
+}
+
+.mc-landing-nav-link:hover::after,
+.mc-landing-nav-link.is-active::after,
+.mc-landing-nav-dropdown-trigger:hover::after,
+.mc-landing-nav-dropdown-trigger[aria-expanded="true"]::after,
+.mc-landing-nav-dropdown-link:hover::after,
+.mc-landing-nav-dropdown-link.is-active::after {
+  transform: scaleX(1);
 }
 
 .mc-landing-nav-link:hover,
@@ -97,13 +126,14 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  padding: 0;
+  padding: 0 0 6px 0;
   margin: 0;
   appearance: none;
   -webkit-appearance: none;
   line-height: 1.2;
   vertical-align: baseline;
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .mc-landing-nav-dropdown-trigger:hover {
@@ -167,6 +197,8 @@
   border-radius: 10px;
   transition: all 0.2s ease;
   font-weight: 500;
+  position: relative;
+  overflow: hidden;
 }
 
 .mc-landing-nav-dropdown-link:hover {

@@ -25,7 +25,15 @@
   {% if user != conversation.patient and msg.thread_sender %}
   <div class="mc-wmsg-sender mc-wmsg-sender--patient">{{ msg.thread_sender }}</div>
   {% endif %}
-  {{ msg.content|linebreaksbr }}
+  {% if msg.content %}{{ msg.content|linebreaksbr }}{% endif %}
+  {% if msg.attachment %}
+  <div class="mc-wmsg-attachment">
+    <a href="{{ msg.attachment.url }}" target="_blank" rel="noopener noreferrer" class="mc-wmsg-attach-link">
+      {% if msg.attachment.name|lower|slice:'-4:' == '.pdf' %}📄{% elif msg.attachment.name|lower|slice:'-4:' in '.png,.jpg,.jpeg,.gif,.webp' %}🖼️{% else %}📎{% endif %}
+      {{ msg.attachment.name|cut:'message_attachments/' }}
+    </a>
+  </div>
+  {% endif %}
   <div class="mc-wtime">{{ msg.timestamp|date:"H:i" }}</div>
 </div>
 {% else %}
@@ -33,7 +41,15 @@
   {% if msg.thread_sender %}
   <div class="mc-wmsg-sender{% if msg.thread_sender == 'MedCare' %} mc-wmsg-sender--medcare{% else %} mc-wmsg-sender--org{% endif %}">{{ msg.thread_sender }}</div>
   {% endif %}
-  {{ msg.content|linebreaksbr }}
+  {% if msg.content %}{{ msg.content|linebreaksbr }}{% endif %}
+  {% if msg.attachment %}
+  <div class="mc-wmsg-attachment">
+    <a href="{{ msg.attachment.url }}" target="_blank" rel="noopener noreferrer" class="mc-wmsg-attach-link">
+      {% if msg.attachment.name|lower|slice:'-4:' == '.pdf' %}📄{% elif msg.attachment.name|lower|slice:'-4:' in '.png,.jpg,.jpeg,.gif,.webp' %}🖼️{% else %}📎{% endif %}
+      {{ msg.attachment.name|cut:'message_attachments/' }}
+    </a>
+  </div>
+  {% endif %}
   <div class="mc-wtime">{{ msg.timestamp|date:"H:i" }}</div>
 </div>
 {% endif %}

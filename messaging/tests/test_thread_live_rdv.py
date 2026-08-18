@@ -1,6 +1,7 @@
 """Tests fil messagerie — prise de RDV vs RDV déjà actif."""
 from datetime import timedelta
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -76,3 +77,28 @@ class ThreadBookingWhenRdvLiveTest(TestCase):
         r = self.client.get(url)
         self.assertEqual(r.status_code, 302)
         self.assertEqual(r.url, reverse("messaging:conversation_detail", args=[self.conv.pk]))
+
+    def test_prestataire_can_send_attachment_in_conversation(self):
+        self.client.force_login(self.prest)
+        url = reverse("messaging:conversation_detail", args=[self.conv.pk])
+        file = SimpleUploadedFile("report.pdf", b"pdf-bytes", content_type="application/pdf")
+
+        response = self.client.post(
+            url,
+            {
+                "content": "Voici le rapport médical.",
+                "attachment": file,
+            },
+            follow=False,
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            self.conv.messages.filter(
+                sender=self.prest,
+                content="Voici le rapport médical.",
+            ).exists()
+        )
+        attachment_msg = self.conv.messages.filter(sender=self.prest).latest("timestamp")
+        self.assertTrue(attachment_msg.attachment)
+        self.assertTrue(attachment_msg.attachment.name.endswith("report.pdf") or "report" in attachment_msg.attachment.name)

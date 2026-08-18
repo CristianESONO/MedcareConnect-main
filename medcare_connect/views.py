@@ -39,13 +39,21 @@ def _home_vitrine_context():
         prestataire_actes__organisme__is_active=True,
     )
 
+    # Slugs/noms à exclure de l'affichage des piliers
+    EXCLUDED_PILLAR_SLUGS = ["hematologie", "hemostase", "hématologie", "hémostase"]
+
     services_qs = (
         ServiceMedical.objects.filter(is_active=True)
         .annotate(act_count=Count("acts", filter=Q(acts__level=3, acts__is_active=True)))
-        .order_by("order")[:8]
+        .order_by("order")[:12]  # On prend plus pour compenser les exclusions
     )
     pillars = []
     for service in services_qs:
+        slug_lower = (service.slug or "").lower()
+        name_lower = (service.name or "").lower()
+        # Exclure hématologie et hémostase
+        if any(excl in slug_lower or excl in name_lower for excl in EXCLUDED_PILLAR_SLUGS):
+            continue
         key = _pillar_sample_key(service)
         pillars.append({
             "service": service,
@@ -53,6 +61,8 @@ def _home_vitrine_context():
             "sample_acts": PILLAR_ACT_SAMPLES.get(key, ""),
             "sample_key": key,
         })
+        if len(pillars) >= 6:  # Limiter à 6 piliers
+            break
     trending_qs = (
         ActeMedical.objects.filter(level=3, is_active=True)
         .select_related("service_medical_category", "parent_service")

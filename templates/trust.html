@@ -1,65 +1,354 @@
 {% extends "visitor_base.html" %}
 {% load static %}
 
-{% block title %}Charte de Confiance - MedCare Connect{% endblock %}
+{% block title %}Charte de Confiance — MedCare Connect{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --tr-navy: #0D1B4B;
+    --tr-navy-mid: #152260;
+    --tr-accent: #4fa3c7;
+    --tr-cyan: #00C4C8;
+    --tr-cyan-bright: #00E8FF;
+    --tr-surface: #f4f7fb;
+    --tr-border: #d4deee;
+    --tr-shadow: 0 20px 60px rgba(13,27,75,0.14);
+  }
+  /* Hero */
+  .tr-hero {
+    background: linear-gradient(135deg, var(--tr-navy) 0%, #153C58 60%, #1a5276 100%);
+    position: relative; overflow: hidden; padding: 96px 0 80px; color: #fff;
+  }
+  .tr-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 80% 20%, rgba(0,196,200,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tr-hero-dots {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: radial-gradient(rgba(0,232,255,1) 1px, transparent 1px);
+    background-size: 36px 36px; pointer-events: none;
+  }
+  .tr-hero-inner {
+    position: relative; z-index: 1; text-align: center;
+    max-width: 720px; margin: 0 auto; padding: 0 24px;
+  }
+  .tr-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,196,200,0.12); border: 1px solid rgba(0,196,200,0.3);
+    border-radius: 999px; padding: 7px 18px; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--tr-cyan-bright); margin-bottom: 24px;
+  }
+  .tr-hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--tr-cyan-bright);
+    animation: tr-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes tr-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.75); }
+  }
+  .tr-hero h1 {
+    font-family: var(--mc-font-display, 'Syne', sans-serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800; line-height: 1.1; color: #fff; margin: 0 0 20px;
+  }
+  .tr-hero h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--tr-cyan), var(--tr-accent));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .tr-hero p { font-size: 18px; color: rgba(255,255,255,0.72); line-height: 1.65; max-width: 540px; margin: 0 auto; }
+  /* Stats bar */
+  .tr-stats { background: #fff; border-bottom: 1px solid var(--tr-border); }
+  .tr-stats-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    max-width: 860px; margin: 0 auto; padding: 0 24px;
+  }
+  .tr-stat { padding: 28px 20px; text-align: center; border-right: 1px solid var(--tr-border); }
+  .tr-stat:last-child { border-right: none; }
+  .tr-stat-val {
+    font-family: var(--mc-font-display, 'Syne', sans-serif);
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 800; color: var(--tr-navy); line-height: 1; margin-bottom: 4px;
+  }
+  .tr-stat-val--accent { color: var(--tr-accent); }
+  .tr-stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #6b7280; }
+  /* Container */
+  .tr-container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  /* Section */
+  .tr-section { padding: 80px 0; }
+  .tr-section--surface { background: var(--tr-surface); }
+  .tr-section--white { background: #fff; }
+  .tr-section--dark {
+    background: linear-gradient(160deg, var(--tr-navy) 0%, var(--tr-navy-mid) 100%);
+    color: #fff; position: relative; overflow: hidden;
+  }
+  .tr-section--dark::before {
+    content: ''; position: absolute; inset: 0; opacity: 0.04;
+    background-image: radial-gradient(rgba(0,232,255,1) 1px, transparent 1px);
+    background-size: 32px 32px; pointer-events: none;
+  }
+  .tr-section-head { text-align: center; margin-bottom: 56px; }
+  .tr-section-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--tr-accent); border: 1px solid rgba(79,163,199,0.35);
+    border-radius: 999px; padding: 6px 16px; background: rgba(79,163,199,0.08); margin-bottom: 14px;
+  }
+  .tr-section-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--tr-accent); flex-shrink: 0; }
+  .tr-section-tag--light { color: var(--tr-cyan-bright); border-color: rgba(0,196,200,0.35); background: rgba(0,196,200,0.1); }
+  .tr-section-tag--light::before { background: var(--tr-cyan-bright); }
+  .tr-section-head h2 {
+    font-family: var(--mc-font-display, 'Syne', sans-serif); font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 800; color: var(--tr-navy); margin: 0 0 12px; line-height: 1.2;
+  }
+  .tr-section-head--light h2 { color: #fff; }
+  .tr-section-head p { font-size: 16px; color: #6b7280; max-width: 540px; margin: 0 auto; line-height: 1.6; }
+  .tr-section-head--light p { color: rgba(255,255,255,0.65); }
+  /* Piliers */
+  .tr-pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .tr-pillars-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tr-pillars-grid { grid-template-columns: 1fr; } }
+  .tr-pillar-card {
+    background: #fff; border: 1px solid var(--tr-border); border-radius: 20px; padding: 36px 28px;
+    text-align: center; display: flex; flex-direction: column; align-items: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative; overflow: hidden;
+  }
+  .tr-pillar-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--tr-accent), var(--tr-navy));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.28s ease;
+  }
+  .tr-pillar-card:hover { transform: translateY(-6px); box-shadow: var(--tr-shadow); border-color: rgba(79,163,199,0.3); }
+  .tr-pillar-card:hover::after { transform: scaleX(1); }
+  .tr-pillar-icon {
+    width: 72px; height: 72px; border-radius: 20px;
+    background: linear-gradient(135deg, rgba(79,163,199,0.15), rgba(18,58,99,0.08));
+    border: 1px solid rgba(79,163,199,0.2); display: flex; align-items: center; justify-content: center;
+    font-size: 32px; color: var(--tr-accent); margin: 0 auto 20px auto; transition: transform 0.25s;
+  }
+  .tr-pillar-card:hover .tr-pillar-icon { transform: scale(1.08); }
+  .tr-pillar-card h3 { font-family: var(--mc-font-display, 'Syne', sans-serif); font-size: 17px; font-weight: 700; color: var(--tr-navy); margin: 0 0 12px; }
+  .tr-pillar-card p { font-size: 14px; color: #4b5563; line-height: 1.65; margin: 0; }
+  /* Steps */
+  .tr-steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; position: relative; z-index: 1; }
+  @media (max-width: 900px) { .tr-steps-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tr-steps-grid { grid-template-columns: 1fr; } }
+  .tr-step {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 32px 24px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; transition: background 0.25s, border-color 0.25s;
+  }
+  .tr-step:hover { background: rgba(0,196,200,0.1); border-color: rgba(0,196,200,0.3); }
+  .tr-step-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: rgba(0,232,255,0.1); border: 1px solid rgba(0,232,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: var(--tr-cyan-bright); margin: 0 auto 16px auto; transition: transform 0.25s;
+  }
+  .tr-step:hover .tr-step-icon { transform: scale(1.1); }
+  .tr-step h3 { font-family: var(--mc-font-display, 'Syne', sans-serif); font-size: 15px; font-weight: 700; color: #fff; margin: 0 0 8px; }
+  .tr-step p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55; margin: 0; }
+  /* Badge */
+  .tr-badge-section {
+    background: linear-gradient(135deg, var(--tr-accent) 0%, var(--tr-navy) 100%);
+    border-radius: 24px; padding: 56px 48px; display: grid;
+    grid-template-columns: auto 1fr; gap: 40px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  @media (max-width: 680px) { .tr-badge-section { grid-template-columns: 1fr; text-align: center; } .tr-badge-visual { margin: 0 auto; } }
+  .tr-badge-section::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; background: rgba(255,255,255,0.06); border-radius: 50%;
+  }
+  .tr-badge-visual {
+    width: 96px; height: 96px; border-radius: 24px;
+    background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px; color: #fff; flex-shrink: 0; backdrop-filter: blur(8px);
+  }
+  .tr-badge-text h3 { font-family: var(--mc-font-display, 'Syne', sans-serif); font-size: clamp(1.25rem, 2.5vw, 1.75rem); font-weight: 800; color: #fff; margin: 0 0 12px; }
+  .tr-badge-text p { font-size: 15px; color: rgba(255,255,255,0.82); line-height: 1.65; margin: 0; }
+  /* CTA */
+  .tr-cta-section { padding: 80px 0; background: var(--tr-surface); }
+  .tr-cta-inner { text-align: center; max-width: 600px; margin: 0 auto; padding: 0 24px; }
+  .tr-cta-inner h2 { font-family: var(--mc-font-display, 'Syne', sans-serif); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; color: var(--tr-navy); margin: 0 0 14px; }
+  .tr-cta-inner p { font-size: 16px; color: #6b7280; line-height: 1.65; margin-bottom: 32px; }
+  .tr-btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--tr-navy) 0%, #153C58 100%);
+    color: #fff; font-weight: 700; font-size: 15px; padding: 15px 30px;
+    border-radius: 14px; text-decoration: none; transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 4px 16px rgba(13,27,75,0.28); margin: 4px;
+  }
+  .tr-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(13,27,75,0.35); }
+  .tr-btn-ghost {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 2px solid var(--tr-border); color: var(--tr-navy);
+    font-weight: 600; font-size: 15px; padding: 13px 26px;
+    border-radius: 14px; text-decoration: none; transition: border-color 0.18s, background 0.18s; margin: 4px;
+  }
+  .tr-btn-ghost:hover { border-color: var(--tr-accent); background: rgba(79,163,199,0.06); }
+  @media (max-width: 767px) {
+    .tr-hero { padding: 72px 0 60px; }
+    .tr-stats-grid { grid-template-columns: 1fr; max-width: 280px; }
+    .tr-stat { border-right: none; border-bottom: 1px solid var(--tr-border); }
+    .tr-stat:last-child { border-bottom: none; }
+    .tr-section { padding: 60px 0; }
+    .tr-badge-section { padding: 40px 28px; gap: 24px; }
+  }
+</style>
+{% endblock %}
 
 {% block page_content %}
-<div class="mc-page-wrap mc-trust-page">
-  <header class="mc-page-hero">
-    <div class="mc-container">
-      <h1>Votre confiance,<br>notre priorité.</h1>
-      <p>Découvrez comment nous garantissons la fiabilité et la sécurité de vos données de santé.</p>
-    </div>
-  </header>
 
-  <section class="mc-section">
-    <div class="mc-container">
-      <div class="mc-section-head">
-        <h2>Les piliers de notre engagement</h2>
-      </div>
-      <div class="mc-trust-page-grid">
-        <div class="mc-trust-page-card">
-          <div class="mc-trust-page-icon"><i class="ti ti-certificate"></i></div>
-          <h3>Vérification rigoureuse</h3>
-          <p>Chaque établissement de santé inscrit sur MedCare Connect doit fournir ses agréments officiels. Nos équipes vérifient manuellement l'existence légale de chaque centre avant toute publication.</p>
-        </div>
-        <div class="mc-trust-page-card">
-          <div class="mc-trust-page-icon"><i class="ti ti-refresh"></i></div>
-          <h3>Transparence des prix</h3>
-          <p>Les tarifs sont déclarés par les structures sous leur responsabilité. Nous exigeons une mise à jour régulière pour garantir que les devis reçus soient les plus précis possibles.</p>
-        </div>
-        <div class="mc-trust-page-card">
-          <div class="mc-trust-page-icon"><i class="ti ti-shield-lock"></i></div>
-          <h3>Protection des données</h3>
-          <p>Nous respectons scrupuleusement la loi sénégalaise sur la protection des données personnelles (CDP). Vos informations de santé ne sont jamais partagées sans votre accord.</p>
-        </div>
-      </div>
+<!-- HERO -->
+<section class="tr-hero">
+  <div class="tr-hero-dots" aria-hidden="true"></div>
+  <div class="tr-hero-inner">
+    <div class="tr-hero-badge">
+      <i class="ti ti-shield-check" aria-hidden="true"></i>
+      Charte de confiance MedCare
     </div>
-  </section>
+    <h1>Votre confiance,<br><em>notre priorité.</em></h1>
+    <p>Découvrez comment nous garantissons la fiabilité, la sécurité et la transparence de chaque donnée de santé sur notre plateforme.</p>
+  </div>
+</section>
 
-  <div class="mc-badge-section">
-    <div class="mc-container">
-      <div class="mc-badge-inner">
-        <div class="mc-badge-visual">
-          <i class="ti ti-rosette-check"></i>
-        </div>
-        <div class="mc-badge-text">
-          <h3>Le Badge « Vérifié » MedCare</h3>
-          <p>Ce badge est attribué aux structures ayant complété l'intégralité de leur profil, fourni tous leurs justificatifs légaux et dont les tarifs ont été mis à jour il y a moins de 3 mois. C'est notre garantie de qualité pour vous.</p>
-        </div>
+<!-- STATS -->
+<div class="tr-stats" aria-label="Engagements en chiffres">
+  <div class="tr-stats-grid">
+    <div class="tr-stat">
+      <div class="tr-stat-val tr-stat-val--accent">100%</div>
+      <div class="tr-stat-label">Structures vérifiées manuellement</div>
+    </div>
+    <div class="tr-stat">
+      <div class="tr-stat-val">0%</div>
+      <div class="tr-stat-label">Commission sur les actes</div>
+    </div>
+    <div class="tr-stat">
+      <div class="tr-stat-val tr-stat-val--accent">24/7</div>
+      <div class="tr-stat-label">Disponibilité de la plateforme</div>
+    </div>
+  </div>
+</div>
+
+<!-- LES 6 PILIERS -->
+<section class="tr-section tr-section--surface">
+  <div class="tr-container">
+    <div class="tr-section-head">
+      <div class="tr-section-tag">Nos engagements</div>
+      <h2>Les piliers de notre confiance</h2>
+      <p>Chaque donnée publiée sur MedCare repose sur des processus rigoureux de vérification et de mise à jour.</p>
+    </div>
+    <div class="tr-pillars-grid">
+      <div class="tr-pillar-card">
+        <div class="tr-pillar-icon"><i class="ti ti-certificate" aria-hidden="true"></i></div>
+        <h3>Vérification rigoureuse</h3>
+        <p>Chaque établissement doit fournir ses agréments officiels. Nos équipes vérifient manuellement l'existence légale de chaque centre avant toute publication.</p>
+      </div>
+      <div class="tr-pillar-card">
+        <div class="tr-pillar-icon"><i class="ti ti-refresh" aria-hidden="true"></i></div>
+        <h3>Transparence des prix</h3>
+        <p>Les tarifs sont déclarés par les structures sous leur responsabilité. Nous exigeons une mise à jour régulière pour garantir des devis précis et fiables.</p>
+      </div>
+      <div class="tr-pillar-card">
+        <div class="tr-pillar-icon"><i class="ti ti-shield-lock" aria-hidden="true"></i></div>
+        <h3>Protection des données</h3>
+        <p>Nous respectons la loi sénégalaise sur la protection des données (CDP). Vos informations ne sont jamais partagées sans votre accord explicite.</p>
+      </div>
+      <div class="tr-pillar-card">
+        <div class="tr-pillar-icon"><i class="ti ti-eye" aria-hidden="true"></i></div>
+        <h3>Neutralité éditoriale</h3>
+        <p>MedCare n'oriente aucun patient vers un prestataire particulier. Chaque résultat est affiché de manière neutre, sans favoritisme commercial.</p>
+      </div>
+      <div class="tr-pillar-card">
+        <div class="tr-pillar-icon"><i class="ti ti-currency-dollar" aria-hidden="true"></i></div>
+        <h3>Zéro commission</h3>
+        <p>Nous ne prélevons aucune commission sur vos actes médicaux. Le prix affiché est celui que vous payez directement à la structure de santé.</p>
+      </div>
+      <div class="tr-pillar-card">
+        <div class="tr-pillar-icon"><i class="ti ti-device-mobile" aria-hidden="true"></i></div>
+        <h3>Accessibilité totale</h3>
+        <p>La plateforme est accessible gratuitement, sans inscription, sur tous les appareils — pour que chaque patient puisse exercer son droit à l'information.</p>
       </div>
     </div>
   </div>
+</section>
 
-  <section class="mc-section">
-    <div class="mc-container mc-section-narrow">
-      <div class="mc-section-head">
-        <h2>Une question sur nos processus ?</h2>
-        <p class="mc-section-sub">Notre équipe est à votre disposition pour vous apporter toutes les précisions nécessaires sur notre charte de confiance.</p>
+<!-- BADGE VÉRIFIÉ -->
+<section class="tr-section tr-section--white">
+  <div class="tr-container">
+    <div class="tr-badge-section">
+      <div class="tr-badge-visual" aria-hidden="true">
+        <i class="ti ti-rosette-check"></i>
       </div>
-      <div class="mc-cta-row">
-        <a href="{% url 'contact' %}" class="mc-btn-primary mc-btn-primary--navy">Contacter le support</a>
+      <div class="tr-badge-text">
+        <h3>Le Badge « Vérifié » MedCare</h3>
+        <p>Ce badge est attribué aux structures ayant complété l'intégralité de leur profil, fourni tous leurs justificatifs légaux et dont les tarifs ont été mis à jour il y a moins de 3 mois. C'est notre garantie de qualité, visible sur toutes leurs fiches publiques.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="tr-section tr-section--dark">
+  <div class="tr-container" style="position:relative;z-index:1;">
+    <div class="tr-section-head tr-section-head--light">
+      <div class="tr-section-tag tr-section-tag--light">Notre processus</div>
+      <h2>Comment nous garantissons la fiabilité</h2>
+      <p>Un processus en 4 étapes pour vous assurer des données de qualité à chaque instant.</p>
+    </div>
+    <div class="tr-steps-grid">
+      <div class="tr-step">
+        <div class="tr-step-icon"><i class="ti ti-file-check" aria-hidden="true"></i></div>
+        <h3>Inscription vérifiée</h3>
+        <p>Chaque structure soumet ses agréments et documents officiels lors de l'inscription sur la plateforme.</p>
+      </div>
+      <div class="tr-step">
+        <div class="tr-step-icon"><i class="ti ti-users-check" aria-hidden="true"></i></div>
+        <h3>Contrôle manuel</h3>
+        <p>Notre équipe valide chaque dossier avant la publication. Aucune structure n'est publiée sans validation interne.</p>
+      </div>
+      <div class="tr-step">
+        <div class="tr-step-icon"><i class="ti ti-calendar-check" aria-hidden="true"></i></div>
+        <h3>Mises à jour régulières</h3>
+        <p>Les structures sont notifiées pour actualiser leurs tarifs et informations tous les 3 mois minimum.</p>
+      </div>
+      <div class="tr-step">
+        <div class="tr-step-icon"><i class="ti ti-star" aria-hidden="true"></i></div>
+        <h3>Badge de confiance</h3>
+        <p>Les établissements conformes reçoivent le badge « Vérifié » visible sur toutes leurs fiches publiques.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA CONTACT -->
+<section class="tr-cta-section">
+  <div class="tr-cta-inner">
+    <div class="tr-section-tag" style="margin:0 auto 16px;display:inline-flex;">Support</div>
+    <h2>Une question sur nos processus ?</h2>
+    <p>Notre équipe est à votre disposition pour vous apporter toutes les précisions nécessaires sur notre charte de confiance et notre engagement qualité.</p>
+    <div>
+      <a href="{% url 'contact' %}" class="tr-btn-primary">
+        <i class="ti ti-mail" aria-hidden="true"></i>
+        Contacter le support
+      </a>
+      <a href="{% url 'about' %}" class="tr-btn-ghost">
+        <i class="ti ti-info-circle" aria-hidden="true"></i>
+        À propos de MedCare
+      </a>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
+
+
+
+

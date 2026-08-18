@@ -355,9 +355,23 @@ def conversation_detail(request, pk):
 
     conv.messages.filter(receiver=request.user, is_read=False).update(is_read=True)
 
-    if request.method == "POST" and request.POST.get("content"):
-        content = request.POST.get("content", "").strip()
-        if content:
+    if request.method == "POST" and (request.POST.get("content") or request.FILES.get("attachment")):
+        content = (request.POST.get("content") or "").strip()
+        attachment = request.FILES.get("attachment")
+        if attachment:
+            if request.user == conv.patient:
+                thread_svc.append_patient(
+                    conv,
+                    content or "Pièce jointe",
+                    attachment=attachment,
+                )
+            elif request.user == conv.prestataire:
+                thread_svc.append_prestataire(
+                    conv,
+                    content or "Pièce jointe",
+                    attachment=attachment,
+                )
+        elif content:
             if request.user == conv.patient:
                 django_messages.warning(
                     request,

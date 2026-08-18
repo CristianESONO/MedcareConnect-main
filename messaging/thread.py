@@ -26,6 +26,7 @@ def _append(
     payload: dict | None = None,
     notify: bool = True,
     notify_title: str = "",
+    attachment=None,
 ) -> Message:
     msg = Message.objects.create(
         conversation=conv,
@@ -34,6 +35,7 @@ def _append(
         content=content,
         message_type=message_type,
         payload=payload or {},
+        attachment=attachment,
     )
     _touch(conv)
     if notify and receiver:
@@ -71,7 +73,7 @@ def append_status(conv: Conversation, content: str, payload: dict | None = None)
     )
 
 
-def append_patient(conv: Conversation, content: str, *, notify=True, payload=None) -> Message:
+def append_patient(conv: Conversation, content: str, *, notify=True, payload=None, attachment=None) -> Message:
     return _append(
         conv,
         sender=conv.patient,
@@ -81,10 +83,11 @@ def append_patient(conv: Conversation, content: str, *, notify=True, payload=Non
         payload=payload,
         notify=notify,
         notify_title=f"Patient · {conv.dossier_label}",
+        attachment=attachment,
     )
 
 
-def append_prestataire(conv: Conversation, content: str, *, notify=True, payload=None) -> Message:
+def append_prestataire(conv: Conversation, content: str, *, notify=True, payload=None, attachment=None) -> Message:
     return _append(
         conv,
         sender=conv.prestataire,
@@ -94,6 +97,7 @@ def append_prestataire(conv: Conversation, content: str, *, notify=True, payload
         payload=payload,
         notify=notify,
         notify_title=f"{conv.organisme.name if conv.organisme else 'Structure'} · {conv.dossier_label}",
+        attachment=attachment,
     )
 
 

@@ -123,9 +123,25 @@
   </div>
   <script src="{% static 'messaging/js/thread_book.js' %}?v=11"></script>
   {% elif conversation.thread_status != 'closed' and user == conversation.prestataire %}
-  <form method="post" class="mc-thread-bar">
+  <form method="post" class="mc-thread-bar" enctype="multipart/form-data">
     {% csrf_token %}
+    <label class="mc-thread-attach" title="Joindre un fichier" aria-label="Joindre un fichier">
+      <input type="file" name="attachment" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,image/*,application/pdf" hidden>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.75 10.5 20.625A3.75 3.75 0 1 1 4.875 15L14.25 5.625a2.5 2.5 0 0 1 3.536 3.536L8.411 18.46a1.25 1.25 0 1 1-1.768-1.768L15.5 7.5"/></svg>
+    </label>
     <input type="text" name="content" class="mc-thread-inp" placeholder="Message…" maxlength="500" autocomplete="off">
+    <button type="submit" class="mc-thread-send" aria-label="Envoyer">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+    </button>
+  </form>
+  {% elif conversation.thread_status != 'closed' and user == conversation.patient and conversation.devis_part %}
+  <form method="post" class="mc-thread-bar" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label class="mc-thread-attach" title="Joindre un fichier" aria-label="Joindre un fichier">
+      <input type="file" name="attachment" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,image/*,application/pdf" hidden>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.75 10.5 20.625A3.75 3.75 0 1 1 4.875 15L14.25 5.625a2.5 2.5 0 0 1 3.536 3.536L8.411 18.46a1.25 1.25 0 1 1-1.768-1.768L15.5 7.5"/></svg>
+    </label>
+    <input type="text" name="content" class="mc-thread-inp" placeholder="Ajouter un document…" maxlength="500" autocomplete="off">
     <button type="submit" class="mc-thread-send" aria-label="Envoyer">
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
     </button>
