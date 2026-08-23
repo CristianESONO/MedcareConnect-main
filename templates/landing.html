@@ -4,435 +4,240 @@
 {% block title %}MedCare · L'infrastructure paraclinique digitale du Sénégal{% endblock %}
 
 {% block visitor_extra_css %}
-<link rel="stylesheet" href="{% static 'css/landing.css' %}?v=30">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/landing.css' %}?v=52">
 {% endblock %}
 
 {% block body_extra_class %} mc-vitrine-page mc-landing-body{% endblock %}
 {% block visitor_page_class %} mc-landing-page{% endblock %}
 
 {% block page_content %}
-<!-- ================= HERO & PROFILE SWITCHER ================= -->
-<section class="mc-hero" id="mc-landing-hero">
-  <div class="mc-container">
-    <div class="mc-hero-tag">🇸🇳 L'infrastructure paraclinique digitale du Sénégal</div>
+<!-- ================= HEADER TOGGLE SEGMENTÉ ================= -->
+<div class="hdr" id="hdr" style="background: rgba(255,255,255,.9); padding: 10px 0; border-bottom: 1px solid #e6ebf0; margin-bottom: 0;">
+  <div class="hdr__in" style="max-width: 1180px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center;">
+    <div class="toggle" role="tablist" aria-label="Choisir votre profil">
+      <span class="toggle__pill" id="pill"></span>
+      <button class="toggle__btn" role="tab" aria-selected="true"  data-mode="patient"   onclick="switchMode('patient')"><span class="dot">🔎</span> Patient</button>
+      <button class="toggle__btn" role="tab" aria-selected="false" data-mode="structure" onclick="switchMode('structure')"><span class="dot">🏥</span> Structure</button>
+    </div>
+  </div>
+</div>
 
-    <!-- Toggle Patient / Structure -->
-    <div class="mc-mode-toggle-wrap">
-      <div class="mc-mode-toggle" role="tablist" aria-label="Choisir votre profil">
-        <span class="mc-mode-pill" id="mcModePill"></span>
-        <button type="button" class="mc-mode-btn" role="tab" aria-selected="true" data-mode="patient" onclick="switchLandingMode('patient')">
-          <span>🔎</span> Patient
-        </button>
-        <button type="button" class="mc-mode-btn" role="tab" aria-selected="false" data-mode="structure" onclick="switchLandingMode('structure')">
-          <span>🏥</span> Structure
-        </button>
+<!-- ================= STAGE PATIENT ================= -->
+<section class="stage stage--patient is-active" id="stage-patient">
+
+  <div class="hero">
+    <div class="hero__in">
+      <div>
+        <span class="eyebrow reveal">🇸🇳 Pour les patients</span>
+        <h1 class="h1 reveal">Votre santé,<br><em>au bout des doigts.</em></h1>
+        <p class="lead reveal">Trouvez, comparez et réservez vos examens paracliniques au Sénégal. Prix réels, assurances acceptées et localisation exacte, avant même de vous déplacer.</p>
+        <div class="cta-row reveal">
+          <a class="btn btn--primary" href="{% url 'healthcare:search' %}">Trouver un examen →</a>
+          <a class="btn btn--ghost" href="#patient-flow">Voir comment ça marche</a>
+        </div>
+      </div>
+      <div class="mock reveal">
+        <div class="appcard floaty">
+          <div class="appcard__search"><span class="mag">🔎</span> NFS, Scanner cérébral, Échographie…</div>
+          <div class="appcard__chips">
+            <span class="chip">🧬 Biologie</span><span class="chip">🖥 Imagerie</span><span class="chip chip--on">📍 Proche</span>
+          </div>
+          <div class="res">
+            <div class="res__head">
+              <div class="res__head-top">
+                <div>
+                  <div class="res__nm">Labo Analyses Liberté VI</div>
+                  <div class="res__ty">Laboratoire d'analyses médicales</div>
+                </div>
+                <span class="res__cover">2/2 actes</span>
+              </div>
+              <div class="res__loc">
+                <span class="pl">📍 Dakar, Liberté VI</span>
+                <span class="res__pio">⭐ Pionnier</span>
+              </div>
+            </div>
+            <div class="acte">
+              <span class="acte__check">✓</span>
+              <div class="acte__body">
+                <div class="acte__name">Réticulocytes</div>
+                <div class="acte__delai">⏱ Délai résultats : dans la journée (≤ 4h)</div>
+              </div>
+              <div class="acte__price">5 500 F</div>
+            </div>
+            <div class="acte">
+              <span class="acte__check">✓</span>
+              <div class="acte__body">
+                <div class="acte__name">NFS / Hémogramme</div>
+                <div class="acte__delai">⏱ Délai résultats : moins de 2 heures</div>
+              </div>
+              <div class="acte__price">8 000 F</div>
+            </div>
+            <div class="res__foot">
+              <span class="res__ins">✓ CMU · CNAM · FNR +3</span>
+              <a href="{% url 'healthcare:search' %}" class="res__btn" style="text-decoration:none;">Obtenir mon devis</a>
+            </div>
+          </div>
+        </div>
+        <div class="floaty-tag tag-1"><span class="k">💰</span> Tarif net, 0% commission</div>
+        <div class="floaty-tag tag-2"><span class="k">⏱</span> Délais de résultats affichés</div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- ================= STAGE PATIENT ================= -->
-<div class="mc-stage mc-stage--patient is-active" id="stage-patient">
-
-  <!-- Hero Content Patient -->
-  <section class="mc-section" style="background: linear-gradient(180deg, #fbfffe 0%, #f4fbfa 100%); padding-top: 50px;">
-    <div class="mc-container">
-      <div class="mc-acces-grid">
-        <div>
-          <div class="mc-section-tag" style="background: #e6f8f0; color: #0fa268;">🇸🇳 Pour les patients</div>
-          <h1 class="h1" style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(32px, 4.5vw, 52px); color: #0d1b2a; line-height: 1.1; margin-bottom: 18px;">
-            Votre santé,<br><em style="color: #1a9e9e; font-style: normal;">au bout des doigts.</em>
-          </h1>
-          <p class="lead" style="font-size: 17.5px; color: #5b6675; margin-bottom: 28px; max-width: 520px; line-height: 1.6;">
-            Trouvez, comparez et réservez vos examens paracliniques au Sénégal. Prix réels, assurances acceptées et localisation exacte, avant même de vous déplacer.
-          </p>
-          <div class="mc-hero-ctas" style="justify-content: flex-start; gap: 14px;">
-            <a class="btn-pro-cta" href="{% url 'healthcare:search' %}" style="background: #14b87a; box-shadow: 0 10px 26px rgba(20,184,122,.32);">Trouver un examen →</a>
-            <a class="btn-see" href="#patient-flow" style="padding: 14px 24px; border-radius: 10px; font-weight: 700;">Comment ça marche</a>
-          </div>
-        </div>
-
-        <!-- Mockup carte patient -->
-        <div>
-          <div class="appcard-landing">
-            <div class="appcard-landing__search">
-              <i class="ti ti-search" style="color: #1a9e9e;"></i> NFS, Scanner cérébral, Échographie…
-            </div>
-            <div class="appcard-landing__chips">
-              <span class="chip-landing">🧬 Biologie</span>
-              <span class="chip-landing">🖥 Imagerie</span>
-              <span class="chip-landing chip--on">📍 Proche</span>
-            </div>
-            <div class="res-landing">
-              <div class="res-landing__head">
-                <div class="res-landing__head-top">
-                  <div>
-                    <div class="res-landing__nm">Labo Analyses Liberté VI</div>
-                    <div class="res-landing__ty">Laboratoire d'analyses médicales</div>
-                  </div>
-                  <span class="res-landing__cover">2/2 actes</span>
-                </div>
-                <div class="res-landing__loc">
-                  <span class="pl">📍 Dakar, Liberté VI</span>
-                  <span class="res-landing__pio">⭐ Pionnier</span>
-                </div>
-              </div>
-              <div class="acte-landing">
-                <span class="acte-landing__check">✓</span>
-                <div class="acte-landing__body">
-                  <div class="acte-landing__name">Réticulocytes</div>
-                  <div class="acte-landing__delai">⏱ Délai : dans la journée (≤ 4h)</div>
-                </div>
-                <div class="acte-landing__price">5 500 F</div>
-              </div>
-              <div class="acte-landing">
-                <span class="acte-landing__check">✓</span>
-                <div class="acte-landing__body">
-                  <div class="acte-landing__name">NFS / Hémogramme</div>
-                  <div class="acte-landing__delai">⏱ Délai : moins de 2 heures</div>
-                </div>
-                <div class="acte-landing__price">8 000 F</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <!-- Bénéfices patient -->
+  <div class="sec">
+    <div class="sec__eyebrow reveal">Pourquoi passer par MedCare</div>
+    <h2 class="sec__title reveal">Tout savoir <em>avant</em> de vous déplacer</h2>
+    <p class="sec__sub reveal">Toutes les structures paracliniques du Sénégal réunies. Gratuit, sans compte pour chercher, sans commission sur les actes.</p>
+    <div class="grid-3">
+      <div class="card reveal"><div class="card__ico">💰</div><h3>Les prix, avant de venir</h3><p>Chaque acte affiche son tarif déclaré et daté par la structure. Fini les mauvaises surprises à l'accueil.</p></div>
+      <div class="card reveal"><div class="card__ico">🛡️</div><h3>Vos assurances vérifiées</h3><p>CMU, IPM, CNAM, assureurs privés. Vous voyez ce qui est accepté et la part prise en charge estimée.</p></div>
+      <div class="card reveal"><div class="card__ico">📍</div><h3>La structure la plus proche</h3><p>Localisation exacte, horaires et itinéraire. Comparez par prix, couverture ou distance.</p></div>
+      <div class="card reveal"><div class="card__ico">📋</div><h3>Plusieurs actes, un panier</h3><p>Regroupez vos examens et voyez d'un coup quelle structure couvre votre ordonnance complète.</p></div>
+      <div class="card reveal"><div class="card__ico">💬</div><h3>Devis et RDV en un fil</h3><p>Un devis chiffré et référencé, puis le choix du créneau, directement dans la conversation.</p></div>
+      <div class="card reveal"><div class="card__ico">📱</div><h3>Tout suivi au même endroit</h3><p>RDV à venir, devis en attente, assurances et références de dossier dans votre tableau de bord.</p></div>
     </div>
-  </section>
+  </div>
 
-  <!-- Bénéfices Patient -->
-  <section class="mc-section" style="background: #ffffff;">
-    <div class="mc-container">
-      <div style="text-align: center; max-width: 660px; margin: 0 auto 44px;">
-        <div class="mc-section-tag" style="margin-bottom: 12px;">Pourquoi passer par MedCare</div>
-        <h2 style="font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #0d1b2a;">Tout savoir <em>avant</em> de vous déplacer</h2>
-        <p class="mc-section-sub">Toutes les structures paracliniques du Sénégal réunies. Gratuit, sans compte obligatoire pour chercher, sans commission sur vos actes.</p>
-      </div>
-
-      <div class="mc2-piliers-grid">
-        <div class="mc2-pilier-card">
-          <div class="mc2-pilier-icon"><i class="ti ti-currency-franc"></i></div>
-          <div class="mc2-pilier-name">Les prix, avant de venir</div>
-          <div class="mc2-pilier-sub">Chaque acte affiche son tarif déclaré et daté par la structure. Fini les mauvaises surprises à l'accueil.</div>
-        </div>
-        <div class="mc2-pilier-card">
-          <div class="mc2-pilier-icon"><i class="ti ti-shield-check"></i></div>
-          <div class="mc2-pilier-name">Vos assurances vérifiées</div>
-          <div class="mc2-pilier-sub">CMU, IPM, CNAM, assureurs privés. Vous voyez ce qui est accepté et la prise en charge estimée.</div>
-        </div>
-        <div class="mc2-pilier-card">
-          <div class="mc2-pilier-icon"><i class="ti ti-map-pin"></i></div>
-          <div class="mc2-pilier-name">La structure la plus proche</div>
-          <div class="mc2-pilier-sub">Localisation exacte, horaires et itinéraire. Comparez par prix, couverture ou distance.</div>
-        </div>
-        <div class="mc2-pilier-card">
-          <div class="mc2-pilier-icon"><i class="ti ti-files"></i></div>
-          <div class="mc2-pilier-name">Plusieurs actes, un panier</div>
-          <div class="mc2-pilier-sub">Regroupez vos examens et voyez d'un coup quelle structure couvre votre ordonnance complète.</div>
-        </div>
-        <div class="mc2-pilier-card">
-          <div class="mc2-pilier-icon"><i class="ti ti-brand-whatsapp"></i></div>
-          <div class="mc2-pilier-name">Devis & RDV en un fil</div>
-          <div class="mc2-pilier-sub">Un devis chiffré et référencé, puis le choix du créneau, directement dans votre espace.</div>
-        </div>
-        <div class="mc2-pilier-card">
-          <div class="mc2-pilier-icon"><i class="ti ti-device-mobile"></i></div>
-          <div class="mc2-pilier-name">Tout suivi au même endroit</div>
-          <div class="mc2-pilier-sub">RDV à venir, devis en attente, assurances et références de dossier dans votre tableau de bord.</div>
-        </div>
-      </div>
+  <!-- Parcours patient -->
+  <div class="sec" id="patient-flow" style="padding-top:0;">
+    <div class="sec__eyebrow reveal">Du symptôme au rendez-vous</div>
+    <h2 class="sec__title reveal">En <em>4 gestes simples</em></h2>
+    <p class="sec__sub reveal">Sur mobile, en quelques minutes, sans intermédiaire.</p>
+    <div class="flow">
+      <div class="flow__item reveal"><div class="flow__ico">🔎</div><h4>Cherchez</h4><p>Un acte par son nom ou par pilier.</p></div>
+      <div class="flow__item reveal"><div class="flow__ico">⚖️</div><h4>Comparez</h4><p>Prix, assurances et distance.</p></div>
+      <div class="flow__item reveal"><div class="flow__ico">💬</div><h4>Recevez un devis</h4><p>Chiffré, référencé, dans le chat.</p></div>
+      <div class="flow__item reveal"><div class="flow__ico">📅</div><h4>Réservez</h4><p>Créneau confirmé, référence à l'accueil.</p></div>
     </div>
-  </section>
+  </div>
 
-  <!-- Parcours Patient 4 étapes -->
-  <section class="mc-section" id="patient-flow" style="background: #f9fafb;">
-    <div class="mc-container">
-      <div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
-        <div class="mc-section-tag">Du symptôme au rendez-vous</div>
-        <h2 style="font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: #0d1b2a;">En <em>4 gestes simples</em></h2>
-        <p class="mc-section-sub">Sur mobile, en quelques minutes, sans intermédiaire.</p>
-      </div>
-
-      <div class="steps-pioneer" style="grid-template-columns: repeat(4, 1fr);">
-        <div class="step-pioneer">
-          <div class="n" style="background: #eef7fb; color: #0a5c8a; font-size: 22px;">🔎</div>
-          <h4>Cherchez</h4>
-          <p>Un acte par son nom ou par pilier médical.</p>
-        </div>
-        <div class="step-pioneer">
-          <div class="n" style="background: #eef7fb; color: #0a5c8a; font-size: 22px;">⚖️</div>
-          <h4>Comparez</h4>
-          <p>Prix réels, couverture assurance et distance.</p>
-        </div>
-        <div class="step-pioneer">
-          <div class="n" style="background: #eef7fb; color: #0a5c8a; font-size: 22px;">💬</div>
-          <h4>Recevez un devis</h4>
-          <p>Chiffré, référencé, directement dans le chat.</p>
-        </div>
-        <div class="step-pioneer">
-          <div class="n" style="background: #e6f8f0; color: #14b87a; font-size: 22px;">📅</div>
-          <h4>Réservez</h4>
-          <p>Créneau confirmé, référence à présenter à l'accueil.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Patient -->
-  <section class="mc-section" style="background: #ffffff; padding-top: 20px;">
-    <div class="mc-container">
-      <div style="background: linear-gradient(135deg, #0d1b2a, #0a5c8a); border-radius: 24px; padding: 44px 32px; text-align: center; color: #fff;">
-        <h3 style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; margin-bottom: 12px;">100% gratuit pour les patients</h3>
-        <p style="font-size: 16px; color: #c3d3df; max-width: 540px; margin: 0 auto 28px;">La recherche, la comparaison et la demande de devis ne vous coûtent rien. MedCare ne prend aucune commission sur les actes médicaux.</p>
-        <a class="btn-pro-cta" href="{% url 'healthcare:search' %}" style="background: #14b87a; box-shadow: 0 10px 26px rgba(20,184,122,.32);">Trouver un examen →</a>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<!-- ================= STAGE STRUCTURE (PARTENARIAT PIONNIER) ================= -->
-<div class="mc-stage mc-stage--structure" id="stage-structure">
-
-  <section class="mc-section hero-structure" style="padding-top: 50px; color: #fff;">
-    <div class="mc-container">
-      <div class="mc-acces-grid">
-        <div>
-          <div class="mc-section-tag" style="background: rgba(20,184,122,.2); color: #8fe3c4;">Offre de lancement · CPP-2026</div>
-          <h1 class="h1" style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(32px, 4.5vw, 52px); color: #fff; line-height: 1.1; margin-bottom: 18px;">
-            Devenez<br><em style="color: #8fe3c4; font-style: normal;">Partenaire Pionnier</em>
-          </h1>
-          <p class="lead" style="font-size: 17.5px; color: #c3d3df; margin-bottom: 24px; max-width: 520px; line-height: 1.6;">
-            Rejoignez les premières structures qui construisent l'annuaire paraclinique de référence du Sénégal. Un canal d'acquisition actif de patients, sans commission sur vos actes, jamais.
-          </p>
-          <div class="mc-hero-ctas" style="justify-content: flex-start; gap: 14px;">
-            <a class="btn-pro-cta" href="{% url 'users:register' %}" style="background: #14b87a; box-shadow: 0 12px 30px rgba(20,184,122,.4);">Devenir Partenaire Pionnier →</a>
-            <a class="btn-see" href="https://wa.me/221781673189" target="_blank" rel="noopener" style="color: #fff; border-color: rgba(255,255,255,.35); padding: 14px 24px; border-radius: 10px;">💬 Parler à l'équipe</a>
-          </div>
-          <div class="pill-badge-pioneer">⭐ <b>50 places</b> · Dakar</div>
-        </div>
-
-        <!-- Dashboard Mockup Pionnier -->
-        <div>
-          <div class="dash-landing">
-            <div class="dash-landing__bar">
-              <span class="dash-landing__badge">⭐ Partenaire Pionnier</span>
-              <span class="dash-landing__dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>
-            </div>
-            <div style="font-size: 12px; color: #5b6675;">Tableau de bord · période Pionnière</div>
-            <div class="kpis-landing" style="margin-top: 14px;">
-              <div class="kpi-landing">
-                <div class="lbl">Vues profil</div>
-                <div class="val">347</div>
-                <div class="up">↑ +42 / semaine</div>
-              </div>
-              <div class="kpi-landing">
-                <div class="lbl">Devis WhatsApp</div>
-                <div class="val">62</div>
-                <div class="up">↑ +8 / semaine</div>
-              </div>
-              <div class="kpi-landing">
-                <div class="lbl">Réservations</div>
-                <div class="val">28</div>
-                <div class="up">↑ +4 / semaine</div>
-              </div>
-              <div class="kpi-landing kpi-landing--accent">
-                <div class="lbl">Valeur générée</div>
-                <div class="val">1,24M</div>
-                <div class="up">FCFA · actes</div>
-              </div>
-            </div>
-            <div class="spark-landing">
-              <i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:60%"></i><i style="height:52%"></i><i style="height:72%"></i><i style="height:66%"></i><i class="g" style="height:92%"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 Avantages Pionniers -->
-  <section class="mc-section" style="background: #ffffff;">
-    <div class="mc-container">
-      <div style="text-align: center; max-width: 660px; margin: 0 auto 44px;">
-        <div class="mc-section-tag">Ce que vous obtenez</div>
-        <h2 style="font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #0d1b2a;">Quatre avantages <em>réservés aux pionniers</em></h2>
-        <p class="mc-section-sub">Votre vitrine digitale prête en 15 jours, et une présence conservée à vie.</p>
-      </div>
-
-      <div class="grid-pioneer-2">
-        <div class="mc2-pilier-card num-card-pioneer" style="text-align: left; align-items: flex-start;">
-          <span class="num">01</span>
-          <div class="mc2-pilier-icon" style="margin: 0 0 16px 0;">🎁</div>
-          <div class="mc2-pilier-name">6 mois d'accès Pro</div>
-          <div class="mc2-pilier-sub"><b>Gratuit.</b> Annuaire, devis WhatsApp, réservations, tableau de bord et support prioritaire.</div>
-        </div>
-        <div class="mc2-pilier-card num-card-pioneer" style="text-align: left; align-items: flex-start;">
-          <span class="num">02</span>
-          <div class="mc2-pilier-icon" style="margin: 0 0 16px 0;">📲</div>
-          <div class="mc2-pilier-name">MedPlaque NFC offerte</div>
-          <div class="mc2-pilier-sub"><b>Posée à votre accueil.</b> Un scan renvoie le patient directement vers votre profil public MedCare.</div>
-        </div>
-        <div class="mc2-pilier-card num-card-pioneer" style="text-align: left; align-items: flex-start;">
-          <span class="num">03</span>
-          <div class="mc2-pilier-icon" style="margin: 0 0 16px 0;">✅</div>
-          <div class="mc2-pilier-name">Badge Pionnier à vie</div>
-          <div class="mc2-pilier-sub"><b>Permanent</b> sur votre profil public. Le symbole de la confiance accordée dès le lancement.</div>
-        </div>
-        <div class="mc2-pilier-card num-card-pioneer" style="text-align: left; align-items: flex-start;">
-          <span class="num">04</span>
-          <div class="mc2-pilier-icon" style="margin: 0 0 16px 0;">📊</div>
-          <div class="mc2-pilier-name">Bilan d'activité au M5</div>
-          <div class="mc2-pilier-sub"><b>Avant toute décision.</b> Vues, devis, réservations et scans NFC en données réelles chiffrées.</div>
-        </div>
-      </div>
-
-      <div class="band-pioneer">
-        <div style="display: flex; align-items: center; gap: 18px;">
-          <div style="font-size: 32px; color: #0a5c8a;">♾️</div>
-          <div>
-            <h4 style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; color: #0d1b2a; margin: 0 0 4px;">Votre présence digitale à vie, sans frais</h4>
-            <p style="font-size: 14px; color: #5b6675; margin: 0;">Profil public actif à vie et badge Pionnier conservés, quel que soit votre plan ou une pause d'abonnement.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Garanties -->
-  <section class="mc-section" style="background: #f9fafb; padding-top: 40px; padding-bottom: 40px;">
-    <div class="mc-container">
-      <div class="grid-pioneer-2">
-        <div class="guar-pioneer">
-          <div class="guar-pioneer__ico">⚖️</div>
-          <div>
-            <h4>Modèle 100% sans commission</h4>
-            <p>MedCare ne prélève aucune commission sur vos actes médicaux. Conforme Art. 11 · Décret N°67-147.</p>
-          </div>
-        </div>
-        <div class="guar-pioneer">
-          <div class="guar-pioneer__ico">🛡️</div>
-          <div>
-            <h4>Sécurité de vos données</h4>
-            <p>Données de santé hébergées au Sénégal, garantissant la souveraineté numérique et la conformité locale.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 Étapes Pionniers -->
-  <section class="mc-section" style="background: #ffffff;">
-    <div class="mc-container">
-      <div style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
-        <div class="mc-section-tag">Comment rejoindre</div>
-        <h2 style="font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: #0d1b2a;">3 étapes pour devenir <em>Partenaire Pionnier</em></h2>
-      </div>
-
-      <div class="steps-pioneer">
-        <div class="step-pioneer">
-          <div class="n">1</div>
-          <h4>OUI de principe</h4>
-          <p>Entretien rapide avec le responsable de votre établissement.</p>
-        </div>
-        <div class="step-pioneer">
-          <div class="n">2</div>
-          <h4>Signature CPP</h4>
-          <p>Convention de Partenariat Pionnier, formelle et numérotée.</p>
-        </div>
-        <div class="step-pioneer">
-          <div class="n">3</div>
-          <h4>Onboarding J+15</h4>
-          <p>Profil public complet validé et MedPlaque NFC livrée.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Structure -->
-  <section class="mc-section" style="background: #ffffff; padding-top: 20px;">
-    <div class="mc-container">
-      <div style="background: linear-gradient(135deg, #0d1b2a, #0a5c8a); border-radius: 24px; padding: 44px 32px; text-align: center; color: #fff;">
-        <h3 style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; margin-bottom: 12px;">Prêt à rejoindre les pionniers ?</h3>
-        <p style="font-size: 16px; color: #c3d3df; max-width: 540px; margin: 0 auto 28px;">Créez votre compte établissement en quelques minutes, ou échangez d'abord avec notre équipe.</p>
-        <div class="mc-hero-ctas" style="justify-content: center;">
-          <a class="btn-pro-cta" href="{% url 'users:register' %}" style="background: #14b87a;">Créer mon compte →</a>
-          <a class="btn-see" href="https://wa.me/221781673189" target="_blank" rel="noopener" style="color: #fff; border-color: rgba(255,255,255,.35);">💬 Parler à l'équipe</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<!-- ================= PILIERS & FIABILITÉ PARTAGÉS ================= -->
-<section class="mc-section" style="background: #f9fafb;">
-  <div class="mc-container">
-    <div class="mc-section-tag">Catégories</div>
-    <div class="mc-piliers-head">
-      <div>
-        <h2>Les 6 piliers <em>MedCare</em></h2>
-        <p class="mc-section-sub">Chaque service est structuré, standardisé et accessible en quelques secondes.</p>
-      </div>
-      <a href="{% url 'healthcare:search' %}" class="mc-pilier-link">Voir tous les services <i class="ti ti-arrow-right"></i></a>
-    </div>
-
-    <div class="mc2-piliers-grid">
+  <!-- PILIERS MEDCARE DYNAMIQUES -->
+  <div class="sec" style="padding-top:20px; background:#f9fafb; border-radius:24px; margin-bottom:50px;">
+    <div class="sec__eyebrow reveal">Catégories d'examens</div>
+    <h2 class="sec__title reveal">Les 6 piliers <em>MedCare</em></h2>
+    <p class="sec__sub reveal">Chaque service est structuré, standardisé et accessible en quelques secondes.</p>
+    <div class="grid-3">
       {% for pillar in pillars %}
       {% with service=pillar.service %}
-      <a href="{% url 'healthcare:service_detail' service.slug %}" class="mc2-pilier-card">
-        <div class="mc2-pilier-icon">
-          {% if "biologie" in service.name|lower %}<i class="ti ti-flask"></i>
-          {% elif "imagerie" in service.name|lower %}<i class="ti ti-scan"></i>
-          {% elif "explorations" in service.name|lower or "cardiologie" in service.name|lower %}<i class="ti ti-heartbeat"></i>
-          {% elif "ambulance" in service.name|lower %}<i class="ti ti-ambulance"></i>
-          {% elif "dentaire" in service.name|lower or "dent" in service.name|lower %}<i class="ti ti-dental"></i>
-          {% elif "spécialisés" in service.name|lower or "infirmiers" in service.name|lower %}<i class="ti ti-needle"></i>
-          {% else %}<i class="ti ti-activity"></i>{% endif %}
+      <a href="{% url 'healthcare:service_detail' service.slug %}" class="card reveal" style="text-decoration:none; color:inherit;">
+        <div class="card__ico">
+          {% if "biologie" in service.name|lower %}🧬
+          {% elif "imagerie" in service.name|lower %}🖥
+          {% elif "explorations" in service.name|lower or "cardiologie" in service.name|lower %}🫀
+          {% elif "ambulance" in service.name|lower %}🚑
+          {% elif "dentaire" in service.name|lower or "dent" in service.name|lower %}🦷
+          {% elif "spécialisés" in service.name|lower or "infirmiers" in service.name|lower %}💉
+          {% else %}🩺{% endif %}
         </div>
-        <div class="mc2-pilier-name">{{ service.name }}</div>
-        <div class="mc2-pilier-sub">{{ pillar.sample_acts }}</div>
-        <div class="mc2-pilier-link">
-          <i class="ti ti-arrow-right" style="font-size:12px;"></i>
-          Explorer nos {{ pillar.act_count }} actes
+        <h3>{{ service.name }}</h3>
+        <p>{{ pillar.sample_acts }}</p>
+        <div style="font-size:12px; font-weight:700; color:var(--teal); margin-top:14px; display:flex; align-items:center; gap:4px;">
+          Explorer les {{ pillar.act_count }} actes →
         </div>
       </a>
       {% endwith %}
       {% endfor %}
     </div>
   </div>
+
+  <!-- CTA patient -->
+  <div class="finalcta">
+    <div class="finalcta__in reveal">
+      <h3>100% gratuit pour les patients</h3>
+      <p>La recherche, la comparaison et le devis ne vous coûtent rien. MedCare ne prend aucune commission sur les actes médicaux.</p>
+      <div class="cta-row"><a class="btn btn--primary" href="{% url 'healthcare:search' %}">Trouver un examen →</a></div>
+    </div>
+  </div>
+
 </section>
 
-<!-- FIABILITÉ / TRUST -->
-<section class="mc-trust" id="mc-trust-section">
-  <div class="mc-container">
-    <div class="mc-trust-intro">
-      <div class="mc-section-tag">Fiabilité</div>
-      <p class="mc-trust-heading">Des données <em>dont vous pouvez</em> avoir confiance.</p>
-    </div>
-    <div class="mc-trust-grid" id="mc-trust-tilt-grid">
-      <div class="mc-trust-card mc-trust-tilt">
-        <div class="mc-trust-card-icon"><i class="ti ti-users"></i></div>
-        <div class="mc-trust-card-title">Données déclarées</div>
-        <div class="mc-trust-card-desc">Les informations sont renseignées directement par les établissements, en toute autonomie.</div>
+<!-- ================= STAGE STRUCTURE ================= -->
+<section class="stage stage--structure" id="stage-structure">
+
+  <div class="hero">
+    <div class="hero__in">
+      <div>
+        <span class="eyebrow reveal">Offre de lancement · CPP-2026</span>
+        <h1 class="h1 reveal">Devenez<br><em>Partenaire Pionnier</em></h1>
+        <p class="lead reveal">Rejoignez les premières structures qui construisent l'annuaire paraclinique de référence du Sénégal. Un canal d'acquisition actif de patients, sans commission sur vos actes, jamais.</p>
+        <div class="cta-row reveal">
+          <a class="btn btn--primary" href="{% url 'users:register' %}">Devenir Partenaire Pionnier →</a>
+          <a class="btn btn--ghost" href="https://wa.me/221781673189" target="_blank" rel="noopener">💬 Parler à l'équipe</a>
+        </div>
+        <div class="pill-badge reveal">⭐ <b>50 places</b> · Dakar</div>
       </div>
-      <div class="mc-trust-card mc-trust-tilt">
-        <div class="mc-trust-card-icon"><i class="ti ti-refresh"></i></div>
-        <div class="mc-trust-card-title">Date de mise à jour</div>
-        <div class="mc-trust-card-desc">Les fiches affichent clairement la dernière date de mise à jour des prix et prestations.</div>
-      </div>
-      <div class="mc-trust-card mc-trust-tilt">
-        <div class="mc-trust-card-icon"><i class="ti ti-rosette"></i></div>
-        <div class="mc-trust-card-title">Badge Vérifié & Pionnier</div>
-        <div class="mc-trust-card-desc">Les établissements validés par l'équipe MedCare disposent d'un badge visible sur leurs fiches.</div>
-      </div>
-      <div class="mc-trust-card mc-trust-tilt">
-        <div class="mc-trust-card-icon"><i class="ti ti-credit-card"></i></div>
-        <div class="mc-trust-card-title">Tarifs et Prise en charge</div>
-        <div class="mc-trust-card-desc">Chaque établissement renseigne ses tarifs et les assurances acceptées pour une transparence totale.</div>
+      <div class="mock reveal">
+        <div class="dash floaty">
+          <div class="dash__bar">
+            <span class="dash__badge">⭐ Partenaire Pionnier</span>
+            <span class="dash__dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>
+          </div>
+          <div class="dash__title">Tableau de bord · période Pionnière</div>
+          <div class="kpis" style="margin-top:14px;">
+            <div class="kpi"><div class="lbl">Vues profil</div><div class="val">347</div><div class="up">↑ +42 / semaine</div></div>
+            <div class="kpi"><div class="lbl">Devis WhatsApp</div><div class="val">62</div><div class="up">↑ +8 / semaine</div></div>
+            <div class="kpi"><div class="lbl">Réservations</div><div class="val">28</div><div class="up">↑ +4 / semaine</div></div>
+            <div class="kpi kpi--accent"><div class="lbl">Valeur générée</div><div class="val">1,24M</div><div class="up">FCFA · actes</div></div>
+          </div>
+          <div class="spark"><i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:60%"></i><i style="height:52%"></i><i style="height:72%"></i><i style="height:66%"></i><i class="g" style="height:92%"></i></div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Avantages pionnier -->
+  <div class="sec">
+    <div class="sec__eyebrow reveal">Ce que vous obtenez</div>
+    <h2 class="sec__title reveal">Quatre avantages <em>réservés aux pionniers</em></h2>
+    <p class="sec__sub reveal">Votre vitrine digitale prête en 15 jours, et une présence conservée à vie.</p>
+    <div class="grid-2">
+      <div class="card num-card reveal"><span class="num">01</span><div class="card__ico">🎁</div><h3>6 mois d'accès Pro</h3><p><b>Gratuit.</b> Annuaire, devis WhatsApp, réservations, tableau de bord et support prioritaire.</p></div>
+      <div class="card num-card reveal"><span class="num">02</span><div class="card__ico">📲</div><h3>MedPlaque NFC offerte</h3><p><b>Posée à votre accueil.</b> Un scan renvoie le patient vers votre profil public MedCare.</p></div>
+      <div class="card num-card reveal"><span class="num">03</span><div class="card__ico">✅</div><h3>Badge Pionnier à vie</h3><p><b>Permanent</b> sur votre profil. Le symbole de la confiance accordée dès le lancement.</p></div>
+      <div class="card num-card reveal"><span class="num">04</span><div class="card__ico">📊</div><h3>Bilan d'activité au M5</h3><p><b>Avant toute décision.</b> Vues, devis, réservations et scans NFC en données réelles.</p></div>
+    </div>
+    <div style="height:20px"></div>
+    <div class="band band--blue reveal">
+      <div class="band__left"><div class="band__ico">♾️</div><div><h4>Votre présence digitale à vie, sans frais</h4><p>Profil public actif à vie et badge Pionnier conservés, quel que soit votre plan ou une pause d'abonnement.</p></div></div>
+    </div>
+  </div>
+
+  <!-- Garanties -->
+  <div class="sec" style="padding-top:0;">
+    <div class="grid-2">
+      <div class="guar reveal"><div class="guar__ico">⚖️</div><div><h4>Modèle 100% sans commission</h4><p>MedCare ne prélève aucune commission sur vos actes médicaux. Conforme Art. 11 · Décret N°67-147.</p></div></div>
+      <div class="guar reveal"><div class="guar__ico">🛡️</div><div><h4>Sécurité de vos données</h4><p>Données de santé hébergées au Sénégal, pour la souveraineté numérique.</p></div></div>
+    </div>
+  </div>
+
+  <!-- Étapes -->
+  <div class="sec" style="padding-top:0;">
+    <div class="sec__eyebrow reveal">Comment rejoindre</div>
+    <h2 class="sec__title reveal">3 étapes pour devenir <em>Partenaire Pionnier</em></h2>
+    <div style="height:16px"></div>
+    <div class="steps">
+      <div class="step reveal"><div class="n">1</div><h4>OUI de principe</h4><p>Entretien avec le responsable de la structure.</p></div>
+      <div class="step reveal"><div class="n">2</div><h4>Signature CPP</h4><p>Convention de Partenariat Pionnier, formelle et numérotée.</p></div>
+      <div class="step reveal"><div class="n">3</div><h4>Onboarding J+15</h4><p>Profil public complet et MedPlaque livrée.</p></div>
+    </div>
+  </div>
+
+  <!-- CTA structure -->
+  <div class="finalcta">
+    <div class="finalcta__in reveal">
+      <h3>Prêt à rejoindre les pionniers ?</h3>
+      <p>Créez votre compte établissement en quelques minutes, ou échangez d'abord avec notre équipe.</p>
+      <div class="cta-row">
+        <a class="btn btn--primary" href="{% url 'users:register' %}">Créer mon compte →</a>
+        <a class="btn btn--ghost" href="https://wa.me/221781673189" target="_blank" rel="noopener">💬 Parler à l'équipe</a>
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <!-- FAB WhatsApp & Retour Haut -->
@@ -446,36 +251,72 @@
 
 {% block extra_js %}
 <script>
-(function () {
-  var pill = document.getElementById('mcModePill');
-  var btns = document.querySelectorAll('.mc-mode-btn');
-  var stages = {
-    patient: document.getElementById('stage-patient'),
-    structure: document.getElementById('stage-structure')
-  };
+(function(){
+  var pill = document.getElementById('pill');
+  var body = document.body;
+  var btns = document.querySelectorAll('.toggle__btn');
+  var stages = { patient:document.getElementById('stage-patient'), structure:document.getElementById('stage-structure') };
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var io = null;
+  if(!reduce) document.documentElement.classList.add('js-reveal');
 
-  function moveModePill() {
-    var active = document.querySelector('.mc-mode-btn[aria-selected="true"]');
-    if (!active || !pill) return;
+  function movePill(){
+    var active = document.querySelector('.toggle__btn[aria-selected="true"]');
+    if(!active || !pill) return;
     pill.style.width = active.offsetWidth + 'px';
     pill.style.transform = 'translateX(' + (active.offsetLeft - 5) + 'px)';
     pill.style.background = (active.dataset.mode === 'structure') ? '#0d1b2a' : '#1a9e9e';
   }
 
-  window.switchLandingMode = function (mode) {
-    btns.forEach(function (b) {
-      b.setAttribute('aria-selected', b.dataset.mode === mode);
-    });
-    for (var key in stages) {
-      if (stages[key]) stages[key].classList.remove('is-active');
+  function observeReveals(stage){
+    if(io) io.disconnect();
+    var items = stage.querySelectorAll('.reveal');
+    items.forEach(function(el){ el.classList.remove('in'); });
+    if(reduce){ items.forEach(function(el){ el.classList.add('in'); }); return; }
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var group = e.target.parentElement;
+          var sibs = Array.prototype.filter.call(group.children, function(c){ return c.classList.contains('reveal'); });
+          var i = sibs.indexOf(e.target);
+          e.target.style.transitionDelay = Math.min(i,6)*70 + 'ms';
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  window.switchMode = function(mode){
+    var current = document.querySelector('.stage.is-active');
+    var target = stages[mode];
+    if(current === target) return;
+
+    btns.forEach(function(b){ b.setAttribute('aria-selected', b.dataset.mode === mode); });
+    body.setAttribute('data-mode', mode);
+    movePill();
+
+    if(reduce){
+      current.classList.remove('is-active');
+      target.classList.add('is-active');
+      observeReveals(target);
+      window.scrollTo({top:0});
+      return;
     }
-    if (stages[mode]) stages[mode].classList.add('is-active');
-    moveModePill();
+    current.classList.add('is-leaving');
+    setTimeout(function(){
+      current.classList.remove('is-active','is-leaving');
+      target.classList.add('is-active');
+      window.scrollTo({top:0, behavior:'auto'});
+      void target.offsetWidth;
+      observeReveals(target);
+    }, 300);
   };
 
-  window.addEventListener('resize', moveModePill);
-  window.addEventListener('load', moveModePill);
-  setTimeout(moveModePill, 100);
+  window.addEventListener('resize', movePill);
+  window.addEventListener('load', function(){ movePill(); observeReveals(stages.patient); });
+  movePill(); observeReveals(stages.patient);
 
   /* Retour haut */
   var fabTop = document.getElementById('mcFabTop');
