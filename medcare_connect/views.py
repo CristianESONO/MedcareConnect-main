@@ -137,8 +137,8 @@ def _home_vitrine_context():
 
 
 def home(request):
-    """Page d'accueil principale originale (hero glass patient/soignant)."""
-    return render(request, "index.html", _home_vitrine_context())
+    """Page d'accueil originale (avant l'offre Partenariat Pionnier)."""
+    return render(request, "landing.html", _home_vitrine_context())
 
 
 def landing(request):
