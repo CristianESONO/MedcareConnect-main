@@ -875,6 +875,35 @@ body.mc-visitor-drawer-open {
   box-shadow: -16px 0 48px rgba(0, 0, 0, 0.5);
 }
 
+/* Vue Mon Compte plein écran instantanée (sans animation slide - DEMO_MOBILE_PATIENT) */
+#pacAppDrawer,
+.mc-patient-fullscreen-view {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  transform: none !important;
+  transition: opacity 0.15s ease, visibility 0.15s ease !important;
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  z-index: 999999 !important;
+}
+
+#pacAppDrawer.is-open,
+.mc-patient-fullscreen-view.is-open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
 .mc-landing-drawer-user {
   margin: 10px 0 0;
   font-family: 'Syne', sans-serif;
