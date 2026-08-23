@@ -126,12 +126,21 @@ def login_view(request):
     return render(request, "users/login.html")
 
 
+from django.views.decorators.cache import never_cache
+
+
+@never_cache
 def logout_view(request):
     logout(request)
     messages.info(request, "Vous avez été déconnecté.")
-    return redirect("home")
+    response = redirect("users:login")
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0, private"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+    return response
 
 
+@never_cache
 @login_required
 def patient_account(request):
     if not request.user.is_patient:

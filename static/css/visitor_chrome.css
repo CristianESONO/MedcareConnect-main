@@ -1304,6 +1304,10 @@ body.mc-app-drawer-open {
 @media (min-width: 1024px) {
   .mc-landing-header-actions {
     display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   .mc-landing-burger {
     display: none !important;
