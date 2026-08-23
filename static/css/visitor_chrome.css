@@ -1300,37 +1300,26 @@ body.mc-app-drawer-open {
   }
 }
 
-/* Patient connecté : hamburger dès que largeur < 1110px */
-@media (max-width: 1109px) {
-  body[data-medcare-is-patient="true"] .mc-landing-header-actions {
-    display: none !important;
+/* Header responsive unifié : desktop (>=1024px) navbar visible ; mobile (<1024px) burger visible */
+@media (min-width: 1024px) {
+  .mc-landing-header-actions {
+    display: flex !important;
   }
-
-  body[data-medcare-is-patient="true"] .mc-landing-burger {
-    display: inline-flex !important;
+  .mc-landing-burger {
+    display: none !important;
   }
 }
 
-@media (min-width: 1110px) {
-  body[data-medcare-is-patient="true"] .mc-landing-header-actions {
-    display: flex !important;
-  }
-
-  body[data-medcare-is-patient="true"] .mc-landing-burger {
+@media (max-width: 1023px) {
+  .mc-landing-header-actions {
     display: none !important;
+  }
+  .mc-landing-burger {
+    display: inline-flex !important;
   }
 }
 
 @media (max-width: 768px) {
-  /* Invité / autres : téléphone uniquement */
-  body:not([data-medcare-is-patient="true"]) .mc-landing-header-actions {
-    display: none !important;
-  }
-
-  body:not([data-medcare-is-patient="true"]) .mc-landing-burger {
-    display: inline-flex !important;
-  }
-
   body.mc-visitor-body {
     --mc-content-gutter: 16px;
   }
