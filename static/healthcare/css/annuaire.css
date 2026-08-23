@@ -84,57 +84,83 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 7px;
-  padding-top: 2px;
+  gap: 8px;
+  padding-top: 4px;
+}
+@media (max-width: 767px) {
+  .ann-filter-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .ann-filter-row::-webkit-scrollbar {
+    display: none;
+  }
 }
 .ann-filter-lbl {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ann-g400);
+  color: #64748b;
   white-space: nowrap;
 }
 .ann-filter-chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 999px;
-  background: #f9fafb;
-  font-size: 11.5px;
+  gap: 6px;
+  padding: 7px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  background: #ffffff;
+  font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: #334155;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   font-family: inherit;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
 }
 .ann-filter-chip:hover {
-  border-color: var(--ann-blue);
-  color: var(--ann-blue);
-  background: #fff;
+  border-color: #0284c7;
+  color: #0f172a;
+  background: #f8fafc;
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12);
 }
 .ann-filter-chip.active {
-  border-color: var(--ann-blue);
-  background: var(--ann-blue);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(10, 92, 138, 0.25);
+  border-color: #123a63;
+  background: linear-gradient(135deg, #123a63, #0b2545);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(18, 58, 99, 0.25);
+}
+.ann-chip-chevron {
+  transition: transform 0.2s ease;
+}
+.ann-filter-chip.active .ann-chip-chevron {
+  transform: rotate(180deg);
 }
 .ann-sort-select {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  color: #374151;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
   cursor: pointer;
   outline: none;
   font-family: inherit;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease;
+}
+.ann-sort-select:hover, .ann-sort-select:focus {
+  border-color: #0284c7;
+  color: #0f172a;
 }
 .ann-reset-btn {
   display: none;

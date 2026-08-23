@@ -596,11 +596,18 @@
 }
 
 .mc-landing-burger[aria-expanded="true"] .mc-landing-burger-open {
-  display: none;
+  display: block;
 }
 
 .mc-landing-burger[aria-expanded="true"] .mc-landing-burger-close {
-  display: block;
+  display: none;
+}
+
+body.mc-visitor-drawer-open .mc-landing-burger,
+body.mc-visitor-drawer-open .mc-app-burger {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
 .mc-app-burger:hover,
@@ -965,11 +972,13 @@ body.mc-app-drawer-open {
 }
 
 .mc-footer-tagline {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.82);
-  max-width: 220px;
+  margin: 10px auto;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  max-width: 320px;
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -1396,13 +1405,13 @@ body.mc-app-drawer-open {
   }
 
   .mc-footer-tagline {
-    font-size: 15.5px !important;
+    font-size: 16.5px !important;
     font-weight: 700 !important;
     color: #ffffff !important;
     text-align: center !important;
     max-width: 100% !important;
     line-height: 1.45;
-    margin: 8px auto 16px !important;
+    margin: 10px auto 16px !important;
   }
 
   .mc-footer-links a {

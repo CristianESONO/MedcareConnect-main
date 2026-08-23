@@ -34,24 +34,24 @@
               🏥 Type de structure
             {% endif %}
           </span>
-          <span aria-hidden="true" style="font-size:8px">▼</span>
+          <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
         <button type="button" class="ann-filter-chip{% if current_zone %} active{% endif %}" data-ann-panel="zone" id="ann-chip-zone">
           <span id="ann-lbl-zone">{% if current_zone %}📍 {{ current_zone }}{% else %}📍 Zone / Quartier{% endif %}</span>
-          <span aria-hidden="true" style="font-size:8px">▼</span>
+          <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
         <button type="button" class="ann-filter-chip{% if current_assurances %} active{% endif %}" data-ann-panel="ins" id="ann-chip-ins">
           <span id="ann-lbl-ins">
             {% if current_assurances %}🛡 {{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}🛡 Assurance{% endif %}
           </span>
-          <span aria-hidden="true" style="font-size:8px">▼</span>
+          <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
         <button type="button" class="ann-filter-chip{% if current_delai %} active{% endif %}" data-ann-panel="rdv" id="ann-chip-rdv">
           <span id="ann-lbl-rdv">
             {% if current_delai %}⏱ {% for val, label in annuaire_delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}
             {% else %}⏱ Disponibilité RDV{% endif %}
           </span>
-          <span aria-hidden="true" style="font-size:8px">▼</span>
+          <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
 
         <span class="ann-filter-lbl" style="margin-left:4px">Trier :</span>
@@ -155,7 +155,6 @@
         </div>
         <div class="ann-card-meta">
           <div class="ann-meta-item">⏱ <span>{{ row.delai_label }}</span></div>
-          <div class="ann-meta-item">🕐 <span>{{ row.hours_short }}</span></div>
           <div class="ann-meta-item">🛡 <span>{{ row.insurance_count }} assurance{{ row.insurance_count|pluralize }}</span></div>
         </div>
         <div class="ann-card-footer">

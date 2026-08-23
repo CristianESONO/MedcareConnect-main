@@ -15,12 +15,7 @@
         {% if show_verified_badge or org.is_verified %}<span class="profil-drawer-verified">✓ Vérifié</span>{% endif %}
       </div>
       <div class="profil-drawer-meta-row">
-        <span class="profil-drawer-sub">{{ org.type_organisme.name|default:"Structure" }} · {{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}</span>
-        {% if open_today %}
-        <span class="profil-drawer-open-badge profil-drawer-open-badge--{% if open_today == 'open' %}open{% else %}closed{% endif %}">
-          <span class="profil-drawer-open-dot"></span>{% if open_today == 'open' %}Ouvert{% else %}Fermé{% endif %}
-        </span>
-        {% endif %}
+        <span class="profil-drawer-sub">{{ org.type_organisme.name|default:"Structure" }}</span>
       </div>
     </div>
   </div>
