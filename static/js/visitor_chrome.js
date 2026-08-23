@@ -42,9 +42,9 @@
   }
 
   window.openPrestataireDrawer = function (e) {
-    if (e) e.preventDefault();
-    var drawer = document.getElementById('dashAppDrawer');
-    var backdrop = document.getElementById('dashAppDrawerBackdrop');
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    var drawer = document.getElementById('dashAppDrawer') || document.getElementById('mcLandingDrawer');
+    var backdrop = document.getElementById('dashAppDrawerBackdrop') || document.getElementById('mcLandingDrawerBackdrop');
     if (drawer && backdrop) {
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
@@ -52,6 +52,8 @@
       backdrop.classList.add('is-visible');
       backdrop.setAttribute('aria-hidden', 'false');
       document.body.classList.add('mc-visitor-drawer-open');
+    } else {
+      window.location.href = '/healthcare/prestataire/dashboard/';
     }
   };
 

@@ -6214,7 +6214,9 @@
     initAmbulanceTrajetConfig();
     
     // Check initial state and hide results if no actes selected
-    checkAndToggleResults();
+    if (typeof checkAndToggleResults === 'function') {
+      checkAndToggleResults();
+    }
   })();
 
 })();

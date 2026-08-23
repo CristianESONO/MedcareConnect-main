@@ -17,6 +17,22 @@ Visiteur ailleurs (vitrine, cart, annuaire…) : liens vers l’app recherche (#
             </span>
             <span class="bnav-label">Messages</span>
         </a>
+<script>
+if (typeof window.openPrestataireDrawer !== 'function') {
+  window.openPrestataireDrawer = function(e) {
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    var d = document.getElementById('dashAppDrawer') || document.getElementById('mcLandingDrawer');
+    var b = document.getElementById('dashAppDrawerBackdrop') || document.getElementById('mcLandingDrawerBackdrop');
+    if (d && b) {
+      d.classList.add('is-open'); d.setAttribute('aria-hidden', 'false');
+      b.hidden = false; b.classList.add('is-visible'); b.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('mc-visitor-drawer-open');
+    } else {
+      window.location.href = '{% url "healthcare:prestataire_dashboard" %}';
+    }
+  };
+}
+</script>
         <button type="button" onclick="openPrestataireDrawer(event)" class="bnav-btn {% if rm and rm.namespace == 'healthcare' and 'prestataire' in rm.url_name %}active{% endif %}">
             <span class="bnav-icon" aria-hidden="true"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></span>
             <span class="bnav-label">Mon compte</span>
