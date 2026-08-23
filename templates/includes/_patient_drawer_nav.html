@@ -1,78 +1,160 @@
-{% comment %}Navigation drawer patient — partagée header vitrine + menu in-app.{% endcomment %}
+{% comment %}Navigation drawer patient — fidèle à la démo DEMO_MOBILE_PATIENT.html.{% endcomment %}
 {% with rm=request.resolver_match %}
-<div class="mc-landing-drawer-header">
-  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+<style>
+.mc-menu-drawer-wrap {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background: #fff;
+}
+.mc-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s ease;
+}
+.mc-menu-item:hover, .mc-menu-item:active {
+  background: #f0fdf4;
+}
+.mc-mi-icon {
+  font-size: 18px;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.mc-mi-info {
+  flex: 1;
+}
+.mc-mi-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #111827;
+}
+.mc-mi-sub {
+  font-size: 10.5px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+.mc-mi-arrow {
+  font-size: 15px;
+  color: #9ca3af;
+  font-weight: 700;
+}
+</style>
+
+<!-- HEADER avatar + nom (gradient vert/bleu sombre MedCare - DEMO_MOBILE_PATIENT) -->
+<div style="background:linear-gradient(135deg,#0a3d5e 0%,#033524 100%);padding:22px 16px 18px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden">
+  {% if show_drawer_close %}
+  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu" style="position:absolute;top:10px;right:10px;color:#fff;background:rgba(255,255,255,.18);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;z-index:2">
+    <svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
-  <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
-    {% include "includes/_brand_logo.html" %}
-  </a>
-  <p class="mc-landing-drawer-user">{{ user.display_name|default:"Mon compte" }}</p>
-  <p class="mc-landing-drawer-tagline">{{ user.email|default:user.username }}</p>
+  {% endif %}
+  <div style="width:48px;height:48px;border-radius:50%;background:#14b87a;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(20,184,122,.4)" id="menu-avatar-m">
+    {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}A{% endif %}
+  </div>
+  <div style="overflow:hidden">
+    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="menu-nom">
+      {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Mon compte{% endif %}
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="menu-email">
+      {% if user.is_authenticated %}{{ user.email|default:user.username }}{% else %}Espace patient MedCare{% endif %}
+    </div>
+  </div>
+  <div style="margin-left:auto;margin-right:{% if show_drawer_close %}28px{% else %}0{% endif %}">
+    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff">Med<span style="color:#14b87a">Care</span></div>
+  </div>
 </div>
 
-<nav class="mc-landing-drawer-nav" aria-label="Navigation compte">
-  <ul>
-    <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-layout-dashboard mc-landing-drawer-icon" aria-hidden="true"></i> Vue d'ensemble</span>
-      <ul class="mc-landing-drawer-sublist">
-        <li><a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'accueil' %} is-active{% endif %}" data-pac-tab="accueil">{% include "includes/_patient_nav_link_icons.html" with item="accueil" %} Tableau de bord</a></li>
-      </ul>
-    </li>
-    <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-user mc-landing-drawer-icon" aria-hidden="true"></i> Profil</span>
-      <ul class="mc-landing-drawer-sublist">
-        <li><a href="{% url 'users:patient_panel_tab' tab='profil' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'profil' %} is-active{% endif %}" data-pac-tab="profil">{% include "includes/_patient_nav_link_icons.html" with item="profil" %} Mes informations</a></li>
-        <li><a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'assurance' %} is-active{% endif %}" data-pac-tab="assurance">{% include "includes/_patient_nav_link_icons.html" with item="assurance" %} Assurance</a></li>
-      </ul>
-    </li>
-    <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-stethoscope mc-landing-drawer-icon" aria-hidden="true"></i> Soins &amp; achats</span>
-      <ul class="mc-landing-drawer-sublist">
-        <li>
-          {% if sipn_embedded_drawer %}
-          <button type="button" class="mc-landing-drawer-link mc-landing-drawer-link--btn sipn-goto-panier" data-sipn-goto-tab="panier">
-            {% include "includes/_patient_nav_link_icons.html" with item="chariot" %}
-            Panier{% if cart_count %}<span class="mc-landing-drawer-badge">{{ cart_count }}</span>{% endif %}
-          </button>
-          {% else %}
-          <a href="{% url 'users:patient_panel_tab' tab='chariot' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'chariot' %} is-active{% endif %}" data-pac-tab="chariot">
-            {% include "includes/_patient_nav_link_icons.html" with item="chariot" %}
-            Panier{% if cart_count %}<span class="mc-landing-drawer-badge">{{ cart_count }}</span>{% endif %}
-          </a>
-          {% endif %}
-        </li>
-        <li><a href="{% url 'users:patient_panel_tab' tab='devis' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'devis' %} is-active{% endif %}" data-pac-tab="devis">{% include "includes/_patient_nav_link_icons.html" with item="devis" %} Mes devis</a></li>
-        <li>
-          {% if sipn_embedded_drawer %}
-          <button type="button" class="mc-landing-drawer-link mc-landing-drawer-link--btn sipn-goto-messages" data-sipn-goto-tab="messages">
-            {% include "includes/_patient_nav_link_icons.html" with item="messages" %}
-            Messagerie{% if unread_messages %}<span class="mc-landing-drawer-badge">{{ unread_messages }}</span>{% endif %}
-          </button>
-          {% else %}
-          <a href="{% url 'messaging:inbox' %}" class="mc-landing-drawer-link{% if account_active == 'messages' %} is-active{% endif %}">
-            {% include "includes/_patient_nav_link_icons.html" with item="messages" %}
-            Messagerie{% if unread_messages %}<span class="mc-landing-drawer-badge">{{ unread_messages }}</span>{% endif %}
-          </a>
-          {% endif %}
-        </li>
-        <li><a href="{% url 'users:patient_panel_tab' tab='rdv' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'rdv' %} is-active{% endif %}" data-pac-tab="rdv">{% include "includes/_patient_nav_link_icons.html" with item="rdv" %} Mes RDV</a></li>
-        <li><a href="{% url 'messaging:notifications' %}" class="mc-landing-drawer-link{% if account_active == 'notifications' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="notifications" %} Notifications{% if unread_notifications %}<span class="mc-landing-drawer-badge">{{ unread_notifications }}</span>{% endif %}</a></li>
-        <li><a href="{% url 'messaging:rappels' %}" class="mc-landing-drawer-link{% if account_active == 'rappels' %} is-active{% endif %}">{% include "includes/_patient_nav_link_icons.html" with item="rappels" %} Rappels{% if unread_rappels %}<span class="mc-landing-drawer-badge">{{ unread_rappels }}</span>{% endif %}</a></li>
-        <li><a href="{% url 'users:patient_panel_tab' tab='recherches' %}" class="mc-landing-drawer-link js-pac-nav{% if account_active == 'recherches' %} is-active{% endif %}" data-pac-tab="recherches">{% include "includes/_patient_nav_link_icons.html" with item="recherches" %} Historique</a></li>
-      </ul>
-    </li>
-    <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-info-circle mc-landing-drawer-icon" aria-hidden="true"></i> Informations</span>
-      <ul class="mc-landing-drawer-sublist">
-        <li><a href="{% url 'about' %}" class="mc-landing-drawer-link">À propos · medcare.sn</a></li>
-        <li><a href="{% url 'trust' %}" class="mc-landing-drawer-link">CGU &amp; confidentialité</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
+<!-- SECTIONS nav fidèles à la démo DEMO_MOBILE_PATIENT -->
+<div class="mc-menu-drawer-wrap">
 
-<div class="mc-landing-drawer-cta">
-  <a href="{% url 'users:logout' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Déconnexion</a>
+  <!-- Vue d'ensemble -->
+  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;padding:12px 16px 4px">Vue d'ensemble</div>
+  <a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="mc-menu-item js-pac-nav{% if account_active == 'accueil' %} is-active{% endif %}" data-pac-tab="accueil">
+    <div class="mc-mi-icon">⚡</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Tableau de bord</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+
+  <!-- Profil -->
+  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;padding:12px 16px 4px;border-top:1px solid #f3f4f6">Profil</div>
+  <a href="{% url 'users:patient_panel_tab' tab='profil' %}" class="mc-menu-item js-pac-nav{% if account_active == 'profil' %} is-active{% endif %}" data-pac-tab="profil">
+    <div class="mc-mi-icon">👤</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Mes informations</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+  <a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="mc-menu-item js-pac-nav{% if account_active == 'assurance' %} is-active{% endif %}" data-pac-tab="assurance">
+    <div class="mc-mi-icon">🛡</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Assurance</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+
+  <!-- Soins & Achats -->
+  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;padding:12px 16px 4px;border-top:1px solid #f3f4f6">Soins &amp; Achats</div>
+  <a href="{% url 'users:patient_panel_tab' tab='devis' %}" class="mc-menu-item js-pac-nav{% if account_active == 'devis' %} is-active{% endif %}" data-pac-tab="devis">
+    <div class="mc-mi-icon">📋</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Mes devis</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+  <a href="{% url 'users:patient_panel_tab' tab='rdv' %}" class="mc-menu-item js-pac-nav{% if account_active == 'rdv' %} is-active{% endif %}" data-pac-tab="rdv">
+    <div class="mc-mi-icon">📅</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Mes RDV</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+  <a href="{% url 'messaging:rappels' %}" class="mc-menu-item">
+    <div class="mc-mi-icon">🔔</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Rappels</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+  <a href="{% url 'messaging:notifications' %}" class="mc-menu-item">
+    <div class="mc-mi-icon">🛎️</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Notifications</div></div>
+    {% if unread_notifications %}
+    <div style="background:#14b87a;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;margin-right:6px">{{ unread_notifications }}</div>
+    {% endif %}
+    <div class="mc-mi-arrow">›</div>
+  </a>
+  <a href="{% url 'users:patient_panel_tab' tab='recherches' %}" class="mc-menu-item js-pac-nav{% if account_active == 'recherches' %} is-active{% endif %}" data-pac-tab="recherches">
+    <div class="mc-mi-icon">🕐</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">Historique</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+
+  <!-- Informations -->
+  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;padding:12px 16px 4px;border-top:1px solid #f3f4f6">Informations</div>
+  <a href="{% url 'about' %}" class="mc-menu-item">
+    <div class="mc-mi-icon">ℹ️</div>
+    <div class="mc-mi-info">
+      <div class="mc-mi-label">À propos · medcare.sn</div>
+      <div class="mc-mi-sub">Zéro commission sur les actes</div>
+    </div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+  <a href="{% url 'trust' %}" class="mc-menu-item">
+    <div class="mc-mi-icon">📄</div>
+    <div class="mc-mi-info"><div class="mc-mi-label">CGU &amp; Confidentialité</div></div>
+    <div class="mc-mi-arrow">›</div>
+  </a>
+
+  {% if user.is_authenticated %}
+  <div style="padding:16px">
+    <a href="{% url 'users:logout' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer">
+      <i class="ti ti-logout" aria-hidden="true"></i> Déconnexion
+    </a>
+  </div>
+  {% else %}
+  <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+    <a href="{% url 'users:login' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#0a5c8a;color:#fff;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:none">
+      Connexion
+    </a>
+    <a href="{% url 'users:register' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#14b87a;color:#fff;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:none">
+      Rejoindre MedCare
+    </a>
+  </div>
+  {% endif %}
+  <div style="height:24px"></div>
 </div>
 {% endwith %}
