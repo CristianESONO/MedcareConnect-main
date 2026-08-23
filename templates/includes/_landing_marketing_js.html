@@ -17,6 +17,7 @@
   }
 
   function observeReveals(stage){
+    if(!stage) return;
     if(io) io.disconnect();
     var items = stage.querySelectorAll('.reveal');
     items.forEach(function(el){ el.classList.remove('in'); });
@@ -36,6 +37,13 @@
     items.forEach(function(el){ io.observe(el); });
   }
 
+  function moveForm(mode){
+    var formNode = document.getElementById('inscription-form') || document.getElementById('register');
+    if(!formNode) return;
+    var slot = document.getElementById(mode === 'structure' ? 'slot-structure' : 'slot-patient');
+    if(slot && formNode.parentElement !== slot) slot.appendChild(formNode);
+  }
+
   window.switchMode = function(mode){
     var current = document.querySelector('.stage.is-active');
     var target = stages[mode];
@@ -46,25 +54,27 @@
     movePill();
 
     if(reduce){
-      current.classList.remove('is-active');
-      target.classList.add('is-active');
+      if(current) current.classList.remove('is-active');
+      moveForm(mode);
+      if(target) target.classList.add('is-active');
       observeReveals(target);
       window.scrollTo({top:0});
       return;
     }
-    current.classList.add('is-leaving');
+    if(current) current.classList.add('is-leaving');
     setTimeout(function(){
-      current.classList.remove('is-active','is-leaving');
-      target.classList.add('is-active');
+      if(current) current.classList.remove('is-active','is-leaving');
+      moveForm(mode);
+      if(target) target.classList.add('is-active');
       window.scrollTo({top:0, behavior:'auto'});
-      void target.offsetWidth;
+      if(target) void target.offsetWidth;
       observeReveals(target);
     }, 300);
   };
 
   window.addEventListener('resize', movePill);
-  window.addEventListener('load', function(){ movePill(); observeReveals(stages.patient); });
-  movePill(); observeReveals(stages.patient);
+  window.addEventListener('load', function(){ movePill(); moveForm('patient'); observeReveals(stages.patient); });
+  movePill(); moveForm('patient'); observeReveals(stages.patient);
 
   /* Retour haut */
   var fabTop = document.getElementById('mcFabTop');
