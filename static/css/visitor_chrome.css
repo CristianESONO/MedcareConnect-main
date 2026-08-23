@@ -17,6 +17,16 @@
   padding-top: 15px;
   padding-bottom: 15px;
   min-height: 76px;
+  max-width: 100% !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+@media (min-width: 1024px) {
+  .mc-landing-header-bar {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
 }
 
 .mc-landing-header-actions {
