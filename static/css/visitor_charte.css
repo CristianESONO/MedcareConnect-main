@@ -39,6 +39,18 @@ body {
   line-height: 1.6;
 }
 
+/* Typography & Line Wrap Rules (Recettage Mobile) */
+h1, h2, h3, h4, .sec__title, .h1, .mc-section-title {
+  text-wrap: balance;
+}
+
+@media (max-width: 768px) {
+  h1, .h1 { font-size: clamp(24px, 6vw, 36px) !important; text-wrap: balance; }
+  h2, .sec__title { font-size: clamp(20px, 5.2vw, 28px) !important; text-wrap: balance; }
+  h3 { font-size: clamp(18px, 4.5vw, 24px) !important; text-wrap: balance; }
+  .sec__sub, .lead { font-size: 14.5px !important; line-height: 1.55; }
+}
+
 body.mc-visitor-body,
 body.mc-vitrine-page {
   background: var(--mc-bg) !important;

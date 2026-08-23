@@ -140,6 +140,7 @@ def fiche_context_for_org(org, actes, hours_list, request) -> dict:
     show_pioneer = bool(
         getattr(getattr(org, "subscription_plan", None), "is_pioneer_offer", False)
     )
+    show_verified = bool(getattr(org, "is_verified", False))
     return {
         "services_with_actes": services_with_actes,
         "profil_pillars": profil_pillars,
@@ -149,6 +150,7 @@ def fiche_context_for_org(org, actes, hours_list, request) -> dict:
         "open_today": open_today_from_hours(hours_list),
         "practical_chips": practical_chips_for_org(org),
         "show_pioneer_badge": show_pioneer,
+        "show_verified_badge": show_verified,
         "show_public_prices": bool(getattr(org, "show_prices_on_public_profile", True)),
         "maps_url": maps_url_for_org(org),
         "waze_url": waze_url_for_org(org),

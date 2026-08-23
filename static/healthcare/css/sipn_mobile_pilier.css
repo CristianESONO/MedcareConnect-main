@@ -1146,8 +1146,9 @@
   }
 
   body.sipn-prestations .scard-m-name {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
+    line-height: 1.35;
     color: var(--sipn-text, #0d1b2a);
     display: flex;
     align-items: center;
@@ -1184,9 +1185,10 @@
   }
 
   body.sipn-prestations .scard-m-type {
-    font-size: 10px;
-    color: var(--sipn-g400, #9ca3af);
-    margin-bottom: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 5px;
   }
 
   body.sipn-prestations .scard-m-meta {

@@ -84,8 +84,8 @@
 /* Zone messages — fond WhatsApp */
 .pac-wa-chat, .mc-thread-chat {
   background: #efeae2;
-  padding: 14px 10px 12px;
-  min-height: 240px;
+  padding: 16px 12px 14px;
+  min-height: 260px;
   max-height: 55vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -93,7 +93,7 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   flex: 1 1 auto;
   margin-top: 0;
 }
@@ -108,16 +108,16 @@
 .mc-book-insert:not(:empty) {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
 }
 
 /* Sections thématiques (RDV, devis) */
 .mc-thread-section {
-  margin-top: 10px;
-  padding-top: 4px;
+  margin-top: 12px;
+  padding-top: 6px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
   width: 100%;
   align-self: stretch;
   max-width: 100%;
@@ -128,16 +128,16 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   color: #374151;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .mc-thread-section--booking .mc-thread-section__head {
@@ -147,7 +147,7 @@
 }
 
 .mc-thread-section__icon {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
 }
 
@@ -156,16 +156,16 @@
 }
 
 @media (min-width: 768px) {
-  .pac-wa-chat, .mc-thread-chat { max-height: 420px; }
+  .pac-wa-chat, .mc-thread-chat { max-height: 440px; }
 }
 
 /* Bulles — wmsg-m démo */
 .pac-wmsg, .mc-wmsg {
   max-width: 88%;
-  padding: 7px 10px;
-  border-radius: 7px;
-  font-size: 11.5px;
-  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
   word-break: break-word;
   animation: mc-wmsg-in 0.2s ease;
 }
@@ -176,21 +176,21 @@
 }
 
 .pac-wmsg--r, .mc-wmsg--r {
-  background: #fff;
+  background: #ffffff;
   align-self: flex-start;
-  border-radius: 0 12px 12px 12px;
-  color: #1a1a1a;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  padding: 10px 12px;
+  border-radius: 2px 14px 14px 14px;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 11px 15px;
 }
 
 .pac-wmsg--s, .mc-wmsg--s {
   background: #dcf8c6;
   align-self: flex-end;
-  border-radius: 12px 0 12px 12px;
-  color: #1a1a1a;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  padding: 10px 12px;
+  border-radius: 14px 2px 14px 14px;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 11px 15px;
 }
 
 .pac-wmsg--sys, .mc-wmsg--sys {

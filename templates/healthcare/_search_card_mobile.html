@@ -17,11 +17,6 @@
     {% endif %}
     <div class="scard-m-meta">
       <span class="smeta-m sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %} {{ block.org.city }}{% if block.org.quartier %}, {{ block.org.quartier }}{% endif %}</span>
-      {% if block.hours_summary %}
-      <span class="smeta-m sipn-ico-inline scard-m-hours">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ block.hours_summary }}</span>
-      {% elif block.org.horaires_complement %}
-      <span class="smeta-m sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ block.org.horaires_complement|truncatechars:40 }}</span>
-      {% endif %}
     </div>
   </div>
 

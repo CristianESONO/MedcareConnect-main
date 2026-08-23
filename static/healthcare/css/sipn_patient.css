@@ -594,31 +594,35 @@ body.sipn-prestations #search-form.search-page--dem .sipn-search-input-zone .w-f
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 6px 12px;
-  border: 1.5px solid var(--sipn-g200);
-  border-radius: 20px;
-  background: #fff;
+  padding: 6px 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #f9fafb;
   font-size: 11px;
-  font-weight: 500;
-  color: var(--sipn-g600);
+  font-weight: 600;
+  color: #374151;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.18s ease;
   user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 .sipn-filter-chip:hover {
-  border-color: var(--sipn-blue);
-  color: var(--sipn-blue);
+  border-color: var(--sipn-blue, #0a5c8a);
+  color: var(--sipn-blue, #0a5c8a);
+  background: #fff;
 }
 .sipn-filter-chip.active {
-  border-color: var(--sipn-blue);
-  background: var(--sipn-blue);
-  color: #fff;
+  border-color: var(--sipn-blue, #0a5c8a);
+  background: var(--sipn-blue, #0a5c8a);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(10, 92, 138, 0.25);
 }
-.sipn-filter-chip.active .sipn-filter-arr { color: #fff; }
-.sipn-filter-arr { font-size: 8px; }
+.sipn-filter-chip.active .sipn-filter-arr { color: #ffffff; }
+.sipn-filter-arr { font-size: 8px; margin-left: 2px; }
 .sipn-filter-chip--reset {
   border-color: #fecaca;
   color: #dc2626;
+  background: #fff5f5;
   text-decoration: none;
 }
 .sipn-filter-chip--reset:hover {

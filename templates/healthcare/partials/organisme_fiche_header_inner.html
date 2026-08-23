@@ -11,6 +11,7 @@
     <div class="profil-drawer-titles min-w-0">
       <div class="profil-drawer-name-row">
         <span class="profil-drawer-name">{{ org.name }}</span>
+        {% if show_verified_badge %}<span class="profil-drawer-verified">✓ Vérifié</span>{% endif %}
         {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% endif %}
       </div>
       <div class="profil-drawer-meta-row">

@@ -4,9 +4,9 @@
 
 body.sipn-prestations .scard-m {
   background: #fff;
-  margin: 10px 12px 0;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(10, 92, 138, 0.06);
+  margin: 12px 14px 0;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(10, 92, 138, 0.07);
   border: 1px solid var(--sipn-g200, #e5e7eb);
   overflow: hidden;
   transition: all 0.15s ease;
@@ -14,21 +14,22 @@ body.sipn-prestations .scard-m {
 
 body.sipn-prestations .struct-list-m .scard-m:last-child,
 body.sipn-prestations .struct-list-d .scard-m:last-child {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
-body.sipn-prestations .scard-m-head { padding: 12px 14px 8px; }
+body.sipn-prestations .scard-m-head { padding: 14px 16px 10px; }
 body.sipn-prestations .scard-m-head-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 body.sipn-prestations .scard-m-name {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
+  line-height: 1.35;
   color: var(--sipn-text, #0d1b2a);
   display: flex;
   align-items: center;
@@ -60,9 +61,11 @@ body.sipn-prestations .scard-m-coverage--partial {
   color: #92400e;
 }
 body.sipn-prestations .scard-m-type {
-  font-size: 10px;
-  color: var(--sipn-g400, #9ca3af);
-  margin-bottom: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 5px;
+  letter-spacing: 0.01em;
 }
 body.sipn-prestations .scard-m-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 body.sipn-prestations .smeta-m { font-size: 10px; color: var(--sipn-g600, #4b5563); }
