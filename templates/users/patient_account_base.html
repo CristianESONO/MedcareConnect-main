@@ -16,11 +16,16 @@
   {% include "users/_patient_compte_sidebar.html" %}
   <div class="pac-main">
     <header class="pac-main-head">
-      <div class="min-w-0">
-        <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
-        <p class="pac-main-sub truncate">{{ user.display_name }} · {{ user.email|default:user.username }}</p>
+      <div class="flex items-center gap-3 min-w-0">
+        <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'healthcare:search' %}'; }" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold transition flex-shrink-0" aria-label="Retour">
+          ←
+        </button>
+        <div class="min-w-0">
+          <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
+          <p class="pac-main-sub truncate">{{ user.display_name }} · {{ user.email|default:user.username }}</p>
+        </div>
       </div>
-      <a href="{% url 'healthcare:search' %}" class="pac-back-btn hidden sm:inline-flex">← Retour aux prestations</a>
+      <a href="{% url 'healthcare:search' %}" class="pac-back-btn hidden sm:inline-flex">← Prestations</a>
     </header>
     <div class="pac-main-body" id="pac-content">
       <div class="pac-inner">
