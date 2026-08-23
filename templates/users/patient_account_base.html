@@ -20,6 +20,9 @@
         <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
         <p class="pac-main-sub truncate">{{ user.display_name }} · {{ user.email|default:user.username }}</p>
       </div>
+      <button type="button" onclick="openPatientDrawer(event)" class="pac-back-btn sm:hidden" style="display:inline-flex;align-items:center;gap:4px">
+        <i class="ti ti-menu-2" aria-hidden="true"></i> Menu compte
+      </button>
       <a href="{% url 'healthcare:search' %}" class="pac-back-btn hidden sm:inline-flex">← Retour aux prestations</a>
     </header>
     <div class="pac-main-body" id="pac-content">

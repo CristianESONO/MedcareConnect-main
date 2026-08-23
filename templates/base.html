@@ -233,7 +233,8 @@
 
     {% include "partials/flash_toasts.html" %}
 
-    {% if medcare_user_is_patient %}
+    {% if medcare_user_is_patient or user.is_authenticated and user.is_patient %}
+    {% include "includes/_patient_app_drawer.html" %}
     {% include "users/_patient_account_drawer.html" %}
     {% elif user.is_authenticated and user.is_prestataire %}
     {% include "includes/_prestataire_app_drawer.html" %}

@@ -61,10 +61,10 @@ if (typeof window.openPrestataireDrawer !== 'function') {
             <span class="bnav-label">Messages</span>
         </button>
         {% if user.is_authenticated and user.is_patient %}
-        <a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="bnav-btn" id="bnav-menu">
+        <button type="button" onclick="openPatientDrawer(event)" class="bnav-btn {% if rm and rm.namespace == 'users' %}active{% endif %}" id="bnav-menu">
             <span class="bnav-icon" aria-hidden="true"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></span>
             <span class="bnav-label">Mon compte</span>
-        </a>
+        </button>
         {% else %}
         <button type="button" class="bnav-btn" data-mobile-tab="menu" id="bnav-menu">
             <span class="bnav-icon" aria-hidden="true"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></span>
@@ -94,10 +94,10 @@ if (typeof window.openPrestataireDrawer !== 'function') {
             </span>
             <span class="bnav-label">Messages</span>
         </a>
-        <a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="bnav-btn {% if rm and rm.namespace == 'users' %}active{% endif %}">
+        <button type="button" onclick="openPatientDrawer(event)" class="bnav-btn {% if rm and rm.namespace == 'users' %}active{% endif %}" id="bnav-menu">
             <span class="bnav-icon" aria-hidden="true"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></span>
             <span class="bnav-label">Mon compte</span>
-        </a>
+        </button>
 {% else %}
         <a href="{{ sipn_app_url }}#results-col" class="bnav-btn {% if rm and rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %}active{% endif %}" data-mobile-tab="resultats">
             <span class="bnav-icon" aria-hidden="true"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg></span>

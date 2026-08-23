@@ -57,12 +57,38 @@
     }
   };
 
+  window.openPatientDrawer = function (e) {
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    var drawer = document.getElementById('pacAppDrawer') || document.getElementById('mcLandingDrawer');
+    var backdrop = document.getElementById('pacAppDrawerBackdrop') || document.getElementById('mcLandingDrawerBackdrop');
+    if (drawer && backdrop) {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      backdrop.hidden = false;
+      backdrop.classList.add('is-visible');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('mc-visitor-drawer-open');
+    } else {
+      window.location.href = '/users/compte/panel/accueil/';
+    }
+  };
+
   var dashBackdrop = document.getElementById('dashAppDrawerBackdrop');
   if (dashBackdrop) {
     dashBackdrop.addEventListener('click', function () {
       var drawer = document.getElementById('dashAppDrawer');
       if (drawer) drawer.classList.remove('is-open');
       dashBackdrop.hidden = true;
+      document.body.classList.remove('mc-visitor-drawer-open');
+    });
+  }
+
+  var pacBackdrop = document.getElementById('pacAppDrawerBackdrop');
+  if (pacBackdrop) {
+    pacBackdrop.addEventListener('click', function () {
+      var drawer = document.getElementById('pacAppDrawer');
+      if (drawer) drawer.classList.remove('is-open');
+      pacBackdrop.hidden = true;
       document.body.classList.remove('mc-visitor-drawer-open');
     });
   }

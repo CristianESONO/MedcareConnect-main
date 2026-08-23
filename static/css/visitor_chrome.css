@@ -951,14 +951,17 @@ body.mc-app-drawer-open {
 .mc-footer-brand-row,
 .mc-footer-brand-col {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
+  text-align: center;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
 .mc-footer-logo-link {
   flex-shrink: 0;
   line-height: 0;
+  display: inline-block;
 }
 
 .mc-footer-logo-link .mc-brand-logo {
@@ -969,18 +972,18 @@ body.mc-app-drawer-open {
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 0.95;
+  margin: 0 auto;
 }
 
 .mc-footer-tagline {
-  margin: 10px auto;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 8px auto 0;
+  font-size: 19px !important;
+  font-weight: 700 !important;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.95);
-  text-align: center;
-  max-width: 320px;
-  flex: 1 1 auto;
-  min-width: 0;
+  color: #ffffff !important;
+  text-align: center !important;
+  max-width: 380px;
+  display: block;
 }
 
 .mc-footer-newsletter-block {

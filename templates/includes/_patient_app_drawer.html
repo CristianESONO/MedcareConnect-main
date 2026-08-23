@@ -1,4 +1,5 @@
-{% comment %}Menu patient mobile — design drawer vitrine (mc-landing-drawer).{% endcomment %}
-<div class="mc-landing-drawer mc-landing-drawer--page" aria-label="Menu compte patient">
-  {% include "includes/_patient_drawer_nav.html" with sipn_embedded_drawer=sipn_embedded_drawer %}
-</div>
+{% comment %}Menu patient mobile — drawer compte (slide depuis la droite).{% endcomment %}
+<div class="mc-landing-drawer-backdrop" id="pacAppDrawerBackdrop" hidden aria-hidden="true"></div>
+<aside class="mc-landing-drawer mc-landing-drawer--from-right" id="pacAppDrawer" aria-hidden="true" aria-label="Menu compte patient">
+  {% include "includes/_patient_drawer_nav.html" with show_drawer_close=True %}
+</aside>

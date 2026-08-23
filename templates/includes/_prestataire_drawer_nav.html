@@ -21,15 +21,6 @@
 <nav class="mc-landing-drawer-nav" aria-label="Navigation pro">
   <ul>
     <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-world mc-landing-drawer-icon" aria-hidden="true"></i> Parcourir</span>
-      <ul class="mc-landing-drawer-sublist">
-        <li><a href="{% url 'home' %}" class="mc-landing-drawer-link{% if rm.url_name == 'landing' or rm.url_name == 'home' %} is-active{% endif %}">Accueil</a></li>
-        <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">Annuaire</a></li>
-        <li><a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">Prestations</a></li>
-        <li><a href="{% url 'about' %}" class="mc-landing-drawer-link{% if rm.url_name == 'about' %} is-active{% endif %}">À propos</a></li>
-      </ul>
-    </li>
-    <li class="mc-landing-drawer-group">
       <span class="mc-landing-drawer-group-label"><i class="ti ti-layout-dashboard mc-landing-drawer-icon" aria-hidden="true"></i> Principal</span>
       <ul class="mc-landing-drawer-sublist">
         {% if org %}

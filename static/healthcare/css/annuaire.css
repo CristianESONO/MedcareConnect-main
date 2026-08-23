@@ -110,57 +110,58 @@
 .ann-filter-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 20px;
+  gap: 7px;
+  padding: 8px 18px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 24px;
   background: #ffffff;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
   color: #334155;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   user-select: none;
   font-family: inherit;
   white-space: nowrap;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
 }
 .ann-filter-chip:hover {
   border-color: #0284c7;
-  color: #0f172a;
-  background: #f8fafc;
-  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+  background: #f0f9ff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15);
 }
 .ann-filter-chip.active {
-  border-color: #123a63;
-  background: linear-gradient(135deg, #123a63, #0b2545);
+  border-color: #0f2f52;
+  background: linear-gradient(135deg, #0f2f52 0%, #0369a1 100%);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(18, 58, 99, 0.25);
+  box-shadow: 0 4px 16px rgba(15, 47, 82, 0.28);
 }
 .ann-chip-chevron {
-  transition: transform 0.2s ease;
+  transition: transform 0.25s ease;
 }
 .ann-filter-chip.active .ann-chip-chevron {
   transform: rotate(180deg);
 }
 .ann-sort-select {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 20px;
-  border: 1px solid #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 1.5px solid #e2e8f0;
   background: #ffffff;
   color: #334155;
   cursor: pointer;
   outline: none;
   font-family: inherit;
   white-space: nowrap;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
   transition: all 0.2s ease;
 }
 .ann-sort-select:hover, .ann-sort-select:focus {
   border-color: #0284c7;
-  color: #0f172a;
+  color: #0284c7;
+  background: #f0f9ff;
 }
 .ann-reset-btn {
   display: none;
