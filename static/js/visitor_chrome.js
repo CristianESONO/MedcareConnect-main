@@ -101,11 +101,22 @@
       window._sipnCloseMenuView();
       return;
     }
-    /* Header drawer ouvert : fermeture gérée par .js-visitor-drawer-close */
+    var pacDrawer = document.getElementById('pacAppDrawer');
+    var pacBackdrop = document.getElementById('pacAppDrawerBackdrop');
+    if (pacDrawer) pacDrawer.classList.remove('is-open');
+    if (pacBackdrop) pacBackdrop.hidden = true;
+
+    var dashDrawer = document.getElementById('dashAppDrawer');
+    var dashBackdrop = document.getElementById('dashAppDrawerBackdrop');
+    if (dashDrawer) dashDrawer.classList.remove('is-open');
+    if (dashBackdrop) dashBackdrop.hidden = true;
+
     var headerDrawer = document.getElementById('mcLandingDrawer');
-    if (headerDrawer && headerDrawer.classList.contains('is-open')) return;
-    var fallback = patientClose.getAttribute('data-fallback-href');
-    if (fallback) window.location.href = fallback;
+    var headerBackdrop = document.getElementById('mcLandingDrawerBackdrop');
+    if (headerDrawer) headerDrawer.classList.remove('is-open');
+    if (headerBackdrop) headerBackdrop.hidden = true;
+
+    document.body.classList.remove('mc-visitor-drawer-open');
   });
 
   document.querySelectorAll('.mc-landing-nav-dropdown').forEach(function (dropdown) {

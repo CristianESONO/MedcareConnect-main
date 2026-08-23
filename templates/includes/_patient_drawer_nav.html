@@ -1,7 +1,7 @@
 {% comment %}Navigation drawer patient — partagée header vitrine + menu in-app.{% endcomment %}
 {% with rm=request.resolver_match %}
 <div class="mc-landing-drawer-header">
-  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu" data-fallback-href="{% url 'healthcare:search' %}">
+  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
   <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
