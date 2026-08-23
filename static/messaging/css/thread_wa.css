@@ -1529,15 +1529,15 @@ button.mc-wslot.pac-wchip--sel {
   .pac-page--messages .mc-inbox-wrap {
     margin-left: 0;
     margin-right: 0;
-    padding: 14px 16px;
-    border-radius: 18px;
+    padding: 0;
+    border-radius: 14px;
     border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 18px rgba(10, 92, 138, 0.05);
+    box-shadow: 0 2px 10px rgba(10, 92, 138, 0.04);
   }
 
   .mc-conv-item {
-    padding: 14px 16px;
-    gap: 14px;
+    padding: 12px 14px;
+    gap: 12px;
     border-bottom: 1px solid #f1f5f9;
   }
   .mc-conv-item:last-child {
