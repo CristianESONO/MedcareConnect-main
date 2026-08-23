@@ -259,13 +259,27 @@
 }
 .ann-pioneer {
   float: right;
-  background: var(--ann-green);
-  color: #fff;
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 700;
   padding: 2px 8px;
-  border-radius: 20px;
+  border-radius: 9999px;
   margin-left: 8px;
+  white-space: nowrap;
+  color: #fef08a;
+  border: 1px solid rgba(253, 224, 71, 0.35);
+  background: rgba(234, 179, 8, 0.15);
+}
+.ann-verified {
+  float: right;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-left: 8px;
+  white-space: nowrap;
+  color: #bae6fd;
+  border: 1px solid rgba(125, 211, 252, 0.4);
+  background: rgba(255, 255, 255, 0.12);
 }
 .ann-card-tags {
   display: flex;
