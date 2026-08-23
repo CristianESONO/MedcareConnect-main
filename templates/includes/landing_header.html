@@ -11,7 +11,6 @@
       <ul class="mc-landing-nav-list">
         <li><a href="{% url 'home' %}" class="mc-landing-nav-link{% if rm.url_name == 'landing' or rm.url_name == 'home' or rm.url_name == 'medcare_sn' %} is-active{% endif %}">Accueil</a></li>
         <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">Annuaire</a></li>
-        <li><a href="{% url 'healthcare:search' %}" class="mc-landing-nav-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">Prestations</a></li>
         <li class="mc-landing-nav-dropdown" id="mcNavAboutDropdown">
           <button
             type="button"
@@ -73,49 +72,6 @@
   </div>
 </header>
 
-<div class="mc-landing-drawer-backdrop" id="mcLandingDrawerBackdrop" hidden aria-hidden="true"></div>
-<aside class="mc-landing-drawer" id="mcLandingDrawer" aria-hidden="true" aria-label="Menu navigation">
-  <div class="mc-landing-drawer-header">
-    <button type="button" class="mc-landing-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-    <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
-      {% include "includes/_brand_logo.html" %}
-    </a>
-    {% if user.is_authenticated %}
-    <p class="mc-landing-drawer-user" style="font-weight: 700; color: #0d1b2a; margin-top: 6px;">{{ user.first_name|default:user.username }}</p>
-    {% else %}
-    <p class="mc-landing-drawer-tagline">L'infrastructure digitale<br>paraclinique du Sénégal</p>
-    {% endif %}
-  </div>
-
-  <nav class="mc-landing-drawer-nav" aria-label="Menu mobile">
-    <ul style="line-height: 1.8;">
-      <li><a href="{% url 'home' %}" class="mc-landing-drawer-link{% if rm.url_name == 'landing' or rm.url_name == 'home' or rm.url_name == 'medcare_sn' %} is-active{% endif %}"><i class="ti ti-home mc-landing-drawer-icon" aria-hidden="true"></i> Accueil</a></li>
-      <li><a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}"><i class="ti ti-building-hospital mc-landing-drawer-icon" aria-hidden="true"></i> Annuaire</a></li>
-      <li><a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}"><i class="ti ti-search mc-landing-drawer-icon" aria-hidden="true"></i> Prestations</a></li>
-      <li class="mc-landing-drawer-group" style="margin-top: 8px;">
-        <span class="mc-landing-drawer-group-label"><i class="ti ti-info-circle mc-landing-drawer-icon" aria-hidden="true"></i> À propos</span>
-        <ul class="mc-landing-drawer-sublist" style="line-height: 1.8;">
-          <li><a href="{% url 'about' %}" class="mc-landing-drawer-link{% if rm.url_name == 'about' %} is-active{% endif %}">Qui sommes-nous ?</a></li>
-          <li><a href="{% url 'how_it_works' %}" class="mc-landing-drawer-link{% if rm.url_name == 'how_it_works' %} is-active{% endif %}">Comment ça marche</a></li>
-          <li><a href="{% url 'contact' %}" class="mc-landing-drawer-link{% if rm.url_name == 'contact' %} is-active{% endif %}">Contact</a></li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="mc-landing-drawer-cta">
-    {% if user.is_authenticated %}
-    <form method="post" action="{% url 'users:logout' %}">
-      {% csrf_token %}
-      <button type="submit" class="mc-landing-drawer-btn mc-landing-drawer-btn-login" style="width: 100%; border-color: #fecaca; color: #dc2626;"><i class="ti ti-logout" aria-hidden="true"></i> Déconnexion</button>
-    </form>
-    {% else %}
-    <a href="{% url 'users:login' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-login"><i class="ti ti-login" aria-hidden="true"></i> Connexion</a>
-    <a href="{% url 'users:register' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Rejoindre MedCare</a>
-    {% endif %}
-  </div>
-</aside>
+{% include "includes/_landing_nav_drawer.html" %}
 
 {% endwith %}

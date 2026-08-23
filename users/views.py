@@ -28,6 +28,15 @@ def _after_patient_login_redirect(request, next_url=None):
     return redirect(panel_redirect("rdv"))
 
 
+from medcare_connect.views import _home_vitrine_context
+
+
+def _register_context(form):
+    ctx = _home_vitrine_context()
+    ctx["form"] = form
+    return ctx
+
+
 def register(request):
     if request.user.is_authenticated:
         if request.user.is_patient:
@@ -43,7 +52,7 @@ def register(request):
                     "Inscription temporairement indisponible : aucune formule d'abonnement "
                     "n'est configurée. Contactez l'administrateur.",
                 )
-                return render(request, "users/register.html", {"form": form})
+                return render(request, "users/register.html", _register_context(form))
             with transaction.atomic():
                 user = form.save()
                 if user.is_patient:
@@ -91,7 +100,7 @@ def register(request):
             return redirect("home")
     else:
         form = UserRegistrationForm()
-    return render(request, "users/register.html", {"form": form})
+    return render(request, "users/register.html", _register_context(form))
 
 
 def login_view(request):

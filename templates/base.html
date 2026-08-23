@@ -245,6 +245,10 @@
         {% block content %}{% endblock %}
     </main>
 
+    {% if use_visitor_chrome %}
+    <script src="{% static 'js/visitor_chrome.js' %}?v=11"></script>
+    {% endif %}
+
     <!-- Navigation pied d’écran (mobile, type app — démo MOBILE PATIENT) -->
     {% block mobile_tab_bar %}
     <nav id="medcare-tab-bar" class="bottom-nav medcare-tab-bar fixed bottom-0 left-0 right-0 z-[450]"
@@ -265,9 +269,6 @@
     </script>
     <script src="{% static 'js/guest_cart.js' %}?v=3"></script>
     <script src="{% static 'js/password_toggle.js' %}?v=2"></script>
-    {% if use_visitor_chrome %}
-    <script src="{% static 'js/visitor_chrome.js' %}?v=10"></script>
-    {% endif %}
     {% if medcare_user_is_patient %}
     <script>
     window.MEDCARE_PAC = {

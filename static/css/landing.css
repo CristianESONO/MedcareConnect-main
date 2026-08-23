@@ -17,6 +17,42 @@
   --ease: cubic-bezier(.22,1,.36,1);
 }
 
+/* Intégration Django : neutralise le chrome legacy (header, tab bar, Tailwind body) */
+html:has(body.mc-landing-body) {
+  scroll-behavior: smooth;
+}
+
+body.mc-landing-body {
+  margin: 0 !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  color: var(--ink) !important;
+  background: var(--white) !important;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body.mc-landing-body.flex {
+  display: block !important;
+  min-height: auto !important;
+}
+
+body.mc-landing-body.mc-tab-bar-pad {
+  padding-bottom: 0 !important;
+}
+
+body.mc-landing-body > main.flex-1 {
+  flex: none !important;
+}
+
+body.mc-landing-body .mc-page-wrap.mc-landing-page {
+  max-width: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: var(--white);
+}
+
 /* ============ HEADER STICKY ============ */
 .hdr {
   position: relative;
@@ -32,6 +68,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+}
+.hdr--toggle-only .hdr__in {
+  justify-content: center;
 }
 .wordmark {
   font-family: 'Cinzel', serif;
@@ -409,4 +448,28 @@
   .toggle__btn { padding: 9px 15px; font-size: 13.5px; }
   .hero__in { padding: 48px 20px 44px; }
   .floaty-tag { display: none; }
+}
+
+/* Formulaire inscription sur la landing */
+.landing-register-sec {
+  background: var(--soft);
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+.landing-register-sec__in {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.landing-register-sec .mc-auth-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 28px 24px;
+}
+@media (min-width: 640px) {
+  .landing-register-sec .mc-auth-card {
+    padding: 32px 36px;
+  }
 }

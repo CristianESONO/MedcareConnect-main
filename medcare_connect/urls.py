@@ -9,7 +9,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("select2/", include("django_select2.urls")),
     path("", views.home, name="home"),
-    path("landing/", RedirectView.as_view(url="/", permanent=True), name="landing"),
+    path("landing/", RedirectView.as_view(url="/users/inscription/", permanent=True), name="landing"),
     path("medcare-sn/", views.home_medcare_sn, name="medcare_sn"),
     path("connexion/", RedirectView.as_view(url="/users/connexion/", permanent=False)),
     path("inscription/", RedirectView.as_view(url="/users/inscription/", permanent=False)),

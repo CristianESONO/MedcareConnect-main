@@ -5719,6 +5719,12 @@
       if (resultsDesktop) resultsDesktop.style.display = '';
       if (resultsMobile) resultsMobile.style.display = '';
     }
+
+    function checkAndToggleResults() {
+      var ids = new URL(window.location.href).searchParams.getAll('acte');
+      if (ids.length > 0) showResultsArea();
+      else hideResultsArea();
+    }
     
     // Ensure desktop empty state prompt is visible on load
     showResultsArea();
