@@ -140,6 +140,11 @@ def home(request):
     return render(request, "index.html", _home_vitrine_context())
 
 
+def landing(request):
+    """Vitrine landing page 'Rejoindre MedCare'."""
+    return render(request, "landing.html", _home_vitrine_context())
+
+
 def home_medcare_sn(request):
     """Reproduction structurelle de medcare.sn (charte app) — URL dédiée /medcare-sn/."""
     return render(request, "index.html", _home_vitrine_context())
