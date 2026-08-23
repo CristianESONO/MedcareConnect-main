@@ -33,7 +33,35 @@
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         setDrawerOpen(false);
+        var dashDrawer = document.getElementById('dashAppDrawer');
+        var dashBackdrop = document.getElementById('dashAppDrawerBackdrop');
+        if (dashDrawer) dashDrawer.classList.remove('is-open');
+        if (dashBackdrop) dashBackdrop.hidden = true;
       });
+    });
+  }
+
+  window.openPrestataireDrawer = function (e) {
+    if (e) e.preventDefault();
+    var drawer = document.getElementById('dashAppDrawer');
+    var backdrop = document.getElementById('dashAppDrawerBackdrop');
+    if (drawer && backdrop) {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      backdrop.hidden = false;
+      backdrop.classList.add('is-visible');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('mc-visitor-drawer-open');
+    }
+  };
+
+  var dashBackdrop = document.getElementById('dashAppDrawerBackdrop');
+  if (dashBackdrop) {
+    dashBackdrop.addEventListener('click', function () {
+      var drawer = document.getElementById('dashAppDrawer');
+      if (drawer) drawer.classList.remove('is-open');
+      dashBackdrop.hidden = true;
+      document.body.classList.remove('mc-visitor-drawer-open');
     });
   }
 

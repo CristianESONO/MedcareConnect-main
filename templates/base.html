@@ -235,6 +235,8 @@
 
     {% if medcare_user_is_patient %}
     {% include "users/_patient_account_drawer.html" %}
+    {% elif user.is_authenticated and user.is_prestataire %}
+    {% include "includes/_prestataire_app_drawer.html" %}
     {% endif %}
 
     <!-- Main content -->
