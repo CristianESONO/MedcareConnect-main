@@ -780,12 +780,30 @@ def guest_cart_select_insurance(request):
     return redirect("cart:cart_view")
 
 
-@require_POST
 def guest_cart_clear(request):
-    if request.user.is_authenticated:
-        return redirect("cart:cart_view")
+    return cart_clear(request)
+
+
+def cart_clear(request):
+    """Vide intégralement le panier (session visiteur + base de données patient)."""
     _guest_cart_clear_all(request)
+    if request.user.is_authenticated:
+        cart = Cart.get_active_cart(request.user)
+        cart.items.all().delete()
+        cart.selected_insurance = None
+        cart.insurance_user_override = False
+        cart.save(update_fields=["selected_insurance", "insurance_user_override"])
+
+    if _wants_json_response(request):
+        return JsonResponse({"ok": True, "cart_count": 0, "coverage": _cart_coverage_payload(request)})
+
     messages.info(request, "Panier vidé.")
+    next_url = request.GET.get("next") or request.POST.get("next")
+    if next_url:
+        return redirect(next_url)
+    if getattr(request.user, "is_patient", False):
+        from users.patient_panel import panel_redirect
+        return redirect(panel_redirect("chariot"))
     return redirect("cart:cart_view")
 
 
@@ -824,17 +842,6 @@ def cart_select_insurance(request):
     cart.save(update_fields=["selected_insurance", "insurance_user_override"])
     if getattr(request.user, "is_patient", False):
         return redirect(panel_redirect("chariot"))
-    return redirect("cart:cart_view")
-
-
-@login_required
-def cart_clear(request):
-    cart = Cart.get_active_cart(request.user)
-    cart.items.all().delete()
-    cart.selected_insurance = None
-    cart.insurance_user_override = False
-    cart.save(update_fields=["selected_insurance", "insurance_user_override"])
-    messages.info(request, "Panier vidé.")
     return redirect("cart:cart_view")
 
 
