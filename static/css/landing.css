@@ -1238,3 +1238,70 @@
     font-size: 14px;
   }
 }
+
+/* ── MICRO-ANIMATIONS UX MOBILE PAGE D'ACCUEIL ── */
+@keyframes mcFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mcGlowDot {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 0 4px #14b87a;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 12px #14b87a;
+  }
+}
+
+@media (max-width: 767px) {
+  .mc-hero-badge,
+  .mc-hero-h1,
+  .mc-hero-sub,
+  .mc-hero-ctas,
+  .mc-hero-kpis {
+    animation: mcFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  
+  .mc-hero-h1 { animation-delay: 0.08s; }
+  .mc-hero-sub { animation-delay: 0.16s; }
+  .mc-hero-ctas { animation-delay: 0.24s; }
+  .mc-hero-kpis { animation-delay: 0.32s; }
+
+  .mc-pillar-card,
+  .card,
+  .mc-feature-card,
+  .mc-process-step {
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease !important;
+    will-change: transform;
+  }
+
+  .mc-pillar-card:active,
+  .card:active,
+  .mc-feature-card:active {
+    transform: scale(0.97) !important;
+  }
+
+  .mc-status-dot,
+  .live-dot {
+    animation: mcGlowDot 2s infinite ease-in-out;
+  }
+
+  .mc-btn-primary,
+  .mc-hero-btn-primary {
+    transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+  }
+
+  .mc-btn-primary:active,
+  .mc-hero-btn-primary:active {
+    transform: scale(0.96) !important;
+  }
+}
