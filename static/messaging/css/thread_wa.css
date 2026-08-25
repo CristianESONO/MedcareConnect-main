@@ -34,18 +34,18 @@
 .pac-wa-head, .mc-thread-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #075e54;
-  padding: 10px 14px;
+  gap: 12px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  padding: 12px 16px;
   flex-shrink: 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .pac-wa-av, .mc-thread-av {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #025c4d, #128c7e);
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,47 +53,48 @@
   font-weight: 800;
   color: #fff;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
 }
 
 .pac-wa-hn, .mc-thread-hn {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
+  color: #ffffff;
+  line-height: 1.25;
 }
 
 .pac-wa-hs, .mc-thread-hs {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.45);
-  margin-top: 1px;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
 }
 
 .mc-thread-status {
   margin: 0;
-  padding: 8px 12px;
-  font-size: 11px;
+  padding: 10px 14px;
+  font-size: 11.5px;
   font-weight: 600;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e2e8f0;
   flex-shrink: 0;
 }
 .mc-thread-status--wait { background: #fffbeb; color: #92400e; }
-.mc-thread-status--ok { background: var(--mc-accent-light, rgba(79,163,199,0.12)); color: var(--mc-accent-dark, #3d8fb3); }
+.mc-thread-status--ok { background: rgba(79,163,199,0.12); color: #0284c7; }
 .mc-thread-status--done { background: #eff6ff; color: #1e40af; }
-.mc-thread-status--expired { background: #f3f4f6; color: #6b7280; }
+.mc-thread-status--expired { background: #f8fafc; color: #64748b; }
 
-/* Zone messages — fond WhatsApp */
+/* Zone messages — fond moderne épuré */
 .pac-wa-chat, .mc-thread-chat {
-  background: #efeae2;
-  padding: 16px 12px 14px;
-  min-height: 260px;
-  max-height: 55vh;
+  background: #f8fafc;
+  padding: 18px 16px;
+  min-height: 280px;
+  max-height: 60vh;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   flex: 1 1 auto;
   margin-top: 0;
 }
@@ -127,23 +128,23 @@
   align-self: center;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 14px;
+  gap: 6px;
+  padding: 6px 16px;
   border-radius: 999px;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.94);
-  color: #374151;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  color: #0284c7;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .mc-thread-section--booking .mc-thread-section__head {
-  color: var(--mc-blue);
-  background: var(--mc-accent-light, rgba(79,163,199,0.12));
-  border-color: var(--mc-border, #D4DEEE);
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.08);
+  border-color: rgba(2, 132, 199, 0.2);
 }
 
 .mc-thread-section__icon {
@@ -156,16 +157,15 @@
 }
 
 @media (min-width: 768px) {
-  .pac-wa-chat, .mc-thread-chat { max-height: 440px; }
+  .pac-wa-chat, .mc-thread-chat { max-height: 480px; }
 }
 
-/* Bulles — wmsg-m démo */
+/* Bulles modernes */
 .pac-wmsg, .mc-wmsg {
-  max-width: 88%;
-  padding: 10px 14px;
-  border-radius: 10px;
+  max-width: 85%;
+  padding: 11px 15px;
   font-size: 13.5px;
-  line-height: 1.6;
+  line-height: 1.55;
   word-break: break-word;
   animation: mc-wmsg-in 0.2s ease;
 }
@@ -178,58 +178,58 @@
 .pac-wmsg--r, .mc-wmsg--r {
   background: #ffffff;
   align-self: flex-start;
-  border-radius: 2px 14px 14px 14px;
-  color: #111827;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 11px 15px;
+  color: #0f172a;
+  border-radius: 18px 18px 18px 4px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
 }
 
 .pac-wmsg--s, .mc-wmsg--s {
-  background: #dcf8c6;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   align-self: flex-end;
-  border-radius: 14px 2px 14px 14px;
-  color: #111827;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 11px 15px;
+  color: #ffffff;
+  border-radius: 18px 18px 4px 18px;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.2);
 }
 
-.pac-wmsg--sys, .mc-wmsg--sys {
-  background: rgba(255, 255, 255, 0.75);
+.mc-wmsg--sys {
   align-self: center;
-  font-size: 10px;
-  color: #4b5563;
-  text-align: center;
-  border-radius: 7px;
-  padding: 3px 9px;
-  max-width: 100%;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 4px 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .mc-wmsg--status {
   align-self: center;
   max-width: 96%;
   text-align: center;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
-  border-radius: 9px;
-  padding: 10px 13px;
+  border-radius: 12px;
+  padding: 10px 14px;
   background: #fffbeb;
-  border: 1.5px solid #f59e0b;
+  border: 1px solid #fde68a;
   color: #92400e;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .mc-wmsg-sender {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .mc-wmsg-sender--medcare {
-  color: #075e54;
+  color: #0284c7;
 }
 
 .mc-wmsg-sender--org {
-  color: var(--mc-blue);
+  color: #0f172a;
 }
 
 .mc-wmsg-sender--patient {
@@ -251,10 +251,15 @@
 }
 
 .pac-wtime, .mc-wtime {
-  font-size: 9px;
-  color: #9ca3af;
-  margin-top: 2px;
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 3px;
   text-align: right;
+}
+
+.pac-wmsg--s .pac-wtime,
+.mc-wmsg--s .mc-wtime {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Carte devis — wdevis-m démo (dans bulle blanche reçue) */
@@ -428,20 +433,29 @@
 }
 
 .mc-thread-back-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 18px;
   line-height: 1;
   padding: 0;
   cursor: pointer;
   flex-shrink: 0;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  margin-right: 2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+  margin-right: 4px;
+}
+
+.mc-thread-back-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  transform: translateX(-2px);
 }
 
 .mc-thread-footer {
