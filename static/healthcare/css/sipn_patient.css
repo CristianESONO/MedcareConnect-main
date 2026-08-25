@@ -1033,22 +1033,22 @@ body.sipn-prestations #search-form.search-page--dem #layout-body.layout.sipn-lay
     position: sticky;
     top: 4rem;
     z-index: 42;
-    padding: 0.7rem 0.75rem 0.75rem;
-    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    padding: 0.4rem 0.6rem 0.45rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
   }
 
   .sipn-piliers-block {
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.35rem;
   }
 
   .sipn-piliers-lbl,
   .sipn-search-lbl {
-    margin-bottom: 0.35rem;
-    font-size: 9px;
+    margin-bottom: 0.2rem;
+    font-size: 8.5px;
   }
 
   body.sipn-prestations #search-form.search-page--dem .piliers.dem-piliers {
-    gap: 0.4rem;
+    gap: 0.3rem;
     overflow-x: auto;
     flex-wrap: nowrap;
     padding-bottom: 0.15rem !important;
@@ -1062,30 +1062,46 @@ body.sipn-prestations #search-form.search-page--dem #layout-body.layout.sipn-lay
   body.sipn-prestations #search-form.search-page--dem .dem-pbtn {
     flex: 0 0 auto;
     max-width: 72vw;
-    padding: 6px 11px;
-    font-size: 10px;
+    padding: 4px 9px;
+    font-size: 9.5px;
   }
 
   .sipn-main-search {
-    gap: 0.4rem;
-    margin-bottom: 0.55rem;
+    gap: 0.3rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .sipn-search-input-zone {
+    border-width: 1.5px !important;
+    border-radius: 9px !important;
+  }
+
+  .sipn-ac-box {
+    min-height: 36px !important;
+  }
+
+  .tokenized-input-container {
+    min-height: 36px !important;
+    padding-left: 32px !important;
   }
 
   body.sipn-prestations #search-form.search-page--dem #search-q.sipn-search-input,
   body.sipn-prestations #search-form.search-page--dem .sipn-search-input {
-    min-height: 44px;
-    padding: 11px 34px 11px 38px;
-    font-size: 13px;
+    min-height: 36px !important;
+    padding: 5px 28px 5px 32px !important;
+    font-size: 12px !important;
   }
 
   .sipn-search-emoji {
-    left: 12px;
-    font-size: 14px;
+    left: 10px;
+    font-size: 13px;
   }
 
   .sipn-search-go {
-    min-width: 44px;
-    border-radius: 10px;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    padding: 0 8px;
   }
 
   .sipn-filter-row {
