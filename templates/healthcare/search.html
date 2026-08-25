@@ -4593,14 +4593,17 @@
 
       tabBar.addEventListener('click', function(e){
         if (!mq.matches) return;
-        var link = e.target.closest('[data-mobile-tab]');
+        var link = e.target.closest('[data-mobile-tab], .bnav-btn');
         if (!link || !tabBar.contains(link)) return;
-        e.preventDefault();
         var tab = link.getAttribute('data-mobile-tab');
+        if (tab === 'messages' || (link.id && link.id.indexOf('messages') !== -1)) {
+          window.location.href = '{% url "messaging:inbox" %}';
+          return;
+        }
+        e.preventDefault();
         if (tab === 'prestations') showPrestations(true);
         else if (tab === 'resultats') showResults(true);
         else if (tab === 'panier') showPanier(true);
-        else if (tab === 'messages') showMessages(true);
         else if (tab === 'menu') showMenu(true);
       });
 
