@@ -24,7 +24,7 @@
         <p>Patient : informations personnelles. Prestataire : données complémentaires sur votre établissement.</p>
       </div>
 
-      <form method="POST" action="{% url 'users:register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" enctype="multipart/form-data">
+      <form method="POST" action="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" enctype="multipart/form-data">
         {% csrf_token %}
         {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
 

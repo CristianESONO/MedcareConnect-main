@@ -12,7 +12,7 @@
           <p>Accédez à votre espace MedCare Connect</p>
         </div>
 
-        <form method="POST" action="{% url 'users:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">
+        <form method="POST" action="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">
           {% csrf_token %}
           {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
 

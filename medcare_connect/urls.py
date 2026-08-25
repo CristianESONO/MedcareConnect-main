@@ -11,10 +11,15 @@ urlpatterns = [
     path("select2/", include("django_select2.urls")),
     path("", views.home, name="home"),
 
-    # Routes canoniques en français pour l'authentification (Accès racine /inscription/ & /connexion/)
+    # Routes canoniques en français pour l'authentification (Accès direct racine)
     path("inscription/", users_views.register, name="register"),
     path("connexion/", users_views.login_view, name="login"),
     path("deconnexion/", users_views.logout_view, name="logout"),
+
+    # Routes de compatibilité sans redirection HTTP pour préserver les requêtes POST
+    path("users/inscription/", users_views.register),
+    path("users/connexion/", users_views.login_view),
+    path("users/logout/", users_views.logout_view),
 
     # Routes canoniques en français pour les pages d'information
     path("comment-ca-marche/", views.how_it_works, name="how_it_works"),
@@ -22,10 +27,7 @@ urlpatterns = [
     path("contact/", views.contact, name="contact"),
     path("confiance/", views.trust, name="trust"),
 
-    # Redirections de compatibilité vers les routes canoniques en français
-    path("users/inscription/", RedirectView.as_view(url="/inscription/", permanent=True)),
-    path("users/connexion/", RedirectView.as_view(url="/connexion/", permanent=True)),
-    path("users/logout/", RedirectView.as_view(url="/deconnexion/", permanent=True)),
+    # Redirections d'anciennes pages
     path("landing/", RedirectView.as_view(url="/inscription/", permanent=True), name="landing"),
     path("rejoindre/", RedirectView.as_view(url="/inscription/", permanent=True), name="rejoindre"),
     path("how-it-works/", RedirectView.as_view(url="/comment-ca-marche/", permanent=True)),
