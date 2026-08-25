@@ -5294,10 +5294,13 @@
     var searchInput = document.getElementById('search-q');
     if (!searchInput) return;
     
-    // Create token container
+    // Create token container (responsive height)
+    var isMobile = window.innerWidth < 640;
     var tokenContainer = document.createElement('div');
     tokenContainer.className = 'tokenized-input-container';
-    tokenContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 8px 4px 44px;border:none;background:transparent;min-height:48px;position:relative;width:100%;box-sizing:border-box;';
+    var minH = isMobile ? '36px' : '44px';
+    var padLeft = isMobile ? '32px' : '44px';
+    tokenContainer.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:2px 8px 2px ' + padLeft + ';border:none;background:transparent;min-height:' + minH + ';position:relative;width:100%;box-sizing:border-box;';
     
     var inputWrapper = searchInput.parentElement;
     if (inputWrapper) {
@@ -5305,7 +5308,7 @@
       var searchIcon = inputWrapper.querySelector('svg');
       if (searchIcon) {
         searchIcon.style.position = 'absolute';
-        searchIcon.style.left = '12px';
+        searchIcon.style.left = isMobile ? '10px' : '12px';
         searchIcon.style.top = '50%';
         searchIcon.style.transform = 'translateY(-50%)';
         searchIcon.style.zIndex = '1';
@@ -5314,7 +5317,8 @@
       inputWrapper.insertBefore(tokenContainer, searchInput);
       tokenContainer.appendChild(searchInput);
       if (searchIcon) tokenContainer.appendChild(searchIcon);
-      searchInput.style.cssText = 'flex:1 1 120px;min-width:120px;border:none;outline:none;padding:4px;margin:0;font-size:14px;background:transparent;';
+      var fontSz = isMobile ? '12px' : '14px';
+      searchInput.style.cssText = 'flex:1 1 100px;min-width:100px;border:none;outline:none;padding:2px 4px;margin:0;font-size:' + fontSz + ';background:transparent;';
     }
     
     // Create autocomplete dropdown

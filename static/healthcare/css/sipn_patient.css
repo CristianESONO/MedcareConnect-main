@@ -1082,13 +1082,16 @@ body.sipn-prestations #search-form.search-page--dem #layout-body.layout.sipn-lay
 
   .tokenized-input-container {
     min-height: 36px !important;
-    padding-left: 32px !important;
+    height: 36px !important;
+    padding: 2px 8px 2px 32px !important;
   }
 
   body.sipn-prestations #search-form.search-page--dem #search-q.sipn-search-input,
-  body.sipn-prestations #search-form.search-page--dem .sipn-search-input {
-    min-height: 36px !important;
-    padding: 5px 28px 5px 32px !important;
+  body.sipn-prestations #search-form.search-page--dem .sipn-search-input,
+  .tokenized-input-container input {
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 4px 24px 4px 6px !important;
     font-size: 12px !important;
   }
 
