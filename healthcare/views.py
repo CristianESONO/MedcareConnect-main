@@ -1644,6 +1644,7 @@ def search(request):
                 if aid not in block["matching_acte_ids"] and aid in acte_objs_pool
             ]
             items_total = sum((pa.price or Decimal(0)) for pa in block["items"])
+            plan = getattr(org, "subscription_plan", None)
             mobile_results_by_org.append(
                 {
                     "org": org,
