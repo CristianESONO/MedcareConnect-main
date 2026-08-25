@@ -29,12 +29,7 @@
           <span>Accueil</span>
         </a>
       </li>
-      <li>
-        <a href="{% url 'healthcare:search' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'search' %} is-active{% endif %}">
-          <i class="ti ti-search mc-landing-drawer-icon" aria-hidden="true"></i>
-          <span>Trouver un service</span>
-        </a>
-      </li>
+
       <li>
         <a href="{% url 'healthcare:annuaire' %}" class="mc-landing-drawer-link{% if rm.namespace == 'healthcare' and rm.url_name == 'annuaire' %} is-active{% endif %}">
           <i class="ti ti-building-hospital mc-landing-drawer-icon" aria-hidden="true"></i>
