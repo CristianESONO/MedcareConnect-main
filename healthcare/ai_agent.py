@@ -18,7 +18,7 @@ def process_ai_patient_request(user_prompt: str) -> dict:
     prompt = (user_prompt or "").strip()
     if not prompt:
         return {
-            "answer": "Bonjour ! Je suis l'Agent IA MedCare. Comment puis-je vous aider aujourd'hui ? Vous pouvez me demander un acte médical, un laboratoire, une imagerie ou une localisation.",
+            "answer": "Bonjour ! Je suis l'AgentAbdoul. Comment puis-je vous aider aujourd'hui ? Vous pouvez me demander un acte médical, un laboratoire, une imagerie ou une localisation.",
             "results": [],
             "suggested_chips": [
                 "🔬 Échographie abdominale à Dakar",
