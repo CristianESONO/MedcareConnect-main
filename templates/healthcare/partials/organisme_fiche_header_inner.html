@@ -14,8 +14,17 @@
         {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% endif %}
         {% if show_verified_badge or org.is_verified %}<span class="profil-drawer-verified">✓ Vérifié</span>{% endif %}
       </div>
-      <div class="profil-drawer-meta-row">
-        <span class="profil-drawer-sub">{{ org.type_organisme.name|default:"Structure" }}</span>
+      <div class="profil-drawer-meta-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px">
+        <span class="profil-drawer-sub">
+          {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Structure{% endif %}
+          {% if org.quartier %} · {{ org.quartier }}{% endif %}
+          {% if org.city %}, {{ org.city }}{% endif %}
+        </span>
+        {% if open_today == "closed" %}
+        <span style="font-size:10px;font-weight:700;background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Fermé</span>
+        {% else %}
+        <span style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Ouvert</span>
+        {% endif %}
       </div>
     </div>
   </div>
