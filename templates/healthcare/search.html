@@ -3660,6 +3660,10 @@
 
     initCartCardDelegation();
     syncAllCartCardStates();
+    if (typeof getManquants === 'function' && getManquants().length > 0) {
+      compVisible = true;
+      renderCompPanel();
+    }
     document.addEventListener('click', function(e){
       var btnAll = e.target && e.target.closest ? e.target.closest('[data-scard-add-all]') : null;
       if (btnAll) {
