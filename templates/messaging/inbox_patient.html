@@ -3,8 +3,8 @@
 {% block title %}Messagerie{% endblock %}
 {% block account_page_title %}Messagerie{% endblock %}
 {% block account_extra_css %}
-<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v5">
-<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v5">
+<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v6">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v6">
 {% endblock %}
 {% block account_content %}
 <div class="mc-inbox-wrap">
@@ -38,79 +38,79 @@
   {% endif %}
 
   {% if conversations_pending_validate or conversations_other or conversations %}
-  <div class="mt-4 space-y-4 pb-8">
+  <div class="mc-inbox-section-wrap">
     {% if conversations_pending_validate %}
-    <div class="text-xs font-bold uppercase tracking-wider text-amber-700 px-1">À valider · {{ conversations_pending_validate|length }}</div>
-    {% if grouped_pending %}
-      {% for group in grouped_pending %}
-      <div class="overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-xs">
-        <div class="bg-amber-50/90 px-5 py-2 text-xs font-bold text-amber-800 border-b border-amber-100 flex items-center gap-2">
+    <div class="mc-inbox-group-lbl text-amber-700">À valider · {{ conversations_pending_validate|length }}</div>
+    <div class="mc-inbox-card mc-inbox-card--pending">
+      {% if grouped_pending %}
+        {% for group in grouped_pending %}
+        <div class="mc-conv-date-hdr mc-conv-date-hdr--pending">
           <span>📅</span>
           <span>{{ group.label }}</span>
         </div>
-        <div class="divide-y divide-gray-100">
+        <div class="mc-conv-group-items">
           {% for conv in group.items %}
           {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
           {% endfor %}
         </div>
-      </div>
-      {% endfor %}
-    {% else %}
-      <div class="overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-xs divide-y divide-gray-100">
-        {% for conv in conversations_pending_validate %}
-        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
         {% endfor %}
-      </div>
-    {% endif %}
+      {% else %}
+        <div class="mc-conv-group-items">
+          {% for conv in conversations_pending_validate %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
     {% endif %}
 
     {% if conversations_other %}
-    <div class="text-xs font-bold uppercase tracking-wider text-gray-500 pt-2 px-1">
+    <div class="mc-inbox-group-lbl">
       {% if conversations_pending_validate %}Autres conversations{% else %}Conversations{% endif %} · {{ conversations_other|length }}
     </div>
-    {% if grouped_other %}
-      {% for group in grouped_other %}
-      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs">
-        <div class="bg-gray-50/90 px-5 py-2 text-xs font-bold text-gray-600 border-b border-gray-100 flex items-center gap-2">
+    <div class="mc-inbox-card">
+      {% if grouped_other %}
+        {% for group in grouped_other %}
+        <div class="mc-conv-date-hdr">
           <span>📅</span>
           <span>{{ group.label }}</span>
         </div>
-        <div class="divide-y divide-gray-100">
+        <div class="mc-conv-group-items">
           {% for conv in group.items %}
           {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
           {% endfor %}
         </div>
-      </div>
-      {% endfor %}
-    {% else %}
-      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs divide-y divide-gray-100">
-        {% for conv in conversations_other %}
-        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
         {% endfor %}
-      </div>
-    {% endif %}
+      {% else %}
+        <div class="mc-conv-group-items">
+          {% for conv in conversations_other %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
     {% elif not conversations_pending_validate %}
-    {% if grouped_conversations %}
-      {% for group in grouped_conversations %}
-      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs">
-        <div class="bg-gray-50/90 px-5 py-2 text-xs font-bold text-gray-600 border-b border-gray-100 flex items-center gap-2">
+    <div class="mc-inbox-card">
+      {% if grouped_conversations %}
+        {% for group in grouped_conversations %}
+        <div class="mc-conv-date-hdr">
           <span>📅</span>
           <span>{{ group.label }}</span>
         </div>
-        <div class="divide-y divide-gray-100">
+        <div class="mc-conv-group-items">
           {% for conv in group.items %}
           {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
           {% endfor %}
         </div>
-      </div>
-      {% endfor %}
-    {% else %}
-      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs divide-y divide-gray-100">
-        {% for conv in conversations %}
-        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
         {% endfor %}
-      </div>
-    {% endif %}
+      {% else %}
+        <div class="mc-conv-group-items">
+          {% for conv in conversations %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
     {% endif %}
   </div>
   {% else %}
