@@ -1,58 +1,74 @@
 /* Mon compte — layout plein écran sidebar + contenu (MEDCARE PATIENT FINAL) */
 
-body.pac-page-open,
-body.pac-drawer-open {
-  overflow: hidden;
-  background: var(--mc-bg, #F4F7FB) !important;
-  padding-bottom: 0 !important;
-}
-body.pac-page-open > #medcare-site-nav,
-body.pac-page-open > .mc-landing-header,
-body.pac-page-open > .mc-landing-drawer-backdrop,
-body.pac-page-open > footer,
-body.pac-page-open > #visitor-banner,
-body.pac-drawer-open > #medcare-site-nav,
-body.pac-drawer-open > .mc-landing-header,
-body.pac-drawer-open > .mc-landing-drawer-backdrop,
-body.pac-drawer-open > footer,
-body.pac-drawer-open > #visitor-banner {
-  display: none !important;
+/* ── STYLES DESKTOP ( >= 768px ) : Flux normal avec Navbar en haut et Footer en bas ── */
+@media (min-width: 768px) {
+  body.pac-page-open {
+    overflow: auto !important;
+    background: var(--mc-bg, #F4F7FB) !important;
+  }
+
+  body.pac-page-open > #medcare-site-nav,
+  body.pac-page-open > .mc-landing-header,
+  body.pac-page-open > footer,
+  body.pac-page-open > #visitor-banner {
+    display: block !important;
+  }
+
+  .pac-page {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 10 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    min-height: calc(100vh - 120px) !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #f9fafb !important;
+    box-sizing: border-box !important;
+  }
 }
 
+/* ── STYLES MOBILE ( < 768px ) : Positionnement fixe sous la navbar mobile ── */
 @media (max-width: 767px) {
+  body.pac-page-open,
+  body.pac-drawer-open {
+    overflow: hidden !important;
+    background: var(--mc-bg, #F4F7FB) !important;
+    padding-bottom: 0 !important;
+  }
+
   body.pac-page-open > #medcare-site-nav,
   body.pac-page-open > .mc-landing-header {
     display: block !important;
   }
 
+  body.pac-page-open > footer,
+  body.pac-page-open > #visitor-banner {
+    display: none !important;
+  }
+
   body.pac-page-open .pac-page {
+    position: fixed !important;
     top: var(--medcare-site-nav-h, 4rem) !important;
+    left: 0 !important;
+    right: 0 !important;
     bottom: var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))) !important;
     height: calc(100dvh - var(--medcare-site-nav-h, 4rem) - var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px)))) !important;
     max-height: calc(100dvh - var(--medcare-site-nav-h, 4rem) - var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px)))) !important;
+    z-index: 350 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    background: #f9fafb !important;
+    box-sizing: border-box !important;
   }
-}
 
   body.pac-drawer-open .pac-root.pac-root--open .pac-modal {
     bottom: var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px)));
   }
-}
-
-/* ── Page pleine (URL /compte/panel/…) ── */
-.pac-page {
-  position: fixed;
-  inset: 0;
-  z-index: 350;
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-  height: 100dvh;
-  max-height: 100dvh;
-  overflow: hidden;
-  background: #f9fafb;
-  box-sizing: border-box;
 }
 .pac-page--overlay {
   position: relative;
