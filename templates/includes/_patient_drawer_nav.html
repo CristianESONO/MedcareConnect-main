@@ -56,24 +56,30 @@
 
 <!-- HEADER avatar + nom patient -->
 <div class="mc-patient-drawer-header">
-  {% if show_drawer_close %}
-  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Retour">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-  </button>
-  {% endif %}
-  <div class="mc-patient-avatar-m" id="menu-avatar-m">
-    {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}P{% endif %}
-  </div>
-  <div class="mc-patient-header-info">
-    <div class="mc-patient-header-name" id="menu-nom">
-      {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Mon compte{% endif %}
+  <div class="mc-patient-header-top">
+    <div class="mc-patient-avatar-m" id="menu-avatar-m">
+      {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}P{% endif %}
     </div>
-    <div class="mc-patient-header-email" id="menu-email">
-      {% if user.is_authenticated %}{{ user.email|default:user.username }}{% else %}Espace patient MedCare{% endif %}
+    <div class="mc-patient-header-info">
+      <div class="mc-patient-header-name" id="menu-nom">
+        {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Mon compte{% endif %}
+      </div>
+      <div class="mc-patient-header-email" id="menu-email">
+        {% if user.is_authenticated %}{{ user.email|default:user.username }}{% else %}Espace patient MedCare{% endif %}
+      </div>
     </div>
+    {% if show_drawer_close %}
+    <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+    </button>
+    {% else %}
+    <div class="mc-patient-header-brand">
+      <span>Med</span><span class="mc-brand-accent">Care</span>
+    </div>
+    {% endif %}
   </div>
-  <div class="mc-patient-header-brand">
-    <span>Med</span><span class="mc-brand-accent">Care</span>
+  <div class="mc-patient-header-pill-row">
+    <span class="pac-head-status-pill"><span class="pac-status-dot"></span> Compte Patient VÉRIFIÉ</span>
   </div>
 </div>
 

@@ -6,11 +6,27 @@
       {% include "users/_patient_compte_sidebar.html" %}
       <div class="pac-main">
         <header class="pac-main-head">
-          <div class="min-w-0">
-            <h1 class="pac-main-title" id="pac-content-title">Mon compte</h1>
-            <p class="pac-main-sub truncate">{{ user.display_name }} · {{ user.email|default:user.username }}</p>
+          <div class="pac-head-left">
+            <button type="button" id="pac-close-btn" class="pac-head-back-btn" aria-label="Retour">
+              <i class="ti ti-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div class="pac-head-avatar">
+              {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}P{% endif %}
+            </div>
+            <div class="pac-head-user-info">
+              <div class="pac-head-user-row">
+                <h1 class="pac-main-title" id="pac-content-title">Mon compte</h1>
+                <span class="pac-head-status-pill"><span class="pac-status-dot"></span> Patient</span>
+              </div>
+              <p class="pac-head-user-details">
+                <span class="pac-head-name">{{ user.get_full_name|default:user.display_name }}</span>
+                {% if user.email %}<span class="pac-head-sep">·</span><span class="pac-head-email">{{ user.email }}</span>{% endif %}
+              </p>
+            </div>
           </div>
-          <button type="button" class="pac-back-btn" id="pac-close-btn">← Retour aux prestations</button>
+          <a href="{% url 'healthcare:search' %}" class="pac-back-btn hidden sm:inline-flex">
+            <i class="ti ti-search" aria-hidden="true"></i> Prestations
+          </a>
         </header>
         <div class="pac-main-body" id="pac-overlay-content"><div class="pac-inner"></div></div>
       </div>

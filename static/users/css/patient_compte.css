@@ -414,13 +414,26 @@ body.pac-page-open > main {
 /* En-tête drawer patient mobile */
 .mc-patient-drawer-header {
   background: linear-gradient(135deg, #0b2239 0%, #123a63 60%, #14b87a 100%);
-  padding: 16px;
+  padding: 16px 18px 14px;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mc-patient-header-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.mc-patient-header-pill-row {
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
 }
 
 .mc-patient-avatar-m {
