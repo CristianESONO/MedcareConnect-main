@@ -19,28 +19,18 @@ body.pac-drawer-open > #visitor-banner {
   display: none !important;
 }
 
-@media (max-width: 767px) {
-  body.pac-page-open > #medcare-site-nav,
-  body.pac-page-open > .mc-landing-header {
-    display: block !important;
-  }
-}
-
-body.pac-page-open > main {
-  overflow: hidden;
-  min-height: 0;
-  flex: 1 1 auto;
-  padding: 0;
-  margin: 0;
+body.pac-page-open > #medcare-site-nav,
+body.pac-page-open > .mc-landing-header {
+  display: none !important;
 }
 
 @media (max-width: 767px) {
-  /* La barre d’onglets reste visible — le panneau compte s’arrête au-dessus */
+  /* En-tête unique bleu pac-main-head au sommet de l'écran */
   body.pac-page-open .pac-page {
-    top: var(--medcare-site-nav-h, 4rem);
+    top: 0 !important;
     bottom: var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px)));
-    height: calc(100dvh - var(--medcare-site-nav-h, 4rem) - var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))));
-    max-height: calc(100dvh - var(--medcare-site-nav-h, 4rem) - var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))));
+    height: calc(100dvh - var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))));
+    max-height: calc(100dvh - var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))));
   }
 
   body.pac-drawer-open .pac-root.pac-root--open .pac-modal {
@@ -351,10 +341,13 @@ body.pac-page-open > main {
 
 @media (max-width: 639px) {
   .pac-main-head {
-    padding: 10px 12px !important;
-    height: 52px !important;
-    min-height: 52px !important;
-    max-height: 52px !important;
+    padding-top: max(10px, env(safe-area-inset-top, 10px)) !important;
+    padding-bottom: 10px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    height: auto !important;
+    min-height: calc(52px + env(safe-area-inset-top, 0px)) !important;
+    max-height: none !important;
   }
   .pac-head-back-btn {
     width: 32px !important;
