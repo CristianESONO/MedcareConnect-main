@@ -1588,14 +1588,16 @@ button.mc-wslot.pac-wchip--sel {
 }
 
 /* ============================================================
-   OCCUPATION 100% PLEIN ÉCRAN DU FIL DE DISCUSSION PATIENT
+   OCCUPATION 100% PLEIN ÉCRAN ET DÉFILEMENT FLUIDE MESSAGERIE PATIENT
    ============================================================ */
 body.pac-page-open .pac-page:has(.mc-chat-page) .pac-main-body,
 body.pac-page-open .pac-page:has(.mc-thread) .pac-main-body,
+body.pac-page-open .pac-page:has(.mc-inbox-wrap) .pac-main-body,
 .pac-page--messages .pac-main-body,
 .pac-page--conversation .pac-main-body,
 .pac-main-body:has(.mc-chat-page),
-.pac-main-body:has(.mc-thread) {
+.pac-main-body:has(.mc-thread),
+.pac-main-body:has(.mc-inbox-wrap) {
   padding: 0 !important;
   margin: 0 !important;
   display: flex !important;
@@ -1603,16 +1605,21 @@ body.pac-page-open .pac-page:has(.mc-thread) .pac-main-body,
   flex: 1 1 0% !important;
   min-height: 0 !important;
   height: 100% !important;
-  overflow: hidden !important;
-  background: #f1f5f9 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  background: #f8fafc !important;
 }
 
 body.pac-page-open .pac-page:has(.mc-chat-page) .pac-inner,
 body.pac-page-open .pac-page:has(.mc-thread) .pac-inner,
+body.pac-page-open .pac-page:has(.mc-inbox-wrap) .pac-inner,
 .pac-page--messages .pac-inner,
 .pac-page--conversation .pac-inner,
 .pac-inner:has(.mc-chat-page),
-.pac-inner:has(.mc-thread) {
+.pac-inner:has(.mc-thread),
+.pac-inner:has(.mc-inbox-wrap) {
   max-width: none !important;
   width: 100% !important;
   height: 100% !important;
@@ -1624,6 +1631,27 @@ body.pac-page-open .pac-page:has(.mc-thread) .pac-inner,
   min-height: 0 !important;
 }
 
+.mc-inbox-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  padding: 16px 16px 80px !important;
+  box-sizing: border-box !important;
+}
+
+.mc-conv-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  overflow: visible !important;
+}
+
 .mc-chat-page, .mc-thread-page {
   padding: 0 !important;
   margin: 0 !important;
@@ -1633,6 +1661,7 @@ body.pac-page-open .pac-page:has(.mc-thread) .pac-inner,
   flex-direction: column !important;
   flex: 1 1 0% !important;
   min-height: 0 !important;
+  overflow: hidden !important;
 }
 
 .pac-wa, .mc-thread {
@@ -1657,6 +1686,7 @@ body.pac-page-open .pac-page:has(.mc-thread) .pac-inner,
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
   background: #f1f5f9 !important;
 }
 
