@@ -3,27 +3,12 @@
 {% block title %}Messagerie{% endblock %}
 {% block account_page_title %}Messagerie{% endblock %}
 {% block account_extra_css %}
-<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v4">
-<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v4">
+<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v5">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v5">
 {% endblock %}
 {% block account_content %}
 <div class="mc-inbox-wrap">
-  <div class="mc-inbox-head" style="display:flex;align-items:center;justify-content:space-between">
-    <div class="mc-inbox-title">Messagerie</div>
-    <a href="{% url 'healthcare:search' %}" class="pac-btn-primary" style="display:inline-flex;align-items:center;gap:6px">
-      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
-      Retour aux prestations
-    </a>
-  </div>
-  <div class="mc-inbox-sub">
-      {% if devis_validate_banner %}
-        {{ devis_validate_pending_count }} structure{{ devis_validate_pending_count|pluralize }} à valider · devis {{ devis_validate_ref }}
-      {% elif conversations %}
-        Vos devis et rendez-vous · {{ conversations|length }} conversation{{ conversations|length|pluralize }}
-      {% else %}
-        Vos devis et rendez-vous
-      {% endif %}
-    </div>
+
 
   {% if devis_validate_banner %}
   <section class="mc-validate-banner" aria-label="Structures à valider">
