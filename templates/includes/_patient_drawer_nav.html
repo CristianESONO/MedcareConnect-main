@@ -1,60 +1,209 @@
-{% comment %}Navigation drawer patient — charte graphique officielle MedCare (Navy #0d1b2a, Bleu #0a5c8a, Vert #14b87a).{% endcomment %}
+{% comment %}Navigation drawer patient — charte graphique officielle MedCare Connect Premium.{% endcomment %}
 {% with rm=request.resolver_match %}
 <style>
 .mc-menu-drawer-wrap {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   background: #ffffff;
+  padding-bottom: 24px;
 }
+
+.mc-patient-drawer-header {
+  background: linear-gradient(135deg, #0b2239 0%, #123a63 55%, #0284c7 100%) !important;
+  padding: max(28px, env(safe-area-inset-top, 28px)) 20px 20px !important;
+  color: #ffffff;
+  position: relative;
+}
+
+.mc-patient-header-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mc-patient-avatar-m {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284c7, #14b87a);
+  color: #ffffff;
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  border: 2.5px solid rgba(255, 255, 255, 0.9);
+  flex-shrink: 0;
+}
+
+.mc-patient-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mc-patient-header-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.mc-patient-header-email {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.mc-patient-header-pill-row {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.pac-head-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(20, 184, 122, 0.18);
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  color: #2dd4bf;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.pac-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2dd4bf;
+  box-shadow: 0 0 8px #2dd4bf;
+}
+
+.mc-menu-cat-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  padding: 16px 20px 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mc-menu-cat-lbl::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #f1f5f9;
+}
+
 .mc-menu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px 16px;
+  gap: 14px;
+  padding: 12px 20px;
   background: #ffffff;
-  border-bottom: 1px solid #f1f5f9;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.15s ease;
-  border-left: 3px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border-left: 3.5px solid transparent;
 }
-.mc-menu-item:hover {
+
+.mc-menu-item:active, .mc-menu-item:hover {
   background: #f8fafc;
 }
+
 .mc-menu-item.is-active {
-  background: #eef7fb;
-  border-left-color: #0a5c8a;
+  background: linear-gradient(90deg, rgba(2, 132, 199, 0.08) 0%, rgba(20, 184, 122, 0.03) 100%);
+  border-left-color: #0284c7;
 }
+
 .mc-menu-item.is-active .mc-mi-label {
-  color: #0a5c8a;
+  color: #0284c7;
   font-weight: 700;
 }
-.mc-mi-icon {
-  font-size: 18px;
-  width: 28px;
-  text-align: center;
+
+.mc-mi-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
+
+.mc-menu-item:active .mc-mi-icon-box {
+  transform: scale(0.92);
+}
+
 .mc-mi-info {
   flex: 1;
+  min-width: 0;
 }
+
 .mc-mi-label {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: #0d1b2a;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
 }
+
 .mc-mi-sub {
-  font-size: 10.5px;
+  font-size: 11px;
   color: #64748b;
   margin-top: 1px;
 }
+
 .mc-mi-arrow {
-  font-size: 15px;
-  color: #94a3b8;
+  font-size: 16px;
+  color: #cbd5e1;
   font-weight: 700;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.mc-menu-item:hover .mc-mi-arrow,
+.mc-menu-item:active .mc-mi-arrow {
+  color: #0284c7;
+  transform: translateX(3px);
+}
+
+.mc-drawer-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.mc-drawer-logout-btn:active {
+  background: #fee2e2;
+  transform: scale(0.98);
 }
 </style>
 
-<!-- HEADER avatar + nom patient -->
+<!-- HEADER EN-TÊTE BLEU NAVY MEDCARE -->
 <div class="mc-patient-drawer-header">
   <div class="mc-patient-header-top">
     <div class="mc-patient-avatar-m" id="menu-avatar-m">
@@ -70,12 +219,8 @@
     </div>
     {% if show_drawer_close %}
     <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Fermer">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
     </button>
-    {% else %}
-    <div class="mc-patient-header-brand">
-      <span>Med</span><span class="mc-brand-accent">Care</span>
-    </div>
     {% endif %}
   </div>
   <div class="mc-patient-header-pill-row">
@@ -83,65 +228,83 @@
   </div>
 </div>
 
-<!-- SECTIONS nav aux couleurs de MedCare -->
+<!-- SECTIONS MENU DESIGN COMPTE PATIENT MEDCARE -->
 <div class="mc-menu-drawer-wrap">
 
   <!-- Vue d'ensemble -->
-  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;padding:12px 16px 4px">Vue d'ensemble</div>
+  <div class="mc-menu-cat-lbl">Vue d'ensemble</div>
   <a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="mc-menu-item js-pac-nav{% if account_active == 'accueil' %} is-active{% endif %}" data-pac-tab="accueil">
-    <div class="mc-mi-icon">⚡</div>
+    <div class="mc-mi-icon-box" style="background:#e0f2fe;color:#0284c7">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Tableau de bord</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
 
   <!-- Profil -->
-  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;padding:12px 16px 4px;border-top:1px solid #f1f5f9">Profil</div>
+  <div class="mc-menu-cat-lbl">Profil</div>
   <a href="{% url 'users:patient_panel_tab' tab='profil' %}" class="mc-menu-item js-pac-nav{% if account_active == 'profil' %} is-active{% endif %}" data-pac-tab="profil">
-    <div class="mc-mi-icon">👤</div>
+    <div class="mc-mi-icon-box" style="background:#e0e7ff;color:#4338ca">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Mes informations</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
   <a href="{% url 'users:patient_panel_tab' tab='assurance' %}" class="mc-menu-item js-pac-nav{% if account_active == 'assurance' %} is-active{% endif %}" data-pac-tab="assurance">
-    <div class="mc-mi-icon">🛡</div>
+    <div class="mc-mi-icon-box" style="background:#d1fae5;color:#059669">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751A11.959 11.959 0 0 1 12 2.714Z"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Assurance</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
 
   <!-- Soins & Achats -->
-  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;padding:12px 16px 4px;border-top:1px solid #f1f5f9">Soins &amp; Achats</div>
+  <div class="mc-menu-cat-lbl">Soins &amp; Achats</div>
   <a href="{% url 'users:patient_panel_tab' tab='devis' %}" class="mc-menu-item js-pac-nav{% if account_active == 'devis' %} is-active{% endif %}" data-pac-tab="devis">
-    <div class="mc-mi-icon">📋</div>
+    <div class="mc-mi-icon-box" style="background:#fef3c7;color:#d97706">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Mes devis</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
   <a href="{% url 'users:patient_panel_tab' tab='rdv' %}" class="mc-menu-item js-pac-nav{% if account_active == 'rdv' %} is-active{% endif %}" data-pac-tab="rdv">
-    <div class="mc-mi-icon">📅</div>
+    <div class="mc-mi-icon-box" style="background:#e0f2fe;color:#0284c7">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Mes RDV</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
   <a href="{% url 'messaging:rappels' %}" class="mc-menu-item">
-    <div class="mc-mi-icon">🔔</div>
+    <div class="mc-mi-icon-box" style="background:#ffe4e6;color:#e11d48">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Rappels</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
   <a href="{% url 'messaging:notifications' %}" class="mc-menu-item">
-    <div class="mc-mi-icon">🛎️</div>
+    <div class="mc-mi-icon-box" style="background:#ccfbf1;color:#0d9488">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Notifications</div></div>
     {% if unread_notifications %}
-    <div style="background:#14b87a;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;margin-right:6px">{{ unread_notifications }}</div>
+    <div style="background:#14b87a;color:#fff;font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;margin-right:6px">{{ unread_notifications }}</div>
     {% endif %}
     <div class="mc-mi-arrow">›</div>
   </a>
   <a href="{% url 'users:patient_panel_tab' tab='recherches' %}" class="mc-menu-item js-pac-nav{% if account_active == 'recherches' %} is-active{% endif %}" data-pac-tab="recherches">
-    <div class="mc-mi-icon">🕐</div>
+    <div class="mc-mi-icon-box" style="background:#f3e8ff;color:#7e22ce">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">Historique</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
 
   <!-- Informations -->
-  <div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;padding:12px 16px 4px;border-top:1px solid #f1f5f9">Informations</div>
+  <div class="mc-menu-cat-lbl">Informations</div>
   <a href="{% url 'about' %}" class="mc-menu-item">
-    <div class="mc-mi-icon">ℹ️</div>
+    <div class="mc-mi-icon-box" style="background:#f1f5f9;color:#475569">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
+    </div>
     <div class="mc-mi-info">
       <div class="mc-mi-label">À propos · medcare.sn</div>
       <div class="mc-mi-sub">Zéro commission sur les actes</div>
@@ -149,27 +312,29 @@
     <div class="mc-mi-arrow">›</div>
   </a>
   <a href="{% url 'trust' %}" class="mc-menu-item">
-    <div class="mc-mi-icon">📄</div>
+    <div class="mc-mi-icon-box" style="background:#f1f5f9;color:#475569">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:20px;height:20px"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+    </div>
     <div class="mc-mi-info"><div class="mc-mi-label">CGU &amp; Confidentialité</div></div>
     <div class="mc-mi-arrow">›</div>
   </a>
 
   {% if user.is_authenticated %}
-  <div style="padding:16px">
-    <a href="{% url 'users:logout' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#fef2f2;color:#dc2626;border:1.5px solid #fecaca;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer">
-      <i class="ti ti-logout" aria-hidden="true"></i> Déconnexion
+  <div style="padding:20px 16px 8px">
+    <a href="{% url 'users:logout' %}" class="mc-drawer-logout-btn">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:18px;height:18px"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/></svg>
+      Déconnexion
     </a>
   </div>
   {% else %}
-  <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
-    <a href="{% url 'users:login' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#0a5c8a;color:#fff;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:none">
+  <div style="padding:20px 16px 8px;display:flex;flex-direction:column;gap:10px">
+    <a href="{% url 'users:login' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg, #0b2239, #123a63);color:#fff;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;text-decoration:none">
       Connexion
     </a>
-    <a href="{% url 'users:register' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#14b87a;color:#fff;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-decoration:none">
+    <a href="{% url 'users:register' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg, #0284c7, #14b87a);color:#fff;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;text-decoration:none">
       Rejoindre MedCare
     </a>
   </div>
   {% endif %}
-  <div style="height:24px"></div>
 </div>
 {% endwith %}
