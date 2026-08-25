@@ -53,55 +53,78 @@
   {% endif %}
 
   {% if conversations_pending_validate or conversations_other or conversations %}
-  <div class="mc-conv-list">
+  <div class="mt-4 space-y-4 pb-8">
     {% if conversations_pending_validate %}
-    <div class="mc-conv-section-lbl">À valider · {{ conversations_pending_validate|length }}</div>
+    <div class="text-xs font-bold uppercase tracking-wider text-amber-700 px-1">À valider · {{ conversations_pending_validate|length }}</div>
     {% if grouped_pending %}
       {% for group in grouped_pending %}
-      <div class="mc-conv-day-group">
-        <div class="mc-conv-day-hdr">{{ group.label }}</div>
-        {% for conv in group.items %}
-        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
-        {% endfor %}
+      <div class="overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-xs">
+        <div class="bg-amber-50/90 px-5 py-2 text-xs font-bold text-amber-800 border-b border-amber-100 flex items-center gap-2">
+          <span>📅</span>
+          <span>{{ group.label }}</span>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for conv in group.items %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
+          {% endfor %}
+        </div>
       </div>
       {% endfor %}
     {% else %}
-      {% for conv in conversations_pending_validate %}
-      {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
-      {% endfor %}
+      <div class="overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-xs divide-y divide-gray-100">
+        {% for conv in conversations_pending_validate %}
+        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=1 %}
+        {% endfor %}
+      </div>
     {% endif %}
     {% endif %}
 
     {% if conversations_other %}
-    <div class="mc-conv-section-lbl">{% if conversations_pending_validate %}Autres conversations{% else %}Conversations{% endif %}{% if conversations_other %} · {{ conversations_other|length }}{% endif %}</div>
+    <div class="text-xs font-bold uppercase tracking-wider text-gray-500 pt-2 px-1">
+      {% if conversations_pending_validate %}Autres conversations{% else %}Conversations{% endif %} · {{ conversations_other|length }}
+    </div>
     {% if grouped_other %}
       {% for group in grouped_other %}
-      <div class="mc-conv-day-group">
-        <div class="mc-conv-day-hdr">{{ group.label }}</div>
-        {% for conv in group.items %}
-        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
-        {% endfor %}
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs">
+        <div class="bg-gray-50/90 px-5 py-2 text-xs font-bold text-gray-600 border-b border-gray-100 flex items-center gap-2">
+          <span>📅</span>
+          <span>{{ group.label }}</span>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for conv in group.items %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+          {% endfor %}
+        </div>
       </div>
       {% endfor %}
     {% else %}
-      {% for conv in conversations_other %}
-      {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
-      {% endfor %}
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs divide-y divide-gray-100">
+        {% for conv in conversations_other %}
+        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+        {% endfor %}
+      </div>
     {% endif %}
     {% elif not conversations_pending_validate %}
     {% if grouped_conversations %}
       {% for group in grouped_conversations %}
-      <div class="mc-conv-day-group">
-        <div class="mc-conv-day-hdr">{{ group.label }}</div>
-        {% for conv in group.items %}
-        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
-        {% endfor %}
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs">
+        <div class="bg-gray-50/90 px-5 py-2 text-xs font-bold text-gray-600 border-b border-gray-100 flex items-center gap-2">
+          <span>📅</span>
+          <span>{{ group.label }}</span>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for conv in group.items %}
+          {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+          {% endfor %}
+        </div>
       </div>
       {% endfor %}
     {% else %}
-      {% for conv in conversations %}
-      {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
-      {% endfor %}
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xs divide-y divide-gray-100">
+        {% for conv in conversations %}
+        {% include "messaging/_inbox_conv_item.html" with conv=conv highlight=0 %}
+        {% endfor %}
+      </div>
     {% endif %}
     {% endif %}
   </div>
