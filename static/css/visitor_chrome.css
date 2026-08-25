@@ -998,6 +998,13 @@ body.mc-visitor-drawer-open {
   align-items: start;
 }
 
+.mc-footer-col--newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .mc-footer-brand-row,
 .mc-footer-brand-col {
   display: flex;
@@ -1006,12 +1013,16 @@ body.mc-visitor-drawer-open {
   text-align: center;
   gap: 8px;
   margin-bottom: 18px;
+  width: 100%;
 }
 
 .mc-footer-logo-link {
   flex-shrink: 0;
   line-height: 0;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 
 .mc-footer-logo-link .mc-brand-logo {
@@ -1027,22 +1038,26 @@ body.mc-visitor-drawer-open {
 
 .mc-footer-tagline {
   margin: 8px auto 0;
-  font-size: 19px !important;
+  font-size: 17px !important;
   font-weight: 700 !important;
   line-height: 1.45;
   color: #ffffff !important;
   text-align: center !important;
-  max-width: 380px;
+  max-width: 320px;
+  width: 100%;
   display: block;
 }
 
 .mc-footer-newsletter-block {
-  max-width: 280px;
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .mc-footer-newsletter-title {
   font-family: 'Syne', sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
   color: #8ed4ef;
@@ -1088,6 +1103,8 @@ body.mc-visitor-drawer-open {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  align-items: center;
 }
 
 .mc-footer-input {
@@ -1101,6 +1118,7 @@ body.mc-visitor-drawer-open {
   margin: 0;
   outline: none;
   box-sizing: border-box;
+  text-align: center;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -1110,6 +1128,7 @@ body.mc-visitor-drawer-open {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  text-align: center;
 }
 
 .mc-footer-input:focus {
@@ -1130,6 +1149,8 @@ body.mc-visitor-drawer-open {
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
   transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .mc-footer-submit:hover {
