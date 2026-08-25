@@ -1643,7 +1643,7 @@ def search(request):
                 for aid in pool_for_pills
                 if aid not in block["matching_acte_ids"] and aid in acte_objs_pool
             ]
-            items_total = sum(pa.price for pa in block["items"])
+            items_total = sum((pa.price or Decimal(0)) for pa in block["items"])
             mobile_results_by_org.append(
                 {
                     "org": org,
