@@ -257,30 +257,49 @@ body.pac-page-open > main {
   flex-direction: column;
   overflow: hidden;
 }
-/* ── En-tête Espace Patient haut de gamme ── */
+/* ── En-tête Espace Patient haut de gamme (compatible iOS & iPhone) ── */
 .pac-main-head {
   background: linear-gradient(135deg, #0b2239 0%, #123a63 55%, #184b7a 100%);
-  padding: 16px 24px;
+  padding: max(14px, env(safe-area-inset-top, 14px)) max(18px, env(safe-area-inset-right, 18px)) 14px max(18px, env(safe-area-inset-left, 18px));
+  display: -webkit-box;
+  display: -webkit-flex;
   display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
   align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(11, 34, 57, 0.15);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .pac-head-left {
+  display: -webkit-box;
+  display: -webkit-flex;
   display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
-  flex: 1;
+  width: 100%;
+  flex: 1 1 0%;
 }
 
 .pac-head-back-btn {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
   display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
   justify-content: center;
   width: 36px;
   height: 36px;
@@ -291,6 +310,7 @@ body.pac-page-open > main {
   font-size: 16px;
   cursor: pointer;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
   transition: background 0.2s, transform 0.2s;
 }
 
@@ -300,56 +320,65 @@ body.pac-page-open > main {
 }
 
 .pac-head-avatar {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: linear-gradient(135deg, #14b87a 0%, #0a5c8a 100%);
   border: 2px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 4px 14px rgba(20, 184, 122, 0.35);
   color: #ffffff;
   font-family: 'Syne', sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
+  display: -webkit-flex;
   display: flex;
+  -webkit-align-items: center;
   align-items: center;
+  -webkit-justify-content: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
 .pac-head-user-info {
   min-width: 0;
-  flex: 1;
+  width: 100%;
+  flex: 1 1 0%;
+  overflow: hidden;
 }
 
 .pac-head-user-row {
+  display: -webkit-flex;
   display: flex;
+  -webkit-align-items: center;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .pac-main-title {
   font-family: 'Syne', sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
   color: #ffffff;
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .pac-head-status-pill {
+  display: -webkit-inline-flex;
   display: inline-flex;
+  -webkit-align-items: center;
   align-items: center;
   gap: 5px;
-  padding: 2px 8px;
-  background: rgba(20, 184, 122, 0.18);
-  border: 1px solid rgba(20, 184, 122, 0.35);
+  padding: 2px 7px;
+  background: rgba(20, 184, 122, 0.2);
+  border: 1px solid rgba(20, 184, 122, 0.38);
   border-radius: 9999px;
   color: #4ade80;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .pac-status-dot {
@@ -361,24 +390,24 @@ body.pac-page-open > main {
 }
 
 .pac-head-user-details {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
+  display: block;
+  font-size: 11.5px;
   color: rgba(255, 255, 255, 0.85);
-  margin: 3px 0 0;
+  margin: 2px 0 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .pac-head-name {
-  font-weight: 600;
+  font-weight: 700;
   color: #ffffff;
 }
 
 .pac-head-sep {
   color: rgba(255, 255, 255, 0.4);
+  margin: 0 4px;
 }
 
 .pac-head-email {
@@ -396,7 +425,9 @@ body.pac-page-open > main {
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
+  display: -webkit-inline-flex;
   display: inline-flex;
+  -webkit-align-items: center;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
@@ -411,32 +442,55 @@ body.pac-page-open > main {
   transform: translateY(-1px);
 }
 
-/* En-tête drawer patient mobile */
+/* En-tête drawer patient mobile (iOS compatible) */
 .mc-patient-drawer-header {
   background: linear-gradient(135deg, #0b2239 0%, #123a63 60%, #14b87a 100%);
-  padding: 16px 18px 14px;
+  padding: max(16px, env(safe-area-inset-top, 16px)) max(16px, env(safe-area-inset-right, 16px)) 14px max(16px, env(safe-area-inset-left, 16px));
+  display: -webkit-flex;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mc-patient-header-top {
+  display: -webkit-flex;
   display: flex;
+  -webkit-align-items: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
 }
 
 .mc-patient-header-pill-row {
+  display: -webkit-flex;
   display: flex;
+  -webkit-align-items: center;
   align-items: center;
   margin-top: 2px;
 }
 
 .mc-patient-avatar-m {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #14b87a;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(20, 184, 122, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
   width: 44px;
   height: 44px;
   border-radius: 50%;
