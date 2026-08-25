@@ -3659,7 +3659,9 @@
 
     initCartCardDelegation();
     syncAllCartCardStates();
-    $(document).on('click', '#dem-cart-clear-btn, #btn-vider-panier, .psh-clear, .profil-panier-clear', function(e){
+    document.addEventListener('click', function(e){
+      var btn = e.target && e.target.closest ? e.target.closest('#dem-cart-clear-btn, #btn-vider-panier, .psh-clear, .profil-panier-clear') : null;
+      if (!btn) return;
       e.preventDefault();
       fetch('/cart/clear/', {
         method: 'POST',
