@@ -720,11 +720,11 @@ body.mc-visitor-drawer-open {
 .mc-landing-drawer-logo .mc-brand-logo {
   display: block;
   width: auto;
-  max-width: 8rem;
-  height: 2.35rem;
+  max-width: 11.5rem;
+  height: 3.2rem;
   object-fit: contain;
   filter: brightness(0) invert(1);
-  opacity: 0.98;
+  opacity: 1;
 }
 
 .mc-drawer-tagline-box {
