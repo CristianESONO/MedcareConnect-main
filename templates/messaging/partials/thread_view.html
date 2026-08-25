@@ -21,9 +21,7 @@
   data-embed="1"
   {% endif %}>
   <header class="mc-thread-head">
-    {% if user == conversation.patient %}
-    <a href="{% url 'messaging:inbox' %}" class="mc-thread-back-btn" aria-label="Retour à la messagerie">‹</a>
-    {% endif %}
+
     <div class="mc-thread-av" aria-hidden="true">
       {% if org %}{{ org.name|make_list|first|upper }}{% else %}M{% endif %}
     </div>
