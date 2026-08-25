@@ -3133,11 +3133,10 @@
 
     function renderCompPanel(){
       var container = getCompPanelContainer();
-      if (!container || !compVisible) return;
+      if (!container) return;
       var manquants = getManquants();
       if (!manquants.length) {
         container.innerHTML = '';
-        compVisible = false;
         return;
       }
       Object.keys(compChoices).forEach(function(pk){
@@ -3684,24 +3683,36 @@
       }
       var btn = e.target && e.target.closest ? e.target.closest('#dem-cart-clear-btn, #btn-vider-panier, .psh-clear, .profil-panier-clear') : null;
       if (!btn) return;
-      e.preventDefault();
-      fetch('/cart/clear/', {
+      var csrfToken = (typeof getCsrfToken === 'function' ? getCsrfToken() : (document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : ''));
+      var clearForm = btn.closest ? btn.closest('form') : null;
+      var actionUrl = (clearForm && clearForm.action) ? clearForm.action : '/cart/clear/';
+
+      function resetCartUI(){
+        cart.clear();
+        renderCart();
+        syncCartBadges(0);
+        syncAllCartCardStates();
+        var pBody = document.getElementById('panier-body-m');
+        if (pBody) {
+          pBody.innerHTML = '<div class="cart-empty-m"><div class="cemi">🛒</div><div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre parcours.</div><button type="button" class="cemt-cta" data-sipn-goto-tab="prestations">Rechercher des actes</button></div>';
+        }
+        var pHeadCount = document.querySelector('.psh-count');
+        if (pHeadCount) pHeadCount.textContent = '0';
+        if (typeof renderCompPanel === 'function') renderCompPanel();
+        if (typeof sipnToast === 'function') sipnToast('Panier vidé', 'info');
+      }
+
+      fetch(actionUrl, {
         method: 'POST',
         headers: {
-          'X-CSRFToken': (typeof getCsrfToken === 'function' ? getCsrfToken() : (document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '')),
+          'X-CSRFToken': csrfToken,
           'X-Requested-With': 'XMLHttpRequest'
         }
-      }).then(function(){
-        cart.clear();
-        renderCart();
-        syncCartBadges(0);
-        syncAllCartCardStates();
-        if (typeof sipnToast === 'function') sipnToast('Panier vidé', 'info');
-      }).catch(function(){
-        cart.clear();
-        renderCart();
-        syncCartBadges(0);
-        syncAllCartCardStates();
+      }).then(resetCartUI).catch(function(){
+        fetch('/cart/guest/clear/', {
+          method: 'POST',
+          headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(resetCartUI).catch(resetCartUI);
       });
     });
     var cartFloatBtn = document.getElementById('sipn-cart-float-btn');
