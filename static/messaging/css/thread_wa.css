@@ -1674,6 +1674,33 @@ body.pac-page-open .pac-main-body,
   flex-direction: column !important;
 }
 
+@media (max-width: 767px) {
+  .mc-inbox-wrap {
+    padding: 0 0 90px 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .mc-inbox-section-wrap {
+    gap: 0 !important;
+  }
+
+  .mc-inbox-group-lbl {
+    padding: 12px 16px 6px !important;
+    background: #f8fafc !important;
+  }
+
+  .mc-inbox-card {
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
 .mc-conv-group-items > a,
 .mc-conv-group-items > .mc-conv-item {
   border-bottom: 1px solid #f1f5f9 !important;
