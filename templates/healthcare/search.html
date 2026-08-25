@@ -3058,25 +3058,25 @@
 
     function compOfferTags(offer, rank){
       var tags = [];
-      if (rank === 0 && compSort === 'prix') tags.push('<span class="csr-tag csr-tag--cheap">Moins cher</span>');
+      if (rank === 0 && compSort === 'prix') tags.push('<span class="csr-tag csr-tag--cheap">💰 Moins cher</span>');
       if (rank === 0 && compSort === 'proximite' && offer.distanceKm != null) {
-        tags.push('<span class="csr-tag csr-tag--dist">Plus proche</span>');
+        tags.push('<span class="csr-tag csr-tag--dist">📍 Plus proche</span>');
       }
       if (rank === 0 && compSort === 'assurance' && offer.insOk) {
-        tags.push('<span class="csr-tag csr-tag--ins">Couvert</span>');
+        tags.push('<span class="csr-tag csr-tag--ins">🛡 Couvert</span>');
       }
       if (rank === 0 && compSort === 'delai' && offer.delaiRank <= 4) {
-        tags.push('<span class="csr-tag csr-tag--fast">Plus rapide</span>');
+        tags.push('<span class="csr-tag csr-tag--fast">⚡ Plus rapide</span>');
       }
       if (offer.insOk && compSort !== 'assurance') {
-        tags.push('<span class="csr-tag csr-tag--ins">Couvert</span>');
+        tags.push('<span class="csr-tag csr-tag--ins">🛡 Couvert</span>');
       }
       if (offer.distanceKm != null && compSort === 'proximite') {
-        tags.push('<span class="csr-tag csr-tag--dist">≈ ' + offer.distanceKm + ' km</span>');
+        tags.push('<span class="csr-tag csr-tag--dist">📍 ' + offer.distanceKm + ' km</span>');
       } else if (offer.delai && offer.delaiRank <= 4 && compSort !== 'delai') {
-        tags.push('<span class="csr-tag csr-tag--fast">' + escapeHtml(offer.delai) + '</span>');
+        tags.push('<span class="csr-tag csr-tag--fast">⏱ ' + escapeHtml(offer.delai) + '</span>');
       }
-      return tags.slice(0, 2).join('');
+      return tags.slice(0, 3).join('');
     }
 
     function sortOffers(offers){
@@ -3145,10 +3145,10 @@
       });
 
       var sortDefs = [
-        { val: 'prix', lbl: 'Prix' },
-        { val: 'proximite', lbl: 'Proximité' },
-        { val: 'assurance', lbl: 'Assurance' },
-        { val: 'delai', lbl: 'Délai' }
+        { val: 'prix', lbl: '💰 Prix' },
+        { val: 'proximite', lbl: '📍 Proximité' },
+        { val: 'assurance', lbl: '🛡 Assurance' },
+        { val: 'delai', lbl: '⚡ Délai' }
       ];
       var sortBtns = sortDefs.map(function(o){
         return '<button type="button" class="csort-btn' + (compSort === o.val ? ' active' : '') + '" data-comp-sort="' + o.val + '">' + o.lbl + '</button>';
@@ -3182,7 +3182,7 @@
             '<div class="csr-info"><div class="csr-name">' + escapeHtml(o.orgName) + '</div>' +
             (tags ? '<div class="csr-tags">' + tags + '</div>' : '') + '</div>' +
             '<div class="csr-right"><div class="csr-prix">' + fnum(o.price) + ' F</div>' +
-            (o.delai ? '<div class="csr-delai">' + escapeHtml(o.delai) + '</div>' : '') +
+            (o.delai ? '<div class="csr-delai">⏱ ' + escapeHtml(o.delai) + '</div>' : '') +
             trajetBtn +
             '</div></div>';
         }).join('');
@@ -3203,10 +3203,11 @@
 
       container.innerHTML = '<div class="comp-panel">' +
         '<div class="comp-panel-head"><div class="cph-left">' +
-        '<div><div class="cph-title">Complétez votre panier</div>' +
-        '<div class="cph-sub">' + manquants.length + ' acte' + (manquants.length > 1 ? 's' : '') + ' non couvert' + (manquants.length > 1 ? 's' : '') + ' par votre sélection</div></div></div>' +
+        '<div class="cph-icon" style="font-size:22px;margin-right:8px">🔔</div>' +
+        '<div><div class="cph-title" style="font-family:\'Syne\',sans-serif;font-size:15px;font-weight:700">Complétez votre devis</div>' +
+        '<div class="cph-sub" style="font-size:11.5px;color:#64748b;margin-top:2px">' + manquants.length + ' acte' + (manquants.length > 1 ? 's' : '') + ' non couvert' + (manquants.length > 1 ? 's' : '') + ' par votre sélection</div></div></div>' +
         (canTakeAll ? '<button type="button" class="cph-take-all" data-comp-take-all>Tout prendre</button>' : '') +
-        '<button type="button" class="cph-close" data-comp-close aria-label="Fermer">×</button></div>' +
+        '<button type="button" class="cph-close" data-comp-close aria-label="Fermer">✕</button></div>' +
         '<div class="comp-sort-bar">' + sortBtns + '</div>' + actesHtml +
         '<div class="comp-footer"><div class="cf-total">' +
         (nbChoix > 0
