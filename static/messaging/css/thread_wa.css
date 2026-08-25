@@ -1669,30 +1669,38 @@ body.pac-page-open .pac-main-body,
 @media (min-width: 768px) {
   .pac-page--messages .pac-main-body,
   .pac-page--conversation .pac-main-body {
-    padding: 24px 28px !important;
+    padding: 20px 24px !important;
     background: #f8fafc !important;
+    width: 100% !important;
   }
 
   .pac-page--messages .pac-inner,
   .pac-page--conversation .pac-inner {
-    max-width: 1000px !important;
-    margin: 0 auto !important;
+    max-width: none !important;
     width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .mc-inbox-wrap {
     padding: 0 !important;
-    max-width: 1000px !important;
-    margin: 0 auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .mc-inbox-card {
+    max-width: none !important;
     width: 100% !important;
   }
 
   .mc-chat-page, .mc-thread-page {
-    max-width: 1000px !important;
-    margin: 0 auto !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
     padding: 0 !important;
-    height: calc(100vh - 120px) !important;
-    min-height: 520px !important;
+    height: calc(100vh - 140px) !important;
+    min-height: 540px !important;
     display: flex !important;
     flex-direction: column !important;
   }
@@ -1704,6 +1712,8 @@ body.pac-page-open .pac-main-body,
     overflow: hidden !important;
     background: #ffffff !important;
     height: 100% !important;
+    width: 100% !important;
+    max-width: none !important;
     display: flex !important;
     flex-direction: column !important;
     flex: 1 1 0% !important;
