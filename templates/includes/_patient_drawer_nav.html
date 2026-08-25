@@ -54,26 +54,26 @@
 }
 </style>
 
-<!-- HEADER avatar + nom (Charte MedCare : Gradient Navy/Bleu/Vert - DEMO_MOBILE_PATIENT) -->
-<div style="background:linear-gradient(135deg, #0d1b2a 0%, #0a5c8a 60%, #14b87a 100%);padding:18px 16px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden">
+<!-- HEADER avatar + nom patient -->
+<div class="mc-patient-drawer-header">
   {% if show_drawer_close %}
-  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Retour" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;flex-shrink:0;transition:background .2s">
-    ←
+  <button type="button" class="mc-landing-drawer-close js-patient-drawer-close js-visitor-drawer-close" aria-label="Retour">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
   </button>
   {% endif %}
-  <div style="width:44px;height:44px;border-radius:50%;background:#14b87a;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 4px 14px rgba(20,184,122,.4);border:2px solid rgba(255,255,255,.3)" id="menu-avatar-m">
-    {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}A{% endif %}
+  <div class="mc-patient-avatar-m" id="menu-avatar-m">
+    {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}P{% endif %}
   </div>
-  <div style="overflow:hidden;flex:1">
-    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="menu-nom">
+  <div class="mc-patient-header-info">
+    <div class="mc-patient-header-name" id="menu-nom">
       {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Mon compte{% endif %}
     </div>
-    <div style="font-size:11px;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="menu-email">
+    <div class="mc-patient-header-email" id="menu-email">
       {% if user.is_authenticated %}{{ user.email|default:user.username }}{% else %}Espace patient MedCare{% endif %}
     </div>
   </div>
-  <div style="margin-left:auto">
-    <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff">Med<span style="color:#14b87a">Care</span></div>
+  <div class="mc-patient-header-brand">
+    <span>Med</span><span class="mc-brand-accent">Care</span>
   </div>
 </div>
 
