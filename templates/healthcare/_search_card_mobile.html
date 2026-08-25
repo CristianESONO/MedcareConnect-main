@@ -91,4 +91,12 @@
     <div class="scard-m-cart-badge" data-scard-m-cart-badge hidden></div>
     {% endif %}
   </div>
+
+  {% if block.items|length > 1 %}
+  <div class="scard-m-multiselect-footer" style="padding:8px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:8px">
+    <span style="font-size:11px;font-weight:600;color:#64748b">{{ block.items|length }} actes</span>
+    <span style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#0a5c8a" data-scard-total="{{ block.items_total|floatformat:0 }}">{{ block.items_total|floatformat:0 }} FCFA</span>
+    <button type="button" class="btn-select-all-m" style="background:#14b87a;color:#ffffff;border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;box-shadow:0 2px 8px rgba(20,184,122,0.25)" data-scard-add-all="{{ block.org.pk }}">➕ Tout</button>
+  </div>
+  {% endif %}
 </article>

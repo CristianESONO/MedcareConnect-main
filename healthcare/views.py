@@ -1643,11 +1643,12 @@ def search(request):
                 for aid in pool_for_pills
                 if aid not in block["matching_acte_ids"] and aid in acte_objs_pool
             ]
-            plan = getattr(org, "subscription_plan", None)
+            items_total = sum(pa.price for pa in block["items"])
             mobile_results_by_org.append(
                 {
                     "org": org,
                     "items": block["items"],
+                    "items_total": items_total,
                     "matching_count": matching_count,
                     "total_actes": mobile_results_acte_total,
                     "missing_actes": missing_actes,

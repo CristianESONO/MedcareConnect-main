@@ -3661,6 +3661,23 @@
     initCartCardDelegation();
     syncAllCartCardStates();
     document.addEventListener('click', function(e){
+      var btnAll = e.target && e.target.closest ? e.target.closest('[data-scard-add-all]') : null;
+      if (btnAll) {
+        e.preventDefault();
+        var orgId = btnAll.getAttribute('data-scard-add-all');
+        var card = document.getElementById('sm-' + orgId);
+        if (card) {
+          var checkboxes = card.querySelectorAll('.scard-m-checkbox');
+          checkboxes.forEach(function(cb){
+            if (!cb.checked) {
+              cb.checked = true;
+              var row = cb.closest('.scard-m-acte');
+              if (row) toggleCartFromCard(row);
+            }
+          });
+        }
+        return;
+      }
       var btn = e.target && e.target.closest ? e.target.closest('#dem-cart-clear-btn, #btn-vider-panier, .psh-clear, .profil-panier-clear') : null;
       if (!btn) return;
       e.preventDefault();
@@ -4520,10 +4537,8 @@
             history.replaceState(null, '', u.toString());
           } catch(e) {}
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'instant' });
         if (window._sipnUpdateMobileFabs) window._sipnUpdateMobileFabs();
-        var q = document.getElementById('search-q');
-        if (q) setTimeout(function(){ try { q.focus({ preventScroll: true }); } catch(e) {} }, 250);
       }
 
       function showPanier(push){
