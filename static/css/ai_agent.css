@@ -2,9 +2,8 @@
    Agent IA MedCare - Chatbot Flottant & Modal CSS
    ========================================================================== */
 
-/* FAB Agent IA MedCare (Masqué) */
+/* FAB Agent IA MedCare */
 .mc-fab-ai {
-  display: none !important;
   position: fixed;
   left: 24px;
   bottom: 24px;
