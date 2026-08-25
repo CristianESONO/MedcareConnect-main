@@ -669,16 +669,22 @@ body.mc-visitor-drawer-open {
 
 .mc-landing-drawer-header {
   position: relative;
-  padding: 24px 20px 18px;
+  padding: 16px 18px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
 }
 
+.mc-drawer-header-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  margin-bottom: 6px !important;
+}
+
 .mc-landing-drawer-close {
-  display: none;
-  position: absolute;
-  top: 18px;
-  right: 16px;
+  display: inline-flex !important;
+  position: static !important;
   align-items: center;
   justify-content: center;
   width: 34px;
@@ -707,7 +713,7 @@ body.mc-visitor-drawer-open {
 
 @media (max-width: 1024px) {
   .mc-landing-drawer-close {
-    display: inline-flex;
+    display: inline-flex !important;
   }
 }
 

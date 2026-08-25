@@ -3,12 +3,14 @@
 <div class="mc-landing-drawer-backdrop" id="mcLandingDrawerBackdrop" hidden aria-hidden="true"></div>
 <aside class="mc-landing-drawer" id="mcLandingDrawer" aria-hidden="true" aria-label="Menu navigation mobile">
   <div class="mc-landing-drawer-header">
-    <button type="button" class="mc-landing-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-    </button>
-    <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
-      {% include "includes/_brand_logo.html" %}
-    </a>
+    <div class="mc-drawer-header-top">
+      <a href="{% url 'home' %}" class="mc-landing-drawer-logo" aria-label="MedCare — Accueil">
+        {% include "includes/_brand_logo.html" %}
+      </a>
+      <button type="button" class="mc-landing-drawer-close js-visitor-drawer-close" aria-label="Fermer le menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
     <div class="mc-drawer-tagline-box">
       <span class="mc-drawer-status-pill"><span class="mc-status-dot"></span> Plateforme Officielle</span>
       <p class="mc-landing-drawer-tagline">L'infrastructure paraclinique digitale du Sénégal.</p>

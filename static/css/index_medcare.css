@@ -1467,3 +1467,91 @@ body.mc-index-body .mc-landing-footer {
     margin-bottom: 18px;
   }
 }
+
+/* ============================================================
+   ANIMATIONS ET MICRO-INTERACTIONS UX MOBILE PAGE D'ACCUEIL
+   ============================================================ */
+@keyframes msnFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes msnFloatBadge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes msnGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 196, 200, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(0, 232, 255, 0.7);
+  }
+}
+
+@media (max-width: 767px) {
+  /* Animation d'arrivée fluide au chargement du hero mobile */
+  .mc-page-wrap.mc-index-page .msn-hero--mobile .msn-pill {
+    animation: msnFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both, msnFloatBadge 3s infinite ease-in-out 0.7s;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-hero--mobile .msn-hero-title {
+    animation: msnFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-hero--mobile .msn-hero-identify {
+    animation: msnFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-hero--mobile .msn-hero-btns {
+    animation: msnFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+  }
+
+  /* Micro-interactions tactiles sur les boutons d'action PATIENT & SOIGNANT */
+  .mc-page-wrap.mc-index-page .msn-btn--patient {
+    animation: msnGlowPulse 2.5s infinite ease-in-out;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease !important;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-btn--patient:active {
+    transform: scale(0.95) !important;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-btn--pro {
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), background 0.18s ease !important;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-btn--pro:active {
+    transform: scale(0.95) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Micro-interactions tactiles sur l'ensemble des cartes de la page d'accueil */
+  .mc-page-wrap.mc-index-page .msn-tca-card,
+  .mc-page-wrap.mc-index-page .msn-benefit-card,
+  .mc-page-wrap.mc-index-page .msn-pillar-visual-card,
+  .mc-page-wrap.mc-index-page .msn-glass-card,
+  .mc-page-wrap.mc-index-page .card {
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease !important;
+    will-change: transform;
+  }
+
+  .mc-page-wrap.mc-index-page .msn-tca-card:active,
+  .mc-page-wrap.mc-index-page .msn-benefit-card:active,
+  .mc-page-wrap.mc-index-page .msn-pillar-visual-card:active,
+  .mc-page-wrap.mc-index-page .card:active {
+    transform: scale(0.97) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  }
+}
