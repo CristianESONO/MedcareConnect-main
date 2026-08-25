@@ -3711,3 +3711,20 @@ def insurance_delete(request, pk):
     pec.delete()
     messages.success(request, "Assurance retirée.")
     return redirect("healthcare:insurances_manage")
+
+
+@require_POST
+def api_ai_agent_chat(request):
+    """Endpoint AJAX pour l'Agent IA MedCare (recherche intelligente)."""
+    try:
+        data = json.loads(request.body.decode("utf-8") or "{}")
+    except Exception:
+        data = request.POST or {}
+
+    user_prompt = (data.get("prompt") or data.get("q") or "").strip()
+
+    from .ai_agent import process_ai_patient_request
+    response_data = process_ai_patient_request(user_prompt)
+
+    return JsonResponse(response_data)
+

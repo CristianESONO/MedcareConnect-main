@@ -262,6 +262,9 @@
     {% include "includes/landing_footer.html" %}
     {% endblock site_footer %}
 
+    {% include "includes/ai_agent_modal.html" %}
+    <script src="{% static 'js/ai_agent.js' %}?v=1"></script>
+
     <script>
       window.MEDCARE_IS_AUTHENTICATED = {{ user.is_authenticated|yesno:"true,false" }};
       window.MEDCARE_IS_PATIENT = {{ medcare_user_is_patient|yesno:"true,false" }};

@@ -1,0 +1,64 @@
+{% load static %}
+
+<!-- Bouton Flottant Agent IA MedCare -->
+<button type="button" class="mc-fab-ai" id="mcAiFab" aria-label="Assistant IA MedCare" title="Discuter avec l'Agent IA MedCare">
+  <span class="mc-fab-ai-badge">IA</span>
+  <div class="mc-fab-ai-icon" aria-hidden="true">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width:24px;height:24px"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></svg>
+  </div>
+  <span class="mc-fab-ai-tooltip">Agent IA MedCare</span>
+</button>
+
+<!-- Modal / Drawer Chatbot Agent IA -->
+<div class="mc-ai-modal" id="mcAiModal" hidden aria-hidden="true" role="dialog" aria-label="Assistant IA MedCare">
+  <div class="mc-ai-modal-head">
+    <div class="mc-ai-agent-identity">
+      <div class="mc-ai-agent-avatar">
+        🤖
+        <span class="mc-ai-online-dot"></span>
+      </div>
+      <div class="mc-ai-agent-info">
+        <div class="mc-ai-agent-name">Agent IA MedCare</div>
+        <div class="mc-ai-agent-sub">Recherche intelligente de soins & actes</div>
+      </div>
+    </div>
+    <button type="button" class="mc-ai-close-btn" id="mcAiClose" aria-label="Fermer l'Assistant IA">&times;</button>
+  </div>
+
+  <div class="mc-ai-modal-body" id="mcAiChatBody">
+    <!-- Message d'accueil -->
+    <div class="mc-ai-msg mc-ai-msg--bot">
+      <div class="mc-ai-msg-content">
+        Bonjour ! Je suis l'<strong>Agent IA MedCare</strong>. 👋<br>
+        Quelle recherche souhaitez-vous effectuer ? Posez-moi votre question (acte médical, spécialité, établissement, ville...) et je trouverai les meilleurs résultats pour vous !
+      </div>
+    </div>
+
+    <!-- Suggestions rapides -->
+    <div class="mc-ai-chips" id="mcAiChips">
+      <button type="button" class="mc-ai-chip" data-query="Échographie abdominale à Dakar">🔬 Échographie Dakar</button>
+      <button type="button" class="mc-ai-chip" data-query="Prise de sang & Bilan sanguin">🩸 Prise de sang</button>
+      <button type="button" class="mc-ai-chip" data-query="Laboratoire d'analyses Mermoz">🏥 Labo à Mermoz</button>
+      <button type="button" class="mc-ai-chip" data-query="Scanner cérébral tarif">📻 Scanner médical</button>
+    </div>
+
+    <!-- Dynamic Message Stream -->
+    <div id="mcAiMessageStream" class="mc-ai-stream"></div>
+
+    <!-- Typing Indicator -->
+    <div class="mc-ai-typing" id="mcAiTyping" hidden>
+      <span class="mc-ai-typing-dot"></span>
+      <span class="mc-ai-typing-dot"></span>
+      <span class="mc-ai-typing-dot"></span>
+      <span class="mc-ai-typing-lbl">L'Agent IA recherche sur la plateforme...</span>
+    </div>
+  </div>
+
+  <form class="mc-ai-modal-foot" id="mcAiForm" onsubmit="return false;">
+    {% csrf_token %}
+    <input type="text" id="mcAiInput" class="mc-ai-input" placeholder="Posez votre question à l'Agent IA..." autocomplete="off" maxlength="300">
+    <button type="submit" id="mcAiSend" class="mc-ai-send-btn" aria-label="Envoyer">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+    </button>
+  </form>
+</div>

@@ -23,6 +23,7 @@ urlpatterns = [
     path("avis/", views.platform_review, name="platform_review"),
     path("avis/google/", views.platform_review_google, name="platform_review_google"),
     path("api/autocomplete/", views.api_search_autocomplete, name="api_search_autocomplete"),
+    path("api/ai-agent/", views.api_ai_agent_chat, name="api_ai_agent_chat"),
     path("api/actes-budget/", views.api_actes_budget, name="api_actes_budget"),
     path("api/geocode/", views.api_geocode, name="api_geocode"),
     path("api/reverse/", views.api_reverse, name="api_reverse"),
