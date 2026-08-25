@@ -4433,6 +4433,18 @@
         if (window._closeFilterSheet) window._closeFilterSheet();
         if (window._closeCartSheet) window._closeCartSheet();
         if (window._closeOrgPreview) window._closeOrgPreview();
+        if (window._sipnClosePilierSheet) window._sipnClosePilierSheet();
+        document.body.classList.remove('sipn-pilier-open');
+        var papSheet = document.getElementById('sipn-pap-sheet');
+        if (papSheet) {
+          papSheet.classList.remove('open');
+          papSheet.hidden = true;
+        }
+        var papBackdrop = document.getElementById('sipn-pap-backdrop');
+        if (papBackdrop) {
+          papBackdrop.classList.remove('open');
+          papBackdrop.hidden = true;
+        }
       }
 
       function commitActesToUrl(ids){
@@ -4492,14 +4504,18 @@
       function showPrestations(push){
         closeSheets();
         clearAppViews();
-        if (window._sipnShowPrestations) window._sipnShowPrestations(push);
-        else {
-          document.body.classList.add('sipn-mobile-view-prestations');
-          document.body.classList.remove('sipn-mobile-view-results', 'sipn-mobile-view-panier', 'sipn-mobile-view-messages', 'sipn-mobile-view-menu');
-        }
+        document.body.classList.add('sipn-mobile-view-prestations');
+        document.body.classList.remove('sipn-mobile-view-results', 'sipn-mobile-view-panier', 'sipn-mobile-view-messages', 'sipn-mobile-view-menu');
         setActive('prestations');
-        if (push && history.replaceState && !window._sipnShowPrestations) {
-          history.replaceState(null, '', window.location.pathname + window.location.search);
+        if (push && history.replaceState) {
+          try {
+            var u = new URL(window.location.href);
+            u.searchParams.delete('acte');
+            u.searchParams.delete('service');
+            u.searchParams.delete('page');
+            u.hash = '';
+            history.replaceState(null, '', u.toString());
+          } catch(e) {}
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (window._sipnUpdateMobileFabs) window._sipnUpdateMobileFabs();
