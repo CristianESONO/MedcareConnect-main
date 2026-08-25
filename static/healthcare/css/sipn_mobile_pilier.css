@@ -389,6 +389,19 @@
   /* Bottom nav visible aussi tablette (≤1023px) sur parcours prestations */
   body.sipn-prestations #medcare-tab-bar {
     display: flex !important;
+    z-index: 500 !important;
+    pointer-events: auto !important;
+  }
+
+  body.sipn-prestations #medcare-tab-bar .bnav-btn,
+  body.sipn-prestations #medcare-tab-bar [data-mobile-tab] {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+
+  body.sipn-prestations #medcare-tab-bar .bnav-btn *,
+  body.sipn-prestations #medcare-tab-bar [data-mobile-tab] * {
+    pointer-events: none !important;
   }
 
   body.sipn-prestations [data-mobile-tab="resultats"] {
