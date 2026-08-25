@@ -3,9 +3,9 @@
 {% block title %}{% block account_title %}Mon compte{% endblock %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=20260825_final">
-<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_final">
-<link rel="stylesheet" href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=20260825_final">
+<link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=20260825_v2">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v2">
+<link rel="stylesheet" href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=20260825_v2">
 {% block account_extra_css %}{% endblock %}
 {% endblock %}
 
@@ -20,19 +20,7 @@
         <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'healthcare:search' %}'; }" class="pac-head-back-btn" aria-label="Retour">
           <i class="ti ti-arrow-left" aria-hidden="true"></i>
         </button>
-        <div class="pac-head-avatar">
-          {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}P{% endif %}
-        </div>
-        <div class="pac-head-user-info">
-          <div class="pac-head-user-row">
-            <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
-            <span class="pac-head-status-pill"><span class="pac-status-dot"></span> Patient</span>
-          </div>
-          <p class="pac-head-user-details">
-            <span class="pac-head-name">{{ user.get_full_name|default:user.display_name }}</span>
-            {% if user.email %}<span class="pac-head-sep">·</span><span class="pac-head-email">{{ user.email }}</span>{% endif %}
-          </p>
-        </div>
+        <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
       </div>
       <a href="{% url 'healthcare:search' %}" class="pac-back-btn hidden sm:inline-flex">
         <i class="ti ti-search" aria-hidden="true"></i> Prestations
