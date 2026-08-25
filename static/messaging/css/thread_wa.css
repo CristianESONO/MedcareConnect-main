@@ -1328,12 +1328,13 @@ button.mc-wslot.pac-wchip--sel {
 
 .pac-page--messages .pac-main-body {
   padding: 0;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   background: #f9fafb;
+  -webkit-overflow-scrolling: touch;
 }
 
 .pac-page--messages .pac-inner {
@@ -1342,7 +1343,7 @@ button.mc-wslot.pac-wchip--sel {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .pac-page--messages .mc-inbox-wrap {
@@ -1351,7 +1352,7 @@ button.mc-wslot.pac-wchip--sel {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .pac-page--messages .mc-validate-banner {

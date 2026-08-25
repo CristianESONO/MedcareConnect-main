@@ -1,35 +1,21 @@
 {% with badge=conv.status_badge %}
-<a href="{% url 'messaging:conversation_detail' conv.pk %}{% if highlight %}?book=1{% endif %}" class="flex items-center gap-4 px-5 py-4 transition hover:bg-gray-50/80">
-  <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-sm font-bold text-primary-500">
+<a href="{% url 'messaging:conversation_detail' conv.pk %}{% if highlight %}?book=1{% endif %}" class="mc-conv-item{% if highlight %} mc-conv-item--action{% endif %}">
+  <span class="mc-conv-avatar" aria-hidden="true">
     {% if conv.organisme %}{{ conv.organisme.name|make_list|first|upper }}{% elif user == conv.patient %}{{ conv.prestataire.display_name|make_list|first|upper }}{% else %}{{ conv.patient.display_name|make_list|first|upper }}{% endif %}
+    {% if highlight %}<span class="mc-conv-avatar-dot" aria-hidden="true"></span>{% endif %}
   </span>
-  <span class="min-w-0 flex-1">
-    <span class="flex items-center justify-between gap-2">
-      <span class="truncate font-medium text-gray-900">
-        {% if conv.organisme %}{{ conv.organisme.name }}{% elif user == conv.patient %}{{ conv.prestataire.display_name }}{% else %}{{ conv.patient.display_name }}{% endif %}
-      </span>
-      {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
-    </span>
-    <span class="mt-0.5 flex flex-wrap items-center gap-2">
-      <span class="font-mono text-[10px] text-gray-400">{{ conv.dossier_label }}</span>
-      <span class="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide {% if badge.0 == 'wait' %}bg-amber-100 text-amber-800{% elif badge.0 == 'ok' %}mc-bg-accent-light mc-text-accent-dark{% elif badge.0 == 'done' %}bg-blue-50 text-blue-700{% else %}bg-gray-100 text-gray-600{% endif %}">
-        {% if highlight %}À valider{% else %}{{ badge.1 }}{% endif %}
-      </span>
+  <span class="mc-conv-info">
+    <span class="mc-conv-name">
+      {% if conv.organisme %}{{ conv.organisme.name }}{% elif user == conv.patient %}{{ conv.prestataire.display_name }}{% else %}{{ conv.patient.display_name }}{% endif %}
     </span>
     {% with last=conv.last_message %}
-      {% if last %}
-        <span class="mt-0.5 block truncate text-xs text-gray-400">{{ last.content|truncatechars:72 }}</span>
-      {% endif %}
+    <span class="mc-conv-preview">{% if last %}{{ last.content|truncatechars:56 }}{% else %}{{ conv.dossier_label }}{% endif %}</span>
     {% endwith %}
   </span>
-  {% if user == conv.patient %}
-    {% with count=conv.unread_count_for_patient %}
-      {% if count %}<span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white shadow-xs">{{ count }}</span>{% endif %}
-    {% endwith %}
-  {% else %}
-    {% with count=conv.unread_count_for_prestataire %}
-      {% if count %}<span class="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white shadow-xs">{{ count }}</span>{% endif %}
-    {% endwith %}
-  {% endif %}
+  <span class="mc-conv-meta">
+    {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
+    <span class="mc-conv-pill mc-conv-pill--{% if badge.0 == 'wait' %}wait{% elif badge.0 == 'ok' %}rdv{% elif badge.0 == 'done' %}done{% else %}devis{% endif %}">{% if highlight %}À valider{% else %}{{ badge.1 }}{% endif %}</span>
+    {% if user == conv.patient %}{% with count=conv.unread_count_for_patient %}{% if count %}<span class="mc-conv-unread">{{ count }}</span>{% endif %}{% endwith %}{% else %}{% with count=conv.unread_count_for_prestataire %}{% if count %}<span class="mc-conv-unread">{{ count }}</span>{% endif %}{% endwith %}{% endif %}
+  </span>
 </a>
 {% endwith %}
