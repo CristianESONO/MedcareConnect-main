@@ -207,11 +207,27 @@
 <div class="mc-patient-drawer-header">
   <div class="mc-patient-header-top">
     <div class="mc-patient-avatar-m" id="menu-avatar-m">
-      {% if user.is_authenticated %}{{ user.first_name|default:user.username|slice:":1"|upper }}{% else %}P{% endif %}
+      {% if user.is_authenticated %}
+        {% if user.first_name and user.last_name %}
+          {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+        {% else %}
+          {{ user.first_name|default:user.username|slice:":1"|upper }}
+        {% endif %}
+      {% else %}
+        P
+      {% endif %}
     </div>
     <div class="mc-patient-header-info">
       <div class="mc-patient-header-name" id="menu-nom">
-        {% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Mon compte{% endif %}
+        {% if user.is_authenticated %}
+          {% if user.first_name or user.last_name %}
+            {{ user.first_name }} {{ user.last_name }}
+          {% else %}
+            {{ user.get_full_name|default:user.username }}
+          {% endif %}
+        {% else %}
+          Mon compte
+        {% endif %}
       </div>
       <div class="mc-patient-header-email" id="menu-email">
         {% if user.is_authenticated %}{{ user.email|default:user.username }}{% else %}Espace patient MedCare{% endif %}

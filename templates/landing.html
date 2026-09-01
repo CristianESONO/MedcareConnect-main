@@ -4,7 +4,7 @@
 {% block title %}Bienvenue sur MedCare Connect{% endblock %}
 
 {% block visitor_extra_css %}
-<link rel="stylesheet" href="{% static 'css/landing.css' %}?v=28">
+<link rel="stylesheet" href="{% static 'css/landing.css' %}?v=32">
 {% endblock %}
 
 {% block body_extra_class %} mc-vitrine-page mc-landing-body{% endblock %}
@@ -110,8 +110,8 @@
       <div class="mc-acces-grid">
         <div class="mc-acces-text">
           <div class="mc-section-tag mc-section-tag--on-dark">ACCÈS IMMEDIAT</div>
-          <h2>Prix <em>réels</em>,<br>Localisations <em>exactes</em>,<br>Assurances <em>acceptés</em>.</h2>
-          <p class="mc-section-sub">Tout ce qu'il faut savoir avant de se déplacer.</p>
+          <h2>Prix <em>réels</em>,<br>Localisations <em>exactes</em>,<br>Assurances <em>acceptées</em>.</h2>
+          <p class="mc-section-sub mc-section-sub--nowrap">Tout ce qu'il faut savoir avant de se déplacer.</p>
         </div>
         <div class="mc-acces-visual" aria-hidden="true">
           <img
@@ -141,7 +141,7 @@
       <div class="mc2-piliers-grid">
         {% for pillar in pillars %}
         {% with service=pillar.service %}
-        <a href="{% url 'healthcare:service_detail' service.slug %}" class="mc2-pilier-card">
+        <a href="{% url 'healthcare:search' %}?service={{ service.pk }}" class="mc2-pilier-card">
           <div class="mc2-pilier-icon">
             {% if "biologie" in service.name|lower %}<i class="ti ti-flask"></i>
             {% elif "imagerie" in service.name|lower %}<i class="ti ti-scan"></i>
@@ -156,7 +156,6 @@
           <div class="mc2-pilier-link">
             <i class="ti ti-arrow-right" style="font-size:12px;"></i>
             Explorer nos {{ pillar.act_count }} actes
-            <span class="mc2-pilier-count">{{ pillar.act_count }} actes</span>
           </div>
         </a>
         {% endwith %}

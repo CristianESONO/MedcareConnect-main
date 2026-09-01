@@ -21,14 +21,32 @@
         <div class="pp-avatar-fallback" aria-hidden="true">{{ org.name|make_list|first|upper }}</div>
         {% endif %}
         <div class="pp-hero-text">
-          <div class="pp-title-row">
-            <h1 class="pp-name">{{ org.name }}</h1>
-            {% if show_pioneer_badge %}<span class="pp-title-badge pp-title-badge--pioneer">{% include "healthcare/_icon_svg.html" with icon="star" class="pp-ico pp-ico--xs" %} Pionnier</span>{% elif org.is_verified %}<span class="pp-title-badge pp-title-badge--verified">{% include "healthcare/_icon_svg.html" with icon="check" class="pp-ico pp-ico--xs" %} Vérifié</span>{% endif %}
+          <!-- Ligne 1 : Nom de la structure + Badge (Pionnier OU Vérifié) -->
+          <div class="pp-title-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <h1 class="pp-name" style="margin:0">{{ org.name }}</h1>
+            {% if show_pioneer_badge %}
+              <span class="pp-title-badge pp-title-badge--pioneer">{% include "healthcare/_icon_svg.html" with icon="star" class="pp-ico pp-ico--xs" %} Pionnier</span>
+            {% elif org.is_verified or show_verified_badge %}
+              <span class="pp-title-badge pp-title-badge--verified">{% include "healthcare/_icon_svg.html" with icon="check" class="pp-ico pp-ico--xs" %} Vérifié</span>
+            {% endif %}
           </div>
-          <p class="pp-subtitle">
-            {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
-            <span class="pp-subtitle-loc"> · {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city }}</span>
-          </p>
+
+          <!-- Ligne 2 : Type de structure + Badge (Ouvert OU Fermé) -->
+          <div class="pp-type-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <span class="pp-type" style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:12px">
+              {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
+            </span>
+            {% if open_today == "open" %}
+              <span class="pp-status pp-status--open" style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:2px 9px">● Ouvert</span>
+            {% elif open_today == "closed" %}
+              <span class="pp-status pp-status--closed" style="font-size:10px;font-weight:700;background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.55);border-radius:20px;padding:2px 9px">● Fermé</span>
+            {% endif %}
+          </div>
+
+          <!-- Ligne 3 : Adresse en bas -->
+          <div class="pp-address-row" style="margin-top:6px;font-size:11.5px;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:4px">
+            📍 {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city|default:"Dakar" }}{% if org.address %} — {{ org.address }}{% endif %}
+          </div>
         </div>
       </div>
       {% if maps_url or profil_pillars %}
@@ -70,7 +88,6 @@
       {% elif open_today == "closed" %}
       <span class="pp-status pp-status--closed"><span class="pp-status-dot"></span> Fermé</span>
       {% endif %}
-      {% if show_pioneer_badge %}<span class="pioneer-badge sipn-ico-inline" style="margin-left: 6px;">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>{% endif %}
     </div>
     {% include "healthcare/_organisme_fiche_hours_card.html" %}
     {% if practical_chips %}

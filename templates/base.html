@@ -11,11 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=38">
+    <link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=39">
     <link rel="stylesheet" href="{% static 'css/output.css' %}?v=12">
     <link rel="stylesheet" href="{% static 'css/visitor_charte.css' %}?v=19">
     <link rel="stylesheet" href="{% static 'css/password_toggle.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'css/ai_agent.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/ai_agent.css' %}?v=2">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
       :root {
@@ -167,7 +167,7 @@
                         <a href="{% url 'dashboard:index' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-accent-500 transition hover:bg-accent-50">Admin</a>
                         {% endif %}
                         <div class="ml-3 flex items-center gap-3 border-l border-gray-200 pl-3">
-                            <a href="{% if user.is_patient %}{% url 'users:patient_account' %}{% else %}{% url 'users:profile' %}{% endif %}" class="text-sm font-medium text-gray-700 hover:text-accent-500">{{ user.first_name|default:user.username }}</a>
+                            <a href="{% if user.is_patient %}{% url 'users:patient_account' %}{% else %}{% url 'users:profile' %}{% endif %}" class="text-sm font-medium text-gray-700 hover:text-accent-500">{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.get_full_name|default:user.username }}{% endif %}</a>
                             <a href="{% url 'users:logout' %}" class="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-200">Déconnexion</a>
                         </div>
                     {% else %}

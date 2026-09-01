@@ -468,11 +468,11 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+  background: linear-gradient(135deg, #16a34a 0%, #064e3b 100%);
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.38);
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -481,14 +481,14 @@
 }
 .mc-fab-ai:hover {
   transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 12px 32px rgba(2, 132, 199, 0.5);
+  box-shadow: 0 12px 32px rgba(22, 163, 74, 0.55);
 }
 .mc-fab-ai-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #38bdf8;
-  color: #0f172a;
+  background: #4ade80;
+  color: #052e16;
   font-size: 10px;
   font-weight: 800;
   padding: 1px 6px;
@@ -926,19 +926,37 @@
   .mc-vision-text h2 { font-size: 26px; }
   .mc-pro-text h2 { font-size: 24px; }
 
-  .mc-acces-grid { gap: 28px; }
+  .mc-acces-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
   .mc-acces-visual {
     border-radius: 23px;
     min-height: 270px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .mc-acces-visual-img {
     min-height: 270px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   /* Textes centrés (mobile) */
   .mc-page-wrap.mc-landing-page .mc-acces-text {
     text-align: center;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .mc-page-wrap.mc-landing-page .mc-acces-text .mc-section-tag {
@@ -1031,8 +1049,13 @@
   .mc-vision-kpi-val { font-size: 40px; }
   .mc-phases { flex-direction: column; gap: 10px; }
 
-  .mc-flip-card { max-width: 340px; width: 100%; height: 340px; }
+  .mc-flip-wrapper { width: 100%; max-width: 340px; padding: 8px 0; }
+  .mc-flip-card { max-width: 340px; width: 100%; height: 320px; }
+  /* Sur mobile : désactiver le hover automatique et activer le tap (via .flipped) */
   .mc-flip-card:hover .mc-flip-inner { transform: none; }
+  .mc-flip-card.flipped .mc-flip-inner { transform: rotateY(180deg) !important; }
+  /* Élément hint visible sur mobile pour indiquer qu'on peut tapper */
+  .mc-flip-hint { display: flex !important; opacity: 1 !important; }
 
   .mc-fab { width: 48px; height: 48px; font-size: 24px; }
   .mc-fab-whatsapp {
@@ -1040,9 +1063,50 @@
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
   .mc-fab-top {
-    right: 16px;
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 16px !important;
+    bottom: 140px !important;
     font-size: 20px;
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* Sous-titre Accès Immédiat : affichage complet sur une seule ligne sur tous les mobiles */
+  .mc-section-sub--nowrap {
+    white-space: nowrap;
+    font-size: clamp(9px, 3.25vw, 13.5px);
+    max-width: 100%;
+    box-sizing: border-box;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* FAB Agent IA : repositionnement mobile pour ne pas masquer la barre de nav/menu */
+  .mc-fab-ai {
+    left: auto !important;
+    right: 16px !important;
+    bottom: 82px !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: linear-gradient(135deg, #16a34a 0%, #064e3b 100%) !important;
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45) !important;
+  }
+  .mc-fab-ai:hover {
+    box-shadow: 0 10px 28px rgba(22, 163, 74, 0.6) !important;
+  }
+  .mc-fab-ai-badge {
+    background: #4ade80 !important;
+    color: #052e16 !important;
+  }
+  .mc-fab-ai-tooltip {
+    left: auto !important;
+    right: 58px !important;
+    top: 50% !important;
+    transform: translateY(-50%) translateX(6px) !important;
+    white-space: nowrap !important;
+  }
+  .mc-fab-ai:hover .mc-fab-ai-tooltip {
+    transform: translateY(-50%) translateX(0) !important;
   }
 }
 

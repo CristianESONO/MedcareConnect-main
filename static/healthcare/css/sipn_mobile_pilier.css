@@ -830,7 +830,7 @@
     right: 0;
     bottom: calc(var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))) + 0.5rem);
     z-index: 460;
-    padding: 0 12px;
+    padding: 0 72px 0 12px !important;
     padding-bottom: env(safe-area-inset-bottom, 0px);
     pointer-events: none;
     display: grid;

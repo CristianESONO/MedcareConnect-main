@@ -1298,6 +1298,17 @@ body.mc-index-body .mc-landing-footer {
     font-size: 14px;
   }
 
+  /* Forcer le sous-titre sur une seule ligne (mobile) : affichage complet sans tronquage */
+  .mc-page-wrap.mc-index-page .msn-acces-sub--nowrap {
+    white-space: nowrap;
+    font-size: clamp(9px, 3.25vw, 13.5px);
+    max-width: 100%;
+    box-sizing: border-box;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .mc-page-wrap.mc-index-page .msn-section {
     padding: 24px 0;
   }

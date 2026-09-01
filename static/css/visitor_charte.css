@@ -122,9 +122,12 @@ body.mc-vitrine-page .mc-page-wrap {
 
   /* FABs (landing, etc.) au-dessus de la barre d’onglets */
   body:has(#medcare-tab-bar) .mc-fab,
-  body:has(#medcare-tab-bar) .mc-fab-whatsapp,
-  body:has(#medcare-tab-bar) .mc-fab-top {
+  body:has(#medcare-tab-bar) .mc-fab-whatsapp {
     bottom: calc(var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))) + 0.75rem) !important;
+    z-index: 460;
+  }
+  body:has(#medcare-tab-bar) .mc-fab-top {
+    bottom: calc(var(--medcare-tab-bar-h, calc(4.125rem + env(safe-area-inset-bottom, 0px))) + 4.25rem) !important;
     z-index: 460;
   }
 }

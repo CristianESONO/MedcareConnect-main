@@ -6,7 +6,11 @@
     <div class="scard-m-head-row flex items-center justify-between gap-2">
       <div class="scard-m-name">
         {{ block.org.name }}
-        {% if block.is_pioneer %}<span class="pioneer-badge-m">Pionnier</span>{% endif %}
+        {% if block.is_pioneer %}
+          <span class="pioneer-badge-m">Pionnier</span>
+        {% elif block.org.is_verified %}
+          <span class="pioneer-badge-m" style="background:#e8faf3;color:#065f46;border-color:#a7f3d0">Vérifié</span>
+        {% endif %}
       </div>
       {% if block.total_actes > 1 %}
       <span class="scard-m-coverage{% if block.matching_count == block.total_actes %} scard-m-coverage--full{% else %} scard-m-coverage--partial{% endif %}">{{ block.matching_count }}/{{ block.total_actes }} actes</span>

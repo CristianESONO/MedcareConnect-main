@@ -3037,20 +3037,8 @@ def prestataire_profil_public(request):
     public_path = reverse("healthcare:organisme_detail", kwargs={"slug": org.slug})
     public_absolute_url = request.build_absolute_uri(public_path)
 
-    maps_url = ""
-    if org.latitude and org.longitude:
-        lat = format(org.latitude, "f").rstrip("0").rstrip(".")
-        lng = format(org.longitude, "f").rstrip("0").rstrip(".")
-        maps_url = (
-            f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
-        )
-    elif org.address:
-        from urllib.parse import quote
-
-        maps_url = (
-            "https://www.google.com/maps/search/?api=1&query="
-            + quote(f"{org.address} {org.city}")
-        )
+    from healthcare.organisme_fiche import maps_url_for_org
+    maps_url = maps_url_for_org(org)
 
     ctx.update({
         "services_with_actes": services_with_actes,

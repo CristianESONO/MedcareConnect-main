@@ -7,9 +7,9 @@
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=34" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=39" rel="stylesheet" />
 <link href="{% static 'healthcare/css/sipn_structure_results.css' %}?v=2" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=42" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=43" rel="stylesheet" />
 <link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=5" rel="stylesheet" />
 <link href="{% static 'messaging/css/thread_wa.css' %}?v=16" rel="stylesheet" />
 <link href="{% static 'healthcare/css/demo_patient_search.css' %}?v=20260530e" rel="stylesheet" />
@@ -1806,7 +1806,7 @@
       if (sq) {
         sq.value = savedSearchQ;
         if (mode === 'acte') {
-          sq.placeholder = 'Ex. NFS, Glycémie, scanner cérébral, spermogramme…';
+          sq.placeholder = 'Ex: NFS, Glycémie, IRM, Scanner…';
           sq.setAttribute('aria-label', 'Rechercher un acte médical');
         } else {
           sq.placeholder = 'Nom de la structure ou zone (Mermoz, Plateau, Almadies…)';
@@ -2032,7 +2032,7 @@
       demActeSearchInnerHTML = inner0.innerHTML;
       var sq0 = document.getElementById('search-q');
       if (sq0) {
-        sq0.placeholder = 'Ex. NFS, Glycémie, scanner cérébral, spermogramme…';
+        sq0.placeholder = 'Ex: NFS, Glycémie, IRM, Scanner…';
         sq0.setAttribute('aria-label', 'Rechercher un acte médical');
       }
     }
@@ -4409,12 +4409,21 @@
     updateSelStrip();
     persistSelectedActes();
 
-    /* Panneau actes : uniquement au clic sur une famille (pas d'ouverture auto) */
-    var panelInit = document.getElementById('pilier-actes-panel');
-    if (panelInit) {
-      panelInit.hidden = true;
-      panelInit.innerHTML = '';
-    }
+    /* Auto-ouverture du pilier si ?service=ID est présent dans l'URL (ex: clic depuis la homepage) */
+    (function autoOpenPilierFromUrl() {
+      var u = new URL(window.location.href);
+      var sid = u.searchParams.get('service');
+      if (sid && mq.matches) {
+        var btn = document.getElementById('pbtn-' + sid);
+        selectPilier(sid, btn);
+      } else {
+        var panelInit = document.getElementById('pilier-actes-panel');
+        if (panelInit) {
+          panelInit.hidden = true;
+          panelInit.innerHTML = '';
+        }
+      }
+    })();
 
     function onMqChange(){
       mountMobileFabs();
@@ -5024,6 +5033,15 @@
         if (sid ? bSid === sid : !bSid) activeBtn = b;
       });
       if (activeBtn) applyPillarUi(activeBtn.getAttribute('data-service-id') || '', isAmbulancePillar(activeBtn));
+      if (sid) {
+        var targetFam = document.querySelector('.dem-acte-family[data-service-id="' + sid + '"]');
+        if (targetFam) {
+          targetFam.open = true;
+          setTimeout(function() {
+            targetFam.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 150);
+        }
+      }
     })();
   })();
 
@@ -5079,10 +5097,16 @@
 
     function renderTags() {
       tagsWrap.innerHTML = '';
+      if (tags.length > 0) {
+        searchInp.placeholder = '';
+      } else {
+        searchInp.placeholder = 'Ex: NFS, Glycémie, IRM, Scanner…';
+      }
       tags.forEach(function(tag, idx) {
         var tagEl = document.createElement('span');
-        tagEl.className = 'inline-flex items-center gap-1 rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-900 border border-cyan-300';
-        tagEl.innerHTML = tag + ' <button type="button" class="ml-1 text-cyan-700 hover:text-cyan-900 font-bold">&times;</button>';
+        tagEl.className = 'token-tag';
+        tagEl.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:#edfbfc;border:1px solid #a8e9f0;border-radius:20px;font-size:12px;font-weight:600;color:#0a5c8a;';
+        tagEl.innerHTML = '<span>' + tag + '</span><button type="button" style="background:none;border:none;color:#0a5c8a;cursor:pointer;font-size:14px;padding:0;line-height:1;margin-left:2px;">&times;</button>';
         tagEl.querySelector('button').addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
@@ -5164,8 +5188,34 @@
     };
 
     window.openMapsUrl = function(button) {
-      var url = button.getAttribute('data-maps-url');
-      if (url && url !== '#') window.open(url, '_blank');
+      var mapsUrl = button ? button.getAttribute('data-maps-url') : '';
+      var dest = '';
+      if (mapsUrl && mapsUrl !== '#') {
+        try {
+          var u = new URL(mapsUrl);
+          dest = u.searchParams.get('destination') || '';
+        } catch (e) {
+          dest = mapsUrl;
+        }
+      }
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(pos) {
+            var lat = pos.coords.latitude;
+            var lng = pos.coords.longitude;
+            var dirUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + lat + ',' + lng + '&destination=' + encodeURIComponent(dest || mapsUrl);
+            window.open(dirUrl, '_blank');
+          },
+          function() {
+            var dirUrl = mapsUrl || ('https://www.google.com/maps/dir/?api=1&origin=&destination=' + encodeURIComponent(dest));
+            window.open(dirUrl, '_blank');
+          },
+          { timeout: 4000, enableHighAccuracy: true }
+        );
+      } else {
+        var dirUrl = mapsUrl || ('https://www.google.com/maps/dir/?api=1&origin=&destination=' + encodeURIComponent(dest));
+        window.open(dirUrl, '_blank');
+      }
     };
 
     function profilDrawerUrl(structId) {
@@ -5413,8 +5463,16 @@
       }
     }
     
+    var defaultPlaceholder = searchInput.placeholder || 'Ex: NFS, Glycémie, IRM, Scanner…';
+
     function syncTagsWithCheckboxes() {
       var acteIds = tags.map(function(t) { return t.dataset.value; });
+      
+      if (tags.length > 0) {
+        searchInput.placeholder = '';
+      } else {
+        searchInput.placeholder = defaultPlaceholder;
+      }
       
       // Update checkboxes in sidebar
       document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
@@ -5427,12 +5485,52 @@
         }
       });
     }
+
+    function normalizeStr(str) {
+      return (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    function findActeByName(name) {
+      var normSearch = normalizeStr(name);
+      if (!normSearch) return null;
+      var acteRow = Array.from(document.querySelectorAll('.dem-acte-row--multi')).find(function(row) {
+        var acteName = normalizeStr(row.getAttribute('data-dem-acte-name'));
+        return acteName === normSearch || acteName.indexOf(normSearch) !== -1 || normSearch.indexOf(acteName) !== -1;
+      });
+      
+      if (acteRow) {
+        return {
+          pk: acteRow.getAttribute('data-dem-acte-pk'),
+          name: acteRow.getAttribute('data-dem-acte-name')
+        };
+      }
+      return null;
+    }
+
+    function processInputText(text) {
+      if (!text) return;
+      var parts = text.split(/[,;\n]/).map(function(s){ return s.trim(); }).filter(Boolean);
+      parts.forEach(function(part) {
+        if (!part) return;
+        var matchingActe = findActeByName(part);
+        if (matchingActe) {
+          addTag(matchingActe.name, matchingActe.pk);
+        } else {
+          addTag(part, 'custom_' + part);
+        }
+      });
+    }
     
     function triggerSearchUpdate() {
       var form = document.getElementById('search-form');
       if (!form) return;
       
-      var acteIds = tags.map(function(t) { return t.dataset.value; });
+      if (searchInput && searchInput.value) {
+        processInputText(searchInput.value);
+        searchInput.value = '';
+      }
+      
+      var acteIds = tags.map(function(t) { return t.dataset.value; }).filter(function(v){ return v && !v.startsWith('custom_'); });
       
       // Update hidden acte inputs
       form.querySelectorAll('input[name="acte"]').forEach(function(inp) {
@@ -5458,8 +5556,12 @@
         fd.forEach(function(v, k) {
           if (v !== '' && v != null) u.searchParams.append(k, v);
         });
-        updatePageContent(u.toString());
-      }, 500);
+        if (typeof window.updatePageContent === 'function') {
+          window.updatePageContent(u.toString());
+        } else {
+          window.location.assign(u.toString());
+        }
+      }, 150);
     }
     
     // Handle input for live autocomplete
@@ -5480,19 +5582,22 @@
       });
       
       if (matches.length > 0) {
-        autocompleteDropdown.innerHTML = matches.slice(0, 8).map(function(m) {
-          return '<div class="autocomplete-item" data-pk="' + m.pk + '" data-name="' + m.name + '" style="padding:8px 12px;cursor:pointer;font-size:12px;color:#4b5563;border-bottom:1px solid #f3f4f6;">' + m.name + '</div>';
-        }).join('');
-        autocompleteDropdown.style.display = 'block';
-        
-        // Add click handlers to autocomplete items
-        autocompleteDropdown.querySelectorAll('.autocomplete-item').forEach(function(item) {
+        autocompleteDropdown.innerHTML = '';
+        matches.slice(0, 5).forEach(function(match) {
+          var item = document.createElement('div');
+          item.className = 'autocomplete-item';
+          item.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f3f4f6;';
+          item.textContent = match.name;
           item.addEventListener('click', function() {
-            addTag(item.getAttribute('data-name'), item.getAttribute('data-pk'));
+            addTag(match.name, match.pk);
             searchInput.value = '';
             autocompleteDropdown.style.display = 'none';
           });
+          item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
+          item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
+          autocompleteDropdown.appendChild(item);
         });
+        autocompleteDropdown.style.display = 'block';
       } else {
         autocompleteDropdown.style.display = 'none';
       }
@@ -5506,7 +5611,8 @@
     // Search button click handler
     var searchButton = document.querySelector('.sipn-search-go');
     if (searchButton) {
-      searchButton.addEventListener('click', function() {
+      searchButton.addEventListener('click', function(e) {
+        e.preventDefault();
         triggerSearchUpdate();
       });
     }
@@ -5515,45 +5621,38 @@
     searchInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault();
-        var text = searchInput.value.trim();
-        if (text) {
-          // Try to find matching acte
-          var matchingActe = findActeByName(text);
-          if (matchingActe) {
-            addTag(matchingActe.name, matchingActe.pk);
-            searchInput.value = '';
-          }
+        var val = searchInput.value;
+        if (val) {
+          processInputText(val);
+          searchInput.value = '';
+        }
+        if (e.key === 'Enter') {
+          triggerSearchUpdate();
         }
       } else if (e.key === 'Backspace' && searchInput.value === '' && tags.length > 0) {
         removeTag(tags[tags.length - 1]);
       }
     });
-    
-    searchInput.addEventListener('blur', function() {
-      var text = searchInput.value.trim();
-      if (text) {
-        var matchingActe = findActeByName(text);
-        if (matchingActe) {
-          addTag(matchingActe.name, matchingActe.pk);
+
+    var searchFormEl = document.getElementById('search-form');
+    if (searchFormEl) {
+      searchFormEl.addEventListener('submit', function() {
+        if (searchInput && searchInput.value) {
+          processInputText(searchInput.value);
           searchInput.value = '';
         }
-      }
-    });
-    
-    function findActeByName(name) {
-      var lowerName = name.toLowerCase();
-      var acteRow = Array.from(document.querySelectorAll('.dem-acte-row--multi')).find(function(row) {
-        var acteName = (row.getAttribute('data-dem-acte-name') || '').toLowerCase();
-        return acteName === lowerName || acteName.indexOf(lowerName) !== -1;
+        var acteIds = tags.map(function(t) { return t.dataset.value; }).filter(function(v){ return v && !v.startsWith('custom_'); });
+        searchFormEl.querySelectorAll('input[name="acte"]').forEach(function(inp) {
+          inp.remove();
+        });
+        acteIds.forEach(function(id) {
+          var hidden = document.createElement('input');
+          hidden.type = 'hidden';
+          hidden.name = 'acte';
+          hidden.value = id;
+          searchFormEl.appendChild(hidden);
+        });
       });
-      
-      if (acteRow) {
-        return {
-          pk: acteRow.getAttribute('data-dem-acte-pk'),
-          name: acteRow.getAttribute('data-dem-acte-name')
-        };
-      }
-      return null;
     }
     
     // Sync from checkbox clicks to tags

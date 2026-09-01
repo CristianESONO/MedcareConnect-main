@@ -87,8 +87,8 @@
 <section class="msn-acces">
   <div class="msn-wrap">
     <div class="msn-pill msn-pill--on-dark">ACCÈS IMMEDIAT</div>
-    <h2 class="msn-acces-title">Prix <span>réels</span>,<br>Localisations <span>exactes</span>,<br>Assurances <span>acceptés</span>.</h2>
-    <p class="msn-acces-sub">Tout ce qu'il faut savoir avant de se déplacer.</p>
+    <h2 class="msn-acces-title">Prix <span>réels</span>,<br>Localisations <span>exactes</span>,<br>Assurances <span>acceptées</span>.</h2>
+    <p class="msn-acces-sub msn-acces-sub--nowrap">Tout ce qu'il faut savoir avant de se déplacer.</p>
   </div>
 </section>
 
@@ -106,7 +106,7 @@
     <div class="msn-piliers-grid">
       {% for pillar in pillars %}
       {% with service=pillar.service %}
-      <a href="{% url 'healthcare:service_detail' service.slug %}" class="msn-pilier-card">
+      <a href="{% url 'healthcare:search' %}?service={{ service.pk }}" class="msn-pilier-card">
         <div class="msn-pilier-icon">
           {% if pillar.sample_key == "biologie" %}<i class="ti ti-flask"></i>
           {% elif pillar.sample_key == "imagerie" %}<i class="ti ti-scan"></i>
@@ -118,7 +118,7 @@
         </div>
         <div class="msn-pilier-name">{{ service.name }}</div>
         <div class="msn-pilier-sub">{{ pillar.sample_acts }}</div>
-        <div class="msn-pilier-link">Explorer {{ pillar.act_count }} actes</div>
+        <div class="msn-pilier-link">Explorer nos {{ pillar.act_count }} actes</div>
       </a>
       {% endwith %}
       {% endfor %}

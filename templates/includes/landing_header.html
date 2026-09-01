@@ -32,7 +32,7 @@
         {% if user.is_authenticated and user.is_patient %}
         <li>
           <a href="{% url 'users:patient_panel_tab' tab='accueil' %}" class="mc-landing-nav-link{% if account_active == 'accueil' %} is-active{% endif %}">
-            {{ user.first_name|default:user.username }}
+            {% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.get_full_name|default:user.username }}{% endif %}
           </a>
         </li>
         {% elif user.is_authenticated and user.is_prestataire %}

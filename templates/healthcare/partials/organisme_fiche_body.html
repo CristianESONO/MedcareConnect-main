@@ -156,7 +156,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
   {% if fiche_embedded %}
   <div id="profil-panier-recap" class="profil-panier-recap" aria-live="polite"></div>
   <button type="button" class="devis-btn profil-drawer-devis-btn" data-profil-devis data-org-id="{{ org.id }}">
-    💬 Obtenir mon devis WhatsApp
+    💬 Obtenir mon devis
   </button>
   {% elif org.is_ambulance_service %}
   {# Devis ambulance : bouton dans le configurateur trajet / couverture #}
@@ -170,7 +170,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
     </div>
   </div>
   <button type="button" class="profil-devis-btn" onclick="requestFicheDevis()">
-    💬 Obtenir mon devis WhatsApp
+    💬 Obtenir mon devis
   </button>
   {% endif %}
 </div>

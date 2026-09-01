@@ -20,7 +20,11 @@
     <div class="scard-left min-w-0">
       <div class="scard-name">
         <button type="button" class="org-preview-trigger scard-org-name" data-org-slug="{{ pa.organisme.slug }}" aria-haspopup="dialog">{{ pa.organisme.name }}</button>
-        {% if pa.organisme.subscription_plan and pa.organisme.subscription_plan.is_pioneer_offer %}<span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>{% endif %}
+        {% if pa.organisme.subscription_plan and pa.organisme.subscription_plan.is_pioneer_offer %}
+          <span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>
+        {% elif pa.organisme.is_verified %}
+          <span class="verified-badge sipn-ico-inline" style="background:#e8faf3;color:#065f46;border:1px solid #a7f3d0;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">✓ Vérifié</span>
+        {% endif %}
       </div>
       {% if pa.organisme.type_organisme %}
       <div class="scard-type">{{ pa.organisme.type_organisme.name }}</div>

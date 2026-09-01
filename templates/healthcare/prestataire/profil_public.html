@@ -292,28 +292,33 @@
             {% endif %}
           </div>
           <div style="flex:1;min-width:0">
+            <!-- Ligne 1 : Nom de la structure + Badge (Pionnier OU Vérifié) -->
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;line-height:1.15">{{ org.name }}</span>
-              {% if show_pioneer_badge %}
+              {% if show_pioneer_badge or org.is_pioneer %}
               <span style="font-size:10px;font-weight:700;background:#f5c451;color:#5a4300;border-radius:20px;padding:2px 9px;white-space:nowrap">★ Pionnier</span>
               {% elif org.is_verified %}
               <span style="font-size:10px;font-weight:700;background:#38bdf8;color:#0369a1;border-radius:20px;padding:2px 9px;white-space:nowrap">✓ Vérifié</span>
               {% endif %}
             </div>
+
+            <!-- Ligne 2 : Type de structure + Badge (Ouvert OU Fermé) -->
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px">
-              <span style="font-size:11.5px;color:rgba(255,255,255,.85)">
+              <span style="font-size:11.5px;color:rgba(255,255,255,.9);font-weight:500">
                 {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
-                · {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city }}
               </span>
               {% if open_today == "open" %}
               <span style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Ouvert</span>
               {% elif open_today == "closed" %}
               <span style="font-size:10px;font-weight:700;background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Fermé</span>
+              {% else %}
+              <span style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Ouvert</span>
               {% endif %}
             </div>
-            <div style="margin-top:6px;font-size:10.5px;color:rgba(255,255,255,.9);display:flex;align-items:center;gap:4px">
-              <span>🕐</span>
-              <span>{% if hours_meta %}{{ hours_meta }}{% else %}Lun–Sam : 07h00–19h00 · Dim : 08h00–13h00{% endif %}</span>
+
+            <!-- Ligne 3 : Adresse en bas -->
+            <div style="margin-top:5px;font-size:11px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:4px">
+              <span>📍 {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city|default:"Dakar" }}{% if org.address %} — {{ org.address }}{% endif %}</span>
             </div>
           </div>
         </div>

@@ -717,13 +717,28 @@ function scrollToActesSection() {
   if (sec) sec.scrollIntoView({ behavior: 'smooth' });
 }
 
-// GPS / Maps URL
+// GPS / Maps Itinerary URL calculation
 function openGpsMaps() {
-  const mapsUrl = "{{ maps_url|default:'' }}";
-  if (mapsUrl && mapsUrl !== '#') {
-    window.open(mapsUrl, '_blank');
+  var defaultMapsUrl = "{{ maps_url|escapejs }}";
+  var dest = "{% if org.latitude and org.longitude %}{{ org.latitude|stringformat:'f' }},{{ org.longitude|stringformat:'f' }}{% else %}{{ org.name|escapejs }} {% if org.quartier %}{{ org.quartier|escapejs }} {% endif %}{{ org.city|default:'Dakar'|escapejs }}{% endif %}";
+  
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        var dirUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + lat + ',' + lng + '&destination=' + encodeURIComponent(dest);
+        window.open(dirUrl, '_blank');
+      },
+      function() {
+        var dirUrl = defaultMapsUrl || ('https://www.google.com/maps/dir/?api=1&origin=&destination=' + encodeURIComponent(dest));
+        window.open(dirUrl, '_blank');
+      },
+      { timeout: 4000, enableHighAccuracy: true }
+    );
   } else {
-    alert("Localisation GPS : {{ org.address|default:org.city|escapejs }}");
+    var dirUrl = defaultMapsUrl || ('https://www.google.com/maps/dir/?api=1&origin=&destination=' + encodeURIComponent(dest));
+    window.open(dirUrl, '_blank');
   }
 }
 

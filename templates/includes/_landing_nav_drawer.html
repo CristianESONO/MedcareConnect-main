@@ -18,7 +18,7 @@
     {% if user.is_authenticated %}
     <div class="mc-drawer-user-badge">
       <i class="ti ti-user-circle" aria-hidden="true"></i>
-      <span>{{ user.first_name|default:user.username }}</span>
+      <span>{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.get_full_name|default:user.username }}{% endif %}</span>
     </div>
     {% endif %}
   </div>

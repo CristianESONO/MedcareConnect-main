@@ -34,16 +34,12 @@ def profil_hours_meta_chunks(hours_list) -> list[str]:
 
 
 def maps_url_for_org(org) -> str:
-    if org.latitude and org.longitude:
+    if getattr(org, "latitude", None) and getattr(org, "longitude", None):
         lat = format(org.latitude, "f").rstrip("0").rstrip(".")
         lng = format(org.longitude, "f").rstrip("0").rstrip(".")
-        return f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
-    if org.address:
-        return (
-            "https://www.google.com/maps/search/?api=1&query="
-            + quote(f"{org.address} {org.city}")
-        )
-    return ""
+        return f"https://www.google.com/maps/dir/?api=1&origin=&destination={lat},{lng}"
+    dest = f"{org.name} {getattr(org, 'quartier', '') or ''} {org.city}".strip()
+    return f"https://www.google.com/maps/dir/?api=1&origin=&destination={quote(dest)}"
 
 
 def waze_url_for_org(org) -> str:

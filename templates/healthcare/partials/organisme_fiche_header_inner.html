@@ -9,22 +9,31 @@
       {% endif %}
     </div>
     <div class="profil-drawer-titles min-w-0">
-      <div class="profil-drawer-name-row">
+      <!-- Ligne 1 : Nom de la structure + Badge (Pionnier OU Vérifié) -->
+      <div class="profil-drawer-name-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <span class="profil-drawer-name">{{ org.name }}</span>
-        {% if show_pioneer_badge %}<span class="profil-drawer-pioneer">⭐ Pionnier</span>{% endif %}
-        {% if show_verified_badge or org.is_verified %}<span class="profil-drawer-verified">✓ Vérifié</span>{% endif %}
+        {% if show_pioneer_badge %}
+          <span class="profil-drawer-pioneer">⭐ Pionnier</span>
+        {% elif show_verified_badge or org.is_verified %}
+          <span class="profil-drawer-verified">✓ Vérifié</span>
+        {% endif %}
       </div>
-      <div class="profil-drawer-meta-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px">
+
+      <!-- Ligne 2 : Type de structure / Praticien indépendant + Badge (Ouvert OU Fermé) -->
+      <div class="profil-drawer-type-row" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px">
         <span class="profil-drawer-sub">
-          {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Structure{% endif %}
-          {% if org.quartier %} · {{ org.quartier }}{% endif %}
-          {% if org.city %}, {{ org.city }}{% endif %}
+          {% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Établissement de santé{% endif %}
         </span>
         {% if open_today == "closed" %}
-        <span style="font-size:10px;font-weight:700;background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Fermé</span>
+          <span style="font-size:10px;font-weight:700;background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Fermé</span>
         {% else %}
-        <span style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Ouvert</span>
+          <span style="font-size:10px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.55);border-radius:20px;padding:1px 8px;white-space:nowrap">● Ouvert</span>
         {% endif %}
+      </div>
+
+      <!-- Ligne 3 : Adresse en bas -->
+      <div class="profil-drawer-address-row" style="margin-top:4px;font-size:11px;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:4px">
+        <span>📍 {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city|default:"Dakar" }}{% if org.address %} — {{ org.address }}{% endif %}</span>
       </div>
     </div>
   </div>

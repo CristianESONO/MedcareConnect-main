@@ -679,7 +679,8 @@ body.mc-visitor-drawer-open {
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
-  margin-bottom: 6px !important;
+  min-height: 44px !important;
+  margin-bottom: 8px !important;
 }
 
 .mc-landing-drawer-close {
@@ -718,17 +719,20 @@ body.mc-visitor-drawer-open {
 }
 
 .mc-landing-drawer-logo {
-  display: block;
-  line-height: 0;
-  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  margin-bottom: 0;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .mc-landing-drawer-logo .mc-brand-logo {
   display: block;
-  width: clamp(130px, 42vw, 195px);
+  width: clamp(110px, 36vw, 175px);
   max-width: 100%;
   height: auto;
-  max-height: 3.5rem;
+  max-height: 2.25rem;
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: 1;
@@ -1552,5 +1556,39 @@ body.mc-visitor-drawer-open {
 
   .mc-footer-bottom {
     font-size: 12px;
+  }
+
+  /* ── Footer Contactez-nous : contact à gauche + social à droite ── */
+  .mc-footer-grid > .mc-footer-col:nth-child(4) {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: nowrap;
+  }
+
+  /* Infos de contact (titre + liste) à gauche */
+  .mc-footer-contact-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Icônes sociaux à droite, alignés verticalement (plus petits) */
+  .mc-footer-grid > .mc-footer-col:nth-child(4) .mc-footer-social {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+    padding-top: 0;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .mc-footer-grid > .mc-footer-col:nth-child(4) .mc-footer-social-link {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    border-radius: 6px;
   }
 }
