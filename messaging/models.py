@@ -277,4 +277,6 @@ class Notification(models.Model):
 
     @classmethod
     def queryset_inbox(cls, user):
-        return cls.objects.filter(user=user)
+        return cls.objects.filter(user=user).exclude(
+            notification_type__in=cls.RAPPEL_NOTIFICATION_TYPES
+        )

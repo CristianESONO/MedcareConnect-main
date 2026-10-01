@@ -7,8 +7,8 @@
     <div class="sipn-guest-gate-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="walk" class="sipn-ico sipn-ico--xl" %}</div>
     <div class="sipn-guest-gate-title">Mon compte</div>
     <p class="sipn-guest-gate-sub">Créez un compte pour suivre vos devis, RDV et messages.</p>
-    <a href="{% url 'users:register' %}" class="sipn-guest-gate-cta">S'inscrire</a>
-    <a href="{% url 'users:login' %}?next={% url 'healthcare:search' %}" class="sipn-guest-gate-link">Déjà inscrit ? Se connecter</a>
+    <a href="{% url 'register' %}" class="sipn-guest-gate-cta">S'inscrire</a>
+    <a href="{% url 'login' %}?next={% url 'healthcare:search' %}" class="sipn-guest-gate-link">Déjà inscrit ? Se connecter</a>
   </div>
   {% endif %}
 </div>

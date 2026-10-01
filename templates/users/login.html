@@ -18,7 +18,7 @@
 
           <div class="mc-form-group">
             <label class="mc-form-label" for="username">Nom d'utilisateur</label>
-            <input type="text" name="username" id="username" class="mc-form-input" required autofocus placeholder="votre_nom" autocomplete="username">
+            <input type="text" name="username" id="username" class="mc-form-input" required autofocus placeholder="Votre nom d'utilisateur" autocomplete="username">
           </div>
 
           {% include "includes/_password_field.html" with name="password" id="password" label="Mot de passe" required=True placeholder="••••••••" autocomplete="current-password" %}
@@ -28,7 +28,7 @@
 
         <p class="mc-auth-footer">
           Pas encore de compte ?
-          <a href="{% url 'users:register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">S'inscrire</a>
+          <a href="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">S'inscrire</a>
         </p>
       </div>
     </div>

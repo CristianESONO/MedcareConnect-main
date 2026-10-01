@@ -82,7 +82,7 @@ class DevisCreatedDispatchTest(TestCase):
                 "patient": self.patient,
                 "organisme": self.org,
                 "link": f"/cart/devis/{devis.reference}/",
-                "link_prestataire": f"/healthcare/prestataire/devis/part/DP-TEST/",
+                "link_prestataire": f"/sante/prestataire/devis/partie/DP-TEST/",
             },
             actor=self.prest,
         )

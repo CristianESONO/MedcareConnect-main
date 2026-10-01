@@ -481,7 +481,7 @@ def whatsapp_contact(request, slug):
         notification_type="whatsapp",
         title=f"Demande WhatsApp de {request.user.display_name}",
         content=f"Le patient {request.user.display_name} a initié un contact WhatsApp.",
-        link=f"/healthcare/{org.slug}/",
+        link=f"/sante/{org.slug}/",
     )
 
     return redirect(wa_url)
@@ -502,8 +502,7 @@ def rappels_list(request):
     if not getattr(request.user, "is_patient", False):
         return redirect("messaging:notifications")
     notifs = (
-        Notification.objects.filter(user=request.user)
-        .filter(notification_type__in=["rappel", "prelevement", "preparation"])
+        Notification.queryset_rappels(request.user)
         .exclude(title__icontains="confirmé")
         .exclude(title__icontains="devis")
         .order_by("-created_at")[:50]

@@ -45,7 +45,7 @@ class AnnuaireTests(TestCase):
 
     def test_annuaire_page_renders(self):
         client = Client(HTTP_HOST="app.medcare.sn")
-        response = client.get("/healthcare/annuaire/", follow=True)
+        response = client.get("/sante/annuaire/", follow=True)
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         self.assertIn("Annuaire des établissements", html)
@@ -53,14 +53,14 @@ class AnnuaireTests(TestCase):
 
     def test_centres_redirects_to_annuaire(self):
         client = Client(HTTP_HOST="app.medcare.sn")
-        response = client.get("/healthcare/centres/?q=test", follow=True)
+        response = client.get("/sante/centres/?q=test", follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("/healthcare/annuaire", response.request["PATH_INFO"])
+        self.assertIn("/sante/annuaire", response.request["PATH_INFO"])
         self.assertIn("Annuaire des établissements", response.content.decode())
 
     def test_annuaire_filter_by_type_category(self):
         rf = RequestFactory()
-        req = rf.get("/healthcare/annuaire/", {"type_cat": "labo"})
+        req = rf.get("/sante/annuaire/", {"type_cat": "labo"})
         ctx = build_annuaire_context(req)
         names = [row["org"].name for row in ctx["rows"]]
         self.assertIn("Labo Test", names)

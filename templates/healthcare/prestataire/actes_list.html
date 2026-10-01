@@ -46,21 +46,17 @@
     <div class="cat-pilier-tabs" id="pilier-tabs" role="tablist" aria-label="Piliers">
       {% for block in catalog_by_pilier %}
       <button type="button"
-        class="pilier-tab js-pilier-tab{% if not block.applicable %} is-disabled{% elif block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
+        class="pilier-tab js-pilier-tab{% if block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
         data-pilier-panel="pilier-{{ block.pilier.pk }}"
         data-pilier-slug="{{ block.pilier.slug }}"
         data-pilier-label="{{ block.pilier.display_icon|default:'🏥' }} {{ block.pilier.display_name }}"
-        data-count-text="{{ block.acte_count }} acte{{ block.acte_count|pluralize }}"
-        {% if not block.applicable %}disabled title="Non applicable à votre type de structure"{% endif %}>
+        data-count-text="{{ block.acte_count }} acte{{ block.acte_count|pluralize }}">
         <span class="pilier-tab-icon">{{ block.pilier.display_icon|default:"🏥" }}</span>
         <span class="pilier-tab-label">{{ block.pilier.display_name|upper }}</span>
-        <span class="pilier-tab-count js-pilier-tab-count{% if not block.applicable %} is-na{% endif %}">
-          {% if block.applicable %}{{ block.acte_count }} acte{{ block.acte_count|pluralize }}{% else %}Non applicable{% endif %}
-        </span>
+        <span class="pilier-tab-count js-pilier-tab-count">{{ block.acte_count }} acte{{ block.acte_count|pluralize }}</span>
       </button>
       {% endfor %}
     </div>
-    <p class="cat-hint">Les piliers grisés ne correspondent pas au type de votre structure. Ils seront actifs pour les structures concernées.</p>
   </div>
 </div>
 
@@ -83,11 +79,8 @@
   <section id="pilier-{{ block.pilier.pk }}"
     class="pilier-panel cat-card{% if block.pilier.pk != first_applicable_pilier_id %} hidden{% endif %}"
     data-pilier-slug="{{ block.pilier.slug }}"
-    data-applicable="{{ block.applicable|yesno:'1,0' }}">
+    data-applicable="1">
     <div class="cat-card-body">
-      {% if not block.applicable %}
-      <p class="text-sm font-semibold text-amber-800">Pilier non applicable à votre type de structure.</p>
-      {% else %}
       {% if 'ambulance' in block.pilier.slug or 'Ambulance' in block.pilier.name %}
       {% include "healthcare/prestataire/_actes_ambulance_block.html" %}
       {% endif %}
@@ -127,10 +120,10 @@
               </td>
               <td class="text-gray-600">{{ sg.label }}</td>
               <td>
-                <input type="number" min="0" step="500" name="price_{{ row.acte.pk }}" value="{{ row.price_val|floatformat:0 }}" class="cat-prix-input" {% if not block.applicable %}disabled{% endif %}>
+                <input type="number" min="0" step="500" name="price_{{ row.acte.pk }}" value="{{ row.price_val|floatformat:0 }}" class="cat-prix-input">
               </td>
               <td>
-                <select name="delai_{{ row.acte.pk }}" class="cat-delai-select" {% if not block.applicable %}disabled{% endif %}>
+                <select name="delai_{{ row.acte.pk }}" class="cat-delai-select">
                   <option value="">—</option>
                   {% for val, lbl in prestataire_delai_choices %}
                   <option value="{{ val }}"{% if row.delai_val == val %} selected{% endif %}>{{ lbl }}</option>
@@ -147,7 +140,7 @@
               </td>
               <td>
                 <label class="cat-toggle" title="Activer cet acte">
-                  <input type="checkbox" name="acte_ids" value="{{ row.acte.pk }}" class="js-acte-active" {% if row.acte.pk in selected_acte_ids %}checked{% endif %}{% if not block.applicable %} disabled{% endif %}>
+                  <input type="checkbox" name="acte_ids" value="{{ row.acte.pk }}" class="js-acte-active" {% if row.acte.pk in selected_acte_ids %}checked{% endif %}>
                   <span class="cat-toggle-track"></span>
                 </label>
               </td>
@@ -157,7 +150,7 @@
           </tbody>
         </table>
       </div>
-      {% endif %}
+
     </div>
   </section>
   {% endfor %}

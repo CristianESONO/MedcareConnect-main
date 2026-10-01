@@ -382,7 +382,7 @@ function obtenirDevisTrajet() {
   var isAuthed = {% if user.is_authenticated %}true{% else %}false{% endif %};
   if (!isAuthed) {
     var loginNext = encodeURIComponent(window.location.pathname + window.location.search);
-    window.location.href = '{% url "users:login" %}?next=' + loginNext;
+    window.location.href = '{% url "login" %}?next=' + loginNext;
     return;
   }
 

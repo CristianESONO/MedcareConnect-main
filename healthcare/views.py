@@ -254,7 +254,7 @@ def _presta_acte_form_ui(qs, post_data=None, selected_acte_pk=None):
     groups = []
     for cat, actes_iter in groupby(ordered, key=lambda a: a.service_medical_category):
         chunk = list(actes_iter)
-        chunk.sort(key=lambda a: (a.parent_service_id, a.name))
+        chunk.sort(key=lambda a: (a.parent_service_id or 0, a.name))
         for _parent_id, leaves_iter in groupby(chunk, key=lambda a: a.parent_service_id):
             leaves = list(leaves_iter)
             if not leaves:

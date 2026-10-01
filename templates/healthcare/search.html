@@ -2548,7 +2548,7 @@
     var cartDevisBaseUrl = '{% url "cart:generate_devis" %}';
     var cartViewUrl = '{% url "cart:cart_view" %}';
     var cartChariotUrl = {% if user.is_authenticated and user.is_patient %}'{% url "users:patient_panel_tab" tab="chariot" %}'{% else %}null{% endif %};
-    var cartLoginUrl = '{% url "users:login" %}?next={{ cart_generate_devis_path|urlencode }}';
+    var cartLoginUrl = '{% url "login" %}?next={{ cart_generate_devis_path|urlencode }}';
     function fnum(v){ return Math.round(Number(v || 0)).toLocaleString('fr-FR'); }
     function escapeHtml(s){ var d = document.createElement('div'); d.textContent = String(s || ''); return d.innerHTML; }
     function sipnToast(msg, level){
@@ -2763,7 +2763,7 @@
             sipnIconSvg('calendar', 'sipn-ico sipn-ico--sm') + ' Réserver mes actes</a></div>';
         } else if (!cartChariotUrl && !orgItems[0].cartItemId) {
           var orgDevisUrl = cartDevisBaseUrl ? (cartDevisBaseUrl + '?org=' + encodeURIComponent(orgItems[0].orgId)) : '{% url "cart:cart_view" %}';
-          var loginNext = '{% url "users:login" %}?next=' + encodeURIComponent(orgDevisUrl);
+          var loginNext = '{% url "login" %}?next=' + encodeURIComponent(orgDevisUrl);
           html += '<div class="psg-foot"><a href="' + loginNext + '" class="psg-creneau-btn js-guest-auth-open" data-org-id="' + escapeHtml(orgItems[0].orgId) + '">' +
             sipnIconSvg('calendar', 'sipn-ico sipn-ico--sm') + ' Réserver mes actes</a></div>';
         } else {
@@ -2791,7 +2791,7 @@
       if (cartChariotUrl) {
         html += '<p class="text-[11px] text-gray-500 mt-2">Les actes d’une même structure sont envoyés dans une seule discussion.</p>';
       } else {
-        var cartLoginTarget = '{% url "users:login" %}?next=' + encodeURIComponent('{% url "cart:cart_view" %}');
+        var cartLoginTarget = '{% url "login" %}?next=' + encodeURIComponent('{% url "cart:cart_view" %}');
         html += '<a href="' + cartLoginTarget + '" class="devis-btn-m js-guest-auth-open">' + sipnIconSvg('calendar', 'sipn-ico sipn-ico--sm') + ' Réserver mes actes' +
           (nStructs > 1 ? ' (' + nStructs + ' structures)' : '') + '</a>';
       }
@@ -5156,7 +5156,7 @@
     var drawerUrlTpl = '{% url "healthcare:organisme_profil_drawer" org_id=0 %}';
     var cartDevisBaseUrl = '{% url "cart:generate_devis" %}';
     {% url 'cart:generate_devis' as profil_devis_next %}
-    var cartLoginUrl = '{% url "users:login" %}?next={{ profil_devis_next|urlencode }}';
+    var cartLoginUrl = '{% url "login" %}?next={{ profil_devis_next|urlencode }}';
     var userIsAuthed = {% if user.is_authenticated %}true{% else %}false{% endif %};
 
     window.toggleHorairesPop = function() {
@@ -5240,7 +5240,7 @@
         window.location.href = devisTarget;
         return;
       }
-      window.location.href = '{% url "users:login" %}?next=' + encodeURIComponent(devisTarget);
+      window.location.href = '{% url "login" %}?next=' + encodeURIComponent(devisTarget);
     }
 
     window.closeProfilStruct = function() {
@@ -6256,7 +6256,7 @@
       }
       var isAuthed = {% if user.is_authenticated %}true{% else %}false{% endif %};
       if (!isAuthed) {
-        window.location.href = '{% url "users:login" %}?next=' + encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = '{% url "login" %}?next=' + encodeURIComponent(window.location.pathname + window.location.search);
         return;
       }
       var csrf = (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value || '';

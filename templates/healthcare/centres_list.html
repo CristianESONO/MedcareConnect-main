@@ -98,7 +98,7 @@
                 {% if user.is_authenticated %}
                 <a href="{% url 'messaging:start_conversation' org.slug %}" class="rounded-lg border border-accent-200 bg-accent-50 px-3 py-1.5 text-xs font-medium text-accent-800 hover:bg-accent-100">Message</a>
                 {% else %}
-                <a href="{% url 'users:login' %}?{{ login_next_query }}" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-50">Connexion pour écrire</a>
+                <a href="{% url 'login' %}?{{ login_next_query }}" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-50">Connexion pour écrire</a>
                 {% endif %}
                 {% endcomment %}
             </div>

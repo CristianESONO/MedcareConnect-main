@@ -11,15 +11,10 @@ urlpatterns = [
     path("select2/", include("django_select2.urls")),
     path("", views.home, name="home"),
 
-    # Routes canoniques en français pour l'authentification (Accès direct racine)
+    # Routes d'authentification à la racine
     path("inscription/", users_views.register, name="register"),
     path("connexion/", users_views.login_view, name="login"),
     path("deconnexion/", users_views.logout_view, name="logout"),
-
-    # Routes de compatibilité sans redirection HTTP pour préserver les requêtes POST
-    path("users/inscription/", users_views.register),
-    path("users/connexion/", users_views.login_view),
-    path("users/logout/", users_views.logout_view),
 
     # Routes canoniques en français pour les pages d'information
     path("comment-ca-marche/", views.how_it_works, name="how_it_works"),
@@ -37,7 +32,7 @@ urlpatterns = [
 
     # Applications
     path("users/", include("users.urls")),
-    path("healthcare/", include("healthcare.urls")),
+    path("sante/", include("healthcare.urls")),
     path("cart/", include("cart.urls")),
     path("messaging/", include("messaging.urls")),
     path("dashboard/", include("dashboard.urls")),

@@ -284,11 +284,11 @@
       <!-- EN-TETE DEGRADE (identique démo) -->
       <div class="profil-card-header">
         <div style="display:flex;gap:12px;align-items:flex-start">
-          <div class="profil-photo-zone">
+          <div class="profil-photo-box">
             {% if org.logo %}
             <img src="{{ org.logo.url }}" alt="{{ org.name }}" class="profil-photo-img">
             {% else %}
-            <div class="profil-photo-box">🏥</div>
+            🏥
             {% endif %}
           </div>
           <div style="flex:1;min-width:0">

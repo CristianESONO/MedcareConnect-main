@@ -14,7 +14,7 @@
 
     if (!modal) return;
 
-    const endpointUrl = '/healthcare/api/ai-agent/';
+    const endpointUrl = '/sante/api/ai-agent/';
 
     function openModal() {
       modal.removeAttribute('hidden');

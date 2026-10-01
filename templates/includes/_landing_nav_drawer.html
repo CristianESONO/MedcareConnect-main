@@ -75,17 +75,17 @@
 
   <div class="mc-landing-drawer-cta">
     {% if user.is_authenticated %}
-    <form method="post" action="{% url 'users:logout' %}">
+    <form method="post" action="{% url 'logout' %}">
       {% csrf_token %}
       <button type="submit" class="mc-landing-drawer-btn mc-landing-drawer-btn-logout">
         <i class="ti ti-logout" aria-hidden="true"></i> Déconnexion
       </button>
     </form>
     {% else %}
-    <a href="{% url 'users:login' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-login">
+    <a href="{% url 'login' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-login">
       <i class="ti ti-login" aria-hidden="true"></i> Connexion
     </a>
-    <a href="{% url 'users:register' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">
+    <a href="{% url 'register' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">
       <i class="ti ti-user-plus" aria-hidden="true"></i> Rejoindre MedCare
     </a>
     {% endif %}

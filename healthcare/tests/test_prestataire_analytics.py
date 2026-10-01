@@ -30,11 +30,11 @@ class ProfileTrackingTests(TestCase):
         )
 
     def test_resolve_nfc_source(self):
-        req = self.factory.get("/healthcare/test-lab/?src=nfc")
+        req = self.factory.get("/sante/test-lab/?src=nfc")
         self.assertEqual(resolve_profile_view_source(req), ProfileView.SOURCE_NFC)
 
     def test_resolve_qr_utm(self):
-        req = self.factory.get("/healthcare/test-lab/?utm_source=medplaque&utm_medium=qr")
+        req = self.factory.get("/sante/test-lab/?utm_source=medplaque&utm_medium=qr")
         self.assertEqual(resolve_profile_view_source(req), ProfileView.SOURCE_QR)
 
     def test_activity_chart_structure(self):

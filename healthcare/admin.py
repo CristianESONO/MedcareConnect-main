@@ -275,7 +275,7 @@ class SubscriptionChangeRequestAdmin(admin.ModelAdmin):
                         "organisme": org,
                         "requested_plan": req.requested_plan,
                         "previous_plan": req.previous_plan,
-                        "link": "/healthcare/prestataire/abonnement/",
+                        "link": "/sante/prestataire/abonnement/",
                     },
                     actor=getattr(org, "user", None),
                 )
@@ -302,7 +302,7 @@ class SubscriptionChangeRequestAdmin(admin.ModelAdmin):
                         "requested_plan": req.requested_plan,
                         "previous_plan": req.previous_plan,
                         "staff_note": req.staff_note,
-                        "link": "/healthcare/prestataire/abonnement/",
+                        "link": "/sante/prestataire/abonnement/",
                     },
                     actor=getattr(req.organisme, "user", None),
                 )

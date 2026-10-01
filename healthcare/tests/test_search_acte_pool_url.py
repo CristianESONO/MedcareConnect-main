@@ -12,7 +12,7 @@ def test_remove_url_drops_lot_param():
     """Réinjecter lot= réimposait tous les actes du lot ; le lien « × » ne devait pas le garder."""
     rf = RequestFactory()
     req = rf.get(
-        "/healthcare/search/",
+        "/sante/recherche/",
         {"sort": "price_asc", "acte": ["58", "59"], "lot": "1"},
     )
     url = _search_url_with_acte_pool(req, [58])

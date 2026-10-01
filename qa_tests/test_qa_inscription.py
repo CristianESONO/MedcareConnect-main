@@ -15,7 +15,7 @@ def test_inscription_patient_cree_compte(client):
     suffix = uuid.uuid4().hex[:8]
     username = f"qa_inscrit_{suffix}"
     r = client.post(
-        reverse("users:register"),
+        reverse("register"),
         data={
             "username": username,
             "email": f"{username}@qa.test",

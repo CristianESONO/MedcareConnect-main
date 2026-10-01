@@ -59,6 +59,11 @@ def register(request):
                     PatientProfile.objects.get_or_create(user=user)
                 if user.is_prestataire:
                     d = form.cleaned_data
+                    if not user.first_name and d.get("organisme_name"):
+                        parts = d["organisme_name"].split()
+                        user.first_name = parts[0]
+                        user.last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
+                        user.save(update_fields=["first_name", "last_name"])
                     OrganismeDeSante.objects.create(
                         user=user,
                         name=d["organisme_name"],
@@ -89,8 +94,9 @@ def register(request):
             if user.is_prestataire:
                 messages.info(
                     request,
-                    "Votre fiche établissement a été créée. Elle sera visible après validation par un administrateur. "
-                    "Vous pouvez compléter vos actes, assurances et localisation précise (GPS) depuis votre tableau de bord.",
+                    f"Votre compte établissement a été créé avec le nom d'utilisateur : {user.username}. "
+                    "Vous pouvez l'utiliser pour vous connecter à tout moment. "
+                    "Votre fiche sera visible publiquement dès validation par l'administrateur.",
                 )
                 return redirect("healthcare:prestataire_dashboard")
             if user.is_patient:
@@ -99,7 +105,16 @@ def register(request):
                 return _after_patient_login_redirect(request)
             return redirect("home")
     else:
-        form = UserRegistrationForm()
+        initial_type = (
+            request.GET.get("type")
+            or request.GET.get("role")
+            or request.GET.get("mode")
+            or ""
+        ).lower()
+        if initial_type in ("prestataire", "structure", "soignant"):
+            form = UserRegistrationForm(initial={"user_type": "prestataire"})
+        else:
+            form = UserRegistrationForm(initial={"user_type": "patient"})
     return render(request, "users/register.html", _register_context(form))
 
 
@@ -109,9 +124,10 @@ def login_view(request):
             return redirect(panel_redirect("rdv"))
         return redirect("home")
     if request.method == "POST":
-        username = request.POST.get("username")
+        identifier = (request.POST.get("username") or "").strip()
         password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=identifier, password=password)
+
         if user is not None:
             login(request, user)
             messages.success(request, "Connexion réussie !")
@@ -142,7 +158,7 @@ from django.views.decorators.cache import never_cache
 def logout_view(request):
     logout(request)
     messages.info(request, "Vous avez été déconnecté.")
-    response = redirect("users:login")
+    response = redirect("login")
     response["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0, private"
     response["Pragma"] = "no-cache"
     response["Expires"] = "0"

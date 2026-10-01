@@ -337,17 +337,17 @@
 
   {% if user.is_authenticated %}
   <div style="padding:20px 16px 8px">
-    <a href="{% url 'users:logout' %}" class="mc-drawer-logout-btn">
+    <a href="{% url 'logout' %}" class="mc-drawer-logout-btn">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:18px;height:18px"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/></svg>
       Déconnexion
     </a>
   </div>
   {% else %}
   <div style="padding:20px 16px 8px;display:flex;flex-direction:column;gap:10px">
-    <a href="{% url 'users:login' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg, #0b2239, #123a63);color:#fff;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;text-decoration:none">
+    <a href="{% url 'login' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg, #0b2239, #123a63);color:#fff;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;text-decoration:none">
       Connexion
     </a>
-    <a href="{% url 'users:register' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg, #0284c7, #14b87a);color:#fff;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;text-decoration:none">
+    <a href="{% url 'register' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg, #0284c7, #14b87a);color:#fff;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;text-decoration:none">
       Rejoindre MedCare
     </a>
   </div>

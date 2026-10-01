@@ -37,7 +37,7 @@ Variables : guest_auth_next (URL absolue de retour après connexion).
     </div>
 
     <div class="px-5 py-4 pb-6">
-      <form method="post" action="{% url 'users:login' %}?next={{ guest_auth_next|urlencode }}" class="space-y-4">
+      <form method="post" action="{% url 'login' %}?next={{ guest_auth_next|urlencode }}" class="space-y-4">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ guest_auth_next }}">
         <div>
@@ -52,7 +52,7 @@ Variables : guest_auth_next (URL absolue de retour après connexion).
 
       <p class="mt-4 text-center text-xs text-gray-500">
         Pas encore de compte ?
-        <a id="guest-auth-register" href="{% url 'users:register' %}?next={{ guest_auth_next|urlencode }}" class="font-semibold text-accent-500 hover:text-accent-600">Créer un compte patient</a>
+        <a id="guest-auth-register" href="{% url 'register' %}?next={{ guest_auth_next|urlencode }}" class="font-semibold text-accent-500 hover:text-accent-600">Créer un compte patient</a>
       </p>
     </div>
   </div>

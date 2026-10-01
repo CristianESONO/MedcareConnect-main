@@ -169,7 +169,7 @@
                         Explorer les services
                         <i class="ti ti-arrow-right text-xl"></i>
                     </a>
-                    <a href="{% url 'users:register' %}" class="px-8 py-4 rounded-2xl border border-white/20 hover:bg-white/10 transition font-bold">
+                    <a href="{% url 'register' %}" class="px-8 py-4 rounded-2xl border border-white/20 hover:bg-white/10 transition font-bold">
                         Espace Professionnel
                     </a>
                 </div>
@@ -234,7 +234,7 @@
 
         <div class="bento-grid">
             <!-- Large Item: Biologie -->
-            <a href="/healthcare/service/biologie-medicale/" class="bento-item large">
+            <a href="/sante/service/biologie-medicale/" class="bento-item large">
                 <div class="flex justify-between items-start">
                     <i class="ti ti-flask text-5xl"></i>
                     <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Populaire</span>
@@ -246,7 +246,7 @@
             </a>
 
             <!-- Tall Item: Imagerie -->
-            <a href="/healthcare/service/imagerie-medicale/" class="bento-item tall">
+            <a href="/sante/service/imagerie-medicale/" class="bento-item tall">
                 <i class="ti ti-scan text-4xl text-accent-500"></i>
                 <div class="space-y-2">
                     <h3 class="text-xl font-bold">Imagerie</h3>
@@ -255,13 +255,13 @@
             </a>
 
             <!-- Standard Item: Dentaire -->
-            <a href="/healthcare/service/soins-dentaires/" class="bento-item">
+            <a href="/sante/service/soins-dentaires/" class="bento-item">
                 <i class="ti ti-tooth text-4xl text-accent-500"></i>
                 <h3 class="text-xl font-bold">Soins Dentaires</h3>
             </a>
 
             <!-- Standard Item: Cardiologie -->
-            <a href="/healthcare/service/explorations-fonctionnelles/" class="bento-item">
+            <a href="/sante/service/explorations-fonctionnelles/" class="bento-item">
                 <i class="ti ti-heartbeat text-4xl text-accent-500"></i>
                 <h3 class="text-xl font-bold">Cardiologie</h3>
             </a>
@@ -275,7 +275,7 @@
                     <div class="space-y-2">
                         <h3 class="text-2xl font-bold">Vous êtes un centre ?</h3>
                         <p class="text-gray-400">Rejoignez les {{ stats.providers }} établissements déjà partenaires.</p>
-                        <a href="{% url 'users:register' %}" class="text-accent-400 font-bold inline-block pt-2">Inscrire ma structure →</a>
+                        <a href="{% url 'register' %}" class="text-accent-400 font-bold inline-block pt-2">Inscrire ma structure →</a>
                     </div>
                 </div>
             </div>

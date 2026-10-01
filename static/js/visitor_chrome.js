@@ -53,7 +53,7 @@
       backdrop.setAttribute('aria-hidden', 'false');
       document.body.classList.add('mc-visitor-drawer-open');
     } else {
-      window.location.href = '/healthcare/prestataire/dashboard/';
+      window.location.href = '/sante/prestataire/dashboard/';
     }
   };
 

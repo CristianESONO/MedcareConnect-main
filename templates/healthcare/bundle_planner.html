@@ -65,7 +65,7 @@
     const URL_SAVE = "{% url 'healthcare:bundle_save_session' %}";
     const URL_ALT = "{{ pa_alternatives_url_tpl }}";
     const URL_ADD_BUNDLE = "{% url 'cart:cart_add_bundle' %}";
-    const LOGIN_URL = "{% url 'users:login' %}?next={% url 'healthcare:bundle_planner' %}";
+    const LOGIN_URL = "{% url 'login' %}?next={% url 'healthcare:bundle_planner' %}";
     const IS_AUTH = {{ user.is_authenticated|yesno:"true,false" }};
     const IS_PATIENT = {% if user.is_authenticated and user.is_patient %}true{% else %}false{% endif %};
 
@@ -284,7 +284,7 @@
                             <option value="${ln.prestataire_acte_id}" data-price="${ln.price}" data-org-id="${ln.organisme_id}" data-slug="${ln.organisme_slug}">${escapeHtml(ln.organisme_name)} — ${moneyXOF(ln.price)}</option>
                         </select>
                     </td>
-                    <td class="py-3"><a href="/healthcare/${ln.organisme_slug}/" class="text-xs font-medium text-accent-600 hover:text-accent-700">Fiche</a></td>
+                    <td class="py-3"><a href="/sante/${ln.organisme_slug}/" class="text-xs font-medium text-accent-600 hover:text-accent-700">Fiche</a></td>
                 `;
                 tb.appendChild(tr);
                 const sel = tr.querySelector('select');
@@ -299,7 +299,7 @@
                     recalcPlanCard(card);
                     const opt = sel.options[sel.selectedIndex];
                     const a = tr.querySelector('a');
-                    if (a && opt && opt.dataset.slug) a.href = '/healthcare/' + opt.dataset.slug + '/';
+                    if (a && opt && opt.dataset.slug) a.href = '/sante/' + opt.dataset.slug + '/';
                 });
             });
             root.appendChild(card);

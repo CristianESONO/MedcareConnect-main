@@ -162,7 +162,7 @@ def index(request):
             "lat": float(o.latitude),
             "lng": float(o.longitude),
             "active": bool(o.is_active),
-            "url": f"/healthcare/{o.slug}/",
+            "url": f"/sante/{o.slug}/",
         })
 
     context = {
@@ -329,7 +329,7 @@ def organisme_approve(request, pk):
         from notifications.dispatcher import dispatch as _notify
         _notify(
             "organisme.approved",
-            context={"organisme": org, "link": f"/healthcare/{org.slug}/"},
+            context={"organisme": org, "link": f"/sante/{org.slug}/"},
             actor=org.user,
         )
     except Exception:
@@ -348,7 +348,7 @@ def organisme_reject(request, pk):
         from notifications.dispatcher import dispatch as _notify
         _notify(
             "organisme.rejected",
-            context={"organisme": org, "link": "/healthcare/prestataire/"},
+            context={"organisme": org, "link": "/sante/prestataire/"},
             actor=org.user,
         )
     except Exception:

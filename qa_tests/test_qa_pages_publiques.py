@@ -42,12 +42,12 @@ def test_panier_public_200(client):
 
 @pytest.mark.django_db
 def test_inscription_200(client):
-    assert client.get(reverse("users:register")).status_code == 200
+    assert client.get(reverse("register")).status_code == 200
 
 
 @pytest.mark.django_db
 def test_connexion_200(client):
-    assert client.get(reverse("users:login")).status_code == 200
+    assert client.get(reverse("login")).status_code == 200
 
 
 @pytest.mark.django_db

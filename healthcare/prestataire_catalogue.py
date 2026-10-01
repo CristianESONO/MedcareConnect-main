@@ -21,14 +21,10 @@ from healthcare.service_icons import icon_for_subfamily_label
 
 def applicable_pilier_slugs(org: OrganismeDeSante) -> set[str] | None:
     """
-    Slugs de piliers applicables à la structure.
-    None = type inconnu → tous les piliers actifs sont affichés comme applicables.
+    Retourne None → tous les piliers sont affichés comme applicables,
+    quel que soit le type de structure.
     """
-    type_name = (org.type_organisme.name if org.type_organisme_id else "") or ""
-    demo_key = demo_key_for_type_name(type_name)
-    if demo_key is None:
-        return None
-    return pilier_slugs_for_demo_key(demo_key)
+    return None
 
 
 def type_structure_context(org: OrganismeDeSante) -> dict:

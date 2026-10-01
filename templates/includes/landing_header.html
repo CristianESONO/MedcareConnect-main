@@ -48,20 +48,20 @@
     <div class="mc-landing-header-ctas">
       {% if user.is_authenticated and user.is_patient %}
       {% include "includes/_patient_header_quick_icons.html" %}
-      <form method="post" action="{% url 'users:logout' %}" class="inline-block">
+      <form method="post" action="{% url 'logout' %}" class="inline-block">
         {% csrf_token %}
         <button type="submit" class="mc-landing-btn mc-landing-btn-login">Déconnexion</button>
       </form>
       {% elif user.is_authenticated and user.is_prestataire %}
       {% include "includes/_prestataire_header_quick_icons.html" %}
-      <form method="post" action="{% url 'users:logout' %}" class="inline-block">
+      <form method="post" action="{% url 'logout' %}" class="inline-block">
         {% csrf_token %}
         <button type="submit" class="mc-landing-btn mc-landing-btn-login">Déconnexion</button>
       </form>
       {% else %}
-      <a href="{% url 'users:login' %}" class="mc-landing-btn mc-landing-btn-login">Connexion</a>
+      <a href="{% url 'login' %}" class="mc-landing-btn mc-landing-btn-login">Connexion</a>
       <a href="{% url 'healthcare:search' %}" class="mc-landing-btn mc-landing-btn-search">Trouver un service</a>
-      <a href="{% url 'users:register' %}" class="mc-landing-btn mc-landing-btn-join">Rejoindre MedCare</a>
+      <a href="{% url 'register' %}" class="mc-landing-btn mc-landing-btn-join">Rejoindre MedCare</a>
       {% endif %}
     </div>
     </div>

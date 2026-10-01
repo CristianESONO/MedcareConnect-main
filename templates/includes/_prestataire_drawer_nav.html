@@ -60,6 +60,6 @@
   {% if org %}
   <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="mc-landing-drawer-btn mc-landing-drawer-btn-pro"><i class="ti ti-external-link" aria-hidden="true"></i> Voir profil public</a>
   {% endif %}
-  <a href="{% url 'users:logout' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Déconnexion</a>
+  <a href="{% url 'logout' %}" class="mc-landing-drawer-btn mc-landing-drawer-btn-join">Déconnexion</a>
 </div>
 {% endwith %}

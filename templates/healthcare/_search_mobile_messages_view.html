@@ -44,7 +44,7 @@
     <div class="sipn-guest-gate-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="chat" class="sipn-ico sipn-ico--xl" %}</div>
     <div class="sipn-guest-gate-title">Messagerie</div>
     <p class="sipn-guest-gate-sub">Connectez-vous pour échanger avec les structures et valider vos devis.</p>
-    <a href="{% url 'users:login' %}?next={% url 'messaging:inbox' %}" class="sipn-guest-gate-cta">Se connecter</a>
+    <a href="{% url 'login' %}?next={% url 'messaging:inbox' %}" class="sipn-guest-gate-cta">Se connecter</a>
   </div>
   {% endif %}
 </div>

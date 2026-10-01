@@ -20,8 +20,8 @@
   <div class="landing-register-sec__in">
     <div class="mc-auth-card mc-auth-card--wide">
       <div class="mc-auth-header">
-        <h1>Créer un compte</h1>
-        <p>Patient : informations personnelles. Prestataire : données complémentaires sur votre établissement.</p>
+        <h1 id="register-header-title">Créer un compte Patient</h1>
+        <p id="register-header-subtitle">Vos informations personnelles pour réserver et suivre vos examens.</p>
       </div>
 
       <form method="POST" action="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" enctype="multipart/form-data">
@@ -43,38 +43,56 @@
         </div>
         {% endif %}
 
-        <div class="mc-form-grid mc-form-grid--2">
-          <div class="mc-form-group">
-            <label class="mc-form-label" for="id_first_name">Prénom</label>
+        <div class="mc-form-grid mc-form-grid--2" id="grid-user-names" style="align-items: end;">
+          <div class="mc-form-group" style="margin-bottom: 0;">
+            <label class="mc-form-label" for="id_first_name" id="lbl_first_name" style="display:block; min-height:2em;">Prénom</label>
             <input type="text" name="first_name" id="id_first_name" class="mc-form-input" value="{{ form.first_name.value|default:'' }}" placeholder="Prénom">
           </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label" for="id_last_name">Nom</label>
+          <div class="mc-form-group" style="margin-bottom: 0;">
+            <label class="mc-form-label" for="id_last_name" id="lbl_last_name" style="display:block; min-height:2em;">Nom</label>
             <input type="text" name="last_name" id="id_last_name" class="mc-form-input" value="{{ form.last_name.value|default:'' }}" placeholder="Nom de famille">
           </div>
         </div>
 
         <div class="mc-form-group">
-          <label class="mc-form-label" for="id_username">Nom d'utilisateur <span class="mc-form-required">*</span></label>
+          <label class="mc-form-label" for="id_username" id="lbl_username">Nom d'utilisateur <span class="mc-form-required">*</span></label>
           <input type="text" name="username" id="id_username" class="mc-form-input" required value="{{ form.username.value|default:'' }}" placeholder="votre_nom">
+          <p class="mc-pro-hint" id="username-hint" style="margin-top:6px; font-size:12px; color:#0284c7; display:none;"></p>
         </div>
 
         <div class="mc-form-group">
-          <label class="mc-form-label" for="id_email">Email <span class="mc-form-required">*</span></label>
+          <label class="mc-form-label" for="id_email" id="lbl_email">Email <span class="mc-form-required">*</span></label>
           <input type="email" name="email" id="id_email" class="mc-form-input" required value="{{ form.email.value|default:'' }}" placeholder="votre@email.com">
         </div>
 
         <div class="mc-form-group">
-          <label class="mc-form-label" for="id_phone_number">Téléphone personnel</label>
+          <label class="mc-form-label" for="id_phone_number" id="lbl_phone_number">Téléphone personnel</label>
           <input type="tel" name="phone_number" id="id_phone_number" class="mc-form-input" value="{{ form.phone_number.value|default:'' }}" placeholder="+221 77 000 00 00">
         </div>
 
         <div class="mc-form-group">
-          <label class="mc-form-label" for="id_user_type">Type de compte <span class="mc-form-required">*</span></label>
-          <select name="user_type" id="id_user_type" class="mc-form-input">
-            <option value="patient" {% if form.user_type.value == "patient" %}selected{% endif %}>Patient</option>
-            <option value="prestataire" {% if form.user_type.value == "prestataire" %}selected{% endif %}>Prestataire de Santé (établissement)</option>
-          </select>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label class="mc-form-label" for="id_user_type" style="margin-bottom:0;">Type de compte <span class="mc-form-required">*</span></label>
+            <span id="user-type-badge" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:3px 10px; border-radius:9999px; background:#e0f2fe; color:#0369a1; transition:all .2s ease;">
+              Mode Patient
+            </span>
+          </div>
+
+          <div style="position:relative;">
+            <select name="user_type" id="id_user_type" class="mc-form-input" style="background-color: #f1f5f9; color: #1e293b; cursor: not-allowed; pointer-events: none; -webkit-appearance: none; -moz-appearance: none; appearance: none; padding-right: 36px; font-weight: 600;">
+              <option value="patient" {% if form.user_type.value == "patient" or not form.user_type.value %}selected{% endif %}>Patient</option>
+              <option value="prestataire" {% if form.user_type.value == "prestataire" %}selected{% endif %}>Prestataire de Santé (établissement)</option>
+            </select>
+            <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:14px; color:#64748b; pointer-events:none;" title="Défini automatiquement">
+              🔒
+            </span>
+          </div>
+          <p class="mc-pro-hint" id="user-type-hint-text" style="margin-top:6px; margin-bottom:0; font-size:12px; color:#64748b;">
+            Type de compte défini automatiquement sur <strong id="user-type-name-label">Patient</strong> (défini par votre choix en haut).
+            <button type="button" id="btn-toggle-profile-inline" style="margin-left:6px; background:none; border:none; padding:0; color:#0284c7; text-decoration:underline; font-size:12px; font-weight:600; cursor:pointer;">
+              Basculer sur Structure →
+            </button>
+          </p>
         </div>
 
         <div id="prestataire-fields" class="mc-pro-block">
@@ -109,7 +127,7 @@
             <label class="mc-form-label">Adresse du siège <span class="mc-form-required">*</span></label>
             {{ form.organisme_address }}
           </div>
-          <div class="mc-form-grid mc-form-grid--2">
+          <div class="mc-form-grid mc-form-grid--2" style="align-items: start;">
             <div class="mc-form-group">
               <label class="mc-form-label">Quartier</label>
               {{ form.organisme_quartier }}
@@ -133,7 +151,7 @@
           </div>
         </div>
 
-        <div class="mc-form-grid mc-form-grid--2">
+        <div class="mc-form-grid mc-form-grid--2" style="align-items: start;">
           <div class="mc-form-group">
             <label class="mc-form-label" for="id_password1">Mot de passe <span class="mc-form-required">*</span></label>
             <input type="password" name="password1" id="id_password1" class="mc-form-input" required placeholder="••••••••">
@@ -144,12 +162,12 @@
           </div>
         </div>
 
-        <button type="submit" class="mc-btn-primary mc-btn-primary--block">Créer mon compte</button>
+        <button type="submit" id="register-submit-btn" class="mc-btn-primary mc-btn-primary--block">Créer mon compte Patient →</button>
       </form>
 
       <p class="mc-auth-footer">
         Déjà un compte ?
-        <a href="{% url 'users:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Se connecter</a>
+        <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Se connecter</a>
       </p>
     </div>
   </div>
@@ -162,13 +180,126 @@
 (function() {
   var sel = document.getElementById('id_user_type');
   var block = document.getElementById('prestataire-fields');
-  if (!sel || !block) return;
-  function sync() {
-    block.classList.toggle('is-visible', sel.value === 'prestataire');
-  }
-  sel.addEventListener('change', sync);
-  sync();
+  var badge = document.getElementById('user-type-badge');
+  var hintLabel = document.getElementById('user-type-name-label');
+  var inlineToggleBtn = document.getElementById('btn-toggle-profile-inline');
+  var submitBtn = document.getElementById('register-submit-btn');
+  var authHeaderTitle = document.getElementById('register-header-title');
+  var authHeaderSubtitle = document.getElementById('register-header-subtitle');
 
+  var lblFirstName = document.getElementById('lbl_first_name');
+  var lblLastName = document.getElementById('lbl_last_name');
+  var lblUsername = document.getElementById('lbl_username');
+  var usernameInput = document.getElementById('id_username');
+  var usernameHint = document.getElementById('username-hint');
+  var lblPhone = document.getElementById('lbl_phone_number');
+  var orgNameInput = document.getElementById('id_organisme_name');
+
+  var currentMode = 'patient';
+  var userEditedUsername = false;
+
+  function slugifyUsername(val) {
+    return (val || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .substring(0, 30);
+  }
+
+  if (usernameInput) {
+    usernameInput.addEventListener('input', function() {
+      userEditedUsername = (this.value.trim().length > 0);
+    });
+  }
+
+  if (orgNameInput) {
+    orgNameInput.addEventListener('input', function() {
+      if (currentMode === 'structure' && !userEditedUsername && usernameInput) {
+        var slug = slugifyUsername(this.value);
+        if (slug) {
+          usernameInput.value = slug;
+        }
+      }
+    });
+  }
+
+  function applyMode(mode, triggerSwitch) {
+    var isPrestataire = (mode === 'structure' || mode === 'prestataire');
+    currentMode = isPrestataire ? 'structure' : 'patient';
+
+    // Synchroniser la valeur du sélecteur désactivé
+    if (sel) {
+      sel.value = isPrestataire ? 'prestataire' : 'patient';
+    }
+
+    // Afficher ou masquer les champs spécifiques à l'établissement
+    if (block) {
+      block.classList.toggle('is-visible', isPrestataire);
+    }
+
+    // Mettre à jour l'affichage textuel et les boutons
+    if (isPrestataire) {
+      if (badge) {
+        badge.textContent = 'Mode Structure';
+        badge.style.background = '#fef3c7';
+        badge.style.color = '#92400e';
+      }
+      if (hintLabel) hintLabel.textContent = 'Prestataire de Santé (établissement)';
+      if (inlineToggleBtn) inlineToggleBtn.textContent = 'Basculer sur Patient →';
+      if (submitBtn) submitBtn.textContent = 'Créer le compte établissement →';
+      if (authHeaderTitle) authHeaderTitle.textContent = 'Créer un compte Prestataire';
+      if (authHeaderSubtitle) authHeaderSubtitle.textContent = 'Renseignez les informations de votre établissement pour créer votre fiche.';
+
+      if (lblFirstName) lblFirstName.innerHTML = 'Prénom du responsable <span style="font-size:10px;font-weight:500;color:#94a3b8;">(optionnel)</span>';
+      if (lblLastName) lblLastName.innerHTML = 'Nom du responsable <span style="font-size:10px;font-weight:500;color:#94a3b8;">(optionnel)</span>';
+      if (lblUsername) lblUsername.innerHTML = 'Nom d\'utilisateur de la structure (identifiant de connexion) <span class="mc-form-required">*</span>';
+      if (usernameInput) {
+        usernameInput.placeholder = 'ex: polyclinique_de_libe, clinique_pasteur';
+        if (!userEditedUsername && orgNameInput && orgNameInput.value) {
+          var autoSlug = slugifyUsername(orgNameInput.value);
+          if (autoSlug) usernameInput.value = autoSlug;
+        }
+      }
+      if (usernameHint) {
+        usernameHint.textContent = '💡 Cet identifiant est le username de connexion de la structure. Il se génère automatiquement avec le nom de l\'établissement ci-dessous.';
+        usernameHint.style.display = 'block';
+      }
+      if (lblPhone) lblPhone.textContent = 'Téléphone du contact / responsable';
+    } else {
+      if (badge) {
+        badge.textContent = 'Mode Patient';
+        badge.style.background = '#e0f2fe';
+        badge.style.color = '#0369a1';
+      }
+      if (hintLabel) hintLabel.textContent = 'Patient';
+      if (inlineToggleBtn) inlineToggleBtn.textContent = 'Basculer sur Structure →';
+      if (submitBtn) submitBtn.textContent = 'Créer mon compte Patient →';
+      if (authHeaderTitle) authHeaderTitle.textContent = 'Créer un compte Patient';
+      if (authHeaderSubtitle) authHeaderSubtitle.textContent = 'Vos informations personnelles pour réserver et suivre vos examens.';
+
+      if (lblFirstName) lblFirstName.textContent = 'Prénom';
+      if (lblLastName) lblLastName.textContent = 'Nom';
+      if (lblUsername) lblUsername.innerHTML = 'Nom d\'utilisateur <span class="mc-form-required">*</span>';
+      if (usernameInput) usernameInput.placeholder = 'votre_nom';
+      if (usernameHint) usernameHint.style.display = 'none';
+      if (lblPhone) lblPhone.textContent = 'Téléphone personnel';
+    }
+
+    if (triggerSwitch && typeof window.switchMode === 'function') {
+      window.switchMode(currentMode);
+    }
+  }
+
+  // Écouter les changements sur le select (ex: Playwright ou script externe)
+  if (sel) {
+    sel.addEventListener('change', function() {
+      applyMode(this.value === 'prestataire' ? 'structure' : 'patient', true);
+    });
+  }
+
+  // Type organisme hint
   var typeSel = document.getElementById('id_organisme_type');
   var typeHint = document.getElementById('organisme-type-hint');
   function syncTypeHint() {
@@ -188,18 +319,65 @@
     syncTypeHint();
   }
 
-  var origSwitch = window.switchMode;
-  if (typeof origSwitch === 'function') {
-    window.switchMode = function(mode) {
-      origSwitch(mode);
-      if (mode === 'structure' && sel) {
-        sel.value = 'prestataire';
-        sync();
-      } else if (mode === 'patient' && sel) {
-        sel.value = 'patient';
-        sync();
+  // Bouton inline sous le champ désactivé
+  if (inlineToggleBtn) {
+    inlineToggleBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var nextMode = (currentMode === 'structure') ? 'patient' : 'structure';
+      if (typeof window.switchMode === 'function') {
+        window.switchMode(nextMode);
+      } else {
+        applyMode(nextMode, false);
       }
-    };
+    });
+  }
+
+  // Remplacement/Enrichissement de switchMode
+  var origSwitch = window.switchMode;
+  window.switchMode = function(mode) {
+    if (typeof origSwitch === 'function') {
+      origSwitch(mode);
+    }
+    applyMode(mode, false);
+  };
+
+  // Clic direct sur les boutons du toggle en haut
+  document.querySelectorAll('.toggle__btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var m = this.getAttribute('data-mode');
+      if (m) {
+        applyMode(m, false);
+      }
+    });
+  });
+
+  // Avant soumission, s'assurer que le champ user_type est actif et conforme
+  var formEl = document.querySelector('#inscription-form form');
+  if (formEl) {
+    formEl.addEventListener('submit', function() {
+      if (sel) {
+        sel.value = (currentMode === 'structure') ? 'prestataire' : 'patient';
+        sel.disabled = false;
+        sel.style.pointerEvents = 'auto';
+      }
+    });
+  }
+
+  // Détection initiale au chargement (URL params ou valeur par défaut)
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
+  var initialMode = (urlType === 'prestataire' || urlType === 'structure' || urlType === 'soignant' || (sel && sel.value === 'prestataire')) ? 'structure' : 'patient';
+
+  if (initialMode === 'structure') {
+    setTimeout(function() {
+      if (typeof window.switchMode === 'function') {
+        window.switchMode('structure');
+      } else {
+        applyMode('structure', false);
+      }
+    }, 50);
+  } else {
+    applyMode('patient', false);
   }
 
   if (window.location.hash === '#inscription-form') {

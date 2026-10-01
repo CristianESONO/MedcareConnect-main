@@ -813,7 +813,7 @@ function requestFicheDevis() {
     return;
   }
   {% if not user.is_authenticated %}
-  window.location.href = '{% url "users:login" %}?next={{ request.get_full_path|urlencode }}';
+  window.location.href = '{% url "login" %}?next={{ request.get_full_path|urlencode }}';
   return;
   {% elif not user.is_patient %}
   alert('Seuls les comptes patient peuvent demander un devis via MedCare.');
