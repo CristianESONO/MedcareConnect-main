@@ -52,6 +52,7 @@ class OrganismeForm(forms.ModelForm):
         model = OrganismeDeSante
         fields = (
             "name", "raison_sociale", "ninea", "type_organisme", "profession",
+            "ordre_numero", "intervention_zone",
             "address", "quartier", "city", "region",
             "latitude", "longitude", "contact_email", "contact_phone",
             "whatsapp_number", "description", "website", "logo",
@@ -60,6 +61,9 @@ class OrganismeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["type_organisme"].queryset = type_organisme_queryset()
+        inst = self.instance
+        is_praticien = bool(inst and (getattr(inst, "account_nature", None) == "praticien" or getattr(inst, "is_praticien", False)))
+
         for name, f in self.fields.items():
             if isinstance(f.widget, forms.Textarea):
                 f.widget.attrs.update({"class": ORG_TW, "rows": 4})
@@ -71,16 +75,40 @@ class OrganismeForm(forms.ModelForm):
                 f.widget.attrs.update({"class": ORG_TW + " file:mr-4 file:rounded-lg file:border-0 file:bg-primary-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-primary-800 hover:file:bg-primary-100", "accept": "image/*"})
             else:
                 f.widget.attrs.update({"class": ORG_TW})
+
             if name == "description":
-                f.widget.attrs.setdefault("placeholder", "Présentez votre établissement en quelques lignes…")
+                if is_praticien:
+                    f.widget.attrs["placeholder"] = "Présentez votre parcours, vos diplômes, expertises et modalités de soins…"
+                else:
+                    f.widget.attrs.setdefault("placeholder", "Présentez votre établissement en quelques lignes…")
             elif name == "name":
-                f.widget.attrs.setdefault("placeholder", "Ex. Clinique du Plateau")
+                if is_praticien:
+                    f.widget.attrs["placeholder"] = "Ex. Dr Cheikh Ndiaye ou Cheikh Ndiaye"
+                else:
+                    f.widget.attrs.setdefault("placeholder", "Ex. Clinique du Plateau")
             elif name == "whatsapp_number":
                 f.widget.attrs.setdefault("placeholder", "+221 77 000 00 00")
-        inst = self.instance
-        if inst and not getattr(inst, "logo", None):
-            self.fields["logo"].required = True
-            self.fields["logo"].label = "Logo / photo de l'établissement (obligatoire)"
+            elif name == "ordre_numero":
+                f.widget.attrs.setdefault("placeholder", "Ex. ONMS-12345 ou N° d'enregistrement / licence")
+            elif name == "intervention_zone":
+                f.widget.attrs.setdefault("placeholder", "Ex. Dakar, Almadies, Ouakam, Mermoz, Plateau...")
+
+        if is_praticien:
+            self.fields["type_organisme"].required = False
+            self.fields["profession"].required = True
+            self.fields["ordre_numero"].required = False
+            self.fields["intervention_zone"].required = False
+            self.fields["name"].label = "Nom complet / Nom d'exercice"
+            self.fields["logo"].label = "Photo de profil / Portrait professionnel"
+            if inst and not getattr(inst, "logo", None):
+                self.fields["logo"].required = False
+        else:
+            self.fields["profession"].required = False
+            self.fields["ordre_numero"].required = False
+            self.fields["intervention_zone"].required = False
+            if inst and not getattr(inst, "logo", None):
+                self.fields["logo"].required = True
+                self.fields["logo"].label = "Logo / photo de l'établissement (obligatoire)"
 
 
 class OpeningHoursForm(forms.Form):

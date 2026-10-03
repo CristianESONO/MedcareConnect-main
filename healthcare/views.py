@@ -2106,6 +2106,10 @@ def organisme_detail(request, slug):
         slug=slug, is_active=True,
     )
 
+    # Garde-fou praticien : pas de fiche publique (Art. 10, 17, 19 du Décret n°67-147)
+    if org.is_praticien:
+        raise Http404("Conformément aux règles déontologiques, les praticiens indépendants ne disposent pas d'une fiche publique de structure.")
+
     org.profile_views_count = F("profile_views_count") + 1
     org.save(update_fields=["profile_views_count"])
     from .profile_tracking import resolve_profile_view_source
@@ -2864,14 +2868,24 @@ def organisme_create(request):
 
 
 def _organisme_profile_completion(org) -> int:
-    steps = [
-        bool((org.name or "").strip()),
-        bool(org.logo),
-        bool((org.description or "").strip()),
-        org.latitude is not None and org.longitude is not None,
-        bool((org.contact_phone or "").strip()),
-        bool((org.whatsapp_number or "").strip()),
-    ]
+    if getattr(org, "account_nature", None) == "praticien" or getattr(org, "is_praticien", False):
+        steps = [
+            bool((org.name or "").strip()),
+            bool((org.profession or "").strip()),
+            bool((org.ordre_numero or "").strip()),
+            bool(org.logo),
+            bool((org.description or "").strip()),
+            bool((org.contact_phone or "").strip() or (org.whatsapp_number or "").strip()),
+        ]
+    else:
+        steps = [
+            bool((org.name or "").strip()),
+            bool(org.logo),
+            bool((org.description or "").strip()),
+            org.latitude is not None and org.longitude is not None,
+            bool((org.contact_phone or "").strip()),
+            bool((org.whatsapp_number or "").strip()),
+        ]
     return round(sum(1 for ok in steps if ok) / len(steps) * 100)
 
 
@@ -2885,7 +2899,9 @@ def organisme_edit(request):
         form = OrganismeForm(request.POST, request.FILES, instance=org)
         if form.is_valid():
             form.save()
-            messages.success(request, "Profil mis à jour.")
+            messages.success(request, "Profil mis à jour avec succès.")
+            if getattr(org, "account_nature", None) == "praticien" or getattr(org, "is_praticien", False):
+                return redirect("healthcare:organisme_edit")
             return redirect("healthcare:prestataire_profil_public")
     else:
         form = OrganismeForm(instance=org)

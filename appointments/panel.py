@@ -27,7 +27,9 @@ def patient_rdv_context(user) -> dict:
         else:
             past.append(rdv)
     past.reverse()
-    return {"rdv_upcoming": upcoming, "rdv_past": past}
+    from healthcare.models import PrestationTicket
+    received_tickets = PrestationTicket.objects.filter(is_active=True).select_related("organisme", "acte").order_by("-created_at")[:3]
+    return {"rdv_upcoming": upcoming, "rdv_past": past, "received_tickets": received_tickets}
 
 
 def render_rdv_panel(request):

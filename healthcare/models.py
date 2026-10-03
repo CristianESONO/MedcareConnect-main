@@ -80,14 +80,53 @@ class OrganismeDeSante(models.Model):
         blank=True,
         related_name="organismes",
     )
+    ACCOUNT_NATURE_CHOICES = (
+        ("structure", "Structure de soins"),
+        ("praticien", "Praticien indépendant"),
+    )
+    TOPOLOGY_CHOICES = (
+        ("simple", "Structure simple (un seul site)"),
+        ("multiservice", "Établissement multi-services (un lieu, plusieurs services)"),
+        ("multisite", "Réseau multi-sites (un métier, plusieurs lieux)"),
+    )
+    account_nature = models.CharField(
+        max_length=20,
+        choices=ACCOUNT_NATURE_CHOICES,
+        default="structure",
+        db_index=True,
+        verbose_name="Nature du compte",
+    )
+    topology_type = models.CharField(
+        max_length=30,
+        choices=TOPOLOGY_CHOICES,
+        default="simple",
+        blank=True,
+        verbose_name="Topologie d'établissement",
+        help_text="Uniquement la topologie (nombre de nœuds), découplée des piliers d'activité.",
+    )
+    type_libre = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+        verbose_name="Type de structure (listing indicatif)",
+        help_text="Label libre choisi par la structure (ex: Clinique, Laboratoire…). Indicatif — ne connecte pas automatiquement les piliers.",
+    )
+    is_individual = models.BooleanField(
+        default=False,
+        db_index=True,
+        verbose_name="Praticien indépendant individuel",
+        help_text="Si vrai, l'individu assume son nom propre, sans fiche directe dans l'annuaire (Art. 10, 17, 19).",
+    )
     PROFESSION_CHOICES = [
         ("",                          "— Sélectionnez votre profession —"),
-        ("kinesitherapeute",          "Kinésithérapeute"),
+        ("medecin",                   "Médecin"),
         ("infirmier",                 "Infirmier(ère)"),
+        ("kinesitherapeute",          "Kinésithérapeute"),
         ("sage_femme",                "Sage-femme"),
+        ("psychologue",               "Psychologue"),
+        ("autre",                     "Autre paramédical"),
         ("orthophoniste",             "Orthophoniste"),
         ("psychomotricien",           "Psychomotricien(ne)"),
-        ("psychologue",               "Psychologue"),
         ("dieteticien",               "Diététicien(ne)-nutritionniste"),
         ("orthoptiste",               "Orthoptiste"),
         ("ergotherapeute",            "Ergothérapeute"),
@@ -99,7 +138,40 @@ class OrganismeDeSante(models.Model):
         default="",
         choices=PROFESSION_CHOICES,
         verbose_name="Profession",
-        help_text="Uniquement pour les praticiens indépendants paramédicaux.",
+        help_text="Profession du praticien indépendant.",
+    )
+    ordre_numero = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Numéro d'inscription à l'Ordre ou titre professionnel",
+        help_text="Numéro ONMS pour médecin, ou titre / ADELI selon la profession.",
+    )
+    specialties = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Spécialités professionnelles",
+        help_text="Liste des spécialités déclarées (ex: 43 spécialités médicales / 7 familles, etc.).",
+    )
+    exercise_modes = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Modes d'exercice",
+        help_text="Ex: ['cabinet', 'domicile']",
+    )
+    intervention_zone = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Zone d'intervention (domicile)",
+        help_text="Ex: Dakar, Almadies, Ouest-Foire...",
+    )
+    piliers_actifs = models.ManyToManyField(
+        "ServiceMedical",
+        blank=True,
+        related_name="organismes_actifs",
+        verbose_name="Piliers d'activité choisis librement",
+        help_text="Piliers choisis par la structure, indépendamment de son type/topologie.",
     )
     address = models.CharField(max_length=255)
     quartier = models.CharField(max_length=100, blank=True, null=True)
@@ -292,6 +364,14 @@ class OrganismeDeSante(models.Model):
         return False
 
     @property
+    def is_praticien(self) -> bool:
+        return self.account_nature == "praticien" or self.is_individual
+
+    @property
+    def is_structure(self) -> bool:
+        return not self.is_praticien
+
+    @property
     def accepted_insurances(self):
         return Assurance.objects.filter(
             prises_en_charge__organisme=self
@@ -302,6 +382,12 @@ class OrganismeDeSante(models.Model):
         return ServiceMedical.objects.filter(
             acts__prestataire_actes__organisme=self
         ).distinct()
+
+    def get_public_url(self):
+        from django.urls import reverse
+        if self.is_praticien:
+            return reverse("healthcare:praticien_public_detail", kwargs={"slug": self.slug or self.pk})
+        return reverse("healthcare:organisme_detail", kwargs={"slug": self.slug})
 
     def plan_allows(self, feature_code: str) -> bool:
         """
@@ -1022,3 +1108,153 @@ def get_default_subscription_plan():
     if p:
         return p
     return SubscriptionPlan.objects.order_by("order", "pk").first()
+
+
+class PrestationTicket(models.Model):
+    """
+    Ticket de prestation privé (généré par le praticien indépendant).
+    Lien sécurisé direct (ex: medcare.sn/t/identifiant), non indexé et invisible dans l'annuaire public.
+    """
+    organisme = models.ForeignKey(
+        OrganismeDeSante,
+        on_delete=models.CASCADE,
+        related_name="tickets",
+        verbose_name="Praticien",
+    )
+    identifiant = models.CharField(
+        max_length=64,
+        unique=True,
+        db_index=True,
+        help_text="Clé publique unique du ticket (ex: cheikh-kine-1a2b).",
+    )
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Titre de la prestation",
+        help_text="Ex: Kiné respiratoire adulte, à domicile",
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Description de la prestation",
+    )
+    acte = models.ForeignKey(
+        ActeMedical,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="tickets",
+        verbose_name="Acte médical rattaché",
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Tarif (FCFA)",
+    )
+    mode = models.CharField(
+        max_length=50,
+        default="domicile",
+        choices=[("domicile", "À domicile"), ("cabinet", "Au cabinet")],
+        verbose_name="Modalité",
+    )
+    zone = models.CharField(
+        max_length=255,
+        blank=True,
+        default="Dakar",
+        verbose_name="Zone d'intervention",
+    )
+    disponibilite = models.CharField(
+        max_length=120,
+        default="Créneaux sur demande",
+        verbose_name="Disponibilité",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Ticket actif",
+    )
+    views_count = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Nombre de consultations",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Ticket de prestation"
+        verbose_name_plural = "Tickets de prestation"
+
+    def __str__(self):
+        return f"{self.title} ({self.price} FCFA) — {self.organisme.name}"
+
+    def get_public_path(self):
+        return f"/t/{self.identifiant}"
+
+
+class PractitionerAffiliation(models.Model):
+    """
+    Rattachement / Affiliation d'un praticien indépendant à une structure de soins.
+    Permet à l'indépendant d'exercer des vacations au sein de structures partenaires.
+    """
+    STATUS_CHOICES = (
+        ("pending", "En attente de validation"),
+        ("invited", "Invitation envoyée"),
+        ("approved", "Validé"),
+        ("rejected", "Rejeté"),
+    )
+    INITIATED_BY_CHOICES = (
+        ("praticien", "Praticien"),
+        ("structure", "Structure"),
+    )
+    praticien = models.ForeignKey(
+        OrganismeDeSante,
+        on_delete=models.CASCADE,
+        related_name="affiliations_praticien",
+        verbose_name="Praticien indépendant",
+    )
+    structure = models.ForeignKey(
+        OrganismeDeSante,
+        on_delete=models.CASCADE,
+        related_name="affiliations_structure",
+        verbose_name="Structure d'accueil",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="approved",
+        db_index=True,
+        verbose_name="Statut",
+    )
+    initiated_by = models.CharField(
+        max_length=20,
+        choices=INITIATED_BY_CHOICES,
+        default="praticien",
+        verbose_name="Initié par",
+        help_text="Qui a initié le rattachement : le praticien (demande) ou la structure (invitation)",
+    )
+    role_title = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name="Rôle / Spécialité exercée",
+        help_text="Ex: Kinésithérapeute vacataire, Médecin consultant",
+    )
+    days_schedule = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Jours et plages de présence",
+        help_text="Ex: ['Lundi matin (8h-12h)', 'Jeudi après-midi (14h-18h)']",
+    )
+    notes = models.TextField(
+        blank=True,
+        verbose_name="Notes ou conditions d'affiliation",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("praticien", "structure")
+        ordering = ["-created_at"]
+        verbose_name = "Affiliation Praticien ↔ Structure"
+        verbose_name_plural = "Affiliations Praticien ↔ Structure"
+
+    def __str__(self):
+        return f"{self.praticien.name} @ {self.structure.name} ({self.get_status_display()})"
+

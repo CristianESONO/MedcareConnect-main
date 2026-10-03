@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import bundle_views
+from . import practitioner_views
 
 app_name = "healthcare"
 
@@ -48,6 +49,7 @@ urlpatterns = [
     path("prestataire/organisme/creer/", views.organisme_create, name="organisme_create"),
     path("prestataire/organisme/modifier/", views.organisme_edit, name="organisme_edit"),
     path("prestataire/organisme/horaires/", views.organisme_hours, name="organisme_hours"),
+    path("prestataire/type-etablissement/", practitioner_views.prestataire_type_etablissement, name="prestataire_type_etablissement"),
     path("prestataire/profil-public/", views.prestataire_profil_public, name="prestataire_profil_public"),
     path("prestataire/actes/", views.actes_list, name="actes_list"),
     path("prestataire/actes/ajouter/", views.acte_add, name="acte_add"),
@@ -72,6 +74,25 @@ urlpatterns = [
     path("prestataire/bilan/", views.prestataire_bilan, name="prestataire_bilan"),
     path("prestataire/parametres/", views.prestataire_settings, name="prestataire_settings"),
     path("prestataire/abonnement/", views.prestataire_subscription, name="prestataire_subscription"),
+
+    # Étape 4 — Tickets de prestation (praticien indépendant)
+    path("prestataire/tickets/", practitioner_views.prestataire_tickets, name="prestataire_tickets"),
+    path("prestataire/tickets/creer/", practitioner_views.prestataire_ticket_create, name="prestataire_ticket_create"),
+    path("prestataire/tickets/<int:pk>/activer/", practitioner_views.prestataire_ticket_toggle, name="prestataire_ticket_toggle"),
+    path("prestataire/tickets/<int:pk>/supprimer/", practitioner_views.prestataire_ticket_delete, name="prestataire_ticket_delete"),
+    path("patient-mobile/", practitioner_views.patient_mobile_view, name="patient_mobile"),
+
+    # Étape 6 — Accès / affiliations praticien
+    path("prestataire/acces/", practitioner_views.prestataire_acces, name="prestataire_acces"),
+    path("prestataire/acces/affiliation/creer/", practitioner_views.prestataire_affiliation_create, name="prestataire_affiliation_create"),
+    path("prestataire/acces/affiliation/inviter/", practitioner_views.prestataire_affiliation_invite, name="prestataire_affiliation_invite"),
+    path("prestataire/acces/affiliation/<int:pk>/accepter/", practitioner_views.prestataire_affiliation_accept, name="prestataire_affiliation_accept"),
+    path("prestataire/acces/affiliation/<int:pk>/valider/", practitioner_views.prestataire_affiliation_approve, name="prestataire_affiliation_approve"),
+    path("prestataire/acces/affiliation/<int:pk>/supprimer/", practitioner_views.prestataire_affiliation_delete, name="prestataire_affiliation_delete"),
+    path("prestataire/acces/agenda/<int:aff_pk>/", practitioner_views.agenda_praticien_edit, name="agenda_praticien_edit"),
+
+    # Fiche publique praticien (acte proposé → visible en recherche)
+    path("praticien/<slug:slug>/", practitioner_views.praticien_public_detail, name="praticien_public_detail"),
 
     # Fiche organisme (doit rester en dernier parmi les patterns « racine »)
     path("organisme/<int:org_id>/profil-drawer/", views.organisme_profil_drawer, name="organisme_profil_drawer"),

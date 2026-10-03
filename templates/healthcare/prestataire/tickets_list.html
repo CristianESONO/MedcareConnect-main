@@ -1,0 +1,226 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+
+{% block dash_extra_css %}
+<style>
+.tk-note {
+  display:flex;align-items:flex-start;gap:10px;
+  background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;
+  padding:12px 14px;font-size:12px;color:#1e40af;margin-bottom:16px;line-height:1.55;
+}
+.tk-card {
+  background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+  padding:16px 18px;display:flex;flex-direction:column;gap:10px;transition:box-shadow .15s;
+}
+.tk-card:hover{box-shadow:0 4px 16px rgba(10,92,138,.10);}
+.tk-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.tk-name{font-size:14px;font-weight:700;color:#0d1b2a;}
+.tk-meta{font-size:11px;color:#6b7280;margin-top:2px;}
+.tk-switch{position:relative;width:36px;height:20px;flex-shrink:0;cursor:pointer;}
+.tk-switch input{opacity:0;width:0;height:0;}
+.tk-track{position:absolute;inset:0;background:#d1d5db;border-radius:20px;transition:.2s;}
+.tk-switch input:checked + .tk-track{background:#14b87a;}
+.tk-track::after{content:'';position:absolute;height:16px;width:16px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:.2s;}
+.tk-switch input:checked + .tk-track::after{transform:translateX(16px);}
+.tk-link-row{display:flex;align-items:center;gap:8px;background:#f9fafb;border:1px dashed #d1d5db;border-radius:8px;padding:8px 12px;}
+.tk-url{font-size:11.5px;font-family:monospace;color:#374151;flex:1;word-break:break-all;}
+.tk-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.tk-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:6px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#374151;cursor:pointer;transition:all .15s;text-decoration:none;}
+.tk-btn:hover{background:#f3f4f6;border-color:#9ca3af;}
+.tk-btn.danger:hover{background:#fee2e2;border-color:#ef4444;color:#dc2626;}
+.tk-status-on{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46;}
+.tk-status-off{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#f3f4f6;color:#6b7280;}
+.tk-modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,27,42,.5);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.tk-modal-overlay.open{display:flex;}
+.tk-modal{background:#fff;border-radius:14px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(10,92,138,.22);max-height:88vh;display:flex;flex-direction:column;animation:tkFi .22s ease both;}
+@keyframes tkFi{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.tk-modal-head{padding:15px 20px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
+.tk-modal-title{font-size:15px;font-weight:700;color:#0d1b2a;}
+.tk-modal-close{background:#f3f4f6;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:#6b7280;}
+.tk-modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+.tk-field label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin-bottom:5px;}
+.tk-field input,.tk-field select,.tk-field textarea{width:100%;border:1.5px solid #e5e7eb;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;color:#0d1b2a;box-sizing:border-box;outline:none;transition:border-color .15s;}
+.tk-field input:focus,.tk-field select:focus,.tk-field textarea:focus{border-color:#0a5c8a;}
+.tk-modal-foot{padding:16px 20px;border-top:1px solid #f0f4f8;display:flex;justify-content:flex-end;gap:10px;background:linear-gradient(to bottom,#fff,#f8fafc);border-radius:0 0 14px 14px;}
+
+.tk-btn-cancel{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;font-family:inherit;padding:9px 18px;border-radius:10px;border:1.5px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);text-decoration:none;}
+.tk-btn-cancel:hover{background:#f8fafc;border-color:#cbd5e1;color:#374151;transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.tk-btn-cancel:active{transform:translateY(0);box-shadow:none;}
+
+.tk-btn-create{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;font-family:inherit;padding:9px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#0a5c8a 0%,#4fa3c7 60%,#14b8a6 100%);color:#fff;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;box-shadow:0 4px 14px rgba(10,92,138,.35);letter-spacing:.01em;}
+.tk-btn-create::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);transform:translateX(-100%);transition:transform .5s ease;}
+.tk-btn-create:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(10,92,138,.42);}
+.tk-btn-create:hover::before{transform:translateX(100%);}
+.tk-btn-create:active{transform:translateY(0);box-shadow:0 2px 8px rgba(10,92,138,.3);}
+
+.tk-page-create-btn{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;font-weight:700;font-family:inherit;padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#0a5c8a 0%,#4fa3c7 70%,#06b6d4 100%);color:#fff;cursor:pointer;transition:all .22s ease;box-shadow:0 3px 12px rgba(10,92,138,.30);position:relative;overflow:hidden;text-decoration:none;}
+.tk-page-create-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transform:translateX(-100%);transition:transform .45s ease;}
+.tk-page-create-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(10,92,138,.40);color:#fff;}
+.tk-page-create-btn:hover::before{transform:translateX(100%);}
+.tk-page-create-btn:active{transform:translateY(0);}
+
+.tk-empty{text-align:center;padding:48px 24px;color:#9ca3af;}
+.tk-empty-icon{font-size:36px;margin-bottom:10px;}
+.tk-empty-txt{font-size:13px;line-height:1.7;}
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+  <div>
+    <h1 style="font-size:1.25rem;font-weight:800;color:#0d1b2a;line-height:1.2">Tickets de prestation</h1>
+    <p style="font-size:.75rem;color:#6b7280;margin-top:3px">Un ticket par prestation · partagez son lien directement à vos patients</p>
+  </div>
+  <button id="btn-open-create-tk" class="tk-page-create-btn" onclick="openCreateTk()">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    Créer un ticket
+  </button>
+</div>
+
+<div class="tk-note">
+  <span style="font-size:15px;flex-shrink:0">🔗</span>
+  <span>Un ticket est un <strong>lien privé, non répertorié et non classé</strong>. Il n'apparaît pas dans la recherche, il n'est visible que par ceux à qui vous l'envoyez. Vos actes restent aussi découvrables par recherche d'acte, au même rang que les autres.</span>
+</div>
+
+{% if messages %}
+<div style="margin-bottom:14px">
+  {% for message in messages %}
+  <div style="padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:6px;{% if 'success' in message.tags %}background:#ecfdf5;color:#065f46;{% elif 'error' in message.tags %}background:#fee2e2;color:#dc2626;{% else %}background:#eff6ff;color:#1e40af;{% endif %}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div style="display:flex;flex-direction:column;gap:12px" id="tk-list-django">
+  {% for ticket in tickets %}
+  <div class="tk-card" id="tk-{{ ticket.pk }}">
+    <div class="tk-header">
+      <div>
+        <div class="tk-name">{{ ticket.title }}</div>
+        <div class="tk-meta">{{ ticket.get_mode_display }} · {{ ticket.zone }}{% if ticket.price %} · <strong>{{ ticket.price|floatformat:0 }} FCFA</strong>{% endif %}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        {% if ticket.is_active %}<span class="tk-status-on"><span style="width:6px;height:6px;border-radius:50%;background:#14b87a;display:inline-block"></span> Actif</span>{% else %}<span class="tk-status-off">Inactif</span>{% endif %}
+        <form method="post" action="{% url 'healthcare:prestataire_ticket_toggle' ticket.pk %}" style="margin:0">
+          {% csrf_token %}
+          <label class="tk-switch" title="{% if ticket.is_active %}Désactiver{% else %}Activer{% endif %}">
+            <input type="checkbox" {% if ticket.is_active %}checked{% endif %} onchange="this.form.submit()">
+            <div class="tk-track"></div>
+          </label>
+        </form>
+      </div>
+    </div>
+    {% if ticket.description %}<div style="font-size:11.5px;color:#6b7280;line-height:1.5">{{ ticket.description|truncatechars:120 }}</div>{% endif %}
+    <div class="tk-link-row">
+      <span class="tk-url">{{ base_url }}/t/{{ ticket.identifiant }}</span>
+      <button class="tk-btn" onclick="copyTicketLink('{{ ticket.identifiant }}','{{ base_url }}')">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2m-6 12h8a2 2 0 0 1 2-2v-8a2 2 0 0 1-2-2h-8a2 2 0 0 1-2 2v8a2 2 0 0 1 2 2Z"/></svg>
+        Copier le lien
+      </button>
+    </div>
+    <div class="tk-actions">
+      <a href="/t/{{ ticket.identifiant }}" target="_blank" class="tk-btn">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+        Aperçu patient
+      </a>
+      <form method="post" action="{% url 'healthcare:prestataire_ticket_delete' ticket.pk %}" style="margin:0" onsubmit="return confirm('Supprimer ce ticket ?')">
+        {% csrf_token %}
+        <button type="submit" class="tk-btn danger">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v3M4 7h16"/></svg>
+          Supprimer
+        </button>
+      </form>
+      {% if ticket.views_count %}<span style="margin-left:auto;font-size:10px;color:#9ca3af;align-self:center">{{ ticket.views_count }} vue{{ ticket.views_count|pluralize }}</span>{% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="tk-empty">
+    <div class="tk-empty-icon">🎫</div>
+    <div class="tk-empty-txt">Vous n'avez pas encore créé de ticket de prestation.<br>Créez-en un pour partager un lien privé à vos patients.</div>
+  </div>
+  {% endfor %}
+</div>
+
+{# Modal création #}
+<div class="tk-modal-overlay" id="tk-create-overlay" onclick="if(event.target===this)closeCreateTk()">
+  <div class="tk-modal">
+    <div class="tk-modal-head">
+      <span class="tk-modal-title">🎫 Créer un ticket de prestation</span>
+      <button class="tk-modal-close" onclick="closeCreateTk()">✕</button>
+    </div>
+    <form method="post" action="{% url 'healthcare:prestataire_ticket_create' %}">
+      {% csrf_token %}
+      <div class="tk-modal-body">
+        <div class="tk-field">
+          <label>Prestation (titre) <span style="color:#dc2626">*</span></label>
+          <input type="text" name="title" placeholder="Ex : Kiné respiratoire à domicile" required>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="tk-field">
+            <label>Mode</label>
+            <select name="mode">
+              <option value="domicile">À domicile</option>
+              <option value="cabinet">Cabinet</option>
+              <option value="teleconsultation">Téléconsultation</option>
+              <option value="structure">Structure partenaire</option>
+            </select>
+          </div>
+          <div class="tk-field">
+            <label>Tarif (FCFA)</label>
+            <input type="number" name="price" placeholder="Ex : 12000" min="0" step="500">
+          </div>
+        </div>
+        <div class="tk-field">
+          <label>Zone d'intervention</label>
+          <input type="text" name="zone" placeholder="Ex : Dakar, Almadies…" value="Dakar">
+        </div>
+        {% if my_actes %}
+        <div class="tk-field">
+          <label>Acte associé (optionnel)</label>
+          <select name="acte_id">
+            <option value="">— Aucun acte lié —</option>
+            {% for pa in my_actes %}<option value="{{ pa.acte.id }}">{{ pa.acte.name }}</option>{% endfor %}
+          </select>
+        </div>
+        {% endif %}
+        <div class="tk-field">
+          <label>Description factuelle</label>
+          <textarea name="description" rows="3" placeholder="Sans superlatif ni mise en avant (Art. 10, 17, 19)"></textarea>
+        </div>
+        <div style="font-size:10.5px;color:#6b7280;background:#f9fafb;border-radius:8px;padding:10px 12px;line-height:1.6">
+          🛡️ Ce ticket est <strong>non répertorié</strong> : invisible dans la recherche. Partageable uniquement par lien direct.
+        </div>
+      </div>
+      <div class="tk-modal-foot">
+        <button type="button" class="tk-btn-cancel" onclick="closeCreateTk()">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+          Annuler
+        </button>
+        <button type="submit" class="tk-btn-create" id="btn-create-ticket-submit">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/></svg>
+          Créer &amp; générer le lien
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="tk-toast" style="position:fixed;bottom:24px;right:24px;background:#1f2937;color:#fff;font-size:12px;font-weight:500;padding:10px 16px;border-radius:9px;z-index:999;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none"></div>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+function openCreateTk(){document.getElementById('tk-create-overlay').classList.add('open');}
+function closeCreateTk(){document.getElementById('tk-create-overlay').classList.remove('open');}
+function copyTicketLink(id,base){
+  var url=base+'/t/'+id;
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){showToast('Lien copié ✓');});}
+  else{showToast('Lien : '+url);}
+}
+function showToast(msg){
+  var el=document.getElementById('tk-toast');
+  el.textContent=msg;el.style.opacity='1';el.style.transform='translateY(0)';
+  setTimeout(function(){el.style.opacity='0';el.style.transform='translateY(10px)';},2600);
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCreateTk();});
+</script>
+{% endblock %}

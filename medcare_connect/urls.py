@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from medcare_connect import views
 from users import views as users_views
+from healthcare import practitioner_views as pr_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -38,6 +39,12 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")),
     path("notifications/", include("notifications.urls")),
     path("rdv/", include("appointments.urls")),
+
+    # Étape 5 — Tickets de prestation (liens directs praticien → patient)
+    # Route courte /t/<identifiant> : non indexée (noindex), accessible sans login
+    path("t/<str:token>/", pr_views.patient_ticket_view, name="patient_ticket_view"),
+    path("patient-mobile/", pr_views.patient_mobile_view, name="patient_mobile"),
+    path("demo-patient/", pr_views.patient_mobile_view, name="demo_patient"),
 ]
 
 if settings.DEBUG:

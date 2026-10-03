@@ -1,0 +1,271 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Agenda · {{ aff.structure.name }} · MedCare Pro{% endblock %}
+{% block page_title %}Agenda · {{ aff.structure.name }}{% endblock %}
+
+{% block dash_extra_css %}
+<style>
+#page-agenda { max-width: 1100px; margin: 0 auto; }
+.ag-header { margin-bottom: 20px; }
+.ag-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #0f172a; }
+.ag-sub { font-size: 12.5px; color: #64748b; margin-top: 5px; line-height: 1.55; }
+
+.ag-info-card {
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, #eef6fb 0%, #f0fdf4 100%);
+  border: 1px solid #bfdbfe; border-radius: 12px;
+  padding: 14px 18px; margin-bottom: 22px;
+}
+.ag-info-card-icon { font-size: 22px; flex-shrink: 0; }
+.ag-info-card-body { font-size: 12px; color: #1e40af; line-height: 1.6; }
+.ag-info-card-body strong { color: #1e3a8a; }
+
+/* Grille calendrier */
+.ag-grid-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #e5e7eb; background: #fff; }
+.ag-grid { display: grid; min-width: 700px; border-collapse: collapse; }
+.ag-grid-head {
+  display: grid;
+  grid-template-columns: 72px repeat(7, 1fr);
+  background: linear-gradient(90deg, #0a5c8a 0%, #1a7ab0 100%);
+  border-radius: 11px 11px 0 0;
+}
+.ag-head-cell {
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .04em;
+}
+.ag-head-cell:first-child { color: rgba(255,255,255,.5); font-size: 9px; }
+
+.ag-row {
+  display: grid;
+  grid-template-columns: 72px repeat(7, 1fr);
+  border-bottom: 1px solid #f1f5f9;
+}
+.ag-row:last-child { border-bottom: none; }
+.ag-row:hover { background: #f8fafc; }
+.ag-time-cell {
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: right;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.ag-slot-cell {
+  padding: 4px;
+  border-right: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ag-slot-cell:last-child { border-right: none; }
+
+/* Checkbox stylisée */
+.ag-slot-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .1s;
+}
+.ag-slot-label:hover { background: #eff6ff; }
+.ag-slot-cb { display: none; }
+.ag-slot-dot {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  border: 2px solid #d1d5db;
+  background: #fff;
+  transition: all .15s;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ag-slot-cb:checked + .ag-slot-dot {
+  background: linear-gradient(135deg, #0a5c8a, #14b8a6);
+  border-color: #0a5c8a;
+}
+.ag-slot-cb:checked + .ag-slot-dot::after {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: #fff;
+}
+
+/* Compteur */
+.ag-counter {
+  display: flex; gap: 20px;
+  background: #f8fafc; border-radius: 10px;
+  padding: 12px 16px; margin: 16px 0;
+  font-size: 12px; color: #374151;
+  flex-wrap: wrap;
+}
+.ag-counter-item { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.ag-counter-dot { width: 10px; height: 10px; border-radius: 3px; background: linear-gradient(135deg, #0a5c8a, #14b8a6); }
+
+/* Actions */
+.ag-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+.ag-btn-save {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, #0a5c8a 0%, #0d9488 100%);
+  color: #fff; border: none; border-radius: 10px;
+  padding: 11px 22px; font-size: 13px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(10,92,138,.18);
+  position: relative; overflow: hidden; transition: all .2s;
+}
+.ag-btn-save::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  transform: translateX(-100%); transition: transform .5s;
+}
+.ag-btn-save:hover::after { transform: translateX(100%); }
+.ag-btn-save:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(10,92,138,.28); }
+
+.ag-btn-cancel {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #fff; color: #374151;
+  border: 1.5px solid #d1d5db; border-radius: 10px;
+  padding: 10px 18px; font-size: 13px; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: all .15s;
+}
+.ag-btn-cancel:hover { background: #f9fafb; border-color: #9ca3af; }
+
+/* Légende rapide */
+.ag-legend { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+.ag-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #64748b; }
+
+/* Select all per day */
+.ag-head-cell button.ag-sel-all {
+  display: block; font-size: 9px; color: rgba(255,255,255,.7);
+  background: none; border: none; cursor: pointer; margin-top: 2px;
+  text-decoration: underline; padding: 0;
+}
+.ag-head-cell button.ag-sel-all:hover { color: #fff; }
+
+@media (max-width: 768px) {
+  .ag-grid-wrap { border-radius: 8px; }
+}
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div id="page-agenda">
+
+  <div class="ag-header">
+    <div class="ag-title">🗓️ Agenda · {{ aff.structure.name }}</div>
+    <div class="ag-sub">
+      Définissez vos créneaux de présence heure par heure dans cette structure.
+      <strong>Rôle :</strong> {{ aff.role_title|default:"Intervenant" }}
+    </div>
+  </div>
+
+  <div class="ag-info-card">
+    <div class="ag-info-card-icon">💡</div>
+    <div class="ag-info-card-body">
+      Cliquez sur un créneau pour l'activer ou le désactiver. Utilisez <strong>"Tout"</strong> pour sélectionner toute la journée.
+      L'agenda est enregistré et visible par la structure.
+    </div>
+  </div>
+
+  <form method="post" id="ag-form" action="">
+    {% csrf_token %}
+
+    <div class="ag-legend">
+      <div class="ag-legend-item">
+        <div style="width:16px;height:16px;border-radius:4px;border:2px solid #d1d5db;background:#fff;"></div>
+        Créneau libre
+      </div>
+      <div class="ag-legend-item">
+        <div style="width:16px;height:16px;border-radius:4px;background:linear-gradient(135deg,#0a5c8a,#14b8a6);"></div>
+        Créneau activé
+      </div>
+    </div>
+
+    <!-- Compteur live -->
+    <div class="ag-counter" id="ag-counter">
+      <div class="ag-counter-item">
+        <div class="ag-counter-dot"></div>
+        <span id="ag-count">0</span> créneau(x) activé(s)
+      </div>
+    </div>
+
+    <div class="ag-grid-wrap">
+      <!-- En-tête jours -->
+      <div class="ag-grid-head">
+        <div class="ag-head-cell">Heure</div>
+        {% for day in days %}
+        <div class="ag-head-cell">
+          {{ day|slice:":3" }}<br>
+          <button type="button" class="ag-sel-all" onclick="toggleDay('{{ day }}')">Tout</button>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Lignes heures -->
+      {% for row in grid_rows %}
+      <div class="ag-row">
+        <div class="ag-time-cell">{{ row.hour }}</div>
+        {% for slot in row.slots %}
+        <div class="ag-slot-cell">
+          <label class="ag-slot-label" title="{{ slot.day }} {{ slot.hour }}">
+            <input
+              type="checkbox"
+              name="slots"
+              value="{{ slot.key }}"
+              class="ag-slot-cb"
+              data-day="{{ slot.day }}"
+              {% if slot.is_active %}checked{% endif %}
+              onchange="updateCount()"
+            >
+            <span class="ag-slot-dot"></span>
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="ag-actions">
+      <a href="{% url 'healthcare:prestataire_acces' %}" class="ag-btn-cancel">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+        Retour sans sauvegarder
+      </a>
+      <button type="submit" class="ag-btn-save">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+        Enregistrer l'agenda
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+function updateCount() {
+  var count = document.querySelectorAll('.ag-slot-cb:checked').length;
+  var el = document.getElementById('ag-count');
+  if (el) el.textContent = count;
+}
+
+function toggleDay(day) {
+  var cbs = document.querySelectorAll('.ag-slot-cb[data-day="' + day + '"]');
+  var anyUnchecked = Array.from(cbs).some(function(cb) { return !cb.checked; });
+  cbs.forEach(function(cb) { cb.checked = anyUnchecked; });
+  updateCount();
+}
+
+// Init compteur
+document.addEventListener('DOMContentLoaded', updateCount);
+</script>
+{% endblock %}

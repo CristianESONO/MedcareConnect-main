@@ -208,24 +208,48 @@ def index(request):
 
 @superadmin_required
 def users_list(request):
-    qs = User.objects.all().order_by("-date_joined")
+    qs = User.objects.all().select_related("healthcare_provider_profile__type_organisme").order_by("-date_joined")
     user_type = request.GET.get("type")
     search = request.GET.get("q", "").strip()
-    if user_type in ("patient", "prestataire", "admin"):
-        qs = qs.filter(user_type=user_type)
+
+    if user_type == "patient":
+        qs = qs.filter(user_type="patient")
+    elif user_type == "structure":
+        qs = qs.filter(user_type="prestataire", healthcare_provider_profile__account_nature="structure")
+    elif user_type == "praticien":
+        qs = qs.filter(user_type="prestataire", healthcare_provider_profile__account_nature="praticien")
+    elif user_type == "prestataire":
+        qs = qs.filter(user_type="prestataire")
+    elif user_type == "admin":
+        qs = qs.filter(user_type="admin")
+
     if search:
         qs = qs.filter(
             Q(username__icontains=search)
             | Q(email__icontains=search)
             | Q(first_name__icontains=search)
             | Q(last_name__icontains=search)
+            | Q(healthcare_provider_profile__name__icontains=search)
         )
     paginator = Paginator(qs, 20)
     page = paginator.get_page(request.GET.get("page"))
+
+    base_users = User.objects.all()
+    count_all = base_users.count()
+    count_patients = base_users.filter(user_type="patient").count()
+    count_structures = base_users.filter(user_type="prestataire", healthcare_provider_profile__account_nature="structure").count()
+    count_praticiens = base_users.filter(user_type="prestataire", healthcare_provider_profile__account_nature="praticien").count()
+    count_admins = base_users.filter(user_type="admin").count()
+
     return render(request, "dashboard/users_list.html", {
         "page": page,
         "current_type": user_type,
         "search": search,
+        "count_all": count_all,
+        "count_patients": count_patients,
+        "count_structures": count_structures,
+        "count_praticiens": count_praticiens,
+        "count_admins": count_admins,
     })
 
 
@@ -248,11 +272,17 @@ def organismes_list(request):
     ).order_by("-created_at")
 
     status = request.GET.get("status")
+    nature = request.GET.get("nature")
     search = request.GET.get("q", "").strip()
+
     if status == "pending":
         qs = qs.filter(is_active=False)
     elif status == "active":
         qs = qs.filter(is_active=True)
+
+    if nature in ("structure", "praticien"):
+        qs = qs.filter(account_nature=nature)
+
     if search:
         qs = qs.filter(Q(name__icontains=search) | Q(city__icontains=search))
 
@@ -261,7 +291,11 @@ def organismes_list(request):
     return render(request, "dashboard/organismes_list.html", {
         "page": page,
         "current_status": status,
+        "current_nature": nature,
         "search": search,
+        "count_total": OrganismeDeSante.objects.count(),
+        "count_structures": OrganismeDeSante.objects.filter(account_nature="structure").count(),
+        "count_praticiens": OrganismeDeSante.objects.filter(account_nature="praticien").count(),
     })
 
 

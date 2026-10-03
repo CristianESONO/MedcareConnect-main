@@ -11,7 +11,7 @@
   </a>
   {% if org %}
   <p class="mc-landing-drawer-user">{{ org.name }}</p>
-  <p class="mc-landing-drawer-tagline">{% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Espace prestataire{% endif %}</p>
+  <p class="mc-landing-drawer-tagline">{% if org.account_nature == 'praticien' %}{% if org.profession %}{{ org.profession|title }}{% else %}Praticien indépendant{% endif %}{% elif org.type_organisme %}{{ org.type_organisme.name }}{% else %}Espace prestataire{% endif %}</p>
   {% else %}
   <p class="mc-landing-drawer-user">{{ user.display_name }}</p>
   <p class="mc-landing-drawer-tagline">Espace prestataire</p>
@@ -20,30 +20,51 @@
 
 <nav class="mc-landing-drawer-nav" aria-label="Navigation pro">
   <ul>
+    {# ══ Principal ══ #}
     <li class="mc-landing-drawer-group">
       <span class="mc-landing-drawer-group-label"><i class="ti ti-layout-dashboard mc-landing-drawer-icon" aria-hidden="true"></i> Principal</span>
       <ul class="mc-landing-drawer-sublist">
         {% if org %}
         <li><a href="{% url 'healthcare:prestataire_dashboard' %}" class="mc-landing-drawer-link{% if dash_active == 'home' %} is-active{% endif %}">Tableau de bord</a></li>
         <li><a href="{% url 'healthcare:prestataire_devis_list' %}" class="mc-landing-drawer-link{% if dash_active == 'devis' %} is-active{% endif %}">Devis WhatsApp{% if new_devis_count %}<span class="mc-landing-drawer-badge">{{ new_devis_count }}</span>{% endif %}</a></li>
-        <li><a href="{% url 'appointments:prestataire_rdv_list' %}" class="mc-landing-drawer-link{% if dash_active == 'rdv' %} is-active{% endif %}">Rendez-vous{% if new_rdv_count %}<span class="mc-landing-drawer-badge">{{ new_rdv_count }}</span>{% endif %}</a></li>
+        <li><a href="{% url 'appointments:prestataire_rdv_list' %}" class="mc-landing-drawer-link{% if dash_active == 'rdv' %} is-active{% endif %}">{% if org.account_nature == 'praticien' %}Mon agenda{% else %}Rendez-vous{% endif %}{% if new_rdv_count %}<span class="mc-landing-drawer-badge">{{ new_rdv_count }}</span>{% endif %}</a></li>
         {% else %}
         <li><a href="{% url 'healthcare:organisme_create' %}" class="mc-landing-drawer-link{% if dash_active == 'onboarding' %} is-active{% endif %}">Créer mon établissement</a></li>
         {% endif %}
       </ul>
     </li>
+
     {% if org %}
+    {# ══ Profil / Mon établissement ══ #}
     <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="ti ti-building-hospital mc-landing-drawer-icon" aria-hidden="true"></i> Mon établissement</span>
+      <span class="mc-landing-drawer-group-label"><i class="{% if org.account_nature == 'praticien' %}ti ti-user-circle{% else %}ti ti-building-hospital{% endif %} mc-landing-drawer-icon" aria-hidden="true"></i> {% if org.account_nature == 'praticien' %}Mon profil praticien{% else %}Mon établissement{% endif %}</span>
       <ul class="mc-landing-drawer-sublist">
-        <li><a href="{% url 'healthcare:organisme_edit' %}" class="mc-landing-drawer-link{% if dash_active == 'profile' %} is-active{% endif %}">Profil établissement</a></li>
-        <li><a href="{% url 'healthcare:actes_list' %}" class="mc-landing-drawer-link{% if dash_active == 'actes' %} is-active{% endif %}">Catalogue d'actes</a></li>
+        <li><a href="{% url 'healthcare:organisme_edit' %}" class="mc-landing-drawer-link{% if dash_active == 'profile' %} is-active{% endif %}">{% if org.account_nature == 'praticien' %}Mon profil praticien{% else %}Profil établissement{% endif %}</a></li>
+        {% if org.account_nature != 'praticien' %}
+        <li><a href="{% url 'healthcare:prestataire_type_etablissement' %}" class="mc-landing-drawer-link{% if dash_active == 'typeetab' %} is-active{% endif %}">Type d'établissement</a></li>
+        {% endif %}
+      </ul>
+    </li>
+
+    {# ══ Mon exercice (praticien) / Catalogue (structure) ══ #}
+    <li class="mc-landing-drawer-group">
+      <span class="mc-landing-drawer-group-label"><i class="{% if org.account_nature == 'praticien' %}ti ti-stethoscope{% else %}ti ti-microscope{% endif %} mc-landing-drawer-icon" aria-hidden="true"></i> {% if org.account_nature == 'praticien' %}Mon exercice{% else %}Services{% endif %}</span>
+      <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'healthcare:actes_list' %}" class="mc-landing-drawer-link{% if dash_active == 'actes' %} is-active{% endif %}">{% if org.account_nature == 'praticien' %}Mes actes{% else %}Catalogue d'actes{% endif %}</a></li>
+        {% if org.account_nature == 'praticien' %}
+        <li><a href="{% url 'healthcare:prestataire_tickets' %}" class="mc-landing-drawer-link{% if dash_active == 'tickets' %} is-active{% endif %}">Tickets de prestation</a></li>
+        {% endif %}
+        {% if org.account_nature != 'praticien' %}
         <li><a href="{% url 'healthcare:insurances_manage' %}" class="mc-landing-drawer-link{% if dash_active == 'insurances' %} is-active{% endif %}">Assurances</a></li>
         <li><a href="{% url 'healthcare:prestataire_profil_public' %}" class="mc-landing-drawer-link{% if dash_active == 'public_profile' or dash_active == 'profil_public' %} is-active{% endif %}">Profil public</a></li>
+        {% endif %}
+        <li><a href="{% url 'healthcare:prestataire_acces' %}" class="mc-landing-drawer-link{% if dash_active == 'acces' %} is-active{% endif %}">{% if org.account_nature == 'praticien' %}Accès{% else %}Praticiens rattachés{% endif %}{% if pending_acces_count %}<span class="mc-landing-drawer-badge">{{ pending_acces_count }}</span>{% endif %}</a></li>
         <li><a href="{% url 'messaging:inbox' %}" class="mc-landing-drawer-link{% if dash_active == 'messages' %} is-active{% endif %}">Messagerie{% if unread_messages %}<span class="mc-landing-drawer-badge">{{ unread_messages }}</span>{% endif %}</a></li>
         <li><a href="{% url 'healthcare:prestataire_medplaque' %}" class="mc-landing-drawer-link{% if dash_active == 'medplaque' %} is-active{% endif %}">MedPlaque NFC</a></li>
       </ul>
     </li>
+
+    {# ══ Compte ══ #}
     <li class="mc-landing-drawer-group">
       <span class="mc-landing-drawer-group-label"><i class="ti ti-settings mc-landing-drawer-icon" aria-hidden="true"></i> Compte</span>
       <ul class="mc-landing-drawer-sublist">

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedCare · Praticiens indépendants, implications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0a5c8a;--green:#14b87a;--teal:#0d9488;--navy:#1a3a6e;--ink:#0f172a;--g700:#334155;--g600:#475569;--g500:#64748b;--g400:#94a3b8;--g300:#cbd5e1;--g200:#e2e8f0;--g100:#f1f5f9;--g50:#f8fafc;--amber:#d97706;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;background:#eef2f7;font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);line-height:1.6;font-size:15px}
+.sheet{max-width:1000px;margin:26px auto;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(15,23,42,.08);overflow:hidden}
+.pad{padding:32px 46px 44px}
+.head{background:linear-gradient(135deg,#7a3b12,#9a3412);color:#fff;padding:30px 46px 26px}
+.brand{font-family:'Cinzel',serif;font-weight:700;font-size:21px}
+.brand span{color:#7ee0b6}
+.head h1{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;margin:14px 0 4px;line-height:1.15}
+.head .sub{color:#f3d9c9;font-size:13.5px;max-width:680px}
+.refblock{display:flex;flex-wrap:wrap;gap:20px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.2)}
+.refblock .k{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#e6b79f;font-weight:700}
+.refblock .v{font-size:12.5px;color:#fbeee6;font-weight:600;font-family:'JetBrains Mono',monospace}
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--navy);margin:34px 0 5px}
+h2 .i{color:var(--amber);margin-right:9px}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin:18px 0 5px;color:var(--ink)}
+.lead{color:var(--g600);font-size:14px;margin:0 0 12px;max-width:800px}
+p{margin:0 0 12px}b{font-weight:700}
+code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--g100);border:1px solid var(--g200);border-radius:5px;padding:1px 6px;color:#0b3a57}
+.call{border-radius:12px;padding:14px 16px;margin:14px 0;font-size:13.3px;line-height:1.55;border:1px solid}
+.call .h{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;margin-bottom:4px;display:flex;gap:7px;align-items:center}
+.call.risk{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+.call.guard{background:#f0fdf7;border-color:#a7f3d0;color:#065f46}
+.call.note{background:#f2f9fd;border-color:#cfe6f3;color:#0a4d6e}
+ul,ol{margin:6px 0 14px;padding-left:22px}li{margin:5px 0}
+table{width:100%;border-collapse:collapse;margin:14px 0 8px;font-size:12.6px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--g200);vertical-align:top}
+th{background:var(--g50);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--g600);font-weight:700}
+.lv{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px}
+.lv-h{background:#fee2e2;color:#b91c1c}.lv-m{background:#fef3c7;color:#92400e}
+.foot{padding:18px 46px 30px;color:var(--g400);font-size:11px;border-top:1px solid var(--g200)}
+@media(max-width:720px){.pad,.head,.foot{padding-left:22px;padding-right:22px}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <div class="brand">Med<span>Care</span></div>
+    <h1>Ouvrir la plateforme aux praticiens indépendants</h1>
+    <div class="sub">Analyse d'implications, déontologiques d'abord, puis juridiques, produit, marché, opérationnelles et relationnelles. Le point le plus sensible du modèle, à traiter avec méthode.</div>
+    <div class="refblock">
+      <div><div class="k">Référence</div><div class="v">MÉMO-PRAT-01</div></div>
+      <div><div class="k">Version</div><div class="v">1.0 · analyse</div></div>
+      <div><div class="k">Date</div><div class="v">Sept. 2026</div></div>
+      <div><div class="k">Usage</div><div class="v">Interne · Direction</div></div>
+    </div>
+  </div>
+
+  <div class="pad">
+
+    <!-- 1 -->
+    <section>
+      <h2><span class="i">1</span>La décision et ce qu'elle débloque</h2>
+      <p class="lead">Ajouter une nature de compte à part entière, le praticien indépendant, à côté des structures : médecins libéraux, infirmiers, kinésithérapeutes, sages-femmes, psychologues, autres paramédicaux, exerçant en leur nom propre, à domicile ou au cabinet.</p>
+      <p>Le potentiel est réel. C'est un segment mal desservi, en forte demande, surtout avec le soin à domicile que le poids des maladies chroniques appelle. Ces soignants ont même plus besoin de la couche MedCare que les structures, faute d'existence institutionnelle pour se rendre visibles et prendre des rendez-vous. Le marché s'élargit bien au-delà des 858 structures, et l'objectif d'accès aux soins de la SNTSS est directement servi.</p>
+      <p>Mais c'est aussi l'endroit où une bonne idée peut abîmer le meilleur atout de MedCare si elle est posée sans garde-fous. Ce mémo cartographie les implications, plan par plan.</p>
+    </section>
+
+    <!-- 2 -->
+    <section>
+      <h2><span class="i">2</span>Plan déontologique, le plus sensible</h2>
+      <div class="call risk"><div class="h">▲ La tension centrale</div>Le moat de MedCare repose sur un principe : on référence des <b>structures</b>, pas des individus, sans classement ni publicité de praticien (Art. 10, 17, 19 du Décret n°67-147). Dans une structure, l'individu se tient derrière l'offre, le patient voit une spécialité, pas un nom. Un praticien indépendant, par définition, <b>est</b> l'individu. Le lister nommément avec ses actes et ses tarifs est mécaniquement proche de la publicité individuelle et du classement entre praticiens, exactement ce que l'architecture évite et ce que l'ONMS surveille.</div>
+      <p>La bonne nouvelle : cela se neutralise, à quatre conditions non négociables.</p>
+      <div class="call guard"><div class="h">✔ Les quatre conditions de neutralisation</div>
+        <ol style="margin:6px 0 0">
+          <li><b>Découverte par l'acte et le besoin</b>, jamais par le praticien. Le patient cherche « kiné à domicile » ou « consultation cardiologique », pas « le meilleur médecin ».</li>
+          <li><b>Présentation strictement factuelle et non classée</b>. Ordre neutre, aucun encart sponsorisé, aucune mise en avant, aucune note ni avis patient.</li>
+          <li><b>Vérification obligatoire</b> de l'inscription à l'ordre et du diplôme avant toute visibilité publique.</li>
+          <li><b>Re-validation ONMS</b> et extension du mémo déontologique avant lancement, l'aval obtenu pour les structures ne couvrant pas l'ajout d'individus.</li>
+        </ol>
+      </div>
+      <h3>Deux régimes, pas un</h3>
+      <p>Les médecins relèvent de l'ONMS et du Décret 67-147, régime strict. Les paramédicaux, kinés, infirmiers, sages-femmes, psychologues, relèvent d'autorités de tutelle différentes et de textes souvent plus ouverts au référencement factuel. Le compte doit donc se sous-brancher par profession, le régime déontologique et les actes proposables n'étant pas les mêmes.</p>
+      <div class="call note"><div class="h">ℹ Le paradoxe protecteur</div>L'interdiction des avis et notations, contrainte déontologique, devient une protection. Le patient choisit par l'acte, la zone, la disponibilité et le titre vérifié, jamais par une réputation affichée. C'est un défi d'expérience, mais c'est aussi ce qui garde la plateforme neutre.</div>
+    </section>
+
+    <!-- 3 -->
+    <section>
+      <h2><span class="i">3</span>Plan juridique et réglementaire</h2>
+      <ul>
+        <li><b>Vérification du titre, responsabilité légale.</b> Référencer un individu non vérifié, c'est risquer de faciliter l'exercice illégal de la médecine et d'engager la responsabilité de MedCare. La vérification préalable n'est donc pas une option de confort, c'est une obligation de prudence.</li>
+        <li><b>Protection des données (CDP, Loi 2008-12).</b> Lister des individus, c'est traiter des données personnelles de professionnels, nom, titre, coordonnées. Base légale, information, droit de rectification et de retrait doivent être cadrés.</li>
+        <li><b>Déplacement de la responsabilité.</b> Pour une structure, la structure répond. Pour un individu directement identifié, l'exposition en cas de litige change de nature. Les conditions générales doivent le refléter.</li>
+        <li><b>Soin à domicile.</b> Traçabilité de l'intervention, sécurité, périmètre d'exercice hors plateau technique, à préciser avec le cadre applicable.</li>
+      </ul>
+    </section>
+
+    <!-- 4 -->
+    <section>
+      <h2><span class="i">4</span>Plan produit et architecture</h2>
+      <ul>
+        <li><b>Une nature de compte, pas une topologie.</b> Le modèle de données diffère : numéro d'ordre et titre au lieu de RCCM et NINEA, pas de console multi-structures, et surtout une règle de présentation publique <b>inversée</b>, le nom est assumé au lieu d'être masqué.</li>
+        <li><b>Aucun nouvel acte à créer.</b> La segmentation contient déjà les actes compatibles domicile, kinésithérapie, soins infirmiers, consultations à domicile. Le praticien pioche dans les piliers existants.</li>
+        <li><b>STRUCTURED reste neutre.</b> L'orientation route par acte et besoin, puis présente les praticiens correspondants de façon factuelle et non classée, ou les rend découvrables par recherche explicite. Router vers un individu nommé serait un aiguillage, à proscrire.</li>
+        <li><b>Tarification dédiée.</b> Un indépendant ne peut pas payer le prix d'une structure. Il faut une entrée sous le socle Simple, un socle Praticien à l'échelle individuelle, à glisser dans la grille adoptée.</li>
+      </ul>
+    </section>
+
+    <!-- 5 -->
+    <section>
+      <h2><span class="i">5</span>Plan marché et business</h2>
+      <ul>
+        <li><b>Élargissement massif du marché.</b> Au-delà des 858 structures, ce sont des milliers de praticiens libéraux et paramédicaux, une expansion d'un ordre de grandeur du parc adressable.</li>
+        <li><b>Effet de réseau renforcé.</b> Plus de praticiens, c'est un annuaire plus dense, donc plus de valeur pour les patients et les assureurs.</li>
+        <li><b>Demande de soin à domicile.</b> Elle est alignée avec le poids des maladies chroniques, 53% des décès selon la SNTSS, et avec la proximité prônée par l'État.</li>
+        <li><b>Risques.</b> Dilution du positionnement institutionnel si l'exécution est molle, qualité variable des acteurs solo, et coût de vérification qui croît avec le volume.</li>
+      </ul>
+    </section>
+
+    <!-- 6 -->
+    <section>
+      <h2><span class="i">6</span>Plan opérationnel</h2>
+      <ul>
+        <li><b>Charge de vérification.</b> Chaque titre doit être contrôlé. Il faut un process, idéalement un partenariat ou un accès à la base de l'ordre, sinon une vérification manuelle qui devient un goulet.</li>
+        <li><b>Confiance sans notation.</b> Le patient ne peut pas comparer par avis, interdits. Le tri se fait par acte, zone, disponibilité et titre vérifié. Défi d'expérience, mais garde-fou en même temps.</li>
+        <li><b>Fraude et usurpation.</b> Le risque du faux praticien existe. La vérification du titre en est le rempart, elle doit précéder toute visibilité.</li>
+      </ul>
+    </section>
+
+    <!-- 7 -->
+    <section>
+      <h2><span class="i">7</span>Plan relationnel et positionnement</h2>
+      <div class="call risk"><div class="h">▲ La relation ONMS et la marque</div>Tu disposes d'un aval informel de l'ONMS pour les structures. Ajouter des individus nommés change le calcul, il faut re-engager l'Ordre, et peut-être formaliser. Mal fait, l'Ordre peut objecter et abîmer la légitimité de toute la plateforme. Ta marque, la plateforme neutre et déontologique, est ta différenciation, l'ajout d'individus ne doit pas la compromettre. Ce plan est aussi critique que le plan déontologique, il en est le prolongement politique.</div>
+    </section>
+
+    <!-- 8 -->
+    <section>
+      <h2><span class="i">8</span>Synthèse et conditions</h2>
+      <p class="lead">Verdict : le faire, c'est un vrai élargissement de plateforme, mais le traiter comme une nature de compte gardée, pas comme une ligne de plus dans un menu. Bien fait, cela densifie l'offre, donc la valeur pour les assureurs et les patients, et renforce la thèse.</p>
+      <table>
+        <tr><th>Plan</th><th>Enjeu principal</th><th class="c">Risque</th><th>Garde-fou</th></tr>
+        <tr><td><b>Déontologique</b></td><td>Publicité et classement individuels (Art. 10, 17, 19)</td><td><span class="lv lv-h">Élevé</span></td><td>Découverte par l'acte, présentation factuelle non classée, aval ONMS</td></tr>
+        <tr><td><b>Juridique</b></td><td>Exercice illégal, données CDP, responsabilité</td><td><span class="lv lv-h">Élevé</span></td><td>Vérification obligatoire du titre, base légale CDP, CGU adaptées</td></tr>
+        <tr><td><b>Produit</b></td><td>Présentation inversée, routage</td><td><span class="lv lv-m">Moyen</span></td><td>Modèle de données dédié, STRUCTURED neutre par l'acte</td></tr>
+        <tr><td><b>Marché</b></td><td>Dilution du positionnement, prix</td><td><span class="lv lv-m">Moyen</span></td><td>Socle Praticien dédié, gating qualité</td></tr>
+        <tr><td><b>Opérationnel</b></td><td>Charge de vérification, usurpation</td><td><span class="lv lv-m">Moyen</span></td><td>Process de vérification, partenariat ordre</td></tr>
+        <tr><td><b>Relationnel</b></td><td>Relation ONMS, marque</td><td><span class="lv lv-h">Élevé</span></td><td>Re-engagement ONMS, mémo déontologique étendu</td></tr>
+      </table>
+      <div class="call guard"><div class="h">✔ Conditions de lancement</div>
+        <ol style="margin:6px 0 0">
+          <li>Les quatre garde-fous déontologiques verrouillés, découverte par l'acte, présentation non classée, vérification du titre, aval ONMS.</li>
+          <li>Le régime sous-branché par profession, médical strict, paramédical factuel.</li>
+          <li>Un socle Praticien dédié, sous le Simple, dans la grille adoptée.</li>
+          <li>Le séquencement : après la densité des structures, et après le verrouillage du cadre déontologique et juridique.</li>
+        </ol>
+      </div>
+    </section>
+
+  </div>
+  <div class="foot">MedCare · MÉMO-PRAT-01 · Ouverture aux praticiens indépendants, analyse d'implications · v1.0 · Sept. 2026 · Usage interne Direction. Document de travail, sans valeur juridique. Conforme à l'esprit de MÉMO-DÉONTO-001.</div>
+</div>
+</body>
+</html>

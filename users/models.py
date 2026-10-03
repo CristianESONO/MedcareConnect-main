@@ -58,6 +58,23 @@ class User(AbstractUser):
         full = self.get_full_name()
         return full if full else self.username
 
+    @property
+    def organisme(self):
+        try:
+            return self.healthcare_provider_profile
+        except Exception:
+            return None
+
+    @property
+    def is_structure(self):
+        org = self.organisme
+        return org is not None and getattr(org, "account_nature", "structure") == "structure"
+
+    @property
+    def is_praticien(self):
+        org = self.organisme
+        return org is not None and getattr(org, "account_nature", "") == "praticien"
+
 
 class PatientProfile(models.Model):
     GENDER_CHOICES = (

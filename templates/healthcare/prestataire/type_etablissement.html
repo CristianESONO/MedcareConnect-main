@@ -1,0 +1,291 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Type d'établissement & Piliers · MedCare Pro{% endblock %}
+{% block page_title %}Type d'établissement{% endblock %}
+
+{% block dash_extra_css %}
+<style>
+#page-typeetab { max-width: 1000px; margin: 0 auto; }
+#page-typeetab .te-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 21px; color: #0f172a; }
+#page-typeetab .te-sub { font-size: 12.5px; color: #64748b; margin-top: 5px; max-width: 680px; line-height: 1.55; }
+#page-typeetab .te-card { background: #fff; border: 1px solid #e6ebf1; border-radius: 14px; padding: 20px 22px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+#page-typeetab .te-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14.5px; color: #0f172a; margin-bottom: 3px; }
+#page-typeetab .te-sub2 { font-size: 11.5px; color: #64748b; margin-bottom: 10px; line-height: 1.5; max-width: 640px; }
+#page-typeetab .te-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#page-typeetab .te-field label { display: block; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 5px; }
+#page-typeetab .te-input { width: 100%; border: 1px solid #d7dee6; border-radius: 8px; padding: 10px 12px; font-size: 13px; font-family: inherit; color: #0f172a; box-sizing: border-box; }
+#page-typeetab .te-input:focus { outline: none; border-color: #0a5c8a; box-shadow: 0 0 0 3px rgba(10,92,138,.12); }
+#page-typeetab .te-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+#page-typeetab .te-type { border: 1.5px solid #e6ebf1; border-radius: 12px; padding: 15px; cursor: pointer; transition: .15s; background: #fbfcfe; text-align: left; }
+#page-typeetab .te-type:hover { border-color: #b9c6d4; }
+#page-typeetab .te-type.sel { border-color: #0a5c8a; background: #eef6fb; box-shadow: 0 0 0 3px rgba(10,92,138,.10); }
+#page-typeetab .te-type-ic { font-size: 24px; margin-bottom: 8px; }
+#page-typeetab .te-type-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13.5px; color: #0f172a; margin-bottom: 5px; }
+#page-typeetab .te-type-desc { font-size: 11px; color: #64748b; line-height: 1.45; }
+#page-typeetab .te-console-note { margin-top: 14px; font-size: 11.5px; padding: 10px 12px; border-radius: 9px; line-height: 1.5; }
+#page-typeetab .te-console-note.on { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+#page-typeetab .te-console-note.off { background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; }
+
+/* Types indicatifs */
+.type-struct-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 20px; border: 1.5px solid #e5e7eb; background: #fff; font-size: 11px; font-weight: 600; color: #4b5563; cursor: pointer; transition: all .15s; font-family: 'DM Sans', sans-serif; }
+.type-struct-btn:hover { border-color: #0a5c8a; color: #0a5c8a; background: #e8f4fb; }
+.type-struct-btn.active { border-color: #0a5c8a; background: #0a5c8a; color: #fff; }
+.type-struct-btn.proposed { border-style: dashed; border-color: #14b87a; }
+.type-struct-btn.proposed:hover { background: #e8faf3; color: #065f46; }
+.type-struct-btn.proposed.active { border-style: solid; border-color: #14b87a; background: #14b87a; color: #fff; }
+
+/* Piliers */
+#page-typeetab .te-pillars { display: flex; flex-direction: column; gap: 14px; }
+#page-typeetab .te-pill { display: flex; align-items: center; gap: 9px; border: 1.5px solid #e6ebf1; border-radius: 10px; padding: 11px 13px; cursor: pointer; transition: .15s; background: #fff; user-select: none; }
+#page-typeetab .te-pill .te-pill-dot { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; flex-shrink: 0; }
+#page-typeetab .te-pill.on { border-color: #14b87a; background: #f0fdf7; }
+#page-typeetab .te-pill.on .te-pill-dot { background: #14b87a; box-shadow: 0 0 0 3px rgba(20,184,122,.18); }
+#page-typeetab .te-pill-name { font-size: 12px; font-weight: 600; color: #0f172a; }
+#page-typeetab .te-pill.off .te-pill-name { color: #94a3b8; }
+#page-typeetab .te-dom-block { display: flex; flex-direction: column; gap: 8px; }
+#page-typeetab .te-dom-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding-left: 9px; border-left: 3px solid; }
+#page-typeetab .te-dom-pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+@media (max-width: 860px) {
+  #page-typeetab .te-grid2, #page-typeetab .te-types, #page-typeetab .te-dom-pills { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div id="page-typeetab">
+  <div style="margin-bottom: 20px;">
+    <div class="te-title">Type d'établissement & Piliers d'activité</div>
+    <div class="te-sub">
+      Informations de la structure et périmètre du compte. Le type de compte fixe la <strong>topologie</strong> (simple, multi-services, multi-sites). Les piliers d'activité se choisissent librement ci-dessous et pilotent directement la section <strong>Catalogue actes</strong>.
+    </div>
+  </div>
+
+  <form method="POST" action="{% url 'healthcare:prestataire_type_etablissement' %}">
+    {% csrf_token %}
+
+    <!-- CARTE 1 : INFORMATIONS DE LA STRUCTURE -->
+    <div class="te-card">
+      <div class="te-card-title">Informations de la structure</div>
+      <div class="te-sub2">Données générales d'identification de l'établissement.</div>
+      <div class="te-grid2" style="margin-top: 12px;">
+        <div class="te-field">
+          <label for="teName">Nom de la structure</label>
+          <input type="text" name="name" id="teName" class="te-input" value="{{ org.name }}" required>
+        </div>
+        <div class="te-field">
+          <label for="teAddress">Zone / adresse</label>
+          <input type="text" name="address" id="teAddress" class="te-input" value="{{ org.address }}" required>
+        </div>
+        <div class="te-field">
+          <label for="teCity">Ville</label>
+          <input type="text" name="city" id="teCity" class="te-input" value="{{ org.city|default:'Dakar' }}" required>
+        </div>
+        <div class="te-field">
+          <label for="teNinea">NINEA</label>
+          <input type="text" name="ninea" id="teNinea" class="te-input" value="{{ org.ninea|default:'' }}" placeholder="Numéro d'identification entreprise">
+        </div>
+      </div>
+    </div>
+
+    <!-- CARTE 2 : TYPE DE COMPTE (TOPOLOGIE) -->
+    <div class="te-card">
+      <div class="te-card-title">Type de compte (Topologie)</div>
+      <div class="te-sub2">Défini à la création du compte. Il conditionne le modèle d'organisation et l'accès multi-structures.</div>
+      
+      <input type="hidden" name="topology_type" id="id_topology_type" value="{{ org.topology_type|default:'simple' }}">
+
+      <div class="te-types">
+        <div class="te-type {% if org.topology_type == 'simple' or not org.topology_type %}sel{% endif %}" id="tt-simple" onclick="selectTopo('simple')">
+          <div class="te-type-ic">🏢</div>
+          <div class="te-type-name">Structure simple</div>
+          <div class="te-type-desc">Une seule entité, un seul site. Idéal pour un laboratoire, un cabinet ou un centre d'imagerie.</div>
+        </div>
+        <div class="te-type {% if org.topology_type == 'multiservice' %}sel{% endif %}" id="tt-multiservice" onclick="selectTopo('multiservice')">
+          <div class="te-type-ic">🏛️</div>
+          <div class="te-type-name">Établissement multi-services</div>
+          <div class="te-type-desc">Un lieu, plusieurs métiers. Chaque service a sa page et son catalogue propre (clinique, hôpital).</div>
+        </div>
+        <div class="te-type {% if org.topology_type == 'multisite' %}sel{% endif %}" id="tt-multisite" onclick="selectTopo('multisite')">
+          <div class="te-type-ic">🗺️</div>
+          <div class="te-type-name">Réseau multi-sites</div>
+          <div class="te-type-desc">Un métier, plusieurs lieux. Catalogue de référence hérité et ajustable par site (réseau de labos, imagerie).</div>
+        </div>
+      </div>
+
+      <div class="te-console-note {% if org.topology_type == 'multiservice' or org.topology_type == 'multisite' %}on{% else %}off{% endif %}" id="teConsoleNote">
+        {% if org.topology_type == 'multiservice' %}
+        🏛️ Mode Multi-services actif : Vous pouvez organiser votre établissement en plusieurs pavillons ou services.
+        {% elif org.topology_type == 'multisite' %}
+        🗺️ Mode Réseau multi-sites actif : Vous pouvez gérer vos différentes implantations géographiques.
+        {% else %}
+        🏢 Compte mono-structure : pas de configuration multi-structures. Tout se paramètre dans les sections ci-dessous.
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- CARTE 3 : TYPE DE STRUCTURE (LISTING INDICATIF) -->
+    <div class="te-card">
+      <div class="te-card-title">Type de structure (Listing indicatif)</div>
+      <div class="te-sub2">Nature de la structure. <strong>Listing indicatif :</strong> la sélection ne connecte pas automatiquement les piliers, qui restent en choix totalement libre ci-dessous.</div>
+      
+      <input type="hidden" name="type_libre" id="id_type_libre" value="{{ org.type_libre }}">
+
+      <div id="te-type-listing" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+        {% for t in indicatif_types %}
+        <button type="button"
+          class="type-struct-btn{% if t.proposed %} proposed{% endif %}"
+          data-name="{{ t.name }}"
+          id="type-btn-{{ forloop.counter }}"
+          onclick="selectTypeStruct(this)">
+          <span>{{ t.icon }}</span> {{ t.name }}
+        </button>
+        {% endfor %}
+      </div>
+
+      <div style="display:flex; align-items:center; gap:14px; margin-top:12px; flex-wrap:wrap;">
+        <span style="font-size:9.5px; color:#94a3b8;">
+          <span style="display:inline-block; width:18px; border-top:1.5px dashed #14b87a; vertical-align:middle; margin-right:4px;"></span>
+          Propositions à valider
+        </span>
+        <span id="te-type-listing-desc" style="font-size:11px; color:#475569; font-weight:500;">
+          {% if org.type_libre %}Type sélectionné : {{ org.type_libre }} · listing indicatif, non connecté aux piliers.{% else %}Aucun type sélectionné.{% endif %}
+        </span>
+      </div>
+    </div>
+
+    <!-- CARTE 4 : PILIERS ACTIVÉS (CHOIX LIBRE) -->
+    <div class="te-card">
+      <div class="te-card-title">Piliers activés (Choix libre)</div>
+      <div class="te-sub2">
+        Choisissez un ou plusieurs piliers d'activité, indépendamment du type de compte ou de structure. Ils définissent les actes disponibles dans <strong>Catalogue actes</strong>.
+        <span style="color:#0a5c8a; font-weight:600;">Astuce : cliquez sur un type ci-dessus pour pré-sélectionner les piliers recommandés.</span>
+      </div>
+
+      <!-- Bandeau de suggestion (affiché temporairement après un clic sur un type) -->
+      <div id="te-suggestion-banner" style="display:none; opacity:0; align-items:center; gap:9px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:9px; padding:10px 14px; font-size:12px; color:#1e40af; font-weight:500; margin-top:10px; transition:opacity .4s;"></div>
+
+      <div class="te-pillars" id="tePillars" style="margin-top: 14px;">
+        {% for dom_key, dom_data in domain_piliers.items %}
+        <div class="te-dom-block">
+          <div class="te-dom-lbl" style="border-color:{{ dom_data.color }}; color:{{ dom_data.color }};">
+            {{ dom_data.name }}
+          </div>
+          <div class="te-dom-pills">
+            {% for pilier in dom_data.piliers %}
+            <div class="te-pill {% if pilier.id in active_pilier_ids %}on{% else %}off{% endif %}" onclick="togglePilierCard(this)">
+              <input type="checkbox" name="piliers" value="{{ pilier.id }}" style="display:none;" {% if pilier.id in active_pilier_ids %}checked{% endif %}>
+              <span class="te-pill-dot"></span>
+              <span class="te-pill-name">{{ pilier.display_icon }} {{ pilier.display_name }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- BOUTON D'ENREGISTREMENT -->
+    <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+      <a href="{% url 'healthcare:actes_list' %}" class="btn" style="background:#fff; border:1px solid #d1d5db; color:#374151; padding:10px 18px; border-radius:10px; font-weight:600; text-decoration:none;">
+        Voir le catalogue d'actes →
+      </a>
+      <button type="submit" class="btn" style="background:linear-gradient(90deg, #0a5c8a, #0d9488); color:#fff; border:none; border-radius:10px; padding:11px 24px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 2px 8px rgba(10,92,138,.16);">
+        Enregistrer les modifications
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+function selectTopo(mode) {
+  document.getElementById('id_topology_type').value = mode;
+  document.querySelectorAll('.te-type').forEach(function(el) { el.classList.remove('sel'); });
+  var target = document.getElementById('tt-' + mode);
+  if (target) target.classList.add('sel');
+
+  var note = document.getElementById('teConsoleNote');
+  if (note) {
+    if (mode === 'multiservice') {
+      note.className = 'te-console-note on';
+      note.innerHTML = '🏛️ <strong>Mode Multi-services actif :</strong> Vous pouvez organiser votre établissement en plusieurs pavillons ou services.';
+    } else if (mode === 'multisite') {
+      note.className = 'te-console-note on';
+      note.innerHTML = '🗺️ <strong>Mode Réseau multi-sites actif :</strong> Vous pouvez gérer vos différentes implantations géographiques.';
+    } else {
+      note.className = 'te-console-note off';
+      note.innerHTML = '🏢 <strong>Compte mono-structure :</strong> pas de configuration multi-structures. Tout se paramètre dans les sections ci-dessus.';
+    }
+  }
+}
+
+// Carte type → IDs piliers suggérés (injectée par Django)
+var TYPE_PILIERS_MAP = {{ type_piliers_map_json|safe }};
+
+function selectTypeStruct(btn) {
+  document.querySelectorAll('.type-struct-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var name = btn.getAttribute('data-name') || btn.textContent.trim();
+
+  // Persister dans le champ caché
+  var hidden = document.getElementById('id_type_libre');
+  if (hidden) hidden.value = name;
+
+  // Mettre à jour la description
+  var desc = document.getElementById('te-type-listing-desc');
+  if (desc) desc.textContent = 'Type sélectionné : ' + name + ' · listing indicatif, non connecté aux piliers.';
+
+  // Suggérer les piliers recommandés pour ce type (sans forcer — l\'utilisateur peut tout changer)
+  var suggested = TYPE_PILIERS_MAP[name] || null;
+  if (suggested !== null) {
+    document.querySelectorAll('#tePillars input[type="checkbox"]').forEach(function(cb) {
+      var id = parseInt(cb.value, 10);
+      var shouldCheck = suggested.indexOf(id) !== -1;
+      cb.checked = shouldCheck;
+      var pill = cb.closest('.te-pill');
+      if (pill) {
+        pill.classList.toggle('on', shouldCheck);
+        pill.classList.toggle('off', !shouldCheck);
+      }
+    });
+    // Bandeau d\'info suggestion
+    showSuggestionBanner(name, suggested.length);
+  }
+}
+
+function showSuggestionBanner(typeName, count) {
+  var banner = document.getElementById('te-suggestion-banner');
+  if (!banner) return;
+  banner.style.display = 'flex';
+  banner.innerHTML = '💡 <strong>' + count + ' pilier' + (count > 1 ? 's' : '') + ' pré-sélectionné' + (count > 1 ? 's' : '') + '</strong> pour « ' + typeName + ' » — vous pouvez les modifier librement.';
+  setTimeout(function() { banner.style.opacity = '1'; }, 10);
+  setTimeout(function() { banner.style.opacity = '0'; setTimeout(function(){ banner.style.display='none'; }, 400); }, 4000);
+}
+
+function togglePilierCard(pill) {
+  var cb = pill.querySelector('input[type="checkbox"]');
+  if (!cb) return;
+  cb.checked = !cb.checked;
+  pill.classList.toggle('on', cb.checked);
+  pill.classList.toggle('off', !cb.checked);
+}
+
+// Au chargement : restaurer le type sauvegardé
+document.addEventListener('DOMContentLoaded', function() {
+  var savedType = document.getElementById('id_type_libre');
+  if (savedType && savedType.value) {
+    document.querySelectorAll('.type-struct-btn').forEach(function(b) {
+      if (b.getAttribute('data-name') === savedType.value) {
+        b.classList.add('active');
+      }
+    });
+  } else {
+    // Si aucun type sauvegardé, aucun bouton actif par défaut
+    document.querySelectorAll('.type-struct-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+});
+</script>
+{% endblock %}

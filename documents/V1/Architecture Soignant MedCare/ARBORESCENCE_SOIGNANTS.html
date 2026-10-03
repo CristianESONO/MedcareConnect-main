@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedCare · Arborescence des types de soignant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0a5c8a;--green:#14b87a;--teal:#0d9488;--navy:#1a3a6e;--ink:#0f172a;--g700:#334155;--g600:#475569;--g500:#64748b;--g400:#94a3b8;--g300:#cbd5e1;--g200:#e2e8f0;--g100:#f1f5f9;--g50:#f8fafc;--amber:#d97706}
+*{box-sizing:border-box}
+body{margin:0;background:#eef2f7;font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);line-height:1.55}
+.sheet{max-width:1000px;margin:26px auto;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(15,23,42,.08);overflow:hidden}
+.top{padding:24px 40px 18px;border-bottom:1px solid var(--g200)}
+.brand{font-family:'Cinzel',serif;font-weight:700;font-size:20px}
+.brand span{color:var(--green)}
+.top h1{font-family:'Syne',sans-serif;font-weight:800;font-size:23px;color:var(--navy);margin:10px 0 3px}
+.top p{color:var(--g600);font-size:13px;margin:0;max-width:680px}
+.top .tag{display:inline-block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--g500);background:var(--g100);border:1px solid var(--g200);border-radius:20px;padding:3px 10px;margin-top:8px}
+.body{padding:24px 40px 40px}
+.branch{border-radius:14px;border:1px solid var(--g200);padding:0;margin:18px 0;overflow:hidden}
+.branch>.bh{padding:15px 18px;color:#fff;display:flex;align-items:center;gap:12px}
+.branch.b1>.bh{background:var(--blue)}
+.branch.b2>.bh{background:var(--green)}
+.bh .bi{font-size:24px}
+.bh .bt{font-family:'Syne',sans-serif;font-weight:800;font-size:17px}
+.bh .bs{font-size:11.5px;opacity:.92}
+.bc{padding:8px 18px 16px}
+.node{padding-left:16px;border-left:2px solid var(--g200);margin:14px 0 6px}
+.node.blue{border-color:#bcdcee}.node.green{border-color:#b6ebd4}
+.node .nt{font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;color:var(--ink)}
+.node .nsub{font-size:11px;color:var(--g500);margin-top:1px}
+.cat{margin:10px 0 4px 0}
+.cat .ct{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--g400);margin-bottom:6px}
+.leaves{display:flex;flex-wrap:wrap;gap:7px}
+.chip{background:var(--g50);border:1px solid var(--g200);border-radius:8px;padding:5px 11px;font-size:12px;color:var(--g700)}
+.branch.b1 .chip{background:#f2f9fd;border-color:#dbecf6}
+.branch.b2 .chip{background:#f0fdf7;border-color:#d3f3e5}
+.note{background:#f2f9fd;border:1px solid #cfe6f3;color:#0a4d6e;border-radius:9px;padding:9px 12px;font-size:11.5px;line-height:1.5;margin:10px 0 2px}
+.foot{padding:14px 40px 26px;border-top:1px solid var(--g200);color:var(--g400);font-size:11px}
+.matrix-wrap{padding:10px 40px 34px}.matrix-wrap h2{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;color:var(--navy);margin:20px 0 3px}.matrix-wrap .ms{color:var(--g600);font-size:12.5px;margin:0 0 14px;max-width:760px;line-height:1.55}.matrix-wrap svg{width:100%;height:auto;display:block;border:1px solid var(--g200);border-radius:14px;background:#fff}.matrix-cap{font-size:11.5px;color:var(--g500);font-style:italic;margin-top:9px;text-align:center;line-height:1.5}@media(max-width:720px){.matrix-wrap{padding-left:20px;padding-right:20px}}
+@media(max-width:720px){.top,.body,.foot{padding-left:20px;padding-right:20px}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="top">
+    <div class="brand">Med<span>Care</span></div>
+    <h1>Arborescence des types de soignant</h1>
+    <p>Vue de référence, structures et praticiens confondus, jusqu'à la plus petite ramification. Deux régimes en tête, puis la topologie pour les structures, la profession puis la spécialité pour les praticiens.</p>
+    <div class="tag">Document interne · à titre informatif</div>
+  </div>
+
+  <div class="body">
+
+    <!-- BRANCHE 1 : STRUCTURES -->
+    <div class="branch b1">
+      <div class="bh"><div class="bi">🏥</div><div><div class="bt">Structure de soins</div><div class="bs">Une entité organisée · l'individu se tient derrière l'offre</div></div></div>
+      <div class="bc">
+        <div class="note">Les piliers d'activité (biologie, imagerie, explorations, ambulance, soins spécialisés, dentaire, consultations, vaccination, actes médico-administratifs) se cochent librement, indépendamment du type d'établissement.</div>
+
+        <div class="node blue">
+          <div class="nt">Structure simple</div>
+          <div class="nsub">Une seule entité, un seul site</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Laboratoire d'analyses médicales</span><span class="chip">Cabinet médical</span><span class="chip">Cabinet dentaire</span><span class="chip">Centre d'imagerie médicale</span><span class="chip">Centre d'exploration fonctionnelle</span><span class="chip">Service ambulancier</span>
+          </div></div>
+        </div>
+
+        <div class="node blue">
+          <div class="nt">Établissement multi-services</div>
+          <div class="nsub">Un lieu, plusieurs services, catalogue propre</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Hôpital</span><span class="chip">Clinique</span><span class="chip">Polyclinique</span><span class="chip">Centre de santé</span><span class="chip">Centre de santé mentale</span><span class="chip">Centre de dialyse</span>
+          </div></div>
+        </div>
+
+        <div class="node blue">
+          <div class="nt">Réseau multi-sites</div>
+          <div class="nsub">Un métier, plusieurs lieux, catalogue hérité</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Réseau de laboratoires</span><span class="chip">Réseau d'imagerie</span><span class="chip">Réseau de dialyse</span><span class="chip">Réseau de cabinets</span>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRANCHE 2 : PRATICIENS -->
+    <div class="branch b2">
+      <div class="bh"><div class="bi">🩺</div><div><div class="bt">Praticien indépendant</div><div class="bs">Un soignant en son nom propre · vérification du titre requise</div></div></div>
+      <div class="bc">
+
+        <div class="node green">
+          <div class="nt">Médecin</div>
+          <div class="nsub">Inscription à l'Ordre des médecins (ONMS)</div>
+          <div class="cat"><div class="ct">Médecine générale et de recours</div><div class="leaves">
+            <span class="chip">Médecine générale</span><span class="chip">Médecine interne</span><span class="chip">Gériatrie</span><span class="chip">Médecine d'urgence</span>
+          </div></div>
+          <div class="cat"><div class="ct">Spécialités médicales</div><div class="leaves">
+            <span class="chip">Cardiologie</span><span class="chip">Pneumologie</span><span class="chip">Hépato-gastro-entérologie</span><span class="chip">Néphrologie</span><span class="chip">Endocrinologie · Diabétologie</span><span class="chip">Neurologie</span><span class="chip">Rhumatologie</span><span class="chip">Dermatologie · Vénéréologie</span><span class="chip">Hématologie clinique</span><span class="chip">Oncologie médicale</span><span class="chip">Maladies infectieuses et tropicales</span><span class="chip">Allergologie · Immunologie clinique</span><span class="chip">Médecine physique et de réadaptation</span><span class="chip">Angiologie / Médecine vasculaire</span><span class="chip">Génétique médicale</span>
+          </div></div>
+          <div class="cat"><div class="ct">Spécialités chirurgicales</div><div class="leaves">
+            <span class="chip">Chirurgie générale et digestive</span><span class="chip">Chirurgie orthopédique et traumatologique</span><span class="chip">Neurochirurgie</span><span class="chip">Chirurgie cardio-vasculaire</span><span class="chip">Chirurgie thoracique</span><span class="chip">Chirurgie vasculaire</span><span class="chip">Chirurgie plastique et reconstructrice</span><span class="chip">Chirurgie pédiatrique</span><span class="chip">Chirurgie maxillo-faciale</span><span class="chip">Urologie</span>
+          </div></div>
+          <div class="cat"><div class="ct">Organes des sens et tête-cou</div><div class="leaves">
+            <span class="chip">Ophtalmologie</span><span class="chip">ORL et chirurgie cervico-faciale</span>
+          </div></div>
+          <div class="cat"><div class="ct">Santé de la mère et de l'enfant</div><div class="leaves">
+            <span class="chip">Gynécologie · Obstétrique</span><span class="chip">Médecine de la reproduction / Fertilité</span><span class="chip">Pédiatrie et néonatologie</span>
+          </div></div>
+          <div class="cat"><div class="ct">Santé mentale</div><div class="leaves">
+            <span class="chip">Psychiatrie</span><span class="chip">Pédopsychiatrie</span><span class="chip">Addictologie</span>
+          </div></div>
+          <div class="cat"><div class="ct">Transversales et de recours</div><div class="leaves">
+            <span class="chip">Anesthésie · Réanimation</span><span class="chip">Médecine de la douleur / Algologie</span><span class="chip">Soins palliatifs</span><span class="chip">Médecine du sport</span><span class="chip">Médecine du travail</span><span class="chip">Nutrition clinique</span>
+          </div></div>
+        </div>
+
+        <div class="node green">
+          <div class="nt">Infirmier(ère)</div>
+          <div class="nsub">Diplôme d'État, autorité de tutelle paramédicale</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Soins infirmiers généraux (IDE)</span><span class="chip">Infirmier anesthésiste (IADE)</span><span class="chip">Infirmier de bloc opératoire (IBODE)</span><span class="chip">Puériculture</span><span class="chip">Infirmier en pratique avancée (IPA)</span><span class="chip">Soins infirmiers à domicile</span>
+          </div></div>
+        </div>
+
+        <div class="node green">
+          <div class="nt">Kinésithérapeute</div>
+          <div class="nsub">Rééducation fonctionnelle</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Rééducation ostéo-articulaire</span><span class="chip">Kinésithérapie respiratoire</span><span class="chip">Rééducation neurologique</span><span class="chip">Rééducation périnéo-sphinctérienne</span><span class="chip">Drainage lymphatique</span><span class="chip">Kinésithérapie du sport</span><span class="chip">Kinésithérapie pédiatrique</span>
+          </div></div>
+        </div>
+
+        <div class="node green">
+          <div class="nt">Sage-femme</div>
+          <div class="nsub">Santé de la femme et périnatale</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Suivi prénatal</span><span class="chip">Planning familial / contraception</span><span class="chip">Suivi post-natal</span><span class="chip">Rééducation périnéale</span><span class="chip">Préparation à la naissance</span>
+          </div></div>
+        </div>
+
+        <div class="node green">
+          <div class="nt">Psychologue</div>
+          <div class="nsub">Santé mentale, hors Décret médical</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Psychologie clinique</span><span class="chip">Neuropsychologie</span><span class="chip">Psychothérapie</span><span class="chip">Psychologie de l'enfant et de l'adolescent</span><span class="chip">Thérapie de couple / familiale</span>
+          </div></div>
+        </div>
+
+        <div class="node green">
+          <div class="nt">Autre paramédical</div>
+          <div class="nsub">Professions à tutelle propre</div>
+          <div class="cat"><div class="leaves">
+            <span class="chip">Diététicien · Nutritionniste</span><span class="chip">Orthophoniste</span><span class="chip">Psychomotricien</span><span class="chip">Ergothérapeute</span><span class="chip">Orthoptiste</span><span class="chip">Podologue</span><span class="chip">Ostéopathe</span>
+          </div></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="matrix-wrap">
+    <h2>Matrice · les trois couches de décision</h2>
+    <div class="ms">De la nature du compte jusqu'à la spécialité, en trois couches. La branche praticien culmine à la spécialité ; la branche structure s'arrête à la topologie, les piliers d'activité étant un choix libre distinct, ajouté après connexion.</div>
+    <svg viewBox="0 0 1360 470" role="img" aria-label="Arbre des trois couches">
+<rect x="152" y="96" width="1196" height="66" rx="10" fill="#f6fafd"/>
+<rect x="152" y="238" width="1196" height="60" rx="10" fill="#f9fafc"/>
+<rect x="152" y="376" width="1196" height="70" rx="10" fill="#f7fcfa"/>
+<text x="14" y="124" font-family="Syne,sans-serif" font-weight="800" font-size="11" fill="#334155">Couche 1</text><text x="14" y="139" font-family="DM Sans,sans-serif" font-size="9.5" fill="#64748b">Type de soignant</text>
+<text x="14" y="264" font-family="Syne,sans-serif" font-weight="800" font-size="11" fill="#334155">Couche 2</text><text x="14" y="279" font-family="DM Sans,sans-serif" font-size="9.5" fill="#64748b">Topologie ou profession</text>
+<text x="14" y="406" font-family="Syne,sans-serif" font-weight="800" font-size="11" fill="#334155">Couche 3</text><text x="14" y="421" font-family="DM Sans,sans-serif" font-size="9.5" fill="#64748b">Exemple ou spécialité</text>
+<rect x="680" y="20" width="150" height="42" rx="12" fill="#1a3a6e" stroke="#1a3a6e" stroke-width="0"/>
+<text x="755" y="46" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="12.5" fill="#ffffff">Compte soignant</text>
+<line x1="755" y1="62" x2="400" y2="103" stroke="#cbd5e1" stroke-width="1.4"/>
+<line x1="755" y1="62" x2="1000" y2="103" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="305" y="103" width="190" height="50" rx="12" fill="#eef6fb" stroke="#0a5c8a" stroke-width="1.5"/>
+<text x="400" y="133" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="13" fill="#0a4d6e">Structure de soins</text>
+<rect x="905" y="103" width="190" height="50" rx="12" fill="#f0fdf7" stroke="#14b87a" stroke-width="1.5"/>
+<text x="1000" y="133" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="13" fill="#065f46">Praticien indépendant</text>
+<line x1="400" y1="153" x2="250" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="187" y="244" width="126" height="48" rx="11" fill="#f2f9fd" stroke="#bcdcee" stroke-width="1.5"/>
+<text x="250" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#0a4d6e">Structure simple</text>
+<line x1="400" y1="153" x2="400" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="337" y="244" width="126" height="48" rx="11" fill="#f2f9fd" stroke="#bcdcee" stroke-width="1.5"/>
+<text x="400" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#0a4d6e">Multi-services</text>
+<line x1="400" y1="153" x2="550" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="487" y="244" width="126" height="48" rx="11" fill="#f2f9fd" stroke="#bcdcee" stroke-width="1.5"/>
+<text x="550" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#0a4d6e">Réseau multi-sites</text>
+<line x1="1000" y1="153" x2="700" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="644" y="244" width="112" height="48" rx="11" fill="#f0fdf7" stroke="#b6ebd4" stroke-width="1.5"/>
+<text x="700" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#065f46">Médecin</text>
+<line x1="1000" y1="153" x2="820" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="764" y="244" width="112" height="48" rx="11" fill="#f0fdf7" stroke="#b6ebd4" stroke-width="1.5"/>
+<text x="820" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#065f46">Infirmier</text>
+<line x1="1000" y1="153" x2="940" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="884" y="244" width="112" height="48" rx="11" fill="#f0fdf7" stroke="#b6ebd4" stroke-width="1.5"/>
+<text x="940" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#065f46">Kiné</text>
+<line x1="1000" y1="153" x2="1060" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="1004" y="244" width="112" height="48" rx="11" fill="#f0fdf7" stroke="#b6ebd4" stroke-width="1.5"/>
+<text x="1060" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#065f46">Sage-femme</text>
+<line x1="1000" y1="153" x2="1180" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="1124" y="244" width="112" height="48" rx="11" fill="#f0fdf7" stroke="#b6ebd4" stroke-width="1.5"/>
+<text x="1180" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#065f46">Psychologue</text>
+<line x1="1000" y1="153" x2="1300" y2="244" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="1244" y="244" width="112" height="48" rx="11" fill="#f0fdf7" stroke="#b6ebd4" stroke-width="1.5"/>
+<text x="1300" y="272" text-anchor="middle" font-family="Syne,sans-serif" font-weight="800" font-size="10.5" fill="#065f46">Autre</text>
+<line x1="250" y1="292" x2="250" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="187" y="383" width="126" height="54" rx="10" fill="#f7fbfe" stroke="#dbecf6" stroke-width="1.5"/>
+<text x="250" y="405" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="9.5" fill="#475569">Labo, cabinet,</text>
+<text x="250" y="419" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="9.5" fill="#475569">imagerie…</text>
+<line x1="400" y1="292" x2="400" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="337" y="383" width="126" height="54" rx="10" fill="#f7fbfe" stroke="#dbecf6" stroke-width="1.5"/>
+<text x="400" y="405" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="9.5" fill="#475569">Hôpital, clinique,</text>
+<text x="400" y="419" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="9.5" fill="#475569">centre de santé</text>
+<line x1="550" y1="292" x2="550" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="487" y="383" width="126" height="54" rx="10" fill="#f7fbfe" stroke="#dbecf6" stroke-width="1.5"/>
+<text x="550" y="405" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="9.5" fill="#475569">Réseau de labos,</text>
+<text x="550" y="419" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="9.5" fill="#475569">réseau imagerie</text>
+<line x1="700" y1="292" x2="700" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="644" y="383" width="112" height="54" rx="10" fill="#f4fdf9" stroke="#d3f3e5" stroke-width="1.5"/>
+<text x="700" y="414" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="10" fill="#0f766e">43 spé · 7 familles</text>
+<line x1="820" y1="292" x2="820" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="764" y="383" width="112" height="54" rx="10" fill="#f4fdf9" stroke="#d3f3e5" stroke-width="1.5"/>
+<text x="820" y="414" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="10" fill="#0f766e">6 spécialités</text>
+<line x1="940" y1="292" x2="940" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="884" y="383" width="112" height="54" rx="10" fill="#f4fdf9" stroke="#d3f3e5" stroke-width="1.5"/>
+<text x="940" y="414" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="10" fill="#0f766e">7 spécialités</text>
+<line x1="1060" y1="292" x2="1060" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="1004" y="383" width="112" height="54" rx="10" fill="#f4fdf9" stroke="#d3f3e5" stroke-width="1.5"/>
+<text x="1060" y="414" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="10" fill="#0f766e">5 spécialités</text>
+<line x1="1180" y1="292" x2="1180" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="1124" y="383" width="112" height="54" rx="10" fill="#f4fdf9" stroke="#d3f3e5" stroke-width="1.5"/>
+<text x="1180" y="414" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="10" fill="#0f766e">5 spécialités</text>
+<line x1="1300" y1="292" x2="1300" y2="383" stroke="#cbd5e1" stroke-width="1.4"/>
+<rect x="1244" y="383" width="112" height="54" rx="10" fill="#f4fdf9" stroke="#d3f3e5" stroke-width="1.5"/>
+<text x="1300" y="414" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="10" fill="#0f766e">7 spécialités</text>
+</svg>
+    <div class="matrix-cap">Couche 1 : type de soignant. Couche 2 : topologie pour une structure, profession pour un praticien. Couche 3 : exemple d'établissement, ou spécialité exacte du praticien.</div>
+  </div>
+  <div class="foot">MedCare · Arborescence des types de soignant · document interne à titre informatif · Sept. 2026. Les consultations des praticiens sont indexées par spécialité au Pilier 7. Vérification du titre et cadrage déontologique conditionnent la visibilité publique.</div>
+</div>
+</body>
+</html>

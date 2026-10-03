@@ -1,6 +1,6 @@
 {% extends "healthcare/prestataire/dashboard_base.html" %}
 {% load static %}
-{% block title %}Profil établissement{% endblock %}
+{% block title %}{% if org.account_nature == 'praticien' or org.is_praticien %}Mon profil praticien{% else %}Profil établissement{% endif %}{% endblock %}
 
 {% block dash_extra_css %}
 <link rel="stylesheet" href="{% static 'healthcare/css/prestataire_organisme_form.css' %}?v=5">
@@ -10,12 +10,21 @@
 <div class="org-edit-admin">
   <div class="flex flex-wrap items-start justify-between gap-4">
     <div class="min-w-0">
+      {% if org.account_nature == 'praticien' or org.is_praticien %}
+      <p class="text-[10px] font-bold uppercase tracking-widest text-primary-600">Mon profil praticien</p>
+      <h1 class="mt-1 text-xl font-bold sm:text-2xl">Profil professionnel</h1>
+      <p class="org-edit-lead mt-1 max-w-2xl text-sm">
+        Informations professionnelles : identité, profession paramédicale, NINEA et coordonnées d'exercice.
+      </p>
+      {% else %}
       <p class="text-[10px] font-bold uppercase tracking-widest text-primary-600">Mon établissement</p>
       <h1 class="mt-1 text-xl font-bold sm:text-2xl">Profil établissement</h1>
       <p class="org-edit-lead mt-1 max-w-2xl text-sm">
         Informations affichées sur votre fiche patient : identité et localisation GPS. Les contacts servent à MedCare et ne sont pas visibles des patients.
       </p>
+      {% endif %}
     </div>
+    {% if org.account_nature != 'praticien' and not org.is_praticien %}
     <div class="org-edit-actions flex flex-shrink-0 flex-wrap items-center gap-2">
       {% if org.is_active %}
       <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 border border-primary-200 bg-primary-50 px-4 py-2.5 text-sm font-semibold text-primary-900 hover:bg-primary-100">
@@ -30,10 +39,11 @@
         {% include "healthcare/_icon_svg.html" with icon="clock" class="org-edit-ico org-edit-ico--sm" %} Horaires
       </a>
     </div>
+    {% endif %}
   </div>
 </div>
 
-{% if not org.is_active %}
+{% if not org.is_active and org.account_nature != 'praticien' and not org.is_praticien %}
 <div class="org-edit-alert" role="status">
   <strong>Publication en attente.</strong> Complétez ce formulaire ; votre fiche sera visible des patients après validation MedCare.
 </div>
@@ -53,66 +63,124 @@
 
       <section id="sec-identite" class="org-edit-card scroll-mt-24">
         <header class="org-edit-card-head">
-          <span class="org-edit-card-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="building" class="org-edit-ico" %}</span>
+          <span class="org-edit-card-icon" aria-hidden="true">
+            {% if org.account_nature == 'praticien' or org.is_praticien %}
+            {% include "healthcare/_icon_svg.html" with icon="stethoscope" class="org-edit-ico" %}
+            {% else %}
+            {% include "healthcare/_icon_svg.html" with icon="building" class="org-edit-ico" %}
+            {% endif %}
+          </span>
           <div>
-            <h2 class="org-edit-card-title">Identité &amp; présentation</h2>
-            <p class="org-edit-card-sub">Enseigne, type, logo et texte « À propos ».</p>
+            <h2 class="org-edit-card-title">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}Identité &amp; profession{% else %}Identité &amp; présentation{% endif %}
+            </h2>
+            <p class="org-edit-card-sub">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}
+              Nom d'exercice, profession paramédicale ou médicale, et titre officiel.
+              {% else %}
+              Enseigne, type, logo et texte « À propos ».
+              {% endif %}
+            </p>
           </div>
         </header>
         <div class="org-edit-card-body">
           <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_10.5rem] lg:items-start">
             <div class="space-y-4">
-              <div>
-                <label for="{{ form.name.id_for_label }}" class="org-edit-label">Nom affiché <span class="text-rose-500">*</span></label>
-                {{ form.name }}
-                {{ form.name.errors }}
-              </div>
-              <div class="grid gap-4 sm:grid-cols-2">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}
+                {# ── Praticien : Identité & Profession ── #}
                 <div>
-                  <label for="{{ form.raison_sociale.id_for_label }}" class="org-edit-label">Raison sociale</label>
-                  {{ form.raison_sociale }}
-                  {{ form.raison_sociale.errors }}
+                  <label for="{{ form.name.id_for_label }}" class="org-edit-label">Nom complet / Nom d'exercice <span class="text-rose-500">*</span></label>
+                  {{ form.name }}
+                  {{ form.name.errors }}
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label for="{{ form.profession.id_for_label }}" class="org-edit-label">Profession <span class="text-rose-500">*</span></label>
+                    {{ form.profession }}
+                    {{ form.profession.errors }}
+                  </div>
+                  <div>
+                    <label for="{{ form.ordre_numero.id_for_label }}" class="org-edit-label">N° Ordre / Titre professionnel</label>
+                    {{ form.ordre_numero }}
+                    {{ form.ordre_numero.errors }}
+                    <p class="org-edit-hint">Numéro ONMS pour médecin, ou titre / ADELI selon profession.</p>
+                  </div>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label for="{{ form.ninea.id_for_label }}" class="org-edit-label">NINEA <span class="text-[10.5px] font-normal text-gray-400">(Optionnel)</span></label>
+                    {{ form.ninea }}
+                    {{ form.ninea.errors }}
+                  </div>
+                  <div>
+                    <label for="{{ form.raison_sociale.id_for_label }}" class="org-edit-label">Nom du cabinet / Raison sociale <span class="text-[10.5px] font-normal text-gray-400">(Optionnel)</span></label>
+                    {{ form.raison_sociale }}
+                    {{ form.raison_sociale.errors }}
+                  </div>
+                </div>
+                <div class="hidden">
+                  {{ form.type_organisme }}
                 </div>
                 <div>
-                  <label for="{{ form.ninea.id_for_label }}" class="org-edit-label">NINEA</label>
-                  {{ form.ninea }}
-                  {{ form.ninea.errors }}
+                  <label for="{{ form.description.id_for_label }}" class="org-edit-label">Biographie &amp; Parcours professionnel</label>
+                  {{ form.description }}
+                  {{ form.description.errors }}
+                  <p class="org-edit-hint">Présentation de votre parcours, diplômes, expertises et prises en charge.</p>
                 </div>
-              </div>
-              <div>
-                <label for="{{ form.type_organisme.id_for_label }}" class="org-edit-label">Type d&apos;établissement</label>
-                {{ form.type_organisme }}
-                {{ form.type_organisme.errors }}
-              </div>
-              <div id="profession-row" class="{% if org.type_organisme.name != 'Praticien indépendant' %}hidden{% endif %}">
-                <label for="{{ form.profession.id_for_label }}" class="org-edit-label">
-                  Profession <span class="text-rose-500">*</span>
-                  <span class="ml-1 text-[10px] font-normal text-gray-400">(praticiens indépendants uniquement)</span>
-                </label>
-                {{ form.profession }}
-                {{ form.profession.errors }}
-                <p class="org-edit-hint">Paramédical uniquement — conformité Art. 17 et 19.</p>
-              </div>
-              <div>
-                <label for="{{ form.description.id_for_label }}" class="org-edit-label">Description</label>
-                {{ form.description }}
-                {{ form.description.errors }}
-                <p class="org-edit-hint">Visible sur la fiche publique — soyez concis.</p>
-              </div>
+              {% else %}
+                {# ── Structure : Identité ── #}
+                <div>
+                  <label for="{{ form.name.id_for_label }}" class="org-edit-label">Nom affiché <span class="text-rose-500">*</span></label>
+                  {{ form.name }}
+                  {{ form.name.errors }}
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label for="{{ form.raison_sociale.id_for_label }}" class="org-edit-label">Raison sociale</label>
+                    {{ form.raison_sociale }}
+                    {{ form.raison_sociale.errors }}
+                  </div>
+                  <div>
+                    <label for="{{ form.ninea.id_for_label }}" class="org-edit-label">NINEA</label>
+                    {{ form.ninea }}
+                    {{ form.ninea.errors }}
+                  </div>
+                </div>
+                <div>
+                  <label for="{{ form.type_organisme.id_for_label }}" class="org-edit-label">Type d&apos;établissement</label>
+                  {{ form.type_organisme }}
+                  {{ form.type_organisme.errors }}
+                </div>
+                <div id="profession-row" class="{% if org.type_organisme.name != 'Praticien indépendant' %}hidden{% endif %}">
+                  <label for="{{ form.profession.id_for_label }}" class="org-edit-label">
+                    Profession <span class="text-rose-500">*</span>
+                    <span class="ml-1 text-[10px] font-normal text-gray-400">(praticiens indépendants uniquement)</span>
+                  </label>
+                  {{ form.profession }}
+                  {{ form.profession.errors }}
+                  <p class="org-edit-hint">Paramédical uniquement — conformité Art. 17 et 19.</p>
+                </div>
+                <div>
+                  <label for="{{ form.description.id_for_label }}" class="org-edit-label">Description</label>
+                  {{ form.description }}
+                  {{ form.description.errors }}
+                  <p class="org-edit-hint">Visible sur la fiche publique — soyez concis.</p>
+                </div>
+              {% endif %}
             </div>
             <aside class="org-edit-logo">
-              <p class="org-edit-label" style="margin-bottom:0">Logo</p>
+              <p class="org-edit-label" style="margin-bottom:0">{% if org.account_nature == 'praticien' or org.is_praticien %}Photo de profil{% else %}Logo{% endif %}</p>
               <div class="org-edit-logo-preview-wrap">
                 {% if org.logo %}
-                <img id="org-logo-preview" src="{{ org.logo.url }}" alt="" class="org-edit-logo-preview">
+                <img id="org-logo-preview" src="{{ org.logo.url }}" alt="" class="org-edit-logo-preview" style="{% if org.account_nature == 'praticien' or org.is_praticien %}border-radius:50%;object-fit:cover{% endif %}">
                 {% else %}
-                <div id="org-logo-preview" class="org-edit-logo-fallback" aria-hidden="true">{{ org.name|make_list|first|upper }}</div>
+                <div id="org-logo-preview" class="org-edit-logo-fallback" style="{% if org.account_nature == 'praticien' or org.is_praticien %}border-radius:50%{% endif %}" aria-hidden="true">{{ org.name|make_list|first|upper }}</div>
                 {% endif %}
               </div>
               <div class="org-edit-logo-upload">
                 <label for="{{ form.logo.id_for_label }}" class="org-edit-logo-pick">
                   <span class="org-edit-logo-pick-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="camera" class="org-edit-ico" %}</span>
-                  <span class="org-edit-logo-pick-label">{% if org.logo %}Changer l&apos;image{% else %}Ajouter une image{% endif %}</span>
+                  <span class="org-edit-logo-pick-label">{% if org.logo %}{% if org.account_nature == 'praticien' or org.is_praticien %}Changer la photo{% else %}Changer l&apos;image{% endif %}{% else %}{% if org.account_nature == 'praticien' or org.is_praticien %}Ajouter une photo{% else %}Ajouter une image{% endif %}{% endif %}</span>
                   <span class="org-edit-logo-pick-hint">PNG ou JPG</span>
                 </label>
                 <input type="file" name="{{ form.logo.html_name }}" id="{{ form.logo.id_for_label }}" accept="image/*" class="org-edit-logo-input">
@@ -132,14 +200,31 @@
         <header class="org-edit-card-head">
           <span class="org-edit-card-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="org-edit-ico" %}</span>
           <div>
-            <h2 class="org-edit-card-title">Localisation</h2>
-            <p class="org-edit-card-sub">GPS pour la recherche par distance et l&apos;itinéraire patient.</p>
+            <h2 class="org-edit-card-title">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}Localisation &amp; Zone d'intervention{% else %}Localisation{% endif %}
+            </h2>
+            <p class="org-edit-card-sub">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}
+              Zone de déplacement pour vos visites à domicile et adresse de consultation.
+              {% else %}
+              GPS pour la recherche par distance et l&apos;itinéraire patient.
+              {% endif %}
+            </p>
           </div>
         </header>
         <div class="org-edit-card-body space-y-4">
+          {% if org.account_nature == 'praticien' or org.is_praticien %}
+          <div>
+            <label for="{{ form.intervention_zone.id_for_label }}" class="org-edit-label">Zone d'intervention (visites à domicile / déplacements)</label>
+            {{ form.intervention_zone }}
+            {{ form.intervention_zone.errors }}
+            <p class="org-edit-hint">Précisez les villes, quartiers ou secteurs où vous vous déplacez (ex: Dakar, Almadies, Ngor, Ouakam, Mermoz, Plateau...).</p>
+          </div>
+          {% endif %}
+
           <div class="org-edit-geo">
             <button type="button" id="org-btn-gps" class="org-edit-geo-btn">
-              {% include "healthcare/_icon_svg.html" with icon="map-pin" class="org-edit-ico org-edit-ico--sm" %} Ma position GPS
+              {% include "healthcare/_icon_svg.html" with icon="map-pin" class="org-edit-ico org-edit-ico--sm" %} {% if org.account_nature == 'praticien' or org.is_praticien %}Position GPS cabinet{% else %}Ma position GPS{% endif %}
             </button>
             <div class="org-edit-geo-search">
               <input type="search" id="org-geo-q" placeholder="Rechercher une adresse…" autocomplete="off" aria-label="Rechercher une adresse">
@@ -153,7 +238,7 @@
           </div>
           <div class="grid gap-4 sm:grid-cols-2">
             <div class="sm:col-span-2">
-              <label for="{{ form.address.id_for_label }}" class="org-edit-label">Adresse</label>
+              <label for="{{ form.address.id_for_label }}" class="org-edit-label">{% if org.account_nature == 'praticien' or org.is_praticien %}Adresse du cabinet / lieu d'exercice{% else %}Adresse{% endif %}</label>
               {{ form.address }}
               {{ form.address.errors }}
             </div>
@@ -193,29 +278,37 @@
         <header class="org-edit-card-head">
           <span class="org-edit-card-icon" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="phone" class="org-edit-ico" %}</span>
           <div>
-            <h2 class="org-edit-card-title">Contact</h2>
-            <p class="org-edit-card-sub">Téléphone, WhatsApp et e-mail : usage interne, non affichés aux patients. Le site web reste visible sur la fiche.</p>
+            <h2 class="org-edit-card-title">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}Coordonnées directes{% else %}Contact{% endif %}
+            </h2>
+            <p class="org-edit-card-sub">
+              {% if org.account_nature == 'praticien' or org.is_praticien %}
+              Téléphone et WhatsApp professionnels pour vos alertes et devis. L'e-mail sert aux notifications MedCare.
+              {% else %}
+              Téléphone, WhatsApp et e-mail : usage interne, non affichés aux patients. Le site web reste visible sur la fiche.
+              {% endif %}
+            </p>
           </div>
         </header>
         <div class="org-edit-card-body grid gap-4 sm:grid-cols-2">
           <div>
-            <label for="{{ form.contact_phone.id_for_label }}" class="org-edit-label">Téléphone</label>
+            <label for="{{ form.contact_phone.id_for_label }}" class="org-edit-label">Téléphone professionnel</label>
             {{ form.contact_phone }}
             {{ form.contact_phone.errors }}
           </div>
           <div>
-            <label for="{{ form.whatsapp_number.id_for_label }}" class="org-edit-label">WhatsApp</label>
+            <label for="{{ form.whatsapp_number.id_for_label }}" class="org-edit-label">WhatsApp professionnel</label>
             {{ form.whatsapp_number }}
             {{ form.whatsapp_number.errors }}
-            <p class="org-edit-hint">Numéro utilisé pour les devis WhatsApp.</p>
+            <p class="org-edit-hint">Numéro utilisé pour les demandes directes et devis WhatsApp.</p>
           </div>
           <div>
-            <label for="{{ form.contact_email.id_for_label }}" class="org-edit-label">E-mail</label>
+            <label for="{{ form.contact_email.id_for_label }}" class="org-edit-label">E-mail professionnel</label>
             {{ form.contact_email }}
             {{ form.contact_email.errors }}
           </div>
           <div>
-            <label for="{{ form.website.id_for_label }}" class="org-edit-label">Site web</label>
+            <label for="{{ form.website.id_for_label }}" class="org-edit-label">{% if org.account_nature == 'praticien' or org.is_praticien %}Site web ou profil pro (LinkedIn, etc.){% else %}Site web{% endif %}</label>
             {{ form.website }}
             {{ form.website.errors }}
           </div>
@@ -231,7 +324,7 @@
     <aside class="hidden lg:block">
       <div class="sticky top-4 space-y-3">
         <div class="org-edit-aside-card">
-          <p class="org-edit-aside-title">Complétude du profil</p>
+          <p class="org-edit-aside-title">{% if org.account_nature == 'praticien' or org.is_praticien %}Complétude du profil praticien{% else %}Complétude du profil{% endif %}</p>
           <div class="org-edit-progress-ring" aria-hidden="true">
             <svg width="72" height="72" viewBox="0 0 72 72">
               <circle cx="36" cy="36" r="30" fill="none" stroke="var(--mc-border, #D4DEEE)" stroke-width="6"></circle>
@@ -243,12 +336,21 @@
             <span class="org-edit-progress-val">{{ profile_completion|default:0 }}%</span>
           </div>
           <ul class="org-edit-checklist mt-3 space-y-1">
+            {% if org.account_nature == 'praticien' or org.is_praticien %}
+            <li class="{% if org.name %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Nom complet</li>
+            <li class="{% if org.profession %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Profession</li>
+            <li class="{% if org.ordre_numero %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> N° Ordre / Titre</li>
+            <li class="{% if org.logo %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Photo de profil</li>
+            <li class="{% if org.description %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Biographie</li>
+            <li class="{% if org.contact_phone or org.whatsapp_number %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Téléphone / WhatsApp</li>
+            {% else %}
             <li class="{% if org.name %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Nom affiché</li>
             <li class="{% if org.logo %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Logo</li>
             <li class="{% if org.description %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Description</li>
             <li class="{% if org.latitude and org.longitude %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Coordonnées GPS</li>
             <li class="{% if org.contact_phone %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> Téléphone</li>
             <li class="{% if org.whatsapp_number %}is-done{% else %}is-missing{% endif %}"><span class="org-edit-check-dot"></span> WhatsApp</li>
+            {% endif %}
           </ul>
         </div>
 

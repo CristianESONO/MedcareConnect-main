@@ -3,11 +3,19 @@
   <div class="pac-sidebar-inner pac-sidebar-inner--desktop">
     <div class="pac-sidebar-user">
       <div class="pac-sidebar-user-row">
+        {% if user.is_authenticated %}
         <div class="pac-avatar" aria-hidden="true">{{ user.display_name|make_list|first|upper }}</div>
         <div class="min-w-0">
           <div class="pac-sidebar-name">{{ user.display_name|default:"Mon compte" }}</div>
           <div class="pac-sidebar-email truncate">{{ user.email|default:user.username }}</div>
         </div>
+        {% else %}
+        <div class="pac-avatar" style="background:#0a5c8a">👤</div>
+        <div class="min-w-0">
+          <div class="pac-sidebar-name">Espace patient</div>
+          <div style="font-size:11px;color:#6b7280"><a href="{% url 'login' %}?next={{ request.path }}" style="color:#0a5c8a;font-weight:600">Se connecter</a></div>
+        </div>
+        {% endif %}
       </div>
     </div>
 
@@ -74,6 +82,7 @@
     </nav>
 
     <div class="pac-sidebar-footer">
+      {% if user.is_authenticated %}
       <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit" class="sb-link sb-link--logout">
@@ -81,6 +90,12 @@
           Déconnexion
         </button>
       </form>
+      {% else %}
+      <a href="{% url 'login' %}?next={{ request.path }}" class="sb-link">
+        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
+        Connexion
+      </a>
+      {% endif %}
     </div>
   </div>
 

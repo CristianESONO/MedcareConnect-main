@@ -59,28 +59,68 @@ def register(request):
                     PatientProfile.objects.get_or_create(user=user)
                 if user.is_prestataire:
                     d = form.cleaned_data
-                    if not user.first_name and d.get("organisme_name"):
-                        parts = d["organisme_name"].split()
-                        user.first_name = parts[0]
-                        user.last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
-                        user.save(update_fields=["first_name", "last_name"])
-                    OrganismeDeSante.objects.create(
-                        user=user,
-                        name=d["organisme_name"],
-                        raison_sociale=(d.get("organisme_raison_sociale") or "").strip() or None,
-                        ninea=(d.get("organisme_ninea") or "").strip() or None,
-                        type_organisme=d["organisme_type"],
-                        address=d["organisme_address"],
-                        quartier=(d.get("organisme_quartier") or "").strip() or None,
-                        city=(d.get("organisme_city") or "Dakar").strip(),
-                        region=d.get("organisme_region"),
-                        contact_phone=d["organisme_contact_phone"],
-                        contact_email=(d.get("organisme_contact_email") or user.email or "").strip() or None,
-                        logo=d["organisme_logo"],
-                        subscription_plan=default_plan,
-                        is_active=False,
-                        is_verified=False,
-                    )
+                    account_nature = d.get("account_nature") or "structure"
+                    import json
+
+                    if account_nature == "praticien":
+                        raw_spe = d.get("praticien_specialties") or ""
+                        if raw_spe.startswith("["):
+                            try:
+                                spe_list = json.loads(raw_spe)
+                            except Exception:
+                                spe_list = [s.strip() for s in raw_spe.split(",") if s.strip()]
+                        else:
+                            spe_list = [s.strip() for s in raw_spe.split(",") if s.strip()]
+
+                        raw_modes = d.get("praticien_modes") or ""
+                        modes_list = [m.strip() for m in raw_modes.split(",") if m.strip()]
+
+                        full_name = f"{user.first_name} {user.last_name}".strip()
+                        OrganismeDeSante.objects.create(
+                            user=user,
+                            name=full_name or user.username,
+                            account_nature="praticien",
+                            is_individual=True,
+                            profession=d.get("praticien_profession") or "",
+                            ordre_numero=d.get("praticien_ordre") or "",
+                            specialties=spe_list,
+                            exercise_modes=modes_list,
+                            intervention_zone=d.get("praticien_zone") or "",
+                            address=d.get("praticien_address") or "Dakar",
+                            city=(d.get("praticien_city") or "Dakar").strip(),
+                            contact_phone=d.get("praticien_phone") or user.phone_number,
+                            contact_email=user.email,
+                            logo=d.get("praticien_photo"),
+                            subscription_plan=default_plan,
+                            is_active=False,
+                            is_verified=False,
+                        )
+                    else:
+                        if not user.first_name and d.get("organisme_name"):
+                            parts = d["organisme_name"].split()
+                            user.first_name = parts[0]
+                            user.last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
+                            user.save(update_fields=["first_name", "last_name"])
+                        OrganismeDeSante.objects.create(
+                            user=user,
+                            name=d["organisme_name"],
+                            account_nature="structure",
+                            is_individual=False,
+                            topology_type=d.get("organisme_topology") or "simple",
+                            raison_sociale=(d.get("organisme_raison_sociale") or "").strip() or None,
+                            ninea=(d.get("organisme_ninea") or "").strip() or None,
+                            type_organisme=d.get("organisme_type"),
+                            address=d["organisme_address"],
+                            quartier=(d.get("organisme_quartier") or "").strip() or None,
+                            city=(d.get("organisme_city") or "Dakar").strip(),
+                            region=d.get("organisme_region"),
+                            contact_phone=d["organisme_contact_phone"],
+                            contact_email=(d.get("organisme_contact_email") or user.email or "").strip() or None,
+                            logo=d.get("organisme_logo"),
+                            subscription_plan=default_plan,
+                            is_active=False,
+                            is_verified=False,
+                        )
             login(request, user)
             messages.success(request, "Inscription réussie ! Bienvenue sur MedCare Connect.")
             if user.is_patient:
@@ -92,11 +132,12 @@ def register(request):
                     "Votre panier a été synchronisé — vous pouvez réserver vos actes.",
                 )
             if user.is_prestataire:
+                nature_label = "praticien" if form.cleaned_data.get("account_nature") == "praticien" else "établissement"
                 messages.info(
                     request,
-                    f"Votre compte établissement a été créé avec le nom d'utilisateur : {user.username}. "
+                    f"Votre compte {nature_label} a été créé avec le nom d'utilisateur : {user.username}. "
                     "Vous pouvez l'utiliser pour vous connecter à tout moment. "
-                    "Votre fiche sera visible publiquement dès validation par l'administrateur.",
+                    "Votre compte sera actif dès validation par l'administrateur.",
                 )
                 return redirect("healthcare:prestataire_dashboard")
             if user.is_patient:

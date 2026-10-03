@@ -52,7 +52,7 @@ def global_context(request):
             receiver=request.user, is_read=False
         ).count()
         if getattr(request.user, "is_prestataire", False):
-            from healthcare.models import OrganismeDeSante
+            from healthcare.models import OrganismeDeSante, PractitionerAffiliation
             from cart.models import DevisPart
             from appointments.models import RendezVous
 
@@ -67,9 +67,18 @@ def global_context(request):
                     organisme=prestataire_org,
                     status=RendezVous.STATUS_REQUESTED,
                 ).count()
+                if prestataire_org.is_praticien:
+                    ctx["pending_acces_count"] = PractitionerAffiliation.objects.filter(
+                        praticien=prestataire_org, status="invited", initiated_by="structure"
+                    ).count()
+                else:
+                    ctx["pending_acces_count"] = PractitionerAffiliation.objects.filter(
+                        structure=prestataire_org, status="pending"
+                    ).count()
             else:
                 ctx["new_devis_count"] = 0
                 ctx["new_rdv_count"] = 0
+                ctx["pending_acces_count"] = 0
         if request.user.is_patient:
             cart = Cart.objects.filter(patient=request.user, status="active").first()
             ctx["cart_count"] = cart.item_count if cart else 0

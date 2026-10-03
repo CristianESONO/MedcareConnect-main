@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedCare · Créer un compte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0a5c8a;--green:#14b87a;--teal:#0d9488;--navy:#1a3a6e;--ink:#0f172a;--g700:#334155;--g600:#475569;--g500:#64748b;--g400:#94a3b8;--g300:#cbd5e1;--g200:#e2e8f0;--g100:#f1f5f9;--g50:#f8fafc;--amber:#d97706;--red:#dc2626;--in:#eaeef6}
+*{box-sizing:border-box}
+body{margin:0;background:#eef2f7;font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);line-height:1.55}
+.nav{background:#fff;border-bottom:1px solid var(--g200);padding:14px 30px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Cinzel',serif;font-weight:700;font-size:20px}
+.brand span{color:var(--green)}
+.nav .lk{display:flex;gap:24px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--g600)}
+.nav .lk a{color:inherit;text-decoration:none}
+.wrap{max-width:720px;margin:30px auto;padding:0 18px 70px}
+.card{background:#fff;border-radius:22px;box-shadow:0 10px 34px rgba(15,23,42,.07);padding:34px 38px}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:27px;color:var(--navy);text-align:center;margin:0 0 4px}
+.subt{text-align:center;color:var(--g500);font-size:13.5px;margin:0 0 26px}
+label,.lbl{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--navy);font-weight:700;margin:0 0 7px}
+.opt{color:var(--g400);font-weight:600}
+.req{color:var(--red)}
+.f{margin-bottom:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+input[type=text],input[type=email],input[type=tel],input[type=password],select{width:100%;background:var(--in);border:1.5px solid transparent;border-radius:12px;padding:13px 14px;font-size:14px;font-family:inherit;color:var(--ink)}
+input::placeholder{color:#9aa6bd}
+input:focus,select:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(10,92,138,.10)}
+.hint{font-size:11.5px;color:var(--blue);margin-top:6px;line-height:1.5;display:flex;gap:6px}
+.pw{position:relative}
+.pw .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--g400);cursor:pointer}
+/* type de compte fork */
+.tc-head{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px}
+.tc-badge{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--amber);background:#fff7ed;border:1px solid #fde68a;border-radius:20px;padding:4px 11px}
+.fork{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt-card{border:1.5px solid var(--g200);border-radius:14px;padding:15px 16px;cursor:pointer;background:#fff;transition:.15s;display:flex;gap:12px;align-items:flex-start}
+.opt-card:hover{border-color:var(--blue)}
+.opt-card.on{border-color:var(--blue);background:#eef6fb;box-shadow:0 0 0 3px rgba(10,92,138,.08)}
+.opt-card .ic{font-size:22px;line-height:1}
+.opt-card .nm{font-family:'Syne',sans-serif;font-weight:800;font-size:14.5px}
+.opt-card .d{font-size:11.5px;color:var(--g600);line-height:1.45;margin-top:2px}
+.switch{font-size:12px;color:var(--blue);font-weight:600;text-decoration:none;margin-top:8px;display:inline-block}
+/* sous-panneau */
+.panel{border:1px solid #dce6f2;background:#f4f8fd;border-radius:16px;padding:20px 20px 6px;margin:16px 0 8px}
+.panel-t{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);font-weight:800}
+.panel-s{font-size:12px;color:var(--g500);margin:3px 0 16px;line-height:1.5}
+.file{background:#fff;border:1px dashed #c3d3e6;border-radius:11px;padding:12px 13px;font-size:12.5px;color:var(--g500)}
+/* topology + profession cards */
+.pick3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:4px}
+.pick2{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:4px}
+.pk{border:1.5px solid var(--g200);border-radius:12px;padding:13px 13px;cursor:pointer;background:#fff;transition:.15s}
+.pk:hover{border-color:var(--blue)}
+.pk.on{border-color:var(--blue);background:#eef6fb;box-shadow:0 0 0 3px rgba(10,92,138,.08)}
+.pk .pic{font-size:20px}
+.pk .pnm{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;margin:6px 0 3px}
+.pk .pd{font-size:10.5px;color:var(--g600);line-height:1.4}
+.pk .pex{font-size:9.5px;color:var(--g400);margin-top:5px}
+/* checkbox specialites */
+.spegroup .gt{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--g400);margin:14px 0 8px}
+.chkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.chk{position:relative;border:1.5px solid var(--g200);border-radius:11px;padding:12px 12px 12px 40px;cursor:pointer;background:#fff;transition:.15s;display:block;font-size:12.8px;color:var(--g700);line-height:1.3;font-weight:600}
+.chk:hover{border-color:var(--blue)}
+.chk input{position:absolute;opacity:0;width:0;height:0}
+.chk .box{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;border:2px solid var(--g300);border-radius:5px;transition:.15s}
+.chk.on{border-color:var(--green);background:#f0fdf7;color:var(--ink);font-weight:700}
+.chk.on .box{background:var(--green);border-color:var(--green)}
+.chk.on .box::after{content:'✓';color:#fff;font-size:11px;font-weight:800;position:absolute;left:3px;top:-2px}
+.mini-lbl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--navy);font-weight:700;margin:16px 0 8px}
+.deo{background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.5;margin-top:6px}
+.modes{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.modechk{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--g200);border-radius:9px;padding:8px 12px;font-size:12.5px;cursor:pointer;color:var(--g700)}
+.modechk.on{border-color:var(--green);background:#f0fdf7;color:var(--ink);font-weight:600}
+.modechk.soon{opacity:.55;cursor:not-allowed}
+.submit{width:100%;margin-top:22px;background:linear-gradient(90deg,#0a5c8a,#0d9488);color:#fff;border:none;border-radius:13px;padding:15px;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:.15s}
+.submit:hover{filter:brightness(1.06)}
+.signin{text-align:center;font-size:13px;color:var(--g500);margin-top:16px}
+.signin a{color:var(--blue);font-weight:700;text-decoration:none}
+.hide{display:none}
+@media(max-width:640px){.card{padding:24px 20px}.row,.fork,.pick3,.pick2,.chkgrid{grid-template-columns:1fr}.nav .lk{display:none}}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="brand">Med<span>Care</span></div>
+  <div class="lk"><a>Accueil</a><a>Annuaire</a><a>À propos</a><a>Connexion</a></div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h1 id="title">Créer un compte prestataire</h1>
+    <div class="subt" id="subt">Renseignez vos informations pour créer votre fiche publique.</div>
+
+    <!-- FORK type de compte -->
+    <div class="tc-head"><div class="lbl" style="margin:0">Type de compte <span class="req">*</span></div><div class="tc-badge" id="mode-badge">Mode structure</div></div>
+    <div class="fork">
+      <div class="opt-card on" id="fk-structure" onclick="setAccount('structure')">
+        <div class="ic">🏥</div>
+        <div><div class="nm">Structure de soins</div><div class="d">Laboratoire, cabinet, centre, clinique, hôpital, réseau. L'individu se tient derrière l'offre.</div></div>
+      </div>
+      <div class="opt-card" id="fk-praticien" onclick="setAccount('praticien')">
+        <div class="ic">🩺</div>
+        <div><div class="nm">Praticien indépendant</div><div class="d">Médecin, infirmier, kiné, sage-femme, psychologue, autre paramédical. En son nom propre.</div></div>
+      </div>
+    </div>
+    <a class="switch" href="#">Vous êtes un particulier ? Basculer sur compte Patient →</a>
+
+    <!-- Responsable -->
+    <div class="row">
+      <div class="f"><label id="lbl-prenom">Prénom du responsable <span class="opt">(optionnel)</span></label><input type="text" placeholder="Prénom"></div>
+      <div class="f"><label id="lbl-nom">Nom du responsable <span class="opt">(optionnel)</span></label><input type="text" id="nom-resp" placeholder="Nom de famille" oninput="autoUser()"></div>
+    </div>
+
+    <div class="f">
+      <label>Nom d'utilisateur <span class="opt">(identifiant de connexion)</span> <span class="req">*</span></label>
+      <input type="text" id="username" placeholder="ex : polyclinique_de_libe, dr_diagne">
+      <div class="hint">💡 <span>Cet identifiant est le username de connexion. Il se génère automatiquement à partir du nom ci-dessous, vous pouvez le modifier.</span></div>
+    </div>
+
+    <div class="f"><label>Email <span class="req">*</span></label><input type="email" placeholder="votre@email.com"></div>
+    <div class="f"><label>Téléphone du contact / responsable</label><input type="tel" placeholder="+221 77 000 00 00"></div>
+
+    <!-- ============ BLOC STRUCTURE ============ -->
+    <div id="block-structure">
+      <div class="panel">
+        <div class="panel-t">Votre établissement</div>
+        <div class="panel-s">Ces informations créent votre fiche publique. La géolocalisation précise (GPS) s'ajoute après connexion.</div>
+
+        <div class="f"><label>Logo / photo de l'établissement <span class="req">*</span></label><div class="file">Choisir un fichier · aucun fichier sélectionné</div></div>
+        <div class="f"><label>Nom commercial / enseigne <span class="req">*</span></label><input type="text" id="enseigne" placeholder="Ex : Clinique Les Almadies" oninput="autoUser()"></div>
+        <div class="f"><label>Raison sociale <span class="opt">(légale)</span></label><input type="text" placeholder="Si différent du nom affiché"></div>
+        <div class="f"><label>NINEA <span class="opt">(optionnel)</span></label><input type="text" placeholder="Numéro d'identification entreprise"></div>
+
+        <div class="f">
+          <label>Type d'établissement <span class="req">*</span></label>
+          <div class="panel-s" style="margin:0 0 6px">Uniquement la topologie, c'est-à-dire le nombre de nœuds à gérer.</div>
+          <div class="pick3">
+            <div class="pk on" data-topo="simple" onclick="setTopo(this)"><div class="pic">🏢</div><div class="pnm">Structure simple</div><div class="pd">Un seul site.</div><div class="pex">Ex : labo, cabinet, centre d'imagerie</div></div>
+            <div class="pk" data-topo="multiservice" onclick="setTopo(this)"><div class="pic">🏛️</div><div class="pnm">Multi-services</div><div class="pd">Un lieu, plusieurs services.</div><div class="pex">Ex : hôpital, clinique, centre de santé</div></div>
+            <div class="pk" data-topo="multisite" onclick="setTopo(this)"><div class="pic">🗺️</div><div class="pnm">Réseau multi-sites</div><div class="pd">Un métier, plusieurs lieux.</div><div class="pex">Ex : réseau de labos, d'imagerie</div></div>
+          </div>
+          <div class="hint">💡 <span>Les piliers d'activité (biologie, imagerie, consultations, etc.) se choisissent librement après connexion, indépendamment du type.</span></div>
+        </div>
+
+        <div class="f"><label>Adresse du siège <span class="req">*</span></label><input type="text" placeholder="Rue, numéro"></div>
+        <div class="row">
+          <div class="f"><label>Quartier</label><input type="text"></div>
+          <div class="f"><label>Ville</label><input type="text" value="Dakar"></div>
+        </div>
+        <div class="f"><label>Région <span class="opt">(optionnel)</span></label><select><option>Optionnel</option><option>Dakar</option><option>Thiès</option><option>Diourbel</option><option>Saint-Louis</option><option>Autre</option></select></div>
+        <div class="f"><label>Téléphone professionnel <span class="req">*</span></label><input type="tel" placeholder="+221 33 ..."></div>
+      </div>
+    </div>
+
+    <!-- ============ BLOC PRATICIEN ============ -->
+    <div id="block-praticien" class="hide">
+      <div class="panel">
+        <div class="panel-t">Votre profil praticien</div>
+        <div class="panel-s">En exercice indépendant, votre nom est assumé sur votre fiche. La visibilité publique est conditionnée à la vérification de votre titre.</div>
+
+        <div class="f"><label>Photo <span class="opt">(optionnel)</span></label><div class="file">Choisir un fichier · aucun fichier sélectionné</div></div>
+
+        <div class="f">
+          <label>Profession <span class="req">*</span></label>
+          <div class="panel-s" style="margin:0 0 6px">Le régime déontologique dépend de la profession.</div>
+          <div class="pick2" id="prof-cards">
+            <div class="pk" data-prof="medecin" onclick="setProf(this)"><div class="pic">🩺</div><div class="pnm">Médecin</div><div class="pd">Inscription à l'Ordre</div></div>
+            <div class="pk" data-prof="infirmier" onclick="setProf(this)"><div class="pic">💉</div><div class="pnm">Infirmier(ère)</div><div class="pd">Soins et gestes</div></div>
+            <div class="pk" data-prof="kine" onclick="setProf(this)"><div class="pic">🤸</div><div class="pnm">Kinésithérapeute</div><div class="pd">Rééducation</div></div>
+            <div class="pk" data-prof="sagefemme" onclick="setProf(this)"><div class="pic">🤰</div><div class="pnm">Sage-femme</div><div class="pd">Santé de la femme</div></div>
+            <div class="pk" data-prof="psy" onclick="setProf(this)"><div class="pic">🧠</div><div class="pnm">Psychologue</div><div class="pd">Santé mentale</div></div>
+            <div class="pk" data-prof="autre" onclick="setProf(this)"><div class="pic">🩹</div><div class="pnm">Autre paramédical</div><div class="pd">Diététique, etc.</div></div>
+          </div>
+        </div>
+
+        <div class="f hide" id="spe-wrap">
+          <label>Vos spécialités <span class="req">*</span></label>
+          <div class="panel-s" style="margin:0 0 6px">Cochez toutes celles que vous proposez. Plusieurs choix possibles.</div>
+          <div id="spe-cards"></div>
+        </div>
+
+        <div class="f hide" id="ordre-wrap">
+          <label id="ordre-lbl">Numéro d'inscription à l'Ordre <span class="req">*</span></label>
+          <input type="text" id="ordre-input" placeholder="Numéro d'inscription">
+          <div class="deo">La présentation reste factuelle : pas de classement, pas de mise en avant, pas de mention promotionnelle (Art. 10, 17, 19). Le titre est vérifié avant mise en ligne.</div>
+        </div>
+
+        <div class="f">
+          <label>Mode d'exercice</label>
+          <div class="modes">
+            <div class="modechk" onclick="this.classList.toggle('on')">Au cabinet</div>
+            <div class="modechk" onclick="this.classList.toggle('on')">À domicile</div>
+            <div class="modechk soon">Téléconsultation · V2</div>
+          </div>
+        </div>
+
+        <div class="f"><label>Adresse d'exercice / cabinet</label><input type="text" placeholder="Rue, numéro"></div>
+        <div class="row">
+          <div class="f"><label>Zone d'intervention <span class="opt">(domicile)</span></label><input type="text" placeholder="Ex : Dakar, Almadies, Ouest-Foire"></div>
+          <div class="f"><label>Ville</label><input type="text" value="Dakar"></div>
+        </div>
+        <div class="f"><label>Téléphone professionnel <span class="req">*</span></label><input type="tel" placeholder="+221 77 ..."></div>
+      </div>
+    </div>
+
+    <!-- Mot de passe -->
+    <div class="row">
+      <div class="f"><label>Mot de passe <span class="req">*</span></label><div class="pw"><input type="password" id="pw1" placeholder="••••••••"><span class="eye" onclick="tgpw('pw1')">👁</span></div></div>
+      <div class="f"><label>Confirmer <span class="req">*</span></label><div class="pw"><input type="password" id="pw2" placeholder="••••••••"><span class="eye" onclick="tgpw('pw2')">👁</span></div></div>
+    </div>
+
+    <button class="submit" id="submit-btn">Créer le compte établissement →</button>
+    <div class="signin">Déjà un compte ? <a href="#">Se connecter</a></div>
+  </div>
+</div>
+
+<script>
+var SPE={
+  medecin:{groups:[
+    ["Médecine générale et de recours",["Médecine générale","Médecine interne","Gériatrie","Médecine d'urgence"]],
+    ["Spécialités médicales",["Cardiologie","Pneumologie","Hépato-gastro-entérologie","Néphrologie","Endocrinologie · Diabétologie","Neurologie","Rhumatologie","Dermatologie · Vénéréologie","Hématologie clinique","Oncologie médicale","Maladies infectieuses et tropicales","Allergologie · Immunologie clinique","Médecine physique et de réadaptation","Angiologie / Médecine vasculaire","Génétique médicale"]],
+    ["Spécialités chirurgicales",["Chirurgie générale et digestive","Chirurgie orthopédique et traumatologique","Neurochirurgie","Chirurgie cardio-vasculaire","Chirurgie thoracique","Chirurgie vasculaire","Chirurgie plastique et reconstructrice","Chirurgie pédiatrique","Chirurgie maxillo-faciale","Urologie"]],
+    ["Organes des sens et tête-cou",["Ophtalmologie","ORL et chirurgie cervico-faciale"]],
+    ["Santé de la mère et de l'enfant",["Gynécologie · Obstétrique","Médecine de la reproduction / Fertilité","Pédiatrie et néonatologie"]],
+    ["Santé mentale",["Psychiatrie","Pédopsychiatrie","Addictologie"]],
+    ["Transversales et de recours",["Anesthésie · Réanimation","Médecine de la douleur / Algologie","Soins palliatifs","Médecine du sport","Médecine du travail","Nutrition clinique"]]
+  ]},
+  infirmier:{flat:["Soins infirmiers généraux (IDE)","Infirmier anesthésiste (IADE)","Infirmier de bloc opératoire (IBODE)","Puériculture","Infirmier en pratique avancée (IPA)","Soins infirmiers à domicile"]},
+  kine:{flat:["Rééducation ostéo-articulaire","Kinésithérapie respiratoire","Rééducation neurologique","Rééducation périnéo-sphinctérienne","Drainage lymphatique","Kinésithérapie du sport","Kinésithérapie pédiatrique"]},
+  sagefemme:{flat:["Suivi prénatal","Planning familial / contraception","Suivi post-natal","Rééducation périnéale","Préparation à la naissance"]},
+  psy:{flat:["Psychologie clinique","Neuropsychologie","Psychothérapie","Psychologie de l'enfant et de l'adolescent","Thérapie de couple / familiale"]},
+  autre:{flat:["Diététicien · Nutritionniste","Orthophoniste","Psychomotricien","Ergothérapeute","Orthoptiste","Podologue","Ostéopathe"]}
+};
+var ORDRE_LBL={medecin:"Numéro d'inscription à l'Ordre des médecins (ONMS)",infirmier:"Numéro / titre professionnel",kine:"Numéro / titre professionnel",sagefemme:"Numéro / titre professionnel",psy:"Numéro d'ADELI / titre professionnel",autre:"Numéro / titre professionnel"};
+var account='structure';
+
+function setAccount(t){
+  account=t;
+  document.getElementById('fk-structure').classList.toggle('on',t==='structure');
+  document.getElementById('fk-praticien').classList.toggle('on',t==='praticien');
+  document.getElementById('block-structure').classList.toggle('hide',t!=='structure');
+  document.getElementById('block-praticien').classList.toggle('hide',t!=='praticien');
+  document.getElementById('mode-badge').textContent=t==='structure'?'Mode structure':'Mode praticien';
+  document.getElementById('title').textContent=t==='structure'?'Créer un compte établissement':'Créer un compte praticien';
+  document.getElementById('subt').textContent=t==='structure'?"Renseignez les informations de votre établissement pour créer votre fiche.":"Renseignez vos informations professionnelles pour créer votre fiche.";
+  document.getElementById('submit-btn').textContent=t==='structure'?'Créer le compte établissement →':'Créer le compte praticien →';
+  document.getElementById('lbl-prenom').innerHTML=t==='structure'?'Prénom du responsable <span class="opt">(optionnel)</span>':'Prénom du praticien <span class="req">*</span>';
+  document.getElementById('lbl-nom').innerHTML=t==='structure'?'Nom du responsable <span class="opt">(optionnel)</span>':'Nom du praticien <span class="req">*</span>';
+  autoUser();
+}
+function setTopo(el){document.querySelectorAll('[data-topo]').forEach(function(x){x.classList.remove('on')});el.classList.add('on');}
+function setProf(el){
+  document.querySelectorAll('[data-prof]').forEach(function(x){x.classList.remove('on')});el.classList.add('on');
+  var p=el.getAttribute('data-prof');var data=SPE[p];var html='';
+  function card(s){var v=s.replace(/"/g,'&quot;');return "<label class='chk'><input type='checkbox' value=\""+v+"\" onchange='toggleChk(this)'><span class='box'></span>"+s+"</label>";}
+  if(data.groups){data.groups.forEach(function(g){html+="<div class='spegroup'><div class='gt'>"+g[0]+"</div><div class='chkgrid'>"+g[1].map(card).join('')+"</div></div>";});}
+  else{html+="<div class='chkgrid'>"+data.flat.map(card).join('')+"</div>";}
+  document.getElementById('spe-cards').innerHTML=html;
+  document.getElementById('spe-wrap').classList.remove('hide');
+  document.getElementById('ordre-wrap').classList.remove('hide');
+  document.getElementById('ordre-lbl').innerHTML=ORDRE_LBL[p]+' <span class="req">*</span>';
+}
+function toggleChk(cb){cb.parentElement.classList.toggle('on',cb.checked);}
+function slug(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
+function autoUser(){
+  var u=document.getElementById('username');if(u.dataset.touched)return;
+  var base=account==='structure'?(document.getElementById('enseigne')?document.getElementById('enseigne').value:''):'';
+  if(!base) base=document.getElementById('nom-resp').value;
+  u.value=slug(base);
+}
+document.getElementById('username').addEventListener('input',function(){this.dataset.touched='1';});
+function tgpw(id){var e=document.getElementById(id);e.type=e.type==='password'?'text':'password';}
+</script>
+</body>
+</html>

@@ -17,10 +17,22 @@
         {% if current_type %}<input type="hidden" name="type" value="{{ current_type }}">{% endif %}
         <button type="submit" class="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600">Rechercher</button>
     </form>
-    <div class="flex gap-1 rounded-lg bg-gray-100 p-1">
-        <a href="{% url 'dashboard:users_list' %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_type %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Tous</a>
-        <a href="?type=patient" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'patient' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Patients</a>
-        <a href="?type=prestataire" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'prestataire' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Prestataires</a>
+    <div class="flex flex-wrap gap-1 rounded-lg bg-gray-100 p-1">
+        <a href="{% url 'dashboard:users_list' %}{% if search %}?q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_type %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            Tous <span class="ml-1 rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] text-gray-700">{{ count_all }}</span>
+        </a>
+        <a href="?type=patient{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'patient' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            Patients <span class="ml-1 rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] text-gray-700">{{ count_patients }}</span>
+        </a>
+        <a href="?type=structure{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'structure' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            🏥 Structures de soins <span class="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-800">{{ count_structures }}</span>
+        </a>
+        <a href="?type=praticien{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'praticien' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            🩺 Praticiens indépendants <span class="ml-1 rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] text-teal-800">{{ count_praticiens }}</span>
+        </a>
+        <a href="?type=admin{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'admin' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            Admins <span class="ml-1 rounded-full bg-purple-100 px-1.5 py-0.5 text-[10px] text-purple-700">{{ count_admins }}</span>
+        </a>
     </div>
 </div>
 
@@ -50,9 +62,27 @@
                     </div>
                 </td>
                 <td class="px-4 py-3">
-                    <span class="rounded-full px-2 py-0.5 text-[11px] font-medium {% if u.user_type == 'prestataire' %}bg-blue-50 text-blue-700 {% elif u.user_type == 'admin' %}bg-purple-50 text-purple-700 {% else %}bg-gray-100 text-gray-600{% endif %}">
+                    {% if u.user_type == 'patient' %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                        👤 Patient
+                    </span>
+                    {% elif u.user_type == 'admin' %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-[11px] font-medium text-purple-700">
+                        🛡️ Admin MedCare
+                    </span>
+                    {% elif u.is_praticien %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-medium text-teal-800 border border-teal-200">
+                        🩺 Praticien ({{ u.organisme.get_profession_display|default:"Indépendant" }})
+                    </span>
+                    {% elif u.is_structure %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-medium text-blue-800 border border-blue-200">
+                        🏥 Structure ({{ u.organisme.name|truncatechars:22 }})
+                    </span>
+                    {% else %}
+                    <span class="rounded-full px-2 py-0.5 text-[11px] font-medium bg-gray-100 text-gray-600">
                         {{ u.get_user_type_display }}
                     </span>
+                    {% endif %}
                 </td>
                 <td class="hidden px-4 py-3 text-gray-500 sm:table-cell">{{ u.phone_number|default:"—" }}</td>
                 <td class="hidden px-4 py-3 text-gray-500 md:table-cell">{{ u.date_joined|date:"d/m/Y H:i" }}</td>

@@ -17,20 +17,33 @@ class UserRegistrationForm(UserCreationForm):
         choices=[("patient", "Patient"), ("prestataire", "Prestataire de Santé")],
         widget=forms.Select(attrs={"class": TAILWIND_SELECT, "id": "id_user_type"}),
     )
+    account_nature = forms.ChoiceField(
+        choices=[("structure", "Structure de soins"), ("praticien", "Praticien indépendant")],
+        required=False,
+        initial="structure",
+        widget=forms.HiddenInput(attrs={"id": "id_account_nature"}),
+    )
     phone_number = forms.CharField(max_length=20, required=False, widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "placeholder": "+221 77 000 00 00"}))
 
-    # Champs établissement (requis si prestataire)
+    # ============ CHAMPS STRUCTURE ============
     organisme_name = forms.CharField(
         label="Nom commercial / enseigne",
         max_length=255,
         required=False,
-        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "placeholder": "Ex : Clinique Les Almadies"}),
+        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "id": "enseigne", "placeholder": "Ex : Clinique Les Almadies"}),
     )
     organisme_raison_sociale = forms.CharField(
         label="Raison sociale (légale)",
         max_length=255,
         required=False,
         widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "placeholder": "Si différent du nom affiché"}),
+    )
+    organisme_topology = forms.ChoiceField(
+        label="Type d'établissement (topologie)",
+        choices=[("simple", "Structure simple"), ("multiservice", "Multi-services"), ("multisite", "Réseau multi-sites")],
+        initial="simple",
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_organisme_topology"}),
     )
     organisme_type = forms.ModelChoiceField(
         label="Type d'établissement",
@@ -91,6 +104,60 @@ class UserRegistrationForm(UserCreationForm):
         ),
     )
 
+    # ============ CHAMPS PRATICIEN INDÉPENDANT ============
+    praticien_photo = forms.ImageField(
+        label="Photo du praticien",
+        required=False,
+        widget=forms.ClearableFileInput(
+            attrs={"class": TAILWIND_INPUT, "accept": "image/*"}
+        ),
+    )
+    praticien_profession = forms.CharField(
+        max_length=50,
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_praticien_profession"}),
+    )
+    praticien_specialties = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_praticien_specialties"}),
+    )
+    praticien_ordre = forms.CharField(
+        label="Numéro d'inscription à l'Ordre ou titre professionnel",
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "id": "ordre-input", "placeholder": "Numéro d'inscription"}),
+    )
+    praticien_modes = forms.CharField(
+        required=False,
+        initial="cabinet,domicile",
+        widget=forms.HiddenInput(attrs={"id": "id_praticien_modes"}),
+    )
+    praticien_address = forms.CharField(
+        label="Adresse d'exercice / cabinet",
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "placeholder": "Rue, numéro"}),
+    )
+    praticien_zone = forms.CharField(
+        label="Zone d'intervention (domicile)",
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "placeholder": "Ex : Dakar, Almadies, Ouest-Foire"}),
+    )
+    praticien_city = forms.CharField(
+        label="Ville",
+        max_length=100,
+        required=False,
+        initial="Dakar",
+        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT}),
+    )
+    praticien_phone = forms.CharField(
+        label="Téléphone professionnel",
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(attrs={"class": TAILWIND_INPUT, "placeholder": "+221 77 …"}),
+    )
+
     class Meta:
         model = User
         fields = (
@@ -112,20 +179,33 @@ class UserRegistrationForm(UserCreationForm):
 
     def clean(self):
         cleaned = super().clean()
-        if cleaned.get("user_type") == "prestataire":
-            if not cleaned.get("organisme_name"):
-                self.add_error("organisme_name", "Le nom commercial de l'établissement est obligatoire pour un prestataire.")
-            if not cleaned.get("organisme_type"):
-                self.add_error("organisme_type", "Veuillez indiquer le type d'établissement.")
-            if not cleaned.get("organisme_address"):
-                self.add_error("organisme_address", "L'adresse de l'établissement est obligatoire.")
-            if not cleaned.get("organisme_contact_phone"):
-                self.add_error("organisme_contact_phone", "Un téléphone professionnel est obligatoire.")
-            if not self.files.get("organisme_logo"):
-                self.add_error(
-                    "organisme_logo",
-                    "Le logo (photo) de l'établissement est obligatoire.",
-                )
+        user_type = cleaned.get("user_type")
+        account_nature = cleaned.get("account_nature") or "structure"
+
+        if user_type == "prestataire":
+            if account_nature == "structure":
+                if not cleaned.get("organisme_name"):
+                    self.add_error("organisme_name", "Le nom commercial / enseigne de l'établissement est obligatoire.")
+                if not cleaned.get("organisme_address"):
+                    self.add_error("organisme_address", "L'adresse de l'établissement est obligatoire.")
+                if not cleaned.get("organisme_contact_phone"):
+                    self.add_error("organisme_contact_phone", "Un téléphone professionnel est obligatoire.")
+                if not self.files.get("organisme_logo"):
+                    self.add_error(
+                        "organisme_logo",
+                        "Le logo / photo de l'établissement est obligatoire.",
+                    )
+            elif account_nature == "praticien":
+                if not cleaned.get("first_name"):
+                    self.add_error("first_name", "Le prénom du praticien est obligatoire.")
+                if not cleaned.get("last_name"):
+                    self.add_error("last_name", "Le nom de famille du praticien est obligatoire.")
+                if not cleaned.get("praticien_profession"):
+                    self.add_error("praticien_profession", "Veuillez sélectionner votre profession.")
+                if not cleaned.get("praticien_ordre"):
+                    self.add_error("praticien_ordre", "Le numéro d'ordre ou titre professionnel est obligatoire.")
+                if not cleaned.get("praticien_phone"):
+                    self.add_error("praticien_phone", "Un numéro de téléphone professionnel est obligatoire.")
         return cleaned
 
 

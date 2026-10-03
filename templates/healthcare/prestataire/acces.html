@@ -1,0 +1,414 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+
+{% block dash_extra_css %}
+<style>
+.ac-note {
+  display:flex;align-items:flex-start;gap:10px;
+  background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;
+  padding:12px 14px;font-size:12px;color:#065f46;margin-bottom:16px;line-height:1.55;
+}
+.ac-card {
+  background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+  overflow:hidden;margin-bottom:14px;box-shadow:0 1px 4px rgba(10,92,138,.05);
+}
+.ac-card-head {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 16px;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;
+}
+.ac-card-title{font-size:13px;font-weight:700;color:#0d1b2a;}
+.ac-card-sub{font-size:10px;color:#9ca3af;margin-top:1px;}
+.ac-card-body{padding:14px 16px;}
+.ac-struct {
+  display:flex;flex-direction:column;gap:0;
+  border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;
+}
+.ac-struct-row {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;background:#fff;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;
+}
+.ac-struct-row:last-child{border-bottom:none;}
+.ac-struct-name{font-size:13px;font-weight:600;color:#0d1b2a;}
+.ac-struct-meta{font-size:11px;color:#6b7280;margin-top:2px;}
+.ac-struct-agenda{font-size:11px;color:#374151;padding:8px 14px;background:#f9fafb;border-top:1px solid #f3f4f6;}
+.ac-pill-active{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46;}
+.ac-pill-pending{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#92400e;}
+.ac-pill-invited{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:#eff6ff;color:#1d4ed8;}
+.ac-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:6px 12px;border-radius:8px;border:1.5px solid #d1d5db;background:#fff;color:#374151;cursor:pointer;transition:all .15s;text-decoration:none;}
+.ac-btn:hover{background:#f3f4f6;border-color:#9ca3af;}
+.ac-btn.danger:hover{background:#fee2e2;border-color:#ef4444;color:#dc2626;}
+.ac-empty{text-align:center;padding:32px 24px;color:#9ca3af;font-size:12px;}
+
+/* Carte invitation reçue */
+.ac-invite-card{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,#eff6ff 0%,#f0fdf4 100%);
+  border:1.5px solid #bfdbfe;border-radius:10px;
+  padding:12px 16px;margin-bottom:8px;
+}
+.ac-invite-card:last-child{margin-bottom:0;}
+.ac-invite-badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;
+  padding:2px 8px;border-radius:20px;background:#dbeafe;color:#1d4ed8;margin-bottom:4px;
+}
+
+/* Modal */
+.ac-modal-overlay{display:none;position:fixed;inset:0;background:rgba(13,27,42,.5);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.ac-modal-overlay.open{display:flex;}
+.ac-modal{background:#fff;border-radius:14px;width:100%;max-width:460px;box-shadow:0 8px 40px rgba(10,92,138,.22);max-height:88vh;display:flex;flex-direction:column;animation:acFi .22s ease both;}
+@keyframes acFi{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.ac-modal-head{padding:15px 20px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
+.ac-modal-title{font-size:15px;font-weight:700;color:#0d1b2a;}
+.ac-modal-close{background:#f3f4f6;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:#6b7280;}
+.ac-modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+.ac-field label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin-bottom:5px;}
+.ac-field input,.ac-field select{width:100%;border:1.5px solid #e5e7eb;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;color:#0d1b2a;box-sizing:border-box;outline:none;transition:border-color .15s;}
+.ac-field input:focus,.ac-field select:focus{border-color:#0a5c8a;}
+.ac-modal-foot{padding:16px 20px;border-top:1px solid #f0f4f8;display:flex;justify-content:flex-end;gap:10px;background:linear-gradient(to bottom,#fff,#f8fafc);border-radius:0 0 14px 14px;}
+.day-grid{display:flex;gap:6px;flex-wrap:wrap;}
+.day-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:5px 11px;border-radius:8px;border:1.5px solid #e5e7eb;background:#fff;color:#374151;cursor:pointer;user-select:none;}
+.day-chip input{display:none;}
+.day-chip:has(input:checked){border-color:#0a5c8a;background:#eff6ff;color:#0a5c8a;}
+
+/* ── Bouton Annuler ── */
+.ac-btn-cancel{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;font-family:inherit;padding:9px 18px;border-radius:10px;border:1.5px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);text-decoration:none;}
+.ac-btn-cancel:hover{background:#f8fafc;border-color:#cbd5e1;color:#374151;transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.ac-btn-cancel:active{transform:translateY(0);box-shadow:none;}
+
+/* ── Bouton action modal (submit) ── */
+.ac-btn-submit{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;font-family:inherit;padding:9px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#0a5c8a 0%,#4fa3c7 60%,#14b8a6 100%);color:#fff;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;box-shadow:0 4px 14px rgba(10,92,138,.35);letter-spacing:.01em;}
+.ac-btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);transform:translateX(-100%);transition:transform .5s ease;}
+.ac-btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(10,92,138,.42);}
+.ac-btn-submit:hover::before{transform:translateX(100%);}
+.ac-btn-submit:active{transform:translateY(0);box-shadow:0 2px 8px rgba(10,92,138,.3);}
+
+/* ── Bouton accept invitation (vert) ── */
+.ac-btn-accept{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;font-family:inherit;padding:7px 14px;border-radius:9px;border:none;background:linear-gradient(135deg,#059669 0%,#10b981 100%);color:#fff;cursor:pointer;transition:all .2s ease;box-shadow:0 3px 10px rgba(5,150,105,.30);}
+.ac-btn-accept:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(5,150,105,.40);}
+.ac-btn-accept:active{transform:translateY(0);}
+
+/* ── Bouton page principal ── */
+.ac-page-btn{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;font-weight:700;font-family:inherit;padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#0a5c8a 0%,#4fa3c7 70%,#06b6d4 100%);color:#fff;cursor:pointer;transition:all .22s ease;box-shadow:0 3px 12px rgba(10,92,138,.30);position:relative;overflow:hidden;text-decoration:none;}
+.ac-page-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transform:translateX(-100%);transition:transform .45s ease;}
+.ac-page-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(10,92,138,.40);color:#fff;}
+.ac-page-btn:hover::before{transform:translateX(100%);}
+.ac-page-btn:active{transform:translateY(0);}
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+  <div>
+    <h1 style="font-size:1.25rem;font-weight:800;color:#0d1b2a;line-height:1.2">Accès &amp; structures</h1>
+    <p style="font-size:.75rem;color:#6b7280;margin-top:3px">Vos affiliations aux structures partenaires et votre agenda d'intervention</p>
+  </div>
+  {% if org.is_praticien %}
+  <button class="ac-page-btn" onclick="openAcModal()">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    Demander un accès
+  </button>
+  {% else %}
+  <button class="ac-page-btn" onclick="openInviteModal()">
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3M13.5 4.5 21 12l-7.5 7.5"/></svg>
+    Inviter un praticien
+  </button>
+  {% endif %}
+</div>
+
+<div class="ac-note">
+  <span style="font-size:15px;flex-shrink:0">🛡️</span>
+  <span>En indépendant, votre présence se construit d'abord via les structures où vous exercez. Vos actes en propre restent découvrables uniquement en recherche de prestation, <strong>sans fiche individuelle publique ni classement</strong>.</span>
+</div>
+
+{% if messages %}
+<div style="margin-bottom:14px">
+  {% for message in messages %}
+  <div style="padding:10px 14px;border-radius:9px;font-size:12.5px;margin-bottom:6px;{% if 'success' in message.tags %}background:#ecfdf5;color:#065f46;{% elif 'error' in message.tags %}background:#fee2e2;color:#dc2626;{% elif 'warning' in message.tags %}background:#fef3c7;color:#92400e;{% else %}background:#eff6ff;color:#1e40af;{% endif %}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{# ═══ VUE PRATICIEN ═══ #}
+{% if org.is_praticien %}
+
+{# Invitations reçues de structures #}
+{% if invitations_recues %}
+<div class="ac-card" style="border-color:#bfdbfe;">
+  <div class="ac-card-head" style="background:linear-gradient(135deg,#eff6ff,#f0fdf4);">
+    <div>
+      <div class="ac-card-title">📨 Invitations reçues</div>
+      <div class="ac-card-sub">Des structures vous ont invité à rejoindre leur équipe — acceptez ou déclinez.</div>
+    </div>
+    <span style="font-size:11px;font-weight:700;background:#dbeafe;color:#1d4ed8;padding:3px 10px;border-radius:20px;">{{ invitations_recues|length }} invitation{{ invitations_recues|length|pluralize }}</span>
+  </div>
+  <div class="ac-card-body" style="padding:12px 16px;">
+    {% for inv in invitations_recues %}
+    <div class="ac-invite-card">
+      <div>
+        <div class="ac-invite-badge">
+          <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+          Invitation de structure
+        </div>
+        <div class="ac-struct-name">{{ inv.structure.name }}</div>
+        <div class="ac-struct-meta">Rôle proposé : {{ inv.role_title }}{% if inv.days_schedule %} · {{ inv.days_schedule|join:", " }}{% endif %}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+        <form method="post" action="{% url 'healthcare:prestataire_affiliation_accept' inv.pk %}" style="margin:0">
+          {% csrf_token %}
+          <button type="submit" class="ac-btn-accept">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+            Accepter
+          </button>
+        </form>
+        <form method="post" action="{% url 'healthcare:prestataire_affiliation_delete' inv.pk %}" style="margin:0" onsubmit="return confirm('Refuser cette invitation ?')">
+          {% csrf_token %}
+          <button type="submit" class="ac-btn danger" style="font-size:11px;padding:6px 12px;">Refuser</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{# Mes structures (affiliations approuvées & en attente) #}
+<div class="ac-card">
+  <div class="ac-card-head">
+    <div>
+      <div class="ac-card-title">Mes structures</div>
+      <div class="ac-card-sub">Là où vous exercez. Gérez votre rôle et votre agenda dans chacune.</div>
+    </div>
+  </div>
+  <div class="ac-card-body">
+    {% if affiliations %}
+    <div class="ac-struct">
+      {% for aff in affiliations %}
+      <div>
+        <div class="ac-struct-row">
+          <div>
+            <div class="ac-struct-name">{{ aff.structure.name }}</div>
+            <div class="ac-struct-meta">
+              Rôle : {{ aff.role_title }}
+              &nbsp;·&nbsp;
+              {% if aff.status == 'approved' %}<span class="ac-pill-active">● Actif</span>{% elif aff.status == 'pending' %}<span class="ac-pill-pending">En attente de validation</span>{% else %}<span style="font-size:9px;color:#6b7280">{{ aff.get_status_display }}</span>{% endif %}
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0;align-items:center">
+            {% if aff.status == 'approved' %}
+            <a href="{% url 'healthcare:agenda_praticien_edit' aff.pk %}" class="ac-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border-color:#bbf7d0;color:#166534;font-weight:600">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.253 3v13.5A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V7.5A2.25 2.25 0 0 0 18.75 5.25H5.25A2.25 2.25 0 0 0 3 7.5v11.25m0-11.25h18"/></svg>
+              🗓️ Gérer l'agenda
+            </a>
+            {% endif %}
+            <form method="post" action="{% url 'healthcare:prestataire_affiliation_delete' aff.pk %}" style="margin:0" onsubmit="return confirm('Vous retirer de cette structure ?')">
+              {% csrf_token %}
+              <button type="submit" class="ac-btn danger">Se retirer</button>
+            </form>
+          </div>
+        </div>
+        {% if aff.days_schedule %}
+        <div class="ac-struct-agenda">Agenda actuel : <strong>{{ aff.days_schedule|join:" · " }}</strong> &nbsp;—&nbsp; <a href="{% url 'healthcare:agenda_praticien_edit' aff.pk %}" style="color:#0a5c8a;font-weight:600;text-decoration:underline">Modifier</a></div>
+        {% elif aff.status == 'approved' %}
+        <div class="ac-struct-agenda">Aucun créneau configuré. <a href="{% url 'healthcare:agenda_praticien_edit' aff.pk %}" style="color:#0a5c8a;font-weight:600;text-decoration:underline">Définir vos créneaux horaire par heure</a></div>
+        {% elif aff.status == 'pending' %}
+        <div class="ac-struct-agenda">L'agenda sera activable une fois l'accès validé par la structure.</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="ac-empty">
+      <div style="font-size:28px;margin-bottom:8px">🏥</div>
+      <div>Vous n'êtes rattaché à aucune structure pour l'instant.<br>Faites une demande d'accès pour commencer à exercer dans une structure.</div>
+    </div>
+    {% endif %}
+    <div style="margin-top:12px">
+      <button class="ac-page-btn" style="font-size:.75rem" onclick="openAcModal()">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Demander un accès à une structure
+      </button>
+    </div>
+  </div>
+</div>
+
+{# ═══ VUE STRUCTURE ═══ #}
+{% else %}
+
+{# Demandes en attente (initiated_by=praticien, status=pending) #}
+{% with pending_aff=affiliations|dictsortreversed:"status" %}
+<div class="ac-card">
+  <div class="ac-card-head">
+    <div>
+      <div class="ac-card-title">Praticiens rattachés</div>
+      <div class="ac-card-sub">Praticiens ayant demandé ou obtenu un accès à votre structure.</div>
+    </div>
+    <button class="ac-page-btn" style="font-size:.75rem" onclick="openInviteModal()">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3M13.5 4.5 21 12l-7.5 7.5"/></svg>
+      Inviter un praticien
+    </button>
+  </div>
+  <div class="ac-card-body">
+    {% if affiliations %}
+    <div class="ac-struct">
+      {% for aff in affiliations %}
+      <div class="ac-struct-row">
+        <div>
+          <div class="ac-struct-name">{{ aff.praticien.name }}</div>
+          <div class="ac-struct-meta">
+            {{ aff.role_title }} &nbsp;·&nbsp;
+            {% if aff.status == 'approved' %}<span class="ac-pill-active">● Actif</span>{% elif aff.status == 'pending' %}<span class="ac-pill-pending">Demande en attente</span>{% elif aff.status == 'invited' %}<span class="ac-pill-invited">Invitation envoyée</span>{% else %}<span style="font-size:9px">{{ aff.get_status_display }}</span>{% endif %}
+            {% if aff.initiated_by == 'structure' %}<span style="font-size:9px;color:#9ca3af;margin-left:4px">· Invité par vous</span>{% endif %}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          {% if aff.status == 'pending' %}
+          <form method="post" action="{% url 'healthcare:prestataire_affiliation_approve' aff.pk %}" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="ac-btn-accept">
+              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+              Valider l'accès
+            </button>
+          </form>
+          <form method="post" action="{% url 'healthcare:prestataire_affiliation_delete' aff.pk %}" style="margin:0" onsubmit="return confirm('Refuser ce praticien ?')">
+            {% csrf_token %}
+            <button type="submit" class="ac-btn danger">Refuser</button>
+          </form>
+          {% else %}
+          {% if aff.status == 'approved' %}
+          <span style="font-size:11px;color:#065f46;background:#ecfdf5;padding:4px 8px;border-radius:6px">Accès autorisé</span>
+          {% elif aff.status == 'invited' %}
+          <span style="font-size:11px;color:#1d4ed8;background:#dbeafe;padding:4px 8px;border-radius:6px">En attente du praticien</span>
+          {% endif %}
+          <form method="post" action="{% url 'healthcare:prestataire_affiliation_delete' aff.pk %}" style="margin:0" onsubmit="return confirm('Retirer ce praticien ?')">
+            {% csrf_token %}
+            <button type="submit" class="ac-btn danger">Retirer</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="ac-empty">Aucun praticien rattaché pour l'instant.<br>Invitez des praticiens ou attendez leurs demandes.</div>
+    {% endif %}
+  </div>
+</div>
+{% endwith %}
+{% endif %}
+
+{# ═══ MODAL : Praticien → demande d'accès à une structure ═══ #}
+{% if org.is_praticien %}
+<div class="ac-modal-overlay" id="ac-modal-overlay" onclick="if(event.target===this)closeAcModal()">
+  <div class="ac-modal">
+    <div class="ac-modal-head">
+      <span class="ac-modal-title">🔑 Demander un accès à une structure</span>
+      <button class="ac-modal-close" onclick="closeAcModal()">✕</button>
+    </div>
+    <form method="post" action="{% url 'healthcare:prestataire_affiliation_create' %}">
+      {% csrf_token %}
+      <div class="ac-modal-body">
+        <div class="ac-field">
+          <label>Structure <span style="color:#dc2626">*</span></label>
+          <select name="structure_id" required>
+            <option value="">— Choisir une structure —</option>
+            {% for structure in structures_dispo %}
+            <option value="{{ structure.id }}">{{ structure.name }}{% if structure.city %} · {{ structure.city }}{% endif %}</option>
+            {% empty %}
+            <option disabled>Aucune structure disponible</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="ac-field">
+          <label>Rôle souhaité</label>
+          <input type="text" name="role_title" placeholder="Ex : Intervenant, Vacataire, Consultant…" value="Intervenant">
+        </div>
+        <div class="ac-field">
+          <label>Jours d'intervention</label>
+          <div class="day-grid">
+            {% for day in day_choices %}
+            <label class="day-chip"><input type="checkbox" name="days" value="{{ day }}"> {{ day }}</label>
+            {% endfor %}
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:#6b7280;background:#f9fafb;border-radius:8px;padding:10px 12px;line-height:1.6">
+          La demande sera envoyée à la structure, qui la valide depuis son tableau de bord.
+        </div>
+      </div>
+      <div class="ac-modal-foot">
+        <button type="button" class="ac-btn-cancel" onclick="closeAcModal()">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+          Annuler
+        </button>
+        <button type="submit" class="ac-btn-submit">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+          Envoyer la demande
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ═══ MODAL : Structure → inviter un praticien ═══ #}
+{% else %}
+<div class="ac-modal-overlay" id="ac-invite-overlay" onclick="if(event.target===this)closeInviteModal()">
+  <div class="ac-modal">
+    <div class="ac-modal-head">
+      <span class="ac-modal-title">📨 Inviter un praticien</span>
+      <button class="ac-modal-close" onclick="closeInviteModal()">✕</button>
+    </div>
+    <form method="post" action="{% url 'healthcare:prestataire_affiliation_invite' %}">
+      {% csrf_token %}
+      <div class="ac-modal-body">
+        <div class="ac-field">
+          <label>Praticien <span style="color:#dc2626">*</span></label>
+          <select name="praticien_id" required>
+            <option value="">— Choisir un praticien —</option>
+            {% for prat in praticiens_dispo %}
+            <option value="{{ prat.id }}">{{ prat.name }}{% if prat.city %} · {{ prat.city }}{% endif %}</option>
+            {% empty %}
+            <option disabled>Aucun praticien disponible (tous déjà rattachés)</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="ac-field">
+          <label>Rôle proposé</label>
+          <input type="text" name="role_title" placeholder="Ex : Intervenant, Vacataire, Consultant…" value="Intervenant">
+        </div>
+        <div class="ac-field">
+          <label>Jours proposés</label>
+          <div class="day-grid">
+            {% for day in day_choices %}
+            <label class="day-chip"><input type="checkbox" name="days" value="{{ day }}"> {{ day }}</label>
+            {% endfor %}
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:#1d4ed8;background:#eff6ff;border-radius:8px;padding:10px 12px;line-height:1.6;border:1px solid #bfdbfe;">
+          📨 Le praticien recevra l'invitation dans son tableau de bord. Il pourra l'<strong>accepter ou refuser</strong> librement.
+        </div>
+      </div>
+      <div class="ac-modal-foot">
+        <button type="button" class="ac-btn-cancel" onclick="closeInviteModal()">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+          Annuler
+        </button>
+        <button type="submit" class="ac-btn-submit">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+          Envoyer l'invitation
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+function openAcModal(){var el=document.getElementById('ac-modal-overlay');if(el)el.classList.add('open');}
+function closeAcModal(){var el=document.getElementById('ac-modal-overlay');if(el)el.classList.remove('open');}
+function openInviteModal(){var el=document.getElementById('ac-invite-overlay');if(el)el.classList.add('open');}
+function closeInviteModal(){var el=document.getElementById('ac-invite-overlay');if(el)el.classList.remove('open');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeAcModal();closeInviteModal();}});
+</script>
+{% endblock %}

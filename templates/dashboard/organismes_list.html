@@ -5,22 +5,36 @@
 
 {% block content %}
 <!-- Filters -->
-<div class="flex flex-wrap items-center gap-3">
-    <form method="GET" class="flex flex-1 items-center gap-2">
-        <div class="relative flex-1 max-w-sm">
-            <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-            </svg>
-            <input type="text" name="q" value="{{ search }}" placeholder="Rechercher un organisme…"
-                class="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-accent-400 focus:ring-1 focus:ring-accent-400 focus:outline-none">
+<div class="space-y-3">
+    <div class="flex flex-wrap items-center gap-3">
+        <form method="GET" class="flex flex-1 items-center gap-2">
+            <div class="relative flex-1 max-w-sm">
+                <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+                </svg>
+                <input type="text" name="q" value="{{ search }}" placeholder="Rechercher un organisme ou praticien…"
+                    class="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 text-sm focus:border-accent-400 focus:ring-1 focus:ring-accent-400 focus:outline-none">
+            </div>
+            {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
+            {% if current_nature %}<input type="hidden" name="nature" value="{{ current_nature }}">{% endif %}
+            <button type="submit" class="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600">Rechercher</button>
+        </form>
+        <div class="flex gap-1 rounded-lg bg-gray-100 p-1">
+            <a href="?{% if current_nature %}nature={{ current_nature }}&{% endif %}{% if search %}q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_status %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Tous statuts</a>
+            <a href="?status=pending{% if current_nature %}&nature={{ current_nature }}{% endif %}{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_status == 'pending' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">En attente</a>
+            <a href="?status=active{% if current_nature %}&nature={{ current_nature }}{% endif %}{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_status == 'active' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Actifs</a>
         </div>
-        {% if current_status %}<input type="hidden" name="status" value="{{ current_status }}">{% endif %}
-        <button type="submit" class="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600">Rechercher</button>
-    </form>
-    <div class="flex gap-1 rounded-lg bg-gray-100 p-1">
-        <a href="{% url 'dashboard:organismes_list' %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_status %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Tous</a>
-        <a href="?status=pending" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_status == 'pending' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">En attente</a>
-        <a href="?status=active" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_status == 'active' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">Actifs</a>
+    </div>
+    <div class="flex flex-wrap items-center gap-1 rounded-lg bg-gray-100 p-1 w-fit">
+        <a href="?{% if current_status %}status={{ current_status }}&{% endif %}{% if search %}q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if not current_nature %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            Tous les prestataires <span class="ml-1 rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] text-gray-700">{{ count_total }}</span>
+        </a>
+        <a href="?nature=structure{% if current_status %}&status={{ current_status }}{% endif %}{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_nature == 'structure' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            🏥 Structures de soins <span class="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-800">{{ count_structures }}</span>
+        </a>
+        <a href="?nature=praticien{% if current_status %}&status={{ current_status }}{% endif %}{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_nature == 'praticien' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+            🩺 Praticiens indépendants <span class="ml-1 rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] text-teal-800">{{ count_praticiens }}</span>
+        </a>
     </div>
 </div>
 
@@ -36,7 +50,18 @@
             {% endif %}
             <div class="flex-1">
                 <h3 class="font-semibold text-gray-900">{{ org.name }}</h3>
-                <p class="text-xs text-gray-400">{{ org.type_organisme|default:"Non classé" }} · {{ org.city }}</p>
+                <div class="mt-0.5 flex flex-wrap items-center gap-1.5">
+                    {% if org.is_praticien %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-800 border border-teal-200">
+                        🩺 Praticien ({{ org.get_profession_display|default:"Indépendant" }})
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-800 border border-blue-200">
+                        🏥 Structure ({{ org.type_organisme.name|default:"Établissement" }})
+                    </span>
+                    {% endif %}
+                    <span class="text-xs text-gray-400">· {{ org.city }}</span>
+                </div>
             </div>
             {% if org.is_active %}
             <span class="inline-flex items-center gap-1 rounded-full mc-bg-accent-light px-2 py-0.5 text-[11px] font-medium mc-text-accent-dark">
@@ -55,8 +80,13 @@
                 <p class="text-[10px] text-gray-400">Actes</p>
             </div>
             <div class="rounded-lg bg-gray-50 px-2 py-1.5">
+                {% if org.is_praticien %}
+                <p class="text-sm font-bold text-gray-900">{{ org.tickets.count }}</p>
+                <p class="text-[10px] text-gray-400">Tickets</p>
+                {% else %}
                 <p class="text-sm font-bold text-gray-900">{{ org.prises_en_charge.count }}</p>
                 <p class="text-[10px] text-gray-400">Assurances</p>
+                {% endif %}
             </div>
             <div class="rounded-lg bg-gray-50 px-2 py-1.5">
                 <p class="text-sm font-bold text-gray-900">{{ org.profile_views_count }}</p>

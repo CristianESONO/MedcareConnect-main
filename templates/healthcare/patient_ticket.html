@@ -1,0 +1,591 @@
+{% extends "users/patient_account_base.html" %}
+{% load static %}
+
+{% block account_page_title %}Prestation · {{ ticket.title }}{% endblock %}
+
+{% block account_extra_css %}
+<style>
+/* ── Carte & conteneur ticket dans l'espace patient ── */
+.pt-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 4px 0 28px;
+}
+
+/* Bandeau origine du lien */
+.pt-origin-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  border: 1.5px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(10, 92, 138, .04);
+}
+.pt-origin-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.pt-origin-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 2px;
+}
+.pt-origin-sub {
+  font-size: 11.5px;
+  color: #3b82f6;
+  line-height: 1.5;
+}
+
+/* Carte principale */
+.pt-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(10, 92, 138, .06);
+  overflow: hidden;
+  transition: box-shadow .2s ease;
+}
+
+/* En-tête praticien */
+.pt-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.pt-prat-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.pt-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0a5c8a 0%, #4fa3c7 100%);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(10, 92, 138, .22);
+  flex-shrink: 0;
+}
+.pt-prat-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+.pt-prat-role {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pt-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+/* Corps du ticket */
+.pt-body {
+  padding: 22px;
+}
+.pt-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0d1b2a;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+.pt-desc {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.65;
+  margin-bottom: 20px;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border-left: 3px solid #0a5c8a;
+}
+
+/* Grille des caractéristiques */
+.pt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.pt-grid-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all .15s ease;
+}
+.pt-grid-item:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+.pt-grid-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.pt-grid-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Bloc tarif */
+.pt-price-box {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1.5px solid #a7f3d0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.pt-price-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #065f46;
+}
+.pt-price-sub {
+  font-size: 10.5px;
+  color: #047857;
+  margin-top: 1px;
+}
+.pt-price-amount {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #065f46;
+  letter-spacing: -.02em;
+}
+
+/* Boutons d'action */
+.pt-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pt-btn-cart {
+  flex: 1;
+  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 12px 20px;
+  border-radius: 11px;
+  border: none;
+  background: linear-gradient(135deg, #0a5c8a 0%, #4fa3c7 70%, #06b6d4 100%);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all .22s ease;
+  box-shadow: 0 4px 14px rgba(10, 92, 138, .30);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+.pt-btn-cart::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+  transform: translateX(-100%);
+  transition: transform .5s ease;
+}
+.pt-btn-cart:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(10, 92, 138, .40);
+  color: #ffffff;
+}
+.pt-btn-cart:hover::before {
+  transform: translateX(100%);
+}
+.pt-btn-cart:active {
+  transform: translateY(0);
+}
+
+.pt-btn-cart.in-cart {
+  background: #f0fdf4;
+  border: 1.5px solid #10b981;
+  color: #065f46;
+  box-shadow: none;
+}
+.pt-btn-cart.in-cart:hover {
+  background: #ecfdf5;
+}
+
+.pt-btn-devis {
+  flex: 1;
+  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 12px 20px;
+  border-radius: 11px;
+  border: none;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all .22s ease;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, .30);
+}
+.pt-btn-devis:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, .40);
+}
+.pt-btn-devis:active {
+  transform: translateY(0);
+}
+
+/* Pied de page ticket */
+.pt-footer {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pt-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  transition: all .15s ease;
+}
+.pt-back-link:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+.pt-legal-note {
+  font-size: 10.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* ── Modal confirmation devis ── */
+.pt-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .55);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.pt-modal-overlay.open {
+  display: flex;
+}
+.pt-modal-box {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 440px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .20);
+  animation: ptPop .2s ease both;
+  text-align: center;
+}
+@keyframes ptPop {
+  from { opacity: 0; transform: scale(.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.pt-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 14px;
+}
+.pt-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+.pt-modal-sub {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.pt-modal-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pt-modal-confirm {
+  width: 100%;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(5, 150, 105, .3);
+}
+.pt-modal-cancel {
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid #e2e8f0;
+  color: #64748b;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pt-modal-cancel:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+</style>
+{% endblock %}
+
+{% block account_content %}
+<div class="pt-container">
+
+  {# Messages système Django #}
+  {% if messages %}
+  <div style="margin-bottom:14px">
+    {% for message in messages %}
+    <div style="padding:11px 16px;border-radius:10px;font-size:12.5px;margin-bottom:8px;font-weight:500;{% if 'success' in message.tags %}background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;{% elif 'error' in message.tags %}background:#fee2e2;color:#dc2626;border:1px solid #fecaca;{% else %}background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# Bandeau explicatif lien direct #}
+  <div class="pt-origin-banner">
+    <div class="pt-origin-icon">🔗</div>
+    <div>
+      <div class="pt-origin-title">Lien direct de prestation</div>
+      <div class="pt-origin-sub">
+        Ce soin vous a été partagé directement par <strong>{{ praticien.name }}</strong>.
+        Il s'agit d'un lien d'accès direct, confidentiel et non répertorié publiquement.
+      </div>
+    </div>
+  </div>
+
+  {# Carte principale du ticket #}
+  <div class="pt-card">
+
+    {# Header praticien #}
+    <div class="pt-header">
+      <div class="pt-prat-info">
+        {% if praticien.logo %}
+        <img src="{{ praticien.logo.url }}" alt="{{ praticien.name }}" class="pt-avatar" style="object-fit:cover;">
+        {% else %}
+        <div class="pt-avatar">{{ praticien.name|first|upper }}</div>
+        {% endif %}
+        <div>
+          <div class="pt-prat-name">{{ praticien.name }}</div>
+          <div class="pt-prat-role">
+            <span>{% if praticien.profession %}{{ praticien.profession|title }}{% else %}Praticien indépendant{% endif %}</span>
+            <span class="pt-verified-badge">
+              <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+              Praticien vérifié
+            </span>
+            {% if praticien.city %}
+            <span>· 📍 {{ praticien.city }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:#94a3b8;font-weight:600;">
+        Ref : #{{ ticket.identifiant|slice:":8" }}
+      </div>
+    </div>
+
+    {# Corps #}
+    <div class="pt-body">
+      <h1 class="pt-title">{{ ticket.title }}</h1>
+
+      {% if ticket.description %}
+      <div class="pt-desc">
+        {{ ticket.description }}
+      </div>
+      {% endif %}
+
+      {# Grille des détails #}
+      <div class="pt-grid">
+        <div class="pt-grid-item">
+          <span class="pt-grid-label">🏠 Modalité</span>
+          <span class="pt-grid-val">{{ ticket.get_mode_display }}</span>
+        </div>
+        <div class="pt-grid-item">
+          <span class="pt-grid-label">📍 Zone</span>
+          <span class="pt-grid-val">{{ ticket.zone|default:"Dakar & environs" }}</span>
+        </div>
+        <div class="pt-grid-item">
+          <span class="pt-grid-label">🕒 Disponibilité</span>
+          <span class="pt-grid-val">{{ ticket.disponibilite|default:"Sur demande" }}</span>
+        </div>
+        {% if ticket.views_count %}
+        <div class="pt-grid-item">
+          <span class="pt-grid-label">👁 Consultation</span>
+          <span class="pt-grid-val">{{ ticket.views_count }} vue{{ ticket.views_count|pluralize }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      {# Tarif #}
+      <div class="pt-price-box">
+        <div>
+          <div class="pt-price-label">Tarif convenu de la prestation</div>
+          <div class="pt-price-sub">Paiement direct au praticien · Zéro intermédiaire</div>
+        </div>
+        <div class="pt-price-amount">
+          {{ ticket.price|floatformat:0 }} FCFA
+        </div>
+      </div>
+
+      {# Actions patient #}
+      <div class="pt-actions">
+        {# Ajouter au panier #}
+        {% if in_cart %}
+        <a href="{% url 'cart:cart_view' %}" class="pt-btn-cart in-cart">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+          ✓ Dans votre panier · Voir
+        </a>
+        {% else %}
+        <form method="post" style="flex:1;min-width:180px;display:flex;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_cart">
+          <button type="submit" class="pt-btn-cart" style="width:100%;">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+            Ajouter au panier
+          </button>
+        </form>
+        {% endif %}
+
+        {# Demander un devis & convenir RDV #}
+        <button type="button" class="pt-btn-devis" onclick="openDevisModal()">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"/></svg>
+          Demander un devis / RDV
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  {# Pied de page avec retour vers Mes RDV #}
+  <div class="pt-footer">
+    <a href="{% url 'users:patient_panel_tab' tab='rdv' %}" class="pt-back-link">
+      <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+      Revenir à mes RDV
+    </a>
+    <div class="pt-legal-note">
+      MedCare Connect · Soins vérifiés à Dakar
+    </div>
+  </div>
+
+</div>
+
+{# Modal confirmation demande de devis #}
+<div class="pt-modal-overlay" id="pt-devis-modal" onclick="if(event.target===this)closeDevisModal()">
+  <div class="pt-modal-box">
+    <div class="pt-modal-icon">
+      💬
+    </div>
+    <div class="pt-modal-title">Demander un devis &amp; échanger</div>
+    <div class="pt-modal-sub">
+      Un fil de messagerie sécurisé sera ouvert avec <strong>{{ praticien.name }}</strong> pour la prestation :<br>
+      <strong style="color:#0f172a">« {{ ticket.title }} »</strong> ({{ ticket.price|floatformat:0 }} FCFA).
+    </div>
+    <form method="post" class="pt-modal-btns">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="request_devis">
+      <button type="submit" class="pt-modal-confirm">
+        Envoyer et ouvrir la conversation
+      </button>
+      <button type="button" class="pt-modal-cancel" onclick="closeDevisModal()">
+        Annuler
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+function openDevisModal(){
+  var el = document.getElementById('pt-devis-modal');
+  if(el) el.classList.add('open');
+}
+function closeDevisModal(){
+  var el = document.getElementById('pt-devis-modal');
+  if(el) el.classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeDevisModal();
+});
+</script>
+{% endblock %}

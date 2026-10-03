@@ -1,13 +1,130 @@
 {% extends "visitor_base.html" %}
 {% load static %}
 
-{% block title %}Rejoindre MedCare · L'infrastructure paraclinique digitale du Sénégal{% endblock %}
+{% block title %}MedCare · Créer un compte{% endblock %}
 
 {% block visitor_extra_css %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/rejoindre_marketing.css' %}?v=1">
+<style>
+:root {
+  --blue: #0a5c8a;
+  --green: #14b87a;
+  --teal: #0d9488;
+  --navy: #1a3a6e;
+  --ink: #0f172a;
+  --g700: #334155;
+  --g600: #475569;
+  --g500: #64748b;
+  --g400: #94a3b8;
+  --g300: #cbd5e1;
+  --g200: #e2e8f0;
+  --g100: #f1f5f9;
+  --g50: #f8fafc;
+  --amber: #d97706;
+  --red: #dc2626;
+  --in: #eaeef6;
+}
+
+.wrap { max-width: 720px; margin: 30px auto; padding: 0 18px 70px; }
+.card { background: #fff; border-radius: 22px; box-shadow: 0 10px 34px rgba(15,23,42,.07); padding: 34px 38px; }
+.card h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 27px; color: var(--navy); text-align: center; margin: 0 0 4px; }
+.subt { text-align: center; color: var(--g500); font-size: 13.5px; margin: 0 0 26px; }
+
+label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--navy); font-weight: 700; margin: 0 0 7px; text-align: left; }
+.opt { color: var(--g400); font-weight: 600; text-transform: none; }
+.req { color: var(--red); }
+.f { margin-bottom: 16px; text-align: left; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.card input[type=text],
+.card input[type=email],
+.card input[type=tel],
+.card input[type=password],
+.card select {
+  width: 100%;
+  background: var(--in);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+
+.card input::placeholder { color: #9aa6bd; }
+.card input:focus, .card select:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(10,92,138,.10);
+}
+
+.hint { font-size: 11.5px; color: var(--blue); margin-top: 6px; line-height: 1.5; display: flex; gap: 6px; }
+.pw { position: relative; }
+.pw .eye { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--g400); cursor: pointer; user-select: none; font-size: 16px; }
+
+/* type de compte fork */
+.tc-head { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 10px; }
+.tc-badge { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 800; color: var(--amber); background: #fff7ed; border: 1px solid #fde68a; border-radius: 20px; padding: 4px 11px; }
+.fork { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt-card { border: 1.5px solid var(--g200); border-radius: 14px; padding: 15px 16px; cursor: pointer; background: #fff; transition: .15s; display: flex; gap: 12px; align-items: flex-start; text-align: left; }
+.opt-card:hover { border-color: var(--blue); }
+.opt-card.on { border-color: var(--blue); background: #eef6fb; box-shadow: 0 0 0 3px rgba(10,92,138,.08); }
+.opt-card .ic { font-size: 22px; line-height: 1; }
+.opt-card .nm { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14.5px; color: var(--navy); }
+.opt-card .d { font-size: 11.5px; color: var(--g600); line-height: 1.45; margin-top: 2px; }
+.switch { font-size: 12px; color: var(--blue); font-weight: 600; text-decoration: none; margin-top: 8px; margin-bottom: 14px; display: inline-block; cursor: pointer; }
+
+/* sous-panneau */
+.panel { border: 1px solid #dce6f2; background: #f4f8fd; border-radius: 16px; padding: 20px 20px 6px; margin: 16px 0 8px; text-align: left; }
+.panel-t { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--navy); font-weight: 800; }
+.panel-s { font-size: 12px; color: var(--g500); margin: 3px 0 16px; line-height: 1.5; }
+.file { background: #fff; border: 1px dashed #c3d3e6; border-radius: 11px; padding: 12px 13px; font-size: 12.5px; color: var(--g500); }
+.file input[type=file] { font-size: 13px; color: var(--g700); }
+
+/* topology + profession cards */
+.pick3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; margin-top: 4px; }
+.pick2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; margin-top: 4px; }
+.pk { border: 1.5px solid var(--g200); border-radius: 12px; padding: 13px 13px; cursor: pointer; background: #fff; transition: .15s; text-align: left; }
+.pk:hover { border-color: var(--blue); }
+.pk.on { border-color: var(--blue); background: #eef6fb; box-shadow: 0 0 0 3px rgba(10,92,138,.08); }
+.pk .pic { font-size: 20px; }
+.pk .pnm { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; margin: 6px 0 3px; color: var(--navy); }
+.pk .pd { font-size: 10.5px; color: var(--g600); line-height: 1.4; }
+.pk .pex { font-size: 9.5px; color: var(--g400); margin-top: 5px; }
+
+/* checkbox specialites */
+.spegroup .gt { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--g400); margin: 14px 0 8px; }
+.chkgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.chk { position: relative; border: 1.5px solid var(--g200); border-radius: 11px; padding: 12px 12px 12px 40px; cursor: pointer; background: #fff; transition: .15s; display: block; font-size: 12.8px; color: var(--g700); line-height: 1.3; font-weight: 600; text-align: left; }
+.chk:hover { border-color: var(--blue); }
+.chk input { position: absolute; opacity: 0; width: 0; height: 0; }
+.chk .box { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border: 2px solid var(--g300); border-radius: 5px; transition: .15s; }
+.chk.on { border-color: var(--green); background: #f0fdf7; color: var(--ink); font-weight: 700; }
+.chk.on .box { background: var(--green); border-color: var(--green); }
+.chk.on .box::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 800; position: absolute; left: 3px; top: -2px; }
+
+.deo { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 10px; padding: 10px 12px; font-size: 11.5px; line-height: 1.5; margin-top: 6px; text-align: left; }
+.modes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.modechk { display: inline-flex; align-items: center; gap: 7px; border: 1.5px solid var(--g200); border-radius: 9px; padding: 8px 12px; font-size: 12.5px; cursor: pointer; color: var(--g700); font-weight: 600; background: #fff; transition: .15s; }
+.modechk.on { border-color: var(--green); background: #f0fdf7; color: var(--ink); font-weight: 600; }
+.modechk.soon { opacity: .55; cursor: not-allowed; }
+
+.submit { width: 100%; margin-top: 22px; background: linear-gradient(90deg,#0a5c8a,#0d9488); color: #fff; border: none; border-radius: 13px; padding: 15px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; cursor: pointer; transition: .15s; }
+.submit:hover { filter: brightness(1.06); }
+.signin { text-align: center; font-size: 13px; color: var(--g500); margin-top: 16px; }
+.signin a { color: var(--blue); font-weight: 700; text-decoration: none; }
+.hide { display: none !important; }
+
+@media(max-width:640px) {
+  .card { padding: 24px 20px; }
+  .row, .fork, .pick3, .pick2, .chkgrid { grid-template-columns: 1fr; }
+}
+</style>
 {% endblock %}
 
 {% block body_extra_class %} mc-vitrine-page mc-landing-body{% endblock %}
@@ -17,23 +134,21 @@
 {% include "includes/_landing_marketing.html" %}
 
 <section id="inscription-form" class="sec landing-register-sec">
-  <div class="landing-register-sec__in">
-    <div class="mc-auth-card mc-auth-card--wide">
-      <div class="mc-auth-header">
-        <h1 id="register-header-title">Créer un compte Patient</h1>
-        <p id="register-header-subtitle">Vos informations personnelles pour réserver et suivre vos examens.</p>
-      </div>
+  <div class="wrap">
+    <div class="card">
+      <h1 id="title">Créer un compte prestataire</h1>
+      <div class="subt" id="subt">Renseignez vos informations pour créer votre fiche publique.</div>
 
       <form method="POST" action="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" enctype="multipart/form-data">
         {% csrf_token %}
         {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
 
         {% if form.errors %}
-        <div class="mc-form-error">
-          <ul>
+        <div class="mc-form-error" style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:14px 18px; margin-bottom:20px; color:#b91c1c; font-size:13px; text-align:left;">
+          <ul style="margin:0; padding-left:18px;">
             {% for field in form %}
               {% for error in field.errors %}
-              <li>{{ field.label }} : {{ error }}</li>
+              <li><strong>{{ field.label }}</strong> : {{ error }}</li>
               {% endfor %}
             {% endfor %}
             {% for error in form.non_field_errors %}
@@ -43,132 +158,269 @@
         </div>
         {% endif %}
 
-        <div class="mc-form-grid mc-form-grid--2" id="grid-user-names" style="align-items: end;">
-          <div class="mc-form-group" style="margin-bottom: 0;">
-            <label class="mc-form-label" for="id_first_name" id="lbl_first_name" style="display:block; min-height:2em;">Prénom</label>
-            <input type="text" name="first_name" id="id_first_name" class="mc-form-input" value="{{ form.first_name.value|default:'' }}" placeholder="Prénom">
-          </div>
-          <div class="mc-form-group" style="margin-bottom: 0;">
-            <label class="mc-form-label" for="id_last_name" id="lbl_last_name" style="display:block; min-height:2em;">Nom</label>
-            <input type="text" name="last_name" id="id_last_name" class="mc-form-input" value="{{ form.last_name.value|default:'' }}" placeholder="Nom de famille">
-          </div>
-        </div>
+        <!-- TYPE DE COMPTE UTILISATEUR CACHÉ -->
+        <input type="hidden" name="user_type" id="id_user_type" value="{{ form.user_type.value|default:'prestataire' }}">
+        <input type="hidden" name="account_nature" id="id_account_nature" value="{{ form.account_nature.value|default:'structure' }}">
+        <input type="hidden" name="organisme_topology" id="id_organisme_topology" value="{{ form.organisme_topology.value|default:'simple' }}">
+        <input type="hidden" name="praticien_profession" id="id_praticien_profession" value="{{ form.praticien_profession.value|default:'' }}">
+        <input type="hidden" name="praticien_specialties" id="id_praticien_specialties" value="{{ form.praticien_specialties.value|default:'[]' }}">
+        <input type="hidden" name="praticien_modes" id="id_praticien_modes" value="{{ form.praticien_modes.value|default:'cabinet,domicile' }}">
 
-        <div class="mc-form-group">
-          <label class="mc-form-label" for="id_username" id="lbl_username">Nom d'utilisateur <span class="mc-form-required">*</span></label>
-          <input type="text" name="username" id="id_username" class="mc-form-input" required value="{{ form.username.value|default:'' }}" placeholder="votre_nom">
-          <p class="mc-pro-hint" id="username-hint" style="margin-top:6px; font-size:12px; color:#0284c7; display:none;"></p>
-        </div>
-
-        <div class="mc-form-group">
-          <label class="mc-form-label" for="id_email" id="lbl_email">Email <span class="mc-form-required">*</span></label>
-          <input type="email" name="email" id="id_email" class="mc-form-input" required value="{{ form.email.value|default:'' }}" placeholder="votre@email.com">
-        </div>
-
-        <div class="mc-form-group">
-          <label class="mc-form-label" for="id_phone_number" id="lbl_phone_number">Téléphone personnel</label>
-          <input type="tel" name="phone_number" id="id_phone_number" class="mc-form-input" value="{{ form.phone_number.value|default:'' }}" placeholder="+221 77 000 00 00">
-        </div>
-
-        <div class="mc-form-group">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <label class="mc-form-label" for="id_user_type" style="margin-bottom:0;">Type de compte <span class="mc-form-required">*</span></label>
-            <span id="user-type-badge" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:3px 10px; border-radius:9999px; background:#e0f2fe; color:#0369a1; transition:all .2s ease;">
-              Mode Patient
-            </span>
+        <!-- FORK type de compte (CREER_COMPTE_MEDCARE.html) -->
+        <div id="fork-container">
+          <div class="tc-head">
+            <div class="lbl" style="margin:0">Type de compte <span class="req">*</span></div>
+            <div class="tc-badge" id="mode-badge">Mode structure</div>
           </div>
-
-          <div style="position:relative;">
-            <select name="user_type" id="id_user_type" class="mc-form-input" style="background-color: #f1f5f9; color: #1e293b; cursor: not-allowed; pointer-events: none; -webkit-appearance: none; -moz-appearance: none; appearance: none; padding-right: 36px; font-weight: 600;">
-              <option value="patient" {% if form.user_type.value == "patient" or not form.user_type.value %}selected{% endif %}>Patient</option>
-              <option value="prestataire" {% if form.user_type.value == "prestataire" %}selected{% endif %}>Prestataire de Santé (établissement)</option>
-            </select>
-            <span style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:14px; color:#64748b; pointer-events:none;" title="Défini automatiquement">
-              🔒
-            </span>
-          </div>
-          <p class="mc-pro-hint" id="user-type-hint-text" style="margin-top:6px; margin-bottom:0; font-size:12px; color:#64748b;">
-            Type de compte défini automatiquement sur <strong id="user-type-name-label">Patient</strong> (défini par votre choix en haut).
-            <button type="button" id="btn-toggle-profile-inline" style="margin-left:6px; background:none; border:none; padding:0; color:#0284c7; text-decoration:underline; font-size:12px; font-weight:600; cursor:pointer;">
-              Basculer sur Structure →
-            </button>
-          </p>
-        </div>
-
-        <div id="prestataire-fields" class="mc-pro-block">
-          <h2>Votre établissement</h2>
-          <p class="mc-pro-hint">Ces informations permettent de créer votre fiche publique. Vous pourrez ajouter la géolocalisation précise (GPS) après connexion.</p>
-
-          <div class="mc-form-group">
-            <label class="mc-form-label">Logo / photo de l'établissement <span class="mc-form-required">*</span></label>
-            <p class="mc-pro-hint" style="margin-bottom: 8px;">Affichée sur la fiche publique du centre (formats image courants).</p>
-            {{ form.organisme_logo }}
-          </div>
-
-          <div class="mc-form-group">
-            <label class="mc-form-label">Nom commercial / enseigne <span class="mc-form-required">*</span></label>
-            {{ form.organisme_name }}
-          </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">Raison sociale (légale)</label>
-            {{ form.organisme_raison_sociale }}
-          </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">NINEA (optionnel)</label>
-            {{ form.organisme_ninea }}
-          </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">Type d'établissement <span class="mc-form-required">*</span></label>
-            <p class="mc-pro-hint" style="margin-bottom: 8px;">Indépendant, imagerie, clinique, hôpital, laboratoire, pharmacie…</p>
-            {{ form.organisme_type }}
-            <p id="organisme-type-hint" class="mc-pro-hint" style="margin-top: 8px; margin-bottom: 0; display: none;"></p>
-          </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">Adresse du siège <span class="mc-form-required">*</span></label>
-            {{ form.organisme_address }}
-          </div>
-          <div class="mc-form-grid mc-form-grid--2" style="align-items: start;">
-            <div class="mc-form-group">
-              <label class="mc-form-label">Quartier</label>
-              {{ form.organisme_quartier }}
+          <div class="fork">
+            <div class="opt-card on" id="fk-structure" onclick="setAccount('structure')">
+              <div class="ic">🏥</div>
+              <div>
+                <div class="nm">Structure de soins</div>
+                <div class="d">Laboratoire, cabinet, centre, clinique, hôpital, réseau. L'individu se tient derrière l'offre.</div>
+              </div>
             </div>
-            <div class="mc-form-group">
-              <label class="mc-form-label">Ville</label>
-              {{ form.organisme_city }}
+            <div class="opt-card" id="fk-praticien" onclick="setAccount('praticien')">
+              <div class="ic">🩺</div>
+              <div>
+                <div class="nm">Praticien indépendant</div>
+                <div class="d">Médecin, infirmier, kiné, sage-femme, psychologue, autre paramédical. En son nom propre.</div>
+              </div>
             </div>
           </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">Région</label>
-            {{ form.organisme_region }}
+          <a class="switch" href="#" id="switch-link-patient" onclick="togglePatientMode(); return false;">Vous êtes un particulier ? Basculer sur compte Patient →</a>
+        </div>
+
+        <!-- Responsable / Identité -->
+        <div class="row">
+          <div class="f">
+            <label id="lbl-prenom">Prénom du responsable <span class="opt">(optionnel)</span></label>
+            <input type="text" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}" placeholder="Prénom" oninput="autoUser()">
           </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">Téléphone professionnel <span class="mc-form-required">*</span></label>
-            {{ form.organisme_contact_phone }}
-          </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label">Email de l'établissement</label>
-            {{ form.organisme_contact_email }}
+          <div class="f">
+            <label id="lbl-nom">Nom du responsable <span class="opt">(optionnel)</span></label>
+            <input type="text" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}" placeholder="Nom de famille" oninput="autoUser()">
           </div>
         </div>
 
-        <div class="mc-form-grid mc-form-grid--2" style="align-items: start;">
-          <div class="mc-form-group">
-            <label class="mc-form-label" for="id_password1">Mot de passe <span class="mc-form-required">*</span></label>
-            <input type="password" name="password1" id="id_password1" class="mc-form-input" required placeholder="••••••••">
-          </div>
-          <div class="mc-form-group">
-            <label class="mc-form-label" for="id_password2">Confirmer <span class="mc-form-required">*</span></label>
-            <input type="password" name="password2" id="id_password2" class="mc-form-input" required placeholder="••••••••">
+        <div class="f">
+          <label id="lbl-username">Nom d'utilisateur <span class="opt">(identifiant de connexion)</span> <span class="req">*</span></label>
+          <input type="text" name="username" id="username" value="{{ form.username.value|default:'' }}" required placeholder="ex : polyclinique_de_libe, dr_diagne">
+          <div class="hint" id="username-hint">💡 <span>Cet identifiant est le username de connexion. Il se génère automatiquement à partir du nom ci-dessous, vous pouvez le modifier.</span></div>
+        </div>
+
+        <div class="f">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" required placeholder="votre@email.com">
+        </div>
+
+        <div class="f">
+          <label id="lbl-phone">Téléphone du contact / responsable</label>
+          <input type="tel" name="phone_number" id="id_phone_number" value="{{ form.phone_number.value|default:'' }}" placeholder="+221 77 000 00 00">
+        </div>
+
+        <!-- ============ BLOC STRUCTURE (CREER_COMPTE_MEDCARE.html) ============ -->
+        <div id="block-structure">
+          <div class="panel">
+            <div class="panel-t">Votre établissement</div>
+            <div class="panel-s">Ces informations créent votre fiche publique. La géolocalisation précise (GPS) s'ajoute après connexion.</div>
+
+            <div class="f">
+              <label>Logo / photo de l'établissement <span class="req">*</span></label>
+              <div class="file">
+                <input type="file" name="organisme_logo" id="id_organisme_logo" accept="image/*">
+              </div>
+            </div>
+
+            <div class="f">
+              <label>Nom commercial / enseigne <span class="req">*</span></label>
+              <input type="text" name="organisme_name" id="enseigne" value="{{ form.organisme_name.value|default:'' }}" placeholder="Ex : Clinique Les Almadies" oninput="autoUser()">
+            </div>
+
+            <div class="f">
+              <label>Raison sociale <span class="opt">(légale)</span></label>
+              <input type="text" name="organisme_raison_sociale" id="id_organisme_raison_sociale" value="{{ form.organisme_raison_sociale.value|default:'' }}" placeholder="Si différent du nom affiché">
+            </div>
+
+            <div class="f">
+              <label>NINEA <span class="opt">(optionnel)</span></label>
+              <input type="text" name="organisme_ninea" id="id_organisme_ninea" value="{{ form.organisme_ninea.value|default:'' }}" placeholder="Numéro d'identification entreprise">
+            </div>
+
+            <div class="f">
+              <label>Type d'établissement <span class="req">*</span></label>
+              <div class="panel-s" style="margin:0 0 6px">Uniquement la topologie, c'est-à-dire le nombre de nœuds à gérer.</div>
+              <div class="pick3">
+                <div class="pk on" data-topo="simple" onclick="setTopo(this)">
+                  <div class="pic">🏢</div>
+                  <div class="pnm">Structure simple</div>
+                  <div class="pd">Un seul site.</div>
+                  <div class="pex">Ex : labo, cabinet, centre d'imagerie</div>
+                </div>
+                <div class="pk" data-topo="multiservice" onclick="setTopo(this)">
+                  <div class="pic">🏛️</div>
+                  <div class="pnm">Multi-services</div>
+                  <div class="pd">Un lieu, plusieurs services.</div>
+                  <div class="pex">Ex : hôpital, clinique, centre de santé</div>
+                </div>
+                <div class="pk" data-topo="multisite" onclick="setTopo(this)">
+                  <div class="pic">🗺️</div>
+                  <div class="pnm">Réseau multi-sites</div>
+                  <div class="pd">Un métier, plusieurs lieux.</div>
+                  <div class="pex">Ex : réseau de labos, d'imagerie</div>
+                </div>
+              </div>
+              <div class="hint">💡 <span>Les piliers d'activité (biologie, imagerie, consultations, etc.) se choisissent librement après connexion, indépendamment du type.</span></div>
+            </div>
+
+            <div class="f">
+              <label>Adresse du siège <span class="req">*</span></label>
+              <input type="text" name="organisme_address" id="id_organisme_address" value="{{ form.organisme_address.value|default:'' }}" placeholder="Rue, numéro">
+            </div>
+
+            <div class="row">
+              <div class="f">
+                <label>Quartier</label>
+                <input type="text" name="organisme_quartier" id="id_organisme_quartier" value="{{ form.organisme_quartier.value|default:'' }}">
+              </div>
+              <div class="f">
+                <label>Ville</label>
+                <input type="text" name="organisme_city" id="id_organisme_city" value="{{ form.organisme_city.value|default:'Dakar' }}">
+              </div>
+            </div>
+
+            <div class="f">
+              <label>Région <span class="opt">(optionnel)</span></label>
+              <select name="organisme_region" id="id_organisme_region">
+                <option value="">Optionnel</option>
+                {% for reg in form.organisme_region.field.queryset %}
+                <option value="{{ reg.pk }}" {% if form.organisme_region.value|stringformat:"s" == reg.pk|stringformat:"s" %}selected{% endif %}>{{ reg.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="f">
+              <label>Téléphone professionnel <span class="req">*</span></label>
+              <input type="tel" name="organisme_contact_phone" id="id_organisme_contact_phone" value="{{ form.organisme_contact_phone.value|default:'' }}" placeholder="+221 33 ...">
+            </div>
           </div>
         </div>
 
-        <button type="submit" id="register-submit-btn" class="mc-btn-primary mc-btn-primary--block">Créer mon compte Patient →</button>
+        <!-- ============ BLOC PRATICIEN (CREER_COMPTE_MEDCARE.html) ============ -->
+        <div id="block-praticien" class="hide">
+          <div class="panel">
+            <div class="panel-t">Votre profil praticien</div>
+            <div class="panel-s">En exercice indépendant, votre nom est assumé sur votre fiche. La visibilité publique est conditionnée à la vérification de votre titre.</div>
+
+            <div class="f">
+              <label>Photo <span class="opt">(optionnel)</span></label>
+              <div class="file">
+                <input type="file" name="praticien_photo" id="id_praticien_photo" accept="image/*">
+              </div>
+            </div>
+
+            <div class="f">
+              <label>Profession <span class="req">*</span></label>
+              <div class="panel-s" style="margin:0 0 6px">Le régime déontologique dépend de la profession.</div>
+              <div class="pick2" id="prof-cards">
+                <div class="pk" data-prof="medecin" onclick="setProf(this)">
+                  <div class="pic">🩺</div>
+                  <div class="pnm">Médecin</div>
+                  <div class="pd">Inscription à l'Ordre</div>
+                </div>
+                <div class="pk" data-prof="infirmier" onclick="setProf(this)">
+                  <div class="pic">💉</div>
+                  <div class="pnm">Infirmier(ère)</div>
+                  <div class="pd">Soins et gestes</div>
+                </div>
+                <div class="pk" data-prof="kine" onclick="setProf(this)">
+                  <div class="pic">🤸</div>
+                  <div class="pnm">Kinésithérapeute</div>
+                  <div class="pd">Rééducation</div>
+                </div>
+                <div class="pk" data-prof="sagefemme" onclick="setProf(this)">
+                  <div class="pic">🤰</div>
+                  <div class="pnm">Sage-femme</div>
+                  <div class="pd">Santé de la femme</div>
+                </div>
+                <div class="pk" data-prof="psy" onclick="setProf(this)">
+                  <div class="pic">🧠</div>
+                  <div class="pnm">Psychologue</div>
+                  <div class="pd">Santé mentale</div>
+                </div>
+                <div class="pk" data-prof="autre" onclick="setProf(this)">
+                  <div class="pic">🩹</div>
+                  <div class="pnm">Autre paramédical</div>
+                  <div class="pd">Diététique, etc.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="f hide" id="spe-wrap">
+              <label>Vos spécialités <span class="req">*</span></label>
+              <div class="panel-s" style="margin:0 0 6px">Cochez toutes celles que vous proposez. Plusieurs choix possibles.</div>
+              <div id="spe-cards"></div>
+            </div>
+
+            <div class="f hide" id="ordre-wrap">
+              <label id="ordre-lbl">Numéro d'inscription à l'Ordre <span class="req">*</span></label>
+              <input type="text" name="praticien_ordre" id="ordre-input" value="{{ form.praticien_ordre.value|default:'' }}" placeholder="Numéro d'inscription">
+              <div class="deo">La présentation reste factuelle : pas de classement, pas de mise en avant, pas de mention promotionnelle (Art. 10, 17, 19). Le titre est vérifié avant mise en ligne.</div>
+            </div>
+
+            <div class="f">
+              <label>Mode d'exercice</label>
+              <div class="modes">
+                <div class="modechk on" data-mode="cabinet" onclick="toggleExerciseMode('cabinet', this)">Au cabinet</div>
+                <div class="modechk on" data-mode="domicile" onclick="toggleExerciseMode('domicile', this)">À domicile</div>
+                <div class="modechk soon">Téléconsultation · V2</div>
+              </div>
+            </div>
+
+            <div class="f">
+              <label>Adresse d'exercice / cabinet</label>
+              <input type="text" name="praticien_address" id="id_praticien_address" value="{{ form.praticien_address.value|default:'' }}" placeholder="Rue, numéro">
+            </div>
+
+            <div class="row">
+              <div class="f">
+                <label>Zone d'intervention <span class="opt">(domicile)</span></label>
+                <input type="text" name="praticien_zone" id="id_praticien_zone" value="{{ form.praticien_zone.value|default:'' }}" placeholder="Ex : Dakar, Almadies, Ouest-Foire">
+              </div>
+              <div class="f">
+                <label>Ville</label>
+                <input type="text" name="praticien_city" id="id_praticien_city" value="{{ form.praticien_city.value|default:'Dakar' }}">
+              </div>
+            </div>
+
+            <div class="f">
+              <label>Téléphone professionnel <span class="req">*</span></label>
+              <input type="tel" name="praticien_phone" id="id_praticien_phone" value="{{ form.praticien_phone.value|default:'' }}" placeholder="+221 77 ...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="row">
+          <div class="f">
+            <label>Mot de passe <span class="req">*</span></label>
+            <div class="pw">
+              <input type="password" name="password1" id="pw1" required placeholder="••••••••">
+              <span class="eye" onclick="tgpw('pw1')">👁</span>
+            </div>
+          </div>
+          <div class="f">
+            <label>Confirmer <span class="req">*</span></label>
+            <div class="pw">
+              <input type="password" name="password2" id="pw2" required placeholder="••••••••">
+              <span class="eye" onclick="tgpw('pw2')">👁</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit" id="submit-btn">Créer le compte établissement →</button>
+        <div class="signin">Déjà un compte ? <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Se connecter</a></div>
       </form>
-
-      <p class="mc-auth-footer">
-        Déjà un compte ?
-        <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Se connecter</a>
-      </p>
     </div>
   </div>
 </section>
@@ -177,213 +429,270 @@
 {% block extra_js %}
 {% include "includes/_landing_marketing_js.html" %}
 <script>
-(function() {
-  var sel = document.getElementById('id_user_type');
-  var block = document.getElementById('prestataire-fields');
-  var badge = document.getElementById('user-type-badge');
-  var hintLabel = document.getElementById('user-type-name-label');
-  var inlineToggleBtn = document.getElementById('btn-toggle-profile-inline');
-  var submitBtn = document.getElementById('register-submit-btn');
-  var authHeaderTitle = document.getElementById('register-header-title');
-  var authHeaderSubtitle = document.getElementById('register-header-subtitle');
+var SPE = {
+  medecin: {
+    groups: [
+      ["Médecine générale et de recours", ["Médecine générale", "Médecine interne", "Gériatrie", "Médecine d'urgence"]],
+      ["Spécialités médicales", ["Cardiologie", "Pneumologie", "Hépato-gastro-entérologie", "Néphrologie", "Endocrinologie · Diabétologie", "Neurologie", "Rhumatologie", "Dermatologie · Vénéréologie", "Hématologie clinique", "Oncologie médicale", "Maladies infectieuses et tropicales", "Allergologie · Immunologie clinique", "Médecine physique et de réadaptation", "Angiologie / Médecine vasculaire", "Génétique médicale"]],
+      ["Spécialités chirurgicales", ["Chirurgie générale et digestive", "Chirurgie orthopédique et traumatologique", "Neurochirurgie", "Chirurgie cardio-vasculaire", "Chirurgie thoracique", "Chirurgie vasculaire", "Chirurgie plastique et reconstructrice", "Chirurgie pédiatrique", "Chirurgie maxillo-faciale", "Urologie"]],
+      ["Organes des sens et tête-cou", ["Ophtalmologie", "ORL et chirurgie cervico-faciale"]],
+      ["Santé de la mère et de l'enfant", ["Gynécologie · Obstétrique", "Médecine de la reproduction / Fertilité", "Pédiatrie et néonatologie"]],
+      ["Santé mentale", ["Psychiatrie", "Pédopsychiatrie", "Addictologie"]],
+      ["Transversales et de recours", ["Anesthésie · Réanimation", "Médecine de la douleur / Algologie", "Soins palliatifs", "Médecine du sport", "Médecine du travail", "Nutrition clinique"]]
+    ]
+  },
+  infirmier: {
+    flat: ["Soins infirmiers généraux (IDE)", "Infirmier anesthésiste (IADE)", "Infirmier de bloc opératoire (IBODE)", "Puériculture", "Infirmier en pratique avancée (IPA)", "Soins infirmiers à domicile"]
+  },
+  kine: {
+    flat: ["Rééducation ostéo-articulaire", "Kinésithérapie respiratoire", "Rééducation neurologique", "Rééducation périnéo-sphinctérienne", "Drainage lymphatique", "Kinésithérapie du sport", "Kinésithérapie pédiatrique"]
+  },
+  sagefemme: {
+    flat: ["Suivi prénatal", "Planning familial / contraception", "Suivi post-natal", "Rééducation périnéale", "Préparation à la naissance"]
+  },
+  psy: {
+    flat: ["Psychologie clinique", "Neuropsychologie", "Psychothérapie", "Psychologie de l'enfant et de l'adolescent", "Thérapie de couple / familiale"]
+  },
+  autre: {
+    flat: ["Diététicien · Nutritionniste", "Orthophoniste", "Psychomotricien", "Ergothérapeute", "Orthoptiste", "Podologue", "Ostéopathe"]
+  }
+};
 
-  var lblFirstName = document.getElementById('lbl_first_name');
-  var lblLastName = document.getElementById('lbl_last_name');
-  var lblUsername = document.getElementById('lbl_username');
-  var usernameInput = document.getElementById('id_username');
-  var usernameHint = document.getElementById('username-hint');
-  var lblPhone = document.getElementById('lbl_phone_number');
-  var orgNameInput = document.getElementById('id_organisme_name');
+var ORDRE_LBL = {
+  medecin: "Numéro d'inscription à l'Ordre des médecins (ONMS)",
+  infirmier: "Numéro / titre professionnel",
+  kine: "Numéro / titre professionnel",
+  sagefemme: "Numéro / titre professionnel",
+  psy: "Numéro d'ADELI / titre professionnel",
+  autre: "Numéro / titre professionnel"
+};
 
-  var currentMode = 'patient';
-  var userEditedUsername = false;
+var account = 'structure';
+var isPatient = false;
+var activeModes = ['cabinet', 'domicile'];
 
-  function slugifyUsername(val) {
-    return (val || '')
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '_')
-      .replace(/^_+|_+$/g, '')
-      .substring(0, 30);
+function setAccount(t) {
+  account = t;
+  var actInput = document.getElementById('id_account_nature');
+  if (actInput) actInput.value = t;
+
+  document.getElementById('fk-structure').classList.toggle('on', t === 'structure');
+  document.getElementById('fk-praticien').classList.toggle('on', t === 'praticien');
+  document.getElementById('block-structure').classList.toggle('hide', t !== 'structure');
+  document.getElementById('block-praticien').classList.toggle('hide', t !== 'praticien');
+  document.getElementById('mode-badge').textContent = (t === 'structure') ? 'Mode structure' : 'Mode praticien';
+  document.getElementById('title').textContent = (t === 'structure') ? 'Créer un compte établissement' : 'Créer un compte praticien';
+  document.getElementById('subt').textContent = (t === 'structure')
+    ? 'Renseignez les informations de votre établissement pour créer votre fiche.'
+    : 'Renseignez vos informations professionnelles pour créer votre fiche.';
+  document.getElementById('submit-btn').textContent = (t === 'structure') ? 'Créer le compte établissement →' : 'Créer le compte praticien →';
+  document.getElementById('lbl-prenom').innerHTML = (t === 'structure') ? 'Prénom du responsable <span class="opt">(optionnel)</span>' : 'Prénom du praticien <span class="req">*</span>';
+  document.getElementById('lbl-nom').innerHTML = (t === 'structure') ? 'Nom du responsable <span class="opt">(optionnel)</span>' : 'Nom du praticien <span class="req">*</span>';
+  document.getElementById('lbl-phone').textContent = (t === 'structure') ? 'Téléphone du contact / responsable' : 'Téléphone personnel du praticien';
+  autoUser();
+}
+
+function setTopo(el) {
+  document.querySelectorAll('[data-topo]').forEach(function(x) { x.classList.remove('on'); });
+  el.classList.add('on');
+  var val = el.getAttribute('data-topo') || 'simple';
+  var topoInput = document.getElementById('id_organisme_topology');
+  if (topoInput) topoInput.value = val;
+}
+
+function setProf(el) {
+  document.querySelectorAll('[data-prof]').forEach(function(x) { x.classList.remove('on'); });
+  el.classList.add('on');
+  var p = el.getAttribute('data-prof');
+  var profInput = document.getElementById('id_praticien_profession');
+  if (profInput) profInput.value = p;
+
+  var data = SPE[p];
+  if (!data) return;
+
+  var html = '';
+  function card(s) {
+    var v = s.replace(/"/g, '&quot;');
+    return "<label class='chk'><input type='checkbox' value=\"" + v + "\" onchange='toggleChk(this)'><span class='box'></span>" + s + "</label>";
   }
 
-  if (usernameInput) {
-    usernameInput.addEventListener('input', function() {
-      userEditedUsername = (this.value.trim().length > 0);
+  if (data.groups) {
+    data.groups.forEach(function(g) {
+      html += "<div class='spegroup'><div class='gt'>" + g[0] + "</div><div class='chkgrid'>" + g[1].map(card).join('') + "</div></div>";
     });
+  } else if (data.flat) {
+    html += "<div class='chkgrid'>" + data.flat.map(card).join('') + "</div>";
   }
 
-  if (orgNameInput) {
-    orgNameInput.addEventListener('input', function() {
-      if (currentMode === 'structure' && !userEditedUsername && usernameInput) {
-        var slug = slugifyUsername(this.value);
-        if (slug) {
-          usernameInput.value = slug;
-        }
-      }
-    });
-  }
+  document.getElementById('spe-cards').innerHTML = html;
+  document.getElementById('spe-wrap').classList.remove('hide');
+  document.getElementById('ordre-wrap').classList.remove('hide');
+  document.getElementById('ordre-lbl').innerHTML = (ORDRE_LBL[p] || "Numéro / titre professionnel") + ' <span class="req">*</span>';
+  updateSpecialtiesInput();
+}
 
-  function applyMode(mode, triggerSwitch) {
-    var isPrestataire = (mode === 'structure' || mode === 'prestataire');
-    currentMode = isPrestataire ? 'structure' : 'patient';
+function toggleChk(cb) {
+  cb.parentElement.classList.toggle('on', cb.checked);
+  updateSpecialtiesInput();
+}
 
-    // Synchroniser la valeur du sélecteur désactivé
-    if (sel) {
-      sel.value = isPrestataire ? 'prestataire' : 'patient';
-    }
-
-    // Afficher ou masquer les champs spécifiques à l'établissement
-    if (block) {
-      block.classList.toggle('is-visible', isPrestataire);
-    }
-
-    // Mettre à jour l'affichage textuel et les boutons
-    if (isPrestataire) {
-      if (badge) {
-        badge.textContent = 'Mode Structure';
-        badge.style.background = '#fef3c7';
-        badge.style.color = '#92400e';
-      }
-      if (hintLabel) hintLabel.textContent = 'Prestataire de Santé (établissement)';
-      if (inlineToggleBtn) inlineToggleBtn.textContent = 'Basculer sur Patient →';
-      if (submitBtn) submitBtn.textContent = 'Créer le compte établissement →';
-      if (authHeaderTitle) authHeaderTitle.textContent = 'Créer un compte Prestataire';
-      if (authHeaderSubtitle) authHeaderSubtitle.textContent = 'Renseignez les informations de votre établissement pour créer votre fiche.';
-
-      if (lblFirstName) lblFirstName.innerHTML = 'Prénom du responsable <span style="font-size:10px;font-weight:500;color:#94a3b8;">(optionnel)</span>';
-      if (lblLastName) lblLastName.innerHTML = 'Nom du responsable <span style="font-size:10px;font-weight:500;color:#94a3b8;">(optionnel)</span>';
-      if (lblUsername) lblUsername.innerHTML = 'Nom d\'utilisateur de la structure (identifiant de connexion) <span class="mc-form-required">*</span>';
-      if (usernameInput) {
-        usernameInput.placeholder = 'ex: polyclinique_de_libe, clinique_pasteur';
-        if (!userEditedUsername && orgNameInput && orgNameInput.value) {
-          var autoSlug = slugifyUsername(orgNameInput.value);
-          if (autoSlug) usernameInput.value = autoSlug;
-        }
-      }
-      if (usernameHint) {
-        usernameHint.textContent = '💡 Cet identifiant est le username de connexion de la structure. Il se génère automatiquement avec le nom de l\'établissement ci-dessous.';
-        usernameHint.style.display = 'block';
-      }
-      if (lblPhone) lblPhone.textContent = 'Téléphone du contact / responsable';
-    } else {
-      if (badge) {
-        badge.textContent = 'Mode Patient';
-        badge.style.background = '#e0f2fe';
-        badge.style.color = '#0369a1';
-      }
-      if (hintLabel) hintLabel.textContent = 'Patient';
-      if (inlineToggleBtn) inlineToggleBtn.textContent = 'Basculer sur Structure →';
-      if (submitBtn) submitBtn.textContent = 'Créer mon compte Patient →';
-      if (authHeaderTitle) authHeaderTitle.textContent = 'Créer un compte Patient';
-      if (authHeaderSubtitle) authHeaderSubtitle.textContent = 'Vos informations personnelles pour réserver et suivre vos examens.';
-
-      if (lblFirstName) lblFirstName.textContent = 'Prénom';
-      if (lblLastName) lblLastName.textContent = 'Nom';
-      if (lblUsername) lblUsername.innerHTML = 'Nom d\'utilisateur <span class="mc-form-required">*</span>';
-      if (usernameInput) usernameInput.placeholder = 'votre_nom';
-      if (usernameHint) usernameHint.style.display = 'none';
-      if (lblPhone) lblPhone.textContent = 'Téléphone personnel';
-    }
-
-    if (triggerSwitch && typeof window.switchMode === 'function') {
-      window.switchMode(currentMode);
-    }
-  }
-
-  // Écouter les changements sur le select (ex: Playwright ou script externe)
-  if (sel) {
-    sel.addEventListener('change', function() {
-      applyMode(this.value === 'prestataire' ? 'structure' : 'patient', true);
-    });
-  }
-
-  // Type organisme hint
-  var typeSel = document.getElementById('id_organisme_type');
-  var typeHint = document.getElementById('organisme-type-hint');
-  function syncTypeHint() {
-    if (!typeSel || !typeHint) return;
-    var opt = typeSel.options[typeSel.selectedIndex];
-    var desc = opt && opt.dataset ? opt.dataset.description : '';
-    if (desc) {
-      typeHint.textContent = desc;
-      typeHint.style.display = 'block';
-    } else {
-      typeHint.textContent = '';
-      typeHint.style.display = 'none';
-    }
-  }
-  if (typeSel) {
-    typeSel.addEventListener('change', syncTypeHint);
-    syncTypeHint();
-  }
-
-  // Bouton inline sous le champ désactivé
-  if (inlineToggleBtn) {
-    inlineToggleBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      var nextMode = (currentMode === 'structure') ? 'patient' : 'structure';
-      if (typeof window.switchMode === 'function') {
-        window.switchMode(nextMode);
-      } else {
-        applyMode(nextMode, false);
-      }
-    });
-  }
-
-  // Remplacement/Enrichissement de switchMode
-  var origSwitch = window.switchMode;
-  window.switchMode = function(mode) {
-    if (typeof origSwitch === 'function') {
-      origSwitch(mode);
-    }
-    applyMode(mode, false);
-  };
-
-  // Clic direct sur les boutons du toggle en haut
-  document.querySelectorAll('.toggle__btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var m = this.getAttribute('data-mode');
-      if (m) {
-        applyMode(m, false);
-      }
-    });
+function updateSpecialtiesInput() {
+  var checked = Array.from(document.querySelectorAll('#spe-cards input[type=checkbox]:checked')).map(function(c) {
+    return c.value;
   });
+  var speInput = document.getElementById('id_praticien_specialties');
+  if (speInput) speInput.value = JSON.stringify(checked);
+}
 
-  // Avant soumission, s'assurer que le champ user_type est actif et conforme
-  var formEl = document.querySelector('#inscription-form form');
-  if (formEl) {
-    formEl.addEventListener('submit', function() {
-      if (sel) {
-        sel.value = (currentMode === 'structure') ? 'prestataire' : 'patient';
-        sel.disabled = false;
-        sel.style.pointerEvents = 'auto';
-      }
-    });
+function toggleExerciseMode(mode, el) {
+  el.classList.toggle('on');
+  var idx = activeModes.indexOf(mode);
+  if (idx > -1) {
+    activeModes.splice(idx, 1);
+  } else {
+    activeModes.push(mode);
+  }
+  var modesInput = document.getElementById('id_praticien_modes');
+  if (modesInput) modesInput.value = activeModes.join(',');
+}
+
+function slug(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function autoUser() {
+  var u = document.getElementById('username');
+  if (!u || u.dataset.touched) return;
+  var base = '';
+  if (account === 'structure') {
+    var enseigneEl = document.getElementById('enseigne');
+    base = enseigneEl ? enseigneEl.value : '';
+  }
+  if (!base) {
+    var prenom = document.getElementById('nom-prenom') ? document.getElementById('nom-prenom').value : '';
+    var nom = document.getElementById('nom-resp') ? document.getElementById('nom-resp').value : '';
+    base = (prenom + ' ' + nom).trim();
+  }
+  if (base) {
+    u.value = slug(base);
+  }
+}
+
+document.getElementById('username').addEventListener('input', function() {
+  this.dataset.touched = '1';
+});
+
+function tgpw(id) {
+  var e = document.getElementById(id);
+  if (e) e.type = e.type === 'password' ? 'text' : 'password';
+}
+
+function togglePatientMode() {
+  isPatient = !isPatient;
+  applyMode(isPatient ? 'patient' : 'structure', true);
+}
+
+function applyMode(mode, triggerHeaderSwitch) {
+  var userTypeInput = document.getElementById('id_user_type');
+  var forkContainer = document.getElementById('fork-container');
+  var blockStructure = document.getElementById('block-structure');
+  var blockPraticien = document.getElementById('block-praticien');
+  var title = document.getElementById('title');
+  var subt = document.getElementById('subt');
+  var submitBtn = document.getElementById('submit-btn');
+  var lblPrenom = document.getElementById('lbl-prenom');
+  var lblNom = document.getElementById('lbl-nom');
+  var lblPhone = document.getElementById('lbl-phone');
+  var switchLinkPatient = document.getElementById('switch-link-patient');
+
+  if (mode === 'patient') {
+    isPatient = true;
+    if (userTypeInput) userTypeInput.value = 'patient';
+    if (forkContainer) forkContainer.classList.add('hide');
+    if (blockStructure) blockStructure.classList.add('hide');
+    if (blockPraticien) blockPraticien.classList.add('hide');
+
+    if (title) title.textContent = 'Créer un compte Patient';
+    if (subt) subt.textContent = 'Vos informations personnelles pour réserver et suivre vos soins.';
+    if (submitBtn) submitBtn.textContent = 'Créer mon compte Patient →';
+    if (lblPrenom) lblPrenom.innerHTML = 'Prénom <span class="req">*</span>';
+    if (lblNom) lblNom.innerHTML = 'Nom de famille <span class="req">*</span>';
+    if (lblPhone) lblPhone.textContent = 'Téléphone personnel';
+
+    var existingBack = document.getElementById('back-to-structure-link');
+    if (!existingBack) {
+      var backLink = document.createElement('a');
+      backLink.id = 'back-to-structure-link';
+      backLink.className = 'switch';
+      backLink.style.display = 'block';
+      backLink.style.textAlign = 'center';
+      backLink.style.marginTop = '14px';
+      backLink.textContent = '← Vous êtes un soignant ou une structure ? Basculer ici';
+      backLink.onclick = function() { togglePatientMode(); return false; };
+      document.querySelector('.signin').before(backLink);
+    }
+  } else {
+    isPatient = false;
+    if (userTypeInput) userTypeInput.value = 'prestataire';
+    if (forkContainer) forkContainer.classList.remove('hide');
+
+    var back = document.getElementById('back-to-structure-link');
+    if (back) back.remove();
+
+    setAccount(account);
   }
 
-  // Détection initiale au chargement (URL params ou valeur par défaut)
+  if (triggerHeaderSwitch && typeof window.switchMode === 'function') {
+    window.switchMode(mode);
+  }
+}
+
+// Intercepter et synchroniser le switchMode de _landing_marketing_js.html
+var origSwitch = window.switchMode;
+window.switchMode = function(mode) {
+  if (typeof origSwitch === 'function') {
+    origSwitch(mode);
+  }
+  applyMode(mode, false);
+};
+
+// Clic direct sur les boutons du toggle marketing en haut
+document.querySelectorAll('.toggle__btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var m = this.getAttribute('data-mode');
+    if (m) applyMode(m, false);
+  });
+});
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', function() {
   var urlParams = new URLSearchParams(window.location.search);
   var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
-  var initialMode = (urlType === 'prestataire' || urlType === 'structure' || urlType === 'soignant' || (sel && sel.value === 'prestataire')) ? 'structure' : 'patient';
-
-  if (initialMode === 'structure') {
+  
+  if (urlType === 'prestataire' || urlType === 'structure' || urlType === 'soignant') {
     setTimeout(function() {
-      if (typeof window.switchMode === 'function') {
-        window.switchMode('structure');
-      } else {
-        applyMode('structure', false);
-      }
+      applyMode('structure', true);
     }, 50);
   } else {
-    applyMode('patient', false);
+    applyMode('patient', true);
+  }
+
+  // Restaurer les champs sélectionnés si rechargement
+  var selectedProf = document.getElementById('id_praticien_profession') ? document.getElementById('id_praticien_profession').value : '';
+  if (selectedProf) {
+    var profEl = document.querySelector('[data-prof="' + selectedProf + '"]');
+    if (profEl) setProf(profEl);
   }
 
   if (window.location.hash === '#inscription-form') {
     var target = document.getElementById('inscription-form');
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-})();
+});
 </script>
 {% endblock %}

@@ -21,9 +21,11 @@ from healthcare.service_icons import icon_for_subfamily_label
 
 def applicable_pilier_slugs(org: OrganismeDeSante) -> set[str] | None:
     """
-    Retourne None → tous les piliers sont affichés comme applicables,
-    quel que soit le type de structure.
+    Découplage V1 : les piliers applicables sont ceux choisis librement par la structure.
+    Si aucun n'a encore été sélectionné, tous sont applicables par défaut.
     """
+    if org and org.piliers_actifs.exists():
+        return set(org.piliers_actifs.values_list("slug", flat=True))
     return None
 
 
