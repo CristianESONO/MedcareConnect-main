@@ -10,7 +10,7 @@ from decimal import Decimal, InvalidOperation
 from django.db.models import Q, Min, Max, Count, F, Sum, Case, When, IntegerField, Value, Prefetch
 from django.utils import timezone
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.urls import reverse
@@ -3278,6 +3278,104 @@ def actes_list(request):
         }
     )
     return render(request, "healthcare/prestataire/actes_list.html", ctx)
+
+
+@_require_prestataire
+@require_POST
+def actes_import_excel(request):
+    """
+    Importe ou met à jour les actes du catalogue depuis un fichier Excel (.xlsx, .xls) ou CSV (.csv).
+    Gère les soumissions formulaire standard et les requêtes AJAX.
+    """
+    ctx = _dash_context(request, "actes")
+    org = ctx["org"]
+    upload = request.FILES.get("file") or request.FILES.get("catalog_file")
+    is_ajax = (
+        request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        or "application/json" in request.headers.get("Accept", "")
+    )
+
+    if not upload:
+        msg = "Veuillez sélectionner un fichier Excel (.xlsx) ou CSV (.csv) à importer."
+        if is_ajax:
+            return JsonResponse({"ok": False, "error": msg}, status=400)
+        messages.error(request, msg)
+        return redirect("healthcare:actes_list")
+
+    auto_activate = request.POST.get("auto_activate", "1") in ("1", "true", "on", "yes")
+
+    from healthcare.catalog_excel import import_catalog_from_file
+
+    result = import_catalog_from_file(upload, org, auto_activate=auto_activate)
+
+    if not result.get("success"):
+        err = result.get("error") or "Erreur lors du traitement du fichier."
+        if is_ajax:
+            return JsonResponse(
+                {"ok": False, "error": err, "details": result.get("errors", [])},
+                status=400,
+            )
+        messages.error(request, err)
+        return redirect("healthcare:actes_list")
+
+    imp = result.get("imported_count", 0)
+    created = result.get("created_count", 0)
+    updated = result.get("updated_count", 0)
+    errors = result.get("errors", [])
+    skipped = result.get("skipped_count", 0)
+
+    summary_msg = (
+        f"Catalogue mis à jour avec succès : {imp} acte(s) importé(s) "
+        f"({created} nouveau(x), {updated} mis à jour)."
+    )
+    if skipped:
+        summary_msg += f" {skipped} ligne(s) ignorée(s)."
+
+    if is_ajax:
+        return JsonResponse(
+            {
+                "ok": True,
+                "message": summary_msg,
+                "imported_count": imp,
+                "created_count": created,
+                "updated_count": updated,
+                "skipped_count": skipped,
+                "errors": errors,
+            }
+        )
+
+    messages.success(request, summary_msg)
+    if errors:
+        preview = " · ".join(errors[:3])
+        if len(errors) > 3:
+            preview += f" (+{len(errors) - 3} autres avertissements)"
+        messages.warning(request, f"Remarques d'import : {preview}")
+
+    return redirect("healthcare:actes_list")
+
+
+@_require_prestataire
+@require_GET
+def actes_template_excel(request):
+    """
+    Télécharge le modèle Excel pré-rempli avec les actes applicables pour la structure.
+    """
+    from django.utils.text import slugify
+    from healthcare.catalog_excel import generate_catalog_template_excel
+
+    ctx = _dash_context(request, "actes")
+    org = ctx["org"]
+
+    excel_buffer = generate_catalog_template_excel(org)
+    slug = slugify(org.name) or "structure"
+    filename = f"catalogue_actes_{slug}.xlsx"
+
+    response = HttpResponse(
+        excel_buffer.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
 
 
 @_require_prestataire

@@ -15,6 +15,15 @@
   </div>
   <div class="flex flex-wrap items-center gap-2">
     <span id="save-ind" class="cat-save-ind" aria-live="polite">✓ Sauvegardé</span>
+    <a href="{% url 'healthcare:actes_template_excel' %}"
+       class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition"
+       title="Télécharger le modèle Excel pré-rempli avec vos actes">
+      <span>📄</span> Modèle Excel
+    </a>
+    <button type="button"
+            class="js-open-import-modal inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-sm font-bold text-emerald-800 shadow-xs hover:bg-emerald-100 hover:border-emerald-400 transition cursor-pointer">
+      <span>📥</span> Importer Excel
+    </button>
     <button type="submit" form="catalogue-form" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700">💾 Sauvegarder</button>
   </div>
 </div>
@@ -94,6 +103,7 @@
           <option value="{{ sg.label }}">{{ sg.label }}</option>
           {% endfor %}
         </select>
+        <button type="button" class="js-open-import-modal whitespace-nowrap rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-800 hover:bg-teal-100 cursor-pointer">📥 Importer Excel</button>
         <button type="button" class="js-open-add-acte-modal whitespace-nowrap rounded-lg bg-primary-600 px-3 py-2 text-xs font-bold text-white hover:bg-primary-700 cursor-pointer">+ Ajouter un acte</button>
         <a href="{% url 'healthcare:prestataire_rdv_reminder_list' %}" class="whitespace-nowrap rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">Rappels RDV</a>
       </div>
@@ -260,6 +270,85 @@
         </button>
         <button type="submit" class="rounded-xl bg-primary-600 px-5 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-700 transition cursor-pointer">
           Ajouter au catalogue
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ── Modal Importer un catalogue Excel / CSV ── #}
+<div id="import-excel-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-xs p-4 hidden opacity-0 transition-opacity duration-200" aria-hidden="true">
+  <div id="import-excel-modal" class="relative w-full max-w-lg transform rounded-2xl bg-white p-6 shadow-2xl transition-all duration-200 scale-95 border border-gray-100">
+    <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 font-bold text-lg shadow-xs">
+          📊
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-900">Importer le catalogue (Excel / CSV)</h3>
+          <p class="text-xs text-gray-500">Mettez à jour vos actes, tarifs et délais en masse</p>
+        </div>
+      </div>
+      <button type="button" id="btn-close-import-modal" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition cursor-pointer">
+        ✕
+      </button>
+    </div>
+
+    <!-- Modèle Excel rapide -->
+    <div class="mt-4 rounded-xl border border-emerald-100 bg-emerald-50/60 p-3.5 text-xs text-emerald-900 flex items-start justify-between gap-3">
+      <div>
+        <p class="font-bold text-emerald-950">Vous n'avez pas encore de fichier préparé ?</p>
+        <p class="mt-0.5 text-emerald-800 text-[11px]">Téléchargez notre modèle pré-rempli avec vos actes du référentiel.</p>
+      </div>
+      <a href="{% url 'healthcare:actes_template_excel' %}" download
+         class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition">
+        📄 Modèle (.xlsx)
+      </a>
+    </div>
+
+    <form id="import-excel-form" method="POST" action="{% url 'healthcare:actes_import_excel' %}" enctype="multipart/form-data" class="mt-4 space-y-4">
+      {% csrf_token %}
+
+      <!-- Zone de glisser-déposer -->
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Fichier Excel ou CSV <span class="text-rose-500">*</span></label>
+        <div id="dropzone" class="relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50/70 p-6 text-center hover:border-emerald-500 hover:bg-emerald-50/30 transition cursor-pointer">
+          <input type="file" id="catalog-file-input" name="file" accept=".xlsx,.xls,.csv" required class="absolute inset-0 h-full w-full opacity-0 cursor-pointer">
+          <div id="dropzone-prompt" class="flex flex-col items-center pointer-events-none">
+            <span class="text-3xl mb-1">📁</span>
+            <p class="text-xs font-semibold text-gray-700"><span class="text-emerald-700 font-bold underline">Cliquez pour choisir</span> ou glissez votre fichier ici</p>
+            <p class="text-[11px] text-gray-400 mt-0.5">Formats acceptés : .xlsx, .xls, .csv</p>
+          </div>
+          <div id="dropzone-file-info" class="hidden flex items-center gap-2.5 rounded-xl bg-white px-3 py-2 border border-emerald-200 shadow-xs">
+            <span class="text-lg">📄</span>
+            <div class="text-left">
+              <p id="dropzone-file-name" class="text-xs font-bold text-gray-800 truncate max-w-[240px]"></p>
+              <p id="dropzone-file-size" class="text-[10px] text-gray-500"></p>
+            </div>
+            <button type="button" id="btn-remove-file" class="ml-2 text-xs text-rose-500 hover:text-rose-700 font-bold cursor-pointer">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="rounded-xl bg-gray-50 p-3 border border-gray-100">
+        <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+          <input type="checkbox" name="auto_activate" value="1" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+          <span>Activer immédiatement au catalogue les actes ayant un tarif</span>
+        </label>
+      </div>
+
+      <!-- Alertes / Résultat en direct -->
+      <div id="import-result-box" class="hidden rounded-xl p-3 text-xs"></div>
+
+      <!-- Boutons -->
+      <div class="flex items-center justify-end gap-2.5 border-t border-gray-100 pt-4">
+        <button type="button" id="btn-cancel-import-modal" class="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition cursor-pointer">
+          Annuler
+        </button>
+        <button type="submit" id="btn-submit-import" class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition cursor-pointer disabled:opacity-50">
+          <span id="import-btn-spinner" class="hidden animate-spin">⏳</span>
+          <span id="import-btn-text">Importer le catalogue</span>
         </button>
       </div>
     </form>
@@ -1049,9 +1138,199 @@ window.MEDCARE_CATALOGUE_PREP = {
       if (e.target === addActeOverlay) closeAddModal();
     });
   }
+  // ── Modal Importer catalogue Excel / CSV ──
+  var importOverlay = document.getElementById('import-excel-overlay');
+  var importModal = document.getElementById('import-excel-modal');
+  var openImportBtns = document.querySelectorAll('.js-open-import-modal');
+  var closeImportBtn = document.getElementById('btn-close-import-modal');
+  var cancelImportBtn = document.getElementById('btn-cancel-import-modal');
+  var importForm = document.getElementById('import-excel-form');
+  var fileInput = document.getElementById('catalog-file-input');
+  var dropzone = document.getElementById('dropzone');
+  var dropzonePrompt = document.getElementById('dropzone-prompt');
+  var dropzoneFileInfo = document.getElementById('dropzone-file-info');
+  var dropzoneFileName = document.getElementById('dropzone-file-name');
+  var dropzoneFileSize = document.getElementById('dropzone-file-size');
+  var btnRemoveFile = document.getElementById('btn-remove-file');
+  var resultBox = document.getElementById('import-result-box');
+  var submitBtn = document.getElementById('btn-submit-import');
+  var btnSpinner = document.getElementById('import-btn-spinner');
+  var btnText = document.getElementById('import-btn-text');
+
+  function openImportModal() {
+    if (!importOverlay || !importModal) return;
+    if (resultBox) { resultBox.className = 'hidden rounded-xl p-3 text-xs'; resultBox.innerHTML = ''; }
+    importOverlay.classList.remove('hidden');
+    setTimeout(function() {
+      importOverlay.classList.remove('opacity-0');
+      importModal.classList.remove('scale-95');
+      importModal.classList.add('scale-100');
+    }, 10);
+  }
+
+  function closeImportModal() {
+    if (!importOverlay || !importModal) return;
+    importOverlay.classList.add('opacity-0');
+    importModal.classList.remove('scale-100');
+    importModal.classList.add('scale-95');
+    setTimeout(function() {
+      importOverlay.classList.add('hidden');
+    }, 200);
+  }
+
+  function updateSelectedFile(file) {
+    if (!file) {
+      if (dropzonePrompt) dropzonePrompt.classList.remove('hidden');
+      if (dropzoneFileInfo) dropzoneFileInfo.classList.add('hidden');
+      return;
+    }
+    if (dropzonePrompt) dropzonePrompt.classList.add('hidden');
+    if (dropzoneFileInfo) dropzoneFileInfo.classList.remove('hidden');
+    if (dropzoneFileName) dropzoneFileName.textContent = file.name;
+    if (dropzoneFileSize) {
+      var kb = Math.round(file.size / 1024);
+      dropzoneFileSize.textContent = kb > 1024 ? (kb / 1024).toFixed(1) + ' Mo' : kb + ' Ko';
+    }
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files && fileInput.files[0]) {
+        updateSelectedFile(fileInput.files[0]);
+      }
+    });
+  }
+
+  if (btnRemoveFile) {
+    btnRemoveFile.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (fileInput) fileInput.value = '';
+      updateSelectedFile(null);
+    });
+  }
+
+  if (dropzone) {
+    ['dragenter', 'dragover'].forEach(function(evt) {
+      dropzone.addEventListener(evt, function(e) {
+        e.preventDefault();
+        dropzone.classList.add('border-emerald-500', 'bg-emerald-50/50');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function(evt) {
+      dropzone.addEventListener(evt, function(e) {
+        e.preventDefault();
+        dropzone.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+      });
+    });
+    dropzone.addEventListener('drop', function(e) {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        updateSelectedFile(fileInput.files[0]);
+      }
+    });
+  }
+
+  openImportBtns.forEach(function(btn) {
+    btn.addEventListener('click', openImportModal);
+  });
+  if (closeImportBtn) closeImportBtn.addEventListener('click', closeImportModal);
+  if (cancelImportBtn) cancelImportBtn.addEventListener('click', closeImportModal);
+  if (importOverlay) {
+    importOverlay.addEventListener('click', function(e) {
+      if (e.target === importOverlay) closeImportModal();
+    });
+  }
+
+  if (importForm) {
+    importForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+        alert('Veuillez sélectionner un fichier Excel (.xlsx) ou CSV.');
+        return;
+      }
+
+      var fd = new FormData(importForm);
+      if (submitBtn) submitBtn.disabled = true;
+      if (btnSpinner) btnSpinner.classList.remove('hidden');
+      if (btnText) btnText.textContent = 'Importation en cours…';
+      if (resultBox) {
+        resultBox.className = 'rounded-xl p-3 text-xs bg-gray-50 border border-gray-200 text-gray-700';
+        resultBox.innerHTML = '<span class="animate-pulse">Traitement du fichier et mise à jour de vos tarifs en cours…</span>';
+        resultBox.classList.remove('hidden');
+      }
+
+      fetch(importForm.action, {
+        method: 'POST',
+        body: fd,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        },
+        credentials: 'same-origin'
+      })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { status: res.status, data: data };
+        });
+      })
+      .then(function(resObj) {
+        var data = resObj.data;
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnSpinner) btnSpinner.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Importer le catalogue';
+
+        if (!data || !data.ok) {
+          var errMsg = (data && data.error) ? data.error : 'Erreur lors du traitement du fichier.';
+          resultBox.className = 'rounded-xl p-3.5 text-xs bg-rose-50 border border-rose-200 text-rose-800';
+          var html = '<strong>Échec de l\'import :</strong> ' + errMsg;
+          if (data && data.details && data.details.length) {
+            html += '<ul class="mt-1.5 list-disc list-inside space-y-0.5 text-[11px] text-rose-700">';
+            data.details.slice(0, 5).forEach(function(d) {
+              html += '<li>' + d + '</li>';
+            });
+            html += '</ul>';
+          }
+          resultBox.innerHTML = html;
+        } else {
+          resultBox.className = 'rounded-xl p-3.5 text-xs bg-emerald-50 border border-emerald-200 text-emerald-800';
+          var successHtml = '<div class="flex items-center gap-2 font-bold text-emerald-900 text-sm"><span>✓</span> ' + data.message + '</div>';
+          if (data.errors && data.errors.length) {
+            successHtml += '<div class="mt-2 text-[11px] text-amber-800 bg-amber-50/80 p-2 rounded-lg border border-amber-200">';
+            successHtml += '<strong>Remarques :</strong><ul class="list-disc list-inside mt-1">';
+            data.errors.slice(0, 5).forEach(function(err) {
+              successHtml += '<li>' + err + '</li>';
+            });
+            successHtml += '</ul></div>';
+          }
+          successHtml += '<p class="mt-2 text-xs text-gray-500">La page va s\'actualiser pour afficher votre catalogue mis à jour…</p>';
+          resultBox.innerHTML = successHtml;
+
+          setTimeout(function() {
+            window.location.reload();
+          }, 1800);
+        }
+      })
+      .catch(function(err) {
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnSpinner) btnSpinner.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Importer le catalogue';
+        if (resultBox) {
+          resultBox.className = 'rounded-xl p-3 text-xs bg-rose-50 border border-rose-200 text-rose-800';
+          resultBox.innerHTML = '<strong>Erreur réseau :</strong> Impossible de traiter le fichier. Réessayez ou vérifiez votre connexion.';
+        }
+      });
+    });
+  }
+
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && addActeOverlay && !addActeOverlay.classList.contains('hidden')) {
-      closeAddModal();
+    if (e.key === 'Escape') {
+      if (importOverlay && !importOverlay.classList.contains('hidden')) {
+        closeImportModal();
+      }
+      if (addActeOverlay && !addActeOverlay.classList.contains('hidden')) {
+        closeAddModal();
+      }
     }
   });
 })();
