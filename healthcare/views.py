@@ -3285,73 +3285,87 @@ def actes_list(request):
 def actes_import_excel(request):
     """
     Importe ou met à jour les actes du catalogue depuis un fichier Excel (.xlsx, .xls) ou CSV (.csv).
-    Gère les soumissions formulaire standard et les requêtes AJAX.
+    Gère les soumissions formulaire standard et les requêtes AJAX avec gestion d'erreurs sécurisée.
     """
-    ctx = _dash_context(request, "actes")
-    org = ctx["org"]
-    upload = request.FILES.get("file") or request.FILES.get("catalog_file")
     is_ajax = (
         request.headers.get("X-Requested-With") == "XMLHttpRequest"
         or "application/json" in request.headers.get("Accept", "")
     )
+    try:
+        ctx = _dash_context(request, "actes")
+        org = ctx["org"]
+        upload = request.FILES.get("file") or request.FILES.get("catalog_file")
 
-    if not upload:
-        msg = "Veuillez sélectionner un fichier Excel (.xlsx) ou CSV (.csv) à importer."
-        if is_ajax:
-            return JsonResponse({"ok": False, "error": msg}, status=400)
-        messages.error(request, msg)
-        return redirect("healthcare:actes_list")
+        if not upload:
+            msg = "Veuillez sélectionner un fichier Excel (.xlsx) ou CSV (.csv) à importer."
+            if is_ajax:
+                return JsonResponse({"ok": False, "error": msg}, status=400)
+            messages.error(request, msg)
+            return redirect("healthcare:actes_list")
 
-    auto_activate = request.POST.get("auto_activate", "1") in ("1", "true", "on", "yes")
+        auto_activate = request.POST.get("auto_activate", "1") in ("1", "true", "on", "yes")
 
-    from healthcare.catalog_excel import import_catalog_from_file
+        from healthcare.catalog_excel import import_catalog_from_file
 
-    result = import_catalog_from_file(upload, org, auto_activate=auto_activate)
+        result = import_catalog_from_file(upload, org, auto_activate=auto_activate)
 
-    if not result.get("success"):
-        err = result.get("error") or "Erreur lors du traitement du fichier."
+        if not result.get("success"):
+            err = result.get("error") or "Erreur lors du traitement du fichier."
+            if is_ajax:
+                return JsonResponse(
+                    {"ok": False, "error": err, "details": result.get("errors", [])},
+                    status=400,
+                )
+            messages.error(request, err)
+            return redirect("healthcare:actes_list")
+
+        imp = result.get("imported_count", 0)
+        created = result.get("created_count", 0)
+        updated = result.get("updated_count", 0)
+        errors = result.get("errors", [])
+        skipped = result.get("skipped_count", 0)
+
+        summary_msg = (
+            f"Catalogue mis à jour avec succès : {imp} acte(s) importé(s) "
+            f"({created} nouveau(x), {updated} mis à jour)."
+        )
+        if skipped:
+            summary_msg += f" {skipped} ligne(s) ignorée(s)."
+
         if is_ajax:
             return JsonResponse(
-                {"ok": False, "error": err, "details": result.get("errors", [])},
-                status=400,
+                {
+                    "ok": True,
+                    "message": summary_msg,
+                    "imported_count": imp,
+                    "created_count": created,
+                    "updated_count": updated,
+                    "skipped_count": skipped,
+                    "errors": errors,
+                }
             )
-        messages.error(request, err)
+
+        messages.success(request, summary_msg)
+        if errors:
+            preview = " · ".join(errors[:3])
+            if len(errors) > 3:
+                preview += f" (+{len(errors) - 3} autres avertissements)"
+            messages.warning(request, f"Remarques d'import : {preview}")
+
         return redirect("healthcare:actes_list")
 
-    imp = result.get("imported_count", 0)
-    created = result.get("created_count", 0)
-    updated = result.get("updated_count", 0)
-    errors = result.get("errors", [])
-    skipped = result.get("skipped_count", 0)
-
-    summary_msg = (
-        f"Catalogue mis à jour avec succès : {imp} acte(s) importé(s) "
-        f"({created} nouveau(x), {updated} mis à jour)."
-    )
-    if skipped:
-        summary_msg += f" {skipped} ligne(s) ignorée(s)."
-
-    if is_ajax:
-        return JsonResponse(
-            {
-                "ok": True,
-                "message": summary_msg,
-                "imported_count": imp,
-                "created_count": created,
-                "updated_count": updated,
-                "skipped_count": skipped,
-                "errors": errors,
-            }
-        )
-
-    messages.success(request, summary_msg)
-    if errors:
-        preview = " · ".join(errors[:3])
-        if len(errors) > 3:
-            preview += f" (+{len(errors) - 3} autres avertissements)"
-        messages.warning(request, f"Remarques d'import : {preview}")
-
-    return redirect("healthcare:actes_list")
+    except Exception as exc:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.exception("Erreur inattendue dans actes_import_excel : %s", exc)
+        err_msg = f"Erreur lors du traitement du fichier : {str(exc)}"
+        if is_ajax:
+            return JsonResponse(
+                {"ok": False, "error": err_msg, "details": [str(exc)]},
+                status=400,
+            )
+        messages.error(request, err_msg)
+        return redirect("healthcare:actes_list")
 
 
 @_require_prestataire

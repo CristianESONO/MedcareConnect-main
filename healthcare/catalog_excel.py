@@ -120,7 +120,10 @@ def _parse_price(val: Any) -> Decimal | None:
         return None
     if isinstance(val, (int, float, Decimal)):
         try:
-            return Decimal(str(val)).quantize(Decimal("0.01"))
+            p = Decimal(str(val)).quantize(Decimal("0.01"))
+            if p < Decimal("0"):
+                return None
+            return min(p, Decimal("99999999.99"))
         except (InvalidOperation, TypeError):
             return None
     s = str(val).strip().upper()
@@ -132,7 +135,9 @@ def _parse_price(val: Any) -> Decimal | None:
         return None
     try:
         p = Decimal(s).quantize(Decimal("0.01"))
-        return p if p >= Decimal("0") else None
+        if p < Decimal("0"):
+            return None
+        return min(p, Decimal("99999999.99"))
     except (InvalidOperation, TypeError):
         return None
 
@@ -293,13 +298,12 @@ def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
 
 def _detect_file_format(filename: str, content: bytes) -> str:
     ext = (filename or "").lower().rsplit(".", 1)[-1]
-    if ext in ("xlsx", "xlsm"):
+    if content.startswith(b"\xd0\xcf\x11\xe0"):
+        return "xls_legacy"
+    if ext in ("xlsx", "xlsm") or content.startswith(b"PK\x03\x04"):
         return "xlsx"
     if ext == "csv":
         return "csv"
-    # Fallback inspecting signature
-    if content.startswith(b"PK\x03\x04"):
-        return "xlsx"
     return "csv"
 
 
@@ -310,6 +314,12 @@ def _read_rows_from_file(file_obj) -> tuple[list[list[Any]], str]:
     content = file_obj.read()
     filename = getattr(file_obj, "name", "")
     fmt = _detect_file_format(filename, content)
+
+    if fmt == "xls_legacy":
+        raise ValueError(
+            "Le format .xls (ancien Excel 97-2003) n'est pas supporté. "
+            "Veuillez enregistrer votre fichier au format moderne Excel (.xlsx) ou CSV (.csv)."
+        )
 
     if fmt == "xlsx":
         bio = io.BytesIO(content)
@@ -454,99 +464,110 @@ def import_catalog_from_file(
     errors: list[str] = []
     data_rows = rows[header_idx + 1 :]
 
-    with transaction.atomic():
-        for line_num, row in enumerate(data_rows, start=header_idx + 2):
-            # Safe access to columns
-            def get_val(key):
-                idx = col_map.get(key)
-                if idx is not None and idx < len(row):
-                    return row[idx]
-                return None
+    try:
+        with transaction.atomic():
+            for line_num, row in enumerate(data_rows, start=header_idx + 2):
+                # Safe access to columns
+                def get_val(key):
+                    idx = col_map.get(key)
+                    if idx is not None and idx < len(row):
+                        return row[idx]
+                    return None
 
-            raw_id = get_val("id")
-            raw_code = get_val("code")
-            raw_name = get_val("name")
-            raw_price = get_val("price")
-            raw_delai = get_val("delai")
-            raw_available = get_val("available")
-            raw_prereq = get_val("prerequisites")
+                raw_id = get_val("id")
+                raw_code = get_val("code")
+                raw_name = get_val("name")
+                raw_price = get_val("price")
+                raw_delai = get_val("delai")
+                raw_available = get_val("available")
+                raw_prereq = get_val("prerequisites")
 
-            # Ignore totally empty rows
-            if not any(get_val(k) for k in col_map):
-                continue
+                # Ignore totally empty rows
+                if not any(str(get_val(k) or "").strip() for k in col_map):
+                    continue
 
-            # Match ActeMedical
-            target_acte: ActeMedical | None = None
-            if raw_id is not None:
-                try:
-                    aid = int(str(raw_id).strip())
-                    target_acte = by_id.get(aid)
-                except (ValueError, TypeError):
-                    pass
+                # Match ActeMedical
+                target_acte: ActeMedical | None = None
+                if raw_id is not None and str(raw_id).strip():
+                    try:
+                        aid = int(float(str(raw_id).strip()))
+                        target_acte = by_id.get(aid)
+                    except (ValueError, TypeError):
+                        pass
 
-            if target_acte is None and raw_code:
-                c_str = str(raw_code).strip().lower()
-                target_acte = by_code.get(c_str)
+                if target_acte is None and raw_code:
+                    c_str = str(raw_code).strip().lower()
+                    target_acte = by_code.get(c_str)
 
-            if target_acte is None and raw_name:
-                name_str = str(raw_name).strip()
-                target_acte = by_exact_name.get(name_str.lower())
+                if target_acte is None and raw_name:
+                    name_str = str(raw_name).strip()
+                    target_acte = by_exact_name.get(name_str.lower())
+                    if target_acte is None:
+                        target_acte = by_norm_name.get(_normalize_str(name_str))
+
                 if target_acte is None:
-                    target_acte = by_norm_name.get(_normalize_str(name_str))
+                    display_label = raw_name or raw_code or raw_id or f"Ligne {line_num}"
+                    errors.append(f"Ligne {line_num} : Acte '{display_label}' introuvable dans le référentiel.")
+                    skipped_count += 1
+                    continue
 
-            if target_acte is None:
-                display_label = raw_name or raw_code or raw_id or f"Ligne {line_num}"
-                errors.append(f"Ligne {line_num} : Acte '{display_label}' introuvable dans le référentiel.")
-                skipped_count += 1
-                continue
+                # Parse price
+                parsed_price = _parse_price(raw_price)
+                if parsed_price is None:
+                    if target_acte.pk in existing_offers:
+                        # Keep existing price
+                        parsed_price = existing_offers[target_acte.pk].price
+                    elif target_acte.reference_price is not None:
+                        parsed_price = target_acte.reference_price
+                    else:
+                        parsed_price = Decimal("0")
 
-            # Parse price
-            parsed_price = _parse_price(raw_price)
-            if parsed_price is None:
-                if target_acte.pk in existing_offers:
-                    # Keep existing price
-                    parsed_price = existing_offers[target_acte.pk].price
-                elif target_acte.reference_price is not None:
-                    parsed_price = target_acte.reference_price
-                else:
-                    parsed_price = Decimal("0")
+                # Parse delai
+                parsed_delai = _parse_delai(raw_delai)
+                if not parsed_delai and target_acte.pk in existing_offers:
+                    parsed_delai = existing_offers[target_acte.pk].delai
 
-            # Parse delai
-            parsed_delai = _parse_delai(raw_delai)
-            if not parsed_delai and target_acte.pk in existing_offers:
-                parsed_delai = existing_offers[target_acte.pk].delai
-
-            # Parse availability
-            is_available = _parse_boolean(
-                raw_available,
-                default=auto_activate if parsed_price > 0 else True,
-            )
-
-            # RDV prerequisites
-            prereq_text = str(raw_prereq).strip() if raw_prereq is not None else None
-
-            pa = existing_offers.get(target_acte.pk)
-            if pa is not None:
-                pa.price = parsed_price
-                pa.delai = parsed_delai
-                pa.is_available = is_available
-                update_fields = ["price", "delai", "is_available", "updated_at"]
-                if prereq_text is not None:
-                    pa.rdv_prerequisites = prereq_text
-                    update_fields.append("rdv_prerequisites")
-                pa.save(update_fields=update_fields)
-                updated_count += 1
-            else:
-                new_pa = PrestataireActe.objects.create(
-                    organisme=org,
-                    acte=target_acte,
-                    price=parsed_price,
-                    delai=parsed_delai,
-                    is_available=is_available,
-                    rdv_prerequisites=prereq_text or "",
+                # Parse availability
+                is_available = _parse_boolean(
+                    raw_available,
+                    default=auto_activate if parsed_price > 0 else True,
                 )
-                existing_offers[target_acte.pk] = new_pa
-                created_count += 1
+
+                # RDV prerequisites
+                prereq_text = str(raw_prereq).strip() if raw_prereq is not None else None
+
+                pa = existing_offers.get(target_acte.pk)
+                if pa is not None:
+                    pa.price = parsed_price
+                    pa.delai = parsed_delai
+                    pa.is_available = is_available
+                    update_fields = ["price", "delai", "is_available", "updated_at"]
+                    if prereq_text is not None:
+                        pa.rdv_prerequisites = prereq_text
+                        update_fields.append("rdv_prerequisites")
+                    pa.save(update_fields=update_fields)
+                    updated_count += 1
+                else:
+                    new_pa = PrestataireActe.objects.create(
+                        organisme=org,
+                        acte=target_acte,
+                        price=parsed_price,
+                        delai=parsed_delai,
+                        is_available=is_available,
+                        rdv_prerequisites=prereq_text or "",
+                    )
+                    existing_offers[target_acte.pk] = new_pa
+                    created_count += 1
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Erreur lors de l'enregistrement en base de données : {str(e)}",
+            "total_rows": len(data_rows),
+            "created_count": 0,
+            "updated_count": 0,
+            "skipped_count": len(data_rows),
+            "errors": [str(e)],
+        }
 
     return {
         "success": True,

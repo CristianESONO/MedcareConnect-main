@@ -1270,8 +1270,22 @@ window.MEDCARE_CATALOGUE_PREP = {
         credentials: 'same-origin'
       })
       .then(function(res) {
-        return res.json().then(function(data) {
-          return { status: res.status, data: data };
+        return res.text().then(function(text) {
+          try {
+            var data = JSON.parse(text);
+            return { ok: res.ok, status: res.status, data: data };
+          } catch (e) {
+            return {
+              ok: false,
+              status: res.status,
+              data: {
+                ok: false,
+                error: res.status === 500
+                  ? 'Erreur interne du serveur (500). Veuillez vérifier que le fichier est bien au format .xlsx ou .csv valide.'
+                  : ('Erreur HTTP ' + res.status + ' lors du traitement du fichier.')
+              }
+            };
+          }
         });
       })
       .then(function(resObj) {
