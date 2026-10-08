@@ -324,7 +324,15 @@ def _read_rows_from_file(file_obj) -> tuple[list[list[Any]], str]:
     if fmt == "xlsx":
         bio = io.BytesIO(content)
         wb = openpyxl.load_workbook(bio, data_only=True)
-        ws = wb.active
+        # Select best matching sheet if multiple sheets exist
+        ws = None
+        for sname in wb.sheetnames:
+            s_low = sname.lower()
+            if any(k in s_low for k in ("catalogue", "acte", "tarif", "prix", "examen")):
+                ws = wb[sname]
+                break
+        if ws is None:
+            ws = wb.active
         rows = []
         for r in ws.iter_rows(values_only=True):
             if any(cell is not None for cell in r):
@@ -387,7 +395,7 @@ def import_catalog_from_file(
     if not rows:
         return {
             "success": False,
-            "error": "Le fichier fourni est vide.",
+            "error": "Le fichier fourni est vide ou aucune ligne valide n'a été détectée.",
             "total_rows": 0,
             "created_count": 0,
             "updated_count": 0,
@@ -395,50 +403,53 @@ def import_catalog_from_file(
             "errors": ["Aucune ligne détectée."],
         }
 
-    # Find header row
+    # Find header row across the first 25 rows
     header_idx = -1
     col_map: dict[str, int] = {}
-    for r_i, row in enumerate(rows[:10]):
+    found_headers_preview: list[str] = []
+
+    for r_i, row in enumerate(rows[:25]):
         norm_row = [_normalize_str(str(c or "")) for c in row]
         temp_map = {}
         for c_i, c_val in enumerate(norm_row):
-            if "id" in c_val and ("acte" in c_val or c_val == "id"):
+            if not c_val:
+                continue
+            if "id" in c_val and ("acte" in c_val or c_val in ("id", "identifiant")):
                 temp_map["id"] = c_i
-            elif "code" in c_val:
+            elif ("code" in c_val and "acte" in c_val) or c_val in ("code", "reference", "ref", "ref_acte", "code_acte"):
                 temp_map["code"] = c_i
-            elif any(w in c_val for w in ("nom", "acte", "designation", "libelle", "prestation")):
+            elif any(w in c_val for w in ("nom", "acte", "actes", "designation", "libelle", "prestation", "prestations", "examen", "examens", "analyse", "analyses", "intitule", "rubrique", "description")):
                 if "id" not in c_val:
                     temp_map["name"] = c_i
-            elif any(w in c_val for w in ("prix", "tarif", "montant", "cout", "couts")):
+            elif any(w in c_val for w in ("prix", "tarif", "tarifs", "montant", "cout", "couts", "valeur", "pu", "frais", "cotation")):
                 temp_map["price"] = c_i
-            elif any(w in c_val for w in ("delai", "delais", "duree")):
+            elif any(w in c_val for w in ("delai", "delais", "duree", "temps")):
                 temp_map["delai"] = c_i
-            elif any(w in c_val for w in ("dispo", "disponible", "actif", "active")):
+            elif any(w in c_val for w in ("dispo", "disponible", "disponibilite", "actif", "active", "statut", "propose")):
                 temp_map["available"] = c_i
-            elif any(w in c_val for w in ("consigne", "consignes", "prerequis", "preparation")):
+            elif any(w in c_val for w in ("consigne", "consignes", "prerequis", "preparation", "instruction", "instructions", "note", "notes")):
                 temp_map["prerequisites"] = c_i
 
-        # A valid header must have at least name or id, and preferably price
-        if ("name" in temp_map or "id" in temp_map) and "price" in temp_map:
+        if "name" in temp_map or "id" in temp_map:
             header_idx = r_i
             col_map = temp_map
-            break
-        elif ("name" in temp_map or "id" in temp_map):
-            header_idx = r_i
-            col_map = temp_map
+            found_headers_preview = [str(c or "") for c in row if c is not None]
+            if "price" in temp_map:
+                break
 
-    if header_idx == -1 or not col_map:
+    if header_idx == -1 or not col_map or ("name" not in col_map and "id" not in col_map):
+        preview_text = " · ".join(found_headers_preview[:6]) if found_headers_preview else "Aucun en-tête lisible"
         return {
             "success": False,
             "error": (
-                "En-têtes de colonnes non reconnus. Assurez-vous d'avoir au moins les colonnes "
-                "'Nom de l'acte' (ou 'ID Acte') et 'Prix (FCFA)'."
+                "En-têtes de colonnes non reconnus. Votre fichier doit contenir au moins "
+                "une colonne désignant l'acte médical (ex: 'Nom de l'acte', 'Acte', 'Examen', 'Analyse' ou 'ID Acte')."
             ),
             "total_rows": len(rows),
             "created_count": 0,
             "updated_count": 0,
             "skipped_count": 0,
-            "errors": ["Impossible d'identifier les colonnes d'en-tête."],
+            "errors": [f"Colonnes détectées : {preview_text}"],
         }
 
     # Preload database reference acts

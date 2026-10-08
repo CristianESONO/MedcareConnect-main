@@ -1036,6 +1036,9 @@ window.MEDCARE_CATALOGUE_PREP = {
   }
 
   function closePrepPanel() {
+    if (document.activeElement && (prepPanel && prepPanel.contains(document.activeElement) || prepOverlay && prepOverlay.contains(document.activeElement))) {
+      document.activeElement.blur();
+    }
     openPrepActeId = null;
     prepReference = '';
     prepOverlay.classList.remove('open');
@@ -1100,6 +1103,7 @@ window.MEDCARE_CATALOGUE_PREP = {
   function openAddModal() {
     if (!addActeOverlay || !addActeModal) return;
     addActeOverlay.classList.remove('hidden');
+    addActeOverlay.setAttribute('aria-hidden', 'false');
     setTimeout(function() {
       addActeOverlay.classList.remove('opacity-0');
       addActeModal.classList.remove('scale-95');
@@ -1120,11 +1124,15 @@ window.MEDCARE_CATALOGUE_PREP = {
 
   function closeAddModal() {
     if (!addActeOverlay || !addActeModal) return;
+    if (document.activeElement && addActeOverlay.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
     addActeOverlay.classList.add('opacity-0');
     addActeModal.classList.remove('scale-100');
     addActeModal.classList.add('scale-95');
     setTimeout(function() {
       addActeOverlay.classList.add('hidden');
+      addActeOverlay.setAttribute('aria-hidden', 'true');
     }, 200);
   }
 
@@ -1157,10 +1165,13 @@ window.MEDCARE_CATALOGUE_PREP = {
   var btnSpinner = document.getElementById('import-btn-spinner');
   var btnText = document.getElementById('import-btn-text');
 
+  var currentImportFile = null;
+
   function openImportModal() {
     if (!importOverlay || !importModal) return;
     if (resultBox) { resultBox.className = 'hidden rounded-xl p-3 text-xs'; resultBox.innerHTML = ''; }
     importOverlay.classList.remove('hidden');
+    importOverlay.setAttribute('aria-hidden', 'false');
     setTimeout(function() {
       importOverlay.classList.remove('opacity-0');
       importModal.classList.remove('scale-95');
@@ -1170,15 +1181,20 @@ window.MEDCARE_CATALOGUE_PREP = {
 
   function closeImportModal() {
     if (!importOverlay || !importModal) return;
+    if (document.activeElement && importOverlay.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
     importOverlay.classList.add('opacity-0');
     importModal.classList.remove('scale-100');
     importModal.classList.add('scale-95');
     setTimeout(function() {
       importOverlay.classList.add('hidden');
+      importOverlay.setAttribute('aria-hidden', 'true');
     }, 200);
   }
 
   function updateSelectedFile(file) {
+    currentImportFile = file || null;
     if (!file) {
       if (dropzonePrompt) dropzonePrompt.classList.remove('hidden');
       if (dropzoneFileInfo) dropzoneFileInfo.classList.add('hidden');
@@ -1197,6 +1213,8 @@ window.MEDCARE_CATALOGUE_PREP = {
     fileInput.addEventListener('change', function() {
       if (fileInput.files && fileInput.files[0]) {
         updateSelectedFile(fileInput.files[0]);
+      } else {
+        updateSelectedFile(null);
       }
     });
   }
@@ -1225,8 +1243,11 @@ window.MEDCARE_CATALOGUE_PREP = {
     });
     dropzone.addEventListener('drop', function(e) {
       if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        updateSelectedFile(fileInput.files[0]);
+        var dropped = e.dataTransfer.files[0];
+        try {
+          fileInput.files = e.dataTransfer.files;
+        } catch (ex) {}
+        updateSelectedFile(dropped);
       }
     });
   }
@@ -1245,12 +1266,14 @@ window.MEDCARE_CATALOGUE_PREP = {
   if (importForm) {
     importForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+      var fileToUpload = currentImportFile || (fileInput && fileInput.files && fileInput.files[0]);
+      if (!fileToUpload) {
         alert('Veuillez sélectionner un fichier Excel (.xlsx) ou CSV.');
         return;
       }
 
       var fd = new FormData(importForm);
+      fd.set('file', fileToUpload);
       if (submitBtn) submitBtn.disabled = true;
       if (btnSpinner) btnSpinner.classList.remove('hidden');
       if (btnText) btnText.textContent = 'Importation en cours…';
