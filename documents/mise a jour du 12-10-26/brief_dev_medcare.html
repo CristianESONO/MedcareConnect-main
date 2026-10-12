@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MedCare — Brief dev · modifications du jour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0a5c8a; --blue-l:#e6f0f7; --blue-m:#b9d6e8;
+    --green:#14b87a; --green-l:#e4f7ef; --green-d:#0a7a4f;
+    --teal:#1a9e9e; --amber:#d97706; --amber-l:#fef3e2;
+    --ink:#0f2233; --g600:#51657a; --g400:#8a9bad; --g200:#dde5ec; --g100:#eef2f6; --g50:#f6f9fb;
+    --bg:#f4f7fa; --card:#ffffff; --line:#e3eaf1; --text:#0f2233;
+    box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --bg:#0b1722; --card:#13222f; --line:#223445; --text:#e7eef5; --ink:#e7eef5;
+    --g600:#a9bccd; --g400:#7d93a6; --g200:#2b3e4f; --g100:#1b2b39; --g50:#16242f;
+    --blue-l:#13303f; --green-l:#123528; --amber-l:#2e2410;
+  }}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:26px 18px 60px}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(20px,3.4vw,27px);letter-spacing:-.01em}
+  .sub{color:var(--g600);font-size:13.5px;margin-top:5px;max-width:720px}
+  .hero-tag{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);background:var(--blue-l);border:1px solid var(--blue-m);border-radius:20px;padding:4px 11px;margin-bottom:12px}
+  h2{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin:30px 0 4px;display:flex;align-items:center;gap:9px}
+  h2 .n{width:24px;height:24px;border-radius:7px;background:var(--ink);color:var(--card);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .h2-sub{color:var(--g400);font-size:12px;margin:0 0 14px 33px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 22px -14px rgba(13,40,66,.3)}
+  /* ─ flux de boucle ─ */
+  .loop{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}
+  .step{flex:1 1 150px;min-width:150px;border-radius:12px;padding:11px 12px;position:relative;border:1px solid var(--line)}
+  .step.pat{background:var(--green-l);border-color:#bfe8d6}
+  .step.str{background:var(--blue-l);border-color:var(--blue-m)}
+  .step .who{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+  .step.pat .who{color:var(--green-d)}
+  .step.str .who{color:var(--blue)}
+  .step .tx{font-size:12px;font-weight:500;color:var(--text);line-height:1.4}
+  .step .tx b{font-weight:700}
+  .arrow{align-self:center;color:var(--g400);font-size:17px;font-weight:700;flex-shrink:0}
+  .loopback{margin-top:11px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--amber);background:var(--amber-l);border:1px solid #f0cda0;border-radius:10px;padding:8px 12px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--g600);margin:0 0 14px 33px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .dot.pat{background:var(--green)} .dot.str{background:var(--blue)}
+  /* ─ profil unifié ─ */
+  .mini{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.mini{grid-template-columns:1fr}}
+  .fiche{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+  .fiche-hd{background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff;padding:13px 14px}
+  .fiche-row1{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .fiche-name{font-family:'Syne',sans-serif;font-weight:800;font-size:14px}
+  .b-pio{font-size:9px;font-weight:700;background:#f5c451;color:#5a4300;border-radius:20px;padding:2px 8px}
+  .b-open{font-size:9px;font-weight:700;background:rgba(20,184,122,.25);color:#8ff3c6;border:1px solid rgba(20,184,122,.5);border-radius:20px;padding:1px 8px}
+  .fiche-type{font-size:11px;color:rgba(255,255,255,.85);margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .fiche-desc{font-size:10.5px;color:var(--g600);margin-bottom:9px;line-height:1.45}
+  .fiche-btns{display:flex;gap:6px;margin-top:11px}
+  .fiche-btns button{flex:1;font-size:10px;font-weight:600;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:7px 2px;font-family:inherit}
+  .fiche-bd{padding:12px 14px}
+  .fiche-search{display:flex;gap:6px;margin-bottom:9px}
+  .fiche-search .inp{flex:1;border:1px solid var(--g200);border-radius:8px;padding:7px 10px;font-size:11px;color:var(--g400);background:var(--g50)}
+  .fiche-search .go{background:var(--blue);color:#fff;border-radius:8px;padding:0 11px;display:flex;align-items:center;font-size:12px}
+  .fiche-ass{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--g200);border-radius:9px;padding:8px 11px;font-size:11.5px;font-weight:700;color:var(--blue)}
+  .tagnew{display:inline-block;font-size:9px;font-weight:800;color:var(--green-d);background:var(--green-l);border:1px solid #bfe8d6;border-radius:5px;padding:1px 6px;vertical-align:middle;margin-left:6px}
+  /* ─ checklist dev ─ */
+  .task{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+  .task:last-child{border-bottom:none}
+  .prio{flex-shrink:0;font-size:9.5px;font-weight:800;border-radius:6px;padding:3px 8px;white-space:nowrap;margin-top:1px}
+  .p0{background:#fde2e2;color:#b91c1c} .p1{background:var(--amber-l);color:#b45309} .p2{background:var(--g100);color:var(--g600)}
+  .task-t{font-size:13px;font-weight:700}
+  .task-d{font-size:11.5px;color:var(--g600);margin-top:2px}
+  /* ─ pourquoi ─ */
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:720px){.why{grid-template-columns:1fr}}
+  .why .c{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .why .c h4{font-size:12.5px;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:5px}
+  .why .c p{font-size:11.5px;color:var(--g600)}
+  .deonto{margin-top:14px;display:flex;gap:10px;align-items:flex-start;background:var(--green-l);border:1px solid #bfe8d6;border-radius:12px;padding:12px 14px}
+  .deonto .tx{font-size:11.5px;color:var(--green-d);line-height:1.55}
+  .foot{margin-top:28px;font-size:11px;color:var(--g400);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="hero-tag">Brief dev · 10 oct. 2026</span>
+  <h1>MedCare — modifications du jour (démo patient &amp; structure)</h1>
+  <p class="sub">Même colonne vertébrale partout : <b>un lien</b> <code>medcare.sn/t/&lt;id&gt;</code> qui présélectionne des actes dans le panier. Il pointe vers un <b>panel</b> (plusieurs actes) ou un <b>ticket de prestation</b> (un acte seul) — même objet, même mécanique. Le reste n'est que de la connexion. Priorité dev en bas.</p>
+
+  <h2><span class="n">A</span> Boucle « Panel / Ticket → lien → panier »</h2>
+  <div class="h2-sub">Constitué une fois, repartagé à volonté. Un <b>panel</b> (plusieurs actes) ou un <b>ticket de prestation</b> (un acte seul), créés tous deux dans « Panels d'examens ». <span class="tagnew">ticket = ajout du jour</span></div>
+  <div class="legend"><span><i class="dot str"></i> Action structure</span><span><i class="dot pat"></i> Action patient</span></div>
+  <div class="card">
+    <div class="loop">
+      <div class="step str"><div class="who">Structure</div><div class="tx">Crée un <b>panel</b> ou un <b>ticket</b> (acte seul) dans « Panels d'examens »</div></div>
+      <div class="arrow">→</div>
+      <div class="step str"><div class="who">Structure</div><div class="tx">Le panel reçoit un <b>lien</b> <code>medcare.sn/t/&lt;id&gt;</code></div></div>
+      <div class="arrow">→</div>
+      <div class="step str"><div class="who">Structure</div><div class="tx"><b>Copier</b> ou <b>📤 Envoyer à</b> → choisit des patients du fil</div></div>
+      <div class="arrow">→</div>
+      <div class="step pat"><div class="who">Patient</div><div class="tx">Reçoit le lien et <b>l'ouvre</b></div></div>
+      <div class="arrow">→</div>
+      <div class="step pat"><div class="who">Patient</div><div class="tx">Les actes arrivent <b>déjà cochés</b> au panier</div></div>
+    </div>
+    <div class="loopback">↩ Rejoint la boucle de réservation habituelle : <b>devis&nbsp;→&nbsp;RDV&nbsp;→&nbsp;confirmation</b></div>
+  </div>
+
+  <h2><span class="n">B</span> Boucle « Pré-devis » (depuis le profil public)</h2>
+  <div class="h2-sub">Le patient sans panier entre par la conversation ; la structure convertit via un panel après lecture du bulletin.</div>
+  <div class="card">
+    <div class="loop">
+      <div class="step pat"><div class="who">Patient</div><div class="tx">Profil public → <b>✉️ Messagerie</b></div></div>
+      <div class="arrow">→</div>
+      <div class="step pat"><div class="who">Patient</div><div class="tx"><b>🧾 Demander un pré-devis</b> → le chatbot réclame le bulletin</div></div>
+      <div class="arrow">→</div>
+      <div class="step pat"><div class="who">Patient</div><div class="tx"><b>📎 Téléverse</b> son bulletin d'analyse</div></div>
+      <div class="arrow">→</div>
+      <div class="step str"><div class="who">Structure</div><div class="tx">Reçoit et <b>lit</b> le bulletin dans la messagerie</div></div>
+      <div class="arrow">→</div>
+      <div class="step str"><div class="who">Structure</div><div class="tx"><b>🧩 Envoie le lien</b> du panel correspondant</div></div>
+      <div class="arrow">→</div>
+      <div class="step pat"><div class="who">Patient</div><div class="tx"><b>🛒 Pré-sélectionne</b> les actes → panier rempli</div></div>
+    </div>
+    <div class="loopback">↩ Même fin que la boucle A : <b>devis&nbsp;→&nbsp;RDV</b> (bulletin déjà fourni&nbsp;→&nbsp;confirmation directe)</div>
+  </div>
+
+  <h2><span class="n">C</span> Profil public unifié (patient = structure)</h2>
+  <div class="h2-sub">Même gabarit des deux côtés. La maquette ci-dessous = le rendu cible.</div>
+  <div class="mini">
+    <div class="fiche">
+      <div class="fiche-hd">
+        <div class="fiche-row1"><span class="fiche-name">Laboratoire BioSanté Mermoz</span><span class="b-pio">★ Pionnier</span></div>
+        <div class="fiche-type">Laboratoire d'analyses médicales · Mermoz <span class="b-open">● Ouvert</span></div>
+        <div class="fiche-btns"><button>✉️ Messagerie</button><button>📍 Itinéraire</button><button>🕐 Horaires</button></div>
+      </div>
+      <div class="fiche-bd">
+        <div class="fiche-desc">Laboratoire d'analyses médicales à Mermoz, pour la biologie courante et spécialisée.</div>
+        <div class="fiche-search"><div class="inp">Rechercher un acte…</div><div class="go">🔍</div></div>
+        <div class="fiche-ass">🛡 Assurances acceptées (6) <span style="color:var(--g400)">▾</span></div>
+      </div>
+    </div>
+    <div style="font-size:12.5px;color:var(--g600);align-self:center">
+      <div style="font-weight:700;color:var(--text);margin-bottom:7px;font-family:'Syne',sans-serif">Ce qui est aligné</div>
+      • Nom + badge <b>Pionnier/Vérifié</b> sur une ligne<br>
+      • Type + badge <b>Ouvert/Fermé</b><br>
+      • <b>3 boutons</b> sur une ligne : Messagerie · Itinéraire · Horaires<br>
+      • Descriptif court <b>sous les boutons</b>, juste au-dessus de la recherche<br>
+      • <b>Recherche d'actes</b> <span class="tagnew">ajout du jour</span><br>
+      • Assurances <b>repliables</b><br>
+      • Horaires dans le bouton (plus de doublon texte)
+    </div>
+  </div>
+
+  <h2><span class="n">D</span> Ce que Christian doit brancher</h2>
+  <div class="h2-sub">La démo simule ; le vrai travail est la connexion (2 fichiers séparés aujourd'hui, état en mémoire).</div>
+  <div class="card">
+    <div class="task"><span class="prio p0">P0</span><div><div class="task-t">Résolution du lien <code>/t/:id</code> côté app patient</div><div class="task-d">Charger la cible du lien (<b>panel OU ticket acte-seul</b>) et <b>pré-cocher réellement</b> les actes dans le panier de la bonne structure. C'est le chaînon manquant — aujourd'hui simulé car les deux apps sont des fichiers distincts.</div></div></div>
+    <div class="task"><span class="prio p0">P0</span><div><div class="task-t">Messagerie unifiée temps réel patient ↔ structure</div><div class="task-d">Un seul fil partagé (pas deux copies). Types de message à gérer : <code>pré-devis</code>, <code>bulletin</code> (pièce jointe), <code>panel_link</code>.</div></div></div>
+    <div class="task"><span class="prio p1">P1</span><div><div class="task-t">Modèle <code>Panel</code> (+ ticket) + génération du lien</div><div class="task-d"><code>{id, structureId, nom, actes[], lien, kind}</code> — <code>kind:'ticket'</code> = un acte seul. Lien court créé à l'enregistrement, même espace pour panels et tickets. Stockage.</div></div></div>
+    <div class="task"><span class="prio p1">P1</span><div><div class="task-t">Upload &amp; stockage du bulletin</div><div class="task-d">Téléversement réel côté patient, lecture côté structure. Garde-fou : bulletin émis par un tiers (pas d'auto-prescription).</div></div></div>
+    <div class="task"><span class="prio p1">P1</span><div><div class="task-t">« Envoyer à » → push serveur</div><div class="task-d">Pousser le lien vers les fils patients sélectionnés + notification + compteur de non-lus.</div></div></div>
+    <div class="task"><span class="prio p2">P2</span><div><div class="task-t">Profil public : données réelles</div><div class="task-d">Badge <b>Ouvert/Fermé</b> calculé depuis les horaires ; champ <code>desc</code> propre à chaque structure (le texte est généré par famille dans la démo).</div></div></div>
+    <div class="task"><span class="prio p2">P2</span><div><div class="task-t">Persistance</div><div class="task-d">Tout l'état de la démo est en mémoire (reset au rechargement). À brancher sur le backend.</div></div></div>
+  </div>
+
+  <h2><span class="n">E</span> Pourquoi ces ajouts</h2>
+  <div class="why">
+    <div class="c"><h4>🧾 Acquisition</h4><p>Le patient qui ne sait pas quoi cocher entre par la conversation. La structure le convertit via un panel : moins de friction, plus de demandes abouties.</p></div>
+    <div class="c"><h4>🔁 Réutilisation</h4><p>Un panel constitué une fois est repartageable à l'infini (Copier / Envoyer à). Le même objet sert aux deux boucles et à la fin de réservation.</p></div>
+    <div class="c"><h4>🧩 Cohérence</h4><p>Un seul type de lien, un seul gabarit de profil public des deux côtés. Le patient voit toujours la même chose, quelle que soit la source.</p></div>
+  </div>
+  <div class="deonto"><span style="font-size:15px">🔒</span><div class="tx"><b>Garde-fou déontologique préservé dans les deux sens :</b> le bulletin tiers reste obligatoire, la structure <b>exécute</b> le panel sans le prescrire, MedCare n'émet pas d'ordonnance et ne prélève aucune commission sur les actes.</div></div>
+
+  <div class="foot">MedCare · démo patient + démo structure · résumé pour passation dev</div>
+</div>
+</body>
+</html>

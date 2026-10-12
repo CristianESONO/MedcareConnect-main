@@ -115,3 +115,103 @@ def test_actes_excel_views(client):
     pa = PrestataireActe.objects.get(organisme=org, acte=acte)
     assert pa.price == Decimal("12000.00")
     assert pa.delai == "immediat"
+
+
+@pytest.mark.django_db
+def test_catalog_normalization_synonyms_and_duplicates():
+    user = User.objects.create_user(username="test_presta_fuzzy", email="fuzzy@medcare.sn", password="pass")
+    org = OrganismeDeSante.objects.create(user=user, name="Clinique de l'Espoir", is_active=True)
+
+    svc_bio = ServiceMedical.objects.create(name="Biologie médicale", slug="biologie-medicale-test", order=1, is_active=True)
+    svc_img = ServiceMedical.objects.create(name="Imagerie", slug="imagerie-test", order=2, is_active=True)
+
+    nfs = ActeMedical.objects.create(
+        name="NFS / Hémogramme",
+        code="BIO-NFS",
+        service_medical_category=svc_bio,
+        level=3,
+        reference_price=Decimal("5000"),
+        is_active=True,
+    )
+    gly = ActeMedical.objects.create(
+        name="Glycémie à jeun",
+        code="BIO-GLY",
+        service_medical_category=svc_bio,
+        level=3,
+        reference_price=Decimal("3000"),
+        is_active=True,
+    )
+    echo = ActeMedical.objects.create(
+        name="Échographie abdomino-pelvienne",
+        code="IMG-ECHO-ABD",
+        service_medical_category=svc_img,
+        level=3,
+        reference_price=Decimal("25000"),
+        is_active=True,
+    )
+
+    # Fichier CSV contenant :
+    # 1. Sigle avec points et minuscules : "n.f.s."
+    # 2. Synonyme étendu : "Numération formule sanguine" (même acte que nfs -> doublon intra-fichier harmonisé)
+    # 3. Inclusion de mots-clés : "Dosage de la glycémie à jeun" avec formatage "3.500 FCFA"
+    # 4. Alias imagerie sans accents : "ECHO ABDOMINO PELVIENNE" avec formatage "25,000 CFA" et délai "Urgence"
+    csv_content = (
+        "Nom de l'acte;Prix;Délai indicatif;Disponible\n"
+        "n.f.s.;5 000 FCFA;Sous 24h;Oui\n"
+        "NUMERATION FORMULE SANGUINE;6000 CFA;24 h;Oui\n"
+        "Dosage de la glycémie à jeun;3.500 FCFA;immediat;Oui\n"
+        "ECHO ABDOMINO PELVIENNE;25,000;Urgent;Oui\n"
+    )
+
+    csv_file = SimpleUploadedFile("catalogue_variations.csv", csv_content.encode("utf-8"), content_type="text/csv")
+    res = import_catalog_from_file(csv_file, org, auto_activate=True)
+
+    assert res["success"] is True
+    # Exactly 3 distinct leaf acts should be created/updated (no duplicate offers)
+    assert PrestataireActe.objects.filter(organisme=org).count() == 3
+
+    # NFS must have the final price from the second line (6000 FCFA)
+    pa_nfs = PrestataireActe.objects.get(organisme=org, acte=nfs)
+    assert pa_nfs.price == Decimal("6000.00")
+    assert pa_nfs.delai == "24h"
+
+    # Glycémie parsed correctly
+    pa_gly = PrestataireActe.objects.get(organisme=org, acte=gly)
+    assert pa_gly.price == Decimal("3500.00")
+    assert pa_gly.delai == "immediat"
+
+    # Echo parsed correctly
+    pa_echo = PrestataireActe.objects.get(organisme=org, acte=echo)
+    assert pa_echo.price == Decimal("25000.00")
+    assert pa_echo.delai == "immediat"
+
+    # Verify that the duplicate warning was generated
+    assert any("correspond au même acte référentiel" in err for err in res["errors"])
+
+
+@pytest.mark.django_db
+def test_fuzzy_typo_matching_and_price_variations():
+    user = User.objects.create_user(username="test_presta_typo", email="typo@medcare.sn", password="pass")
+    org = OrganismeDeSante.objects.create(user=user, name="Cabinet Test Typo", is_active=True)
+    svc = ServiceMedical.objects.create(name="Consultations", slug="consult-typo", order=1, is_active=True)
+
+    nfs = ActeMedical.objects.create(name="NFS / Hémogramme", service_medical_category=svc, level=3, is_active=True)
+    consult = ActeMedical.objects.create(name="Consultation de médecine générale", service_medical_category=svc, level=3, is_active=True)
+
+    csv_content = (
+        "Nom de l'acte;Prix;Délai\n"
+        "Hemograme;Gratuit;immediat\n"
+        "Consultation medecin generaliste;15 000 FCFA;24h\n"
+    )
+    csv_file = SimpleUploadedFile("typo.csv", csv_content.encode("utf-8"), content_type="text/csv")
+    res = import_catalog_from_file(csv_file, org, auto_activate=True)
+    assert res["success"] is True
+    assert PrestataireActe.objects.filter(organisme=org).count() == 2
+
+    pa_nfs = PrestataireActe.objects.get(organisme=org, acte=nfs)
+    assert pa_nfs.price == Decimal("0.00")
+
+    pa_c = PrestataireActe.objects.get(organisme=org, acte=consult)
+    assert pa_c.price == Decimal("15000.00")
+
+
