@@ -15,7 +15,10 @@ def normalize(s):
         return ""
     return s.strip().lower().replace("’", "'").replace(" ", "")
 
-with open(r"e:\projets\MedcareConnect-main\MedcareConnect-main\referentiel_6piliers_medcare.json", "r", encoding="utf-8") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+json_file = os.path.join(BASE_DIR, "referentiel_6piliers_medcare.json")
+
+with open(json_file, "r", encoding="utf-8") as f:
     master = json.load(f)
 
 print("================================================================", flush=True)
