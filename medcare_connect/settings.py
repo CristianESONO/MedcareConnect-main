@@ -178,7 +178,11 @@ if _TRUST_PROXY:
 
 CSRF_COOKIE_SECURE = _SERVE_HTTPS
 SESSION_COOKIE_SECURE = _SERVE_HTTPS
-CSRF_COOKIE_HTTPONLY = _SERVE_HTTPS
+# CSRF_COOKIE_HTTPONLY doit toujours être False :
+# Le middleware CSRF de Django exige que JavaScript puisse lire le cookie
+# csrftoken via document.cookie pour les requêtes AJAX/fetch (X-CSRFToken).
+# Mettre True bloque toutes les requêtes API → 403 Forbidden.
+CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Lax"
