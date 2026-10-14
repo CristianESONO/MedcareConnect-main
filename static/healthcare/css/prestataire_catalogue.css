@@ -810,9 +810,9 @@
   color: #6b7280;
   font-size: 10px;
 }
-.pilier-tab.is-active .tab-count-active { color: #fff; }
+.pilier-tab.is-active .tab-count-active { color: #0a5c8a; }
 .pilier-tab.is-active .pilier-tab-count.has-active {
-  background: rgba(255,255,255,0.25);
-  color: #fff;
+  background: rgba(10, 92, 138, 0.12);
+  color: #0a5c8a;
 }
-.pilier-tab.is-active .tab-count-sep { color: rgba(255,255,255,0.75); }
+.pilier-tab.is-active .tab-count-sep { color: #4b5563; }
