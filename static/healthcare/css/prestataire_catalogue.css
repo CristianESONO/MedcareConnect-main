@@ -792,3 +792,27 @@
   font-weight: 600;
   color: #0a6140;
 }
+
+/* ── Compteur actif / total sur les onglets piliers ── */
+.pilier-tab-count.has-active {
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+.tab-count-active {
+  font-weight: 800;
+  color: #15803d;
+  font-size: 12px;
+}
+.tab-count-sep {
+  font-weight: 500;
+  color: #6b7280;
+  font-size: 10px;
+}
+.pilier-tab.is-active .tab-count-active { color: #fff; }
+.pilier-tab.is-active .pilier-tab-count.has-active {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+.pilier-tab.is-active .tab-count-sep { color: rgba(255,255,255,0.75); }

@@ -3233,6 +3233,15 @@ def actes_list(request):
         "",
     )
 
+    # Enrichit chaque bloc avec le nombre d'actes actifs de cette structure
+    for block in catalog_by_pilier:
+        block_acte_pks = set(
+            acte.pk
+            for sg in block.get("subgroups") or []
+            for acte in sg.get("actes") or []
+        )
+        block["active_count"] = len(block_acte_pks & selected_acte_ids)
+
     from healthcare.prestataire_domicile import (
         DOMICILE_DELAI_CHOICES,
         domicile_all_actes_active,

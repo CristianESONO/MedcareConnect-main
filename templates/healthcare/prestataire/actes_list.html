@@ -3,7 +3,7 @@
 {% block title %}Catalogue des actes{% endblock %}
 
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=6">
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=7">
 {% endblock %}
 
 {% block dash_content %}
@@ -60,10 +60,16 @@
         data-pilier-panel="pilier-{{ block.pilier.pk }}"
         data-pilier-slug="{{ block.pilier.slug }}"
         data-pilier-label="{{ block.pilier.display_name }}"
-        data-count-text="{{ block.acte_count }} acte{{ block.acte_count|pluralize }}">
+        data-count-text="{{ block.active_count }} / {{ block.acte_count }} actif{{ block.active_count|pluralize }}">
         <span class="pilier-tab-icon">{% if block.pilier.display_icon %}{{ block.pilier.display_icon }}{% else %}<i class="ti ti-building-hospital"></i>{% endif %}</span>
         <span class="pilier-tab-label">{{ block.pilier.display_name|upper }}</span>
-        <span class="pilier-tab-count js-pilier-tab-count">{{ block.acte_count }} acte{{ block.acte_count|pluralize }}</span>
+        <span class="pilier-tab-count js-pilier-tab-count{% if block.active_count > 0 %} has-active{% endif %}">
+          {% if block.active_count > 0 %}
+            <span class="tab-count-active">{{ block.active_count }}</span><span class="tab-count-sep"> / {{ block.acte_count }}</span>
+          {% else %}
+            {{ block.acte_count }} acte{{ block.acte_count|pluralize }}
+          {% endif %}
+        </span>
       </button>
       {% endfor %}
     </div>
