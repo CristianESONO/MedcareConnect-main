@@ -357,16 +357,24 @@ def api_chatbot_apply_reconciliation(request):
 
     created_count = 0
     updated_count = 0
+    skipped_labels = []  # Libellés ignorés car absents du référentiel
 
     with transaction.atomic():
         for item in items:
             act_id = item.get("acte_id")
             if not act_id or act_id <= 0:
+                # Acte non apparié : libellé original tracé pour le retour
+                raw_label = item.get("raw") or item.get("raw_label") or ""
+                if raw_label:
+                    skipped_labels.append(raw_label)
                 continue
 
             try:
                 acte = ActeMedical.objects.get(pk=act_id)
             except ActeMedical.DoesNotExist:
+                raw_label = item.get("raw") or item.get("raw_label") or ""
+                if raw_label:
+                    skipped_labels.append(raw_label)
                 continue
 
             item_price = item.get("price")
@@ -429,16 +437,25 @@ def api_chatbot_apply_reconciliation(request):
             org.piliers_actifs.set(pilier_ids)
 
 
-    msg = (
-        f"Félicitations ! {total_applied} acte(s) ont été enregistrés dans votre catalogue "
-        f"({created_count} nouveau(x), {updated_count} mis à jour)."
-    )
+    skipped_count = len(skipped_labels)
+    msg_parts = [
+        f"Félicitations ! {total_applied} acte(s) ont été enregistrés dans votre catalogue",
+        f"({created_count} nouveau(x), {updated_count} mis à jour).",
+    ]
+    if skipped_count:
+        msg_parts.append(
+            f"{skipped_count} libellé(s) n'ont pas pu être associés au référentiel MedCare "
+            f"et n'ont pas été importés."
+        )
+    msg = " ".join(msg_parts)
 
     return JsonResponse({
         "ok": True,
         "created_count": created_count,
         "updated_count": updated_count,
         "total_count": total_applied,
+        "skipped_count": skipped_count,
+        "skipped_labels": skipped_labels[:50],  # max 50 pour éviter payload trop lourd
         "message": msg,
         "redirect_url": "/sante/prestataire/actes/",
     })

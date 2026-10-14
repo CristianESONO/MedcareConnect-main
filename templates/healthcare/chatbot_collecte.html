@@ -642,6 +642,7 @@ body { background: var(--mc-bg); }
       Vos actes réconciliés ont été enregistrés dans votre catalogue. Vous pouvez dès à présent les consulter, ajuster vos tarifs et vos délais de rendu.
     </p>
     <div id="successStats" style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:.75rem 0;font-size:.9rem;"></div>
+    <div id="successSkipped" style="display:none;text-align:left;"></div>
     <p id="successRedirectMsg" style="color:var(--text-muted,#888);font-size:.85rem;margin:.5rem 0 1rem;"></p>
     <a href="{% url 'healthcare:actes_list' %}" class="btn-goto-cat" id="btnGotoCat">
       <i class="ti ti-list-details"></i> Accéder à mon catalogue d'actes
@@ -1027,7 +1028,32 @@ async function applyReconciliation() {
         statsEl.innerHTML = [
           data.created_count > 0 ? `<span style="background:#e6f9f0;color:#16a34a;padding:.3rem .8rem;border-radius:99px;"><b>${data.created_count}</b> nouvel acte${data.created_count > 1 ? 's' : ''} ajouté${data.created_count > 1 ? 's' : ''}</span>` : '',
           data.updated_count > 0 ? `<span style="background:#eff6ff;color:#2563eb;padding:.3rem .8rem;border-radius:99px;"><b>${data.updated_count}</b> acte${data.updated_count > 1 ? 's' : ''} mis à jour</span>` : '',
+          data.skipped_count > 0 ? `<span style="background:#fef2f2;color:#dc2626;padding:.3rem .8rem;border-radius:99px;"><b>${data.skipped_count}</b> non importé${data.skipped_count > 1 ? 's' : ''} ⚠</span>` : '',
         ].filter(Boolean).join('');
+      }
+
+      // Afficher les actes ignorés s'il y en a
+      const skippedBlock = document.getElementById('successSkipped');
+      if (skippedBlock && data.skipped_labels && data.skipped_labels.length > 0) {
+        const listHtml = data.skipped_labels
+          .map(l => `<li style="padding:3px 0;color:#374151;font-size:13px;"><span style="color:#dc2626;margin-right:6px;">✗</span>${escapeHtml(l)}</li>`)
+          .join('');
+        skippedBlock.innerHTML = `
+          <details style="margin-top:1rem;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem 1rem;">
+            <summary style="cursor:pointer;font-weight:700;color:#dc2626;font-size:.875rem;list-style:none;display:flex;align-items:center;gap:8px;">
+              <i class="ti ti-alert-circle"></i>
+              ${data.skipped_labels.length} libellé${data.skipped_labels.length > 1 ? 's' : ''} non trouvé${data.skipped_labels.length > 1 ? 's' : ''} dans le référentiel MedCare
+              <span style="font-size:11px;color:#9ca3af;font-weight:400;margin-left:auto;">Cliquez pour voir</span>
+            </summary>
+            <p style="font-size:11px;color:#6b7280;margin:.5rem 0 .75rem;">
+              Ces actes n'ont pas été importés car aucun équivalent n'a été trouvé.
+              Ajoutez-les manuellement via <b>« + Ajouter un acte »</b> dans votre catalogue.
+            </p>
+            <ul style="margin:0;padding-left:1.2rem;list-style:none;">
+              ${listHtml}
+            </ul>
+          </details>`;
+        skippedBlock.style.display = 'block';
       }
 
       document.getElementById('successCard').classList.add('visible');
