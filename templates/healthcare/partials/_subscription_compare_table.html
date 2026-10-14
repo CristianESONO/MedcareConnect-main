@@ -29,7 +29,7 @@
           {% if feature.code == "medplaque" and theme == "starter" and feature.code not in included %}
           <span class="mcc-sp-ico-addon">+</span>
           {% elif feature.code in included %}
-          <span class="mcc-sp-ico-on">✓</span>
+          <span class="mcc-sp-ico-on"><i class="ti ti-check"></i></span>
           {% else %}
           <span class="mcc-sp-ico-off">–</span>
           {% endif %}

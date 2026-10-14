@@ -1,0 +1,4993 @@
+{
+  "pilier_id": 1,
+  "pilier_slug": "biologie-medicale",
+  "pilier_nom": "Biologie médicale",
+  "lexique_intention_uniquement": false,
+  "nb_actes": 415,
+  "actes": [
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "NFS + réticulocytes",
+      "actes_composants": [
+        "NFS (hémogramme)",
+        "Réticulocytes (taux)"
+      ],
+      "lexique_intention": [
+        "NFS+TR",
+        "NFS + réticulocytes",
+        "hémogramme + réticulocytes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "NFS + frottis sanguin",
+      "actes_composants": [
+        "NFS (hémogramme)",
+        "Frottis sanguin (étude morphologique)"
+      ],
+      "lexique_intention": [
+        "NFS + frottis sanguin",
+        "NFS + frotis",
+        "hémogramme + frottis",
+        "nfs frotis sanguin"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Transaminases (ASAT + ALAT)",
+      "actes_composants": [
+        "ASAT (TGO)",
+        "ALAT (TGP)"
+      ],
+      "lexique_intention": [
+        "transaminases",
+        "ASAT ALAT",
+        "ASAT + ALAT",
+        "TGO TGP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilirubine totale et conjuguée",
+      "actes_composants": [
+        "Bilirubine totale",
+        "Bilirubine conjuguée (directe)"
+      ],
+      "lexique_intention": [
+        "bilirubine totale et directe",
+        "bilirubine T et D",
+        "bilirubine totale et conjuguée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Ionogramme sanguin (Na + K + Cl)",
+      "actes_composants": [
+        "Natrémie",
+        "Kaliémie",
+        "Chlorémie"
+      ],
+      "lexique_intention": [
+        "ionogramme sanguin",
+        "iono sang",
+        "Na K Cl",
+        "ionogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan lipidique (EAL)",
+      "actes_composants": [
+        "Cholestérol total",
+        "HDL-cholestérol",
+        "LDL-cholestérol",
+        "Triglycérides"
+      ],
+      "lexique_intention": [
+        "bilan lipidique",
+        "EAL",
+        "lipidogramme",
+        "cholestérol HDL LDL triglycérides"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan d'hémostase (TP + TCK + TS)",
+      "actes_composants": [
+        "TP / INR",
+        "TCA / TCK",
+        "Temps de saignement (TS)"
+      ],
+      "lexique_intention": [
+        "TPTCK",
+        "TC TS",
+        "bilan d'hémostase",
+        "TP TCK TS",
+        "bilan de coagulation",
+        "tptck tc ts"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Dosage pondéral des immunoglobulines (IgG + IgA + IgM)",
+      "actes_composants": [
+        "Dosage des IgG",
+        "Dosage des IgA",
+        "Dosage des IgM"
+      ],
+      "lexique_intention": [
+        "dosage pondéral des Ig",
+        "immunoglobulines IgG IgA IgM",
+        "EPP immunoglobulines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Panel myosite (anti-Jo1, Mi-2, SRP, MDA5…)",
+      "actes_composants": [
+        "anti-Jo1",
+        "anti-Mi-2",
+        "anti-SRP",
+        "anti-MDA5",
+        "anti-TIF1γ",
+        "anti-NXP2",
+        "anti-PL7/PL12"
+      ],
+      "lexique_intention": [
+        "panel myosite",
+        "anti Jo1 Mi-2 SRP MDA5",
+        "myosite panel",
+        "Dotmyosite",
+        "dot myosite",
+        "dot blot myosite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Panel d'allergènes (Phadiatop, trophallergènes, pneumallergènes)",
+      "actes_composants": [
+        "IgE spécifiques (pneumallergènes)",
+        "IgE spécifiques (trophallergènes)"
+      ],
+      "lexique_intention": [
+        "Phadiatop",
+        "panel pneumallergènes",
+        "trophallergènes",
+        "multi-allergènes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan martial (fer + ferritine + CST/CTF)",
+      "actes_composants": [
+        "Fer sérique",
+        "Ferritine",
+        "Transferrine",
+        "Coefficient de saturation de la transferrine (CST)",
+        "Capacité totale de fixation de la transferrine (CTF)"
+      ],
+      "lexique_intention": [
+        "bilan martial",
+        "fer ferritine",
+        "bilan du fer",
+        "statut martial"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan hépatique complet",
+      "actes_composants": [
+        "ASAT (TGO)",
+        "ALAT (TGP)",
+        "Gamma-GT (GGT)",
+        "Phosphatases alcalines (PAL)",
+        "Bilirubine totale",
+        "Bilirubine conjuguée (directe)"
+      ],
+      "lexique_intention": [
+        "bilan hépatique",
+        "ASAT ALAT GGT PAL bilirubine",
+        "BHC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan rénal",
+      "actes_composants": [
+        "Urée (azotémie)",
+        "Créatininémie",
+        "Clairance de la créatinine (DFG)",
+        "Ionogramme sanguin (Na + K + Cl)"
+      ],
+      "lexique_intention": [
+        "bilan rénal",
+        "urée créatinine ionogramme",
+        "fonction rénale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan thyroïdien (TSH, FT4 ± FT3)",
+      "actes_composants": [
+        "TSH ultrasensible",
+        "T4 libre (FT4)",
+        "T3 libre (FT3)"
+      ],
+      "lexique_intention": [
+        "bilan thyroïdien",
+        "TSH FT4 FT3",
+        "exploration thyroïdienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan phosphocalcique",
+      "actes_composants": [
+        "Calcémie",
+        "Phosphorémie",
+        "Parathormone (PTH intacte)",
+        "Vitamine D (25-OH)"
+      ],
+      "lexique_intention": [
+        "bilan phosphocalcique",
+        "calcémie phosphorémie PTH vitamine D"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan inflammatoire (VS, CRP, fibrinogène)",
+      "actes_composants": [
+        "Vitesse de sédimentation (VS)",
+        "CRP (protéine C réactive)",
+        "Fibrinogène"
+      ],
+      "lexique_intention": [
+        "bilan inflammatoire",
+        "VS CRP fibrinogène",
+        "syndrome inflammatoire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens",
+      "code": "PAN",
+      "acte_standardise": "Bilan préopératoire standard",
+      "actes_composants": [
+        "NFS (hémogramme)",
+        "TP / INR",
+        "TCA / TCK",
+        "Groupe sanguin ABO-Rhésus",
+        "Glycémie à jeun"
+      ],
+      "lexique_intention": [
+        "bilan préopératoire",
+        "préop",
+        "NFS TP TCK groupe glycémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "NFS (hémogramme)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "NFS",
+        "numération formule sanguine",
+        "hémogramme",
+        "FNS",
+        "CBC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Réticulocytes (taux)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réticulocytes",
+        "TR",
+        "taux de réticulocytes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Frottis sanguin (étude morphologique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "frottis sanguin",
+        "frottis",
+        "étude morphologique du sang"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Vitesse de sédimentation (VS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VS",
+        "vitesse de sédimentation",
+        "sédimentation",
+        "ESR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Groupe sanguin ABO-Rhésus",
+      "actes_composants": [],
+      "lexique_intention": [
+        "GSRH",
+        "groupe sanguin",
+        "groupage ABO Rh",
+        "GS RH"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Phénotype érythrocytaire étendu (Rh-Kell)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "phénotype érythrocytaire",
+        "Rh Kell",
+        "phénotype étendu"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Antigène D faible (Du)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "antigène D faible",
+        "Du",
+        "Rh faible"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Recherche d'agglutinines irrégulières (RAI)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "RAI",
+        "agglutinines irrégulières",
+        "anticorps irréguliers"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Test de Coombs direct",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coombs direct",
+        "TDA",
+        "test direct à l'antiglobuline"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Test de Coombs indirect",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coombs indirect",
+        "TIA",
+        "test indirect à l'antiglobuline"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Test d'Emmel (falciformation)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TE",
+        "test d'Emmel",
+        "falciformation",
+        "Emmel",
+        "drépanocytose test"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Test de solubilité de l'hémoglobine S",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test de solubilité",
+        "solubilité HbS",
+        "Itano"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Électrophorèse de l'hémoglobine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "électrophorèse de l'hémoglobine",
+        "EPH",
+        "Hb électrophorèse",
+        "electrophorese de l hemoglobine protidogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Dosage HbA2 / HbF",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HbA2",
+        "HbF",
+        "hémoglobine foetale",
+        "hémoglobine A2"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Myélogramme",
+      "actes_composants": [],
+      "lexique_intention": [
+        "myélogramme",
+        "ponction médullaire",
+        "moelle osseuse cytologie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Test de fragilité osmotique (résistance globulaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fragilité osmotique",
+        "résistance globulaire",
+        "sphérocytose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Dosage G6PD",
+      "actes_composants": [],
+      "lexique_intention": [
+        "G6PD",
+        "glucose-6-phosphate déshydrogénase",
+        "déficit G6PD"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Dosage pyruvate kinase érythrocytaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pyruvate kinase",
+        "PK érythrocytaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Recherche de schizocytes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "schizocytes",
+        "microangiopathie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Test de Kleihauer",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Kleihauer",
+        "hémorragie foeto-maternelle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Immunophénotypage lymphocytaire (cytométrie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "immunophénotypage",
+        "cytométrie en flux",
+        "CD4 CD8",
+        "phénotypage lymphocytaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Fer sérique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fer sérique",
+        "sidérémie",
+        "fer",
+        "Fe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Ferritine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ferritine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Fraction glycosylée de la ferritine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fraction glycosylée de la ferritine",
+        "ferritine glyquée",
+        "fraction glycosylee ferritine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Transferrine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "transferrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Coefficient de saturation de la transferrine (CST)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CST",
+        "saturation de la transferrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Capacité totale de fixation de la transferrine (CTF)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CTF",
+        "TIBC",
+        "capacité de fixation",
+        "capacite totale de fixation de la tranferrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Récepteur soluble de la transferrine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "récepteur soluble de la transferrine",
+        "RsTf",
+        "sTfR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hématologie",
+      "code": "HEM",
+      "acte_standardise": "Haptoglobine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "haptoglobine",
+        "hapto",
+        "hémolyse",
+        "hapto globine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "TP / INR",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TP",
+        "INR",
+        "taux de prothrombine",
+        "temps de prothrombine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "TCA / TCK",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TCA",
+        "TCK",
+        "temps de céphaline activée",
+        "temps de céphaline kaolin"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Temps de saignement (TS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "temps de saignement",
+        "TS",
+        "Ivy",
+        "Duke"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Temps de thrombine (TT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "temps de thrombine",
+        "TT",
+        "anti thrombine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Fibrinogène",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fibrinogène",
+        "fibrinémie",
+        "fibrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "D-Dimères",
+      "actes_composants": [],
+      "lexique_intention": [
+        "D-dimères",
+        "DDimères",
+        "DD"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Produits de dégradation de la fibrine (PDF)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PDF",
+        "produits de dégradation de la fibrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Dosage des facteurs de coagulation (II, V, VII, X)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur II V VII X",
+        "dosage de facteurs",
+        "facteurs vitamine K"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Dosage du facteur VIII",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur 8",
+        "facteur VIII",
+        "FVIII",
+        "hémophilie A"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Dosage du facteur IX",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur 9",
+        "facteur IX",
+        "FIX",
+        "hémophilie B"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Dosage du facteur XIII",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur 13",
+        "facteur XIII",
+        "FXIII"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Facteur Willebrand (antigène + activité)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur Willebrand",
+        "vWF",
+        "von Willebrand",
+        "dosage facteur willebrand"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Protéine C",
+      "actes_composants": [],
+      "lexique_intention": [
+        "protéine C",
+        "dosage protéine C"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Protéine S",
+      "actes_composants": [],
+      "lexique_intention": [
+        "protéine S",
+        "dosage protéine S"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Antithrombine (III)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "antithrombine",
+        "ATIII",
+        "AT3"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Résistance à la protéine C activée (RPCa)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "résistance protéine C activée",
+        "RPCa",
+        "facteur V Leiden fonctionnel"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Anticoagulant circulant / lupique (LA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anticoagulant lupique",
+        "LA",
+        "anticoagulant circulant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Activité anti-Xa (héparine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti-Xa",
+        "activité anti Xa",
+        "héparinémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Hémostase / Coagulation",
+      "code": "HEMO",
+      "acte_standardise": "Agrégation plaquettaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "agrégation plaquettaire",
+        "agrégométrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Glycémie à jeun",
+      "actes_composants": [],
+      "lexique_intention": [
+        "glycémie",
+        "glucose",
+        "GAJ"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Glycémie post-prandiale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "glycémie post-prandiale",
+        "glycémie 2h"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "HGPO (hyperglycémie provoquée orale)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HGPO",
+        "hyperglycémie provoquée",
+        "OGTT",
+        "O'Sullivan",
+        "hgpo hyperglycemie provoque par voie orale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Hémoglobine glyquée (HbA1c)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HbA1c",
+        "hémoglobine glyquée",
+        "A1c"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Fructosamine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fructosamine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Insulinémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "insulinémie",
+        "insuline"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Peptide C",
+      "actes_composants": [],
+      "lexique_intention": [
+        "peptide C",
+        "C-peptide"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Urée (azotémie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "azotémie",
+        "urée",
+        "urémie",
+        "BUN"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Créatininémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "créatinine",
+        "créatininémie",
+        "créat"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Clairance de la créatinine (DFG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "clairance de la créatinine",
+        "DFG estimé",
+        "Cockcroft",
+        "clairance rénale",
+        "clairance de la creat"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Cystatine C",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cystatine C",
+        "cystatine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Uricémie (acide urique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "uricémie",
+        "acide urique",
+        "urate"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Natrémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "natrémie",
+        "sodium",
+        "Na"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Kaliémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "kaliémie",
+        "potassium",
+        "K"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Chlorémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chlorémie",
+        "chlore",
+        "Cl"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Réserve alcaline (bicarbonates / CO2 total)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réserve alcaline",
+        "bicarbonates",
+        "CO2 total",
+        "HCO3"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Calcémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "calcémie",
+        "calcium",
+        "Ca"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Calcium ionisé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "calcium ionisé",
+        "calcium libre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Phosphorémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "phosphore",
+        "phosphorémie",
+        "phosphate",
+        "P"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Magnésémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "magnésémie",
+        "magnésium",
+        "Mg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "ASAT (TGO)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ASAT",
+        "SGOT",
+        "TGO",
+        "aspartate aminotransférase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "ALAT (TGP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ALAT",
+        "SGPT",
+        "TGP",
+        "alanine aminotransférase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Gamma-GT (GGT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "GGT",
+        "gamma GT",
+        "gamma-glutamyl transférase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Phosphatases alcalines (PAL)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PAL",
+        "phosphatase alcaline",
+        "ALP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "5'-nucléotidase",
+      "actes_composants": [],
+      "lexique_intention": [
+        "5 nucléotidase",
+        "5'-nucléotidase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Bilirubine totale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bilirubine totale",
+        "BT"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Bilirubine conjuguée (directe)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bilirubine conjuguée",
+        "bilirubine directe",
+        "BD"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Ammoniémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ammoniémie",
+        "ammoniac",
+        "NH3"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Protéines totales (protidémie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "protidémie",
+        "protéines totales",
+        "protéine",
+        "protides"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Albuminémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "albumine",
+        "albuminémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Préalbumine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "préalbumine",
+        "transthyrétine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Électrophorèse des protéines sériques (EPP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "électrophorèse des protéines",
+        "EPP",
+        "protidogramme",
+        "protéinogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Immunofixation des protéines sériques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "immunofixation",
+        "IEPP",
+        "pic monoclonal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Bêta-2-microglobuline",
+      "actes_composants": [],
+      "lexique_intention": [
+        "beta-2-microglobuline",
+        "B2M"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Céruloplasmine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "céruloplasmine",
+        "Wilson"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "CRP (protéine C réactive)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CRP",
+        "protéine C réactive"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "CRP ultrasensible",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CRP ultrasensible",
+        "CRPus",
+        "hs-CRP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Procalcitonine (PCT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "procalcitonine",
+        "PCT"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Cholestérol total",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cholestérol total",
+        "cholestérol"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "HDL-cholestérol",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HDL",
+        "cholestérol HDL"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "LDL-cholestérol",
+      "actes_composants": [],
+      "lexique_intention": [
+        "LDL",
+        "cholestérol LDL"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Triglycérides",
+      "actes_composants": [],
+      "lexique_intention": [
+        "triglycérides",
+        "TG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Apolipoprotéine A1",
+      "actes_composants": [],
+      "lexique_intention": [
+        "apolipoprotéine A1",
+        "ApoA1"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Apolipoprotéine B",
+      "actes_composants": [],
+      "lexique_intention": [
+        "apolipoprotéine B",
+        "ApoB"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Lipoprotéine (a)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lipoprotéine a",
+        "Lp(a)",
+        "Lpa"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Amylasémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "amylase",
+        "amylasémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Lipase",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lipase",
+        "lipasémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "LDH (lactate déshydrogénase)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "LDH",
+        "lactate déshydrogénase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Aldolase",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aldolase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Cholinestérases",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cholinestérase",
+        "pseudocholinestérase",
+        "butyrylcholinestérase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Homocystéine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "homocystéine",
+        "homocysteine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Osmolalité plasmatique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "osmolalité",
+        "osmolarité plasmatique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "FibroTest-ActiTest",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fibrotest",
+        "actitest",
+        "fibrose hépatique non invasive"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biochimie & ionogramme",
+      "code": "BIO",
+      "acte_standardise": "Chimie des liquides (LCR, ascite, pleural)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chimie LCR",
+        "glycorachie",
+        "protéinorachie",
+        "biochimie liquide de ponction"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Bandelette urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bandelette urinaire",
+        "BU",
+        "dipstick",
+        "albumine sucre",
+        "bandelettes alb sucre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Protéinurie des 24 h",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Pu 24h",
+        "protéinurie 24h",
+        "protéinurie des 24 heures",
+        "pu 24 h"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Microalbuminurie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "microalbuminurie",
+        "albuminurie",
+        "micro-albumine urinaire",
+        "micro albuminurie albuminurie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Rapport protéinurie / créatininurie (RPC)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "RPC",
+        "rapport protéinurie créatininurie",
+        "ratio albumine créatinine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Ionogramme urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ionogramme urinaire",
+        "iono urines",
+        "Na K urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Urée urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "urée urinaire",
+        "urée des urines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Créatininurie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "créatininurie",
+        "créatinine urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Calciurie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "calciurie",
+        "calcium urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Phosphaturie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "phosphaturie",
+        "phosphore urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Uricurie (acide urique urinaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "uricurie",
+        "acide urique urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Oxalurie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "oxalurie",
+        "oxaturie",
+        "oxalate urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Glycosurie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "glycosurie",
+        "glucose urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Culot urinaire (sédiment)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "culot urinaire",
+        "sédiment urinaire",
+        "culot urinaire sediment urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Compte d'Addis (HLM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HLM",
+        "compte d'Addis",
+        "hématies leucocytes minute",
+        "hlm compte d addis"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations urinaires",
+      "code": "URI",
+      "acte_standardise": "Protéinurie de Bence-Jones",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Bence-Jones",
+        "chaînes légères urinaires",
+        "protéinurie de surcharge"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine A (rétinol)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine A",
+        "rétinol"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine B1 (thiamine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine B1",
+        "thiamine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine B6 (pyridoxine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine B6",
+        "pyridoxine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine B9 (folates)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine B9",
+        "folates",
+        "acide folique",
+        "folate",
+        "vitamine b9 folate"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine B12 (cobalamine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine B12",
+        "cobalamine",
+        "B12"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine C (acide ascorbique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine C",
+        "acide ascorbique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine D (25-OH)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine D",
+        "25 OH vitamine D",
+        "25-hydroxyvitamine D",
+        "calcidiol",
+        "vitamine d 25 oh vit d"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "1,25-OH vitamine D (calcitriol)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "1,25 OH vitamine D",
+        "calcitriol",
+        "vitamine D active"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine E (tocophérol)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine E",
+        "tocophérol"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Vitamine K",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vitamine K",
+        "phylloquinone"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Zinc (zincémie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "zinc",
+        "zincémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Cuivre (cuprémie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cuivre",
+        "cuprémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Sélénium",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sélénium",
+        "sélénémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Vitamines & oligo-éléments",
+      "code": "VIT",
+      "acte_standardise": "Iodurie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "iodurie",
+        "iode urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "Troponine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "troponine",
+        "Tnc",
+        "troponine T",
+        "troponine I"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "Troponine ultrasensible",
+      "actes_composants": [],
+      "lexique_intention": [
+        "troponine ultrasensible",
+        "troponine US",
+        "hs-troponine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "Myoglobine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "myoglobine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "CPK (créatine phosphokinase)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CPK",
+        "CK",
+        "créatine kinase"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "CPK-MB",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CPK-MB",
+        "CK-MB"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "BNP",
+      "actes_composants": [],
+      "lexique_intention": [
+        "BNP",
+        "peptide natriurétique B"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs cardiaques",
+      "code": "CAR",
+      "acte_standardise": "NT-proBNP",
+      "actes_composants": [],
+      "lexique_intention": [
+        "NT proBNP",
+        "NTproBNP",
+        "peptide natriurétique",
+        "nt pro bnp"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "TSH ultrasensible",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TSH",
+        "TSHus",
+        "thyréostimuline"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "T4 libre (FT4)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "T4",
+        "FT4",
+        "T4 libre",
+        "thyroxine libre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "T3 libre (FT3)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "T3",
+        "FT3",
+        "T3 libre",
+        "triiodothyronine libre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "T4 totale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "T4 totale",
+        "thyroxine totale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "T3 totale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "T3 totale",
+        "triiodothyronine totale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Thyroglobuline",
+      "actes_composants": [],
+      "lexique_intention": [
+        "thyroglobuline",
+        "Tg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Calcitonine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "calcitonine",
+        "thyrocalcitonine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Parathormone (PTH intacte)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PTH",
+        "parathormone",
+        "PTHi",
+        "pthi parathormone"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Cortisolémie (8h)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cortisol",
+        "cortisolémie",
+        "cortisol 8h"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Cycle du cortisol",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cycle du cortisol",
+        "cortisol 8h 16h minuit"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Cortisol libre urinaire (CLU)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cortisol urinaire",
+        "CLU",
+        "cortisol libre urinaire",
+        "cortisol urines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "ACTH",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ACTH",
+        "corticotrophine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Aldostérone",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aldostérone"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Rénine (activité rénine plasmatique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rénine",
+        "activité rénine plasmatique",
+        "ARP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Rapport aldostérone / rénine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rapport aldostérone rénine",
+        "ARR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Métanéphrines plasmatiques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "métanéphrines plasmatiques",
+        "normétanéphrine plasmatique",
+        "phéochromocytome",
+        "metanephrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Métanéphrines urinaires",
+      "actes_composants": [],
+      "lexique_intention": [
+        "métanéphrines urinaires",
+        "dérivés méthoxylés urinaires",
+        "phéochromocytome"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Catécholamines",
+      "actes_composants": [],
+      "lexique_intention": [
+        "catécholamines",
+        "adrénaline noradrénaline dopamine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "17-OH-progestérone",
+      "actes_composants": [],
+      "lexique_intention": [
+        "17 OH progestérone",
+        "17OHP",
+        "bloc enzymatique surrénalien"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Delta-4-androstènedione",
+      "actes_composants": [],
+      "lexique_intention": [
+        "delta 4 androstènedione",
+        "androstènedione"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "SDHEA (sulfate de DHEA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "SDHEA",
+        "sulfate de DHEA",
+        "DHEAS"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "DHEA",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DHEA",
+        "déhydroépiandrostérone"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Test au Synacthène (dynamique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test au synacthène",
+        "synacthène",
+        "stimulation ACTH"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "FSH",
+      "actes_composants": [],
+      "lexique_intention": [
+        "FSH",
+        "hormone folliculo-stimulante"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "LH",
+      "actes_composants": [],
+      "lexique_intention": [
+        "LH",
+        "hormone lutéinisante"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Prolactine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prolactine",
+        "PRL"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Œstradiol (E2)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "oestradiol",
+        "estradiol",
+        "E2"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Progestérone",
+      "actes_composants": [],
+      "lexique_intention": [
+        "progestérone"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Testostérone totale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "testostérone",
+        "testostérone totale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Testostérone biodisponible / libre",
+      "actes_composants": [],
+      "lexique_intention": [
+        "testostérone biodisponible",
+        "testostérone libre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "SHBG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "SHBG",
+        "protéine de transport des hormones sexuelles"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Hormone anti-müllérienne (AMH)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "AMH",
+        "hormone anti-mullérienne",
+        "amh hormone anti mullerienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Inhibine B",
+      "actes_composants": [],
+      "lexique_intention": [
+        "inhibine B"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Hormone de croissance (GH)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "GH",
+        "hormone de croissance",
+        "somatotropine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "IGF-1 (somatomédine C)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IGF1",
+        "IGF-1",
+        "somatomédine C"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Glucagon",
+      "actes_composants": [],
+      "lexique_intention": [
+        "glucagon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Gastrine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gastrine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Érythropoïétine (EPO)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EPO",
+        "érythropoïétine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Chromogranine A",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chromogranine A",
+        "CgA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "CrossLaps (CTX) / marqueurs du remodelage osseux",
+      "actes_composants": [],
+      "lexique_intention": [
+        "crosslaps",
+        "CTX",
+        "télopeptide",
+        "remodelage osseux"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Ostéocalcine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ostéocalcine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endocrinologie & hormonologie",
+      "code": "END",
+      "acte_standardise": "Sérotonine plasmatique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérotonine",
+        "5-HT"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Spermogramme",
+      "actes_composants": [],
+      "lexique_intention": [
+        "spermogramme",
+        "sperme numération mobilité"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Spermocytogramme",
+      "actes_composants": [],
+      "lexique_intention": [
+        "spermocytogramme",
+        "morphologie des spermatozoïdes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Test de migration-survie (TMS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TMS",
+        "test de migration survie",
+        "capacitation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Spermoculture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "spermoculture",
+        "culture du sperme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Biochimie du sperme (fructose, zinc, carnitine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biochimie du sperme",
+        "fructose séminal",
+        "zinc séminal",
+        "carnitine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Test post-coïtal (Hühner)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test post-coïtal",
+        "Hühner",
+        "test de Huhner"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Fertilité & spermiologie",
+      "code": "FER",
+      "acte_standardise": "Anticorps anti-spermatozoïdes (MAR test)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anticorps anti-spermatozoïdes",
+        "MAR test"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "PSA total",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PSAt",
+        "PSA total",
+        "antigène prostatique spécifique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "PSA libre + rapport libre/total",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PSA libre",
+        "rapport PSA libre total",
+        "PSA ratio"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "ACE (antigène carcino-embryonnaire / CEA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ACE",
+        "CEA",
+        "antigène carcino-embryonnaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "Alpha-fœtoprotéine (AFP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "AFP",
+        "alpha foetoprotéine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "Bêta-HCG (quantitatif)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "beta HCG",
+        "βHCG",
+        "HCG",
+        "gonadotrophine chorionique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "CA 125",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CA125",
+        "CA 125",
+        "marqueur ovarien"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "CA 15-3",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CA15-3",
+        "marqueur sein"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "CA 19-9",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CA19-9",
+        "marqueur digestif pancréas"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "CA 72-4",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CA72-4",
+        "marqueur gastrique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "CYFRA 21-1",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CYFRA 21-1",
+        "cytokératine 19"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "NSE (énolase neurospécifique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "NSE",
+        "énolase neurospécifique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "SCC (antigène du carcinome épidermoïde)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "SCC",
+        "carcinome épidermoïde"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "HE4",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HE4",
+        "human epididymis protein 4"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "ProGRP",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ProGRP",
+        "pro-gastrin releasing peptide"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Marqueurs tumoraux",
+      "code": "TUM",
+      "acte_standardise": "S100",
+      "actes_composants": [],
+      "lexique_intention": [
+        "S100",
+        "protéine S100",
+        "mélanome"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Complément C3",
+      "actes_composants": [],
+      "lexique_intention": [
+        "complément C3",
+        "C3"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Complément C4",
+      "actes_composants": [],
+      "lexique_intention": [
+        "complément C4",
+        "C4"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "CH50 (complément total)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CH50",
+        "complément hémolytique 50",
+        "complément total"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Facteur rhumatoïde (latex)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur rhumatoïde",
+        "FR",
+        "latex",
+        "RF"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Réaction de Waaler-Rose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Waaler Rose",
+        "Waler Rose",
+        "latex waaler rose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-CCP",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti CCP",
+        "anti-peptide citrulliné",
+        "ACPA",
+        "ac anti ccp"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-nucléaires (AAN/FAN)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti nucléaire",
+        "AAN",
+        "ANA",
+        "FAN",
+        "ac anti nucleaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-ADN natif (anti-dsDNA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti DNA natif",
+        "anti dsDNA",
+        "anti-ADN double brin",
+        "ac anti adn",
+        "ac anti dna natif"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-ENA (anti-ECT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti ECT",
+        "ENA",
+        "anti-Sm RNP SSA SSB Scl70 Jo1",
+        "ac anti ect"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-nucléosomes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti nucléosome"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "ANCA (p-ANCA/MPO, c-ANCA/PR3)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ANCA",
+        "p-ANCA",
+        "c-ANCA",
+        "MPO",
+        "PR3",
+        "vascularite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps antiphospholipides (bilan SAPL)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti phospholipides",
+        "antiphospholipides",
+        "APL",
+        "aPL",
+        "syndrome des antiphospholipides",
+        "SAPL",
+        "ac anti phospholipides"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticardiolipines IgG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anticardiolipine IgG",
+        "aCL IgG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticardiolipines IgM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anticardiolipine IgM",
+        "aCL IgM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-β2-glycoprotéine 1 IgG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti beta2GP1 IgG",
+        "anti-β2GP1 IgG",
+        "beta 2 glycoprotéine IgG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-β2-glycoprotéine 1 IgM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti beta2GP1 IgM",
+        "anti-β2GP1 IgM",
+        "beta 2 glycoprotéine IgM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-muscle lisse (AML)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti muscle lisse",
+        "ASMA",
+        "anti-actine",
+        "ac anti muscle lisse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-mitochondries (AMA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti mitochondrie",
+        "AMA",
+        "M2",
+        "ac anti mitochondrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-LKM1",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti LKM",
+        "LKM1"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-gp210 (CP210)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti gp210",
+        "CP210",
+        "ac anti cp 210"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-SLA",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti SLA",
+        "soluble liver antigen"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-PLA2R",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti PLA2R",
+        "phospholipase A2 récepteur",
+        "ac anti pla 2r"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-membrane basale glomérulaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti membrane basale",
+        "anti-MBG",
+        "Goodpasture",
+        "anti-GBM",
+        "ac anti membrane basale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-récepteur de l'acétylcholine (RACh)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti récepteur acétylcholine",
+        "anti-RACh",
+        "RATH",
+        "myasthénie",
+        "rath anticorps anti recepteur de l acethyle choline"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-MuSK",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti MuSK",
+        "myasthénie MuSK",
+        "ac anti musk"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-transglutaminase (IgA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti transglutaminase",
+        "tTG",
+        "cœliaque"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-endomysium (EMA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti endomysium",
+        "EMA",
+        "ac anti endomysium"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-gliadine déamidée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti gliadine déamidée",
+        "DGP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-facteur intrinsèque",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti facteur intrinsèque",
+        "Biermer",
+        "ac anti facteur intrinseque",
+        "facteur intrinseque"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-TPO",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti TPO",
+        "anti-thyroperoxydase",
+        "ATPO",
+        "TPO"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-thyroglobuline",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti thyroglobuline",
+        "anti Tg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-récepteurs de la TSH (TRAK)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti récepteur TSH",
+        "TRAK",
+        "TRAb",
+        "Basedow",
+        "anticorps anti recepteur de la tsh"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-GAD",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti GAD",
+        "GAD65",
+        "diabète auto-immun"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-IA2",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti IA2"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-îlots (ICA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti îlots",
+        "ICA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-insuline",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti insuline",
+        "IAA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-substance intercellulaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti substance intercellulaire",
+        "desmogléine",
+        "pemphigus",
+        "ac anti substance intra cellulaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Anticorps anti-membrane basale cutanée (BP180/BP230)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti BP180",
+        "BP230",
+        "pemphigoïde"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Dosage des IgG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgG",
+        "immunoglobuline G",
+        "gammaglobulines G"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Dosage des IgA",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgA",
+        "immunoglobuline A"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Dosage des IgM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgM",
+        "immunoglobuline M"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Sous-classes d'IgG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sous-classes IgG",
+        "IgG1 IgG2 IgG3 IgG4"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "IgG4",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgG4",
+        "maladie à IgG4"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Cryoglobulines",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cryoglobuline",
+        "cryoglobulinémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "HLA-B27",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HLA B27",
+        "spondylarthrite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "QuantiFERON-TB (IGRA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "quantiferon",
+        "IGRA",
+        "TB gold",
+        "tuberculose interféron"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "IDR à la tuberculine (IDRt)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IDR",
+        "intradermoréaction",
+        "tuberculine",
+        "Mantoux",
+        "idrt"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "IgE totales sériques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgE totales",
+        "IgE sérum",
+        "IgE total"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "IgE spécifiques (allergène unique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgE spécifique",
+        "RAST",
+        "allergène unique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "IgE spécifiques — protéines de lait de vache",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IgE lait de vache",
+        "APLV",
+        "ige serique specifique proteine lait de vache"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "Tryptase",
+      "actes_composants": [],
+      "lexique_intention": [
+        "tryptase",
+        "mastocytose",
+        "anaphylaxie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Immunologie, auto-immunité & allergologie",
+      "code": "IMM",
+      "acte_standardise": "ECP (protéine cationique des éosinophiles)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ECP",
+        "protéine cationique éosinophiles"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie VIH (Ag/Ac)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VIH",
+        "HIV",
+        "sérologie VIH",
+        "Ag/Ac VIH",
+        "PTME",
+        "hiv ptme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Confirmation VIH (Western blot)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "western blot VIH",
+        "confirmation VIH"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Antigène HBs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "antigène HBs",
+        "AgHBs",
+        "HBsAg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-HBs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti HBs",
+        "immunité hépatite B",
+        "ac anti hbs"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Antigène HBe",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Ag HBe",
+        "AgHBe",
+        "HBeAg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-HBe",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti HBe",
+        "ac anti hbe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-HBc totaux",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti HBc totaux",
+        "HBc total",
+        "ac anti hbc totaux"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-HBc IgM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti HBc IgM",
+        "ac anti hbc igm"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-HBc IgG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti HBc IgG",
+        "ac anti hbc igg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-VHC",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti VHC",
+        "hépatite C sérologie",
+        "HCV Ab",
+        "ac anti vhc",
+        "ac anticorps anti vhc"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-VHA IgM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VHA IgM",
+        "hépatite A IgM",
+        "serologie vha igm"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-VHA IgG",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VHA IgG",
+        "hépatite A IgG",
+        "serologie vha igg"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-VHD (delta)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti VHD",
+        "hépatite delta",
+        "ac anticorps anti vhd"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Anticorps anti-VHE",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anti VHE",
+        "hépatite E"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie toxoplasmose (IgG + IgM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "toxo IgG IgM",
+        "toxoplasmose",
+        "toxoplasma",
+        "toxo igg et igm"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Avidité toxoplasmose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "avidité toxoplasmose",
+        "avidité IgG toxo"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie rubéole (IgG + IgM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rubéole IgG IgM",
+        "rubella",
+        "rubeole igg et igm"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie CMV (IgG/IgM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CMV",
+        "cytomégalovirus"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Avidité CMV",
+      "actes_composants": [],
+      "lexique_intention": [
+        "avidité CMV",
+        "avidité IgG CMV"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie HSV1/HSV2",
+      "actes_composants": [],
+      "lexique_intention": [
+        "herpès",
+        "HSV",
+        "HSV1 HSV2",
+        "herpes simplex",
+        "hsv1 et hsv2"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie VZV (varicelle-zona)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VZV",
+        "varicelle",
+        "zona"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie parvovirus B19",
+      "actes_composants": [],
+      "lexique_intention": [
+        "parvovirus B19",
+        "B19"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie EBV (MNI, VCA, EBNA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EBV",
+        "MNI test",
+        "mononucléose",
+        "VCA EBNA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie rougeole",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rougeole",
+        "measles",
+        "morbillivirus",
+        "rugeole"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie oreillons",
+      "actes_composants": [],
+      "lexique_intention": [
+        "oreillons",
+        "mumps"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie dengue (NS1, IgM, IgG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dengue",
+        "NS1",
+        "dengue IgM IgG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie chikungunya (IgM/IgG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chikungunya"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie SARS-CoV-2",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérologie covid",
+        "SARS-CoV-2 sérologie",
+        "anticorps covid"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérodiagnostic de Widal et Félix",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Widal",
+        "Widal Félix",
+        "salmonella",
+        "TO TH"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie syphilis (TPHA-VDRL/RPR, BW)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TPHA RPR",
+        "BW",
+        "TPHA VDRL",
+        "syphilis",
+        "tpha rpr bw"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "ASLO (antistreptolysines O)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ASLO",
+        "antistreptolysine",
+        "ASO"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Antistreptodornase (ASD)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ASDOR",
+        "antistreptodornase",
+        "ASD"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie Chlamydia",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérologie chlamydiae",
+        "anticorps chlamydia"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie Mycoplasme",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérologie mycoplasme",
+        "anticorps mycoplasma"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie brucellose (Wright)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "brucellose",
+        "Wright",
+        "brucella"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie leptospirose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "leptospirose",
+        "leptospira"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie borréliose (Lyme)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "Lyme",
+        "borréliose",
+        "Borrelia"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie coqueluche",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coqueluche",
+        "Bordetella"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie légionelle",
+      "actes_composants": [],
+      "lexique_intention": [
+        "légionelle",
+        "Legionella"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie bilharziose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérologie bilharziose",
+        "schistosomiase sérologie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie amibiase",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérologie amibienne",
+        "amibiase",
+        "entamoeba"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie hydatidose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hydatidose",
+        "échinococcose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Sérologie aspergillaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sérologie aspergillaire",
+        "aspergillose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Antigène cryptocoque",
+      "actes_composants": [],
+      "lexique_intention": [
+        "antigène cryptocoque",
+        "cryptococcose Ag"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Sérologie & virologie",
+      "code": "SER",
+      "acte_standardise": "Antigène galactomannane (aspergillus)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "galactomannane",
+        "aspergillus Ag"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "ECBU + antibiogramme",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ECBU",
+        "examen cytobactériologique des urines",
+        "uroculture + antibiogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Hémoculture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hémoculture",
+        "blood culture"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Coproculture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coproculture",
+        "culture des selles"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "ECBC (expectorations)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ECBC",
+        "examen cytobactériologique des crachats",
+        "expectorations"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Recherche de BAAR (Ziehl)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "crachat BAAR",
+        "BK crachats",
+        "Ziehl",
+        "bacille acido-alcoolo-résistant",
+        "crachat barr"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Culture de mycobactéries (Löwenstein)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "culture mycobactérie",
+        "Löwenstein",
+        "BK culture"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Prélèvement de pus + culture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prélèvement de pus",
+        "pus culture",
+        "plaie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Prélèvement de gorge + culture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prélèvement de gorge",
+        "gorge culture",
+        "angine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Prélèvement nasal / portage SARM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prélèvement nasal",
+        "portage SARM",
+        "écouvillon nasal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Prélèvement vaginal (PV) + culture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PV",
+        "prélèvement vaginal",
+        "cervico-vaginal",
+        "pv chlam myco"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Prélèvement endocervical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prélèvement endocervical",
+        "col utérin"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Prélèvement urétral + culture",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prélèvement urétral",
+        "urètre",
+        "écoulement urétral"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Écouvillonnage + ECB + antibiogramme",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écouvillonnage ECB ATB",
+        "écouvillon culture antibiogramme",
+        "econvillonage ecb atb"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Culture de cathéter",
+      "actes_composants": [],
+      "lexique_intention": [
+        "culture cathéter",
+        "KT culture"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Cytobactériologie du LCR",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytobactério LCR",
+        "LCR",
+        "méningite",
+        "cytochimie bacterio du lcr"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Cytobactériologie du liquide pleural",
+      "actes_composants": [],
+      "lexique_intention": [
+        "liquide pleural",
+        "plèvre",
+        "cyto bacterio du liquide pleural"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Cytobactériologie du liquide d'ascite",
+      "actes_composants": [],
+      "lexique_intention": [
+        "liquide d'ascite",
+        "ascite",
+        "cytobacterio du liquide d ascite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Cytobactériologie d'un liquide articulaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "liquide articulaire",
+        "synovie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Cytobactériologie d'un liquide de ponction",
+      "actes_composants": [],
+      "lexique_intention": [
+        "liquide de ponction",
+        "ponction",
+        "cyto bacterio du liquide de ponction"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Antibiogramme (seul)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "antibiogramme",
+        "ATB"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Antigènes solubles urinaires (pneumocoque, légionelle)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "antigène urinaire pneumocoque",
+        "antigène légionelle urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Antigène H. pylori dans les selles",
+      "actes_composants": [],
+      "lexique_intention": [
+        "H pylori selles",
+        "Helicobacter pylori antigène",
+        "HpSA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Test respiratoire à l'urée (H. pylori)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test respiratoire à l'urée",
+        "breath test",
+        "H pylori respiratoire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Bactériologie",
+      "code": "BAC",
+      "acte_standardise": "Recherche toxine Clostridioides difficile",
+      "actes_composants": [],
+      "lexique_intention": [
+        "clostridium difficile",
+        "toxine C difficile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Examen parasitologique des selles (KAOP / EPS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "KAOP",
+        "EPS",
+        "examen parasitologique des selles",
+        "kystes amibes œufs parasites"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Goutte épaisse + frottis (paludisme)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "goutte épaisse",
+        "GE frottis",
+        "paludisme",
+        "frottis paludisme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "TDR paludisme (antigène HRP2)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDR palu",
+        "test rapide paludisme",
+        "HRP2"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de microfilaires (filariose)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "microfilaires",
+        "filariose",
+        "filaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de Schistosoma (urines / selles)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "schistosome",
+        "bilharziose urinaire",
+        "hématurie bilharzienne",
+        "recherche de schistosome dans les urines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Confirmation bilharziose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "confirmation bilharziose",
+        "schistosomiase confirmation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Scotch-test anal (test de Graham)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scotch test",
+        "test de Graham",
+        "oxyure",
+        "scoth test"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de sang occulte dans les selles",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hemocult",
+        "sang occulte selles",
+        "FOBT",
+        "hemocult recherche d hematies occultes dans les selles"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Examen mycologique (peau, ongles, cheveux)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "examen mycologique",
+        "mycologie",
+        "dermatophyte",
+        "recherche de champignons"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de Candida",
+      "actes_composants": [],
+      "lexique_intention": [
+        "recherche candida",
+        "candidose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Prélèvement mycologique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prélèvement mycologique",
+        "myco prélèvement"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de Cryptococcus (encre de Chine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cryptococcus",
+        "encre de Chine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de leishmanies",
+      "actes_composants": [],
+      "lexique_intention": [
+        "leishmanies",
+        "leishmaniose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parasitologie & mycologie",
+      "code": "PAR",
+      "acte_standardise": "Recherche de trypanosomes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "trypanosome",
+        "trypanosomiase",
+        "THA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Charge virale VIH",
+      "actes_composants": [],
+      "lexique_intention": [
+        "charge virale VIH",
+        "ARN VIH",
+        "HIV viral load"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Charge virale VHB (ADN)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "charge virale VHB",
+        "ADN VHB",
+        "HBV DNA",
+        "PCR VHB",
+        "charge virale b adn vhb"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Charge virale VHC (ARN)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "charge virale VHC",
+        "ARN VHC",
+        "HCV RNA",
+        "PCR VHC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Génotypage VHC",
+      "actes_composants": [],
+      "lexique_intention": [
+        "génotypage VHC",
+        "HCV génotype"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Charge virale VHD (ADN)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "charge virale VHD",
+        "ADN VHD",
+        "delta",
+        "charge virale adn vhd"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Charge virale CMV",
+      "actes_composants": [],
+      "lexique_intention": [
+        "charge virale CMV",
+        "PCR CMV",
+        "ADN CMV"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Charge virale EBV",
+      "actes_composants": [],
+      "lexique_intention": [
+        "charge virale EBV",
+        "PCR EBV"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "PCR SARS-CoV-2",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PCR covid",
+        "SARS-CoV-2 PCR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "PCR Chlamydia / Gonocoque",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PCR chlamydia",
+        "gonocoque",
+        "Neisseria gonorrhoeae",
+        "recherche chlamydia"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "PCR Mycoplasme / Ureaplasma",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PCR mycoplasme",
+        "ureaplasma",
+        "recherche mycoplasme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "PCR HSV",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PCR HSV",
+        "herpès PCR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Test HPV (détection)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HPV test",
+        "papillomavirus"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Typage HPV oncogène",
+      "actes_composants": [],
+      "lexique_intention": [
+        "typage HPV oncogène",
+        "génotypage HPV haut risque"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "GeneXpert MTB/RIF (tuberculose)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "GeneXpert",
+        "MTB RIF",
+        "PCR tuberculose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "PCR respiratoire (multiplex)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PCR respiratoire",
+        "panel respiratoire multiplex"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "PCR entéropathogènes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PCR selles",
+        "entéropathogènes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Recherche Facteur V Leiden",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facteur V Leiden",
+        "FV Leiden mutation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Recherche mutation prothrombine G20210A",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prothrombine G20210A",
+        "FII mutation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "Recherche hémochromatose (gène HFE)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HFE",
+        "hémochromatose génétique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biologie moléculaire / PCR",
+      "code": "MOL",
+      "acte_standardise": "BCR-ABL / JAK2 (hémopathies)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "BCR-ABL",
+        "JAK2",
+        "hémopathie moléculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Alcoolémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "alcoolémie",
+        "éthanol"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Recherche de drogues urinaires (panel)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "recherche drogue urines",
+        "toxiques urinaires",
+        "drogues panel",
+        "recherche de drogue dans les urines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Paracétamol",
+      "actes_composants": [],
+      "lexique_intention": [
+        "paracétamol",
+        "acétaminophène"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Salicylés",
+      "actes_composants": [],
+      "lexique_intention": [
+        "salicylés",
+        "aspirine dosage"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Carboxyhémoglobine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "carboxyhémoglobine",
+        "HbCO",
+        "CO"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Méthémoglobine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "méthémoglobine",
+        "MetHb"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Plombémie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "plomb",
+        "plombémie",
+        "saturnisme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Métaux lourds (arsenic, mercure, cadmium)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "métaux lourds",
+        "arsenic",
+        "mercure",
+        "cadmium"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Digoxine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "digoxine",
+        "digoxinémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Lithium (lithémie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lithium",
+        "lithémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Acide valproïque",
+      "actes_composants": [],
+      "lexique_intention": [
+        "acide valproïque",
+        "valproate",
+        "dépakine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Phénobarbital",
+      "actes_composants": [],
+      "lexique_intention": [
+        "phénobarbital",
+        "gardénal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Phénytoïne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "phénytoïne",
+        "diphantoïne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Carbamazépine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "carbamazépine",
+        "tégrétol"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Vancomycine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vancomycine",
+        "vancomycinémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Ciclosporine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ciclosporine",
+        "cyclosporine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Tacrolimus",
+      "actes_composants": [],
+      "lexique_intention": [
+        "tacrolimus",
+        "FK506"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pharmaco-toxicologie & suivi thérapeutique",
+      "code": "TOX",
+      "acte_standardise": "Méthotrexate",
+      "actes_composants": [],
+      "lexique_intention": [
+        "méthotrexate",
+        "MTX dosage"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gaz du sang & équilibre acido-basique",
+      "code": "GAZ",
+      "acte_standardise": "Gaz du sang artériel",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gaz du sang artériel",
+        "GDS artériel",
+        "gazométrie artérielle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gaz du sang & équilibre acido-basique",
+      "code": "GAZ",
+      "acte_standardise": "Gaz du sang veineux / capillaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gaz du sang veineux",
+        "gaz du sang capillaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gaz du sang & équilibre acido-basique",
+      "code": "GAZ",
+      "acte_standardise": "Lactates (acide lactique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lactates",
+        "acide lactique",
+        "lactacidémie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gaz du sang & équilibre acido-basique",
+      "code": "GAZ",
+      "acte_standardise": "Bicarbonates / réserve alcaline",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bicarbonates",
+        "réserve alcaline",
+        "HCO3",
+        "CO2 total"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Examen anatomopathologique de biopsie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie",
+        "anatomopathologie biopsie",
+        "histologie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Examen anatomopathologique de pièce opératoire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pièce opératoire",
+        "anapath pièce",
+        "histologie pièce"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Examen extemporané",
+      "actes_composants": [],
+      "lexique_intention": [
+        "extemporané",
+        "examen per-opératoire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Immunohistochimie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "immunohistochimie",
+        "IHC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Immunofluorescence (cutanée / rénale)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "immunofluorescence",
+        "IFD",
+        "biopsie rénale IF"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Biopsie ostéomédullaire (lecture)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie ostéomédullaire",
+        "BOM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Frottis cervico-vaginal (FCV / Pap)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "FCV",
+        "frottis cervico-vaginal",
+        "cytologie cervicale",
+        "Pap"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Cytologie en milieu liquide",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytologie en milieu liquide",
+        "ThinPrep",
+        "monocouche"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Cytoponction (thyroïde, ganglion, sein)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytoponction",
+        "ponction cytologique",
+        "FNA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Cytologie des épanchements (pleural, ascite, LCR)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytologie des épanchements",
+        "cytologie liquide pleural ascite LCR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Cytologie urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytologie urinaire",
+        "recherche de cellules tumorales urines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Anatomie & cytopathologie",
+      "code": "ANA",
+      "acte_standardise": "Cytologie des expectorations",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytologie des crachats",
+        "cytologie expectorations"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "Caryotype sanguin",
+      "actes_composants": [],
+      "lexique_intention": [
+        "caryotype",
+        "caryotype sanguin",
+        "cytogénétique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "Caryotype médullaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "caryotype médullaire",
+        "cytogénétique hématologique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "FISH (hybridation in situ)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "FISH",
+        "hybridation in situ"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "Dépistage prénatal non invasif (DPNI)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DPNI",
+        "trisomie 21 dépistage",
+        "ADN libre circulant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "Recherche de mutations BRCA1/BRCA2",
+      "actes_composants": [],
+      "lexique_intention": [
+        "BRCA",
+        "BRCA1 BRCA2",
+        "prédisposition cancer sein"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "Typage HLA (greffe)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "typage HLA",
+        "groupage HLA",
+        "compatibilité greffe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Génétique & cytogénétique",
+      "code": "GEN",
+      "acte_standardise": "Étude moléculaire de la drépanocytose",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drépanocytose moléculaire",
+        "mutation bêta-globine",
+        "HBB"
+      ],
+      "tarif_fcfa_indicatif": null
+    }
+  ]
+}

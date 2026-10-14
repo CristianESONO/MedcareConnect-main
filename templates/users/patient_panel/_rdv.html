@@ -39,7 +39,7 @@
   {% with prereq=rdv.get_prerequisites_display %}
   {% if prereq %}
   <div class="pac-rdv-prereq" style="margin-top:10px;padding:10px 12px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;font-size:12px;line-height:1.5;color:#92400e">
-    <strong style="display:block;margin-bottom:4px;font-size:11px">📋 Consignes avant le RDV</strong>
+    <strong style="display:block;margin-bottom:4px;font-size:11px"><i class="ti ti-clipboard-list"></i> Consignes avant le RDV</strong>
     {{ prereq|linebreaksbr }}
   </div>
   {% endif %}

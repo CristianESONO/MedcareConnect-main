@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from . import bundle_views
 from . import practitioner_views
+from . import chatbot_views
 
 app_name = "healthcare"
 
@@ -35,6 +36,12 @@ urlpatterns = [
     ),
     path("api/enregistrer-localisation/", views.save_search_location, name="save_search_location"),
     path("service/<slug:slug>/", views.service_detail, name="service_detail"),
+
+    # Chatbot d'onboarding prestataire (4 questions → import catalogue)
+    path("assistant-collecte/", chatbot_views.chatbot_collecte_view, name="chatbot_collecte"),
+    path("api/chatbot/submit/", chatbot_views.api_chatbot_submit, name="api_chatbot_submit"),
+    path("api/chatbot/reconcile/", chatbot_views.api_chatbot_reconcile, name="api_chatbot_reconcile"),
+    path("api/chatbot/apply-reconciliation/", chatbot_views.api_chatbot_apply_reconciliation, name="api_chatbot_apply_reconciliation"),
 
     # Prestataire
     path("prestataire/tableau-de-bord/", views.prestataire_dashboard, name="prestataire_dashboard"),
@@ -83,6 +90,16 @@ urlpatterns = [
     path("prestataire/tickets/<int:pk>/activer/", practitioner_views.prestataire_ticket_toggle, name="prestataire_ticket_toggle"),
     path("prestataire/tickets/<int:pk>/supprimer/", practitioner_views.prestataire_ticket_delete, name="prestataire_ticket_delete"),
     path("patient-mobile/", practitioner_views.patient_mobile_view, name="patient_mobile"),
+
+    # Panels d'examens (structures + praticiens)
+    path("prestataire/panels/", practitioner_views.prestataire_panels, name="prestataire_panels"),
+    path("prestataire/panels/creer/", practitioner_views.panel_create, name="panel_create"),
+    path("prestataire/panels/<str:pk>/activer/", practitioner_views.panel_toggle, name="panel_toggle"),
+    path("prestataire/panels/<str:pk>/supprimer/", practitioner_views.panel_delete, name="panel_delete"),
+    path("prestataire/panels/envoyer/", practitioner_views.panel_send, name="panel_send"),
+
+    # Pré-devis depuis profil public
+    path("predevis/<slug:slug>/", practitioner_views.start_predevis_conversation, name="start_predevis"),
 
     # Étape 6 — Accès / affiliations praticien
     path("prestataire/acces/", practitioner_views.prestataire_acces, name="prestataire_acces"),

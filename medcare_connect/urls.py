@@ -45,6 +45,8 @@ urlpatterns = [
     path("t/<str:token>/", pr_views.patient_ticket_view, name="patient_ticket_view"),
     path("patient-mobile/", pr_views.patient_mobile_view, name="patient_mobile"),
     path("demo-patient/", pr_views.patient_mobile_view, name="demo_patient"),
+    path("assistant/", RedirectView.as_view(url="/sante/assistant-collecte/", permanent=False), name="assistant_shortcut"),
+    path("chatbot/", RedirectView.as_view(url="/sante/assistant-collecte/", permanent=False), name="chatbot_shortcut"),
 ]
 
 if settings.DEBUG:

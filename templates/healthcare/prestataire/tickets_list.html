@@ -78,7 +78,7 @@
 </div>
 
 <div class="tk-note">
-  <span style="font-size:15px;flex-shrink:0">🔗</span>
+  <span style="font-size:15px;flex-shrink:0"><i class="ti ti-link"></i></span>
   <span>Un ticket est un <strong>lien privé, non répertorié et non classé</strong>. Il n'apparaît pas dans la recherche, il n'est visible que par ceux à qui vous l'envoyez. Vos actes restent aussi découvrables par recherche d'acte, au même rang que les autres.</span>
 </div>
 
@@ -134,7 +134,7 @@
   </div>
   {% empty %}
   <div class="tk-empty">
-    <div class="tk-empty-icon">🎫</div>
+    <div class="tk-empty-icon"><i class="ti ti-ticket"></i></div>
     <div class="tk-empty-txt">Vous n'avez pas encore créé de ticket de prestation.<br>Créez-en un pour partager un lien privé à vos patients.</div>
   </div>
   {% endfor %}
@@ -144,8 +144,8 @@
 <div class="tk-modal-overlay" id="tk-create-overlay" onclick="if(event.target===this)closeCreateTk()">
   <div class="tk-modal">
     <div class="tk-modal-head">
-      <span class="tk-modal-title">🎫 Créer un ticket de prestation</span>
-      <button class="tk-modal-close" onclick="closeCreateTk()">✕</button>
+      <span class="tk-modal-title"><i class="ti ti-ticket"></i> Créer un ticket de prestation</span>
+      <button class="tk-modal-close" onclick="closeCreateTk()"><i class="ti ti-x"></i></button>
     </div>
     <form method="post" action="{% url 'healthcare:prestataire_ticket_create' %}">
       {% csrf_token %}
@@ -187,7 +187,7 @@
           <textarea name="description" rows="3" placeholder="Sans superlatif ni mise en avant (Art. 10, 17, 19)"></textarea>
         </div>
         <div style="font-size:10.5px;color:#6b7280;background:#f9fafb;border-radius:8px;padding:10px 12px;line-height:1.6">
-          🛡️ Ce ticket est <strong>non répertorié</strong> : invisible dans la recherche. Partageable uniquement par lien direct.
+          <i class="ti ti-shield-check"></i> Ce ticket est <strong>non répertorié</strong> : invisible dans la recherche. Partageable uniquement par lien direct.
         </div>
       </div>
       <div class="tk-modal-foot">
@@ -213,7 +213,7 @@ function openCreateTk(){document.getElementById('tk-create-overlay').classList.a
 function closeCreateTk(){document.getElementById('tk-create-overlay').classList.remove('open');}
 function copyTicketLink(id,base){
   var url=base+'/t/'+id;
-  if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){showToast('Lien copié ✓');});}
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){showToast('Lien copié <i class="ti ti-check"></i>');});}
   else{showToast('Lien : '+url);}
 }
 function showToast(msg){

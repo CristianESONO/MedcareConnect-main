@@ -1,0 +1,1258 @@
+{
+  "pilier_id": 6,
+  "pilier_slug": "soins-dentaires",
+  "pilier_nom": "Soins dentaires",
+  "lexique_intention_uniquement": false,
+  "nb_actes": 103,
+  "actes": [
+    {
+      "type_service": "Panel d'examens / Forfaits",
+      "code": "PAN",
+      "acte_standardise": "Bilan bucco-dentaire complet",
+      "actes_composants": [
+        "Consultation dentaire (première consultation)",
+        "Bilan parodontal (sondage / charting)",
+        "Test de vitalité pulpaire"
+      ],
+      "lexique_intention": [
+        "bilan bucco-dentaire",
+        "examen bucco-dentaire complet",
+        "bilan dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Forfaits",
+      "code": "PAN",
+      "acte_standardise": "Séance de prophylaxie complète (détartrage + polissage + fluor)",
+      "actes_composants": [
+        "Détartrage",
+        "Polissage",
+        "Application de fluor topique"
+      ],
+      "lexique_intention": [
+        "séance d'hygiène",
+        "prophylaxie complète",
+        "détartrage polissage fluor"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Forfaits",
+      "code": "PAN",
+      "acte_standardise": "Réhabilitation implantaire unitaire (implant + couronne)",
+      "actes_composants": [
+        "Pose d'implant unitaire",
+        "Couronne sur implant"
+      ],
+      "lexique_intention": [
+        "réhabilitation implantaire",
+        "implant et couronne",
+        "restauration implantaire unitaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Forfaits",
+      "code": "PAN",
+      "acte_standardise": "Aménagement osseux pré-implantaire",
+      "actes_composants": [
+        "Greffe osseuse pré-implantaire (ROG)",
+        "Élévation du plancher sinusien (sinus lift)"
+      ],
+      "lexique_intention": [
+        "aménagement osseux",
+        "préparation pré-implantaire",
+        "greffe et sinus lift"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Consultation dentaire (première consultation)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation dentaire",
+        "première consultation",
+        "examen dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Consultation de contrôle / suivi",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation de contrôle",
+        "visite de suivi",
+        "contrôle dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Consultation dentaire spécialisée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation spécialisée",
+        "avis spécialisé"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Consultation d'urgence dentaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "urgence dentaire",
+        "consultation d'urgence",
+        "rage de dent"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Test de vitalité pulpaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test de vitalité",
+        "test au froid",
+        "vitalité pulpaire",
+        "test pulpaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Dépistage des lésions de la muqueuse buccale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dépistage cancer buccal",
+        "lésions muqueuses",
+        "médecine orale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Consultations & diagnostic",
+      "code": "CONS",
+      "acte_standardise": "Empreinte optique (scanner intra-oral)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "empreinte optique",
+        "scanner intra-oral",
+        "empreinte numérique",
+        "caméra intra-orale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prévention & prophylaxie",
+      "code": "PREV",
+      "acte_standardise": "Détartrage",
+      "actes_composants": [],
+      "lexique_intention": [
+        "détartrage",
+        "détartrage supra-gingival",
+        "nettoyage dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prévention & prophylaxie",
+      "code": "PREV",
+      "acte_standardise": "Polissage",
+      "actes_composants": [],
+      "lexique_intention": [
+        "polissage",
+        "polissage dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prévention & prophylaxie",
+      "code": "PREV",
+      "acte_standardise": "Aéropolissage",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aéropolissage",
+        "aéropolisseur"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prévention & prophylaxie",
+      "code": "PREV",
+      "acte_standardise": "Application de fluor topique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fluoration",
+        "application de fluor",
+        "vernis fluoré",
+        "gel fluoré"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prévention & prophylaxie",
+      "code": "PREV",
+      "acte_standardise": "Scellement de sillons",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scellement de sillons",
+        "sealant",
+        "sillons dentaires"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prévention & prophylaxie",
+      "code": "PREV",
+      "acte_standardise": "Motivation & enseignement à l'hygiène bucco-dentaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "motivation à l'hygiène",
+        "enseignement hygiène",
+        "instructions d'hygiène"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Traitement de carie simple",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soin de carie",
+        "traitement de carie",
+        "caries"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Obturation composite (1 face)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "composite 1 face",
+        "obturation composite simple",
+        "plombage blanc"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Obturation composite (2-3 faces)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "composite 2 faces",
+        "composite 3 faces",
+        "obturation composite complexe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Obturation à l'amalgame",
+      "actes_composants": [],
+      "lexique_intention": [
+        "amalgame",
+        "plombage",
+        "obturation amalgame"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Obturation au verre ionomère (CVI)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "verre ionomère",
+        "CVI",
+        "ciment verre ionomère"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Inlay / Onlay (céramique ou composite)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "inlay",
+        "onlay",
+        "restauration indirecte"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Coiffage pulpaire (direct / indirect)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coiffage pulpaire",
+        "coiffage direct",
+        "coiffage indirect"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie restauratrice (conservatrice)",
+      "code": "REST",
+      "acte_standardise": "Dépose et réfection d'obturation",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réfection d'obturation",
+        "changement de plombage",
+        "dépose composite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Traitement endodontique mono-radiculaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "traitement de canal mono",
+        "endodontie incisive",
+        "dévitalisation mono-radiculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Traitement endodontique bi-radiculaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "traitement de canal bi",
+        "endodontie prémolaire",
+        "dévitalisation bi-radiculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Traitement endodontique pluri-radiculaire (molaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "traitement de canal molaire",
+        "endodontie molaire",
+        "dévitalisation pluri-radiculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Retraitement endodontique (reprise de traitement)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "retraitement",
+        "reprise de traitement canalaire",
+        "reprise endodontique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Pulpotomie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pulpotomie",
+        "biopulpotomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Pulpectomie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pulpectomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Apexification / apexogénèse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "apexification",
+        "apexogénèse",
+        "dent immature"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Endodontie",
+      "code": "ENDO",
+      "acte_standardise": "Traitement d'une urgence endodontique (pulpite)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "urgence endodontique",
+        "pulpite",
+        "rage de dent",
+        "trépanation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Bilan parodontal (sondage / charting)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sondage parodontal",
+        "bilan parodontal",
+        "charting",
+        "indice de plaque"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Surfaçage radiculaire (détartrage sous-gingival)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "surfaçage radiculaire",
+        "détartrage sous-gingival",
+        "débridement par quadrant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Débridement parodontal non chirurgical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "débridement parodontal",
+        "assainissement parodontal non chirurgical"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Chirurgie parodontale à lambeau (assainissement)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chirurgie parodontale",
+        "lambeau d'assainissement",
+        "lambeau de Widman"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Gingivectomie / gingivoplastie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gingivectomie",
+        "gingivoplastie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Greffe gingivale / chirurgie muco-gingivale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "greffe gingivale",
+        "greffe de gencive",
+        "récession gingivale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Allongement coronaire chirurgical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "allongement coronaire",
+        "élongation coronaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Comblement osseux / régénération parodontale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "comblement osseux parodontal",
+        "régénération tissulaire guidée",
+        "RTG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Parodontologie",
+      "code": "PARO",
+      "acte_standardise": "Contention parodontale (attelle)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "contention parodontale",
+        "attelle de contention",
+        "solidarisation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Extraction simple",
+      "actes_composants": [],
+      "lexique_intention": [
+        "extraction simple",
+        "avulsion simple",
+        "extraction dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Extraction chirurgicale (complexe)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "extraction chirurgicale",
+        "avulsion complexe",
+        "alvéolectomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Avulsion de dent de sagesse (incluse / enclavée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dent de sagesse",
+        "troisième molaire",
+        "dent incluse sagesse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Désinclusion / avulsion de dent incluse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dent incluse",
+        "canine incluse",
+        "désinclusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Germectomie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "germectomie",
+        "avulsion de germe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Drainage d'abcès dentaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage d'abcès",
+        "incision d'abcès",
+        "abcès dentaire",
+        "cellulite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Énucléation de kyste des maxillaires (kystectomie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "kystectomie",
+        "énucléation kystique",
+        "kyste maxillaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Résection apicale (apicectomie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "apicectomie",
+        "résection apicale",
+        "chirurgie endodontique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Freinectomie (labiale / linguale)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "freinectomie",
+        "frénectomie",
+        "frein labial",
+        "frein lingual"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Biopsie de la muqueuse buccale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie buccale",
+        "biopsie muqueuse orale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Exérèse de lésion muqueuse bénigne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "exérèse de lésion",
+        "exérèse épulis",
+        "exérèse mucocèle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Préservation / comblement alvéolaire post-extraction",
+      "actes_composants": [],
+      "lexique_intention": [
+        "préservation alvéolaire",
+        "comblement d'alvéole",
+        "greffe post-extraction"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Chirurgie buccale & orale",
+      "code": "CHIR",
+      "acte_standardise": "Chirurgie pré-prothétique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chirurgie pré-prothétique",
+        "régularisation de crête",
+        "vestibuloplastie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Consultation / bilan implantaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation implantaire",
+        "bilan implantaire",
+        "étude implantaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Pose d'implant unitaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pose d'implant",
+        "implant unitaire",
+        "mise en place implant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Pose d'implants multiples",
+      "actes_composants": [],
+      "lexique_intention": [
+        "implants multiples",
+        "pose de plusieurs implants"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Greffe osseuse pré-implantaire (ROG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "greffe osseuse",
+        "ROG",
+        "régénération osseuse guidée",
+        "augmentation osseuse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Élévation du plancher sinusien (sinus lift)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sinus lift",
+        "élévation sinusienne",
+        "greffe sinusienne",
+        "soulevé de sinus"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Pose de vis de cicatrisation / pilier implantaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vis de cicatrisation",
+        "pilier implantaire",
+        "pilier de cicatrisation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Couronne sur implant",
+      "actes_composants": [],
+      "lexique_intention": [
+        "couronne implantaire",
+        "couronne sur implant",
+        "prothèse implanto-portée unitaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Bridge sur implants",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bridge sur implants",
+        "pont implanto-porté"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Prothèse complète sur implants (overdenture / All-on-4)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "overdenture",
+        "all-on-4",
+        "prothèse amovible sur implants",
+        "prothèse complète implanto-portée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Traitement d'une péri-implantite",
+      "actes_composants": [],
+      "lexique_intention": [
+        "péri-implantite",
+        "mucosite péri-implantaire",
+        "maintenance implantaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Implantologie",
+      "code": "IMPLANT",
+      "acte_standardise": "Dépose d'implant",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dépose d'implant",
+        "explantation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Reconstitution corono-radiculaire (inlay-core)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "inlay-core",
+        "faux moignon",
+        "reconstitution corono-radiculaire",
+        "tenon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Couronne céramo-métallique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "couronne céramo-métallique",
+        "CCM",
+        "couronne métallo-céramique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Couronne céramo-céramique (zircone)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "couronne zircone",
+        "céramo-céramique",
+        "full ceram",
+        "couronne tout céramique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Couronne provisoire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "couronne provisoire",
+        "provisoire",
+        "temporaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Bridge (pont) fixe",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bridge",
+        "pont",
+        "prothèse fixe plurale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Prothèse amovible partielle en résine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prothèse amovible résine",
+        "PAP résine",
+        "appareil partiel résine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Prothèse amovible partielle à châssis métallique (stellite)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "châssis métallique",
+        "stellite",
+        "PAP métallique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Prothèse complète (dentier)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prothèse complète",
+        "dentier",
+        "prothèse adjointe complète",
+        "PAC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Prothèse immédiate",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prothèse immédiate",
+        "prothèse post-extractionnelle immédiate"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Réparation de prothèse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réparation de prothèse",
+        "réparation de dentier",
+        "ajout de dent"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prothèse dentaire",
+      "code": "PROTH",
+      "acte_standardise": "Rebasage / regarnissage de prothèse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rebasage",
+        "regarnissage",
+        "réadaptation de prothèse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Consultation / bilan orthodontique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation orthodontique",
+        "bilan orthodontique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Traitement par appareil multi-attaches fixe (bagues)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bagues",
+        "appareil fixe",
+        "multi-attaches",
+        "brackets"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Traitement par appareil amovible",
+      "actes_composants": [],
+      "lexique_intention": [
+        "appareil amovible",
+        "plaque orthodontique",
+        "appareil mobile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Traitement par gouttières (aligneurs transparents)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aligneurs",
+        "gouttières transparentes",
+        "invisalign",
+        "orthodontie invisible"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Appareil d'orthopédie dento-faciale (fonctionnel)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ODF",
+        "orthopédie dento-faciale",
+        "appareil fonctionnel",
+        "activateur"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Disjoncteur / expansion maxillaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "disjoncteur",
+        "expansion palatine",
+        "quad helix"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Mini-vis d'ancrage orthodontique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "mini-vis",
+        "ancrage osseux",
+        "micro-vis orthodontique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Contention post-orthodontique (fixe / amovible)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "contention",
+        "fil de contention",
+        "gouttière de contention"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Orthodontie & orthopédie dento-faciale",
+      "code": "ORTHO",
+      "acte_standardise": "Pose / dépose d'attachements orthodontiques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "collage de bagues",
+        "dépose de bagues",
+        "attachements"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Consultation pédodontique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation pédodontique",
+        "dentiste enfant",
+        "odontologie pédiatrique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Soin de carie sur dent temporaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "carie dent de lait",
+        "soin dent temporaire",
+        "obturation dent de lait"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Pulpotomie sur dent temporaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pulpotomie dent de lait",
+        "pulpotomie pédiatrique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Coiffe pédodontique préformée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "couronne pédiatrique",
+        "coiffe préformée",
+        "couronne pédodontique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Extraction de dent temporaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "extraction dent de lait",
+        "avulsion dent temporaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Mainteneur d'espace",
+      "actes_composants": [],
+      "lexique_intention": [
+        "mainteneur d'espace",
+        "maintien d'espace"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Odontologie pédiatrique (pédodontie)",
+      "code": "PEDO",
+      "acte_standardise": "Prise en charge sous MEOPA / sédation consciente",
+      "actes_composants": [],
+      "lexique_intention": [
+        "MEOPA",
+        "sédation consciente",
+        "gaz hilarant",
+        "sédation enfant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Occlusodontie & ATM",
+      "code": "OCCL",
+      "acte_standardise": "Bilan / analyse occlusale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "analyse occlusale",
+        "bilan occlusal",
+        "étude de l'occlusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Occlusodontie & ATM",
+      "code": "OCCL",
+      "acte_standardise": "Gouttière occlusale (bruxisme / reconditionnement)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gouttière occlusale",
+        "gouttière de bruxisme",
+        "gouttière de reconditionnement"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Occlusodontie & ATM",
+      "code": "OCCL",
+      "acte_standardise": "Équilibration occlusale (meulage sélectif)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "équilibration occlusale",
+        "meulage sélectif",
+        "ajustement occlusal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Occlusodontie & ATM",
+      "code": "OCCL",
+      "acte_standardise": "Prise en charge des troubles de l'ATM (DAM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ATM",
+        "DAM",
+        "SADAM",
+        "dysfonction temporo-mandibulaire",
+        "articulation temporo-mandibulaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dentisterie esthétique",
+      "code": "ESTH",
+      "acte_standardise": "Blanchiment dentaire au fauteuil",
+      "actes_composants": [],
+      "lexique_intention": [
+        "blanchiment au fauteuil",
+        "éclaircissement au fauteuil",
+        "blanchiment en cabinet"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dentisterie esthétique",
+      "code": "ESTH",
+      "acte_standardise": "Blanchiment dentaire ambulatoire (gouttières)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "blanchiment ambulatoire",
+        "gouttières de blanchiment",
+        "éclaircissement à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dentisterie esthétique",
+      "code": "ESTH",
+      "acte_standardise": "Blanchiment interne (dent dépulpée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "blanchiment interne",
+        "éclaircissement dent dévitalisée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dentisterie esthétique",
+      "code": "ESTH",
+      "acte_standardise": "Facettes composites",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facettes composite",
+        "facette directe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dentisterie esthétique",
+      "code": "ESTH",
+      "acte_standardise": "Facettes céramiques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "facettes céramique",
+        "facette porcelaine",
+        "facette emax"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dentisterie esthétique",
+      "code": "ESTH",
+      "acte_standardise": "Smile design / projet esthétique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "smile design",
+        "projet esthétique",
+        "design du sourire",
+        "mock-up"
+      ],
+      "tarif_fcfa_indicatif": null
+    }
+  ]
+}

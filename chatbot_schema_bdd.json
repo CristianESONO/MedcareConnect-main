@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MedCareChatbotCollecteSchema",
+  "description": "Schéma de collecte de données en 4 questions aligné sur la base de données MedCare",
+  "type": "object",
+  "required": [
+    "q1_besoin",
+    "q2_ville",
+    "q3_delai",
+    "q4_nom",
+    "q4_telephone"
+  ],
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["patient", "structure"],
+      "default": "patient",
+      "description": "Mode de collecte : 'patient' (Demande de soin / RDV) ou 'structure' (Onboarding établissement)"
+    },
+    "question_1": {
+      "title": "Question 1 : Prestation médicale ou Besoin",
+      "description": "Résolution de l'examen, pilier ou intention médicale recherchée",
+      "database_mapping": {
+        "table": "appointments_rendezvous / healthcare_actemedical / healthcare_servicemedical",
+        "fields": {
+          "q1_besoin": "RendezVous.walk_in_motif (CharField)",
+          "q1_acte_id": "ActeMedical.id (ForeignKey optionnelle)",
+          "q1_service_slug": "ServiceMedical.slug (ForeignKey indirecte via ActeMedical)",
+          "lexique_reconnu": "RendezVous.actes_snapshot[0]['terme_intention'] (JSONField)"
+        }
+      },
+      "properties": {
+        "q1_besoin": {
+          "type": "string",
+          "minLength": 2,
+          "description": "Texte libre, nom d'acte ou intention médicale (ex: NFS, Scanner, Dialyse, Détartrage)"
+        },
+        "q1_acte_id": {
+          "type": ["integer", "null"],
+          "description": "Identifiant clé primaire de l'ActeMedical si sélectionné dans l'autocomplétion"
+        },
+        "q1_service_slug": {
+          "type": ["string", "null"],
+          "enum": [
+            "biologie-medicale",
+            "imagerie-medicale",
+            "explorations-fonctionnelles",
+            "ambulance-medicalisee",
+            "soins-specialises",
+            "soins-dentaires"
+          ],
+          "description": "Slug du pilier parmi les 6 piliers MedCare"
+        }
+      }
+    },
+    "question_2": {
+      "title": "Question 2 : Localisation géographique",
+      "description": "Zone d'intervention ou de recherche pour orienter vers la structure la plus proche",
+      "database_mapping": {
+        "table": "healthcare_region / healthcare_organismedesante",
+        "fields": {
+          "q2_ville": "OrganismeDeSante.city / quartier (CharField)",
+          "q2_region_id": "Region.id (ForeignKey vers healthcare.Region)"
+        }
+      },
+      "properties": {
+        "q2_ville": {
+          "type": "string",
+          "minLength": 2,
+          "description": "Ville ou commune (ex: Dakar, Almadies, Thiès, Mbour, Saint-Louis)"
+        },
+        "q2_region_id": {
+          "type": ["integer", "string", "null"],
+          "description": "ID de la région administrative sénégalaise"
+        }
+      }
+    },
+    "question_3": {
+      "title": "Question 3 : Moment & Urgence",
+      "description": "Degré d'urgence ou créneau de rendez-vous souhaité",
+      "database_mapping": {
+        "table": "appointments_rendezvous",
+        "fields": {
+          "start": "RendezVous.start (DateTimeField) calculé selon le délai et le créneau",
+          "end": "RendezVous.end (DateTimeField) start + 30 minutes",
+          "slot_minutes": "RendezVous.slot_minutes (PositiveSmallIntegerField, défaut: 30)",
+          "status": "RendezVous.status (CharField, défaut: 'requested')"
+        }
+      },
+      "properties": {
+        "q3_delai": {
+          "type": "string",
+          "enum": ["asap", "demain", "semaine", "date"],
+          "description": "'asap' (Dès aujourd'hui), 'demain', 'semaine', ou 'date' spécifique"
+        },
+        "q3_creneau": {
+          "type": "string",
+          "enum": ["matin", "apres_midi"],
+          "description": "Plage horaire : 'matin' (8h-12h) ou 'apres_midi' (14h-18h)"
+        },
+        "q3_date": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "Date calendaire au format YYYY-MM-DD"
+        }
+      }
+    },
+    "question_4": {
+      "title": "Question 4 : Coordonnées du demandeur",
+      "description": "Informations de contact pour la confirmation WhatsApp / SMS et le suivi",
+      "database_mapping": {
+        "table": "appointments_rendezvous / users_user",
+        "fields": {
+          "q4_nom": "RendezVous.walk_in_name (CharField)",
+          "q4_telephone": "RendezVous.walk_in_phone (CharField, WhatsApp)",
+          "q4_email": "User.email (EmailField, optionnel)",
+          "reference": "RendezVous.reference (CharField unique, ex: RDV-XXXXXXXX)"
+        }
+      },
+      "properties": {
+        "q4_nom": {
+          "type": "string",
+          "minLength": 2,
+          "description": "Nom complet du patient ou responsable"
+        },
+        "q4_telephone": {
+          "type": "string",
+          "minLength": 8,
+          "description": "Numéro de téléphone avec indicatif (ex: +221 77 000 00 00)"
+        },
+        "q4_email": {
+          "type": ["string", "null"],
+          "format": "email",
+          "description": "Adresse email optionnelle"
+        }
+      }
+    }
+  }
+}

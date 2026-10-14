@@ -1,0 +1,1667 @@
+{
+  "pilier_id": 3,
+  "pilier_slug": "explorations-fonctionnelles",
+  "pilier_nom": "Explorations fonctionnelles",
+  "lexique_intention_uniquement": false,
+  "nb_actes": 136,
+  "actes": [
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan cardiologique de base",
+      "actes_composants": [
+        "ECG de repos",
+        "ECG d'effort (épreuve d'effort)"
+      ],
+      "lexique_intention": [
+        "bilan cardiologique",
+        "bilan cardiaque",
+        "ECG écho épreuve d'effort"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "EFR complète (spirométrie + pléthysmographie + DLCO)",
+      "actes_composants": [
+        "Spirométrie (EFR simple)",
+        "Pléthysmographie (volumes pulmonaires)",
+        "Test de diffusion du CO (DLCO)"
+      ],
+      "lexique_intention": [
+        "EFR complète",
+        "exploration fonctionnelle respiratoire complète",
+        "spirométrie pléthysmographie DLCO"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan vestibulaire complet",
+      "actes_composants": [
+        "Vidéonystagmographie (VNG) / épreuves caloriques",
+        "Test vidéo d'impulsion céphalique (vHIT)",
+        "Potentiels évoqués vestibulaires myogéniques (VEMP)"
+      ],
+      "lexique_intention": [
+        "bilan vestibulaire",
+        "exploration vestibulaire complète",
+        "VNG vHIT VEMP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan audiométrique complet",
+      "actes_composants": [
+        "Audiométrie tonale",
+        "Audiométrie vocale",
+        "Impédancemétrie / tympanométrie"
+      ],
+      "lexique_intention": [
+        "bilan auditif",
+        "bilan audiométrique",
+        "audiométrie complète"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan urodynamique complet",
+      "actes_composants": [
+        "Débitmétrie urinaire",
+        "Cystomanométrie",
+        "Électromyographie périnéale",
+        "Profil urétral (profilométrie)"
+      ],
+      "lexique_intention": [
+        "bilan urodynamique",
+        "urodynamique",
+        "BUD",
+        "débitmétrie cystomanométrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan du glaucome",
+      "actes_composants": [
+        "Tonométrie (pression intra-oculaire)",
+        "Champ visuel (périmétrie)",
+        "OCT (tomographie en cohérence optique)",
+        "Pachymétrie cornéenne"
+      ],
+      "lexique_intention": [
+        "bilan glaucome",
+        "dépistage glaucome",
+        "tonométrie champ visuel OCT"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan du sommeil (polygraphie + oxymétrie)",
+      "actes_composants": [
+        "Polygraphie ventilatoire nocturne",
+        "Oxymétrie nocturne"
+      ],
+      "lexique_intention": [
+        "bilan du sommeil",
+        "dépistage apnées",
+        "polygraphie oxymétrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Bilans",
+      "code": "PAN",
+      "acte_standardise": "Bilan d'infertilité féminine",
+      "actes_composants": [
+        "Hystérosonographie (HyCoSy)",
+        "Hystéroscopie diagnostique",
+        "Monitoring de l'ovulation"
+      ],
+      "lexique_intention": [
+        "bilan d'infertilité",
+        "exploration infertilité féminine",
+        "HSG hystéroscopie monitoring"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "ECG de repos",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ECG",
+        "électrocardiogramme",
+        "ECG de repos",
+        "ECG 12 dérivations"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "ECG d'effort (épreuve d'effort)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "épreuve d'effort",
+        "ECG d'effort",
+        "test d'effort",
+        "tapis roulant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Holter ECG (24 h)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "holter ECG",
+        "holter rythmique",
+        "enregistrement ECG 24h"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Holter ECG longue durée (48-72 h)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "holter longue durée",
+        "holter 48h",
+        "holter 72h"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Holter tensionnel (MAPA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "MAPA",
+        "holter tensionnel",
+        "mesure ambulatoire de la pression artérielle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Enregistreur d'événements (R-test)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "R-test",
+        "enregistreur d'événements",
+        "event recorder",
+        "holter implantable"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Tilt-test (test d'inclinaison)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "tilt test",
+        "test d'inclinaison",
+        "exploration de syncope"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Mesure de l'index de pression systolique (IPS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IPS",
+        "ABI",
+        "index de pression systolique",
+        "index cheville-bras"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Mesure de la rigidité artérielle (onde de pouls)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VOP",
+        "rigidité artérielle",
+        "vitesse de l'onde de pouls",
+        "pulse wave velocity"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Capillaroscopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "capillaroscopie",
+        "capillaroscopie péri-unguéale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Cardiologie & explorations vasculaires",
+      "code": "CARD",
+      "acte_standardise": "Exploration électrophysiologique endocavitaire (EEP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EEP",
+        "exploration électrophysiologique",
+        "stimulation endocavitaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Spirométrie (EFR simple)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "spirométrie",
+        "EFR",
+        "exploration fonctionnelle respiratoire",
+        "courbe débit-volume"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Spirométrie avec test de réversibilité (bronchodilatateur)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réversibilité",
+        "bronchodilatateur",
+        "test aux bêta-2",
+        "spirométrie post-BD"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Pléthysmographie (volumes pulmonaires)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pléthysmographie",
+        "volumes pulmonaires",
+        "capacité résiduelle fonctionnelle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Test de diffusion du CO (DLCO)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DLCO",
+        "transfert du CO",
+        "capacité de diffusion",
+        "TLCO"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Test de provocation bronchique (métacholine)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "provocation bronchique",
+        "métacholine",
+        "hyperréactivité bronchique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Débit expiratoire de pointe (DEP / peak flow)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DEP",
+        "peak flow",
+        "débit de pointe",
+        "débitmètre de pointe"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Mesure de la FeNO (NO exhalé)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "FeNO",
+        "NO exhalé",
+        "monoxyde d'azote exhalé"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Oscillométrie (IOS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "oscillométrie",
+        "IOS",
+        "oscillations forcées"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Mesure des pressions respiratoires (PImax/PEmax)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PImax",
+        "PEmax",
+        "pressions respiratoires maximales",
+        "force des muscles respiratoires"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Épreuve d'effort cardio-respiratoire (VO2 max)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VO2 max",
+        "épreuve d'effort cardio-respiratoire",
+        "ergospirométrie",
+        "EFX"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Test de marche de 6 minutes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test de marche 6 minutes",
+        "TM6",
+        "6MWT",
+        "périmètre de marche"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Fibroscopie bronchique + LBA",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fibroscopie bronchique",
+        "bronchoscopie",
+        "lavage broncho-alvéolaire",
+        "LBA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Biopsie bronchique (sous fibroscopie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie bronchique",
+        "biopsie sous bronchoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pneumologie & explorations respiratoires",
+      "code": "PNEU",
+      "acte_standardise": "Écho-endoscopie bronchique (EBUS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EBUS",
+        "écho-endoscopie bronchique",
+        "ponction médiastinale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Électroencéphalogramme (EEG) standard",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EEG",
+        "électroencéphalogramme",
+        "EEG standard"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "EEG de sommeil / après privation",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EEG de sommeil",
+        "EEG de privation",
+        "EEG prolongé"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Vidéo-EEG de longue durée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vidéo-EEG",
+        "EEG longue durée",
+        "monitoring EEG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Électroneuromyogramme (ENMG / EMG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ENMG",
+        "EMG",
+        "électromyogramme",
+        "conduction nerveuse",
+        "électroneuromyographie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Potentiels évoqués visuels (PEV)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PEV",
+        "potentiels évoqués visuels"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Potentiels évoqués auditifs (PEA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PEA",
+        "potentiels évoqués auditifs",
+        "tronc cérébral auditif"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Potentiels évoqués somesthésiques (PES)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PES",
+        "potentiels évoqués somesthésiques"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Potentiels évoqués moteurs (PEM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PEM",
+        "potentiels évoqués moteurs",
+        "stimulation magnétique transcrânienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Potentiels évoqués cognitifs (P300)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "P300",
+        "potentiels évoqués cognitifs"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Test de stimulation nerveuse répétitive",
+      "actes_composants": [],
+      "lexique_intention": [
+        "stimulation répétitive",
+        "bloc neuromusculaire",
+        "myasthénie ENMG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Électromyographie de fibre unique (jitter)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fibre unique",
+        "jitter",
+        "single fiber EMG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Neurologie & neurophysiologie",
+      "code": "NEU",
+      "acte_standardise": "Ponction lombaire diagnostique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction lombaire",
+        "PL",
+        "mesure de pression du LCR"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Fibroscopie œso-gastro-duodénale (FOGD)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "FOGD",
+        "endoscopie haute",
+        "gastroscopie",
+        "fibroscopie digestive haute"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "FOGD avec biopsies",
+      "actes_composants": [],
+      "lexique_intention": [
+        "FOGD biopsies",
+        "endoscopie haute avec biopsies"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Coloscopie totale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coloscopie",
+        "endoscopie basse",
+        "coloscopie totale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Coloscopie avec polypectomie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "polypectomie",
+        "coloscopie thérapeutique",
+        "résection de polype"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Rectosigmoïdoscopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rectosigmoïdoscopie",
+        "sigmoïdoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Anuscopie / rectoscopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "anuscopie",
+        "rectoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Écho-endoscopie digestive",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho-endoscopie",
+        "echoendoscopie digestive",
+        "EUS"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Cholangio-pancréatographie rétrograde endoscopique (CPRE)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "CPRE",
+        "ERCP",
+        "cholangiographie rétrograde endoscopique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Entéroscopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "entéroscopie",
+        "endoscopie du grêle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Vidéocapsule endoscopique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vidéocapsule",
+        "capsule endoscopique",
+        "capsule du grêle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Manométrie œsophagienne (haute résolution)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "manométrie œsophagienne",
+        "manométrie haute résolution",
+        "HRM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "pH-métrie œsophagienne (24 h)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pH-métrie",
+        "pH-métrie œsophagienne",
+        "reflux gastro-œsophagien"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "pH-impédancemétrie œsophagienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pH-impédancemétrie",
+        "impédancemétrie œsophagienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Manométrie ano-rectale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "manométrie anorectale",
+        "manométrie ano-rectale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Test respiratoire à l'hydrogène (lactose, SIBO)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test respiratoire à l'hydrogène",
+        "breath test hydrogène",
+        "intolérance au lactose",
+        "pullulation bactérienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Élastométrie hépatique (FibroScan)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fibroscan",
+        "élastométrie hépatique",
+        "élastographie impulsionnelle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Ligature de varices œsophagiennes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ligature de varices",
+        "ligature élastique",
+        "varices œsophagiennes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Dilatation œsophagienne endoscopique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dilatation œsophagienne",
+        "dilatation endoscopique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gastro-entérologie & endoscopie digestive",
+      "code": "GAST",
+      "acte_standardise": "Gastrostomie endoscopique percutanée (GEP/PEG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gastrostomie",
+        "PEG",
+        "GEP",
+        "sonde de gastrostomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Audiométrie tonale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "audiométrie tonale",
+        "audiogramme tonal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Audiométrie vocale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "audiométrie vocale",
+        "audiogramme vocal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Impédancemétrie / tympanométrie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "impédancemétrie",
+        "tympanométrie",
+        "tympanogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Réflexe stapédien",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réflexe stapédien",
+        "réflexe acoustique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Oto-émissions acoustiques (OEA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "OEA",
+        "oto-émissions acoustiques",
+        "dépistage auditif néonatal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Potentiels évoqués auditifs (PEA / ABR)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PEA",
+        "ABR",
+        "potentiels évoqués auditifs du tronc"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Vidéonystagmographie (VNG) / épreuves caloriques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VNG",
+        "vidéonystagmographie",
+        "épreuves caloriques",
+        "exploration vestibulaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Test vidéo d'impulsion céphalique (vHIT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "vHIT",
+        "video head impulse test",
+        "impulsion céphalique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Potentiels évoqués vestibulaires myogéniques (VEMP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "VEMP",
+        "potentiels évoqués vestibulaires"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Posturographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "posturographie",
+        "plateforme de posture",
+        "exploration de l'équilibre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Fibroscopie naso-pharyngée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fibroscopie nasale",
+        "nasofibroscopie",
+        "naso-pharyngoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Fibroscopie laryngée / laryngoscopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "laryngoscopie",
+        "fibroscopie laryngée",
+        "nasofibrolaryngoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Vidéostroboscopie laryngée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "stroboscopie",
+        "vidéostroboscopie",
+        "exploration des cordes vocales"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Rhinomanométrie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rhinomanométrie",
+        "perméabilité nasale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL & explorations audio-vestibulaires",
+      "code": "ORL",
+      "acte_standardise": "Olfactométrie (test de l'odorat)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "olfactométrie",
+        "test de l'odorat",
+        "exploration de l'olfaction"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Mesure de l'acuité visuelle / réfraction",
+      "actes_composants": [],
+      "lexique_intention": [
+        "acuité visuelle",
+        "réfraction",
+        "réfractométrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Fond d'œil (ophtalmoscopie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fond d'œil",
+        "ophtalmoscopie",
+        "examen du fond d'oeil"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Tonométrie (pression intra-oculaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "tonométrie",
+        "pression intra-oculaire",
+        "PIO",
+        "tension oculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Champ visuel (périmétrie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "champ visuel",
+        "périmétrie",
+        "campimétrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "OCT (tomographie en cohérence optique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "OCT",
+        "tomographie en cohérence optique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "OCT-angiographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "OCT-angiographie",
+        "OCT-A",
+        "angio-OCT"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Pachymétrie cornéenne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pachymétrie",
+        "épaisseur cornéenne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Topographie cornéenne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "topographie cornéenne",
+        "cartographie cornéenne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Biométrie oculaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biométrie",
+        "biométrie oculaire",
+        "calcul d'implant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Angiographie rétinienne à la fluorescéine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angiographie rétinienne",
+        "angiofluorographie",
+        "fluorescéine"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Angiographie au vert d'indocyanine (ICG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ICG",
+        "vert d'indocyanine",
+        "angiographie ICG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Rétinographie (photographie du fond d'œil)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rétinographie",
+        "photographie du fond d'œil",
+        "rétinophotographie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Électrorétinogramme (ERG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ERG",
+        "électrorétinogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Électro-oculogramme (EOG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EOG",
+        "électro-oculogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Microscopie spéculaire (comptage endothélial)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "microscopie spéculaire",
+        "comptage endothélial",
+        "cellules endothéliales"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Gonioscopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gonioscopie",
+        "angle irido-cornéen"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Test de Schirmer (sécheresse oculaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test de Schirmer",
+        "sécheresse oculaire",
+        "film lacrymal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Bilan orthoptique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bilan orthoptique",
+        "orthoptie",
+        "vision binoculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Laser YAG (capsulotomie / iridotomie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "laser YAG",
+        "capsulotomie",
+        "iridotomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Laser rétinien (photocoagulation)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "laser rétinien",
+        "photocoagulation",
+        "panphotocoagulation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ophtalmologie",
+      "code": "OPH",
+      "acte_standardise": "Injection intravitréenne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "injection intravitréenne",
+        "IVT",
+        "anti-VEGF"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Débitmétrie urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "débitmétrie",
+        "débitmétrie urinaire",
+        "flux urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Cystomanométrie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cystomanométrie",
+        "cystométrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Profil urétral (profilométrie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "profil urétral",
+        "profilométrie urétrale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Électromyographie périnéale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "EMG périnéal",
+        "électromyographie du périnée",
+        "exploration sphinctérienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Mesure du résidu post-mictionnel",
+      "actes_composants": [],
+      "lexique_intention": [
+        "résidu post-mictionnel",
+        "RPM",
+        "résidu vésical"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Cystoscopie diagnostique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cystoscopie",
+        "fibroscopie vésicale",
+        "urétrocystoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Clairance rénale (mesurée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "clairance rénale",
+        "clairance de la créatinine mesurée",
+        "fonction rénale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Épreuve de concentration / dilution urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test de concentration",
+        "épreuve de restriction hydrique",
+        "dilution urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Uro-néphrologie & urodynamique",
+      "code": "URONEPH",
+      "acte_standardise": "Exploration des troubles mictionnels (calendrier mictionnel)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "calendrier mictionnel",
+        "catalogue mictionnel",
+        "troubles mictionnels"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Hystéroscopie diagnostique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hystéroscopie",
+        "hystéroscopie diagnostique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Hystéroscopie opératoire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hystéroscopie opératoire",
+        "résection hystéroscopique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Colposcopie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "colposcopie",
+        "examen du col sous colposcope"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Colposcopie avec biopsie cervicale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "colposcopie avec biopsie",
+        "biopsie du col"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Hystérosonographie (HyCoSy)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HyCoSy",
+        "hystérosonographie",
+        "écho-sonosalpingographie",
+        "perméabilité tubaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Monitoring de l'ovulation",
+      "actes_composants": [],
+      "lexique_intention": [
+        "monitoring ovulatoire",
+        "monitorage de l'ovulation",
+        "suivi folliculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Test post-coïtal (test de Huhner)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test post-coïtal",
+        "test de Huhner",
+        "Hühner"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Cardiotocographie / rythme cardiaque fœtal",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cardiotocographie",
+        "CTG",
+        "RCF",
+        "monitoring fœtal",
+        "ERCF"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynéco-obstétrique & fertilité",
+      "code": "GYN",
+      "acte_standardise": "Exploration de l'infertilité (bilan du couple)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bilan d'infertilité",
+        "exploration de l'infertilité",
+        "bilan de fertilité"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie",
+      "code": "DERM",
+      "acte_standardise": "Dermoscopie (dermatoscopie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dermoscopie",
+        "dermatoscopie",
+        "examen dermoscopique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie",
+      "code": "DERM",
+      "acte_standardise": "Cartographie des nævus (vidéodermoscopie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cartographie des nævus",
+        "cartographie des grains de beauté",
+        "vidéodermoscopie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie",
+      "code": "DERM",
+      "acte_standardise": "Biopsie cutanée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie cutanée",
+        "biopsie de peau",
+        "punch biopsie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie",
+      "code": "DERM",
+      "acte_standardise": "Examen en lumière de Wood",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lumière de Wood",
+        "lampe de Wood"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie",
+      "code": "DERM",
+      "acte_standardise": "Microscopie confocale cutanée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "microscopie confocale",
+        "confocal cutané"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Allergologie",
+      "code": "ALL",
+      "acte_standardise": "Tests cutanés allergologiques (prick-tests)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "prick-test",
+        "tests cutanés allergologiques",
+        "tests allergologiques cutanés"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Allergologie",
+      "code": "ALL",
+      "acte_standardise": "Intradermoréaction allergologique (IDR)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IDR allergologique",
+        "intradermoréaction allergénique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Allergologie",
+      "code": "ALL",
+      "acte_standardise": "Patch-tests (tests épicutanés)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "patch-test",
+        "tests épicutanés",
+        "tests de contact"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Allergologie",
+      "code": "ALL",
+      "acte_standardise": "Tests de provocation (orale, nasale, médicamenteuse)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "test de provocation",
+        "provocation orale",
+        "provocation médicamenteuse",
+        "réintroduction"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Polysomnographie (PSG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "polysomnographie",
+        "PSG",
+        "enregistrement du sommeil"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Polygraphie ventilatoire nocturne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "polygraphie ventilatoire",
+        "polygraphie respiratoire",
+        "apnées du sommeil"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Oxymétrie nocturne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "oxymétrie nocturne",
+        "saturation nocturne",
+        "oxymétrie de nuit"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Capnographie nocturne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "capnographie",
+        "capnographie nocturne",
+        "CO2 transcutané"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Actimétrie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "actimétrie",
+        "actigraphie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Test itératif de latence d'endormissement (TILE/MSLT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TILE",
+        "MSLT",
+        "latence d'endormissement",
+        "hypersomnie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Test de maintien d'éveil (TME/MWT)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TME",
+        "MWT",
+        "maintien de l'éveil"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Titration de PPC (CPAP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "titration PPC",
+        "CPAP",
+        "pression positive continue",
+        "réglage PPC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Explorations du sommeil",
+      "code": "SOM",
+      "acte_standardise": "Endoscopie du sommeil (DISE)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DISE",
+        "endoscopie du sommeil",
+        "sleep endoscopy"
+      ],
+      "tarif_fcfa_indicatif": null
+    }
+  ]
+}

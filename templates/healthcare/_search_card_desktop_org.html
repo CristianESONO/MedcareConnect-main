@@ -17,7 +17,7 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
         {% if block.is_pioneer %}
           <span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>
         {% elif block.org.is_verified %}
-          <span class="verified-badge sipn-ico-inline" style="background:#e8faf3;color:#065f46;border:1px solid #a7f3d0;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">✓ Vérifié</span>
+          <span class="verified-badge sipn-ico-inline" style="background:#e8faf3;color:#065f46;border:1px solid #a7f3d0;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700"><i class="ti ti-check"></i> Vérifié</span>
         {% endif %}
       </div>
       {% if block.org.type_organisme %}

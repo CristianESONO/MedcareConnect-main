@@ -45,7 +45,7 @@
       {% if grouped_pending %}
         {% for group in grouped_pending %}
         <div class="mc-conv-date-hdr mc-conv-date-hdr--pending">
-          <span>📅</span>
+          <span><i class="ti ti-calendar"></i></span>
           <span>{{ group.label }}</span>
         </div>
         <div class="mc-conv-group-items">
@@ -72,7 +72,7 @@
       {% if grouped_other %}
         {% for group in grouped_other %}
         <div class="mc-conv-date-hdr">
-          <span>📅</span>
+          <span><i class="ti ti-calendar"></i></span>
           <span>{{ group.label }}</span>
         </div>
         <div class="mc-conv-group-items">
@@ -94,7 +94,7 @@
       {% if grouped_conversations %}
         {% for group in grouped_conversations %}
         <div class="mc-conv-date-hdr">
-          <span>📅</span>
+          <span><i class="ti ti-calendar"></i></span>
           <span>{{ group.label }}</span>
         </div>
         <div class="mc-conv-group-items">

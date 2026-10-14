@@ -10,14 +10,14 @@
     <p class="mt-0.5 text-xs text-gray-500">
       Devis patient <span class="font-mono font-semibold text-primary-600">{{ devis.reference }}</span>
       · {{ devis.patient.display_name|default:devis.patient.username }}
-      {% if devis.insurance %}· 🛡 {{ devis.insurance.name }}{% endif %}
+      {% if devis.insurance %}· <i class="ti ti-shield-check"></i> {{ devis.insurance.name }}{% endif %}
     </p>
   </div>
   <div class="flex flex-wrap items-center gap-2">
     {% if row.is_accepted %}
-      <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800">✅ Accepté</span>
+      <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800"><i class="ti ti-circle-check"></i> Accepté</span>
     {% elif part.status == 'sent' %}
-      <span class="rounded-full mc-bg-accent-light px-3 py-1 text-xs font-semibold mc-text-accent-dark">🟢 Nouveau</span>
+      <span class="rounded-full mc-bg-accent-light px-3 py-1 text-xs font-semibold mc-text-accent-dark"><i class="ti ti-circle-check"></i> Nouveau</span>
     {% elif part.status == 'viewed' %}
       <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Consulté</span>
     {% elif part.status == 'relanced' %}
@@ -34,12 +34,12 @@
 
 {% if row.creneau %}
 <div class="mt-4 rounded-xl border border-[var(--mc-border)] mc-bg-accent-light px-4 py-3 text-sm mc-text-accent-dark">
-  📅 Créneau souhaité : <strong>{{ row.creneau }}</strong>
+  <i class="ti ti-calendar"></i> Créneau souhaité : <strong>{{ row.creneau }}</strong>
   {% if row.pending_rdv %}<span class="ml-2 text-xs mc-text-accent-dark">· en attente de votre confirmation</span>{% endif %}
 </div>
 {% elif part.status != 'archived' and not row.is_accepted %}
 <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-  ⚠ Aucun créneau choisi par le patient — vous pouvez relancer via WhatsApp / messagerie.
+  <i class="ti ti-alert-triangle"></i> Aucun créneau choisi par le patient — vous pouvez relancer via WhatsApp / messagerie.
 </div>
 {% endif %}
 

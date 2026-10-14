@@ -1,0 +1,372 @@
+{
+  "pilier_id": 4,
+  "pilier_slug": "ambulance-medicalisee",
+  "pilier_nom": "Ambulance médicalisée",
+  "lexique_intention_uniquement": true,
+  "remarque": "Catalogue des actes inchangé sur la plateforme (déjà conforme). Utilisation exclusive du lexique d'intention pour l'aiguillage.",
+  "nb_intentions_couvertes": 40,
+  "lexique_intention": [
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport domicile vers structure de soins",
+      "intentions_synonymes": [
+        "transport domicile hôpital",
+        "domicile vers structure",
+        "domicile vers clinique"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport structure de soins vers domicile",
+      "intentions_synonymes": [
+        "transport retour domicile",
+        "sortie d'hôpital",
+        "structure vers domicile"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport inter-structures non urgent",
+      "intentions_synonymes": [
+        "transfert non urgent",
+        "transport inter-hospitalier simple",
+        "transfert entre structures"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport pour consultation / examen programmé",
+      "intentions_synonymes": [
+        "transport consultation",
+        "transport examen",
+        "navette rendez-vous"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport pour séance de dialyse (navette)",
+      "intentions_synonymes": [
+        "transport dialyse",
+        "navette dialyse",
+        "transport hémodialyse"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport assis professionnalisé (VSL)",
+      "intentions_synonymes": [
+        "VSL",
+        "véhicule sanitaire léger",
+        "transport assis"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport de personne à mobilité réduite",
+      "intentions_synonymes": [
+        "PMR",
+        "mobilité réduite",
+        "transport fauteuil roulant",
+        "brancardage"
+      ]
+    },
+    {
+      "type_service": "Ambulance simple (transport non médicalisé)",
+      "prestation_cible": "Transport programmé longue distance (non médicalisé)",
+      "intentions_synonymes": [
+        "transport longue distance non médicalisé",
+        "interurbain non médicalisé"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport médicalisé avec infirmier",
+      "intentions_synonymes": [
+        "ambulance avec infirmier",
+        "transport paramédicalisé",
+        "infirmier à bord"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport médicalisé avec médecin",
+      "intentions_synonymes": [
+        "ambulance avec médecin",
+        "transport médicalisé médecin",
+        "médecin à bord"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport sous oxygénothérapie",
+      "intentions_synonymes": [
+        "transport sous oxygène",
+        "oxygénothérapie en transport",
+        "O2 à bord"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport sous surveillance scope (monitorage)",
+      "intentions_synonymes": [
+        "transport monitoré",
+        "surveillance scope",
+        "monitorage en transport"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport de patient sous perfusion",
+      "intentions_synonymes": [
+        "transport sous perfusion",
+        "perfusion en transport"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport de patient instable (surveillance continue)",
+      "intentions_synonymes": [
+        "patient instable",
+        "surveillance continue",
+        "transport surveillé"
+      ]
+    },
+    {
+      "type_service": "Ambulance médicalisée",
+      "prestation_cible": "Transport post-opératoire médicalisé",
+      "intentions_synonymes": [
+        "transport post-opératoire",
+        "retour de bloc médicalisé"
+      ]
+    },
+    {
+      "type_service": "SMUR / Réanimation mobile",
+      "prestation_cible": "Intervention SMUR pré-hospitalière (primaire)",
+      "intentions_synonymes": [
+        "SMUR",
+        "intervention pré-hospitalière",
+        "sortie primaire",
+        "SAMU"
+      ]
+    },
+    {
+      "type_service": "SMUR / Réanimation mobile",
+      "prestation_cible": "Transport réanimatoire (patient intubé / ventilé)",
+      "intentions_synonymes": [
+        "transport réanimatoire",
+        "patient intubé",
+        "patient ventilé",
+        "réanimation mobile"
+      ]
+    },
+    {
+      "type_service": "SMUR / Réanimation mobile",
+      "prestation_cible": "Évacuation sanitaire médicalisée urgente",
+      "intentions_synonymes": [
+        "évacuation urgente",
+        "EVASAN urgente",
+        "évacuation médicalisée"
+      ]
+    },
+    {
+      "type_service": "SMUR / Réanimation mobile",
+      "prestation_cible": "Médicalisation d'une détresse vitale sur place",
+      "intentions_synonymes": [
+        "détresse vitale",
+        "médicalisation sur site",
+        "urgence vitale"
+      ]
+    },
+    {
+      "type_service": "SMUR / Réanimation mobile",
+      "prestation_cible": "Prise en charge d'arrêt cardio-respiratoire sur site",
+      "intentions_synonymes": [
+        "arrêt cardiaque",
+        "ACR",
+        "réanimation cardio-pulmonaire sur site"
+      ]
+    },
+    {
+      "type_service": "SMUR / Réanimation mobile",
+      "prestation_cible": "Transfert secondaire médicalisé urgent (inter-hospitalier)",
+      "intentions_synonymes": [
+        "transfert secondaire",
+        "SMUR secondaire",
+        "transport inter-hospitalier urgent"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Évacuation inter-hospitalière médicalisée",
+      "intentions_synonymes": [
+        "évacuation inter-hospitalière",
+        "transfert médicalisé entre hôpitaux"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Rapatriement sanitaire national",
+      "intentions_synonymes": [
+        "rapatriement national",
+        "rapatriement sanitaire au Sénégal"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Rapatriement sanitaire international",
+      "intentions_synonymes": [
+        "rapatriement international",
+        "rapatriement médicalisé international",
+        "assistance rapatriement"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Transport médicalisé longue distance",
+      "intentions_synonymes": [
+        "transport médicalisé longue distance",
+        "interurbain médicalisé"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Évacuation sanitaire aérienne (avion sanitaire)",
+      "intentions_synonymes": [
+        "EVASAN aérienne",
+        "avion sanitaire",
+        "évacuation aéromédicale",
+        "vol sanitaire"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Transport héliporté médicalisé",
+      "intentions_synonymes": [
+        "hélicoptère sanitaire",
+        "héliporté",
+        "hélitreuillage médicalisé"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Transport de patient bariatrique",
+      "intentions_synonymes": [
+        "transport bariatrique",
+        "patient obèse",
+        "brancard bariatrique"
+      ]
+    },
+    {
+      "type_service": "Transport sanitaire spécialisé",
+      "prestation_cible": "Transport en cellule d'isolement (patient contagieux)",
+      "intentions_synonymes": [
+        "transport isolement",
+        "patient contagieux",
+        "cellule d'isolement",
+        "transport infectieux"
+      ]
+    },
+    {
+      "type_service": "Transport néonatal & pédiatrique",
+      "prestation_cible": "Transport néonatal en incubateur de transport",
+      "intentions_synonymes": [
+        "transport néonatal",
+        "incubateur de transport",
+        "couveuse de transport",
+        "transfert nouveau-né"
+      ]
+    },
+    {
+      "type_service": "Transport néonatal & pédiatrique",
+      "prestation_cible": "Transport pédiatrique médicalisé",
+      "intentions_synonymes": [
+        "transport pédiatrique",
+        "ambulance pédiatrique",
+        "transfert enfant médicalisé"
+      ]
+    },
+    {
+      "type_service": "Transport néonatal & pédiatrique",
+      "prestation_cible": "Transfert maternel in utero (grossesse à risque)",
+      "intentions_synonymes": [
+        "transfert in utero",
+        "TIU",
+        "transport femme enceinte à risque",
+        "transfert maternel"
+      ]
+    },
+    {
+      "type_service": "Transport néonatal & pédiatrique",
+      "prestation_cible": "Évacuation néonatale urgente",
+      "intentions_synonymes": [
+        "évacuation néonatale",
+        "urgence néonatale",
+        "transfert nouveau-né urgent"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Couverture médicale d'événement sportif",
+      "intentions_synonymes": [
+        "couverture sportive",
+        "événement sportif",
+        "poste de secours sportif"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Couverture médicale de manifestation publique",
+      "intentions_synonymes": [
+        "manifestation publique",
+        "couverture manifestation",
+        "rassemblement public"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Couverture médicale de concert / rassemblement",
+      "intentions_synonymes": [
+        "concert",
+        "festival",
+        "rassemblement",
+        "couverture concert"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Assistance médicale sur site (poste de secours)",
+      "intentions_synonymes": [
+        "poste de secours",
+        "assistance sur site",
+        "poste médical avancé"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Mise à disposition d'une ambulance + équipe (événementiel)",
+      "intentions_synonymes": [
+        "ambulance en stand-by",
+        "mise à disposition ambulance",
+        "ambulance événementielle"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Dispositif prévisionnel de secours (DPS)",
+      "intentions_synonymes": [
+        "DPS",
+        "dispositif prévisionnel de secours",
+        "secourisme événementiel"
+      ]
+    },
+    {
+      "type_service": "Couverture médicale & événementielle",
+      "prestation_cible": "Couverture médicale de chantier / entreprise",
+      "intentions_synonymes": [
+        "couverture chantier",
+        "poste de santé entreprise",
+        "médecine du travail sur site"
+      ]
+    }
+  ]
+}

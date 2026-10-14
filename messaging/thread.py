@@ -147,7 +147,7 @@ def ensure_devis_thread(part) -> tuple[Conversation, bool]:
     )
     append_prestataire(
         conv,
-        f"Bonjour 👋 Voici le récapitulatif de votre demande :\n\n{_actes_lines(part)}\n\n"
+        f"Bonjour, voici le récapitulatif de votre demande :\n\n{_actes_lines(part)}\n\n"
         f"Total patient : {int(part.total_patient or 0):,} F".replace(",", " ")
         + "\n\nSouhaitez-vous prendre rendez-vous ? Utilisez le bouton ci-dessous ou écrivez-nous ici.",
         notify=True,
@@ -178,12 +178,12 @@ def on_rdv_requested(rdv, note: str = "") -> Conversation | None:
     conv, _ = ensure_devis_thread(part)
     link_rdv(conv, rdv)
     label = _slot_label(rdv.start)
-    append_patient(conv, f"🕐 Créneau souhaité : {label}", notify=True)
+    append_patient(conv, f"Créneau souhaité : {label}", notify=True)
     if note:
         append_patient(conv, note.strip(), notify=False)
     append_status(
         conv,
-        f"⏳ Demande envoyée — en attente de confirmation par {rdv.organisme.name}.",
+        f"Demande envoyée — en attente de confirmation par {rdv.organisme.name}.",
         payload={"rdv_ref": rdv.reference, "status": rdv.status},
     )
     return conv
@@ -279,10 +279,10 @@ def on_rdv_event(rdv, event: str, detail: str = "") -> Conversation | None:
         return None
 
     labels = {
-        "confirmed": ("✅ Rendez-vous confirmé", Conversation.STATUS_ACTIVE),
-        "declined": ("✕ Demande refusée", Conversation.STATUS_CLOSED),
+        "confirmed": ("Rendez-vous confirmé", Conversation.STATUS_ACTIVE),
+        "declined": ("Demande refusée", Conversation.STATUS_CLOSED),
         "cancelled": ("Annulation", Conversation.STATUS_CLOSED),
-        "completed": ("✓ Rendez-vous honoré", Conversation.STATUS_CLOSED),
+        "completed": ("Rendez-vous honoré", Conversation.STATUS_CLOSED),
         "no_show": ("Patient absent", Conversation.STATUS_CLOSED),
     }
     title, ts = labels.get(event, (event, conv.thread_status))

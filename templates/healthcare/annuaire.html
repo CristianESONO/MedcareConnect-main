@@ -16,7 +16,7 @@
   <form method="get" id="ann-form" class="ann-search-section" aria-label="Recherche annuaire">
     <div class="ann-search-inner">
       <div class="ann-search-wrap">
-        <span class="ann-search-emoji" aria-hidden="true">🏥</span>
+        <span class="ann-search-emoji" aria-hidden="true"><i class="ti ti-building-hospital"></i></span>
         <input type="search" name="q" id="ann-search" value="{{ search_q }}" class="ann-search-input"
           placeholder="Nom d'établissement, type (labo, imagerie…), quartier…" autocomplete="off">
       </div>
@@ -28,28 +28,28 @@
           <span id="ann-lbl-type">
             {% if current_type_cat and current_type_cat != 'all' %}
               {% for key, label, icon in annuaire_categories %}
-                {% if current_type_cat == key %}{{ icon }} {{ label }}{% endif %}
+                {% if current_type_cat == key %}{{ icon|safe }} {{ label }}{% endif %}
               {% endfor %}
             {% else %}
-              🏥 Type de structure
+              <i class="ti ti-building-hospital"></i> Type de structure
             {% endif %}
           </span>
           <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
         <button type="button" class="ann-filter-chip{% if current_zone %} active{% endif %}" data-ann-panel="zone" id="ann-chip-zone">
-          <span id="ann-lbl-zone">{% if current_zone %}📍 {{ current_zone }}{% else %}📍 Zone / Quartier{% endif %}</span>
+          <span id="ann-lbl-zone">{% if current_zone %}<i class="ti ti-map-pin"></i> {{ current_zone }}{% else %}<i class="ti ti-map-pin"></i> Zone / Quartier{% endif %}</span>
           <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
         <button type="button" class="ann-filter-chip{% if current_assurances %} active{% endif %}" data-ann-panel="ins" id="ann-chip-ins">
           <span id="ann-lbl-ins">
-            {% if current_assurances %}🛡 {{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}🛡 Assurance{% endif %}
+            {% if current_assurances %}<i class="ti ti-shield-check"></i> {{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}<i class="ti ti-shield-check"></i> Assurance{% endif %}
           </span>
           <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
         <button type="button" class="ann-filter-chip{% if current_delai %} active{% endif %}" data-ann-panel="rdv" id="ann-chip-rdv">
           <span id="ann-lbl-rdv">
-            {% if current_delai %}⏱ {% for val, label in annuaire_delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}
-            {% else %}⏱ Disponibilité RDV{% endif %}
+            {% if current_delai %}<i class="ti ti-clock"></i> {% for val, label in annuaire_delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}
+            {% else %}<i class="ti ti-clock"></i> Disponibilité RDV{% endif %}
           </span>
           <svg class="ann-chip-chevron" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width:12px;height:12px;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>
         </button>
@@ -61,7 +61,7 @@
           {% endfor %}
         </select>
 
-        <a href="{% url 'healthcare:annuaire' %}" class="ann-reset-btn{% if active_filter_count or search_q %} visible{% endif %}" id="ann-reset-btn">✕ Réinitialiser</a>
+        <a href="{% url 'healthcare:annuaire' %}" class="ann-reset-btn{% if active_filter_count or search_q %} visible{% endif %}" id="ann-reset-btn">&times; Réinitialiser</a>
       </div>
 
       <input type="hidden" name="type_cat" id="ann-inp-type" value="{{ current_type_cat|default:'all' }}">
@@ -71,16 +71,16 @@
       <input type="hidden" name="geo_lng" id="ann-inp-geo-lng" value="{{ request.GET.geo_lng }}">
 
       <div class="ann-panel{% if request.GET.ann_open == 'type' %} open{% endif %}" id="ann-panel-type" data-ann-panel="type">
-        <p class="ann-panel-title">🏥 Type de structure</p>
+        <p class="ann-panel-title"><i class="ti ti-building-hospital"></i> Type de structure</p>
         <div class="ann-opt-wrap" id="ann-type-opts">
           {% for key, label, icon in annuaire_categories %}
-          <button type="button" class="ann-opt{% if current_type_cat == key or not current_type_cat and key == 'all' %} on{% endif %}" data-ann-type="{{ key }}">{{ icon }} {{ label }}</button>
+          <button type="button" class="ann-opt{% if current_type_cat == key or not current_type_cat and key == 'all' %} on{% endif %}" data-ann-type="{{ key }}">{{ icon|safe }} {{ label }}</button>
           {% endfor %}
         </div>
       </div>
 
       <div class="ann-panel" id="ann-panel-zone" data-ann-panel="zone">
-        <p class="ann-panel-title">📍 Zone / Quartier</p>
+        <p class="ann-panel-title"><i class="ti ti-map-pin"></i> Zone / Quartier</p>
         <div class="ann-opt-wrap" id="ann-zone-opts">
           {% for z in zones %}
           <button type="button" class="ann-opt{% if current_zone == z %} on{% endif %}" data-ann-zone="{{ z }}">{{ z }}</button>
@@ -89,7 +89,7 @@
       </div>
 
       <div class="ann-panel" id="ann-panel-ins" data-ann-panel="ins">
-        <p class="ann-panel-title">🛡 Couverture assurance</p>
+        <p class="ann-panel-title"><i class="ti ti-shield-check"></i> Couverture assurance</p>
         <p class="ann-panel-hint">Cochez une ou plusieurs assurances acceptées par l'établissement.</p>
         <div class="ann-opt-wrap" id="ann-ins-opts">
           {% for a in all_assurances %}
@@ -106,7 +106,7 @@
       </div>
 
       <div class="ann-panel" id="ann-panel-rdv" data-ann-panel="rdv">
-        <p class="ann-panel-title">⏱ Disponibilité / Délai RDV</p>
+        <p class="ann-panel-title"><i class="ti ti-clock"></i> Disponibilité / Délai RDV</p>
         <div class="ann-opt-wrap" id="ann-rdv-opts">
           {% for val, label in annuaire_delai_choices %}
           <button type="button" class="ann-opt{% if current_delai == val %} on{% endif %}" data-ann-delai="{{ val }}">{{ label }}</button>
@@ -118,7 +118,7 @@
 
   {% if geo_required %}
   <div class="ann-geo-banner" id="ann-geo-banner" role="alert">
-    <span>📍 Activez la géolocalisation pour trier par distance.</span>
+    <span><i class="ti ti-map-pin"></i> Activez la géolocalisation pour trier par distance.</span>
     <button type="button" id="ann-geo-retry" class="ann-geo-retry-btn">Autoriser la position</button>
     <style>
       .ann-geo-banner { display:flex; align-items:center; gap:12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; font-size:14px; color:#1e40af; margin-bottom:16px; }
@@ -135,27 +135,27 @@
     <div class="ann-grid" id="ann-grid">
       {% for row in rows %}
       <article class="ann-card">
-        {% if row.is_pioneer %}<span class="ann-pioneer">⭐ Pionnier</span>{% elif row.is_verified %}<span class="ann-pioneer ann-verified">✓ Vérifié</span>{% endif %}
+        {% if row.is_pioneer %}<span class="ann-pioneer"><i class="ti ti-star"></i> Pionnier</span>{% elif row.is_verified %}<span class="ann-pioneer ann-verified"><i class="ti ti-check"></i> Vérifié</span>{% endif %}
         <div class="ann-card-top">
-          <div class="ann-card-av" aria-hidden="true">{{ row.icon }}</div>
+          <div class="ann-card-av" aria-hidden="true">{{ row.icon|safe }}</div>
           <div style="flex:1;min-width:0">
             <div class="ann-card-name">{{ row.org.name }}</div>
             <div class="ann-card-type">{{ row.org.type_organisme|default:"Établissement de santé" }}</div>
           </div>
         </div>
         <div class="ann-card-tags">
-          <span class="ann-tag ann-tag--muted">📍 {{ row.zone_label }}</span>
+          <span class="ann-tag ann-tag--muted"><i class="ti ti-map-pin"></i> {{ row.zone_label }}</span>
           <span class="ann-tag ann-tag--blue">{{ row.acte_count }} acte{{ row.acte_count|pluralize }}</span>
           {% for ins in row.matched_insurances|slice:":2" %}
-          <span class="ann-tag ann-tag--green">✓ {{ ins }}</span>
+          <span class="ann-tag ann-tag--green"><i class="ti ti-check"></i> {{ ins }}</span>
           {% endfor %}
           {% if row.matched_insurances|length > 2 %}
           <span class="ann-tag ann-tag--green">+{{ row.matched_insurances|length|add:"-2" }}</span>
           {% endif %}
         </div>
         <div class="ann-card-meta">
-          <div class="ann-meta-item">⏱ <span>{{ row.delai_label }}</span></div>
-          <div class="ann-meta-item">🛡 <span>{{ row.insurance_count }} assurance{{ row.insurance_count|pluralize }}</span></div>
+          <div class="ann-meta-item"><i class="ti ti-clock"></i> <span>{{ row.delai_label }}</span></div>
+          <div class="ann-meta-item"><i class="ti ti-shield-check"></i> <span>{{ row.insurance_count }} assurance{{ row.insurance_count|pluralize }}</span></div>
         </div>
         <div class="ann-card-footer">
           <a href="{% url 'healthcare:organisme_detail' row.org.slug %}?src=annuaire" class="ann-btn-fiche">Voir la fiche</a>
@@ -164,7 +164,7 @@
       </article>
       {% empty %}
       <div class="ann-empty">
-        <div class="ann-empty-icon" aria-hidden="true">🏥</div>
+        <div class="ann-empty-icon" aria-hidden="true"><i class="ti ti-building-hospital"></i></div>
         <p style="font-size:12px;line-height:1.6;margin:0">Aucun établissement ne correspond.<br>Modifiez vos filtres.</p>
       </div>
       {% endfor %}
@@ -197,13 +197,13 @@
   var openPanel = null;
 
   var TYPE_LABELS = {
-    all: '🏥 Type de structure',
-    labo: '🧬 Laboratoire',
-    img: '🩻 Imagerie',
-    exp: '⚡ Explorations fonctionnelles',
-    dent: '🦷 Soins dentaires',
-    soins: '💉 Soins spécialisés',
-    amb: '🚑 Ambulance médicalisée'
+    all: '<i class="ti ti-building-hospital"></i> Type de structure',
+    labo: '<i class="ti ti-flask"></i> Laboratoire',
+    img: '<i class="ti ti-scan"></i> Imagerie',
+    exp: '<i class="ti ti-bolt"></i> Explorations fonctionnelles',
+    dent: '<i class="ti ti-dental"></i> Soins dentaires',
+    soins: '<i class="ti ti-needle"></i> Soins spécialisés',
+    amb: '<i class="ti ti-ambulance"></i> Ambulance médicalisée'
   };
 
   function submitForm() {
@@ -245,7 +245,7 @@
         b.classList.toggle('on', b.getAttribute('data-ann-type') === v);
       });
       var lbl = document.getElementById('ann-lbl-type');
-      if (lbl) lbl.textContent = TYPE_LABELS[v] || TYPE_LABELS.all;
+      if (lbl) lbl.innerHTML = TYPE_LABELS[v] || TYPE_LABELS.all;
       var chip = document.getElementById('ann-chip-type');
       if (chip) chip.classList.toggle('active', v !== 'all');
       closePanels();
@@ -262,7 +262,7 @@
         b.classList.toggle('on', b.getAttribute('data-ann-zone') === inpZone.value && inpZone.value);
       });
       var lbl = document.getElementById('ann-lbl-zone');
-      if (lbl) lbl.textContent = inpZone.value ? '📍 ' + inpZone.value : '📍 Zone / Quartier';
+      if (lbl) lbl.innerHTML = inpZone.value ? '<i class="ti ti-map-pin"></i> ' + inpZone.value : '<i class="ti ti-map-pin"></i> Zone / Quartier';
       var chip = document.getElementById('ann-chip-zone');
       if (chip) chip.classList.toggle('active', !!inpZone.value);
       closePanels();
@@ -280,7 +280,7 @@
       var lbl = document.getElementById('ann-lbl-rdv');
       if (lbl) {
         var txt = btn.textContent.trim();
-        lbl.textContent = inpDelai.value ? '⏱ ' + txt : '⏱ Disponibilité RDV';
+        lbl.innerHTML = inpDelai.value ? '<i class="ti ti-clock"></i> ' + txt : '<i class="ti ti-clock"></i> Disponibilité RDV';
       }
       var chip = document.getElementById('ann-chip-rdv');
       if (chip) chip.classList.toggle('active', !!inpDelai.value);
@@ -303,7 +303,7 @@
       if (label) label.classList.toggle('on', cb.checked);
       var cnt = form.querySelectorAll('.ann-ins-cb:checked').length;
       var lbl = document.getElementById('ann-lbl-ins');
-      if (lbl) lbl.textContent = cnt ? '🛡 ' + cnt + ' assurance' + (cnt > 1 ? 's' : '') : '🛡 Assurance';
+      if (lbl) lbl.innerHTML = cnt ? '<i class="ti ti-shield-check"></i> ' + cnt + ' assurance' + (cnt > 1 ? 's' : '') : '<i class="ti ti-shield-check"></i> Assurance';
       var chip = document.getElementById('ann-chip-ins');
       if (chip) chip.classList.toggle('active', cnt > 0);
     });

@@ -1,16 +1,19 @@
 """
-Icônes des piliers (familles de soins / ServiceMedical) — alignées démo structures Thior.
+Icônes des piliers (familles de soins / ServiceMedical) — Tabler Icons professionnels.
 """
 from __future__ import annotations
 
+import unicodedata as _ud
+from django.utils.safestring import mark_safe
+
 # Nom exact des piliers MedCare (catalog_pillars.PILLARS_FROM_DOCS)
 SERVICE_MEDICAL_ICONS: dict[str, str] = {
-    "Biologie médicale": "🧬",
-    "Imagerie médicale": "🖥",
-    "Explorations fonctionnelles": "⚡",
-    "Ambulance médicalisée": "🚑",
-    "Soins spécialisés": "🩺",
-    "Soins dentaires": "🦷",
+    "Biologie médicale": mark_safe('<i class="ti ti-flask"></i>'),
+    "Imagerie médicale": mark_safe('<i class="ti ti-scan"></i>'),
+    "Explorations fonctionnelles": mark_safe('<i class="ti ti-activity"></i>'),
+    "Ambulance médicalisée": mark_safe('<i class="ti ti-ambulance"></i>'),
+    "Soins spécialisés": mark_safe('<i class="ti ti-stethoscope"></i>'),
+    "Soins dentaires": mark_safe('<i class="ti ti-dental"></i>'),
 }
 
 # Libellés alternatifs (démo / anciennes données)
@@ -20,16 +23,16 @@ _SERVICE_ALIASES: dict[str, str] = {
     "ambulance": "Ambulance médicalisée",
 }
 
-DEFAULT_SERVICE_ICON = "🏥"
+DEFAULT_SERVICE_ICON = mark_safe('<i class="ti ti-building-hospital"></i>')
 
 # Slugs des 6 piliers — icônes affichage (prioritaires sur le champ DB)
 OFFICIAL_PILIER_ICONS_BY_SLUG: dict[str, str] = {
-    "biologie-medicale": "🧬",
-    "imagerie-medicale": "🖥",
-    "explorations-fonctionnelles": "⚡",
-    "ambulance-medicalisee": "🚑",
-    "soins-specialises": "🩺",
-    "soins-dentaires": "🦷",
+    "biologie-medicale": mark_safe('<i class="ti ti-flask"></i>'),
+    "imagerie-medicale": mark_safe('<i class="ti ti-scan"></i>'),
+    "explorations-fonctionnelles": mark_safe('<i class="ti ti-activity"></i>'),
+    "ambulance-medicalisee": mark_safe('<i class="ti ti-ambulance"></i>'),
+    "soins-specialises": mark_safe('<i class="ti ti-stethoscope"></i>'),
+    "soins-dentaires": mark_safe('<i class="ti ti-dental"></i>'),
 }
 
 # Libellés compacts grille mobile (démo MOBILE PATIENT)
@@ -41,9 +44,6 @@ SERVICE_MOBILE_SHORT: dict[str, tuple[str, str]] = {
     "Soins spécialisés": ("Soins", "Kiné, soins spéc."),
     "Soins dentaires": ("Dentaire", "Soins dentaires"),
 }
-
-
-import unicodedata as _ud
 
 
 def strip_leading_emoji(text: str) -> str:
@@ -70,43 +70,44 @@ def mobile_labels_for_service(name: str) -> tuple[str, str]:
         short = short[:12].rstrip() + "…"
     return (short or clean or name, "")
 
+
 # Sous-familles (types niveau 2) — pastille tableau catalogue
 _SUBFAMILY_KEYWORDS: tuple[tuple[tuple[str, ...], str], ...] = (
-    (("hématologie", "hémostase", "coagulation"), "🩸"),
-    (("biochimie", "ionogramme"), "🧪"),
-    (("immunologie", "auto-immun"), "🛡️"),
-    (("sérologie", "virologie"), "🦠"),
-    (("bactériologie", "coproculture", "hémoculture"), "🔬"),
-    (("parasitologie", "mycologie", "paludisme"), "🪱"),
-    (("endocrino", "fertilité", "amp"), "⚗️"),
-    (("gaz du sang", "acido"), "💨"),
-    (("anatomopath", "histologie", "cytologie"), "🔬"),
-    (("moléculaire", " pcr"), "🧬"),
-    (("toxicologie", "marqueurs tumoraux"), "⚠️"),
-    (("radiographie", " radio"), "🩻"),
-    (("échographie", "écho", "doppler"), "📡"),
-    (("scanner", "tdm"), "🖥️"),
-    (("irm",), "🧲"),
-    (("interventionnelle", "biopsie"), "🎯"),
-    (("cardiologie", "ecg", "holter", "mapa"), "❤️"),
-    (("pneumologie", "spirom", "efr", "sommeil"), "🫁"),
-    (("gastro", "endoscop", "coloscop", "manométrie"), "🫃"),
-    (("neurologie", "eeg", "emg", "potentiels"), "🧠"),
-    (("orl", "audiom", "vestibulaire"), "👂"),
-    (("ophtalm", "oct", "fond d"), "👁️"),
-    (("dermatologie", "dermoscop"), "🧴"),
-    (("gynécologie", "obstét", "colposcop"), "🤰"),
-    (("urologie", "cystoscop", "urodynam"), "💧"),
-    (("néphrologie", "dialyse"), "💉"),
-    (("andrologie", "sperm"), "👨‍⚕️"),
-    (("orthopédie", "arthroscop"), "🦴"),
-    (("kinésithérapie", "rééduc"), "🏃"),
-    (("oncologie", "radiothérapie", "chimio"), "🎗️"),
-    (("psychologie", "psychiatrie", "santé mentale"), "🧘"),
-    (("médecine générale", "infirmier"), "🩺"),
-    (("dentaire", "dent", "orthodont", "implant", "endodont"), "🦷"),
-    (("ambulance", "smur", "évacuation", "rapatriement"), "🚑"),
-    (("stomatologie", "buccale"), "🦷"),
+    (("hématologie", "hémostase", "coagulation"), '<i class="ti ti-droplet"></i>'),
+    (("biochimie", "ionogramme"), '<i class="ti ti-flask"></i>'),
+    (("immunologie", "auto-immun"), '<i class="ti ti-shield"></i>'),
+    (("sérologie", "virologie"), '<i class="ti ti-virus"></i>'),
+    (("bactériologie", "coproculture", "hémoculture"), '<i class="ti ti-microscope"></i>'),
+    (("parasitologie", "mycologie", "paludisme"), '<i class="ti ti-bug"></i>'),
+    (("endocrino", "fertilité", "amp"), '<i class="ti ti-test-pipe"></i>'),
+    (("gaz du sang", "acido"), '<i class="ti ti-wind"></i>'),
+    (("anatomopath", "histologie", "cytologie"), '<i class="ti ti-microscope"></i>'),
+    (("moléculaire", " pcr"), '<i class="ti ti-dna"></i>'),
+    (("toxicologie", "marqueurs tumoraux"), '<i class="ti ti-alert-triangle"></i>'),
+    (("radiographie", " radio"), '<i class="ti ti-viewport-wide"></i>'),
+    (("échographie", "écho", "doppler"), '<i class="ti ti-radar"></i>'),
+    (("scanner", "tdm"), '<i class="ti ti-device-desktop"></i>'),
+    (("irm",), '<i class="ti ti-magnet"></i>'),
+    (("interventionnelle", "biopsie"), '<i class="ti ti-target"></i>'),
+    (("cardiologie", "ecg", "holter", "mapa"), '<i class="ti ti-heart"></i>'),
+    (("pneumologie", "spirom", "efr", "sommeil"), '<i class="ti ti-lungs"></i>'),
+    (("gastro", "endoscop", "coloscop", "manométrie"), '<i class="ti ti-stomach"></i>'),
+    (("neurologie", "eeg", "emg", "potentiels"), '<i class="ti ti-brain"></i>'),
+    (("orl", "audiom", "vestibulaire"), '<i class="ti ti-ear"></i>'),
+    (("ophtalm", "oct", "fond d"), '<i class="ti ti-eye"></i>'),
+    (("dermatologie", "dermoscop"), '<i class="ti ti-sparkles"></i>'),
+    (("gynécologie", "obstét", "colposcop"), '<i class="ti ti-woman"></i>'),
+    (("urologie", "cystoscop", "urodynam"), '<i class="ti ti-droplet-half-2"></i>'),
+    (("néphrologie", "dialyse"), '<i class="ti ti-needle"></i>'),
+    (("andrologie", "sperm"), '<i class="ti ti-user"></i>'),
+    (("orthopédie", "arthroscop"), '<i class="ti ti-bone"></i>'),
+    (("kinésithérapie", "rééduc"), '<i class="ti ti-walk"></i>'),
+    (("oncologie", "radiothérapie", "chimio"), '<i class="ti ti-ribbon"></i>'),
+    (("psychologie", "psychiatrie", "santé mentale"), '<i class="ti ti-mood-smile"></i>'),
+    (("médecine générale", "infirmier"), '<i class="ti ti-stethoscope"></i>'),
+    (("dentaire", "dent", "orthodont", "implant", "endodont"), '<i class="ti ti-dental"></i>'),
+    (("ambulance", "smur", "évacuation", "rapatriement"), '<i class="ti ti-ambulance"></i>'),
+    (("stomatologie", "buccale"), '<i class="ti ti-dental"></i>'),
 )
 
 
@@ -140,7 +141,10 @@ def icon_for_service_medical(service) -> str:
         return OFFICIAL_PILIER_ICONS_BY_SLUG[slug]
     stored = (getattr(service, "icon", None) or "").strip()
     if stored:
-        return stored[:12]
+        if stored.startswith("<i ") or stored.startswith("ti "):
+            if stored.startswith("ti "):
+                return mark_safe(f'<i class="{stored}"></i>')
+            return mark_safe(stored)
     return icon_for_service_name(getattr(service, "name", "") or "")
 
 
@@ -148,11 +152,11 @@ def icon_for_subfamily_label(label: str) -> str:
     """Icône indicative pour une sous-famille (type niveau 2) dans le tableau catalogue."""
     low = _normalize_name(label)
     if not low or low == "sans sous-famille":
-        return "📂"
+        return mark_safe('<i class="ti ti-folder"></i>')
     for keywords, icon in _SUBFAMILY_KEYWORDS:
         if any(k in low for k in keywords):
-            return icon
-    return "🏷️"
+            return mark_safe(icon)
+    return mark_safe('<i class="ti ti-tag"></i>')
 
 
 def icons_for_pillars_data() -> list[tuple[str, str]]:

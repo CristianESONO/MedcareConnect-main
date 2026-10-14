@@ -25,60 +25,62 @@ ALL_PILIER_KEYS: tuple[str, ...] = (
     "dentaire",
 )
 
+from django.utils.safestring import mark_safe
+
 # 8 types démo — ordre et libellés identiques à la démo
 DEMO_STRUCTURE_TYPES: tuple[dict, ...] = (
     {
         "key": "labo",
-        "icon": "🔬",
+        "icon": mark_safe('<i class="ti ti-flask"></i>'),
         "label": "Laboratoire d'analyses",
         "desc": "Pilier actif : Biologie médicale",
         "pilier_keys": ("biologie",),
     },
     {
         "key": "imagerie",
-        "icon": "🩻",
+        "icon": mark_safe('<i class="ti ti-scan"></i>'),
         "label": "Cabinet d'imagerie",
         "desc": "Pilier actif : Imagerie médicale",
         "pilier_keys": ("imagerie",),
     },
     {
         "key": "cabinet",
-        "icon": "🩺",
+        "icon": mark_safe('<i class="ti ti-stethoscope"></i>'),
         "label": "Cabinet spécialisé",
         "desc": "Piliers actifs : Explorations fonctionnelles · Soins spécialisés",
         "pilier_keys": ("explorations", "soins"),
     },
     {
         "key": "dentaire",
-        "icon": "🦷",
+        "icon": mark_safe('<i class="ti ti-dental"></i>'),
         "label": "Cabinet dentaire",
         "desc": "Pilier actif : Soins dentaires",
         "pilier_keys": ("dentaire",),
     },
     {
         "key": "ambulance",
-        "icon": "🚑",
+        "icon": mark_safe('<i class="ti ti-ambulance"></i>'),
         "label": "Service d'ambulance",
         "desc": "Pilier actif : Services d'ambulance",
         "pilier_keys": ("ambulance",),
     },
     {
         "key": "clinique",
-        "icon": "🏥",
+        "icon": mark_safe('<i class="ti ti-building-hospital"></i>'),
         "label": "Clinique",
         "desc": "Piliers actifs : Biologie · Imagerie · Explorations · Soins spécialisés",
         "pilier_keys": ("biologie", "imagerie", "explorations", "soins"),
     },
     {
         "key": "hopital",
-        "icon": "🏨",
+        "icon": mark_safe('<i class="ti ti-building"></i>'),
         "label": "Hôpital",
         "desc": "Tous les piliers actifs",
         "pilier_keys": ALL_PILIER_KEYS,
     },
     {
         "key": "multi",
-        "icon": "⚙️",
+        "icon": mark_safe('<i class="ti ti-settings"></i>'),
         "label": "Multi-activités",
         "desc": "Sélection manuelle des piliers",
         "pilier_keys": ALL_PILIER_KEYS,

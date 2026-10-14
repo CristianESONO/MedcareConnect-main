@@ -39,7 +39,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
         <div class="search-input-zone sipn-search-input-zone" id="search-input-zone" data-dem-mode="acte">
           <div id="search-input-inner" class="sipn-search-input-wrap" data-dem-slot="acte">
             <div id="ac-box" class="sipn-ac-box">
-              <span class="sipn-search-emoji" aria-hidden="true">🔬</span>
+              <span class="sipn-search-emoji" aria-hidden="true"><i class="ti ti-flask"></i></span>
               <input type="text" name="q" id="search-q" value="{{ query }}" autocomplete="off" inputmode="search"
                 placeholder="NFS, Glycémie, IRM, Scanner…"
                 class="sipn-search-input border-0 outline-none focus:outline-none focus:ring-0 focus:border-transparent shadow-none"
@@ -67,7 +67,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           <!-- Header -->
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3 mb-4">
             <div class="flex items-center gap-3">
-              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 text-2xl border border-cyan-100">🚑</div>
+              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 text-2xl border border-cyan-100"><i class="ti ti-ambulance"></i></div>
               <div>
                 <div class="flex flex-wrap items-center gap-2">
                   <h3 class="text-base font-bold text-slate-800">Transport en Ambulance Médicalisée</h3>
@@ -84,9 +84,9 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           <div class="mb-4">
             <label class="block text-[11px] font-bold text-slate-600 mb-2">Type de service</label>
             <select id="amb-service-type" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition cursor-pointer">
-              <option value="trajet">🚑 Transport de trajet (point A → point B)</option>
-              <option value="rapatriement">🌍 Rapatriement (national/international)</option>
-              <option value="evenement">🩺 Couverture d'événement</option>
+              <option value="trajet">Transport de trajet (point A → point B)</option>
+              <option value="rapatriement">Rapatriement (national/international)</option>
+              <option value="evenement">Couverture d'événement</option>
             </select>
           </div>
 
@@ -101,7 +101,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
 
           <!-- Action Button -->
           <button type="button" id="amb-submit-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-700 hover:bg-cyan-800 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition cursor-pointer">
-            <span>💬 Obtenir mon devis</span>
+            <span><i class="ti ti-message"></i> Obtenir mon devis</span>
             <span class="text-sm">→</span>
           </button>
         </div>
@@ -177,23 +177,23 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           var st = ambState.trajet;
           return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">📍 Point de départ</label>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-map-pin"></i> Point de départ</label>' +
               '<input type="text" id="amb-depart" value="' + (st.depart || '') + '" placeholder="Adresse de départ..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.depart=this.value;window.updateAmbRecap()">' +
             '</div>' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">🏁 Point d\'arrivée</label>' +
+              '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-flag"></i> Point d\'arrivée</label>' +
               '<input type="text" id="amb-arrivee" value="' + (st.arrivee || '') + '" placeholder="Adresse d\'arrivée..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.arrivee=this.value;window.updateAmbRecap()">' +
             '</div>' +
           '</div>' +
           '<div class="mt-3">' +
             '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
-              '<input type="checkbox" ' + (st.allerRetour ? 'checked' : '') + ' onchange="window.ambState.trajet.allerRetour=this.checked;window.updateAmbRecap()"> 🔁 Aller-retour (retour au point de départ)' +
+              '<input type="checkbox" ' + (st.allerRetour ? 'checked' : '') + ' onchange="window.ambState.trajet.allerRetour=this.checked;window.updateAmbRecap()"> <i class="ti ti-repeat"></i> Aller-retour (retour au point de départ)' +
             '</label>' +
           '</div>' +
           '<div class="mt-3">' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-1">Distance estimée (km)</label>' +
             '<input type="number" id="amb-distance" value="' + st.distance + '" min="0" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.distance=parseFloat(this.value)||0;window.updateAmbRecap()">' +
-            '<span class="text-[9px] text-slate-400 ml-2">🛰 Calculée par GPS en production</span>' +
+            '<span class="text-[9px] text-slate-400 ml-2"><i class="ti ti-satellite"></i> Calculée par GPS en production</span>' +
           '</div>' +
           renderNuitCheckbox();
         }
@@ -213,8 +213,8 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           '<div class="mt-3">' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-2">Mode de transport</label>' +
             '<div class="flex gap-2">' +
-              '<button type="button" onclick="window.ambState.rapatriement.mode=\'routier\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'routier' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '">🚑 Routier</button>' +
-              '<button type="button" onclick="window.ambState.rapatriement.mode=\'aérien\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'aérien' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '">✈️ Aérien</button>' +
+              '<button type="button" onclick="window.ambState.rapatriement.mode=\'routier\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'routier' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '"><i class="ti ti-ambulance"></i> Routier</button>' +
+              '<button type="button" onclick="window.ambState.rapatriement.mode=\'aérien\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'aérien' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '"><i class="ti ti-plane"></i> Aérien</button>' +
             '</div>' +
           '</div>' +
           '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">' +
@@ -234,7 +234,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           '</div>' +
           '<div class="mt-3">' +
             '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
-              '<input type="checkbox" ' + (st.accompagnant ? 'checked' : '') + ' onchange="window.ambState.rapatriement.accompagnant=this.checked;window.updateAmbRecap()"> 👥 Présence d\'un accompagnant' +
+              '<input type="checkbox" ' + (st.accompagnant ? 'checked' : '') + ' onchange="window.ambState.rapatriement.accompagnant=this.checked;window.updateAmbRecap()"> <i class="ti ti-users"></i> Présence d\'un accompagnant' +
             '</label>' +
           '</div>' +
           renderNuitCheckbox();
@@ -249,7 +249,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           };
           
           return '<div>' +
-            '<label class="block text-[11px] font-bold text-slate-600 mb-1">📍 Lieu / site de l\'événement</label>' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-map-pin"></i> Lieu / site de l\'événement</label>' +
             '<input type="text" value="' + (st.lieu || '') + '" placeholder="Adresse du site..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition mb-3" oninput="window.ambState.evenement.lieu=this.value;window.updateAmbRecap()">' +
           '</div>' +
           '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
@@ -281,7 +281,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
         function renderNuitCheckbox() {
           return '<div class="mt-3">' +
             '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
-              '<input type="checkbox" ' + (ambState.nuit ? 'checked' : '') + ' onchange="window.ambState.nuit=this.checked;window.updateAmbRecap()"> 🌙 Intervention de nuit / week-end (+8 000 F)' +
+              '<input type="checkbox" ' + (ambState.nuit ? 'checked' : '') + ' onchange="window.ambState.nuit=this.checked;window.updateAmbRecap()"> <i class="ti ti-moon"></i> Intervention de nuit / week-end (+8 000 F)' +
             '</label>' +
           '</div>';
         }
@@ -476,7 +476,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
   <div class="sipn-prestations-tail" id="sipn-prestations-tail">
     <div class="sipn-mobile-no-acte-hint sipn-pilier-mobile-ui" id="sipn-mobile-no-acte-hint" role="status" aria-live="polite"{% if pool_from_request or query %} hidden{% endif %}>
       <div class="empty-state-m">
-        <div class="empty-icon-m" aria-hidden="true">👈</div>
+        <div class="empty-icon-m" aria-hidden="true"><i class="ti ti-arrow-left"></i></div>
         <p class="empty-txt-m">Sélectionnez un acte dans le menu<br>pour voir toutes les structures qui le proposent.</p>
         <p class="empty-txt-m sipn-empty-hint-sub">Parcourez une famille ci-dessus ou utilisez la recherche.</p>
       </div>

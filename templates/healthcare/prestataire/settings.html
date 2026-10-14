@@ -39,7 +39,7 @@
     <p class="mt-0.5 text-sm text-gray-500">Gestion du compte, notifications et préférences</p>
   </div>
   <button type="submit" form="frm-parametres" class="inline-flex items-center gap-2 mc-btn-primary rounded-xl px-4 py-2.5 text-sm font-bold">
-    💾 Sauvegarder
+    <i class="ti ti-device-floppy"></i> Sauvegarder
   </button>
 </div>
 
@@ -49,7 +49,7 @@
   {# Compte & sécurité #}
   <div class="param-card">
     <div class="param-card-head">
-      <div class="param-card-title">👤 Compte &amp; sécurité</div>
+      <div class="param-card-title"><i class="ti ti-user"></i> Compte &amp; sécurité</div>
     </div>
     <div class="param-card-body space-y-3.5">
       <div>
@@ -77,7 +77,7 @@
         <input type="password" name="confirm_password" id="confirm_password" class="param-input" placeholder="Confirmation" autocomplete="new-password">
       </div>
       <div class="rounded-lg bg-primary-50 px-3 py-2.5 text-[10px] leading-relaxed text-primary-800">
-        🔒 Votre compte est protégé par chiffrement. Nous ne stockons jamais votre mot de passe en clair.
+        <i class="ti ti-lock"></i> Votre compte est protégé par chiffrement. Nous ne stockons jamais votre mot de passe en clair.
       </div>
     </div>
   </div>
@@ -85,7 +85,7 @@
   {# Accès & utilisateurs (démo) #}
   <div class="param-card">
     <div class="param-card-head">
-      <div class="param-card-title">👥 Accès &amp; utilisateurs</div>
+      <div class="param-card-title"><i class="ti ti-users"></i> Accès &amp; utilisateurs</div>
       <div class="param-card-sub">Qui peut accéder au dashboard</div>
     </div>
     <div class="param-card-body space-y-2.5">
@@ -102,7 +102,7 @@
           <div class="text-xs font-semibold text-gray-900">{{ member.name }}</div>
           <div class="text-[10px] text-gray-400">{{ member.role_label }}{% if member.email %} · {{ member.email }}{% endif %}</div>
         </div>
-        <button type="submit" name="team_remove" value="{{ member.index }}" class="param-btn-ghost" title="Retirer l'accès">✕</button>
+        <button type="submit" name="team_remove" value="{{ member.index }}" class="param-btn-ghost" title="Retirer l'accès"><i class="ti ti-x"></i></button>
       </div>
       {% endfor %}
       <button type="button" class="param-btn-outline w-full" id="btn-team-invite-toggle">+ Inviter un utilisateur</button>
@@ -131,7 +131,7 @@
   {# Notifications #}
   <div class="param-card">
     <div class="param-card-head">
-      <div class="param-card-title">🔔 Notifications</div>
+      <div class="param-card-title"><i class="ti ti-bell"></i> Notifications</div>
     </div>
     <div class="param-card-body py-1">
       {% for row in notification_toggles %}
@@ -154,7 +154,7 @@
   {# Préférences #}
   <div class="param-card">
     <div class="param-card-head">
-      <div class="param-card-title">🎛 Préférences</div>
+      <div class="param-card-title"><i class="ti ti-adjustments"></i> Préférences</div>
     </div>
     <div class="param-card-body space-y-3.5">
       <div>
@@ -197,9 +197,9 @@
   {# Abonnement — pleine largeur #}
   <div class="param-card lg:col-span-2">
     <div class="param-card-head flex flex-wrap items-center justify-between gap-2">
-      <div class="param-card-title">💳 Abonnement actuel</div>
+      <div class="param-card-title"><i class="ti ti-credit-card"></i> Abonnement actuel</div>
       {% if org.subscription_plan and org.subscription_plan.is_pioneer_offer %}
-      <span class="rounded-full mc-bg-accent-light px-2.5 py-0.5 text-[9px] font-bold mc-text-accent-dark">★ Partenaire Pionnier</span>
+      <span class="rounded-full mc-bg-accent-light px-2.5 py-0.5 text-[9px] font-bold mc-text-accent-dark"><i class="ti ti-star"></i> Partenaire Pionnier</span>
       {% endif %}
     </div>
     <div class="param-card-body grid gap-4 sm:grid-cols-3">
@@ -223,7 +223,7 @@
       </div>
       <div class="flex flex-col gap-2 sm:justify-center">
         <a href="{% url 'contact' %}" class="rounded-lg border border-primary-200 bg-white px-4 py-2 text-center text-xs font-bold text-primary-700 hover:bg-primary-50">Contacter MedCare</a>
-        <a href="{% url 'healthcare:prestataire_bilan' %}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-center text-xs font-bold text-gray-700 hover:bg-gray-50">📊 Bilan KPI</a>
+        <a href="{% url 'healthcare:prestataire_bilan' %}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-center text-xs font-bold text-gray-700 hover:bg-gray-50"><i class="ti ti-chart-bar"></i> Bilan KPI</a>
         <p class="text-[10px] leading-relaxed text-gray-500">Pour modifier votre formule, écrivez-nous — la grille des plans n'est pas accessible en self-service pour le moment.</p>
       </div>
     </div>
@@ -242,7 +242,7 @@
   {# Zone de danger #}
   <div class="param-card border-rose-200 lg:col-span-2">
     <div class="param-card-head border-rose-100">
-      <div class="param-card-title text-rose-700">⚠️ Zone de danger</div>
+      <div class="param-card-title text-rose-700"><i class="ti ti-alert-triangle"></i> Zone de danger</div>
     </div>
     <div class="param-card-body flex flex-wrap items-center justify-between gap-4">
       <div>

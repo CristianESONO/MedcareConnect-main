@@ -12,7 +12,7 @@
   <div class="inline-flex rounded-xl border border-gray-200 bg-white p-1 text-xs font-semibold shadow-sm">
     <a href="{% url 'appointments:prestataire_agenda' %}" class="rounded-lg px-3 py-1.5 text-gray-600 hover:bg-gray-50">Agenda</a>
     <a href="?view=list{% if status_filter and status_filter != 'all' %}&status={{ status_filter }}{% endif %}" class="rounded-lg px-3 py-1.5 transition {% if view_mode != 'ticket' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Liste</a>
-    <a href="?view=ticket{% if status_filter and status_filter != 'all' %}&status={{ status_filter }}{% endif %}" class="rounded-lg px-3 py-1.5 transition {% if view_mode == 'ticket' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">🎫 Ticket</a>
+    <a href="?view=ticket{% if status_filter and status_filter != 'all' %}&status={{ status_filter }}{% endif %}" class="rounded-lg px-3 py-1.5 transition {% if view_mode == 'ticket' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}"><i class="ti ti-ticket"></i> Ticket</a>
   </div>
 </div>
 
@@ -36,7 +36,7 @@
     <div>
       <div class="flex items-center justify-between border-b border-dashed border-gray-200 pb-3">
         <div class="flex items-center gap-1.5">
-          <span class="text-sm">🎫</span>
+          <span class="text-sm"><i class="ti ti-ticket"></i></span>
           <span class="font-mono text-xs font-bold text-gray-900">{{ rdv.reference }}</span>
         </div>
         {% if rdv.status == 'requested' %}
@@ -61,7 +61,7 @@
         <div>
           <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Patient</span>
           <p class="mt-0.5 text-xs font-bold text-gray-800 flex items-center gap-1.5">
-            <span>👤</span> {{ rdv.patient_label }}
+            <span><i class="ti ti-user"></i></span> {{ rdv.patient_label }}
             {% if rdv.is_walk_in %}<span class="rounded-full bg-indigo-50 px-1.5 py-0.5 text-[9px] font-bold text-indigo-700">Sur place</span>{% endif %}
           </p>
           {% if rdv.patient_note %}<p class="mt-1 text-[11px] italic text-gray-500">« {{ rdv.patient_note }} »</p>{% endif %}
@@ -93,20 +93,20 @@
         {% csrf_token %}
         <input type="hidden" name="action" value="confirm">
         <input type="hidden" name="status" value="{{ status_filter }}">
-        <button type="submit" class="w-full rounded-lg bg-emerald-600 py-1.5 text-center text-xs font-bold text-white hover:bg-emerald-700">✓ Confirmer</button>
+        <button type="submit" class="w-full rounded-lg bg-emerald-600 py-1.5 text-center text-xs font-bold text-white hover:bg-emerald-700"><i class="ti ti-check"></i> Confirmer</button>
       </form>
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}" onsubmit="return confirm('Refuser cette demande de RDV ?');">
         {% csrf_token %}
         <input type="hidden" name="action" value="decline">
         <input type="hidden" name="status" value="{{ status_filter }}">
-        <button type="submit" class="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-gray-600 hover:bg-gray-50">✕</button>
+        <button type="submit" class="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-gray-600 hover:bg-gray-50"><i class="ti ti-x"></i></button>
       </form>
       {% elif rdv.status == 'confirmed' %}
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}" class="flex-1">
         {% csrf_token %}
         <input type="hidden" name="action" value="complete">
         <input type="hidden" name="status" value="{{ status_filter }}">
-        <button type="submit" class="w-full rounded-lg bg-blue-600 py-1.5 text-center text-xs font-bold text-white hover:bg-blue-700">✓ Honoré</button>
+        <button type="submit" class="w-full rounded-lg bg-blue-600 py-1.5 text-center text-xs font-bold text-white hover:bg-blue-700"><i class="ti ti-check"></i> Honoré</button>
       </form>
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}">
         {% csrf_token %}
@@ -125,7 +125,7 @@
         data-phone="{{ rdv.walk_in_phone|default:'' }}"
         data-motif="{{ rdv.walk_in_motif|default:'' }}"
         data-note="{{ rdv.prestataire_note|default:'' }}">
-        ✎ Modifier
+        <i class="ti ti-pencil"></i> Modifier
       </button>
     </div>
   </article>
@@ -195,27 +195,27 @@
         data-phone="{{ rdv.walk_in_phone|default:'' }}"
         data-motif="{{ rdv.walk_in_motif|default:'' }}"
         data-note="{{ rdv.prestataire_note|default:'' }}">
-        ✎ Modifier
+        <i class="ti ti-pencil"></i> Modifier
       </button>
       {% if rdv.status == 'requested' %}
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}" class="inline">
         {% csrf_token %}
         <input type="hidden" name="action" value="confirm">
         <input type="hidden" name="status" value="{{ status_filter }}">
-        <button type="submit" class="mc-btn-primary mc-btn-primary--sm inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold">✓ Confirmer</button>
+        <button type="submit" class="mc-btn-primary mc-btn-primary--sm inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-bold"><i class="ti ti-check"></i> Confirmer</button>
       </form>
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}" class="inline" onsubmit="return confirm('Refuser cette demande de RDV ?');">
         {% csrf_token %}
         <input type="hidden" name="action" value="decline">
         <input type="hidden" name="status" value="{{ status_filter }}">
-        <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[11px] font-bold text-gray-600 hover:bg-gray-50">✕ Refuser</button>
+        <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[11px] font-bold text-gray-600 hover:bg-gray-50">&times; Refuser</button>
       </form>
       {% else %}
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}" class="inline">
         {% csrf_token %}
         <input type="hidden" name="action" value="complete">
         <input type="hidden" name="status" value="{{ status_filter }}">
-        <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg bg-blue-500 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-blue-600">✓ Honoré</button>
+        <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg bg-blue-500 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-blue-600"><i class="ti ti-check"></i> Honoré</button>
       </form>
       <form method="post" action="{% url 'appointments:prestataire_rdv_action' rdv.reference %}" class="inline">
         {% csrf_token %}

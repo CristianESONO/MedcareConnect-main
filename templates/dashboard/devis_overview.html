@@ -45,7 +45,7 @@
     <a href="?status=viewed" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'viewed' %}bg-blue-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Consulté <span class="ml-1 text-[10px] opacity-70">{{ counts.viewed }}</span></a>
     <a href="?status=relanced" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'relanced' %}bg-amber-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Relancé <span class="ml-1 text-[10px] opacity-70">{{ counts.relanced }}</span></a>
     <a href="?status=expired" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'expired' %}bg-rose-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Expiré <span class="ml-1 text-[10px] opacity-70">{{ counts.expired }}</span></a>
-    <a href="?status=archived" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'archived' %}bg-gray-700 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">📁 Archivés <span class="ml-1 text-[10px] opacity-70">{{ counts.archived }}</span></a>
+    <a href="?status=archived" class="rounded-lg px-3 py-1.5 transition {% if status_filter == 'archived' %}bg-gray-700 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}"><i class="ti ti-folder"></i> Archivés <span class="ml-1 text-[10px] opacity-70">{{ counts.archived }}</span></a>
   </div>
   <form method="get" class="flex gap-2">
     <input type="hidden" name="status" value="{{ status_filter }}">
@@ -102,7 +102,7 @@
               {% if d.can_relance %}
               <form method="post" action="{% url 'dashboard:devis_admin_relance' d.reference %}">
                 {% csrf_token %}
-                <button type="submit" class="rounded-md bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-800 hover:bg-amber-100">🔄 Relancer</button>
+                <button type="submit" class="rounded-md bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-800 hover:bg-amber-100"><i class="ti ti-refresh"></i> Relancer</button>
               </form>
               {% endif %}
               {% if not d.is_archived %}

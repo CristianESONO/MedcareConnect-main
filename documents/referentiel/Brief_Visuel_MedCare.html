@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comment MedCare parle le même langage que chaque laboratoire</title>
+<style>
+:root{
+--bg:#F4F5F7;--surface:#FFFFFF;--ink:#16202E;--ink2:#5A6678;--line:#E2E6EC;--line2:#EEF1F5;--hair:#D7DCE4;
+--slate:#334155;--teal:#0F766E;--blue:#1D4ED8;
+--ok:#15803D;--okbg:#E7F5EC;--cf:#B45309;--cfbg:#FEF3C7;--no:#B42318;--nobg:#FDECEA;
+}
+@media (prefers-color-scheme:dark){:root{
+--bg:#0E131B;--surface:#161D27;--ink:#E7ECF3;--ink2:#95A1B3;--line:#28313E;--line2:#1E2630;--hair:#2E3744;
+--slate:#CBD5E1;--teal:#45C7B8;--blue:#6AA0FF;
+--ok:#5FD08A;--okbg:#15301F;--cf:#E0A340;--cfbg:#3A2E12;--no:#FF8A80;--nobg:#3A1A17;
+}}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:840px;margin:0 auto;padding:34px 20px 76px}
+.kick{color:var(--ink2);font-size:13px;margin:0 0 8px}
+h1{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-.01em;margin:0}
+.lead{font-size:17px;color:var(--ink2);margin:14px 0 0;max-width:62ch}
+h2{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:23px;margin:52px 0 10px}
+p{max-width:64ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;margin:18px 0}
+figure{margin:0;overflow-x:auto}
+svg{display:block;max-width:100%;height:auto;margin:0 auto}
+figcaption{color:var(--ink2);font-size:13px;text-align:center;margin-top:12px}
+
+/* babel */
+.babel{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center}
+.col{display:flex;flex-direction:column;gap:7px}
+.lab{background:var(--bg);border:1px dashed var(--hair);border-radius:9px;padding:6px 12px;color:var(--ink2);font-size:13.5px}
+.to{font-size:26px;color:var(--ink2)}
+.std{background:color-mix(in srgb,var(--teal) 14%,var(--surface));border:1.5px solid var(--teal);color:var(--teal);font-weight:600;border-radius:10px;padding:12px 18px;font-size:15px}
+@media(max-width:600px){.to{transform:rotate(90deg)}.babel{flex-direction:column}}
+
+/* pipeline */
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;justify-content:center}
+.step{flex:1 1 130px;min-width:130px;max-width:160px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.step .n{font-family:"Fraunces",serif;font-size:17px;color:var(--teal)}
+.step b{display:block;margin-top:4px}
+.step span{color:var(--ink2);font-size:12.5px}
+.arrow{align-self:center;color:var(--ink2);padding:0 7px;font-size:19px}
+@media(max-width:700px){.arrow{transform:rotate(90deg);padding:5px 0}.pipe{flex-direction:column;align-items:stretch}.step{max-width:none}}
+
+/* two-layer + price pills */
+.pill{display:inline-block;border-radius:8px;padding:5px 11px;font-size:13px;margin:4px;border:1px solid}
+.pill.atom{color:var(--teal);border-color:color-mix(in srgb,var(--teal) 45%,transparent);background:color-mix(in srgb,var(--teal) 12%,var(--surface))}
+.pill.pan{color:var(--slate);border-color:color-mix(in srgb,var(--slate) 50%,transparent);background:color-mix(in srgb,var(--slate) 14%,var(--surface));font-weight:600}
+.price-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.sct{background:var(--bg);border:1px solid var(--hair);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px}
+.sct b{display:block;font-family:"Fraunces",serif;font-size:22px;color:var(--ink)}
+.sct span{color:var(--ink2);font-size:13px}
+.mid{background:color-mix(in srgb,var(--teal) 14%,var(--surface));border:1.5px solid var(--teal);color:var(--teal);border-radius:12px;padding:14px 18px;font-weight:600;text-align:center}
+.eq{color:var(--ink2);font-size:24px}
+
+.callout{border-left:4px solid var(--teal);background:color-mix(in srgb,var(--teal) 7%,var(--surface));border-radius:0 12px 12px 0;padding:14px 18px;margin:18px 0;font-size:14.5px}
+.big{font-size:17px}
+em{color:var(--ink);font-style:italic}
+.end{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink2);font-size:14px}
+@media print{body{background:#fff}.panel{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kick">MedCare · comment ça marche</p>
+<h1>Parler le même langage que chaque laboratoire</h1>
+<p class="lead">Chaque labo nomme ses examens à sa manière. Pour que MedCare puisse chercher, comparer et afficher ces examens pour un patient, il faut d'abord les ramener à un langage commun — sans jamais demander aux labos de changer leurs habitudes. Voici comment.</p>
+
+<!-- 1 -->
+<h2>Le problème : chacun son vocabulaire</h2>
+<p>Un même examen s'écrit de dix façons. « NFS+TR », « Hémogramme + réticulocytes », « N.F.S avec rétic »… C'est le même acte, mais aucun ordinateur ne le devine tout seul. Si on laisse ce désordre entrer, on se retrouve avec dix examens différents là où il n'y en a qu'un : impossible de comparer les prix, impossible d'offrir une recherche claire au patient.</p>
+<div class="panel">
+<div class="babel">
+  <div class="col">
+    <div class="lab">NFS+TR</div>
+    <div class="lab">Hémogramme + réticulocytes</div>
+    <div class="lab">N.F.S avec rétic</div>
+    <div class="lab">numération + réticu</div>
+  </div>
+  <div class="to">→</div>
+  <div class="std">NFS + réticulocytes</div>
+</div>
+<figcaption>Quatre écritures d'un labo, un seul acte de référence côté MedCare.</figcaption>
+</div>
+
+<!-- 2 -->
+<h2>La solution : un dictionnaire commun</h2>
+<p>MedCare tient un <em>référentiel</em> : la liste officielle des examens, chacun avec un nom propre et unique. À côté, chaque acte garde un <em>lexique</em> — toutes les façons dont les labos l'écrivent réellement. Le lexique est la clé : c'est lui qui permet de reconnaître « NFS+TR » et de le rattacher au bon acte. Et il n'est jamais figé : il grandit à chaque nouveau labo (on y revient plus bas).</p>
+
+<!-- 3 -->
+<h2>Le parcours d'un fichier</h2>
+<p>Quand un labo rejoint MedCare, il envoie son catalogue. Voici ce qui lui arrive, de bout en bout.</p>
+<div class="panel">
+<div class="pipe">
+  <div class="step"><span class="n">1</span><b>Le fichier arrive</b><span>le catalogue du labo</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><span class="n">2</span><b>On le lit</b><span>un examen par ligne</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><span class="n">3</span><b>On rapproche</b><span>chaque ligne du référentiel</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><span class="n">4</span><b>On vérifie</b><span>l'humain tranche les doutes</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><span class="n">5</span><b>On publie</b><span>visible par le patient</span></div>
+</div>
+<figcaption>Seule l'étape 4 demande un humain, et uniquement pour les cas incertains.</figcaption>
+</div>
+
+<!-- 4 -->
+<h2>Le rapprochement, en clair</h2>
+<p>Pour chaque ligne du fichier, le système essaie de retrouver l'examen correspondant. Il ne répond jamais par « oui/non » : il range chaque ligne dans l'une de trois cases, selon sa confiance.</p>
+<div class="panel">
+<figure>
+<svg viewBox="0 0 620 300" role="img" aria-label="Les trois issues du rapprochement">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" style="fill:var(--ink2)"/>
+    </marker>
+  </defs>
+  <style>
+    .src{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+    .st{fill:var(--ink);font:600 14px Figtree,sans-serif}
+    .ss{fill:var(--ink2);font:12px Figtree,sans-serif}
+    .ln{stroke:var(--ink2);stroke-width:1.5;fill:none}
+    .cok{fill:var(--okbg);stroke:var(--ok);stroke-width:1.5}
+    .ccf{fill:var(--cfbg);stroke:var(--cf);stroke-width:1.5}
+    .cno{fill:var(--nobg);stroke:var(--no);stroke-width:1.5}
+    .hok{fill:var(--ok);font:700 13px Figtree} .hcf{fill:var(--cf);font:700 13px Figtree} .hno{fill:var(--no);font:700 13px Figtree}
+    .d{fill:var(--ink2);font:12px Figtree}
+  </style>
+  <rect class="src" x="16" y="118" width="170" height="64" rx="12"/>
+  <text class="st" x="101" y="146" text-anchor="middle">Un examen</text>
+  <text class="ss" x="101" y="164" text-anchor="middle">écrit par le labo</text>
+
+  <path class="ln" d="M186 150 C250 150, 250 50, 322 50" marker-end="url(#a)"/>
+  <path class="ln" d="M186 150 L322 150" marker-end="url(#a)"/>
+  <path class="ln" d="M186 150 C250 150, 250 250, 322 250" marker-end="url(#a)"/>
+
+  <rect class="cok" x="322" y="22" width="282" height="56" rx="12"/>
+  <text class="hok" x="340" y="46">Reconnu</text>
+  <text class="d" x="340" y="66">rattaché tout seul — rien à faire</text>
+
+  <rect class="ccf" x="322" y="122" width="282" height="56" rx="12"/>
+  <text class="hcf" x="340" y="146">Ressemblant</text>
+  <text class="d" x="340" y="166">on propose, tu confirmes d'un clic</text>
+
+  <rect class="cno" x="322" y="222" width="282" height="56" rx="12"/>
+  <text class="hno" x="340" y="246">Inconnu</text>
+  <text class="d" x="340" y="266">tu le rattaches à la main, une seule fois</text>
+</svg>
+</figure>
+<p class="callout"><strong>Pourquoi ne pas tout automatiser ?</strong> Parce qu'en biologie, une erreur silencieuse accrocherait un mauvais examen — et un mauvais prix — au nom d'un patient. Le système ne valide tout seul que lorsqu'il est <em>sûr</em>. Au moindre doute, il préfère demander. Une confirmation de trop ne coûte que deux secondes ; une erreur invisible coûte la confiance.</p>
+</div>
+
+<!-- 5 -->
+<h2>Toujours un humain aux commandes — et le système apprend</h2>
+<p>Les cases « ressemblant » et « inconnu » s'affichent sur un écran simple : à gauche le libellé du labo, à droite le bon examen (déjà pré-choisi quand on a une idée). Un bouton <em>valider</em>, et c'est réglé. Le geste a un double effet : il règle la ligne du jour, <em>et</em> il apprend au système cette nouvelle façon d'écrire. La prochaine fois qu'un labo l'écrira pareil, ce sera reconnu tout seul.</p>
+<div class="panel">
+<figure>
+<svg viewBox="0 0 640 210" role="img" aria-label="Le système apprend de chaque validation">
+  <defs>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" style="fill:var(--teal)"/>
+    </marker>
+  </defs>
+  <style>
+    .en{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+    .et{fill:var(--ink);font:600 13.5px Figtree,sans-serif}
+    .es{fill:var(--ink2);font:11.5px Figtree,sans-serif}
+    .el{stroke:var(--teal);stroke-width:2;fill:none}
+    .ei{fill:var(--teal);font:700 12.5px Figtree}
+  </style>
+  <rect class="en" x="18" y="76" width="162" height="64" rx="12"/>
+  <text class="et" x="99" y="103" text-anchor="middle">Un doute</text>
+  <text class="es" x="99" y="121" text-anchor="middle">ressemblant ou inconnu</text>
+
+  <path class="el" d="M180 108 L222 108" marker-end="url(#b)"/>
+
+  <rect class="en" x="222" y="76" width="176" height="64" rx="12"/>
+  <text class="et" x="310" y="103" text-anchor="middle">Tu valides</text>
+  <text class="es" x="310" y="121" text-anchor="middle">tu choisis le bon examen</text>
+
+  <path class="el" d="M398 108 L440 108" marker-end="url(#b)"/>
+
+  <rect class="en" x="440" y="76" width="182" height="64" rx="12"/>
+  <text class="et" x="531" y="103" text-anchor="middle">Le système retient</text>
+  <text class="es" x="531" y="121" text-anchor="middle">cette écriture entre au lexique</text>
+
+  <path class="el" d="M531 76 C531 24, 99 24, 99 76" marker-end="url(#b)"/>
+  <text class="ei" x="315" y="18" text-anchor="middle">la prochaine fois, c'est reconnu tout seul ✓</text>
+</svg>
+</figure>
+<figcaption>Plus MedCare onboarde de labos, moins il reste de doutes. Le produit devient meilleur à l'usage.</figcaption>
+</div>
+
+<!-- 6 -->
+<h2>Deux niveaux : les examens et les bilans</h2>
+<p>Certains labos vendent des examens à l'unité, d'autres des <em>bilans</em> qui en regroupent plusieurs. MedCare gère les deux sans les confondre : chaque examen existe séparément, et un bilan n'est qu'un regroupement qui pointe vers eux. Ainsi « ASAT » reste « ASAT », mais « Bilan hépatique » sait qu'il contient ASAT, ALAT, et les autres.</p>
+<div class="panel">
+<figure>
+<svg viewBox="0 0 600 190" role="img" aria-label="Un bilan regroupe des examens à l'unité">
+  <style>
+    .pan{fill:color-mix(in srgb,var(--slate) 14%,var(--surface));stroke:var(--slate);stroke-width:1.5}
+    .pt{fill:var(--slate);font:700 13.5px Figtree,sans-serif}
+    .at{fill:color-mix(in srgb,var(--teal) 12%,var(--surface));stroke:var(--teal);stroke-width:1.3}
+    .att{fill:var(--teal);font:600 12px Figtree,sans-serif}
+    .lk{stroke:var(--ink2);stroke-width:1.3;fill:none;opacity:.7}
+  </style>
+  <rect class="pan" x="200" y="14" width="200" height="40" rx="10"/>
+  <text class="pt" x="300" y="39" text-anchor="middle">Bilan hépatique</text>
+  <g>
+    <path class="lk" d="M300 54 L92 120"/><path class="lk" d="M300 54 L196 120"/>
+    <path class="lk" d="M300 54 L300 120"/><path class="lk" d="M300 54 L404 120"/><path class="lk" d="M300 54 L508 120"/>
+  </g>
+  <g>
+    <rect class="at" x="40" y="120" width="104" height="36" rx="9"/><text class="att" x="92" y="143" text-anchor="middle">ASAT</text>
+    <rect class="at" x="150" y="120" width="104" height="36" rx="9"/><text class="att" x="202" y="143" text-anchor="middle">ALAT</text>
+    <rect class="at" x="260" y="120" width="104" height="36" rx="9"/><text class="att" x="312" y="143" text-anchor="middle">Gamma-GT</text>
+    <rect class="at" x="370" y="120" width="104" height="36" rx="9"/><text class="att" x="422" y="143" text-anchor="middle">PAL</text>
+    <rect class="at" x="480" y="120" width="104" height="36" rx="9"/><text class="att" x="532" y="143" text-anchor="middle">Bilirubine</text>
+  </g>
+</svg>
+</figure>
+<figcaption>Le bilan en haut, les examens à l'unité en bas. Chacun existe pour lui-même ; le bilan ne fait que les rassembler.</figcaption>
+</div>
+
+<!-- 7 -->
+<h2>Le prix appartient à la structure</h2>
+<p>Un point essentiel : le référentiel ne contient <em>aucun</em> prix. Le nom d'un examen est commun à tout MedCare ; son prix, lui, est fixé par chaque structure. Deux labos peuvent proposer exactement le même examen à deux tarifs différents — et c'est justement ce qui rend la comparaison possible pour le patient.</p>
+<div class="panel">
+<div class="price-row">
+  <div class="sct"><b>4 000 F</b><span>Labo A</span></div>
+  <div class="eq">←</div>
+  <div class="mid">Créatininémie<br><span style="font-weight:400;font-size:12px">examen de référence</span></div>
+  <div class="eq">→</div>
+  <div class="sct"><b>6 000 F</b><span>Labo B</span></div>
+</div>
+<figcaption>Même examen reconnu des deux côtés, deux prix. MedCare sait que c'est le même — le patient voit la différence.</figcaption>
+</div>
+
+<!-- 8 -->
+<h2>Ce que ça change, au bout du compte</h2>
+<p>Grâce à ce langage commun invisible, le patient peut chercher un examen une seule fois et voir toutes les structures qui le proposent, avec leurs prix, côte à côte. Le labo, lui, n'a rien changé à ses habitudes : il a envoyé son catalogue tel quel. Toute la complexité est absorbée en coulisses — et c'est précisément ce travail invisible qui rend MedCare agréable à utiliser.</p>
+
+<p class="end">Ce document explique le principe. La version technique (modèle de données, règles de rapprochement, cas de test) existe à part, pour l'équipe qui construit le back-end.</p>
+
+</div>
+</body>
+</html>

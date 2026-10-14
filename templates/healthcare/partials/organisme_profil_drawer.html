@@ -1,7 +1,7 @@
 {% comment %}Drawer profil structure — aligné page annuaire (organisme_detail).{% endcomment %}
 <div class="profil-drawer-header" data-org-id="{{ org.id }}">
   <div class="profil-drawer-close-row">
-    <button type="button" class="profil-drawer-close" onclick="closeProfilStruct()" aria-label="Fermer">✕</button>
+    <button type="button" class="profil-drawer-close" onclick="closeProfilStruct()" aria-label="Fermer"><i class="ti ti-x"></i></button>
   </div>
   {% include "healthcare/partials/organisme_fiche_header_inner.html" with fiche_embedded=True %}
 </div>

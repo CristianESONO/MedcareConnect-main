@@ -11,20 +11,20 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
 
   {% if patient_insurance_match %}
   <div class="profil-drawer-ins-match">
-    <span aria-hidden="true">✅</span>
+    <span aria-hidden="true"><i class="ti ti-circle-check"></i></span>
     <span>Votre assurance <strong>{{ patient_insurance_match }}</strong> est acceptée ici.</span>
   </div>
   {% endif %}
 
   {% if insurances_profil %}
   <button type="button" class="profil-drawer-assur-toggle" onclick="toggleAssurDrop()">
-    <span>🛡 Assurances acceptées ({{ insurances_profil|length }})</span>
+    <span><i class="ti ti-shield-check"></i> Assurances acceptées ({{ insurances_profil|length }})</span>
     <span id="assur-caret">▼</span>
   </button>
   <div id="assur-list" class="profil-drawer-assur-list" hidden>
     {% for ins in insurances_profil %}
     <div class="profil-drawer-assur-row{% if ins.patient_match %} profil-drawer-assur-row--match{% endif %}">
-      <span>{% if ins.patient_match %}✓ {% endif %}{{ ins.name }}</span>
+      <span>{% if ins.patient_match %}<i class="ti ti-check"></i> {% endif %}{{ ins.name }}</span>
       {% if ins.patient_match %}<span class="profil-drawer-assur-tag">Acceptée pour vous</span>{% endif %}
     </div>
     {% endfor %}
@@ -33,7 +33,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
 
   {% if org.prises_sang_domicile %}
   <div class="profil-drawer-domicile">
-    <div class="profil-drawer-domicile-title">🏠 Prélèvement à domicile disponible</div>
+    <div class="profil-drawer-domicile-title"><i class="ti ti-home"></i> Prélèvement à domicile disponible</div>
     {% if org.horaires_complement %}
     <div class="profil-drawer-domicile-sub">{{ org.horaires_complement|truncatechars:120 }}</div>
     {% endif %}
@@ -53,14 +53,14 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
 
   {% if org.is_ambulance_service %}
   <div class="profil-drawer-amb-hint">
-    🚑 Les montants ci-dessous sont des points de départ. Le prix final dépend du trajet. Cliquez sur un service, puis configurez votre trajet pour obtenir votre devis.
+    <i class="ti ti-ambulance"></i> Les montants ci-dessous sont des points de départ. Le prix final dépend du trajet. Cliquez sur un service, puis configurez votre trajet pour obtenir votre devis.
   </div>
   {% endif %}
 
   <div class="profil-drawer-actes-search">
     <input id="profil-acte-search" type="search" placeholder="Rechercher un acte…" autocomplete="off"
       {% if not fiche_embedded %}oninput="filterProfilActes(this.value)"{% endif %}>
-    <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)">🔍</button>
+    <button type="button" onclick="filterProfilActes(document.getElementById('profil-acte-search').value)"><i class="ti ti-search"></i></button>
   </div>
 
   <div class="profil-drawer-actes-list">
@@ -83,7 +83,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
             onclick="focusTrajetActe('{{ pa.acte.name|escapejs }}', '{{ org.pk }}')">
             <div class="profil-pa-info">
               <div class="profil-pa-nom">{{ pa.acte.name }}</div>
-              <div class="profil-pa-amb-note">🚑 Tarif selon le trajet, à configurer</div>
+              <div class="profil-pa-amb-note"><i class="ti ti-ambulance"></i> Tarif selon le trajet, à configurer</div>
             </div>
             <div class="profil-pa-right">
               {% if amb_sur_devis %}
@@ -118,7 +118,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
               {% endif %}
             </div>
             <div class="profil-pa-right">
-              {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+              {% if pa.delai %}<div class="profil-pa-delai"><i class="ti ti-clock"></i> {{ pa.get_delai_display }}</div>{% endif %}
               <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} FCFA</div>
             </div>
           </div>
@@ -140,7 +140,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
               {% endif %}
             </div>
             <div class="profil-pa-right">
-              {% if pa.delai %}<div class="profil-pa-delai">⏱ {{ pa.get_delai_display }}</div>{% endif %}
+              {% if pa.delai %}<div class="profil-pa-delai"><i class="ti ti-clock"></i> {{ pa.get_delai_display }}</div>{% endif %}
               <div class="profil-pa-prix">{{ pa.price|floatformat:0 }} FCFA</div>
             </div>
           </div>
@@ -156,13 +156,13 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
   {% if fiche_embedded %}
   <div id="profil-panier-recap" class="profil-panier-recap" aria-live="polite"></div>
   <button type="button" class="devis-btn profil-drawer-devis-btn" data-profil-devis data-org-id="{{ org.id }}">
-    💬 Obtenir mon devis
+    <i class="ti ti-message"></i> Obtenir mon devis
   </button>
   {% elif org.is_ambulance_service %}
   {# Devis ambulance : bouton dans le configurateur trajet / couverture #}
   {% else %}
   <div id="profil-panier-recap" class="profil-panier-recap-box" style="display:none;">
-    <div class="profil-panier-title">🛒 Sélection (0 acte)</div>
+    <div class="profil-panier-title"><i class="ti ti-shopping-cart"></i> Sélection (0 acte)</div>
     <div id="profil-panier-items"></div>
     <div class="profil-panier-total-row">
       <span style="font-size: 12px; font-weight: 600; color: #0a5c8a;">Total estimé</span>
@@ -170,7 +170,7 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
     </div>
   </div>
   <button type="button" class="profil-devis-btn" onclick="requestFicheDevis()">
-    💬 Obtenir mon devis
+    <i class="ti ti-message"></i> Obtenir mon devis
   </button>
   {% endif %}
 </div>

@@ -4,11 +4,11 @@
   <div class="mc-wmsg-sender mc-wmsg-sender--medcare">{{ msg.thread_sender|default:"MedCare" }}</div>
   <div class="mc-rdv-card">
     {% if msg.payload.event == 'reminder' %}
-    <div class="mc-rdv-card-title">🔔 Rappel{% if msg.payload.schedule_label %} — {{ msg.payload.schedule_label }}{% endif %}</div>
+    <div class="mc-rdv-card-title"><i class="ti ti-bell"></i> Rappel{% if msg.payload.schedule_label %} — {{ msg.payload.schedule_label }}{% endif %}</div>
     <div class="mc-rdv-card-body">{% firstof msg.payload.summary msg.content as reminder_summary %}{{ reminder_summary|linebreaksbr }}</div>
     {% if msg.payload.prerequisites %}
     <div class="mc-rdv-prereq">
-      <div class="mc-rdv-prereq-title">📋 Consignes importantes</div>
+      <div class="mc-rdv-prereq-title"><i class="ti ti-clipboard-list"></i> Consignes importantes</div>
       <div class="mc-rdv-prereq-body">{{ msg.payload.prerequisites|linebreaksbr }}</div>
     </div>
     {% endif %}
@@ -26,10 +26,26 @@
   <div class="mc-wmsg-sender mc-wmsg-sender--patient">{{ msg.thread_sender }}</div>
   {% endif %}
   {% if msg.content %}{{ msg.content|linebreaksbr }}{% endif %}
+  {% if msg.payload.type == 'predevis' %}
+  <div style="margin-top:6px;display:inline-block;font-size:9.5px;font-weight:700;background:rgba(255,255,255,0.25);color:inherit;border-radius:4px;padding:2px 6px">
+    <i class="ti ti-receipt"></i> Demande de pré-devis
+  </div>
+  {% endif %}
+  {% if msg.payload.type == 'panel_link' or msg.payload.panel_token %}
+  <div class="mc-panel-bubble-card" style="margin-top:8px;background:rgba(255,255,255,0.95);border:1px solid #bae6fd;border-radius:10px;padding:10px 12px;color:#0f2233">
+    <div style="font-size:10px;font-weight:800;color:#0284c7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">
+      {% if msg.payload.kind == 'ticket' %}<i class="ti ti-ticket"></i> Ticket de prestation{% else %}<i class="ti ti-components"></i> Panel d'examens{% endif %}
+    </div>
+    <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:6px">{{ msg.payload.panel_nom|default:"Panel d'examens" }}</div>
+    <a href="/t/{{ msg.payload.panel_token }}" style="display:inline-flex;align-items:center;gap:6px;background:#0a5c8a;color:#ffffff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:7px;text-decoration:none">
+      <i class="ti ti-shopping-cart"></i> Ouvrir &amp; pré-sélectionner au panier →
+    </a>
+  </div>
+  {% endif %}
   {% if msg.attachment %}
   <div class="mc-wmsg-attachment">
     <a href="{{ msg.attachment.url }}" target="_blank" rel="noopener noreferrer" class="mc-wmsg-attach-link">
-      {% if msg.attachment.name|lower|slice:'-4:' == '.pdf' %}📄{% elif msg.attachment.name|lower|slice:'-4:' in '.png,.jpg,.jpeg,.gif,.webp' %}🖼️{% else %}📎{% endif %}
+      {% if msg.attachment.name|lower|slice:'-4:' == '.pdf' %}<i class="ti ti-file-text"></i>{% elif msg.attachment.name|lower|slice:'-4:' in '.png,.jpg,.jpeg,.gif,.webp' %}<i class="ti ti-photo"></i>{% else %}<i class="ti ti-paperclip"></i>{% endif %}
       {{ msg.attachment.name|cut:'message_attachments/' }}
     </a>
   </div>
@@ -42,10 +58,26 @@
   <div class="mc-wmsg-sender{% if msg.thread_sender == 'MedCare' %} mc-wmsg-sender--medcare{% else %} mc-wmsg-sender--org{% endif %}">{{ msg.thread_sender }}</div>
   {% endif %}
   {% if msg.content %}{{ msg.content|linebreaksbr }}{% endif %}
+  {% if msg.payload.type == 'predevis' %}
+  <div style="margin-top:6px;display:inline-block;font-size:9.5px;font-weight:700;background:#e0f2fe;color:#0369a1;border-radius:4px;padding:2px 6px">
+    <i class="ti ti-receipt"></i> Demande de pré-devis
+  </div>
+  {% endif %}
+  {% if msg.payload.type == 'panel_link' or msg.payload.panel_token %}
+  <div class="mc-panel-bubble-card" style="margin-top:8px;background:#ffffff;border:1px solid #bae6fd;border-radius:10px;padding:10px 12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+    <div style="font-size:10px;font-weight:800;color:#0284c7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">
+      {% if msg.payload.kind == 'ticket' %}<i class="ti ti-ticket"></i> Ticket de prestation{% else %}<i class="ti ti-components"></i> Panel d'examens{% endif %}
+    </div>
+    <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:6px">{{ msg.payload.panel_nom|default:"Panel d'examens" }}</div>
+    <a href="/t/{{ msg.payload.panel_token }}" style="display:inline-flex;align-items:center;gap:6px;background:#0a5c8a;color:#ffffff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:7px;text-decoration:none">
+      <i class="ti ti-shopping-cart"></i> Ouvrir &amp; pré-sélectionner au panier →
+    </a>
+  </div>
+  {% endif %}
   {% if msg.attachment %}
   <div class="mc-wmsg-attachment">
     <a href="{{ msg.attachment.url }}" target="_blank" rel="noopener noreferrer" class="mc-wmsg-attach-link">
-      {% if msg.attachment.name|lower|slice:'-4:' == '.pdf' %}📄{% elif msg.attachment.name|lower|slice:'-4:' in '.png,.jpg,.jpeg,.gif,.webp' %}🖼️{% else %}📎{% endif %}
+      {% if msg.attachment.name|lower|slice:'-4:' == '.pdf' %}<i class="ti ti-file-text"></i>{% elif msg.attachment.name|lower|slice:'-4:' in '.png,.jpg,.jpeg,.gif,.webp' %}<i class="ti ti-photo"></i>{% else %}<i class="ti ti-paperclip"></i>{% endif %}
       {{ msg.attachment.name|cut:'message_attachments/' }}
     </a>
   </div>

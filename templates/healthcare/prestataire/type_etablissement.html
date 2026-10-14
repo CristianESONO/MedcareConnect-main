@@ -98,17 +98,17 @@
 
       <div class="te-types">
         <div class="te-type {% if org.topology_type == 'simple' or not org.topology_type %}sel{% endif %}" id="tt-simple" onclick="selectTopo('simple')">
-          <div class="te-type-ic">🏢</div>
+          <div class="te-type-ic"><i class="ti ti-building"></i></div>
           <div class="te-type-name">Structure simple</div>
           <div class="te-type-desc">Une seule entité, un seul site. Idéal pour un laboratoire, un cabinet ou un centre d'imagerie.</div>
         </div>
         <div class="te-type {% if org.topology_type == 'multiservice' %}sel{% endif %}" id="tt-multiservice" onclick="selectTopo('multiservice')">
-          <div class="te-type-ic">🏛️</div>
+          <div class="te-type-ic"><i class="ti ti-building-bank"></i></div>
           <div class="te-type-name">Établissement multi-services</div>
           <div class="te-type-desc">Un lieu, plusieurs métiers. Chaque service a sa page et son catalogue propre (clinique, hôpital).</div>
         </div>
         <div class="te-type {% if org.topology_type == 'multisite' %}sel{% endif %}" id="tt-multisite" onclick="selectTopo('multisite')">
-          <div class="te-type-ic">🗺️</div>
+          <div class="te-type-ic"><i class="ti ti-map"></i></div>
           <div class="te-type-name">Réseau multi-sites</div>
           <div class="te-type-desc">Un métier, plusieurs lieux. Catalogue de référence hérité et ajustable par site (réseau de labos, imagerie).</div>
         </div>
@@ -116,11 +116,11 @@
 
       <div class="te-console-note {% if org.topology_type == 'multiservice' or org.topology_type == 'multisite' %}on{% else %}off{% endif %}" id="teConsoleNote">
         {% if org.topology_type == 'multiservice' %}
-        🏛️ Mode Multi-services actif : Vous pouvez organiser votre établissement en plusieurs pavillons ou services.
+        <i class="ti ti-building-bank"></i> Mode Multi-services actif : Vous pouvez organiser votre établissement en plusieurs pavillons ou services.
         {% elif org.topology_type == 'multisite' %}
-        🗺️ Mode Réseau multi-sites actif : Vous pouvez gérer vos différentes implantations géographiques.
+        <i class="ti ti-map"></i> Mode Réseau multi-sites actif : Vous pouvez gérer vos différentes implantations géographiques.
         {% else %}
-        🏢 Compte mono-structure : pas de configuration multi-structures. Tout se paramètre dans les sections ci-dessous.
+        <i class="ti ti-building"></i> Compte mono-structure : pas de configuration multi-structures. Tout se paramètre dans les sections ci-dessous.
         {% endif %}
       </div>
     </div>
@@ -211,13 +211,13 @@ function selectTopo(mode) {
   if (note) {
     if (mode === 'multiservice') {
       note.className = 'te-console-note on';
-      note.innerHTML = '🏛️ <strong>Mode Multi-services actif :</strong> Vous pouvez organiser votre établissement en plusieurs pavillons ou services.';
+      note.innerHTML = '<i class="ti ti-building-bank"></i> <strong>Mode Multi-services actif :</strong> Vous pouvez organiser votre établissement en plusieurs pavillons ou services.';
     } else if (mode === 'multisite') {
       note.className = 'te-console-note on';
-      note.innerHTML = '🗺️ <strong>Mode Réseau multi-sites actif :</strong> Vous pouvez gérer vos différentes implantations géographiques.';
+      note.innerHTML = '<i class="ti ti-map"></i> <strong>Mode Réseau multi-sites actif :</strong> Vous pouvez gérer vos différentes implantations géographiques.';
     } else {
       note.className = 'te-console-note off';
-      note.innerHTML = '🏢 <strong>Compte mono-structure :</strong> pas de configuration multi-structures. Tout se paramètre dans les sections ci-dessus.';
+      note.innerHTML = '<i class="ti ti-building"></i> <strong>Compte mono-structure :</strong> pas de configuration multi-structures. Tout se paramètre dans les sections ci-dessus.';
     }
   }
 }
@@ -260,7 +260,7 @@ function showSuggestionBanner(typeName, count) {
   var banner = document.getElementById('te-suggestion-banner');
   if (!banner) return;
   banner.style.display = 'flex';
-  banner.innerHTML = '💡 <strong>' + count + ' pilier' + (count > 1 ? 's' : '') + ' pré-sélectionné' + (count > 1 ? 's' : '') + '</strong> pour « ' + typeName + ' » — vous pouvez les modifier librement.';
+  banner.innerHTML = '<i class="ti ti-bulb"></i> <strong>' + count + ' pilier' + (count > 1 ? 's' : '') + ' pré-sélectionné' + (count > 1 ? 's' : '') + '</strong> pour « ' + typeName + ' » — vous pouvez les modifier librement.';
   setTimeout(function() { banner.style.opacity = '1'; }, 10);
   setTimeout(function() { banner.style.opacity = '0'; setTimeout(function(){ banner.style.display='none'; }, 400); }, 4000);
 }

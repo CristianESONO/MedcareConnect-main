@@ -61,7 +61,7 @@
     <div class="mcc-sp-title-block">
       <div class="mcc-sp-doc-type">Configuration formule</div>
       <div class="mcc-sp-doc-title">{{ title }}</div>
-      <div class="mcc-sp-doc-subtitle">Même contenu que la grille <a href="{% url 'dashboard:subscription_plans_list' %}" class="font-semibold text-primary-700 underline">Formules d'abonnement</a> — tarifs, cible, structures et droits (✓ / – / +).</div>
+      <div class="mcc-sp-doc-subtitle">Même contenu que la grille <a href="{% url 'dashboard:subscription_plans_list' %}" class="font-semibold text-primary-700 underline">Formules d'abonnement</a> — tarifs, cible, structures et droits (<i class="ti ti-check"></i> / – / +).</div>
     </div>
   </div>
 
@@ -200,7 +200,7 @@
 
     if (cb.checked) {
       label.classList.add('is-on');
-      icon.textContent = '✓';
+      icon.textContent = '<i class="ti ti-check"></i>';
       if (state) state.textContent = 'Inclus';
     } else if (isStarterMedplaqueAddon(code, false)) {
       label.classList.add('is-addon');
@@ -216,7 +216,7 @@
     var cell = document.querySelector('.plan-feat-compare-cell[data-code="' + code + '"]');
     if (cell) {
       if (cb.checked) {
-        cell.innerHTML = '<span class="mcc-sp-ico-on">✓</span>';
+        cell.innerHTML = '<span class="mcc-sp-ico-on"><i class="ti ti-check"></i></span>';
       } else if (isStarterMedplaqueAddon(code, false)) {
         cell.innerHTML = '<span class="mcc-sp-ico-addon">+</span>';
       } else {
@@ -239,7 +239,7 @@
     text.className = 'mcc-sp-feat-text';
     if (checked) {
       icon.className = 'mcc-sp-feat-on';
-      icon.textContent = '✓';
+      icon.textContent = '<i class="ti ti-check"></i>';
       var sub = text.querySelector('span');
       if (sub && sub.textContent === 'Désactivé') {
         sub.textContent = sub.dataset.desc || sub.textContent;

@@ -174,14 +174,14 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
           </div>
           <div class="fork">
             <div class="opt-card on" id="fk-structure" onclick="setAccount('structure')">
-              <div class="ic">🏥</div>
+              <div class="ic"><i class="ti ti-building-hospital"></i></div>
               <div>
                 <div class="nm">Structure de soins</div>
                 <div class="d">Laboratoire, cabinet, centre, clinique, hôpital, réseau. L'individu se tient derrière l'offre.</div>
               </div>
             </div>
             <div class="opt-card" id="fk-praticien" onclick="setAccount('praticien')">
-              <div class="ic">🩺</div>
+              <div class="ic"><i class="ti ti-stethoscope"></i></div>
               <div>
                 <div class="nm">Praticien indépendant</div>
                 <div class="d">Médecin, infirmier, kiné, sage-femme, psychologue, autre paramédical. En son nom propre.</div>
@@ -206,7 +206,7 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
         <div class="f">
           <label id="lbl-username">Nom d'utilisateur <span class="opt">(identifiant de connexion)</span> <span class="req">*</span></label>
           <input type="text" name="username" id="username" value="{{ form.username.value|default:'' }}" required placeholder="ex : polyclinique_de_libe, dr_diagne">
-          <div class="hint" id="username-hint">💡 <span>Cet identifiant est le username de connexion. Il se génère automatiquement à partir du nom ci-dessous, vous pouvez le modifier.</span></div>
+          <div class="hint" id="username-hint"><i class="ti ti-bulb"></i> <span>Cet identifiant est le username de connexion. Il se génère automatiquement à partir du nom ci-dessous, vous pouvez le modifier.</span></div>
         </div>
 
         <div class="f">
@@ -252,25 +252,25 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
               <div class="panel-s" style="margin:0 0 6px">Uniquement la topologie, c'est-à-dire le nombre de nœuds à gérer.</div>
               <div class="pick3">
                 <div class="pk on" data-topo="simple" onclick="setTopo(this)">
-                  <div class="pic">🏢</div>
+                  <div class="pic"><i class="ti ti-building"></i></div>
                   <div class="pnm">Structure simple</div>
                   <div class="pd">Un seul site.</div>
                   <div class="pex">Ex : labo, cabinet, centre d'imagerie</div>
                 </div>
                 <div class="pk" data-topo="multiservice" onclick="setTopo(this)">
-                  <div class="pic">🏛️</div>
+                  <div class="pic"><i class="ti ti-building-bank"></i></div>
                   <div class="pnm">Multi-services</div>
                   <div class="pd">Un lieu, plusieurs services.</div>
                   <div class="pex">Ex : hôpital, clinique, centre de santé</div>
                 </div>
                 <div class="pk" data-topo="multisite" onclick="setTopo(this)">
-                  <div class="pic">🗺️</div>
+                  <div class="pic"><i class="ti ti-map"></i></div>
                   <div class="pnm">Réseau multi-sites</div>
                   <div class="pd">Un métier, plusieurs lieux.</div>
                   <div class="pex">Ex : réseau de labos, d'imagerie</div>
                 </div>
               </div>
-              <div class="hint">💡 <span>Les piliers d'activité (biologie, imagerie, consultations, etc.) se choisissent librement après connexion, indépendamment du type.</span></div>
+              <div class="hint"><i class="ti ti-bulb"></i> <span>Les piliers d'activité (biologie, imagerie, consultations, etc.) se choisissent librement après connexion, indépendamment du type.</span></div>
             </div>
 
             <div class="f">
@@ -324,32 +324,32 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
               <div class="panel-s" style="margin:0 0 6px">Le régime déontologique dépend de la profession.</div>
               <div class="pick2" id="prof-cards">
                 <div class="pk" data-prof="medecin" onclick="setProf(this)">
-                  <div class="pic">🩺</div>
+                  <div class="pic"><i class="ti ti-stethoscope"></i></div>
                   <div class="pnm">Médecin</div>
                   <div class="pd">Inscription à l'Ordre</div>
                 </div>
                 <div class="pk" data-prof="infirmier" onclick="setProf(this)">
-                  <div class="pic">💉</div>
+                  <div class="pic"><i class="ti ti-needle"></i></div>
                   <div class="pnm">Infirmier(ère)</div>
                   <div class="pd">Soins et gestes</div>
                 </div>
                 <div class="pk" data-prof="kine" onclick="setProf(this)">
-                  <div class="pic">🤸</div>
+                  <div class="pic"><i class="ti ti-stretching"></i></div>
                   <div class="pnm">Kinésithérapeute</div>
                   <div class="pd">Rééducation</div>
                 </div>
                 <div class="pk" data-prof="sagefemme" onclick="setProf(this)">
-                  <div class="pic">🤰</div>
+                  <div class="pic"><i class="ti ti-woman"></i></div>
                   <div class="pnm">Sage-femme</div>
                   <div class="pd">Santé de la femme</div>
                 </div>
                 <div class="pk" data-prof="psy" onclick="setProf(this)">
-                  <div class="pic">🧠</div>
+                  <div class="pic"><i class="ti ti-brain"></i></div>
                   <div class="pnm">Psychologue</div>
                   <div class="pd">Santé mentale</div>
                 </div>
                 <div class="pk" data-prof="autre" onclick="setProf(this)">
-                  <div class="pic">🩹</div>
+                  <div class="pic"><i class="ti ti-bandage"></i></div>
                   <div class="pnm">Autre paramédical</div>
                   <div class="pd">Diététique, etc.</div>
                 </div>
@@ -406,14 +406,14 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
             <label>Mot de passe <span class="req">*</span></label>
             <div class="pw">
               <input type="password" name="password1" id="pw1" required placeholder="••••••••">
-              <span class="eye" onclick="tgpw('pw1')">👁</span>
+              <span class="eye" onclick="tgpw('pw1')"><i class="ti ti-eye"></i></span>
             </div>
           </div>
           <div class="f">
             <label>Confirmer <span class="req">*</span></label>
             <div class="pw">
               <input type="password" name="password2" id="pw2" required placeholder="••••••••">
-              <span class="eye" onclick="tgpw('pw2')">👁</span>
+              <span class="eye" onclick="tgpw('pw2')"><i class="ti ti-eye"></i></span>
             </div>
           </div>
         </div>

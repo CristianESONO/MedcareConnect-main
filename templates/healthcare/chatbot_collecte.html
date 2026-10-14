@@ -1,0 +1,1052 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Assistant d'import · MedCare{% endblock %}
+
+{% block dash_extra_css %}
+<style>
+:root {
+  --mc-navy: #0f172a;
+  --mc-blue: #0ea5e9;
+  --mc-teal: #14b8a6;
+  --mc-border: #e2e8f0;
+  --mc-bg: #f8fafc;
+  --ok: #15803D; --okbg: #E7F5EC;
+  --cf: #B45309; --cfbg: #FEF3C7;
+  --no: #B42318; --nobg: #FDECEA;
+  --line: #E2E6EC; --line2: #EEF1F5; --hair: #D7DCE4;
+  --ink: #16202E; --ink2: #5A6678;
+}
+
+body { background: var(--mc-bg); }
+
+/* ── Layout ── */
+.assistant-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+/* ── Top Bar ── */
+.assistant-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.btn-back-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all .18s ease;
+}
+.btn-back-cat:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* ── Header ── */
+.assistant-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.assistant-avatar {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.85rem;
+  box-shadow: 0 8px 24px rgba(14,165,233,.22);
+  color: #fff;
+  font-size: 26px;
+}
+.assistant-header h1 {
+  font-size: 1.5rem; font-weight: 800; color: var(--mc-navy);
+}
+.assistant-header p { color: #64748b; font-size: .9rem; margin-top: .25rem; }
+
+/* ── Progress bar ── */
+.progress-bar-wrap {
+  display: flex; gap: .5rem; margin-bottom: 1.75rem; align-items: center;
+}
+.progress-step {
+  flex: 1; height: 5px; border-radius: 3px;
+  background: #e2e8f0; transition: background .35s;
+}
+.progress-step.done { background: #14b8a6; }
+.progress-step.active { background: #0ea5e9; }
+
+/* ── Steps ── */
+.step-card {
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 20px -4px rgba(15,23,42,.06);
+  display: none;
+  animation: slideUp .25s ease;
+}
+.step-card.active { display: block; }
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(6px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.step-label {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: #94a3b8; margin-bottom: .4rem;
+}
+.step-title {
+  font-size: 1.2rem; font-weight: 700; color: var(--mc-navy);
+  margin-bottom: 1rem; line-height: 1.4;
+}
+.step-title span { color: #0ea5e9; }
+
+/* ── Radio cards ── */
+.radio-cards { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.radio-card {
+  border: 2px solid #e2e8f0; border-radius: .875rem;
+  padding: 1rem; cursor: pointer; transition: all .2s;
+  display: flex; flex-direction: column; gap: .4rem;
+}
+.radio-card:hover { border-color: #0ea5e9; background: #f0f9ff; }
+.radio-card.selected { border-color: #0ea5e9; background: #e0f2fe; }
+.radio-card .rc-icon {
+  width: 36px; height: 36px; margin-bottom: .25rem;
+  display: flex; align-items: center; justify-content: center;
+  color: #0ea5e9; font-size: 24px;
+}
+.radio-card .rc-label { font-weight: 700; font-size: .9rem; color: #0f172a; }
+.radio-card .rc-desc  { font-size: .78rem; color: #64748b; }
+
+/* ── Type select ── */
+.type-select {
+  width: 100%; border: 2px solid #e2e8f0; border-radius: .75rem;
+  padding: .75rem 1rem; font-size: .9rem; color: #0f172a;
+  background: #fff; margin-top: 1rem; transition: border-color .2s;
+}
+.type-select:focus { outline: none; border-color: #0ea5e9; }
+
+/* ── Pilier chips ── */
+.pilier-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .65rem;
+}
+.pilier-chip {
+  border: 2px solid #e2e8f0; border-radius: .875rem;
+  padding: .875rem 1rem; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; gap: .75rem;
+}
+.pilier-chip:hover { border-color: #0ea5e9; background: #f0f9ff; }
+.pilier-chip.selected { border-color: #14b8a6; background: #f0fdf9; }
+.pilier-chip .pilier-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #64748b; font-size: 20px;
+}
+.pilier-chip.selected .pilier-icon { color: #0d9488; }
+.pilier-chip .pilier-name { font-size: .85rem; font-weight: 600; color: #0f172a; line-height: 1.3; }
+.pilier-chip.selected .pilier-name { color: #0d9488; }
+.pilier-chip .pilier-check {
+  margin-left: auto; width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid #e2e8f0; flex-shrink: 0; transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pilier-chip.selected .pilier-check {
+  border-color: #14b8a6; background: #14b8a6;
+}
+.pilier-chip.selected .pilier-check::after {
+  content: '✓'; color: #fff; font-size: 11px; font-weight: 700;
+}
+
+/* ── Upload zone ── */
+.upload-zone {
+  border: 2.5px dashed #cbd5e1; border-radius: 1rem;
+  padding: 3rem 1.5rem; text-align: center;
+  cursor: pointer; transition: all .2s; position: relative;
+  background: #fbfcfe;
+}
+.upload-zone:hover, .upload-zone.drag { border-color: #0ea5e9; background: #f0f9ff; }
+.upload-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-zone .uz-icon {
+  display: flex; justify-content: center; align-items: center;
+  margin-bottom: .75rem; color: #94a3b8; font-size: 48px;
+}
+.upload-zone .uz-title { font-weight: 700; color: #0f172a; font-size: 1rem; }
+.upload-zone .uz-sub   { color: #64748b; font-size: .83rem; margin-top: .35rem; }
+
+.upload-chosen {
+  display: none; margin-top: 1.25rem; padding: 1rem 1.25rem;
+  background: #f0fdf4; border: 1.5px solid #86efac; border-radius: .875rem;
+  font-size: .9rem; color: #166534; font-weight: 600; align-items: center; gap: .75rem;
+}
+.upload-chosen.visible { display: flex; }
+
+/* ── Contact fields ── */
+.field-group { display: flex; flex-direction: column; gap: 1rem; }
+.field-item label {
+  display: block; font-size: .8rem; font-weight: 600; color: #475569;
+  margin-bottom: .4rem;
+}
+.field-item input {
+  width: 100%; border: 2px solid #e2e8f0; border-radius: .75rem;
+  padding: .75rem 1rem; font-size: .9rem; color: #0f172a;
+  transition: border-color .2s; box-sizing: border-box;
+}
+.field-item input:focus { outline: none; border-color: #0ea5e9; }
+.field-item input.error-field { border-color: #f43f5e; }
+.field-note { font-size: .78rem; color: #94a3b8; margin-top: .35rem; }
+
+/* ── Buttons ── */
+.btn-row { display: flex; justify-content: space-between; margin-top: 1.75rem; gap: 1rem; align-items: center; }
+.btn-back {
+  padding: .7rem 1.5rem; border: 2px solid #e2e8f0; border-radius: .75rem;
+  font-size: .875rem; font-weight: 600; color: #64748b; cursor: pointer;
+  background: #fff; transition: all .2s; text-decoration: none;
+}
+.btn-back:hover { border-color: #94a3b8; color: #374151; }
+.btn-next {
+  flex: 1; padding: .8rem 2rem; background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+  color: #fff; border: none; border-radius: .75rem; font-size: .9rem; font-weight: 700;
+  cursor: pointer; transition: opacity .2s; box-shadow: 0 4px 14px rgba(14,165,233,.3);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-next:hover { opacity: .9; }
+.btn-next:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Réconciliation Section Styles (depuis Reconciliation_Import_MedCare) ── */
+.reconcil-cards { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 8px; }
+.reconcil-card {
+  flex: 1; min-width: 140px; border: 1px solid var(--line); border-radius: 12px;
+  background: #fff; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.reconcil-card b { font-size: 28px; font-weight: 700; display: block; line-height: 1; }
+.reconcil-card span { color: var(--ink2); font-size: 12.5px; margin-top: 4px; display: block; }
+.reconcil-card.ok b { color: var(--ok); }
+.reconcil-card.cf b { color: var(--cf); }
+.reconcil-card.no b { color: var(--no); }
+
+.reconcil-bar {
+  height: 8px; border-radius: 5px; overflow: hidden; display: flex;
+  margin: 14px 0 20px; border: 1px solid var(--line); background: #e2e8f0;
+}
+.reconcil-bar i { display: block; height: 100%; transition: width .3s ease; }
+.reconcil-bar .s-ok { background: var(--ok); }
+.reconcil-bar .s-cf { background: var(--cf); }
+.reconcil-bar .s-no { background: var(--no); }
+
+.reconcil-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.reconcil-seg { display: inline-flex; border: 1px solid var(--hair); border-radius: 9px; overflow: hidden; background: #fff; }
+.reconcil-seg button {
+  border: 0; background: none; color: inherit; font: inherit; padding: 8px 14px;
+  cursor: pointer; font-size: 12.5px; font-weight: 600;
+}
+.reconcil-seg button.active { background: var(--ink); color: #fff; }
+.reconcil-search { flex: 1; min-width: 220px; }
+.reconcil-search input {
+  width: 100%; font: inherit; background: #fff; border: 1px solid var(--hair);
+  border-radius: 9px; padding: 8px 12px; font-size: 13px; color: var(--ink);
+}
+
+.reconcil-table-wrap {
+  overflow-x: auto; border: 1px solid var(--line); border-radius: 12px;
+  background: #fff; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.reconcil-table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.reconcil-table th {
+  font-size: 11.5px; font-weight: 700; color: var(--ink2); text-align: left;
+  padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--line2);
+  white-space: nowrap;
+}
+.reconcil-table td { padding: 10px 14px; border-bottom: 1px solid var(--line2); vertical-align: middle; }
+.reconcil-table tr:last-child td { border-bottom: 0; }
+.reconcil-table .raw { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.reconcil-table .st {
+  display: inline-block; font-size: 11px; font-weight: 700;
+  border-radius: 6px; padding: 2px 8px; white-space: nowrap;
+}
+.reconcil-table .st.ok { color: var(--ok); background: var(--okbg); }
+.reconcil-table .st.cf { color: var(--cf); background: var(--cfbg); }
+.reconcil-table .st.no { color: var(--no); background: var(--nobg); }
+.reconcil-table .via { color: var(--ink2); font-size: 11px; margin-top: 2px; }
+.reconcil-table .sc { font-variant-numeric: tabular-nums; color: var(--ink2); font-weight: 600; font-size: 12.5px; }
+.reconcil-table select {
+  font: inherit; color: var(--ink); background: #fff; border: 1px solid var(--hair);
+  border-radius: 8px; padding: 6px 8px; max-width: 340px; width: 100%; font-size: 12.5px;
+}
+.reconcil-table .reconcil-name-fixed {
+  color: var(--ink) !important;
+  font-weight: 600 !important;
+  position: static !important;
+  display: inline-block !important;
+}
+.reconcil-table .dotc { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: middle; background: #0ea5e9; }
+.reconcil-table .alias { display: block; color: var(--ink2); font-size: 11.5px; margin-top: 4px; }
+.reconcil-table .alias b { color: var(--cf); }
+.reconcil-table .done-row { opacity: .65; background: #fafafa; }
+.reconcil-table .rowbtn {
+  font: inherit; color: inherit; background: none; border: 1px solid var(--hair);
+  border-radius: 7px; padding: 4px 10px; cursor: pointer; font-size: 12px; font-weight: 600;
+  white-space: nowrap;
+}
+.reconcil-table .rowbtn.on { background: var(--ok); color: #fff; border-color: var(--ok); }
+.reconcil-table .empty { display: none; text-align: center; color: var(--ink2); padding: 24px; font-size: 13px; }
+
+/* ── Loading Overlay ── */
+.loading-box {
+  display: none; text-align: center; padding: 3rem 1.5rem;
+  background: #fff; border-radius: 1.25rem; border: 1px solid var(--mc-border);
+  box-shadow: 0 4px 20px -4px rgba(15,23,42,.06);
+}
+.loading-box.visible { display: block; }
+.loading-spinner {
+  width: 44px; height: 44px; border: 4px solid #e2e8f0; border-top-color: #0ea5e9;
+  border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.25rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Success card ── */
+.success-card {
+  display: none; text-align: center; padding: 3.5rem 2rem;
+  background: #fff; border-radius: 1.25rem; border: 1px solid #d1fae5;
+  box-shadow: 0 4px 20px -4px rgba(20,184,166,.15);
+}
+.success-card.visible { display: block; }
+.success-icon {
+  width: 72px; height: 72px; margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, #14b8a6, #10b981);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: #fff; box-shadow: 0 8px 24px rgba(20,184,166,.3);
+}
+.success-card h2 { font-size: 1.45rem; font-weight: 800; color: #0f172a; margin-bottom: .5rem; }
+.success-card p  { color: #64748b; font-size: .95rem; margin-bottom: 2rem; max-width: 60ch; margin-left: auto; margin-right: auto; }
+.btn-goto-cat {
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .9rem 2.2rem; background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+  color: #fff; border-radius: .875rem; font-weight: 700; font-size: .95rem;
+  text-decoration: none; box-shadow: 0 6px 20px rgba(14,165,233,.3);
+  transition: opacity .2s;
+}
+.btn-goto-cat:hover { opacity: .9; }
+
+/* ── Error toast ── */
+.error-toast {
+  background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+  border-radius: .75rem; padding: .75rem 1rem; margin-bottom: 1rem;
+  font-size: .85rem; display: none;
+}
+.error-toast.visible { display: block; }
+
+@media (max-width: 768px) {
+  .radio-cards, .pilier-grid { grid-template-columns: 1fr; }
+  .reconcil-cards { grid-template-columns: 1fr 1fr; }
+  .btn-row { flex-direction: column; }
+  .btn-back { order: 2; width: 100%; text-align: center; }
+}
+</style>
+{% endblock %}
+
+{% block dash_content %}
+{{ ref_actes|json_script:"ref-actes-data" }}
+
+<div class="assistant-wrap">
+
+  <!-- ── Top bar : Bouton retour catalogue ── -->
+  <div class="assistant-top-bar">
+    <a href="{% url 'healthcare:actes_list' %}" class="btn-back-cat" title="Retourner à la gestion des actes">
+      <i class="ti ti-arrow-left"></i> Retour au catalogue d'actes
+    </a>
+    {% if org %}
+    <span class="text-xs font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-lg border border-slate-200">
+      <i class="ti ti-building-hospital mr-1"></i> {{ org.name }}
+    </span>
+    {% endif %}
+  </div>
+
+  <!-- ── Header ── -->
+  <div class="assistant-header">
+    <div class="assistant-avatar">
+      <i class="ti ti-file-analytics"></i>
+    </div>
+    <h1>Assistant d'import MedCare</h1>
+    {% if has_org %}
+    <p>Importez votre fichier Excel ou CSV de catalogue et validez les correspondances avec le référentiel.</p>
+    {% else %}
+    <p>Configurez votre établissement et importez votre catalogue d'actes standardisés.</p>
+    {% endif %}
+  </div>
+
+  <!-- ── Barre de progression ── -->
+  <div class="progress-bar-wrap" id="progressBar">
+    {% if has_org %}
+    <div class="progress-step active" id="ps1" title="Fichier"></div>
+    <div class="progress-step" id="ps2" title="Réconciliation"></div>
+    <div class="progress-step" id="ps3" title="Validation"></div>
+    {% else %}
+    <div class="progress-step active" id="ps1"></div>
+    <div class="progress-step" id="ps2"></div>
+    <div class="progress-step" id="ps3"></div>
+    <div class="progress-step" id="ps4"></div>
+    {% endif %}
+  </div>
+
+  <!-- ── Toast erreur global ── -->
+  <div class="error-toast" id="globalError"></div>
+
+  {% if not has_org %}
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAPE 1 — Type d'établissement (si non connecté)    -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="step-card active" id="step1">
+    <div class="step-label">Étape 1 / 4</div>
+    <div class="step-title">Quel type d'établissement <span>êtes-vous ?</span></div>
+
+    <div class="radio-cards">
+      <div class="radio-card" data-nature="structure" onclick="selectNature(this)">
+        <div class="rc-icon"><i class="ti ti-building-hospital"></i></div>
+        <div class="rc-label">Structure de soins</div>
+        <div class="rc-desc">Clinique, laboratoire, hôpital, cabinet dentaire, ambulance…</div>
+      </div>
+      <div class="radio-card" data-nature="praticien" onclick="selectNature(this)">
+        <div class="rc-icon"><i class="ti ti-user-check"></i></div>
+        <div class="rc-label">Praticien indépendant</div>
+        <div class="rc-desc">Médecin, infirmier, kinésithérapeute, sage-femme…</div>
+      </div>
+    </div>
+
+    <select class="type-select" id="typeFreeSelect">
+      <option value="">— Sélectionnez votre type précis (optionnel) —</option>
+      {% for t in types_organisme %}
+      <option value="{{ t.name }}">{{ t.name }}</option>
+      {% endfor %}
+    </select>
+
+    <div class="btn-row">
+      <div></div>
+      <button class="btn-next" id="btn1" onclick="goStep(2)" disabled>
+        Continuer <i class="ti ti-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAPE 2 — Piliers d'activité (si non connecté)      -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="step-card" id="step2">
+    <div class="step-label">Étape 2 / 4</div>
+    <div class="step-title">Quels <span>piliers MedCare</span> proposez-vous ?</div>
+    <p style="font-size:.83rem;color:#64748b;margin-bottom:1rem">
+      Sélectionnez un ou plusieurs domaines de soins. Cela détermine à quels référentiels votre catalogue sera rattaché.
+    </p>
+
+    <div class="pilier-grid">
+      {% for pilier in piliers %}
+      <div class="pilier-chip" data-pk="{{ pilier.pk }}" onclick="togglePilier(this)">
+        <span class="pilier-icon"><i class="ti ti-activity"></i></span>
+        <span class="pilier-name">{{ pilier.name }}</span>
+        <span class="pilier-check"></span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Retour</button>
+      <button class="btn-next" id="btn2" onclick="goStep(3)" disabled>
+        Continuer <i class="ti ti-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAPE UPLOAD FICHIER EXCEL / CSV                  -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="step-card{% if has_org %} active{% endif %}" id="stepUpload">
+    <div class="step-label">{% if has_org %}Étape 1 / 3 · Fichier catalogue{% else %}Étape 3 / 4{% endif %}</div>
+    <div class="step-title">Importez votre <span>catalogue d'actes</span></div>
+    <p style="font-size:.85rem;color:#64748b;margin-bottom:1.25rem">
+      Sélectionnez votre grille tarifaire (colonnes habituelles : Acte / Désignation, Prix, Délai).
+      MedCare va réconcilier automatiquement vos libellés avec notre référentiel de <strong>1 700+ actes standardisés</strong>.
+    </p>
+
+    <div class="upload-zone" id="uploadZone"
+         ondragover="handleDrag(event, true)"
+         ondragleave="handleDrag(event, false)"
+         ondrop="handleDrop(event)">
+      <input type="file" id="catalogFile" accept=".xlsx,.xls,.csv" onchange="onFileSelect(this)">
+      <div class="uz-icon"><i class="ti ti-file-spreadsheet"></i></div>
+      <div class="uz-title">Glissez votre fichier Excel ou CSV ici ou cliquez pour choisir</div>
+      <div class="uz-sub">Formats acceptés : .xlsx · .csv · .xls · Max 15 Mo</div>
+    </div>
+
+    <div class="upload-chosen" id="uploadChosen">
+      <i class="ti ti-file-check" style="font-size:22px;color:#166534"></i>
+      <div style="flex:1">
+        <span id="uploadFileName" style="display:block"></span>
+        <span style="font-size:11px;color:#15803d;font-weight:normal">Fichier prêt pour la réconciliation</span>
+      </div>
+      <button type="button" style="background:none;border:none;color:#166534;cursor:pointer;font-size:18px" onclick="clearFile()" title="Supprimer">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      {% if not has_org %}
+      <button class="btn-back" onclick="goStep(2)"><i class="ti ti-arrow-left"></i> Retour</button>
+      {% else %}
+      <a href="{% url 'healthcare:actes_list' %}" class="btn-back"><i class="ti ti-arrow-left"></i> Annuler</a>
+      {% endif %}
+      <button class="btn-next" id="btnStartReconcil" onclick="startReconciliation()" disabled>
+        <span>Lancer la réconciliation</span> <i class="ti ti-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAPE CHARGEMENT                                  -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="loading-box" id="loadingBox">
+    <div class="loading-spinner"></div>
+    <h3 style="font-size:1.15rem;font-weight:700;color:#0f172a;margin-bottom:4px">Réconciliation en cours…</h3>
+    <p style="font-size:.85rem;color:#64748b">
+      Analyse du fichier, détection des colonnes et comparaison avec le référentiel des actes MedCare.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAPE RÉCONCILIATION D'IMPORT (TABLEAU COMPLET)   -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="step-card" id="stepReconcil" style="padding:1.5rem">
+    <div class="step-label">{% if has_org %}Étape 2 / 3{% else %}Étape de réconciliation{% endif %}</div>
+    <div class="step-title" style="margin-bottom:.5rem">
+      Tableau de réconciliation d'import · <span id="reconcilFileName">fichier</span>
+    </div>
+    <p style="color:#64748b;font-size:13px;margin-bottom:14px">
+      Chaque libellé de votre fichier est confronté au référentiel. Vérifiez les propositions, complétez les non appariés, puis validez pour intégrer directement vos actes dans votre catalogue.
+    </p>
+
+    <!-- Résumé statistique -->
+    <div class="reconcil-cards">
+      <div class="reconcil-card ok"><b id="c-ok">0</b><span>Appariés automatiquement</span></div>
+      <div class="reconcil-card cf"><b id="c-cf">0</b><span>À confirmer (propositions)</span></div>
+      <div class="reconcil-card no"><b id="c-no">0</b><span>Non appariés</span></div>
+      <div class="reconcil-card"><b id="c-tot">0</b><span>Libellés dans le fichier</span></div>
+    </div>
+
+    <!-- Barre de progression colorée -->
+    <div class="reconcil-bar">
+      <i class="s-ok" id="b-ok" style="width:0%"></i>
+      <i class="s-cf" id="b-cf" style="width:0%"></i>
+      <i class="s-no" id="b-no" style="width:0%"></i>
+    </div>
+
+    <!-- Filtres & Recherche -->
+    <div class="reconcil-tools">
+      <div class="reconcil-seg" role="group" aria-label="Filtrer">
+        <button type="button" class="active" data-f="all">Tout</button>
+        <button type="button" data-f="todo">À traiter</button>
+        <button type="button" data-f="none">Non appariés</button>
+      </div>
+      <div class="reconcil-search">
+        <input id="qSearch" type="text" placeholder="Rechercher un libellé ou un acte…">
+      </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="reconcil-table-wrap">
+      <table class="reconcil-table">
+        <thead>
+          <tr>
+            <th>Libellé du fichier</th>
+            <th>Statut</th>
+            <th>Correspondance référentiel</th>
+            <th>Score</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="reconcilTbody"></tbody>
+      </table>
+      <div class="empty" id="emptyReconcil">Aucun libellé ne correspond à ce filtre.</div>
+    </div>
+
+    <!-- Actions validation finale -->
+    <div class="btn-row" style="margin-top:1.25rem">
+      <button type="button" class="btn-back" onclick="backToUpload()">
+        <i class="ti ti-arrow-left"></i> Changer de fichier
+      </button>
+      <button type="button" class="btn-next" id="btnApplyAll" onclick="applyReconciliation()">
+        <i class="ti ti-device-floppy"></i>
+        <span>Valider et enregistrer dans mon catalogue</span>
+      </button>
+    </div>
+  </div>
+
+  {% if not has_org %}
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- ÉTAPE 4 — Coordonnées (si premier onboarding)      -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="step-card" id="step4">
+    <div class="step-label">Étape 4 / 4</div>
+    <div class="step-title">Vos <span>coordonnées</span> de contact</div>
+
+    <div class="field-group">
+      <div class="field-item">
+        <label>Nom complet / Raison sociale *</label>
+        <input type="text" id="fNom" placeholder="Ex : Clinique de la Madeleine">
+      </div>
+      <div class="field-item">
+        <label>Téléphone de contact *</label>
+        <input type="tel" id="fTel" placeholder="+221 77 000 00 00">
+        <div class="field-note">Utilisé pour les confirmations</div>
+      </div>
+      <div class="field-item">
+        <label>Email professionnel</label>
+        <input type="email" id="fEmail" placeholder="contact@votreetablissement.sn">
+      </div>
+      <div class="field-item">
+        <label>Ville / Zone géographique</label>
+        <input type="text" id="fCity" placeholder="Dakar" value="Dakar">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goStep('stepUpload')"><i class="ti ti-arrow-left"></i> Retour</button>
+      <button class="btn-next" id="btnSubmitOnboard" onclick="submitOnboarding()">
+        <i class="ti ti-check"></i> Finaliser et valider
+      </button>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SUCCÈS FINAL                                      -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="success-card" id="successCard">
+    <div class="success-icon">
+      <i class="ti ti-check"></i>
+    </div>
+    <h2>Catalogue mis à jour avec succès !</h2>
+    <p id="successMsg">
+      Vos actes réconciliés ont été enregistrés dans votre catalogue. Vous pouvez dès à présent les consulter, ajuster vos tarifs et vos délais de rendu.
+    </p>
+    <a href="{% url 'healthcare:actes_list' %}" class="btn-goto-cat">
+      <i class="ti ti-list-details"></i> Accéder à mon catalogue d'actes
+    </a>
+  </div>
+
+</div><!-- /assistant-wrap -->
+
+{{ ref_actes_json|json_script:"ref-actes-data" }}
+
+<script>
+// ── État global (initialisé en tout premier) ──
+const state = {
+  hasOrg: {% if has_org %}true{% else %}false{% endif %},
+  file: null,
+  reconcilRows: [],
+  donePick: {},
+  filter: 'all',
+  searchTerm: '',
+};
+
+function escapeHtml(s) {
+  return (s + '').replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+// ── Référentiel des actes standardisés (injecté depuis le serveur) ──
+let REF_ACTES = [];
+try {
+  const rawRef = document.getElementById('ref-actes-data')?.textContent || '[]';
+  let parsed = JSON.parse(rawRef);
+  if (typeof parsed === 'string') {
+    parsed = JSON.parse(parsed);
+  }
+  REF_ACTES = Array.isArray(parsed) ? parsed : [];
+} catch (err) {
+  console.warn("Impossible de charger REF_ACTES:", err);
+  REF_ACTES = [];
+}
+
+const REF_BY_ID = {};
+REF_ACTES.forEach(a => { REF_BY_ID[a.id] = a; });
+
+// Options HTML pré-générées pour le menu déroulant
+let SELECT_OPTS = '<option value="-1">— Choisir un acte dans le référentiel —</option>';
+REF_ACTES.forEach(a => {
+  SELECT_OPTS += `<option value="${a.id}">[${escapeHtml(a.c)}] ${escapeHtml(a.n)}</option>`;
+});
+
+function showError(msg) {
+  const el = document.getElementById('globalError');
+  el.textContent = msg;
+  el.classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function clearError() {
+  document.getElementById('globalError').classList.remove('visible');
+}
+
+// ── Gestion Fichier Upload ──
+function onFileSelect(input) {
+  if (input.files && input.files.length > 0) {
+    state.file = input.files[0];
+    document.getElementById('uploadFileName').textContent = state.file.name;
+    document.getElementById('uploadChosen').classList.add('visible');
+    document.getElementById('btnStartReconcil').disabled = false;
+  }
+}
+function clearFile() {
+  state.file = null;
+  document.getElementById('catalogFile').value = '';
+  document.getElementById('uploadChosen').classList.remove('visible');
+  document.getElementById('btnStartReconcil').disabled = true;
+}
+function handleDrag(e, on) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.toggle('drag', on);
+}
+function handleDrop(e) {
+  e.preventDefault();
+  handleDrag(e, false);
+  if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+    document.getElementById('catalogFile').files = e.dataTransfer.files;
+    onFileSelect(document.getElementById('catalogFile'));
+  }
+}
+
+// ── Lancement de la Réconciliation AJAX ──
+async function startReconciliation() {
+  clearError();
+  if (!state.file) {
+    showError("Veuillez sélectionner un fichier Excel ou CSV à importer.");
+    return;
+  }
+
+  // Affichage chargement
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('loadingBox').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const formData = new FormData();
+  formData.append('file', state.file);
+
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(r => r.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  try {
+    const resp = await fetch("{% url 'healthcare:api_chatbot_reconcile' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken || '',
+      },
+      body: formData,
+    });
+
+    const data = await resp.json();
+    document.getElementById('loadingBox').classList.remove('visible');
+
+    if (data.ok && data.rows) {
+      state.reconcilRows = data.rows;
+      document.getElementById('reconcilFileName').textContent = data.filename || state.file.name;
+
+      // Initialiser state.donePick
+      state.donePick = {};
+      state.reconcilRows.forEach((r, idx) => {
+        state.donePick[idx] = {
+          acte_id: r.best,
+          done: r.st === 'ok'
+        };
+      });
+
+      // Afficher étape réconciliation
+      document.getElementById('stepReconcil').classList.add('active');
+      if (document.getElementById('ps2')) {
+        document.getElementById('ps1').classList.add('done');
+        document.getElementById('ps2').classList.add('active');
+      }
+
+      refreshReconciliationView();
+    } else {
+      document.getElementById('stepUpload').classList.add('active');
+      showError(data.error || "Une erreur est survenue lors de l'analyse du fichier.");
+    }
+  } catch (err) {
+    document.getElementById('loadingBox').classList.remove('visible');
+    document.getElementById('stepUpload').classList.add('active');
+    showError("Erreur réseau : " + err.message);
+  }
+}
+
+function backToUpload() {
+  document.getElementById('stepReconcil').classList.remove('active');
+  document.getElementById('stepUpload').classList.add('active');
+  if (document.getElementById('ps2')) {
+    document.getElementById('ps2').classList.remove('active');
+    document.getElementById('ps1').classList.remove('done');
+    document.getElementById('ps1').classList.add('active');
+  }
+}
+
+// ── Rendu et Filtrage du Tableau de Réconciliation ──
+function refreshReconciliationView() {
+  updateStatsAndBar();
+  renderReconciliationTable();
+}
+
+function updateStatsAndBar() {
+  let ok = 0, cf = 0, no = 0;
+  state.reconcilRows.forEach((r, idx) => {
+    const isDone = state.donePick[idx] && state.donePick[idx].done;
+    const eff = isDone ? 'ok' : r.st;
+    if (eff === 'ok') ok++;
+    else if (eff === 'confirm') cf++;
+    else no++;
+  });
+  const tot = state.reconcilRows.length || 1;
+
+  document.getElementById('c-ok').textContent = ok;
+  document.getElementById('c-cf').textContent = cf;
+  document.getElementById('c-no').textContent = no;
+  document.getElementById('c-tot').textContent = state.reconcilRows.length;
+
+  document.getElementById('b-ok').style.width = (100 * ok / tot) + '%';
+  document.getElementById('b-cf').style.width = (100 * cf / tot) + '%';
+  document.getElementById('b-no').style.width = (100 * no / tot) + '%';
+}
+
+function renderReconciliationTable() {
+  const tbody = document.getElementById('reconcilTbody');
+  tbody.innerHTML = '';
+  let shownCount = 0;
+
+  state.reconcilRows.forEach((row, idx) => {
+    const pick = state.donePick[idx] || { acte_id: row.best, done: row.st === 'ok' };
+    const effSt = pick.done ? 'ok' : row.st;
+
+    // Filtre sélectionné
+    if (state.filter === 'todo' && (effSt === 'ok')) return;
+    if (state.filter === 'none' && (effSt !== 'none')) return;
+
+    // Filtre recherche
+    if (state.searchTerm) {
+      const matchRaw = (row.raw || '').toLowerCase().includes(state.searchTerm);
+      const matchNraw = (row.nraw || '').toLowerCase().includes(state.searchTerm);
+      const matchBest = (row.best_nom || '').toLowerCase().includes(state.searchTerm);
+      if (!matchRaw && !matchNraw && !matchBest) return;
+    }
+
+    shownCount++;
+    const tr = document.createElement('tr');
+    if (pick.done && row.st !== 'ok') tr.className = 'done-row';
+
+    // 1. Libellé brut
+    const tdRaw = `<td class="raw">${escapeHtml(row.raw)}</td>`;
+
+    // 2. Statut
+    let stBadge = '';
+    if (effSt === 'ok') {
+      stBadge = `<span class="st ok"><i class="ti ti-check mr-1"></i>Apparié</span>`;
+    } else if (effSt === 'confirm') {
+      stBadge = `<span class="st cf"><i class="ti ti-help mr-1"></i>À confirmer</span>`;
+    } else {
+      stBadge = `<span class="st no"><i class="ti ti-alert-circle mr-1"></i>Non apparié</span>`;
+    }
+    const tdSt = `<td>${stBadge}<div class="via">${escapeHtml(row.via || '—')}</div></td>`;
+
+    // 3. Correspondance référentiel
+    let tdMatch = '<td>';
+    const candidateName = row.best_nom || (REF_BY_ID[row.best]?.n) || '';
+    if (row.st === 'ok') {
+      const finalNom = candidateName || (REF_BY_ID[row.best]?.n) || 'Acte #' + row.best;
+      tdMatch += `<div style="display:flex;align-items:center;gap:6px"><span class="dotc" style="background:var(--ok);flex-shrink:0"></span><span class="reconcil-name-fixed" style="position:static!important;display:inline-block!important;color:var(--ink)!important;font-weight:600!important">${escapeHtml(finalNom)}</span></div>`;
+    } else if (row.st === 'confirm') {
+      if (candidateName) {
+        tdMatch += `<div style="font-weight:600;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:6px"><span class="dotc" style="background:var(--cf);flex-shrink:0"></span><span>${escapeHtml(candidateName)}</span></div>`;
+      }
+      tdMatch += `<select data-idx="${idx}" class="reconcil-select">${SELECT_OPTS}</select>`;
+      tdMatch += `<span class="alias" id="alias-tip-${idx}"></span>`;
+    } else {
+      tdMatch += `<div style="color:var(--no);font-size:11px;font-weight:600;margin-bottom:4px"><i class="ti ti-alert-circle"></i> Non apparié — choisir un acte :</div>`;
+      tdMatch += `<select data-idx="${idx}" class="reconcil-select">${SELECT_OPTS}</select>`;
+      tdMatch += `<span class="alias" id="alias-tip-${idx}"></span>`;
+    }
+    tdMatch += '</td>';
+
+    // 4. Score
+    const scDisplay = (row.st === 'ok' ? '100%' : (row.sc ? row.sc + '%' : '—'));
+    const tdSc = `<td class="sc">${scDisplay}</td>`;
+
+    // 5. Action
+    let tdBtn = '<td>';
+    if (row.st === 'ok') {
+      tdBtn += '<span style="color:var(--ok);font-size:12px;font-weight:600"><i class="ti ti-check"></i> validé</span>';
+    } else {
+      const btnClass = pick.done ? 'rowbtn on' : 'rowbtn';
+      const btnLabel = pick.done ? '<i class="ti ti-check"></i> validé' : 'valider';
+      tdBtn += `<button type="button" class="${btnClass}" data-btn-idx="${idx}">${btnLabel}</button>`;
+    }
+    tdBtn += '</td>';
+
+    tr.innerHTML = tdRaw + tdSt + tdMatch + tdSc + tdBtn;
+    tbody.appendChild(tr);
+
+    // Initialiser la valeur du select si présent
+    if (row.st !== 'ok') {
+      const sel = tr.querySelector('select');
+      if (sel) {
+        if (pick.acte_id > 0 && !sel.querySelector(`option[value="${pick.acte_id}"]`)) {
+          const opt = document.createElement('option');
+          opt.value = pick.acte_id;
+          opt.textContent = `[ACT] ${candidateName || 'Acte #' + pick.acte_id}`;
+          sel.appendChild(opt);
+        }
+        sel.value = String(pick.acte_id > 0 ? pick.acte_id : -1);
+        updateAliasTip(idx, row, sel.value);
+
+        sel.addEventListener('change', function() {
+          const chosenId = parseInt(sel.value, 10);
+          state.donePick[idx].acte_id = chosenId;
+          updateAliasTip(idx, row, sel.value);
+        });
+      }
+
+      const rowBtn = tr.querySelector(`[data-btn-idx="${idx}"]`);
+      if (rowBtn) {
+        rowBtn.addEventListener('click', function() {
+          state.donePick[idx].done = !state.donePick[idx].done;
+          refreshReconciliationView();
+        });
+      }
+    }
+  });
+
+  document.getElementById('emptyReconcil').style.display = shownCount ? 'none' : 'block';
+}
+
+function updateAliasTip(idx, row, pidStr) {
+  const el = document.getElementById(`alias-tip-${idx}`);
+  if (!el) return;
+  const aid = parseInt(pidStr, 10);
+  const act = REF_BY_ID[aid];
+  const actName = act ? act.n : (aid === row.best && row.best_nom ? row.best_nom : '');
+  if (actName) {
+    el.innerHTML = `→ associera le libellé à « <b>${escapeHtml(actName)}</b> »`;
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+// ── Filtres & Recherche Events ──
+document.querySelectorAll('.reconcil-seg button').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.reconcil-seg button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.filter = btn.dataset.f;
+    renderReconciliationTable();
+  });
+});
+
+document.getElementById('qSearch').addEventListener('input', function(e) {
+  state.searchTerm = e.target.value.toLowerCase().trim();
+  renderReconciliationTable();
+});
+
+// ── Validation et Application Finale dans le Catalogue BDD ──
+async function applyReconciliation() {
+  clearError();
+  const validItems = [];
+
+  state.reconcilRows.forEach((r, idx) => {
+    const pick = state.donePick[idx];
+    const targetActeId = pick ? pick.acte_id : r.best;
+    if (targetActeId && targetActeId > 0) {
+      validItems.push({
+        acte_id: targetActeId,
+        raw: r.raw,
+        price: r.price,
+        delai: r.delai,
+      });
+    }
+  });
+
+  if (validItems.length === 0) {
+    showError("Aucun acte valide n'est sélectionné pour l'import.");
+    return;
+  }
+
+  const btn = document.getElementById('btnApplyAll');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader animate-spin"></i> Enregistrement en cours…';
+
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(r => r.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  try {
+    const resp = await fetch("{% url 'healthcare:api_chatbot_apply_reconciliation' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken || '',
+      },
+      body: JSON.stringify({ items: validItems }),
+    });
+
+    const data = await resp.json();
+
+    if (data.ok) {
+      // Masquer réconciliation et barre de progression
+      document.getElementById('stepReconcil').classList.remove('active');
+      document.getElementById('progressBar').style.display = 'none';
+
+      document.getElementById('successMsg').textContent =
+        data.message || `Félicitations ! ${data.total_count} actes ont été enregistrés avec succès dans votre catalogue.`;
+      document.getElementById('successCard').classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-device-floppy"></i> <span>Valider et enregistrer dans mon catalogue</span>';
+      showError(data.error || "Une erreur est survenue lors de l'enregistrement.");
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-device-floppy"></i> <span>Valider et enregistrer dans mon catalogue</span>';
+    showError("Erreur réseau : " + err.message);
+  }
+}
+
+// ── Onboarding Initial (si non connecté / nouveau compte) ──
+function goStep(id) {
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  const target = (typeof id === 'number') ? document.getElementById('step' + id) : document.getElementById(id);
+  target?.classList.add('active');
+}
+function selectNature(card) {
+  document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  document.getElementById('btn1').disabled = false;
+}
+function togglePilier(chip) {
+  chip.classList.toggle('selected');
+  const sel = document.querySelectorAll('.pilier-chip.selected');
+  document.getElementById('btn2').disabled = (sel.length === 0);
+}
+</script>
+{% endblock %}

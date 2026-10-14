@@ -15,7 +15,7 @@
   data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}">
   <div class="scard-m-acte-info">
     <div class="scard-m-acte-nom">{{ pa.acte.name }}</div>
-    <div class="amb-acte-sub">🚑 Tarif selon le trajet, à configurer</div>
+    <div class="amb-acte-sub"><i class="ti ti-ambulance"></i> Tarif selon le trajet, à configurer</div>
     {% if pa.delai %}
     <div class="scard-m-acte-meta">
       <span class="scard-m-acte-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} Délai : {{ pa.get_delai_display }}</span>

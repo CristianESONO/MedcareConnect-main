@@ -343,10 +343,10 @@
     <div class="card-header">
       <div class="praticien-info">
         <div class="praticien-avatar">
-          {% if praticien.type == 'clinique' %}🏥
-          {% elif praticien.type == 'laboratoire' %}🔬
-          {% elif praticien.type == 'pharmacie' %}💊
-          {% else %}👨‍⚕️{% endif %}
+          {% if praticien.type == 'clinique' %}<i class="ti ti-building-hospital"></i>
+          {% elif praticien.type == 'laboratoire' %}<i class="ti ti-flask"></i>
+          {% elif praticien.type == 'pharmacie' %}<i class="ti ti-pill"></i>
+          {% else %}<i class="ti ti-user-check"></i>{% endif %}
         </div>
         <div>
           <div class="praticien-name">{{ praticien.name }}</div>
@@ -391,7 +391,7 @@
 
       <!-- Explication -->
       <div class="info-strip">
-        <div class="info-strip-icon">💬</div>
+        <div class="info-strip-icon"><i class="ti ti-message"></i></div>
         <div class="info-strip-text">
           <strong>Connectez-vous</strong> pour démarrer immédiatement une conversation
           sécurisée avec <strong>{{ praticien.name }}</strong> et en savoir plus sur cette prestation.

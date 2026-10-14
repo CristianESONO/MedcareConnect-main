@@ -144,9 +144,9 @@ def process_ai_patient_request(user_prompt: str) -> dict:
         "answer": answer,
         "results": results[:6], # Limiter à 6 cartes maximum pour garder une interface fluide
         "suggested_chips": [
-            "🔬 Échographie",
-            "🩸 Biologie médicale",
-            "📻 Radiologie & Scanner",
-            "🚑 Urgence Ambulance"
+            "Échographie",
+            "Biologie médicale",
+            "Radiologie & Scanner",
+            "Urgence Ambulance"
         ]
     }

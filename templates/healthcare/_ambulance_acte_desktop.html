@@ -22,7 +22,7 @@ Variables : pa, org (Organisme)
       {% if pa.acte.parent_service %}{{ pa.acte.parent_service.name }}{% elif pa.acte.service_medical_category %}{{ pa.acte.service_medical_category.name }}{% endif %}
     </div>
     {% endif %}
-    <div class="amb-acte-sub">🚑 Tarif selon le trajet, à configurer</div>
+    <div class="amb-acte-sub"><i class="ti ti-ambulance"></i> Tarif selon le trajet, à configurer</div>
   </div>
   {% if pa.delai %}
   <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
@@ -42,5 +42,5 @@ Variables : pa, org (Organisme)
   {% endif %}
 </div>
 <div class="amb-acte-hint amb-acte-hint--{{ pa.acte.name|ambulance_flow }}">
-  🛰 {{ pa.acte.name|ambulance_hint }}
+  <i class="ti ti-satellite"></i> {{ pa.acte.name|ambulance_hint }}
 </div>

@@ -4,6 +4,7 @@ from __future__ import annotations
 from urllib.parse import quote
 
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from .insurance_icons import chip_label_for_assurance_segment
 from .models import PrestataireActe
@@ -98,7 +99,7 @@ def build_profil_pillars(actes, is_ambulance: bool = False) -> tuple[list[dict],
     pillars = []
     for idx, (svc_name, group) in enumerate(services_with_actes.items(), start=1):
         svc = group[0].acte.service_medical_category if group else None
-        icon = "" if is_ambulance else (svc.display_icon if svc else "🏥")
+        icon = "" if is_ambulance else (svc.display_icon if svc else mark_safe('<i class="ti ti-building-hospital"></i>'))
         pillars.append(
             {
                 "id": f"p{idx}",

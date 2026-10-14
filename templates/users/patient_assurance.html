@@ -11,8 +11,8 @@
     <div style="font-size:10px;color:#9ca3af;margin-bottom:10px">Cette information permet de filtrer automatiquement les structures qui vous acceptent.</div>
 
     <div class="pac-ins-yn">
-      <button type="button" class="pac-ins-yn-btn {% if has_insurance %}pac-ins-yn-btn--active{% endif %}" data-ins-yes="1">✅ Oui, j'ai une assurance</button>
-      <button type="button" class="pac-ins-yn-btn {% if not has_insurance %}pac-ins-yn-btn--active{% endif %}" data-ins-yes="0">❌ Non / Paiement direct</button>
+      <button type="button" class="pac-ins-yn-btn {% if has_insurance %}pac-ins-yn-btn--active{% endif %}" data-ins-yes="1"><i class="ti ti-circle-check"></i> Oui, j'ai une assurance</button>
+      <button type="button" class="pac-ins-yn-btn {% if not has_insurance %}pac-ins-yn-btn--active{% endif %}" data-ins-yes="0"><i class="ti ti-circle-x"></i> Non / Paiement direct</button>
     </div>
 
     <div id="pac-ins-selector" {% if not has_insurance %}class="hidden"{% endif %}>
@@ -34,12 +34,12 @@
         <label for="id_insurance_number">N° adhérent / carte (optionnel)</label>
         {{ insurance_form.insurance_number }}
       </div>
-      <button type="submit" class="pac-btn-save">💾 Enregistrer ma couverture</button>
+      <button type="submit" class="pac-btn-save"><i class="ti ti-device-floppy"></i> Enregistrer ma couverture</button>
     </div>
 
     <div id="pac-ins-direct" class="pac-direct-box {% if has_insurance %}hidden{% endif %}">
       Vous paierez directement à la structure. Les tarifs affichés sur MedCare sont les tarifs réels pratiqués — sans frais supplémentaires de notre part.
-      <div style="margin-top:8px;font-size:10px;font-weight:600;color:var(--mc-accent-dark, #3d8fb3)">✓ Toutes les structures acceptant le paiement direct vous seront visibles.</div>
+      <div style="margin-top:8px;font-size:10px;font-weight:600;color:var(--mc-accent-dark, #3d8fb3)"><i class="ti ti-check"></i> Toutes les structures acceptant le paiement direct vous seront visibles.</div>
       <button type="submit" class="pac-btn-save mt-3">Enregistrer (paiement direct)</button>
     </div>
   </div>
@@ -51,7 +51,7 @@
     <div class="pac-compat-row">
       <div class="min-w-0">
         <div class="pac-compat-name">{{ org.name }}</div>
-        <div class="pac-compat-meta">📍 {{ org.quartier|default:org.city }} · {{ patient_profile.insurance.name }}</div>
+        <div class="pac-compat-meta"><i class="ti ti-map-pin"></i> {{ org.quartier|default:org.city }} · {{ patient_profile.insurance.name }}</div>
       </div>
       <a href="{% url 'healthcare:organisme_detail' org.slug %}" class="pac-compat-btn">Voir →</a>
     </div>
@@ -61,7 +61,7 @@
 
   <div class="pac-section-title">Intégration CMU · Roadmap</div>
   <div class="pac-roadmap">
-    <div class="pac-roadmap-item"><span style="width:18px;height:18px;border-radius:50%;background:var(--mc-accent, #4fa3c7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">✓</span> Scan QR Code carte CMU · Disponible maintenant</div>
+    <div class="pac-roadmap-item"><span style="width:18px;height:18px;border-radius:50%;background:var(--mc-accent, #4fa3c7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0"><i class="ti ti-check"></i></span> Scan QR Code carte CMU · Disponible maintenant</div>
     <div class="pac-roadmap-item"><span style="width:18px;height:18px;border-radius:50%;background:#fbbf24;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">2</span> Lecture puce NFC CMU · ~18–24 mois</div>
     <div class="pac-roadmap-item" style="opacity:.6"><span style="width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.15);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">3</span> Identifiant biométrique unique · ~36+ mois</div>
   </div>

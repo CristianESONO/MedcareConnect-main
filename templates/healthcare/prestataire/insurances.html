@@ -14,7 +14,7 @@
   </div>
   <div class="ins-page-actions">
     <span class="ins-count-label" id="js-ins-count-label">{{ insurance_selected_count }} organisme{{ insurance_selected_count|pluralize }} sélectionné{{ insurance_selected_count|pluralize }}</span>
-    <button type="submit" form="frm-assurances" class="ins-btn-save">💾 Sauvegarder</button>
+    <button type="submit" form="frm-assurances" class="ins-btn-save"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
   </div>
 </div>
 
@@ -56,7 +56,7 @@
                 <div class="ins-desc">{{ a.description }}</div>
                 {% endif %}
               </div>
-              <span class="ins-check" aria-hidden="true">{% if a.pk in selected_assurance_ids %}✅{% else %}⬜{% endif %}</span>
+              <span class="ins-check" aria-hidden="true">{% if a.pk in selected_assurance_ids %}<i class="ti ti-circle-check"></i>{% else %}⬜{% endif %}</span>
             </label>
             {% endfor %}
           </div>
@@ -140,7 +140,7 @@
     if (!cb) return;
     cb.addEventListener('change', function () {
       card.classList.toggle('is-checked', cb.checked);
-      if (mark) mark.textContent = cb.checked ? '✅' : '⬜';
+      if (mark) mark.textContent = cb.checked ? '<i class="ti ti-circle-check"></i>' : '⬜';
       refreshCounts();
     });
   });

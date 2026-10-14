@@ -18,9 +18,9 @@ class AmbulanceUiTests(SimpleTestCase):
         self.assertEqual(ambulance_acte_flow("Ambulance simple"), "trajet")
         self.assertEqual(ambulance_acte_flow("Rapatriement national"), "rapatriement")
         self.assertEqual(ambulance_acte_flow("Couverture médicale sportive"), "evenement")
-        self.assertEqual(ambulance_configure_label("Ambulance simple"), "🚑 Configurer mon trajet")
-        self.assertEqual(ambulance_configure_label("Rapatriement national"), "🌍 Organiser le rapatriement")
-        self.assertEqual(ambulance_configure_label("Couverture médicale sportive"), "🩺 Configurer ma couverture")
+        self.assertEqual(ambulance_configure_label("Ambulance simple"), '<i class="ti ti-ambulance"></i> Configurer mon trajet')
+        self.assertEqual(ambulance_configure_label("Rapatriement national"), '<i class="ti ti-plane"></i> Organiser le rapatriement')
+        self.assertEqual(ambulance_configure_label("Couverture médicale sportive"), '<i class="ti ti-stethoscope"></i> Configurer ma couverture')
 
     def test_sur_devis(self):
         self.assertTrue(ambulance_sur_devis("Rapatriement international", 500000))

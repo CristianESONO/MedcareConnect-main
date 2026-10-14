@@ -21,7 +21,7 @@
     <div class="flex flex-wrap items-center gap-2">
       <span class="text-lg font-bold">{{ org.subscription_plan.name }}</span>
       {% if org.subscription_plan.is_pioneer_offer %}
-      <span class="mcc-sp-pill mcc-sp-pill-amber">★ Partenaire Pionnier</span>
+      <span class="mcc-sp-pill mcc-sp-pill-amber"><i class="ti ti-star"></i> Partenaire Pionnier</span>
       {% endif %}
       {% if org.subscription_plan.monthly_price_fcfa %}
       <span class="text-sm font-semibold text-primary-600">{{ org.subscription_plan.monthly_price_fcfa|floatformat:0|intcomma }} FCFA / mois</span>

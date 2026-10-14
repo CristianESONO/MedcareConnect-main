@@ -9,7 +9,7 @@
   <div class="shrink-0 text-right">
     <p class="text-sm font-extrabold {% if k.signal == 'ok' %}mc-text-accent{% elif k.signal == 'warn' %}text-amber-600{% else %}text-rose-600{% endif %}">{{ k.val }}</p>
     <span class="mt-1 inline-block rounded-full px-1.5 py-0.5 text-[9px] font-bold {% if k.signal == 'ok' %}mc-bg-accent-light mc-text-accent-dark{% elif k.signal == 'warn' %}bg-amber-50 text-amber-700{% else %}bg-rose-50 text-rose-700{% endif %}">
-      {% if k.signal == 'ok' %}✓ Cible atteinte{% elif k.signal == 'warn' %}⚠ En cours{% else %}✗ Non atteint{% endif %}
+      {% if k.signal == 'ok' %}<i class="ti ti-check"></i> Cible atteinte{% elif k.signal == 'warn' %}<i class="ti ti-alert-triangle"></i> En cours{% else %}<i class="ti ti-x"></i> Non atteint{% endif %}
     </span>
   </div>
 </div>

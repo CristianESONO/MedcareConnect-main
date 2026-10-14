@@ -258,6 +258,14 @@
   font-family: inherit;
   text-align: center;
   transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.profil-drawer-action-btn i {
+  font-size: 15px;
+  margin-right: 2px;
 }
 .profil-drawer-action-btn:hover {
   background: rgba(255, 255, 255, 0.26);
@@ -650,7 +658,7 @@
         <div style="display:flex;align-items:center;gap:8px">
           {% if user.is_authenticated %}
           <a href="{% url 'healthcare:toggle_favorite' org.slug %}" class="profil-drawer-fav-btn{% if is_favorite %} is-active{% endif %}" title="{% if is_favorite %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}">
-            {% if is_favorite %}❤️ Favori{% else %}🤍 Favoris{% endif %}
+            {% if is_favorite %}<i class="ti ti-heart"></i> Favori{% else %}<i class="ti ti-heart"></i> Favoris{% endif %}
           </a>
           {% endif %}
         </div>
@@ -779,7 +787,7 @@ function updateCartRecap() {
   }
   
   box.style.display = 'block';
-  titleEl.textContent = `🛒 Sélection (${selectedActes.length} acte${selectedActes.length > 1 ? 's' : ''})`;
+  titleEl.textContent = `<i class="ti ti-shopping-cart"></i> Sélection (${selectedActes.length} acte${selectedActes.length > 1 ? 's' : ''})`;
   
   let total = 0;
   itemsContainer.innerHTML = selectedActes.map(a => {

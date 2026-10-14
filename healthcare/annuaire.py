@@ -7,17 +7,18 @@ from django.db.models import Count, Min, Prefetch, Q
 from django.db.models import Case, IntegerField, When
 
 from .models import Assurance, OrganismeDeSante, PrestataireActe, PriseEnChargeAssurance
+from django.utils.safestring import mark_safe
 from .utils import assurances_grouped_for_select
 from .geo import haversine_km, parse_lat_lng
 
 ANNUAIRE_CATEGORIES: list[tuple[str, str, str]] = [
-    ("all", "Tous les types", "🏥"),
-    ("labo", "Laboratoire", "🧬"),
-    ("img", "Imagerie", "🩻"),
-    ("exp", "Explorations fonctionnelles", "⚡"),
-    ("dent", "Soins dentaires", "🦷"),
-    ("soins", "Soins spécialisés", "💉"),
-    ("amb", "Ambulance médicalisée", "🚑"),
+    ("all", "Tous les types", mark_safe('<i class="ti ti-building-hospital"></i>')),
+    ("labo", "Laboratoire", mark_safe('<i class="ti ti-flask"></i>')),
+    ("img", "Imagerie", mark_safe('<i class="ti ti-scan"></i>')),
+    ("exp", "Explorations fonctionnelles", mark_safe('<i class="ti ti-activity"></i>')),
+    ("dent", "Soins dentaires", mark_safe('<i class="ti ti-dental"></i>')),
+    ("soins", "Soins spécialisés", mark_safe('<i class="ti ti-stethoscope"></i>')),
+    ("amb", "Ambulance médicalisée", mark_safe('<i class="ti ti-ambulance"></i>')),
 ]
 
 CATEGORY_ICONS: dict[str, str] = {key: icon for key, _label, icon in ANNUAIRE_CATEGORIES if key != "all"}
@@ -67,7 +68,7 @@ SORT_CHOICES: list[tuple[str, str]] = [
     ("zone", "Par zone"),
     ("ins", "Couverture assurance"),
     ("rdv", "RDV le plus proche"),
-    ("dist", "Distance + proche 📍"),
+    ("dist", "Distance la plus proche"),
 ]
 
 
@@ -136,8 +137,8 @@ def organisme_category_icon(org: OrganismeDeSante) -> str:
     name = (org.type_organisme.name if org.type_organisme else "").strip()
     for key, names in CATEGORY_TYPE_NAMES.items():
         if name in names:
-            return CATEGORY_ICONS.get(key, "🏥")
-    return "🏥"
+            return CATEGORY_ICONS.get(key, mark_safe('<i class="ti ti-building-hospital"></i>'))
+    return mark_safe('<i class="ti ti-building-hospital"></i>')
 
 
 def organisme_category_key(org: OrganismeDeSante) -> str:

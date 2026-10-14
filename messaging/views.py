@@ -373,10 +373,13 @@ def conversation_detail(request, pk):
                 )
         elif content:
             if request.user == conv.patient:
-                django_messages.warning(
-                    request,
-                    "Les messages libres ne sont pas disponibles — utilisez la prise de rendez-vous.",
-                )
+                if conv.kind == Conversation.KIND_GENERAL or not conv.devis_part_id:
+                    thread_svc.append_patient(conv, content)
+                else:
+                    django_messages.warning(
+                        request,
+                        "Les messages libres ne sont pas disponibles — utilisez la prise de rendez-vous ou joignez un document.",
+                    )
             elif request.user == conv.prestataire:
                 thread_svc.append_prestataire(conv, content)
         return redirect("messaging:conversation_detail", pk=conv.pk)

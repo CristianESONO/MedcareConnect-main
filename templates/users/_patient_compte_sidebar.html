@@ -10,7 +10,7 @@
           <div class="pac-sidebar-email truncate">{{ user.email|default:user.username }}</div>
         </div>
         {% else %}
-        <div class="pac-avatar" style="background:#0a5c8a">👤</div>
+        <div class="pac-avatar" style="background:#0a5c8a"><i class="ti ti-user"></i></div>
         <div class="min-w-0">
           <div class="pac-sidebar-name">Espace patient</div>
           <div style="font-size:11px;color:#6b7280"><a href="{% url 'login' %}?next={{ request.path }}" style="color:#0a5c8a;font-weight:600">Se connecter</a></div>

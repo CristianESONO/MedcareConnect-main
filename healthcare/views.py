@@ -9,6 +9,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.db.models import Q, Min, Max, Count, F, Sum, Case, When, IntegerField, Value, Prefetch
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_GET, require_POST
@@ -449,18 +450,18 @@ def _parse_decimal_param(raw, default=None):
 def _search_org_card_icon(org: OrganismeDeSante) -> str:
     blob = f"{org.name} {(org.type_organisme.name if org.type_organisme else '')}".lower()
     if any(k in blob for k in ("labo", "biolog", "anapath")):
-        return "🧬"
+        return mark_safe('<i class="ti ti-flask"></i>')
     if any(k in blob for k in ("imag", "radio", "scanner", "irm", "écho", "echo")):
-        return "🩻"
+        return mark_safe('<i class="ti ti-scan"></i>')
     if any(k in blob for k in ("cardio", "explor", "efr", "ecg")):
-        return "⚡"
+        return mark_safe('<i class="ti ti-activity"></i>')
     if "ambulanc" in blob:
-        return "🚑"
+        return mark_safe('<i class="ti ti-ambulance"></i>')
     if "dent" in blob:
-        return "🦷"
+        return mark_safe('<i class="ti ti-dental"></i>')
     if any(k in blob for k in ("kiné", "kine", "soin")):
-        return "💉"
-    return "🏥"
+        return mark_safe('<i class="ti ti-stethoscope"></i>')
+    return mark_safe('<i class="ti ti-building-hospital"></i>')
 
 ACTES_ORDER = {
     "Biologie médicale": {
@@ -1202,7 +1203,7 @@ def search(request):
                 "id": lot.id,
                 "name": lot.name,
                 "teaser": lot.teaser or "",
-                "icon": lot.icon or "📋",
+                "icon": lot.icon or mark_safe('<i class="ti ti-clipboard-list"></i>'),
                 "acte_ids": [a.id for a in actes_lot],
                 "acte_labels": [a.name for a in actes_lot],
             }
@@ -1319,7 +1320,7 @@ def search(request):
         service_dem_pills.append(
             {
                 "label": "Toutes les familles",
-                "icon": "📋",
+                "icon": mark_safe('<i class="ti ti-layout-grid"></i>'),
                 "url": _search_url_mutate(request, clear_service=True, clear_acte=True),
                 "active": not service_id,
                 "count": total_offers_nav,
@@ -1340,7 +1341,7 @@ def search(request):
             service_dem_pills.append(
                 {
                     "label": _strip_leading_emoji(s.name),
-                    "icon": ic[:12],
+                    "icon": ic,
                     "url": _search_url_mutate(
                         request,
                         clear_acte=True,
@@ -2991,7 +2992,7 @@ def prestataire_profil_public(request):
             {
                 "id": f"p{pillar_idx}",
                 "name": svc_name,
-                "icon": svc.display_icon if svc else "🏥",
+                "icon": svc.display_icon if svc else mark_safe('<i class="ti ti-building-hospital"></i>'),
                 "actes": group,
                 "count": len(group),
             }

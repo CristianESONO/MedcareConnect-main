@@ -127,6 +127,15 @@
     text-align: center;
     text-decoration: none;
     transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .profil-action-btn i {
+    font-size: 14px;
+    margin-right: 2px;
   }
 
   .profil-action-btn:hover {
@@ -260,11 +269,11 @@
       <p class="profil-section-sub">Aperçu de votre page telle que les patients la voient sur MedCare</p>
     </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <a href="{% url 'healthcare:organisme_edit' %}" class="pp-btn pp-btn-outline">✏️ Modifier les infos</a>
-      <a href="{% url 'healthcare:organisme_hours' %}" class="pp-btn pp-btn-outline">🕐 Horaires</a>
-      <button type="button" class="pp-btn pp-btn-primary" id="btn-copy-public-url" data-url="{{ public_absolute_url|escape }}">🔗 Copier le lien</button>
+      <a href="{% url 'healthcare:organisme_edit' %}" class="pp-btn pp-btn-outline"><i class="ti ti-edit"></i> Modifier les infos</a>
+      <a href="{% url 'healthcare:organisme_hours' %}" class="pp-btn pp-btn-outline"><i class="ti ti-clock"></i> Horaires</a>
+      <button type="button" class="pp-btn pp-btn-primary" id="btn-copy-public-url" data-url="{{ public_absolute_url|escape }}"><i class="ti ti-link"></i> Copier le lien</button>
       {% if org.is_active %}
-      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="pp-btn pp-btn-light">👁️ Voir la fiche</a>
+      <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" rel="noopener noreferrer" class="pp-btn pp-btn-light"><i class="ti ti-eye"></i> Voir la fiche</a>
       {% endif %}
     </div>
   </div>
@@ -288,7 +297,7 @@
             {% if org.logo %}
             <img src="{{ org.logo.url }}" alt="{{ org.name }}" class="profil-photo-img">
             {% else %}
-            🏥
+            <i class="ti ti-building-hospital"></i>
             {% endif %}
           </div>
           <div style="flex:1;min-width:0">
@@ -296,9 +305,9 @@
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;line-height:1.15">{{ org.name }}</span>
               {% if show_pioneer_badge or org.is_pioneer %}
-              <span style="font-size:10px;font-weight:700;background:#f5c451;color:#5a4300;border-radius:20px;padding:2px 9px;white-space:nowrap">★ Pionnier</span>
+              <span style="font-size:10px;font-weight:700;background:#f5c451;color:#5a4300;border-radius:20px;padding:2px 9px;white-space:nowrap"><i class="ti ti-star"></i> Pionnier</span>
               {% elif org.is_verified %}
-              <span style="font-size:10px;font-weight:700;background:#38bdf8;color:#0369a1;border-radius:20px;padding:2px 9px;white-space:nowrap">✓ Vérifié</span>
+              <span style="font-size:10px;font-weight:700;background:#38bdf8;color:#0369a1;border-radius:20px;padding:2px 9px;white-space:nowrap"><i class="ti ti-check"></i> Vérifié</span>
               {% endif %}
             </div>
 
@@ -318,24 +327,24 @@
 
             <!-- Ligne 3 : Adresse en bas -->
             <div style="margin-top:5px;font-size:11px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:4px">
-              <span>📍 {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city|default:"Dakar" }}{% if org.address %} — {{ org.address }}{% endif %}</span>
+              <span><i class="ti ti-map-pin"></i> {% if org.quartier %}{{ org.quartier }}, {% endif %}{{ org.city|default:"Dakar" }}{% if org.address %} — {{ org.address }}{% endif %}</span>
             </div>
           </div>
         </div>
 
         <div class="profil-action-btns">
-          {% if profil_pillars %}
-          <a href="#actes-section" class="profil-action-btn">📅 RDV</a>
-          {% endif %}
+          <a href="{% url 'healthcare:start_predevis' org.slug %}" class="profil-action-btn"><i class="ti ti-mail"></i> Messagerie</a>
           {% if maps_url %}
-          <a href="{{ maps_url }}" target="_blank" rel="noopener noreferrer" class="profil-action-btn">📍 GPS</a>
+          <a href="{{ maps_url }}" target="_blank" rel="noopener noreferrer" class="profil-action-btn"><i class="ti ti-map-pin"></i> Itinéraire</a>
+          {% else %}
+          <a href="https://www.google.com/maps/search/?api=1&query={{ org.name|urlencode }}+{{ org.city|default:'Dakar'|urlencode }}" target="_blank" rel="noopener noreferrer" class="profil-action-btn"><i class="ti ti-map-pin"></i> Itinéraire</a>
           {% endif %}
-          <button type="button" class="profil-action-btn" id="btn-toggle-hours">🕐 Horaires</button>
+          <button type="button" class="profil-action-btn" id="btn-toggle-hours"><i class="ti ti-clock"></i> Horaires</button>
         </div>
 
         <div id="prev-hor" class="profil-hours-popover">
           <div style="font-weight:700;color:#1a3a6e;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
-            <span>🕐 Horaires d'ouverture</span>
+            <span><i class="ti ti-clock"></i> Horaires d'ouverture</span>
             <span id="btn-close-hours" style="cursor:pointer;color:#9ca3af;font-weight:bold;font-size:14px">&times;</span>
           </div>
           {% for h in hours_list %}
@@ -358,7 +367,7 @@
         <!-- Assurances acceptées -->
         <div class="profil-assurances-box">
           <div id="prev-assur-toggle" class="profil-assurances-head">
-            <span style="font-size:12.5px;font-weight:700;color:#1a3a6e">🛡 Assurances acceptées ({% if insurances_profil %}{{ insurances_profil|length }}{% else %}0{% endif %})</span>
+            <span style="font-size:12.5px;font-weight:700;color:#1a3a6e"><i class="ti ti-shield-check"></i> Assurances acceptées ({% if insurances_profil %}{{ insurances_profil|length }}{% else %}0{% endif %})</span>
             <span id="prev-assur-chev" style="color:#9ca3af">▾</span>
           </div>
           <div id="prev-assur" class="profil-assurances-body">
@@ -381,7 +390,7 @@
 
         <div style="display:flex;gap:8px;margin-bottom:12px">
           <input type="text" id="input-search-actes" placeholder="Rechercher un acte…" style="flex:1;border:1px solid #e5e7eb;border-radius:9px;padding:9px 12px;font-size:12px;outline:none">
-          <button type="button" style="background:#0a5c8a;color:#fff;border:none;border-radius:9px;padding:0 15px;cursor:pointer;font-size:13px">🔍</button>
+          <button type="button" style="background:#0a5c8a;color:#fff;border:none;border-radius:9px;padding:0 15px;cursor:pointer;font-size:13px"><i class="ti ti-search"></i></button>
         </div>
 
         <div id="actes-pillars-container">
@@ -402,7 +411,7 @@
                 <div>
                   <div style="font-size:12.5px;color:#0d1b2a;font-weight:500">{{ pa.acte.name }}</div>
                   {% if pa.delai %}
-                  <div style="font-size:10.5px;color:#6b7280">⏱ Delai : {{ pa.get_delai_display }}</div>
+                  <div style="font-size:10.5px;color:#6b7280"><i class="ti ti-clock"></i> Delai : {{ pa.get_delai_display }}</div>
                   {% endif %}
                 </div>
                 <div style="text-align:right">
@@ -490,7 +499,7 @@
       var url = btnCopy.getAttribute('data-url') || '';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function () {
-          copyFb.textContent = '✓ Lien public copié dans le presse-papiers !';
+          copyFb.textContent = '<i class="ti ti-check"></i> Lien public copié dans le presse-papiers !';
           copyFb.style.display = 'block';
           setTimeout(function () { copyFb.style.display = 'none'; }, 3000);
         });

@@ -105,7 +105,7 @@
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'shrink-0 rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-accent-300 hover:shadow-md';
-            btn.innerHTML = `<span class="text-xl">${p.icon || '📋'}</span><div class="mt-1 font-semibold text-gray-900">${escapeHtml(p.name)}</div><div class="text-xs text-gray-500">${escapeHtml(p.teaser || '')}</div>`;
+            btn.innerHTML = `<span class="text-xl">${p.icon || '<i class="ti ti-clipboard-list"></i>'}</span><div class="mt-1 font-semibold text-gray-900">${escapeHtml(p.name)}</div><div class="text-xs text-gray-500">${escapeHtml(p.teaser || '')}</div>`;
             btn.addEventListener('click', () => {
                 p.acte_ids.forEach((id, i) => {
                     const label = p.acte_labels[i] || ('#' + id);

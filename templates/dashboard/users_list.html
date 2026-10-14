@@ -25,10 +25,10 @@
             Patients <span class="ml-1 rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] text-gray-700">{{ count_patients }}</span>
         </a>
         <a href="?type=structure{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'structure' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
-            🏥 Structures de soins <span class="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-800">{{ count_structures }}</span>
+            <i class="ti ti-building-hospital"></i> Structures de soins <span class="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-800">{{ count_structures }}</span>
         </a>
         <a href="?type=praticien{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'praticien' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
-            🩺 Praticiens indépendants <span class="ml-1 rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] text-teal-800">{{ count_praticiens }}</span>
+            <i class="ti ti-stethoscope"></i> Praticiens indépendants <span class="ml-1 rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] text-teal-800">{{ count_praticiens }}</span>
         </a>
         <a href="?type=admin{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_type == 'admin' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
             Admins <span class="ml-1 rounded-full bg-purple-100 px-1.5 py-0.5 text-[10px] text-purple-700">{{ count_admins }}</span>
@@ -64,19 +64,19 @@
                 <td class="px-4 py-3">
                     {% if u.user_type == 'patient' %}
                     <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-                        👤 Patient
+                        <i class="ti ti-user"></i> Patient
                     </span>
                     {% elif u.user_type == 'admin' %}
                     <span class="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-[11px] font-medium text-purple-700">
-                        🛡️ Admin MedCare
+                        <i class="ti ti-shield-check"></i> Admin MedCare
                     </span>
                     {% elif u.is_praticien %}
                     <span class="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-medium text-teal-800 border border-teal-200">
-                        🩺 Praticien ({{ u.organisme.get_profession_display|default:"Indépendant" }})
+                        <i class="ti ti-stethoscope"></i> Praticien ({{ u.organisme.get_profession_display|default:"Indépendant" }})
                     </span>
                     {% elif u.is_structure %}
                     <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-medium text-blue-800 border border-blue-200">
-                        🏥 Structure ({{ u.organisme.name|truncatechars:22 }})
+                        <i class="ti ti-building-hospital"></i> Structure ({{ u.organisme.name|truncatechars:22 }})
                     </span>
                     {% else %}
                     <span class="rounded-full px-2 py-0.5 text-[11px] font-medium bg-gray-100 text-gray-600">

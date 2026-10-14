@@ -22,6 +22,7 @@ from .models import (
     SubscriptionPlan,
     SubscriptionPlanFeature,
     SubscriptionChangeRequest,
+    ExamenPanel,
 )
 
 
@@ -310,3 +311,13 @@ class SubscriptionChangeRequestAdmin(admin.ModelAdmin):
                 pass
             n += 1
         self.message_user(request, f"{n} demande(s) refusée(s).")
+
+
+@admin.register(ExamenPanel)
+class ExamenPanelAdmin(admin.ModelAdmin):
+    list_display = ("nom", "kind", "organisme", "token", "is_active", "views_count", "created_at")
+    list_filter = ("kind", "is_active", "organisme")
+    search_fields = ("nom", "token", "organisme__name", "description")
+    raw_id_fields = ("organisme",)
+    filter_horizontal = ("actes",)
+    readonly_fields = ("token", "views_count", "created_at", "updated_at")

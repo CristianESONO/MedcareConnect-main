@@ -116,7 +116,7 @@
 </div>
 
 <div class="ac-note">
-  <span style="font-size:15px;flex-shrink:0">🛡️</span>
+  <span style="font-size:15px;flex-shrink:0"><i class="ti ti-shield-check"></i></span>
   <span>En indépendant, votre présence se construit d'abord via les structures où vous exercez. Vos actes en propre restent découvrables uniquement en recherche de prestation, <strong>sans fiche individuelle publique ni classement</strong>.</span>
 </div>
 
@@ -136,7 +136,7 @@
 <div class="ac-card" style="border-color:#bfdbfe;">
   <div class="ac-card-head" style="background:linear-gradient(135deg,#eff6ff,#f0fdf4);">
     <div>
-      <div class="ac-card-title">📨 Invitations reçues</div>
+      <div class="ac-card-title"><i class="ti ti-mail"></i> Invitations reçues</div>
       <div class="ac-card-sub">Des structures vous ont invité à rejoindre leur équipe — acceptez ou déclinez.</div>
     </div>
     <span style="font-size:11px;font-weight:700;background:#dbeafe;color:#1d4ed8;padding:3px 10px;border-radius:20px;">{{ invitations_recues|length }} invitation{{ invitations_recues|length|pluralize }}</span>
@@ -197,7 +197,7 @@
             {% if aff.status == 'approved' %}
             <a href="{% url 'healthcare:agenda_praticien_edit' aff.pk %}" class="ac-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border-color:#bbf7d0;color:#166534;font-weight:600">
               <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.253 3v13.5A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V7.5A2.25 2.25 0 0 0 18.75 5.25H5.25A2.25 2.25 0 0 0 3 7.5v11.25m0-11.25h18"/></svg>
-              🗓️ Gérer l'agenda
+              <i class="ti ti-calendar"></i> Gérer l'agenda
             </a>
             {% endif %}
             <form method="post" action="{% url 'healthcare:prestataire_affiliation_delete' aff.pk %}" style="margin:0" onsubmit="return confirm('Vous retirer de cette structure ?')">
@@ -218,7 +218,7 @@
     </div>
     {% else %}
     <div class="ac-empty">
-      <div style="font-size:28px;margin-bottom:8px">🏥</div>
+      <div style="font-size:28px;margin-bottom:8px"><i class="ti ti-building-hospital"></i></div>
       <div>Vous n'êtes rattaché à aucune structure pour l'instant.<br>Faites une demande d'accès pour commencer à exercer dans une structure.</div>
     </div>
     {% endif %}
@@ -301,8 +301,8 @@
 <div class="ac-modal-overlay" id="ac-modal-overlay" onclick="if(event.target===this)closeAcModal()">
   <div class="ac-modal">
     <div class="ac-modal-head">
-      <span class="ac-modal-title">🔑 Demander un accès à une structure</span>
-      <button class="ac-modal-close" onclick="closeAcModal()">✕</button>
+      <span class="ac-modal-title"><i class="ti ti-key"></i> Demander un accès à une structure</span>
+      <button class="ac-modal-close" onclick="closeAcModal()"><i class="ti ti-x"></i></button>
     </div>
     <form method="post" action="{% url 'healthcare:prestataire_affiliation_create' %}">
       {% csrf_token %}
@@ -353,8 +353,8 @@
 <div class="ac-modal-overlay" id="ac-invite-overlay" onclick="if(event.target===this)closeInviteModal()">
   <div class="ac-modal">
     <div class="ac-modal-head">
-      <span class="ac-modal-title">📨 Inviter un praticien</span>
-      <button class="ac-modal-close" onclick="closeInviteModal()">✕</button>
+      <span class="ac-modal-title"><i class="ti ti-mail"></i> Inviter un praticien</span>
+      <button class="ac-modal-close" onclick="closeInviteModal()"><i class="ti ti-x"></i></button>
     </div>
     <form method="post" action="{% url 'healthcare:prestataire_affiliation_invite' %}">
       {% csrf_token %}
@@ -383,7 +383,7 @@
           </div>
         </div>
         <div style="font-size:10.5px;color:#1d4ed8;background:#eff6ff;border-radius:8px;padding:10px 12px;line-height:1.6;border:1px solid #bfdbfe;">
-          📨 Le praticien recevra l'invitation dans son tableau de bord. Il pourra l'<strong>accepter ou refuser</strong> librement.
+          <i class="ti ti-mail"></i> Le praticien recevra l'invitation dans son tableau de bord. Il pourra l'<strong>accepter ou refuser</strong> librement.
         </div>
       </div>
       <div class="ac-modal-foot">

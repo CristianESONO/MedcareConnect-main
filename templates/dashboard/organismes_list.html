@@ -30,10 +30,10 @@
             Tous les prestataires <span class="ml-1 rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] text-gray-700">{{ count_total }}</span>
         </a>
         <a href="?nature=structure{% if current_status %}&status={{ current_status }}{% endif %}{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_nature == 'structure' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
-            🏥 Structures de soins <span class="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-800">{{ count_structures }}</span>
+            <i class="ti ti-building-hospital"></i> Structures de soins <span class="ml-1 rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-800">{{ count_structures }}</span>
         </a>
         <a href="?nature=praticien{% if current_status %}&status={{ current_status }}{% endif %}{% if search %}&q={{ search }}{% endif %}" class="rounded-md px-3 py-1.5 text-xs font-medium {% if current_nature == 'praticien' %}bg-white text-gray-900 shadow-sm{% else %}text-gray-500 hover:text-gray-700{% endif %}">
-            🩺 Praticiens indépendants <span class="ml-1 rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] text-teal-800">{{ count_praticiens }}</span>
+            <i class="ti ti-stethoscope"></i> Praticiens indépendants <span class="ml-1 rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] text-teal-800">{{ count_praticiens }}</span>
         </a>
     </div>
 </div>
@@ -53,11 +53,11 @@
                 <div class="mt-0.5 flex flex-wrap items-center gap-1.5">
                     {% if org.is_praticien %}
                     <span class="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-medium text-teal-800 border border-teal-200">
-                        🩺 Praticien ({{ org.get_profession_display|default:"Indépendant" }})
+                        <i class="ti ti-stethoscope"></i> Praticien ({{ org.get_profession_display|default:"Indépendant" }})
                     </span>
                     {% else %}
                     <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-800 border border-blue-200">
-                        🏥 Structure ({{ org.type_organisme.name|default:"Établissement" }})
+                        <i class="ti ti-building-hospital"></i> Structure ({{ org.type_organisme.name|default:"Établissement" }})
                     </span>
                     {% endif %}
                     <span class="text-xs text-gray-400">· {{ org.city }}</span>

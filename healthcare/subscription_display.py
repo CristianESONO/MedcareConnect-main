@@ -11,19 +11,21 @@ PLAN_TARGETS = {
     "pro": "Hôpitaux · 6 piliers complets",
 }
 
+from django.utils.safestring import mark_safe
+
 PLAN_STRUCTURES = {
     "starter": [
-        {"icon": "🔬", "name": "Laboratoire d'analyses", "chips": [("Biologie", "pc-bio")]},
-        {"icon": "🖥", "name": "Centre d'imagerie", "chips": [("Imagerie", "pc-img")]},
-        {"icon": "🦷", "name": "Cabinet dentaire", "chips": [("Soins dentaires", "pc-dent")]},
-        {"icon": "🏃", "name": "Kiné / Rééducation", "chips": [("Soins spécialisés", "pc-soins")]},
-        {"icon": "💧", "name": "Centre de dialyse", "chips": [("Soins spécialisés", "pc-soins")]},
-        {"icon": "🧠", "name": "Cabinet santé mentale", "chips": [("Soins spécialisés", "pc-soins")]},
-        {"icon": "🚑", "name": "Service ambulancier", "chips": [("Ambulances", "pc-amb")]},
+        {"icon": mark_safe('<i class="ti ti-flask"></i>'), "name": "Laboratoire d'analyses", "chips": [("Biologie", "pc-bio")]},
+        {"icon": mark_safe('<i class="ti ti-scan"></i>'), "name": "Centre d'imagerie", "chips": [("Imagerie", "pc-img")]},
+        {"icon": mark_safe('<i class="ti ti-dental"></i>'), "name": "Cabinet dentaire", "chips": [("Soins dentaires", "pc-dent")]},
+        {"icon": mark_safe('<i class="ti ti-walk"></i>'), "name": "Kiné / Rééducation", "chips": [("Soins spécialisés", "pc-soins")]},
+        {"icon": mark_safe('<i class="ti ti-droplet-half-2"></i>'), "name": "Centre de dialyse", "chips": [("Soins spécialisés", "pc-soins")]},
+        {"icon": mark_safe('<i class="ti ti-brain"></i>'), "name": "Cabinet santé mentale", "chips": [("Soins spécialisés", "pc-soins")]},
+        {"icon": mark_safe('<i class="ti ti-ambulance"></i>'), "name": "Service ambulancier", "chips": [("Ambulances", "pc-amb")]},
     ],
     "essentiel": [
         {
-            "icon": "🩺",
+            "icon": mark_safe('<i class="ti ti-stethoscope"></i>'),
             "name": "Cabinet spécialisé",
             "chips": [
                 ("Imagerie", "pc-img"),
@@ -32,7 +34,7 @@ PLAN_STRUCTURES = {
             ],
         },
         {
-            "icon": "🏥",
+            "icon": mark_safe('<i class="ti ti-building-hospital"></i>'),
             "name": "Centre de santé",
             "chips": [
                 ("Biologie", "pc-bio"),
@@ -41,7 +43,7 @@ PLAN_STRUCTURES = {
             ],
         },
         {
-            "icon": "🏨",
+            "icon": mark_safe('<i class="ti ti-building-hospital"></i>'),
             "name": "Clinique privée",
             "chips": [
                 ("Biologie", "pc-bio"),
@@ -52,7 +54,7 @@ PLAN_STRUCTURES = {
     ],
     "pro": [
         {
-            "icon": "🏛",
+            "icon": mark_safe('<i class="ti ti-building"></i>'),
             "name": "Hôpital — accès complet",
             "chips": [
                 ("Biologie", "pc-bio"),

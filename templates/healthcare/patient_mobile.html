@@ -927,7 +927,7 @@ body::before{
   <div class="topbar">
     <div class="logo">Med<span>Care</span></div>
     <div class="topbar-right">
-      <button class="topbar-account" onclick="window.open('https://medcare.sn','_blank')" style="display:flex;align-items:center;gap:5px">🏠 Accueil</button>
+      <button class="topbar-account" onclick="window.open('https://medcare.sn','_blank')" style="display:flex;align-items:center;gap:5px"><i class="ti ti-home"></i> Accueil</button>
     </div>
   </div>
 
@@ -936,7 +936,7 @@ body::before{
 
     <!-- ═══ VUE ACCUEIL ═══ -->
     <div id="view-accueil" class="active">
-      <div class="tk-entry" onclick="arriveViaLink()">🔗 Simuler la réception d'un lien de prestation (Insta) <b>→</b></div>
+      <div class="tk-entry" onclick="arriveViaLink()"><i class="ti ti-link"></i> Simuler la réception d'un lien de prestation (Insta) <b>→</b></div>
       <div class="hero-m">
         <div class="hero-lbl">Dakar · Sénégal</div>
         <div class="hero-title">Tout votre<br>écosystème de santé<br><em>sur le bout des doigts</em></div>
@@ -960,7 +960,7 @@ body::before{
         <!-- Barre de recherche -->
         <div style="padding:0 12px 8px">
           <div style="position:relative">
-            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none">🔬</span>
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none"><i class="ti ti-flask"></i></span>
             <input class="mode-input" id="mode-field-m" type="text"
               placeholder="NFS, Scanner cérébral, Échographie…"
               oninput="modeSearchM(this.value)"
@@ -978,20 +978,20 @@ body::before{
         <div style="display:flex;gap:6px;padding:0 12px 8px;overflow-x:auto;scrollbar-width:none;align-items:center">
           <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g400);white-space:nowrap;flex-shrink:0">Trier :</span>
           <div class="filter-chip" id="sort-chip" onclick="openSortSheet()" style="flex-shrink:0">
-            <span id="sort-chip-lbl">💰 Prix ↑</span> <span style="font-size:9px">▼</span>
+            <span id="sort-chip-lbl"><i class="ti ti-coin"></i> Prix ↑</span> <span style="font-size:9px">▼</span>
           </div>
           <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g400);white-space:nowrap;flex-shrink:0">Filtrer :</span>
           <div class="filter-chip" id="ins-filter-chip" onclick="openInsSheet()">
-            <span id="ins-chip-lbl">🛡 Assurance</span> <span style="font-size:9px">▼</span>
+            <span id="ins-chip-lbl"><i class="ti ti-shield-check"></i> Assurance</span> <span style="font-size:9px">▼</span>
           </div>
           <div class="filter-chip" id="chip-zone" onclick="openFilterSheet('zone')">
-            <span id="lbl-zone">📍 Zone</span> <span style="font-size:9px">▼</span>
+            <span id="lbl-zone"><i class="ti ti-map-pin"></i> Zone</span> <span style="font-size:9px">▼</span>
           </div>
           <div class="filter-chip" id="chip-budget" onclick="openFilterSheet('budget')">
-            <span id="lbl-budget">💰 Budget</span> <span style="font-size:9px">▼</span>
+            <span id="lbl-budget"><i class="ti ti-coin"></i> Budget</span> <span style="font-size:9px">▼</span>
           </div>
           <div class="filter-chip" id="chip-delai" onclick="openFilterSheet('delai')">
-            <span id="lbl-delai">⏱ Délai</span> <span style="font-size:9px">▼</span>
+            <span id="lbl-delai"><i class="ti ti-clock"></i> Délai</span> <span style="font-size:9px">▼</span>
           </div>
         </div>
 
@@ -999,7 +999,7 @@ body::before{
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 12px" id="piliers-m">
           <div class="pgrid-dom" style="color:#0a5c8a"><span class="pgrid-dom-dot" style="background:#0a5c8a"></span>Clinique</div>
           <button class="pgrid-btn" id="pbtn-9" onclick="selectPilier('9',this)" style="grid-column:1 / -1;flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px">
-            <div class="pgrid-icon">🧑‍⚕️</div>
+            <div class="pgrid-icon"><i class="ti ti-user-check"></i></div>
             <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1">
               <div class="pgrid-lbl" style="text-align:left">Consultations</div>
               <div class="pgrid-sub" style="text-align:left">Générale · spécialisée · urgence · domicile</div>
@@ -1008,37 +1008,37 @@ body::before{
           </button>
           <div class="pgrid-dom" style="color:#14b87a"><span class="pgrid-dom-dot" style="background:#14b87a"></span>Paraclinique</div>
           <button class="pgrid-btn active" id="pbtn-1" onclick="selectPilier('1',this)">
-            <div class="pgrid-icon">🧬</div>
+            <div class="pgrid-icon"><i class="ti ti-flask"></i></div>
             <div class="pgrid-lbl">Biologie</div>
             <div class="pgrid-sub">Analyses &amp; labo</div>
             <div class="pgrid-badge" id="pbadge-1">0</div>
           </button>
           <button class="pgrid-btn" id="pbtn-2" onclick="selectPilier('2',this)">
-            <div class="pgrid-icon">🖥</div>
+            <div class="pgrid-icon"><i class="ti ti-scan"></i></div>
             <div class="pgrid-lbl">Imagerie</div>
             <div class="pgrid-sub">Radio, écho, IRM</div>
             <div class="pgrid-badge" id="pbadge-2">0</div>
           </button>
           <button class="pgrid-btn" id="pbtn-3" onclick="selectPilier('3',this)">
-            <div class="pgrid-icon">⚡</div>
+            <div class="pgrid-icon"><i class="ti ti-bolt"></i></div>
             <div class="pgrid-lbl">Explorations</div>
             <div class="pgrid-sub">ECG, EEG, EFR…</div>
             <div class="pgrid-badge" id="pbadge-3">0</div>
           </button>
           <button class="pgrid-btn" id="pbtn-4" onclick="selectPilier('4',this)">
-            <div class="pgrid-icon">🚑</div>
+            <div class="pgrid-icon"><i class="ti ti-ambulance"></i></div>
             <div class="pgrid-lbl">Ambulance</div>
             <div class="pgrid-sub">Transport médical</div>
             <div class="pgrid-badge" id="pbadge-4">0</div>
           </button>
           <button class="pgrid-btn" id="pbtn-5" onclick="selectPilier('5',this)">
-            <div class="pgrid-icon">🩺</div>
+            <div class="pgrid-icon"><i class="ti ti-stethoscope"></i></div>
             <div class="pgrid-lbl">Soins</div>
             <div class="pgrid-sub">Kiné, soins spéc.</div>
             <div class="pgrid-badge" id="pbadge-5">0</div>
           </button>
           <button class="pgrid-btn" id="pbtn-6" onclick="selectPilier('6',this)">
-            <div class="pgrid-icon">🦷</div>
+            <div class="pgrid-icon"><i class="ti ti-dental"></i></div>
             <div class="pgrid-lbl">Dentaire</div>
             <div class="pgrid-sub">Soins dentaires</div>
             <div class="pgrid-badge" id="pbadge-6">0</div>
@@ -1047,7 +1047,7 @@ body::before{
             <div style="display:flex;flex-direction:column">
               <div class="pgrid-dom" style="color:#d97706"><span class="pgrid-dom-dot" style="background:#d97706"></span>Préventif</div>
               <button class="pgrid-btn" id="pbtn-7" onclick="selectPilier('7',this)" style="width:100%;flex:1;flex-direction:row;justify-content:flex-start;gap:10px;padding:11px 12px">
-                <div class="pgrid-icon">💉</div>
+                <div class="pgrid-icon"><i class="ti ti-needle"></i></div>
                 <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1">
                   <div class="pgrid-lbl" style="text-align:left">Vaccination</div>
                   <div class="pgrid-sub" style="text-align:left">Voyage · HPV · enfant</div>
@@ -1058,7 +1058,7 @@ body::before{
             <div style="display:flex;flex-direction:column">
               <div class="pgrid-dom" style="color:#7c3aed"><span class="pgrid-dom-dot" style="background:#7c3aed"></span>Légal</div>
               <button class="pgrid-btn" id="pbtn-8" onclick="selectPilier('8',this)" style="width:100%;flex:1;flex-direction:row;justify-content:flex-start;gap:10px;padding:11px 12px">
-                <div class="pgrid-icon">📄</div>
+                <div class="pgrid-icon"><i class="ti ti-file-text"></i></div>
                 <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1">
                   <div class="pgrid-lbl" style="text-align:left">Documents</div>
                   <div class="pgrid-sub" style="text-align:left">Aptitude · permis</div>
@@ -1088,7 +1088,7 @@ body::before{
 
       <!-- PANELS RECOMMANDÉS -->
       <div class="section-head">
-        <div class="sh-title">🧩 Panels recommandés</div>
+        <div class="sh-title"><i class="ti ti-components"></i> Panels recommandés</div>
         <div class="sh-link" onclick="openMenuSection('rappels')">Tout voir →</div>
       </div>
       <div class="panels-scroll-m" id="panels-scroll-m"></div>
@@ -1116,7 +1116,7 @@ body::before{
       </div>
       <div id="struct-list-m">
         <div class="empty-state-m">
-          <div class="empty-icon-m">🔍</div>
+          <div class="empty-icon-m"><i class="ti ti-search"></i></div>
           <div class="empty-txt-m">Cherchez un acte dans l'onglet<br><strong>Accueil</strong> pour voir les structures disponibles</div>
         </div>
       </div>
@@ -1125,7 +1125,7 @@ body::before{
       <!-- BOUTON FLOTTANT → PANIER -->
       <div id="cart-float-wrap" style="display:none">
         <button class="cart-float-btn" onclick="switchView('panier')">
-          <div class="cfb-left">🛒 <span>Voir mon panier</span> <span class="cfb-badge" id="cfb-count">0</span></div>
+          <div class="cfb-left"><i class="ti ti-shopping-cart"></i> <span>Voir mon panier</span> <span class="cfb-badge" id="cfb-count">0</span></div>
           <span class="cfb-total" id="cfb-total">0 FCFA</span>
         </button>
       </div>
@@ -1135,17 +1135,17 @@ body::before{
     <!-- ═══ VUE TICKET DE PRESTATION (lien direct) ═══ -->
     <div id="view-ticket">
       <div class="tk-topbar"><button class="tk-back" onclick="closeTicket()">‹</button><span>Lien de prestation</span></div>
-      <div class="tk-origin">🔗 Ce lien vous a été transmis directement par le praticien. Non répertorié, non classé, invisible dans la recherche.</div>
+      <div class="tk-origin"><i class="ti ti-link"></i> Ce lien vous a été transmis directement par le praticien. Non répertorié, non classé, invisible dans la recherche.</div>
       <div class="tk-card">
-        <div class="tk-h"><div class="tk-av">CN</div><div><div class="tk-name">Cheikh Ndiaye</div><div class="tk-role">Kinésithérapeute · ✓ Titre vérifié</div></div></div>
+        <div class="tk-h"><div class="tk-av">CN</div><div><div class="tk-name">Cheikh Ndiaye</div><div class="tk-role">Kinésithérapeute · <i class="ti ti-check"></i> Titre vérifié</div></div></div>
         <div class="tk-b">
           <div class="tk-act">Kiné respiratoire adulte, à domicile</div>
           <div class="tk-desc">Séance de kinésithérapie respiratoire au domicile du patient. Prise en charge et conseils.</div>
           <div class="tk-rows">
-            <div class="tk-row"><span>🏠 Modalité</span><b>À domicile</b></div>
-            <div class="tk-row"><span>📍 Zone</span><b>Dakar · Ouest-Foire</b></div>
-            <div class="tk-row"><span>🕒 Disponibilité</span><b>Créneaux sur demande</b></div>
-            <div class="tk-row"><span>💰 Tarif</span><b class="tk-price">12 000 F</b></div>
+            <div class="tk-row"><span><i class="ti ti-home"></i> Modalité</span><b>À domicile</b></div>
+            <div class="tk-row"><span><i class="ti ti-map-pin"></i> Zone</span><b>Dakar · Ouest-Foire</b></div>
+            <div class="tk-row"><span><i class="ti ti-clock"></i> Disponibilité</span><b>Créneaux sur demande</b></div>
+            <div class="tk-row"><span><i class="ti ti-coin"></i> Tarif</span><b class="tk-price">12 000 F</b></div>
           </div>
           <div class="tk-cta"><button class="tk-btn-out" id="tk-addbtn" onclick="tkAddCart()">Ajouter au panier</button><button class="tk-btn" onclick="tkDevis()">Demander un devis</button></div>
           <div class="tk-legal">Présentation factuelle, sans classement ni mise en avant (Art. 10, 17, 19). Titre vérifié par MedCare. Paiement direct au praticien, zéro commission.</div>
@@ -1157,12 +1157,12 @@ body::before{
     <!-- ═══ VUE PANIER ═══ -->
     <div id="view-panier">
       <div class="panier-section-head">
-        <div class="psh-title">🛒 Mon panier <span class="psh-count" id="cart-count-m">0</span></div>
+        <div class="psh-title"><i class="ti ti-shopping-cart"></i> Mon panier <span class="psh-count" id="cart-count-m">0</span></div>
         <div class="psh-clear" onclick="clearCartM()">Vider le panier</div>
       </div>
       <div id="panier-body-m">
         <div class="cart-empty-m">
-          <div class="cemi">🛒</div>
+          <div class="cemi"><i class="ti ti-shopping-cart"></i></div>
           <div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre devis.</div>
           <button class="cemt-cta" onclick="switchView('accueil')">Rechercher des actes</button>
         </div>
@@ -1174,7 +1174,7 @@ body::before{
       <!-- Liste des conversations (état par défaut) -->
       <div id="msg-list-view">
         <div class="msg-header" style="background:#075e54">
-          <div class="msg-header-title" style="display:flex;align-items:center;gap:8px">💬 Messagerie</div>
+          <div class="msg-header-title" style="display:flex;align-items:center;gap:8px"><i class="ti ti-message"></i> Messagerie</div>
           <div class="msg-header-sub" id="msg-header-sub">Vos devis et rendez-vous</div>
         </div>
         <div class="conv-list" id="conv-list"></div>
@@ -1202,7 +1202,7 @@ body::before{
         <!-- Vue d'ensemble -->
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g400);padding:12px 16px 4px">Vue d'ensemble</div>
         <div class="menu-item" onclick="openMenuSection('tableau')">
-          <div class="mi-icon">⚡</div>
+          <div class="mi-icon"><i class="ti ti-bolt"></i></div>
           <div class="mi-info"><div class="mi-label">Tableau de bord</div></div>
           <div class="mi-arrow">›</div>
         </div>
@@ -1210,12 +1210,12 @@ body::before{
         <!-- Profil -->
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g400);padding:12px 16px 4px;border-top:1px solid var(--g100)">Profil</div>
         <div class="menu-item" onclick="openMenuSection('infos')">
-          <div class="mi-icon">👤</div>
+          <div class="mi-icon"><i class="ti ti-user"></i></div>
           <div class="mi-info"><div class="mi-label">Mes informations</div></div>
           <div class="mi-arrow">›</div>
         </div>
         <div class="menu-item" onclick="openMenuSection('assurance')">
-          <div class="mi-icon">🛡</div>
+          <div class="mi-icon"><i class="ti ti-shield-check"></i></div>
           <div class="mi-info"><div class="mi-label">Assurance</div></div>
           <div class="mi-arrow">›</div>
         </div>
@@ -1223,30 +1223,30 @@ body::before{
         <!-- Soins & Achats -->
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g400);padding:12px 16px 4px;border-top:1px solid var(--g100)">Soins &amp; Achats</div>
         <div class="menu-item" onclick="openMenuSection('devis')">
-          <div class="mi-icon">📋</div>
+          <div class="mi-icon"><i class="ti ti-clipboard-list"></i></div>
           <div class="mi-info"><div class="mi-label">Mes devis</div></div>
           <div class="mi-arrow">›</div>
         </div>
         <div class="menu-item" onclick="openMenuSection('rdv')">
-          <div class="mi-icon">📅</div>
+          <div class="mi-icon"><i class="ti ti-calendar"></i></div>
           <div class="mi-info"><div class="mi-label">Mes RDV</div></div>
           <div class="mi-arrow">›</div>
         </div>
         <div class="menu-item" onclick="openMenuSection('rappels')">
-          <div class="mi-icon">🔔</div>
+          <div class="mi-icon"><i class="ti ti-bell"></i></div>
           <div class="mi-info"><div class="mi-label">Rappels</div></div>
           <div class="mi-arrow">›</div>
         </div>
         <div class="menu-item" onclick="openMenuSection('historique')">
-          <div class="mi-icon">🕐</div>
+          <div class="mi-icon"><i class="ti ti-clock"></i></div>
           <div class="mi-info"><div class="mi-label">Historique</div></div>
           <div class="mi-arrow">›</div>
         </div>
 
         <!-- Infos -->
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g400);padding:12px 16px 4px;border-top:1px solid var(--g100)">Informations</div>
-        <div class="menu-item"><div class="mi-icon">ℹ️</div><div class="mi-info"><div class="mi-label">À propos · medcare.sn</div><div class="mi-sub">Zéro commission sur les actes</div></div><div class="mi-arrow">›</div></div>
-        <div class="menu-item"><div class="mi-icon">📄</div><div class="mi-info"><div class="mi-label">CGU &amp; Confidentialité</div></div><div class="mi-arrow">›</div></div>
+        <div class="menu-item"><div class="mi-icon"><i class="ti ti-info-circle"></i></div><div class="mi-info"><div class="mi-label">À propos · medcare.sn</div><div class="mi-sub">Zéro commission sur les actes</div></div><div class="mi-arrow">›</div></div>
+        <div class="menu-item"><div class="mi-icon"><i class="ti ti-file-text"></i></div><div class="mi-info"><div class="mi-label">CGU &amp; Confidentialité</div></div><div class="mi-arrow">›</div></div>
         <div style="height:16px"></div>
       </div>
     </div>
@@ -1268,43 +1268,43 @@ body::before{
   <div class="chat-view" id="chat-view">
     <div class="chat-topbar">
       <button class="chat-back" onclick="closeChatView()">‹</button>
-      <div class="chat-av" id="chat-av">🏥</div>
+      <div class="chat-av" id="chat-av"><i class="ti ti-building-hospital"></i></div>
       <div class="chat-info">
         <div class="chat-name" id="chat-name">Structure</div>
         <div class="chat-status" id="chat-status">En ligne</div>
       </div>
-      <button class="chat-action-btn" id="chat-rdv-btn">📅 RDV</button>
+      <button class="chat-action-btn" id="chat-rdv-btn"><i class="ti ti-calendar"></i> RDV</button>
     </div>
     <div class="chat-body" id="chat-body"></div>
     <div class="chat-qr" id="chat-qr" style="display:none"></div>
     <div class="chat-footer" id="chat-footer">
       <input class="chat-inp" type="text" id="chat-inp" placeholder="Message…" readonly>
-      <button class="chat-send">➤</button>
+      <button class="chat-send"><i class="ti ti-send"></i></button>
     </div>
   </div>
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="bnav-btn active" id="bnav-accueil" onclick="switchView('accueil')">
-      <div class="bnav-icon">🔬</div>
+      <div class="bnav-icon"><i class="ti ti-flask"></i></div>
       <div class="bnav-label">Prestations</div>
     </button>
     <button class="bnav-btn" id="bnav-resultats" onclick="switchView('resultats')">
-      <div class="bnav-icon">🔍</div>
+      <div class="bnav-icon"><i class="ti ti-search"></i></div>
       <div class="bnav-label">Résultats</div>
     </button>
     <button class="bnav-btn" id="bnav-panier" onclick="switchView('panier')">
-      <div class="bnav-icon">🛒</div>
+      <div class="bnav-icon"><i class="ti ti-shopping-cart"></i></div>
       <div class="bnav-label">Panier</div>
       <div class="bnav-dot" id="bnav-panier-dot"></div>
     </button>
     <button class="bnav-btn" id="bnav-messages" onclick="switchView('messages')">
-      <div class="bnav-icon">💬</div>
+      <div class="bnav-icon"><i class="ti ti-message"></i></div>
       <div class="bnav-label">Messages</div>
       <div class="bnav-dot" id="bnav-messages-dot"></div>
     </button>
     <button class="bnav-btn" id="bnav-menu" onclick="switchView('menu')">
-      <div class="bnav-icon">☰</div>
+      <div class="bnav-icon"><i class="ti ti-menu-2"></i></div>
       <div class="bnav-label">Menu</div>
     </button>
   </nav>
@@ -1333,7 +1333,7 @@ body::before{
   <div class="creneau-sheet" id="creneau-sheet">
     <div class="cs-handle"></div>
     <div class="cs-head">
-      <div class="cs-title">📅 Choisir un créneau</div>
+      <div class="cs-title"><i class="ti ti-calendar"></i> Choisir un créneau</div>
       <div class="cs-struct" id="cs-struct-name"></div>
     </div>
     <div class="cs-body" id="cs-body"></div>
@@ -1379,7 +1379,7 @@ body::before{
         </div>
         <div id="ins-error-m" style="display:none;font-size:11px;color:var(--red);background:var(--red-l);padding:9px 12px;border-radius:8px"></div>
         <div style="font-size:10px;color:var(--g400);line-height:1.5">En créant un compte, vous acceptez les <span style="color:var(--blue)">CGU</span> et la <span style="color:var(--blue)">Politique de confidentialité</span> MedCare.</div>
-        <button onclick="submitInscriptionM()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;font-family:DM Sans,sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(20,184,122,.3)">✓ Créer mon compte et obtenir mon devis</button>
+        <button onclick="submitInscriptionM()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:14px;font-family:DM Sans,sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(20,184,122,.3)"><i class="ti ti-check"></i> Créer mon compte et obtenir mon devis</button>
         <button onclick="closeInscriptionM(null)" style="width:100%;background:none;border:none;color:var(--g400);font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;padding:6px 0">Annuler</button>
       </div>
     </div>
@@ -1411,7 +1411,7 @@ window.addEventListener('resize', scalePhone);
 // DATA · ACTES TREE (extrait principaux piliers)
 // ══════════════════════════════════════════════════════════════════
 const ACTES_TREE = {
-  '8':{label:'📄 Documents médicaux',cats:{
+  '8':{label:'<i class="ti ti-file-text"></i> Documents médicaux',cats:{
     'Aptitude & médecine du travail':['Certificat d\'aptitude au travail (visite d\'embauche)','Visite médicale périodique (médecine du travail)','Certificat de reprise du travail'],
     'Aptitude sportive':['Certificat médical de non contre-indication au sport','Certificat d\'aptitude à la compétition'],
     'Permis & conduite':['Certificat médical pour permis de conduire','Visite médicale permis lourd / transport public'],
@@ -1420,7 +1420,7 @@ const ACTES_TREE = {
     'Bilan de santé':['Bilan de santé / check-up médical'],
     'Cadrage spécifique':['Contre-visite médicale (arrêt de travail)','Certificat médical prénuptial'],
   }},
-  '1':{label:'🧬 Biologie médicale',cats:{
+  '1':{label:'<i class="ti ti-flask"></i> Biologie médicale',cats:{
     'Hématologie':['NFS / Hémogramme','Réticulocytes','VS','Frottis sanguin','Groupe ABO/Rhésus','RAI','Test de Coombs direct','Électrophorèse de l\'hémoglobine','Vitamine B12','Folates (B9)','Fer sérique','Ferritine','Transferrine / CST'],
     'Hémostase / Coagulation':['TP / INR','TCA','Fibrinogène','D-Dimères','Temps de thrombine (TT)','Activité anti-Xa','Dosage facteur VIII','Dosage facteur IX'],
     'Biochimie & Ionogramme':['Glycémie à jeun','HbA1c','Urée sanguine','Créatininémie','Natrémie','Kaliémie','Chlorémie','Calcémie','Phosphorémie','Magnésémie','ASAT','ALAT','GGT','PAL','Bilirubine totale','Bilirubine conjuguée','Albumine','Protéines totales','CRP','Procalcitonine','Cholestérol total','HDL','LDL','Triglycérides'],
@@ -1435,7 +1435,7 @@ const ACTES_TREE = {
     'Biologie moléculaire / PCR':['PCR Chlamydia / Gonocoque','PCR HPV (génotypage)','PCR BK','GeneXpert MTB/RIF','PCR respiratoires multiplex'],
     'Marqueurs tumoraux':['PSA total','PSA libre','CEA','AFP','CA 125','CA 19-9','CA 15-3','βHCG quantitatif'],
   }},
-  '2':{label:'🖥 Imagerie médicale',cats:{
+  '2':{label:'<i class="ti ti-scan"></i> Imagerie médicale',cats:{
     'Radiographie':['Radio thorax','Radio abdomen (ASP)','Radio rachis cervical','Radio rachis lombaire','Radio bassin','Radio membre · genou','Radio membre · épaule'],
     'Échographie':['Échographie abdominale','Échographie pelvienne','Échographie endovaginale','Échographie obstétricale T1','Échographie morphologique T2','Échographie thyroïdienne','Mammographie'],
     'Échodoppler':['Échodoppler veineux membres inférieurs','Échodoppler artériel membres inférieurs','Échodoppler carotidien + vertébral','Écho-cœur (échocardiographie transthoracique)'],
@@ -1443,7 +1443,7 @@ const ACTES_TREE = {
     'IRM':['IRM cérébrale sans injection','IRM cérébrale avec injection','IRM rachis cervical','IRM rachis lombaire','IRM abdomen / pelvis'],
     'Biopsies guidées':['Biopsie hépatique (écho-guidée)','Biopsie mammaire (écho-guidée)','Biopsie thyroïdienne (écho-guidée)'],
   }},
-  '3':{label:'⚡ Explorations fonctionnelles',cats:{
+  '3':{label:'<i class="ti ti-bolt"></i> Explorations fonctionnelles',cats:{
     'Cardiologie':['ECG standard 12 dérivations','Épreuve d\'effort (test effort cardiaque)','Holter ECG 24h','Holter tensionnel MAPA 24h'],
     'Pneumologie':['EFR / Spirométrie standard','Spirométrie + bronchodilatateur','Test de diffusion DLCO','Polygraphie ventilatoire (apnées du sommeil)'],
     'Gastro-entérologie':['FOGD (fibroscopie gastrique)','Coloscopie','Manométrie œsophagienne'],
@@ -1451,12 +1451,12 @@ const ACTES_TREE = {
     'ORL':['Audiométrie tonale','Audiométrie vocale','Impédancemétrie (tympanométrie)'],
     'Ophtalmologie':['Acuité visuelle + réfraction','Fond d\'œil','OCT (tomographie optique cohérente)','Champ visuel automatisé'],
   }},
-  '4':{label:'🚑 Ambulance médicalisée',cats:{
+  '4':{label:'<i class="ti ti-ambulance"></i> Ambulance médicalisée',cats:{
     'Ambulance simple':['Transport domicile → structure','Transport structure → domicile','Transport inter-structures non urgent'],
     'Ambulance médicalisée':['Transport médicalisé avec infirmier','Transport médicalisé avec médecin'],
     'SMUR / Réanimation mobile':['Intervention SMUR pré-hospitalière','Transport réanimatoire','Évacuation sanitaire médicalisée urgente'],
   }},
-  '5':{label:'🩺 Soins spécialisés',cats:{
+  '5':{label:'<i class="ti ti-stethoscope"></i> Soins spécialisés',cats:{
     'Médecine générale':['Suture plaie simple','Suture plaie complexe','Incision & drainage abcès cutané','Nébulisation thérapeutique'],
     'Soins infirmiers':['Pansement simple','Pansement complexe','Perfusion IV','Injection IM / SC','Soins de plaies chroniques'],
     'Kinésithérapie':['Rééducation post-traumatique','Rééducation lombalgie / cervicalgie','Kiné respiratoire adulte','Rééducation post-AVC','Kinésithérapie à domicile'],
@@ -1466,7 +1466,7 @@ const ACTES_TREE = {
     'Psychologie':['Consultation de psychologie initiale','Séance de psychologie de suivi','Téléconsultation psychologique'],
     'Oncologie':['Consultation d\'oncologie médicale','Administration chimiothérapie ambulatoire'],
   }},
-  '6':{label:'🦷 Soins dentaires',cats:{
+  '6':{label:'<i class="ti ti-dental"></i> Soins dentaires',cats:{
     'Consultations dentaires':['Consultation dentaire standard','Consultation d\'urgence dentaire','Bilan bucco-dentaire complet'],
     'Soins conservateurs':['Détartrage complet','Détartrage + polissage + fluoration','Traitement carie (composite)'],
     'Endodontie':['Traitement endodontique mono-radiculaire','Traitement endodontique multi-radiculaire'],
@@ -1476,13 +1476,13 @@ const ACTES_TREE = {
     'Orthodontie':['Appareil orthodontique fixe (arcade)','Gouttières transparentes (aligneurs)'],
     'Esthétique dentaire':['Blanchiment dentaire professionnel','Facette céramique (par dent)'],
   }},
-  '7':{label:'💉 Vaccination',cats:{
+  '7':{label:'<i class="ti ti-needle"></i> Vaccination',cats:{
     'Vaccination du voyageur':['Vaccin fièvre jaune (amaril)','Vaccin méningococcique ACWY','Vaccin fièvre typhoïde','Vaccin hépatite A','Vaccin rage (pré-exposition)'],
     'Vaccination de l\'adulte':['Rappel dTcaPolio (adulte)','Vaccin hépatite B (adulte)','Vaccin rougeole-rubéole (RR) · adulte','Vaccin grippe saisonnière','Vaccin pneumococcique (adulte)'],
     'Santé de la femme':['Vaccin HPV (papillomavirus) · dose','Vaccin antitétanique (VAT) · femme enceinte'],
     'Vaccination pédiatrique (secteur privé)':['Vaccin BCG (nourrisson)','Vaccin hexavalent (DTC-HepB-Hib-Polio)','Vaccin pneumococcique (nourrisson)','Vaccin rotavirus','Vaccin rougeole-rubéole (RR) · enfant','Vaccin fièvre jaune (enfant ≥ 9 mois)','Rappel vaccinal 15 mois'],
   }},
-  '9':{label:'🧑‍⚕️ Consultations',cats:{
+  '9':{label:'<i class="ti ti-user-check"></i> Consultations',cats:{
     'Consultation générale':['Consultation de médecine générale','Consultation de médecine de famille','Consultation d\'accueil et d\'orientation'],
     'Consultation spécialisée médicale':['Consultation de cardiologie','Consultation de pneumologie','Consultation de gastro-entérologie','Consultation de néphrologie','Consultation d\'endocrinologie - diabétologie','Consultation de neurologie','Consultation de rhumatologie','Consultation de dermatologie','Consultation d\'hématologie','Consultation d\'oncologie médicale','Consultation de maladies infectieuses','Consultation de médecine interne','Consultation de gériatrie','Consultation d\'allergologie','Consultation de médecine physique et réadaptation','Consultation d\'ophtalmologie'],
     'Consultation spécialisée chirurgicale':['Consultation de chirurgie générale et digestive','Consultation de chirurgie orthopédique','Consultation de neurochirurgie','Consultation de chirurgie cardio-vasculaire','Consultation de chirurgie plastique et reconstructrice','Consultation de chirurgie esthétique','Consultation de chirurgie pédiatrique','Consultation de chirurgie maxillo-faciale','Consultation de stomatologie','Consultation d\'ORL et chirurgie cervico-faciale','Consultation d\'urologie'],
@@ -1500,54 +1500,54 @@ const ACTES_TREE = {
 // Chaque panel est un bundle d'actes rattaché au(x) pilier(s) concerné(s).
 // ══════════════════════════════════════════════════════════════════
 const PANELS = [
-  // ── 🧬 Bilans systématiques (Biologie) ──
-  {id:'pan_annuel', theme:'🧬 Bilans systématiques', titre:'Bilan sanguin annuel', freq:'Annuel', piliers:['1'], couleur:'#0a5c8a',
+  // ── <i class="ti ti-flask"></i> Bilans systématiques (Biologie) ──
+  {id:'pan_annuel', theme:'<i class="ti ti-flask"></i> Bilans systématiques', titre:'Bilan sanguin annuel', freq:'Annuel', piliers:['1'], couleur:'#0a5c8a',
    desc:'NFS, glycémie, créatinine, cholestérol · recommandé chaque année après 30 ans.',
    actes:['NFS / Hémogramme','Glycémie à jeun','Créatininémie','Cholestérol total']},
-  {id:'pan_lipide', theme:'🧬 Bilans systématiques', titre:'Bilan lipidique', freq:'Tous les 3 ans', piliers:['1'], couleur:'#0a5c8a',
+  {id:'pan_lipide', theme:'<i class="ti ti-flask"></i> Bilans systématiques', titre:'Bilan lipidique', freq:'Tous les 3 ans', piliers:['1'], couleur:'#0a5c8a',
    desc:'Cholestérol total, HDL, LDL, triglycérides · dépistage du risque cardiovasculaire.',
    actes:['Cholestérol total','HDL','LDL','Triglycérides']},
 
-  // ── 🦋 Thyroïde (Biologie) ──
-  {id:'pan_thyro', theme:'🦋 Bilan thyroïdien', titre:'Bilan thyroïdien complet', freq:'Sur symptômes', piliers:['1'], couleur:'#7c3aed',
+  // ── <i class="ti ti-sparkles"></i> Thyroïde (Biologie) ──
+  {id:'pan_thyro', theme:'<i class="ti ti-sparkles"></i> Bilan thyroïdien', titre:'Bilan thyroïdien complet', freq:'Sur symptômes', piliers:['1'], couleur:'#7c3aed',
    desc:'TSH, FT4, FT3 · fatigue persistante, prise de poids inexpliquée, troubles du rythme.',
    actes:['TSH','FT4','FT3']},
 
-  // ── 💍 Prénuptial (Biologie) ──
-  {id:'pan_prenup', theme:'💍 Bilans prénuptiaux', titre:'Bilan prénuptial standard', freq:'Avant mariage', piliers:['1'], couleur:'#065f46',
+  // ── <i class="ti ti-ring"></i> Prénuptial (Biologie) ──
+  {id:'pan_prenup', theme:'<i class="ti ti-ring"></i> Bilans prénuptiaux', titre:'Bilan prénuptial standard', freq:'Avant mariage', piliers:['1'], couleur:'#065f46',
    desc:'Groupe, VIH, hépatites B et C, syphilis · recommandé avant mariage au Sénégal.',
    actes:['Groupe ABO/Rhésus','VIH Ag/Ac','HBsAg','Anti-VHC','Syphilis VDRL']},
-  {id:'pan_drepano', theme:'💍 Bilans prénuptiaux', titre:'Drépanocytose & hémoglobinopathies', freq:'Avant grossesse', piliers:['1'], couleur:'#065f46',
+  {id:'pan_drepano', theme:'<i class="ti ti-ring"></i> Bilans prénuptiaux', titre:'Drépanocytose & hémoglobinopathies', freq:'Avant grossesse', piliers:['1'], couleur:'#065f46',
    desc:'Électrophorèse de l\'hémoglobine · essentiel en Afrique subsaharienne pour les futurs parents.',
    actes:['Électrophorèse de l\'hémoglobine']},
 
-  // ── 🤰 Suivi grossesse (cross-piliers : Biologie + Imagerie + Vaccination) ──
-  {id:'pan_prenat_t1', theme:'🤰 Suivi grossesse', titre:'Bilan prénatal · 1er trimestre', freq:'1er trimestre', piliers:['1'], couleur:'#d97706',
+  // ── <i class="ti ti-woman"></i> Suivi grossesse (cross-piliers : Biologie + Imagerie + Vaccination) ──
+  {id:'pan_prenat_t1', theme:'<i class="ti ti-woman"></i> Suivi grossesse', titre:'Bilan prénatal · 1er trimestre', freq:'1er trimestre', piliers:['1'], couleur:'#d97706',
    desc:'NFS, groupe, toxoplasmose, rubéole, VIH, HBsAg, glycémie · consultations T1.',
    actes:['NFS / Hémogramme','Groupe ABO/Rhésus','Toxoplasmose IgG/IgM','Rubéole IgG/IgM','VIH Ag/Ac','HBsAg','Glycémie à jeun']},
-  {id:'pan_echo_obs', theme:'🤰 Suivi grossesse', titre:'Échographies obstétricales', freq:'Par trimestre', piliers:['2'], couleur:'#d97706',
+  {id:'pan_echo_obs', theme:'<i class="ti ti-woman"></i> Suivi grossesse', titre:'Échographies obstétricales', freq:'Par trimestre', piliers:['2'], couleur:'#d97706',
    desc:'T1 datation, T2 morphologique · suivi de la croissance fœtale.',
    actes:['Échographie obstétricale T1','Échographie morphologique T2']},
-  {id:'pan_vac_grossesse', theme:'🤰 Suivi grossesse', titre:'Protection vaccinale de la grossesse', freq:'Pendant la grossesse', piliers:['7'], couleur:'#d97706',
+  {id:'pan_vac_grossesse', theme:'<i class="ti ti-woman"></i> Suivi grossesse', titre:'Protection vaccinale de la grossesse', freq:'Pendant la grossesse', piliers:['7'], couleur:'#d97706',
    desc:'Vaccin antitétanique (VAT) et grippe saisonnière · protection de la mère et du nouveau-né.',
    actes:['Vaccin antitétanique (VAT) · femme enceinte','Vaccin grippe saisonnière']},
 
-  // ── 💉 Vaccination (pilier Vaccination) ──
-  {id:'pan_vac_voyageur', theme:'💉 Vaccination', titre:'Vaccination du voyageur · zone tropicale', freq:'Avant départ', piliers:['7'], couleur:'#0d9488',
+  // ── <i class="ti ti-needle"></i> Vaccination (pilier Vaccination) ──
+  {id:'pan_vac_voyageur', theme:'<i class="ti ti-needle"></i> Vaccination', titre:'Vaccination du voyageur · zone tropicale', freq:'Avant départ', piliers:['7'], couleur:'#0d9488',
    desc:'Fièvre jaune, typhoïde, hépatite A, méningocoque ACWY · voyage Afrique / Asie ou pèlerinage.',
    actes:['Vaccin fièvre jaune (amaril)','Vaccin fièvre typhoïde','Vaccin hépatite A','Vaccin méningococcique ACWY']},
-  {id:'pan_vac_adulte', theme:'💉 Vaccination', titre:'Rattrapage vaccinal adulte', freq:'Mise à jour', piliers:['7'], couleur:'#0d9488',
+  {id:'pan_vac_adulte', theme:'<i class="ti ti-needle"></i> Vaccination', titre:'Rattrapage vaccinal adulte', freq:'Mise à jour', piliers:['7'], couleur:'#0d9488',
    desc:'dTcaPolio, hépatite B, rougeole-rubéole · remise à jour du calendrier chez l\'adulte.',
    actes:['Rappel dTcaPolio (adulte)','Vaccin hépatite B (adulte)','Vaccin rougeole-rubéole (RR) · adulte']},
-  {id:'pan_vac_nourrisson', theme:'💉 Vaccination', titre:'Vaccination du nourrisson · 0 à 15 mois', freq:'Calendrier PEV', piliers:['7'], couleur:'#0d9488',
+  {id:'pan_vac_nourrisson', theme:'<i class="ti ti-needle"></i> Vaccination', titre:'Vaccination du nourrisson · 0 à 15 mois', freq:'Calendrier PEV', piliers:['7'], couleur:'#0d9488',
    desc:'BCG, hexavalent, pneumocoque, rotavirus, RR, fièvre jaune, rappel 15 mois · parcours privé aligné sur le PEV.',
    actes:['Vaccin BCG (nourrisson)','Vaccin hexavalent (DTC-HepB-Hib-Polio)','Vaccin pneumococcique (nourrisson)','Vaccin rotavirus','Vaccin rougeole-rubéole (RR) · enfant','Vaccin fièvre jaune (enfant ≥ 9 mois)','Rappel vaccinal 15 mois']},
 
-  // ── 🫁 Bilans OMS (Biologie) ──
-  {id:'pan_oms_diab', theme:'🫁 Bilans OMS recommandés', titre:'Dépistage diabète & HTA', freq:'Tous les 2 ans', piliers:['1'], couleur:'#0891b2',
+  // ── <i class="ti ti-lungs"></i> Bilans OMS (Biologie) ──
+  {id:'pan_oms_diab', theme:'<i class="ti ti-lungs"></i> Bilans OMS recommandés', titre:'Dépistage diabète & HTA', freq:'Tous les 2 ans', piliers:['1'], couleur:'#0891b2',
    desc:'Glycémie à jeun, HbA1c · recommandé par l\'OMS à partir de 40 ans ou en cas de surpoids.',
    actes:['Glycémie à jeun','HbA1c']},
-  {id:'pan_oms_ist', theme:'🫁 Bilans OMS recommandés', titre:'Dépistage IST', freq:'Annuel', piliers:['1'], couleur:'#0891b2',
+  {id:'pan_oms_ist', theme:'<i class="ti ti-lungs"></i> Bilans OMS recommandés', titre:'Dépistage IST', freq:'Annuel', piliers:['1'], couleur:'#0891b2',
    desc:'VIH, hépatite B, syphilis · dépistage régulier recommandé par l\'OMS.',
    actes:['VIH Ag/Ac','HBsAg','Syphilis VDRL','Syphilis TPHA']},
 ];
@@ -1608,10 +1608,10 @@ actes:{'Consultation de médecine générale':{prix:8000,delai:'Sur RDV'},'Consu
 ];
 
 const INS_GROUPS = [
-  {label:'✅ Assurances privées traditionnelles',type:'priv',items:['AMSA IARDT','AXA Assurances Sénégal','Allianz / SanlamAllianz','La Providence du Sénégal','SONAM SA / SONAM Mutuelle','Salama Assurances','MAAS']},
-  {label:'🟢 Digitales & mutuelles modernes',type:'dig',items:['Tanel Health (Afiyah)','Susu Africa','Sammanté','Munasaili']},
-  {label:'🟠 Régimes publics & sociaux',type:'pub',items:['CMU','CNAM','IPM','IPRES','FNR','MSAE','Plan Sésame','Mutuelles communautaires CMU']},
-  {label:'💵 Paiement direct',type:'mut',items:['Privé (paiement direct)']},
+  {label:'<i class="ti ti-circle-check"></i> Assurances privées traditionnelles',type:'priv',items:['AMSA IARDT','AXA Assurances Sénégal','Allianz / SanlamAllianz','La Providence du Sénégal','SONAM SA / SONAM Mutuelle','Salama Assurances','MAAS']},
+  {label:'<i class="ti ti-circle-check"></i> Digitales & mutuelles modernes',type:'dig',items:['Tanel Health (Afiyah)','Susu Africa','Sammanté','Munasaili']},
+  {label:'<i class="ti ti-circle-check"></i> Régimes publics & sociaux',type:'pub',items:['CMU','CNAM','IPM','IPRES','FNR','MSAE','Plan Sésame','Mutuelles communautaires CMU']},
+  {label:'<i class="ti ti-cash"></i> Paiement direct',type:'mut',items:['Privé (paiement direct)']},
 ];
 
 const COVERAGE_RATES = {
@@ -1703,10 +1703,10 @@ function renderMenuSectionContent(tab, content) {
       const statusLabel = r.status==='confirmed'?'Confirmé':r.status==='pending'?'En attente':'Effectué';
       const statusCls = r.status==='confirmed'?'status-confirmed':r.status==='pending'?'status-pending':'status-done';
       return `<div class="rdv-card-m">
-        <div class="rdv-card-head-m"><div><div class="rdv-card-struct-m">${r.struct}</div><div style="font-size:10px;color:var(--g400)">📍 ${r.zone}</div></div><span class="rdv-card-status-m ${statusCls}">${statusLabel}</span></div>
-        <div class="rdv-card-body-m"><div class="rdv-meta-row-m">📅 ${r.slot}</div><div class="rdv-meta-row-m">🔖 Réf. ${r.ref}</div>
+        <div class="rdv-card-head-m"><div><div class="rdv-card-struct-m">${r.struct}</div><div style="font-size:10px;color:var(--g400)"><i class="ti ti-map-pin"></i> ${r.zone}</div></div><span class="rdv-card-status-m ${statusCls}">${statusLabel}</span></div>
+        <div class="rdv-card-body-m"><div class="rdv-meta-row-m"><i class="ti ti-calendar"></i> ${r.slot}</div><div class="rdv-meta-row-m"><i class="ti ti-bookmark"></i> Réf. ${r.ref}</div>
         <div class="rdv-actes-list-m">${r.actes.map(a=>`<div class="rdv-acte-item-m"><span>${a.nom}</span><span style="font-weight:600;color:var(--blue)">${a.prix.toLocaleString('fr-FR')} F</span></div>`).join('')}</div></div>
-        <div class="rdv-card-footer-m"><div style="font-size:10px;color:var(--g400)">Total : ${total.toLocaleString('fr-FR')} FCFA</div>${r.status!=='done'?'<button style="font-size:10px;background:none;border:1px solid var(--red);color:var(--red);border-radius:6px;padding:4px 10px;cursor:pointer">Annuler</button>':'<span style="font-size:10px;color:var(--green-d)">✓ Effectué</span>'}</div>
+        <div class="rdv-card-footer-m"><div style="font-size:10px;color:var(--g400)">Total : ${total.toLocaleString('fr-FR')} FCFA</div>${r.status!=='done'?'<button style="font-size:10px;background:none;border:1px solid var(--red);color:var(--red);border-radius:6px;padding:4px 10px;cursor:pointer">Annuler</button>':'<span style="font-size:10px;color:var(--green-d)"><i class="ti ti-check"></i> Effectué</span>'}</div>
       </div>`;
     };
     content.innerHTML = `${renderReceivedTickets()}<div class="compte-section-title-m">À venir</div>${upcoming.length?upcoming.map(renderCard).join(''):'<div style="font-size:12px;color:var(--g400);text-align:center;padding:16px">Aucun RDV à venir</div>'}<div class="compte-section-title-m">Historique</div>${past.map(renderCard).join('')}`;
@@ -1716,11 +1716,11 @@ function renderMenuSectionContent(tab, content) {
       const total = d.actes.reduce((s,a) => s+a.prix, 0);
       const isPending = d.status === 'pending';
       return `<div class="devis-card-m">
-        <div class="devis-card-head-m"><div><div class="devis-struct-name-m">${d.struct}</div><div class="devis-ref-m">Réf. ${d.ref} · ${d.date}</div></div><span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;${isPending?'background:var(--amber-l);color:var(--amber)':'background:var(--g100);color:var(--g400)'}">${isPending?'⏳ En attente':'✕ Expiré'}</span></div>
+        <div class="devis-card-head-m"><div><div class="devis-struct-name-m">${d.struct}</div><div class="devis-ref-m">Réf. ${d.ref} · ${d.date}</div></div><span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;${isPending?'background:var(--amber-l);color:var(--amber)':'background:var(--g100);color:var(--g400)'}">${isPending?'<i class="ti ti-hourglass"></i> En attente':'&times; Expiré'}</span></div>
         <div class="devis-body-m">${d.actes.map(a=>`<div class="rdv-acte-item-m"><span>${a.nom}</span><span style="font-weight:600;color:var(--blue)">${a.prix.toLocaleString('fr-FR')} F</span></div>`).join('')}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--g100)">
           <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:800;color:var(--blue)">${total.toLocaleString('fr-FR')} FCFA</div>
-          ${isPending?`<button onclick="switchView('messages')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">💬 Messagerie</button>`:''}
+          ${isPending?`<button onclick="switchView('messages')" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif"><i class="ti ti-message"></i> Messagerie</button>`:''}
         </div></div>
       </div>`;
     }).join('');
@@ -1742,7 +1742,7 @@ function renderMenuSectionContent(tab, content) {
       <div class="profil-field-m"><label>Zone / Quartier</label><input class="profil-input-m" type="text" value="${PATIENT_DATA.zone}"></div>
       <div class="compte-section-title-m">Sécurité</div>
       <div class="profil-field-m"><label>Nouveau mot de passe</label><input class="profil-input-m" type="password" placeholder="Laisser vide pour ne pas modifier"></div>
-      <button style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px;font-family:DM Sans,sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px" onclick="alert('Profil sauvegardé ✓')">💾 Sauvegarder</button>
+      <button style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px;font-family:DM Sans,sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px" onclick="alert('Profil sauvegardé <i class="ti ti-check"></i>')"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
       <div style="height:16px"></div>`;
   }
 }
@@ -1755,28 +1755,28 @@ function renderTableauDeBord(content) {
   content.innerHTML = `
     <!-- Bonjour -->
     <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px">
-      BONJOUR, ${PATIENT_DATA.nom.split(' ')[0].toUpperCase()} 👋
+      BONJOUR, ${PATIENT_DATA.nom.split(' ')[0].toUpperCase()} 
     </div>
 
     <!-- Grille 4 KPIs -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
       <div onclick="openMenuSection('rdv')" style="background:var(--white);border:1px solid var(--g200);border-radius:12px;padding:14px;cursor:pointer">
-        <div style="font-size:22px;margin-bottom:6px">📅</div>
+        <div style="font-size:22px;margin-bottom:6px"><i class="ti ti-calendar"></i></div>
         <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--blue)">${rdvAvenir.length}</div>
         <div style="font-size:11px;color:var(--g400);margin-top:2px">RDV à venir</div>
       </div>
       <div onclick="openMenuSection('devis')" style="background:var(--white);border:1px solid var(--g200);border-radius:12px;padding:14px;cursor:pointer">
-        <div style="font-size:22px;margin-bottom:6px">💬</div>
+        <div style="font-size:22px;margin-bottom:6px"><i class="ti ti-message"></i></div>
         <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--green-d)">${devisAttente.length}</div>
         <div style="font-size:11px;color:var(--g400);margin-top:2px">Devis en attente</div>
       </div>
       <div onclick="openMenuSection('assurance')" style="background:var(--white);border:1px solid var(--g200);border-radius:12px;padding:14px;cursor:pointer">
-        <div style="font-size:22px;margin-bottom:6px">🛡</div>
+        <div style="font-size:22px;margin-bottom:6px"><i class="ti ti-shield-check"></i></div>
         <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--blue)">${PATIENT_DATA.assurances.length}</div>
         <div style="font-size:11px;color:var(--g400);margin-top:2px">Assurances</div>
       </div>
       <div onclick="fermerMenuSection();switchView('panier')" style="background:var(--white);border:1px solid var(--g200);border-radius:12px;padding:14px;cursor:pointer">
-        <div style="font-size:22px;margin-bottom:6px">🛒</div>
+        <div style="font-size:22px;margin-bottom:6px"><i class="ti ti-shopping-cart"></i></div>
         <div style="font-family:Syne,sans-serif;font-size:22px;font-weight:800;color:var(--amber)">${cart.length}</div>
         <div style="font-size:11px;color:var(--g400);margin-top:2px">Actes au panier</div>
       </div>
@@ -1789,12 +1789,12 @@ function renderTableauDeBord(content) {
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
         <div>
           <div style="font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:var(--text)">${prochainRdv.struct}</div>
-          <div style="font-size:11px;color:var(--green-d);margin-top:2px">📍 ${prochainRdv.zone}</div>
+          <div style="font-size:11px;color:var(--green-d);margin-top:2px"><i class="ti ti-map-pin"></i> ${prochainRdv.zone}</div>
         </div>
         <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--green-l);color:var(--green-d);border:1px solid var(--green-m)">Confirmé</span>
       </div>
-      <div style="font-size:11px;color:var(--g600);margin-bottom:2px">📅 ${prochainRdv.slot}</div>
-      <div style="font-size:10px;color:var(--g400);margin-bottom:10px">🔖 Réf. ${prochainRdv.ref} · Paiement ${prochainRdv.payRef}</div>
+      <div style="font-size:11px;color:var(--g600);margin-bottom:2px"><i class="ti ti-calendar"></i> ${prochainRdv.slot}</div>
+      <div style="font-size:10px;color:var(--g400);margin-bottom:10px"><i class="ti ti-bookmark"></i> Réf. ${prochainRdv.ref} · Paiement ${prochainRdv.payRef}</div>
       <div style="border-top:1px solid var(--g100);padding-top:8px">
         ${prochainRdv.actes.map(a => `
           <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:11px">
@@ -1815,9 +1815,9 @@ function renderTableauDeBord(content) {
     <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g400);margin-bottom:8px">Prochains rappels</div>
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:16px">
       ${[
-        {icon:'🧬', titre:'Bilan sanguin annuel', urgence:'Annuel', couleur:'#0a5c8a', fond:'#e8f4fb'},
-        {icon:'🦋', titre:'Bilan thyroïdien', urgence:'Sur symptômes', couleur:'#7c3aed', fond:'#f5f3ff'},
-        {icon:'🫁', titre:'Dépistage diabète & HTA', urgence:'Tous les 2 ans', couleur:'#0891b2', fond:'#ecfeff'},
+        {icon:'<i class="ti ti-flask"></i>', titre:'Bilan sanguin annuel', urgence:'Annuel', couleur:'#0a5c8a', fond:'#e8f4fb'},
+        {icon:'<i class="ti ti-sparkles"></i>', titre:'Bilan thyroïdien', urgence:'Sur symptômes', couleur:'#7c3aed', fond:'#f5f3ff'},
+        {icon:'<i class="ti ti-lungs"></i>', titre:'Dépistage diabète & HTA', urgence:'Tous les 2 ans', couleur:'#0891b2', fond:'#ecfeff'},
       ].map(r => `
         <div onclick="openMenuSection('rappels')" style="background:var(--white);border:1px solid var(--g200);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
           <div style="display:flex;align-items:center;gap:10px">
@@ -1861,9 +1861,9 @@ function renderTableauDeBord(content) {
         <div style="background:var(--white);border:1px solid var(--g200);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;cursor:pointer" onclick="fermerMenuSection();switchView('resultats')">
           <div>
             <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;color:var(--text)">${s.name}</div>
-            <div style="font-size:10px;color:var(--g400);margin-top:2px">📍 ${s.zone} · ${s.assurances.filter(a=>PATIENT_DATA.assurances.includes(a)).join(', ')}</div>
+            <div style="font-size:10px;color:var(--g400);margin-top:2px"><i class="ti ti-map-pin"></i> ${s.zone} · ${s.assurances.filter(a=>PATIENT_DATA.assurances.includes(a)).join(', ')}</div>
           </div>
-          <div style="font-size:10px;font-weight:600;color:var(--green-d);background:var(--green-l);padding:3px 9px;border-radius:20px;white-space:nowrap">✓ Compatible</div>
+          <div style="font-size:10px;font-weight:600;color:var(--green-d);background:var(--green-l);padding:3px 9px;border-radius:20px;white-space:nowrap"><i class="ti ti-check"></i> Compatible</div>
         </div>`).join('');
     })()}
     <div style="height:16px"></div>
@@ -1877,7 +1877,7 @@ function renderRappelsM(content) {
 
   const html = `
     <div style="background:linear-gradient(135deg,var(--blue),#0891b2);border-radius:12px;padding:14px 16px;margin-bottom:16px">
-      <div style="font-family:Syne,sans-serif;font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">🔔 Rappels & Panels recommandés</div>
+      <div style="font-family:Syne,sans-serif;font-size:14px;font-weight:800;color:#fff;margin-bottom:4px"><i class="ti ti-bell"></i> Rappels & Panels recommandés</div>
       <div style="font-size:11px;color:rgba(255,255,255,.78);line-height:1.6">Panels de suivi prédéfinis, groupés par pilier. Modèles de base MedCare (OMS, PEV), éditables par chaque structure. Un seul tap sélectionne le panel complet.</div>
     </div>
     ${themes.map(theme => {
@@ -1898,14 +1898,14 @@ function renderRappelsM(content) {
             <div class="pp-desc">${p.desc}</div>
             <div class="pp-tags">${tags}</div>
             <div class="pp-actes">${p.actes.map(a=>`<span>${a}</span>`).join('')}</div>
-            <div class="pp-src">🔒 Modèle MedCare · éditable par la structure</div>
-            <button class="pp-add" onclick="addPanelActes('${p.id}',true)">🔬 Réserver le panel${avail.length?` (${avail.length} acte${avail.length>1?'s':''})`:''} →</button>
+            <div class="pp-src"><i class="ti ti-lock"></i> Modèle MedCare · éditable par la structure</div>
+            <button class="pp-add" onclick="addPanelActes('${p.id}',true)"><i class="ti ti-flask"></i> Réserver le panel${avail.length?` (${avail.length} acte${avail.length>1?'s':''})`:''} →</button>
           </div>`;
         }).join('')}
       </div>`;
     }).join('')}
     <div style="background:var(--g50);border:1px dashed var(--g300);border-radius:12px;padding:14px;text-align:center;margin-top:4px">
-      <div style="font-size:20px;margin-bottom:5px">📖</div>
+      <div style="font-size:20px;margin-bottom:5px"><i class="ti ti-book"></i></div>
       <div style="font-family:Syne,sans-serif;font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">Blog santé MedCare · À venir</div>
       <div style="font-size:11px;color:var(--g400);line-height:1.6">Articles et guides rédigés par le Dr Abdoul · directement dans votre espace patient.</div>
     </div>
@@ -1955,11 +1955,11 @@ const CRENEAUX_M = [
 
 function getConvStatusStyle(status) {
   const map = {
-    pending:   {label:'⏳ En attente', bg:'rgba(255,255,255,.15)', color:'rgba(255,255,255,.9)', pillBg:'var(--amber-l)', pillColor:'var(--amber)'},
-    waiting:   {label:'🕐 En attente de confirmation', bg:'rgba(217,119,6,.25)', color:'#fff', pillBg:'var(--amber-l)', pillColor:'var(--amber)'},
-    confirmed: {label:'✅ Confirmé',   bg:'rgba(37,211,102,.2)',   color:'#fff',                pillBg:'var(--green-l)', pillColor:'var(--green-d)'},
-    refused:   {label:'❌ Refusé',     bg:'rgba(220,38,38,.2)',    color:'#fca5a5',             pillBg:'var(--red-l)',   pillColor:'var(--red)'},
-    expired:   {label:'✕ Expiré',     bg:'rgba(255,255,255,.08)', color:'rgba(255,255,255,.4)', pillBg:'var(--g100)',    pillColor:'var(--g400)'},
+    pending:   {label:'<i class="ti ti-hourglass"></i> En attente', bg:'rgba(255,255,255,.15)', color:'rgba(255,255,255,.9)', pillBg:'var(--amber-l)', pillColor:'var(--amber)'},
+    waiting:   {label:'<i class="ti ti-clock"></i> En attente de confirmation', bg:'rgba(217,119,6,.25)', color:'#fff', pillBg:'var(--amber-l)', pillColor:'var(--amber)'},
+    confirmed: {label:'<i class="ti ti-circle-check"></i> Confirmé',   bg:'rgba(37,211,102,.2)',   color:'#fff',                pillBg:'var(--green-l)', pillColor:'var(--green-d)'},
+    refused:   {label:'<i class="ti ti-circle-x"></i> Refusé',     bg:'rgba(220,38,38,.2)',    color:'#fca5a5',             pillBg:'var(--red-l)',   pillColor:'var(--red)'},
+    expired:   {label:'&times; Expiré',     bg:'rgba(255,255,255,.08)', color:'rgba(255,255,255,.4)', pillBg:'var(--g100)',    pillColor:'var(--g400)'},
   };
   return map[status] || map.pending;
 }
@@ -1995,7 +1995,7 @@ function renderConvList() {
   if (!keys.length) {
     el.innerHTML = `
       <div class="messages-empty">
-        <div class="me-icon">💬</div>
+        <div class="me-icon"><i class="ti ti-message"></i></div>
         <div class="me-title">Aucun message pour l'instant</div>
         <div class="me-sub">Ajoutez des actes à votre panier<br>et envoyez vos demandes de devis.</div>
         <button class="me-cta" onclick="switchView('panier')">Voir mon panier</button>
@@ -2008,14 +2008,14 @@ function renderConvList() {
     const st = getConvStatusStyle(conv.status);
     const total = conv.items.reduce((s,c) => s+c.prix, 0);
     const preview = conv.creneauChoisi
-      ? '📅 ' + conv.creneauChoisi
+      ? '<i class="ti ti-calendar"></i> ' + conv.creneauChoisi
       : conv.items[0]?.acte + (conv.items.length > 1 ? ' +' + (conv.items.length-1) : '');
     const initiale = conv.structName[0].toUpperCase();
     return `
       <div class="conv-item" onclick="openChatView(${sid})">
         <div class="conv-avatar" style="background:linear-gradient(135deg,#025c4d,#128c7e);font-family:Syne,sans-serif;font-size:18px;font-weight:800;color:#fff">
           ${initiale}
-          <div class="conv-avatar-badge ${conv.status==='confirmed'?'badge-rdv':conv.status==='pending'?'badge-new':'badge-done'}">${conv.status==='confirmed'?'✓':'!'}</div>
+          <div class="conv-avatar-badge ${conv.status==='confirmed'?'badge-rdv':conv.status==='pending'?'badge-new':'badge-done'}">${conv.status==='confirmed'?'<i class="ti ti-check"></i>':'!'}</div>
         </div>
         <div class="conv-info">
           <div class="conv-name">${conv.structName}</div>
@@ -2085,7 +2085,7 @@ function renderChatBody(structId) {
       </div>
       <div class="wdb-m">
         <div class="wdr-m"><span class="l">Structure</span><span class="v">${conv.structName}</span></div>
-        ${s ? `<div class="wdr-m"><span class="l">Zone</span><span class="v">📍 ${s.zone}</span></div>` : ''}
+        ${s ? `<div class="wdr-m"><span class="l">Zone</span><span class="v"><i class="ti ti-map-pin"></i> ${s.zone}</span></div>` : ''}
         ${s ? `<div class="wdr-m"><span class="l">Horaires</span><span class="v">${s.horaires.split('·')[0].trim()}</span></div>` : ''}
         ${s && s.assurances.length ? `<div class="wdr-m"><span class="l">Assurances</span><span class="v" style="text-align:right;max-width:55%">${s.assurances.slice(0,3).join(' · ')}${s.assurances.length>3?' …':''}</span></div>` : ''}
         <div class="wsep-m"></div>
@@ -2094,7 +2094,7 @@ function renderChatBody(structId) {
           <div class="wacte-row-m">
             <div class="war-nom-m">${c.acte}</div>
             <div class="war-meta-m">
-              <span style="color:var(--g400)">⏱ ${c.delai}</span>
+              <span style="color:var(--g400)"><i class="ti ti-clock"></i> ${c.delai}</span>
               <span class="war-prix-m">${c.prix.toLocaleString('fr-FR')} FCFA</span>
             </div>
           </div>`).join('')}
@@ -2109,7 +2109,7 @@ function renderChatBody(structId) {
   // ── Grille créneaux (avec créneau sélectionné si déjà choisi)
   const grilleCreneaux = `
     <div class="wcal-m" style="margin-top:6px">
-      <div class="wcal-h-m">📅 Choisissez votre créneau</div>
+      <div class="wcal-h-m"><i class="ti ti-calendar"></i> Choisissez votre créneau</div>
       <div class="wcal-slots-m">
         ${CRENEAUX_M.map(c => {
           const fullSlot = c.d + ' · ' + c.t;
@@ -2123,9 +2123,9 @@ function renderChatBody(structId) {
   // ── Bulle confirmation
   const carteConfirmation = conv.status === 'confirmed' ? `
     <div style="background:var(--green-l);border:1.5px solid var(--green-m);border-radius:9px;padding:11px 13px;margin-top:4px">
-      <div style="font-size:12px;font-weight:700;color:var(--green-d);margin-bottom:5px">✅ RDV confirmé par ${conv.structName}</div>
-      <div style="font-size:11px;color:var(--green-d);margin-bottom:2px">📅 Créneau : <strong>${conv.creneauChoisi}</strong></div>
-      <div style="font-size:11px;color:var(--green-d)">🔖 Réf. dossier : <strong>${conv.ref}</strong></div>
+      <div style="font-size:12px;font-weight:700;color:var(--green-d);margin-bottom:5px"><i class="ti ti-circle-check"></i> RDV confirmé par ${conv.structName}</div>
+      <div style="font-size:11px;color:var(--green-d);margin-bottom:2px"><i class="ti ti-calendar"></i> Créneau : <strong>${conv.creneauChoisi}</strong></div>
+      <div style="font-size:11px;color:var(--green-d)"><i class="ti ti-bookmark"></i> Réf. dossier : <strong>${conv.ref}</strong></div>
     </div>
     <div style="font-size:10.5px;color:var(--g600);line-height:1.6;margin-top:6px">Présentez cette référence à l'accueil.<br>Apportez votre ordonnance médicale.</div>` : '';
 
@@ -2150,8 +2150,8 @@ function renderChatBody(structId) {
     ${conv.creneauxVisible || conv.creneauChoisi || conv.status === 'waiting' || conv.status === 'confirmed' ? `
     <!-- Patient souhaite un RDV -->
     <div class="wmsg-m s">
-      📅 Je souhaite prendre rendez-vous
-      <div class="wtime-m">${t} ✓</div>
+      <i class="ti ti-calendar"></i> Je souhaite prendre rendez-vous
+      <div class="wtime-m">${t} <i class="ti ti-check"></i></div>
     </div>
 
     <!-- Disponibilités -->
@@ -2165,8 +2165,8 @@ function renderChatBody(structId) {
     ${conv.creneauChoisi && conv.status !== 'waiting' && conv.status !== 'confirmed' ? `
     <!-- Créneau choisi par le patient -->
     <div class="wmsg-m s">
-      📅 Créneau choisi : <strong>${conv.creneauChoisi}</strong>
-      <div class="wtime-m">${t} ✓</div>
+      <i class="ti ti-calendar"></i> Créneau choisi : <strong>${conv.creneauChoisi}</strong>
+      <div class="wtime-m">${t} <i class="ti ti-check"></i></div>
     </div>` : ''}
 
     ${conv.creneauChoisi && conv.status === 'pending' ? renderDocStep(conv, structId) : ''}
@@ -2174,20 +2174,20 @@ function renderChatBody(structId) {
     ${conv.status === 'waiting' || conv.status === 'confirmed' ? `
     <!-- Créneau choisi + demande envoyée -->
     <div class="wmsg-m s">
-      📅 Créneau choisi : <strong>${conv.creneauChoisi}</strong>
-      <div class="wtime-m">${t} ✓✓</div>
+      <i class="ti ti-calendar"></i> Créneau choisi : <strong>${conv.creneauChoisi}</strong>
+      <div class="wtime-m">${t} <i class="ti ti-check"></i><i class="ti ti-check"></i></div>
     </div>
 
     <!-- MedCare confirme la réception -->
     <div class="wmsg-m r">
       <div style="font-size:10px;font-weight:700;color:#075e54;margin-bottom:5px">MedCare</div>
       <div style="background:var(--amber-l);border:1.5px solid var(--amber);border-radius:9px;padding:10px 13px;margin-bottom:6px">
-        <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:4px">⏳ RDV en attente de confirmation</div>
+        <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:4px"><i class="ti ti-hourglass"></i> RDV en attente de confirmation</div>
         <div style="font-size:10.5px;color:#78350f;line-height:1.6">Votre demande pour <strong>${conv.creneauChoisi}</strong> a bien été transmise à <strong>${conv.structName}</strong>.<br>Vous serez notifié ici et par WhatsApp dès confirmation.</div>
-        <div style="margin-top:8px;padding-top:7px;border-top:1px solid rgba(217,119,6,.2);font-size:10px;color:#92400e">🔖 Réf. : <strong>${conv.ref}</strong></div>
+        <div style="margin-top:8px;padding-top:7px;border-top:1px solid rgba(217,119,6,.2);font-size:10px;color:#92400e"><i class="ti ti-bookmark"></i> Réf. : <strong>${conv.ref}</strong></div>
       </div>
-      <div style="font-size:10px;color:var(--g500);line-height:1.5">📱 Un message WhatsApp a été envoyé à la structure et à votre numéro.</div>
-      <div class="wtime-m">${t} ✓✓</div>
+      <div style="font-size:10px;color:var(--g500);line-height:1.5"><i class="ti ti-device-mobile"></i> Un message WhatsApp a été envoyé à la structure et à votre numéro.</div>
+      <div class="wtime-m">${t} <i class="ti ti-check"></i><i class="ti ti-check"></i></div>
     </div>` : ''}
 
     ${conv.status === 'confirmed' ? `
@@ -2195,12 +2195,12 @@ function renderChatBody(structId) {
     <div class="wmsg-m r">
       <div style="font-size:10px;font-weight:700;color:#075e54;margin-bottom:5px">MedCare</div>
       <div style="background:var(--green-l);border:1.5px solid var(--green-m);border-radius:9px;padding:11px 13px">
-        <div style="font-size:12px;font-weight:700;color:var(--green-d);margin-bottom:5px">✅ RDV confirmé par ${conv.structName}</div>
-        <div style="font-size:11px;color:var(--green-d);margin-bottom:2px">📅 Créneau : <strong>${conv.creneauChoisi}</strong></div>
-        <div style="font-size:11px;color:var(--green-d)">🔖 Réf. dossier : <strong>${conv.ref}</strong></div>
+        <div style="font-size:12px;font-weight:700;color:var(--green-d);margin-bottom:5px"><i class="ti ti-circle-check"></i> RDV confirmé par ${conv.structName}</div>
+        <div style="font-size:11px;color:var(--green-d);margin-bottom:2px"><i class="ti ti-calendar"></i> Créneau : <strong>${conv.creneauChoisi}</strong></div>
+        <div style="font-size:11px;color:var(--green-d)"><i class="ti ti-bookmark"></i> Réf. dossier : <strong>${conv.ref}</strong></div>
       </div>
       <div style="font-size:10.5px;color:var(--g600);line-height:1.6;margin-top:6px">Présentez cette référence à l'accueil.<br>Apportez votre ordonnance médicale.</div>
-      <div class="wtime-m">${t} ✓✓</div>
+      <div class="wtime-m">${t} <i class="ti ti-check"></i><i class="ti ti-check"></i></div>
     </div>` : ''}
   `;
 
@@ -2232,7 +2232,7 @@ function renderDocStep(conv, structId) {
   if (docType === 'none') return '';
   const t = gt();
   const isCarnet = docType === 'carnet';
-  const icon = isCarnet ? '📗' : '📋';
+  const icon = isCarnet ? '<i class="ti ti-book-2"></i>' : '<i class="ti ti-clipboard-list"></i>';
   const docLabel = isCarnet ? 'carnet de vaccination' : "bulletin d'analyse";
   const fileName = isCarnet ? 'carnet_vaccination.jpg' : 'bulletin.jpg';
 
@@ -2256,7 +2256,7 @@ function renderDocStep(conv, structId) {
   }
 
   if (conv.bulletin === 'oui') {
-    let html = `<div class="wmsg-m s">✅ Oui, j'ai mon ${docLabel}<div class="wtime-m">${t} ✓</div></div>`;
+    let html = `<div class="wmsg-m s"><i class="ti ti-circle-check"></i> Oui, j'ai mon ${docLabel}<div class="wtime-m">${t} <i class="ti ti-check"></i></div></div>`;
     if (!conv.bulletinPhoto) {
       html += `
       <div class="wmsg-m r">
@@ -2268,10 +2268,10 @@ function renderDocStep(conv, structId) {
       html += `
       <div class="wmsg-m s">
         <div style="display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--g200);border-radius:9px;padding:8px 10px">
-          <div style="width:44px;height:44px;border-radius:7px;background:linear-gradient(135deg,#dbeafe,#eef2ff);display:flex;align-items:center;justify-content:center;font-size:20px">🖼️</div>
+          <div style="width:44px;height:44px;border-radius:7px;background:linear-gradient(135deg,#dbeafe,#eef2ff);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ti-photo"></i></div>
           <div><div style="font-size:11px;font-weight:700;color:var(--text)">Photo du ${docLabel}</div><div style="font-size:9.5px;color:var(--g400)">${fileName} · envoyée</div></div>
         </div>
-        <div class="wtime-m">${t} ✓</div>
+        <div class="wtime-m">${t} <i class="ti ti-check"></i></div>
       </div>`;
     }
     return html;
@@ -2281,11 +2281,11 @@ function renderDocStep(conv, structId) {
   if (isCarnet) {
     // Le carnet n'est pas un prérequis bloquant : la structure peut en remettre / mettre à jour un sur place.
     return `
-    <div class="wmsg-m s">Non, pas de carnet sous la main<div class="wtime-m">${t} ✓</div></div>
+    <div class="wmsg-m s">Non, pas de carnet sous la main<div class="wtime-m">${t} <i class="ti ti-check"></i></div></div>
     <div class="wmsg-m r">
       <div style="font-size:10px;font-weight:700;color:#075e54;margin-bottom:5px">MedCare</div>
       <div style="background:var(--green-l);border:1px solid var(--green-m);border-radius:9px;padding:11px 13px">
-        <div style="font-size:12px;font-weight:700;color:var(--green-d);margin-bottom:4px">✅ Ce n'est pas bloquant</div>
+        <div style="font-size:12px;font-weight:700;color:var(--green-d);margin-bottom:4px"><i class="ti ti-circle-check"></i> Ce n'est pas bloquant</div>
         <div style="font-size:10.5px;color:var(--green-d);line-height:1.6">Présentez-vous à votre RDV : un carnet de vaccination vous sera remis ou mis à jour sur place. Vous pouvez envoyer votre demande.</div>
       </div>
       <div class="wtime-m">${t}</div>
@@ -2293,11 +2293,11 @@ function renderDocStep(conv, structId) {
   }
   // bulletin d'analyse manquant -> orientation consultation
   return `
-    <div class="wmsg-m s">Non, pas encore de bulletin<div class="wtime-m">${t} ✓</div></div>
+    <div class="wmsg-m s">Non, pas encore de bulletin<div class="wtime-m">${t} <i class="ti ti-check"></i></div></div>
     <div class="wmsg-m r">
       <div style="font-size:10px;font-weight:700;color:#075e54;margin-bottom:5px">MedCare</div>
       <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:9px;padding:11px 13px">
-        <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px">🔎 Trouvez une consultation</div>
+        <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px"><i class="ti ti-search"></i> Trouvez une consultation</div>
         <div style="font-size:10.5px;color:var(--g600);line-height:1.6;margin-bottom:9px">Prenez une consultation auprès d'un praticien indépendant pour obtenir votre bulletin, puis revenez réserver vos actes.</div>
         <button onclick="goToConsultations()" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px;font-weight:700;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Rechercher une consultation →</button>
       </div>
@@ -2341,20 +2341,20 @@ function renderChatFooter(structId) {
   // Étape 1 : devis reçu → Prendre RDV + Télécharger
   if (conv.status === 'pending' && !conv.creneauChoisi && !conv.creneauxVisible) {
     footer.innerHTML = `
-      <button onclick="afficherCreneaux(activeChatStructId)" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px">📅 Prendre RDV</button>
-      <button onclick="telechargerDevis(activeChatStructId)" style="background:var(--g100);color:var(--g600);border:1px solid var(--g200);border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:4px">📥 Devis</button>`;
+      <button onclick="afficherCreneaux(activeChatStructId)" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><i class="ti ti-calendar"></i> Prendre RDV</button>
+      <button onclick="telechargerDevis(activeChatStructId)" style="background:var(--g100);color:var(--g600);border:1px solid var(--g200);border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:4px"><i class="ti ti-download"></i> Devis</button>`;
   }
   // Étape 2 : créneaux visibles, pas encore choisi
   else if (conv.status === 'pending' && !conv.creneauChoisi && conv.creneauxVisible) {
     footer.innerHTML = `
       <div style="flex:1;background:#fff;border-radius:22px;padding:9px 14px;font-size:12px;color:var(--g400);font-family:'DM Sans',sans-serif">Choisissez un créneau ci-dessus…</div>
-      <div style="width:38px;height:38px;border-radius:50%;background:var(--g300);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0">➤</div>`;
+      <div style="width:38px;height:38px;border-radius:50%;background:var(--g300);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0"><i class="ti ti-send"></i></div>`;
   }
   // Étape 3 : créneau choisi → document selon domaine puis envoi
   else if (conv.status === 'pending' && conv.creneauChoisi) {
     const docType = convDocType(conv);
     const envoyerBtn = `
-        <button onclick="envoyerDemandeRdv(activeChatStructId)" style="flex:1;background:var(--green);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 2px 8px rgba(20,184,122,.3)">✅ Envoyer ma demande</button>`;
+        <button onclick="envoyerDemandeRdv(activeChatStructId)" style="flex:1;background:var(--green);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 2px 8px rgba(20,184,122,.3)"><i class="ti ti-circle-check"></i> Envoyer ma demande</button>`;
     if (docType === 'none') {
       footer.innerHTML = envoyerBtn; // consultation / actes médico-légaux : pas de document requis
     } else if (!conv.bulletin) {
@@ -2363,31 +2363,31 @@ function renderChatFooter(structId) {
     } else if (conv.bulletin === 'oui' && !conv.bulletinPhoto) {
       const docLabel = docType === 'carnet' ? 'carnet' : 'bulletin';
       footer.innerHTML = `
-        <button onclick="envoyerPhotoBulletin(activeChatStructId)" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px">📷 Envoyer la photo du ${docLabel}</button>`;
+        <button onclick="envoyerPhotoBulletin(activeChatStructId)" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><i class="ti ti-camera"></i> Envoyer la photo du ${docLabel}</button>`;
     } else if (conv.bulletin === 'oui' && conv.bulletinPhoto) {
       footer.innerHTML = envoyerBtn;
     } else if (docType === 'carnet') {
       footer.innerHTML = envoyerBtn; // carnet non fourni : non bloquant, remis sur place
     } else {
       footer.innerHTML = `
-        <button onclick="goToConsultations()" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px">🔎 Rechercher une consultation</button>`;
+        <button onclick="goToConsultations()" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><i class="ti ti-search"></i> Rechercher une consultation</button>`;
     }
   }
   // Étape 4 : demande envoyée, en attente
   else if (conv.status === 'waiting') {
     footer.innerHTML = `
-      <button onclick="ouvrirWAMobile(activeChatStructId)" style="flex:1;background:#25d366;color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px">📱 Suivre sur WhatsApp</button>`;
+      <button onclick="ouvrirWAMobile(activeChatStructId)" style="flex:1;background:#25d366;color:#fff;border:none;border-radius:22px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><i class="ti ti-device-mobile"></i> Suivre sur WhatsApp</button>`;
   }
   // Étape 5 : confirmé → message libre
   else if (conv.status === 'confirmed') {
     footer.innerHTML = `
       <input class="chat-inp" type="text" placeholder="Message au secrétariat…" id="chat-inp">
-      <button class="chat-send">➤</button>`;
+      <button class="chat-send"><i class="ti ti-send"></i></button>`;
   }
   else {
     footer.innerHTML = `
       <div style="flex:1;background:#fff;border-radius:22px;padding:9px 14px;font-size:12px;color:var(--g400);font-family:'DM Sans',sans-serif">Message…</div>
-      <div style="width:38px;height:38px;border-radius:50%;background:var(--g300);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0">➤</div>`;
+      <div style="width:38px;height:38px;border-radius:50%;background:var(--g300);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0"><i class="ti ti-send"></i></div>`;
   }
 }
 
@@ -2526,13 +2526,13 @@ let curFilterType = '';
 function openSortSheet() {
   const title = document.getElementById('filter-sheet-title');
   const body = document.getElementById('filter-sheet-body');
-  if (title) title.textContent = '🔃 Trier les résultats';
+  if (title) title.textContent = '<i class="ti ti-refresh"></i> Trier les résultats';
   const opts = [
-    {val:'prix-asc', lbl:'💰 Prix croissant'},
-    {val:'prix-desc', lbl:'💰 Prix décroissant'},
-    {val:'coverage', lbl:'⭐ Couverture assurance'},
-    {val:'delai', lbl:'⏱ Délai le plus court'},
-    {val:'zone', lbl:'📍 Zone / Quartier'},
+    {val:'prix-asc', lbl:'<i class="ti ti-coin"></i> Prix croissant'},
+    {val:'prix-desc', lbl:'<i class="ti ti-coin"></i> Prix décroissant'},
+    {val:'coverage', lbl:'<i class="ti ti-star"></i> Couverture assurance'},
+    {val:'delai', lbl:'<i class="ti ti-clock"></i> Délai le plus court'},
+    {val:'zone', lbl:'<i class="ti ti-map-pin"></i> Zone / Quartier'},
   ];
   if (body) body.innerHTML = opts.map(o =>
     `<div onclick="setSortM('${o.val}');document.getElementById('filter-sheet-overlay').classList.remove('open');document.getElementById('filter-sheet').classList.remove('open');document.getElementById('sort-chip-lbl').textContent='${o.lbl}';document.getElementById('sort-chip').classList.add('active')"
@@ -2544,7 +2544,7 @@ function openSortSheet() {
 
 function openFilterSheet(type) {
   curFilterType = type;
-  const titles = { structure:'🏥 Filtrer par structure', budget:'💰 Budget maximum', delai:'⏱ Délai de résultats', zone:'📍 Zone / Quartier' };
+  const titles = { structure:'<i class="ti ti-building-hospital"></i> Filtrer par structure', budget:'<i class="ti ti-coin"></i> Budget maximum', delai:'<i class="ti ti-clock"></i> Délai de résultats', zone:'<i class="ti ti-map-pin"></i> Zone / Quartier' };
   document.getElementById('filter-sheet-title').textContent = titles[type] || 'Filtrer';
   const body = document.getElementById('filter-sheet-body');
 
@@ -2556,7 +2556,7 @@ function openFilterSheet(type) {
       </div>` +
       STRUCTURES.map(s => `<div class="ins-opt-m" onclick="setFilterVal('structure','${s.id}')">
         <input type="radio" name="fs" ${cur==s.id?'checked':''} onchange="setFilterVal('structure','${s.id}')">
-        <label>${s.name} <span style="color:var(--g400);font-size:10px">📍 ${s.zone}</span></label>
+        <label>${s.name} <span style="color:var(--g400);font-size:10px"><i class="ti ti-map-pin"></i> ${s.zone}</span></label>
       </div>`).join('') + '</div>';
   }
   else if (type === 'budget') {
@@ -2636,14 +2636,14 @@ function getStructTags(acte, s, rank) {
   const ad = s.actes[acte];
   const delaiRank = {'Immédiat':0,'Urgence':0,'30min':1,'1h':2,'1h30':2,'2h':3,'4h':4,'24h':5};
   const tags = [];
-  if (rank === 0 && compSort === 'prix')        tags.push('<span class="csr-tag tag-cheap">💰 Moins cher</span>');
-  if (rank === 0 && compSort === 'proximite')   tags.push('<span class="csr-tag tag-close">📍 Plus proche</span>');
-  if (rank === 0 && compSort === 'assurance')   tags.push('<span class="csr-tag tag-ins">🛡 Couvert</span>');
-  if (rank === 0 && compSort === 'delai')       tags.push('<span class="csr-tag tag-fast">⚡ Plus rapide</span>');
+  if (rank === 0 && compSort === 'prix')        tags.push('<span class="csr-tag tag-cheap"><i class="ti ti-coin"></i> Moins cher</span>');
+  if (rank === 0 && compSort === 'proximite')   tags.push('<span class="csr-tag tag-close"><i class="ti ti-map-pin"></i> Plus proche</span>');
+  if (rank === 0 && compSort === 'assurance')   tags.push('<span class="csr-tag tag-ins"><i class="ti ti-shield-check"></i> Couvert</span>');
+  if (rank === 0 && compSort === 'delai')       tags.push('<span class="csr-tag tag-fast"><i class="ti ti-bolt"></i> Plus rapide</span>');
   if (PATIENT_DATA.assurances.some(i => s.assurances.includes(i)) && compSort !== 'assurance')
-    tags.push('<span class="csr-tag tag-ins">🛡 Couvert</span>');
+    tags.push('<span class="csr-tag tag-ins"><i class="ti ti-shield-check"></i> Couvert</span>');
   if ((delaiRank[ad.delai] ?? 99) <= 2 && compSort !== 'delai')
-    tags.push('<span class="csr-tag tag-fast">⚡ ' + ad.delai + '</span>');
+    tags.push('<span class="csr-tag tag-fast"><i class="ti ti-bolt"></i> ' + ad.delai + '</span>');
   return tags.slice(0,2).join('');
 }
 
@@ -2678,7 +2678,7 @@ function renderCompPanel() {
   Object.keys(compChoices).forEach(a => { if (!manquants.includes(a)) delete compChoices[a]; });
 
   const sortBtns = ['prix','proximite','assurance','delai'].map(s => {
-    const labels = {prix:'💰 Prix', proximite:'📍 Proximité', assurance:'🛡 Assurance', delai:'⚡ Délai'};
+    const labels = {prix:'<i class="ti ti-coin"></i> Prix', proximite:'<i class="ti ti-map-pin"></i> Proximité', assurance:'<i class="ti ti-shield-check"></i> Assurance', delai:'<i class="ti ti-bolt"></i> Délai'};
     return `<button class="csort-btn${compSort===s?' active':''}" onclick="setCompSort('${s}')">${labels[s]}</button>`;
   }).join('');
 
@@ -2697,11 +2697,11 @@ function renderCompPanel() {
         <input type="radio" class="csr-radio" name="cr-${CSS.escape(acte)}" ${isSel?'checked':''} onclick="event.stopPropagation();toggleCompChoice('${acte.replace(/'/g,"\\'")}',${s.id})">
         <div class="csr-info">
           <div class="csr-name">${s.name}${s.pioneer?' <span style="font-size:8px;background:var(--green);color:#fff;padding:1px 5px;border-radius:10px">P</span>':''}</div>
-          <div class="csr-tags">${getStructTags(acte,s,i)}<span class="csr-tag" style="background:var(--g100);color:var(--g600)">📍 ${s.zone}</span></div>
+          <div class="csr-tags">${getStructTags(acte,s,i)}<span class="csr-tag" style="background:var(--g100);color:var(--g600)"><i class="ti ti-map-pin"></i> ${s.zone}</span></div>
         </div>
         <div class="csr-right">
           <div class="csr-prix">${ad.prix.toLocaleString('fr-FR')} F</div>
-          <div class="csr-delai">⏱ ${ad.delai}</div>
+          <div class="csr-delai"><i class="ti ti-clock"></i> ${ad.delai}</div>
         </div>
       </div>`;
     }).join('');
@@ -2725,13 +2725,13 @@ function renderCompPanel() {
   container.innerHTML = `<div class="comp-panel">
     <div class="comp-panel-head">
       <div class="cph-left">
-        <div class="cph-icon">🔔</div>
+        <div class="cph-icon"><i class="ti ti-bell"></i></div>
         <div>
           <div class="cph-title">Complétez votre devis</div>
           <div class="cph-sub">${manquants.length} acte${manquants.length>1?'s':''}  non couverts par votre sélection</div>
         </div>
       </div>
-      <button class="cph-close" onclick="closeCompPanel()">✕</button>
+      <button class="cph-close" onclick="closeCompPanel()"><i class="ti ti-x"></i></button>
     </div>
     <div class="comp-sort-bar">${sortBtns}</div>
     ${actesHtml}
@@ -2801,15 +2801,15 @@ function initAccueil() {
   // Structures pionnières horizontales
   const pioneersEl = document.getElementById('struct-cards-m');
   pioneersEl.innerHTML = STRUCTURES.filter(s=>s.pioneer).map(s => {
-    const emojis = {'Labo':'🧬','Imagerie':'🖥','Centre':'⚡','Clinique':'🏥','AMB':'🚑','Cabinet':'🦷','Kiné':'🩺'};
+    const emojis = {'Labo':'<i class="ti ti-flask"></i>','Imagerie':'<i class="ti ti-scan"></i>','Centre':'<i class="ti ti-bolt"></i>','Clinique':'<i class="ti ti-building-hospital"></i>','AMB':'<i class="ti ti-ambulance"></i>','Cabinet':'<i class="ti ti-dental"></i>','Kiné':'<i class="ti ti-stethoscope"></i>'};
     const em = Object.entries(emojis).find(([k]) => s.name.includes(k) || s.type.includes(k));
-    const icon = em ? em[1] : '🏥';
+    const icon = em ? em[1] : '<i class="ti ti-building-hospital"></i>';
     return `<div class="scard-h" onclick="openProfilSheetM(${s.id})">
       <div class="scard-h-img">${icon}</div>
       <div class="scard-h-body">
         <div class="scard-h-badge">Pionnier</div>
         <div class="scard-h-name">${s.name}</div>
-        <div class="scard-h-zone">📍 ${s.zone}</div>
+        <div class="scard-h-zone"><i class="ti ti-map-pin"></i> ${s.zone}</div>
         <div class="scard-h-actes">${Object.keys(s.actes).length} actes disponibles</div>
       </div>
     </div>`;
@@ -2844,7 +2844,7 @@ function renderPanelsHomeM() {
       </div>
       <div class="pch-title">${p.titre}</div>
       <div class="pch-tags">${tags}</div>
-      <div class="pch-src">🔒 Modèle éditable</div>
+      <div class="pch-src"><i class="ti ti-lock"></i> Modèle éditable</div>
       <div class="pch-cta">Sélectionner (${avail.length}) →</div>
     </div>`;
   }).join('');
@@ -2949,7 +2949,7 @@ function updateSelStrip() {
   if (selectedActes.size === 0) { strip.classList.remove('show'); return; }
   strip.classList.add('show');
   pills.innerHTML = [...selectedActes].map(a =>
-    `<div class="sel-pill-m">${a}<button class="sel-pill-x" onclick="event.stopPropagation();removePacteFromStrip('${a.replace(/'/g,"\\'")}')">✕</button></div>`
+    `<div class="sel-pill-m">${a}<button class="sel-pill-x" onclick="event.stopPropagation();removePacteFromStrip('${a.replace(/'/g,"\\'")}')"><i class="ti ti-x"></i></button></div>`
   ).join('');
 }
 
@@ -2993,7 +2993,7 @@ function modeAssuranceM(ins) {
   const structs=STRUCTURES.filter(s=>s.assurances.includes(ins));
   const qr=document.getElementById('quick-results-m');
   const list=document.getElementById('qr-list-m');
-  list.innerHTML=`<div style="padding:8px 14px;font-size:11px;font-weight:600;color:var(--g600)">${structs.length} structure${structs.length>1?'s':''} acceptant <strong>${ins}</strong></div>`+structs.map(s=>`<div class="qr-item-m" onclick="openProfilSheetM(${s.id})"><span class="qr-item-name">${s.name}</span><span class="qr-item-meta">📍 ${s.zone}</span><span class="qr-item-count">${Object.keys(s.actes).length}</span></div>`).join('');
+  list.innerHTML=`<div style="padding:8px 14px;font-size:11px;font-weight:600;color:var(--g600)">${structs.length} structure${structs.length>1?'s':''} acceptant <strong>${ins}</strong></div>`+structs.map(s=>`<div class="qr-item-m" onclick="openProfilSheetM(${s.id})"><span class="qr-item-name">${s.name}</span><span class="qr-item-meta"><i class="ti ti-map-pin"></i> ${s.zone}</span><span class="qr-item-count">${Object.keys(s.actes).length}</span></div>`).join('');
   qr.style.display='block';
 }
 
@@ -3001,9 +3001,9 @@ function modeLocalisationM(zone) {
   if(!zone)return;
   const qr=document.getElementById('quick-results-m');
   const list=document.getElementById('qr-list-m');
-  if(zone==='__geo'){list.innerHTML='<div style="padding:12px 14px;font-size:12px;color:var(--blue)">📡 En production : géolocalisation GPS. Sélectionnez une zone pour tester.</div>';qr.style.display='block';return;}
+  if(zone==='__geo'){list.innerHTML='<div style="padding:12px 14px;font-size:12px;color:var(--blue)"><i class="ti ti-antenna"></i> En production : géolocalisation GPS. Sélectionnez une zone pour tester.</div>';qr.style.display='block';return;}
   const structs=STRUCTURES.filter(s=>s.zone.toLowerCase().includes(zone.toLowerCase()));
-  list.innerHTML=structs.map(s=>`<div class="qr-item-m" onclick="openProfilSheetM(${s.id})"><span class="qr-item-name">${s.name}</span><span class="qr-item-meta">📍 ${s.zone}</span><span class="qr-item-count">${Object.keys(s.actes).length}</span></div>`).join('');
+  list.innerHTML=structs.map(s=>`<div class="qr-item-m" onclick="openProfilSheetM(${s.id})"><span class="qr-item-name">${s.name}</span><span class="qr-item-meta"><i class="ti ti-map-pin"></i> ${s.zone}</span><span class="qr-item-count">${Object.keys(s.actes).length}</span></div>`).join('');
   qr.style.display='block';
 }
 
@@ -3016,7 +3016,7 @@ function modeDispoM(delai) {
   found.sort((a,b)=>(delaiRank[a.delai]??99)-(delaiRank[b.delai]??99));
   const qr=document.getElementById('quick-results-m');
   const list=document.getElementById('qr-list-m');
-  list.innerHTML=found.slice(0,12).map(f=>`<div class="qr-item-m" onclick="quickSelectActeM('${f.label.replace(/'/g,"\\'")}')"><span class="qr-item-name">${f.label}</span><span class="qr-item-meta">⏱ ${f.delai}</span><span class="qr-item-count">${f.count}</span></div>`).join('');
+  list.innerHTML=found.slice(0,12).map(f=>`<div class="qr-item-m" onclick="quickSelectActeM('${f.label.replace(/'/g,"\\'")}')"><span class="qr-item-name">${f.label}</span><span class="qr-item-meta"><i class="ti ti-clock"></i> ${f.delai}</span><span class="qr-item-count">${f.count}</span></div>`).join('');
   qr.style.display='block';
 }
 
@@ -3061,7 +3061,7 @@ function toggleInsM(ins,checked) {
   const n=activeIns.length;
   const lbl=document.getElementById('ins-chip-lbl');
   const chip=document.getElementById('ins-filter-chip');
-  if(lbl) lbl.textContent=n===0?'🛡 Toutes assurances':'🛡 '+n+' assurance'+(n>1?'s filtrées':' filtrée');
+  if(lbl) lbl.textContent=n===0?'<i class="ti ti-shield-check"></i> Toutes assurances':'<i class="ti ti-shield-check"></i> '+n+' assurance'+(n>1?'s filtrées':' filtrée');
   if(chip) chip.classList.toggle('active',n>0);
 }
 
@@ -3082,7 +3082,7 @@ function renderStructuresM() {
     rhActe.textContent = 'Sélectionnez des actes';
     rhSub.textContent = 'Choisissez vos actes via les piliers ci-dessus';
     el.innerHTML = `<div class="empty-state-m">
-      <div class="empty-icon-m">☑️</div>
+      <div class="empty-icon-m"><i class="ti ti-checkbox"></i></div>
       <div class="empty-txt-m">Sélectionnez un pilier et cochez<br>vos actes pour voir les structures.</div>
       <button style="margin-top:16px;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer" onclick="switchView('accueil')">← Choisir des actes</button>
     </div>`;
@@ -3117,7 +3117,7 @@ function renderStructuresM() {
   rhActe.textContent = n > 1 ? `${n} actes sélectionnés` : `« ${actesArr[0]} »`;
   rhSub.textContent = structs.length + ' structure' + (structs.length>1?'s':'') + ' disponible' + (structs.length>1?'s':'') + (n>1?' · tri par couverture':'');
   if (!structs.length) {
-    el.innerHTML = `<div class="empty-state-m"><div class="empty-icon-m">🔍</div><div class="empty-txt-m">Aucune structure ne correspond<br>aux critères sélectionnés.</div></div>`;
+    el.innerHTML = `<div class="empty-state-m"><div class="empty-icon-m"><i class="ti ti-search"></i></div><div class="empty-txt-m">Aucune structure ne correspond<br>aux critères sélectionnés.</div></div>`;
     return;
   }
   el.innerHTML = structs.map(({ s, matching }) => {
@@ -3133,7 +3133,7 @@ function renderStructuresM() {
         <input type="checkbox" class="scard-m-checkbox" ${inCart?'checked':''} onclick="event.stopPropagation();toggleCartM('${a.replace(/'/g,"\\'")}',${s.id})">
         <div class="scard-m-acte-info">
           <div class="scard-m-acte-nom">${a}</div>
-          <div class="scard-m-acte-delai">⏱ ${ad.delai}</div>
+          <div class="scard-m-acte-delai"><i class="ti ti-clock"></i> ${ad.delai}</div>
         </div>
         <div class="scard-m-acte-prix">${ad.prix.toLocaleString('fr-FR')} F</div>
       </div>`;
@@ -3146,26 +3146,26 @@ function renderStructuresM() {
         </div>
         <div class="scard-m-type">${s.type}</div>
         <div class="scard-m-meta">
-          <span class="smeta-m">📍 ${s.zone}</span>
-          <span class="smeta-m">🕐 ${s.horaires.split('·')[0].trim()}</span>
-          ${PRELEVEMENT_DATA[s.id]?.actif?'<span class="smeta-m" style="color:var(--green-d);font-weight:600">🏠 Domicile</span>':''}
+          <span class="smeta-m"><i class="ti ti-map-pin"></i> ${s.zone}</span>
+          <span class="smeta-m"><i class="ti ti-clock"></i> ${s.horaires.split('·')[0].trim()}</span>
+          ${PRELEVEMENT_DATA[s.id]?.actif?'<span class="smeta-m" style="color:var(--green-d);font-weight:600"><i class="ti ti-home"></i> Domicile</span>':''}
         </div>
       </div>
       ${actesRowsHtml}
       ${missing.length>0 ? `<div class="scard-missing">
-        <div class="scm-title">⚠️ Actes non disponibles ici</div>
+        <div class="scm-title"><i class="ti ti-alert-triangle"></i> Actes non disponibles ici</div>
         <div class="scm-actes">${missing.map(a=>`<span class="scm-pill">${a}</span>`).join('')}</div>
         <span class="scm-cta" onclick="openCompPanel()">Trouver où les faire →</span>
       </div>` : ''}
       <div class="scard-m-footer">
-        <div class="scard-m-ins">🛡 ${s.assurances.slice(0,3).join(' · ')}${s.assurances.length>3?' +'+(s.assurances.length-3):''}</div>
+        <div class="scard-m-ins"><i class="ti ti-shield-check"></i> ${s.assurances.slice(0,3).join(' · ')}${s.assurances.length>3?' +'+(s.assurances.length-3):''}</div>
         <button class="scard-m-profile-btn" onclick="openProfilSheetM(${s.id})">Profil →</button>
-        ${structCartItems.length>0?`<div class="scard-m-cart-badge">🛒 ${structCartItems.length} · ${structCartTotal.toLocaleString('fr-FR')} F</div>`:''}
+        ${structCartItems.length>0?`<div class="scard-m-cart-badge"><i class="ti ti-shopping-cart"></i> ${structCartItems.length} · ${structCartTotal.toLocaleString('fr-FR')} F</div>`:''}
       </div>
       ${matching.length>1?`<div style="padding:8px 14px;background:var(--g50);border-top:1px solid var(--g100);display:flex;justify-content:space-between;align-items:center;gap:8px">
         <span style="font-size:11px;color:var(--g600)">${matching.length} actes</span>
         <span style="font-family:Syne,sans-serif;font-size:15px;font-weight:800;color:var(--blue)">${total.toLocaleString('fr-FR')} FCFA</span>
-        <button style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0" onclick="addAllM(${s.id},'${matching.join('|||').replace(/'/g,"\\'")}')">➕ Tout</button>
+        <button style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0" onclick="addAllM(${s.id},'${matching.join('|||').replace(/'/g,"\\'")}')"><i class="ti ti-plus"></i> Tout</button>
       </div>`:''}
     </div>`;
   }).join('');
@@ -3248,7 +3248,7 @@ function renderCartM() {
   const actesManquants = [...selectedActes].filter(a => !actesEnPanier.has(a));
 
   if (!cart.length && !actesManquants.length) {
-    body.innerHTML = `<div class="cart-empty-m"><div class="cemi">🛒</div><div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre devis.</div><button class="cemt-cta" onclick="switchView('accueil')">Rechercher des actes</button></div>`;
+    body.innerHTML = `<div class="cart-empty-m"><div class="cemi"><i class="ti ti-shopping-cart"></i></div><div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre devis.</div><button class="cemt-cta" onclick="switchView('accueil')">Rechercher des actes</button></div>`;
     return;
   }
 
@@ -3264,7 +3264,7 @@ function renderCartM() {
     html += `<div style="margin:10px 12px 0;background:var(--white);border:1.5px solid var(--amber);border-radius:var(--r);overflow:hidden">
       <div style="background:var(--amber);padding:9px 14px;display:flex;align-items:center;justify-content:space-between">
         <div>
-          <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#fff">⚠️ Actes sans structure assignée</div>
+          <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#fff"><i class="ti ti-alert-triangle"></i> Actes sans structure assignée</div>
           <div style="font-size:10px;color:rgba(255,255,255,.75);margin-top:1px">Allez dans Résultats pour les assigner</div>
         </div>
         <span style="background:rgba(255,255,255,.25);color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px">${actesManquants.length}</span>
@@ -3310,21 +3310,21 @@ function renderCartM() {
 
     html += `<div class="panier-struct-group" style="margin:10px 12px 0">
       <div class="psg-head">
-        <div class="psg-name">🏥 ${s?.name || items[0].struct}</div>
+        <div class="psg-name"><i class="ti ti-building-hospital"></i> ${s?.name || items[0].struct}</div>
         <div class="psg-total">${sub.toLocaleString('fr-FR')} F</div>
       </div>
       ${items.map(c => `<div class="citem-m">
-        <div class="ci-info-m"><div class="ci-nom-m">${c.acte}</div><div class="ci-delai-m">⏱ ${c.delai}</div></div>
+        <div class="ci-info-m"><div class="ci-nom-m">${c.acte}</div><div class="ci-delai-m"><i class="ti ti-clock"></i> ${c.delai}</div></div>
         <div class="ci-prix-m">${c.prix.toLocaleString('fr-FR')} F</div>
         <button class="ci-del-m" onclick="removeFromCartM('${c.acte.replace(/'/g,"\\'")}',${c.structId})">×</button>
       </div>`).join('')}
       <div style="padding:8px 14px 10px">
         ${isSent
           ? `<div class="psg-slot-preview" style="background:var(--green-l);border-color:var(--green-m);cursor:pointer" onclick="ouvrirChatDepuisPanier(${sid})">
-               ✅ Devis envoyé · Choisir un créneau →
+               <i class="ti ti-circle-check"></i> Devis envoyé · Choisir un créneau →
              </div>`
           : `<button class="psg-creneau-btn" onclick="reserverActes(${sid})">
-               📋 Réserver mes actes
+               <i class="ti ti-clipboard-list"></i> Réserver mes actes
              </button>`
         }
       </div>
@@ -3337,7 +3337,7 @@ function renderCartM() {
     const cov = getCoverageForCartM(PATIENT_DATA.assurances, cart);
     const totCov = cov.reduce((s,c) => s+c.couvert, 0);
     const totRest = cov.reduce((s,c) => s+c.reste, 0);
-    if (totCov > 0) coverHtml = `<div class="coverage-badge"><span class="cb-covered">🛡 Pris en charge : <strong>${totCov.toLocaleString('fr-FR')} F</strong></span><span class="cb-rest">Reste : <strong>${totRest.toLocaleString('fr-FR')} F</strong></span></div>`;
+    if (totCov > 0) coverHtml = `<div class="coverage-badge"><span class="cb-covered"><i class="ti ti-shield-check"></i> Pris en charge : <strong>${totCov.toLocaleString('fr-FR')} F</strong></span><span class="cb-rest">Reste : <strong>${totRest.toLocaleString('fr-FR')} F</strong></span></div>`;
   }
 
   const nbSent = Object.keys(byStructId).filter(sid => conversations[sid]).length;
@@ -3350,9 +3350,9 @@ function renderCartM() {
       <span class="ptc-value">${total.toLocaleString('fr-FR')} FCFA</span>
     </div>
     ${allSent
-      ? `<button class="devis-btn-m" style="background:var(--blue)" onclick="switchView('messages')">💬 Voir mes messages →</button>`
+      ? `<button class="devis-btn-m" style="background:var(--blue)" onclick="switchView('messages')"><i class="ti ti-message"></i> Voir mes messages →</button>`
       : `<button class="devis-btn-m" onclick="reserverTousLesActes()">
-           📋 Réserver mes actes${nStructs > 1 ? ' (' + nStructs + ' structures)' : ''}
+           <i class="ti ti-clipboard-list"></i> Réserver mes actes${nStructs > 1 ? ' (' + nStructs + ' structures)' : ''}
          </button>`
     }
   </div>`;
@@ -3392,7 +3392,7 @@ function openCreneauSheet(structId) {
   // Pré-sélectionner le slot choisi si déjà sélectionné
   if (curSlot) {
     document.getElementById('cs-send-btn').disabled = false;
-    document.getElementById('cs-send-btn').textContent = '✅ Confirmer ce créneau';
+    document.getElementById('cs-send-btn').textContent = '<i class="ti ti-circle-check"></i> Confirmer ce créneau';
   } else {
     document.getElementById('cs-send-btn').disabled = true;
     document.getElementById('cs-send-btn').textContent = 'Choisissez un créneau';
@@ -3408,7 +3408,7 @@ function selectSlot(el) {
   creneauChoices[creneauCurrentStructId] = el.dataset.slot;
   const btn = document.getElementById('cs-send-btn');
   btn.disabled = false;
-  btn.textContent = '✅ Confirmer · ' + el.dataset.slot;
+  btn.textContent = '<i class="ti ti-circle-check"></i> Confirmer · ' + el.dataset.slot;
 }
 
 function closeCreneauSheet() {
@@ -3499,12 +3499,12 @@ function renderWAPanelsM() {
     const sub=items.reduce((sum,c)=>sum+c.prix,0);
     const ref='MC-'+sid+'-'+Date.now().toString().slice(-4);
     const chatId='wa-chat-m-'+sid;
-    const acteRows=items.map(c=>`<div class="wacte-row-m"><div class="war-nom-m">${c.acte}</div><div class="war-meta-m"><span style="color:var(--g400)">⏱ ${c.delai}</span><span class="war-prix-m">${c.prix.toLocaleString('fr-FR')} FCFA</span></div></div>`).join('');
+    const acteRows=items.map(c=>`<div class="wacte-row-m"><div class="war-nom-m">${c.acte}</div><div class="war-meta-m"><span style="color:var(--g400)"><i class="ti ti-clock"></i> ${c.delai}</span><span class="war-prix-m">${c.prix.toLocaleString('fr-FR')} FCFA</span></div></div>`).join('');
     const devisCard=`<div class="wdevis-m">
       <div class="wdh-m"><div class="wdh-logo-m">Med<span>Care</span></div><div class="wdh-ref-m">Réf. ${ref}</div></div>
       <div class="wdb-m">
         <div class="wdr-m"><span class="l">Structure</span><span class="v">${s.name}</span></div>
-        <div class="wdr-m"><span class="l">Zone</span><span class="v">📍 ${s.zone}</span></div>
+        <div class="wdr-m"><span class="l">Zone</span><span class="v"><i class="ti ti-map-pin"></i> ${s.zone}</span></div>
         <div class="wdr-m"><span class="l">Horaires</span><span class="v">${s.horaires.split('·')[0].trim()}</span></div>
         <div class="wsep-m"></div>
         <div class="wdr-m"><span class="l" style="font-weight:600">${items.length} acte${items.length>1?'s':''}</span></div>
@@ -3516,7 +3516,7 @@ function renderWAPanelsM() {
 
     return `<div class="wa-panel-m">
       <div class="wa-head-m">
-        <div class="wa-av-m">🏥</div>
+        <div class="wa-av-m"><i class="ti ti-building-hospital"></i></div>
         <div><div class="wa-hn-m">${s.name}</div><div class="wa-hs-m">${s.zone} · ${s.horaires.split('·')[0].trim()}</div></div>
       </div>
       <div class="wa-chat-m" id="${chatId}">
@@ -3525,12 +3525,12 @@ function renderWAPanelsM() {
         <div class="wmsg-m r">Bonjour ! Voici votre devis :<br>${devisCard}<div class="wtime-m">${gt()}</div></div>
       </div>
       <div class="wa-qr-m" id="wa-qr-m-${sid}">
-        <button class="qrb-m" onclick="showCalPanelM(${sid})">📅 Prendre RDV</button>
-        <button class="qrb-m" onclick="openWAM(${sid},'${ref}','${items.map(c=>c.acte).join(', ').replace(/'/g,"\\'")}','${sub.toLocaleString('fr-FR')}')">📲 WhatsApp</button>
+        <button class="qrb-m" onclick="showCalPanelM(${sid})"><i class="ti ti-calendar"></i> Prendre RDV</button>
+        <button class="qrb-m" onclick="openWAM(${sid},'${ref}','${items.map(c=>c.acte).join(', ').replace(/'/g,"\\'")}','${sub.toLocaleString('fr-FR')}')"><i class="ti ti-device-mobile"></i> WhatsApp</button>
       </div>
       <div class="wa-bar-m">
         <input class="wa-inp-m" type="text" placeholder="Message au secrétariat…" readonly>
-        <button class="wa-send-m">➤</button>
+        <button class="wa-send-m"><i class="ti ti-send"></i></button>
       </div>
     </div>`;
   }).join('');
@@ -3542,7 +3542,7 @@ function showCalPanelM(structId) {
   const qrId='wa-qr-m-'+structId;
   const chat=document.getElementById(chatId);
   if(!chat)return;
-  chat.innerHTML+=`<div class="wmsg-m s">📅 Je souhaite prendre rendez-vous<div class="wtime-m">${gt()}</div></div>`;
+  chat.innerHTML+=`<div class="wmsg-m s"><i class="ti ti-calendar"></i> Je souhaite prendre rendez-vous<div class="wtime-m">${gt()}</div></div>`;
   const days=['Lun 19','Mar 20','Mer 21','Jeu 22'];
   const times=['07h30','08h30','09h30','10h30','14h00','15h00','16h00','17h00'];
   const offs=[1,4,6];
@@ -3552,7 +3552,7 @@ function showCalPanelM(structId) {
       if(offs.includes(i))return`<div class="wslot-m off">${d}<br><strong>${t}</strong></div>`;
       return`<div class="wslot-m" data-slot="${d} · ${t}" data-sid="${structId}" onclick="pickSlotPanelM(this)">${d}<br><strong>${t}</strong></div>`;
     }).join('');
-    chat.innerHTML+=`<div class="wmsg-m r">Disponibilités · <strong>${s?s.name:''}</strong><div class="wcal-m"><div class="wcal-h-m">📅 Choisissez un créneau</div><div class="wcal-slots-m">${slots}</div></div><div class="wtime-m">${gt()}</div></div>`;
+    chat.innerHTML+=`<div class="wmsg-m r">Disponibilités · <strong>${s?s.name:''}</strong><div class="wcal-m"><div class="wcal-h-m"><i class="ti ti-calendar"></i> Choisissez un créneau</div><div class="wcal-slots-m">${slots}</div></div><div class="wtime-m">${gt()}</div></div>`;
     document.getElementById(qrId).innerHTML=`<button class="qrb-m" onclick="renderWAPanelsM()">← Retour</button>`;
     chat.scrollTop=chat.scrollHeight;
   },400);
@@ -3570,14 +3570,14 @@ function pickSlotPanelM(el) {
   document.querySelectorAll('#'+chatId+' .wslot-m').forEach(x=>x.classList.remove('sel'));
   el.classList.add('sel');
   const chat=document.getElementById(chatId);
-  chat.innerHTML+=`<div class="wmsg-m s">📅 ${slot}<div class="wtime-m">${gt()}</div></div>`;
+  chat.innerHTML+=`<div class="wmsg-m s"><i class="ti ti-calendar"></i> ${slot}<div class="wtime-m">${gt()}</div></div>`;
   setTimeout(()=>{
     chat.innerHTML+=`<div class="wmsg-m r">
       <div style="background:var(--amber-l);border:1.5px solid var(--amber);border-radius:8px;padding:9px 11px;margin-bottom:6px">
-        <div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:3px">⏳ Frais de réservation · Disponible à M6</div>
+        <div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:3px"><i class="ti ti-hourglass"></i> Frais de réservation · Disponible à M6</div>
         <div style="font-size:10.5px;color:#78350f;line-height:1.5">Pendant la période Pionniers, la réservation est <strong>gratuite</strong>. Les frais de 500 FCFA seront activés à l'issue de la période d'essai.</div>
       </div>
-      <button onclick="confirmRdvM(${structId},'${slot.replace(/'/g,"\\'")}','${ref}')" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;cursor:pointer">✅ Confirmer mon RDV gratuitement</button>
+      <button onclick="confirmRdvM(${structId},'${slot.replace(/'/g,"\\'")}','${ref}')" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:9px;padding:11px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;cursor:pointer"><i class="ti ti-circle-check"></i> Confirmer mon RDV gratuitement</button>
       <div class="wtime-m">${gt()}</div>
     </div>`;
     document.getElementById(qrId).innerHTML=`<button class="qrb-m" onclick="renderWAPanelsM()">← Retour</button>`;
@@ -3593,16 +3593,16 @@ function confirmRdvM(structId,slot,ref) {
   const chatId='wa-chat-m-'+structId;
   const qrId='wa-qr-m-'+structId;
   const chat=document.getElementById(chatId);
-  chat.innerHTML+=`<div class="wmsg-m s">✅ Je confirme : ${slot}<div class="wtime-m">${gt()}</div></div>`;
+  chat.innerHTML+=`<div class="wmsg-m s"><i class="ti ti-circle-check"></i> Je confirme : ${slot}<div class="wtime-m">${gt()}</div></div>`;
   setTimeout(()=>{
     const actesList=items.map(c=>`<div style="display:flex;justify-content:space-between;font-size:10px;padding:2px 0;border-bottom:1px solid var(--g100)"><span>${c.acte}</span><span style="font-weight:600;color:var(--blue)">${c.prix.toLocaleString('fr-FR')} F</span></div>`).join('');
     chat.innerHTML+=`<div class="wmsg-m r">
       <div class="wdevis-m" style="margin-top:0">
         <div class="wdh-m"><div class="wdh-logo-m">Med<span>Care</span></div><div class="wdh-ref-m">RDV · ${ref}</div></div>
         <div class="wdb-m">
-          <div class="wdr-m"><span class="l">🎉 Statut</span><span class="v" style="color:var(--green-d)">RDV Confirmé</span></div>
+          <div class="wdr-m"><span class="l"><i class="ti ti-confetti"></i> Statut</span><span class="v" style="color:var(--green-d)">RDV Confirmé</span></div>
           <div class="wdr-m"><span class="l">Structure</span><span class="v">${s?s.name:''}</span></div>
-          <div class="wdr-m"><span class="l">📅 Créneau</span><span class="v">${slot}</span></div>
+          <div class="wdr-m"><span class="l"><i class="ti ti-calendar"></i> Créneau</span><span class="v">${slot}</span></div>
           <div class="wsep-m"></div>${actesList}
           <div class="wdr-m" style="margin-top:4px"><span class="l">Total estimé</span><span class="v">${sub.toLocaleString('fr-FR')} FCFA</span></div>
         </div>
@@ -3611,11 +3611,11 @@ function confirmRdvM(structId,slot,ref) {
       <div class="wtime-m">${gt()}</div>
     </div>
     <div class="wmsg-m r" style="background:var(--amber-l);border:1px solid var(--amber);border-radius:0 7px 7px 7px;margin-top:4px">
-      <div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:3px">📋 Rappel</div>
+      <div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:3px"><i class="ti ti-clipboard-list"></i> Rappel</div>
       <div style="font-size:11px;color:#78350f;line-height:1.5">Apportez votre <strong>ordonnance ou prescription médicale</strong> au moment du RDV.</div>
       <div class="wtime-m" style="color:#92400e">${gt()}</div>
     </div>`;
-    document.getElementById(qrId).innerHTML=`<button class="qrb-m" onclick="renderWAPanelsM()">🔄 Nouveau devis</button>`;
+    document.getElementById(qrId).innerHTML=`<button class="qrb-m" onclick="renderWAPanelsM()"><i class="ti ti-refresh"></i> Nouveau devis</button>`;
     chat.scrollTop=chat.scrollHeight;
   },600);
   chat.scrollTop=chat.scrollHeight;
@@ -3666,17 +3666,17 @@ function showTabM(tab, el) {
       const statusCls=r.status==='confirmed'?'status-confirmed':r.status==='pending'?'status-pending':'status-done';
       return`<div class="rdv-card-m">
         <div class="rdv-card-head-m">
-          <div><div class="rdv-card-struct-m">${r.struct}</div><div style="font-size:10px;color:var(--g400)">📍 ${r.zone}</div></div>
+          <div><div class="rdv-card-struct-m">${r.struct}</div><div style="font-size:10px;color:var(--g400)"><i class="ti ti-map-pin"></i> ${r.zone}</div></div>
           <span class="rdv-card-status-m ${statusCls}">${statusLabel}</span>
         </div>
         <div class="rdv-card-body-m">
-          <div class="rdv-meta-row-m">📅 ${r.slot}</div>
-          <div class="rdv-meta-row-m">🔖 Réf. ${r.ref}</div>
+          <div class="rdv-meta-row-m"><i class="ti ti-calendar"></i> ${r.slot}</div>
+          <div class="rdv-meta-row-m"><i class="ti ti-bookmark"></i> Réf. ${r.ref}</div>
           <div class="rdv-actes-list-m">${r.actes.map(a=>`<div class="rdv-acte-item-m"><span>${a.nom}</span><span style="font-weight:600;color:var(--blue)">${a.prix.toLocaleString('fr-FR')} F</span></div>`).join('')}</div>
         </div>
         <div class="rdv-card-footer-m">
           <div style="font-size:10px;color:var(--g400)">Total : ${total.toLocaleString('fr-FR')} FCFA</div>
-          ${r.status!=='done'?'<button style="font-size:10px;background:none;border:1px solid var(--red);color:var(--red);border-radius:6px;padding:4px 10px;cursor:pointer">Annuler</button>':'<span style="font-size:10px;color:var(--green-d)">✓ Effectué</span>'}
+          ${r.status!=='done'?'<button style="font-size:10px;background:none;border:1px solid var(--red);color:var(--red);border-radius:6px;padding:4px 10px;cursor:pointer">Annuler</button>':'<span style="font-size:10px;color:var(--green-d)"><i class="ti ti-check"></i> Effectué</span>'}
         </div>
       </div>`;
     };
@@ -3689,12 +3689,12 @@ function showTabM(tab, el) {
       return`<div class="devis-card-m">
         <div class="devis-card-head-m">
           <div><div class="devis-struct-name-m">${d.struct}</div><div class="devis-ref-m">Réf. ${d.ref} · ${d.date}</div></div>
-          <span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;${isPending?'background:var(--green-l);color:var(--green-d)':'background:var(--g100);color:var(--g400)'}">${isPending?'⏳ En attente':'✕ Expiré'}</span>
+          <span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;${isPending?'background:var(--green-l);color:var(--green-d)':'background:var(--g100);color:var(--g400)'}">${isPending?'<i class="ti ti-hourglass"></i> En attente':'&times; Expiré'}</span>
         </div>
         <div class="devis-body-m">${d.actes.map(a=>`<div class="rdv-acte-item-m"><span>${a.nom}</span><span style="font-weight:600;color:var(--blue)">${a.prix.toLocaleString('fr-FR')} F</span></div>`).join('')}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--g100)">
           <div style="font-family:Syne,sans-serif;font-size:15px;font-weight:800;color:var(--blue)">${total.toLocaleString('fr-FR')} FCFA</div>
-          ${isPending?'<button style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">💬 Prendre RDV</button>':''}
+          ${isPending?'<button style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif"><i class="ti ti-message"></i> Prendre RDV</button>':''}
         </div></div>
       </div>`;
     }).join('');
@@ -3705,12 +3705,12 @@ function showTabM(tab, el) {
       <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Avez-vous une assurance maladie ?</div>
       <div style="font-size:10.5px;color:var(--g400);margin-bottom:12px">Permet de filtrer automatiquement les structures qui vous acceptent</div>
       <div style="display:flex;gap:8px;margin-bottom:14px">
-        <button id="ins-oui-btn-m" class="ins-yn-btn-m active" onclick="toggleInsYNM(true)">✅ Oui</button>
-        <button id="ins-non-btn-m" class="ins-yn-btn-m" onclick="toggleInsYNM(false)">❌ Non / Direct</button>
+        <button id="ins-oui-btn-m" class="ins-yn-btn-m active" onclick="toggleInsYNM(true)"><i class="ti ti-circle-check"></i> Oui</button>
+        <button id="ins-non-btn-m" class="ins-yn-btn-m" onclick="toggleInsYNM(false)"><i class="ti ti-circle-x"></i> Non / Direct</button>
       </div>
       <div id="ins-selector-zone-m">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:7px">Assurances enregistrées</div>
-        <div id="ins-tags-registered-m" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${PATIENT_DATA.assurances.map(a=>`<span class="ins-tag-removable-m">${a}<button onclick="removePatientInsM('${a.replace(/'/g,"\\'")}') " style="background:none;border:none;color:rgba(10,92,138,.5);cursor:pointer;font-size:13px;margin-left:4px;padding:0;line-height:1">✕</button></span>`).join('')}</div>
+        <div id="ins-tags-registered-m" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">${PATIENT_DATA.assurances.map(a=>`<span class="ins-tag-removable-m">${a}<button onclick="removePatientInsM('${a.replace(/'/g,"\\'")}') " style="background:none;border:none;color:rgba(10,92,138,.5);cursor:pointer;font-size:13px;margin-left:4px;padding:0;line-height:1"><i class="ti ti-x"></i></button></span>`).join('')}</div>
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:7px">Ajouter une assurance</div>
         <select class="profil-input-m" style="margin-bottom:10px" onchange="addPatientInsM(this.value)"><option value="">· Choisissez votre organisme ·</option>${INS_GROUPS.map(g=>`<optgroup label="${g.label}">${g.items.map(o=>`<option value="${o}">${o}</option>`).join('')}</optgroup>`).join('')}</select>
       </div>
@@ -3719,7 +3719,7 @@ function showTabM(tab, el) {
       </div>
     </div>
     <div class="compte-section-title-m">Structures compatibles</div>
-    <div style="display:flex;flex-direction:column;gap:8px">${STRUCTURES.filter(s=>PATIENT_DATA.assurances.some(a=>s.assurances.includes(a))).slice(0,6).map(s=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--white);border:1px solid var(--g200);border-radius:var(--r)"><div><div style="font-size:12px;font-weight:600;color:var(--text)">${s.name}</div><div style="font-size:10.5px;color:var(--g400)">📍 ${s.zone} · ${PATIENT_DATA.assurances.filter(a=>s.assurances.includes(a)).join(', ')}</div></div><button onclick="openProfilSheetM(${s.id})" style="font-size:11px;background:var(--blue-l);color:var(--blue);border:1px solid var(--blue-m);border-radius:7px;padding:5px 11px;cursor:pointer;font-family:DM Sans,sans-serif">Voir →</button></div>`).join('')}</div>`;
+    <div style="display:flex;flex-direction:column;gap:8px">${STRUCTURES.filter(s=>PATIENT_DATA.assurances.some(a=>s.assurances.includes(a))).slice(0,6).map(s=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--white);border:1px solid var(--g200);border-radius:var(--r)"><div><div style="font-size:12px;font-weight:600;color:var(--text)">${s.name}</div><div style="font-size:10.5px;color:var(--g400)"><i class="ti ti-map-pin"></i> ${s.zone} · ${PATIENT_DATA.assurances.filter(a=>s.assurances.includes(a)).join(', ')}</div></div><button onclick="openProfilSheetM(${s.id})" style="font-size:11px;background:var(--blue-l);color:var(--blue);border:1px solid var(--blue-m);border-radius:7px;padding:5px 11px;cursor:pointer;font-family:DM Sans,sans-serif">Voir →</button></div>`).join('')}</div>`;
   }
   else if(tab==='profil'){
     content.innerHTML=`<div class="compte-section-title-m">Informations personnelles</div>
@@ -3730,7 +3730,7 @@ function showTabM(tab, el) {
     <div class="profil-field-m"><label>Date de naissance</label><input class="profil-input-m" type="text" value="${PATIENT_DATA.naissance}"></div>
     <div class="compte-section-title-m">Sécurité</div>
     <div class="profil-field-m"><label>Nouveau mot de passe</label><input class="profil-input-m" type="password" placeholder="Laisser vide pour ne pas modifier"></div>
-    <button style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px;font-family:DM Sans,sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px" onclick="alert('Profil sauvegardé ✓')">💾 Sauvegarder</button>
+    <button style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:13px;font-family:DM Sans,sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px" onclick="alert('Profil sauvegardé <i class="ti ti-check"></i>')"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
     <div class="compte-section-title-m" style="color:var(--red)">Zone de danger</div>
     <button style="width:100%;background:var(--red-l);color:var(--red);border:1.5px solid var(--red);border-radius:10px;padding:12px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;cursor:pointer">Supprimer mon compte</button>
     <div style="height:16px"></div>`;
@@ -3751,14 +3751,14 @@ function addPatientInsM(val) {
   if (!val) return;
   if (!PATIENT_DATA.assurances.includes(val)) PATIENT_DATA.assurances.push(val);
   const tagsEl = document.getElementById('ins-tags-registered-m');
-  if (tagsEl) tagsEl.innerHTML = PATIENT_DATA.assurances.map(a => `<span class="ins-tag-removable-m">${a}<button onclick="removePatientInsM('${a.replace(/'/g,"\\'")}') " style="background:none;border:none;color:rgba(10,92,138,.5);cursor:pointer;font-size:13px;margin-left:4px;padding:0;line-height:1">✕</button></span>`).join('');
+  if (tagsEl) tagsEl.innerHTML = PATIENT_DATA.assurances.map(a => `<span class="ins-tag-removable-m">${a}<button onclick="removePatientInsM('${a.replace(/'/g,"\\'")}') " style="background:none;border:none;color:rgba(10,92,138,.5);cursor:pointer;font-size:13px;margin-left:4px;padding:0;line-height:1"><i class="ti ti-x"></i></button></span>`).join('');
   const row = document.getElementById('menu-ins-row');
   if (row) row.innerHTML = PATIENT_DATA.assurances.map(a => `<span class="ins-tag-m">${a}</span>`).join('');
 }
 function removePatientInsM(name) {
   PATIENT_DATA.assurances = PATIENT_DATA.assurances.filter(a => a !== name);
   const tagsEl = document.getElementById('ins-tags-registered-m');
-  if (tagsEl) tagsEl.innerHTML = PATIENT_DATA.assurances.length ? PATIENT_DATA.assurances.map(a => `<span class="ins-tag-removable-m">${a}<button onclick="removePatientInsM('${a.replace(/'/g,"\\'")}') " style="background:none;border:none;color:rgba(10,92,138,.5);cursor:pointer;font-size:13px;margin-left:4px;padding:0;line-height:1">✕</button></span>`).join('') : '<span style="font-size:12px;color:var(--g400)">Aucune assurance</span>';
+  if (tagsEl) tagsEl.innerHTML = PATIENT_DATA.assurances.length ? PATIENT_DATA.assurances.map(a => `<span class="ins-tag-removable-m">${a}<button onclick="removePatientInsM('${a.replace(/'/g,"\\'")}') " style="background:none;border:none;color:rgba(10,92,138,.5);cursor:pointer;font-size:13px;margin-left:4px;padding:0;line-height:1"><i class="ti ti-x"></i></button></span>`).join('') : '<span style="font-size:12px;color:var(--g400)">Aucune assurance</span>';
   const row = document.getElementById('menu-ins-row');
   if (row) row.innerHTML = PATIENT_DATA.assurances.map(a => `<span class="ins-tag-m">${a}</span>`).join('');
 }
@@ -3781,34 +3781,34 @@ function openProfilSheetM(structId) {
   modal.innerHTML=`
     <div style="background:linear-gradient(135deg,#0a4a72,#054a38);color:#fff;position:sticky;top:0;z-index:1">
       <div style="height:90px;background:linear-gradient(135deg,rgba(10,92,138,.4),rgba(6,95,70,.4));display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center"><div style="font-size:36px;margin-bottom:4px">🏥</div><div style="font-size:9px;color:rgba(255,255,255,.5)">Photo de la structure</div></div>
+        <div style="text-align:center"><div style="font-size:36px;margin-bottom:4px"><i class="ti ti-building-hospital"></i></div><div style="font-size:9px;color:rgba(255,255,255,.5)">Photo de la structure</div></div>
       </div>
       <div style="padding:14px 16px 14px">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
           <div>
             <div style="font-family:Syne,sans-serif;font-size:18px;font-weight:800">${s.name}</div>
             <div style="font-size:11px;color:rgba(255,255,255,.65);margin-top:2px">${s.type} · ${s.zone}</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">🕐 ${s.horaires}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px"><i class="ti ti-clock"></i> ${s.horaires}</div>
           </div>
-          <button onclick="closeProfilSheetM()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:34px;height:34px;color:rgba(255,255,255,.8);font-size:16px;cursor:pointer;flex-shrink:0">✕</button>
+          <button onclick="closeProfilSheetM()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;width:34px;height:34px;color:rgba(255,255,255,.8);font-size:16px;cursor:pointer;flex-shrink:0"><i class="ti ti-x"></i></button>
         </div>
         <div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">
-          <button onclick="closeProfilSheetM();switchView('panier');checkInscriptionThenDevisM()" style="flex:1;min-width:120px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">💬 Devis WhatsApp</button>
-          <button style="background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.25);border-radius:9px;padding:10px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif">📍 Itinéraire</button>
+          <button onclick="closeProfilSheetM();switchView('panier');checkInscriptionThenDevisM()" style="flex:1;min-width:120px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif"><i class="ti ti-message"></i> Devis WhatsApp</button>
+          <button style="background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.25);border-radius:9px;padding:10px 14px;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif"><i class="ti ti-map-pin"></i> Itinéraire</button>
         </div>
       </div>
     </div>
     <div style="padding:16px">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g400);margin-bottom:8px">Assurances acceptées</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">${s.assurances.map(a=>{const compat=insActives.includes(a);return`<span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;${compat?'background:var(--green-l);color:var(--green-d);border:1px solid var(--green-m)':'background:var(--g100);color:var(--g600)'}">${compat?'✓ ':''}${a}</span>`;}).join('')}</div>
-      ${prelevData?.actif?`<div style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:10px;padding:12px 14px;margin-bottom:14px"><div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px">🏠 Prélèvement à domicile disponible</div><div style="font-size:10.5px;color:var(--g600);margin-bottom:8px">⏱ ${prelevData.delai} · 🕐 ${prelevData.horaires}</div>${prelevData.zones.map(z=>`<div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid var(--blue-m)"><span>📍 ${z.nom}</span><span style="font-weight:700;color:${z.prix===0?'var(--green-d)':'var(--blue)'}">${z.prix===0?'Gratuit':z.prix.toLocaleString('fr-FR')+' FCFA'}</span></div>`).join('')}</div>`:''}
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">${s.assurances.map(a=>{const compat=insActives.includes(a);return`<span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;${compat?'background:var(--green-l);color:var(--green-d);border:1px solid var(--green-m)':'background:var(--g100);color:var(--g600)'}">${compat?'<i class="ti ti-check"></i> ':''}${a}</span>`;}).join('')}</div>
+      ${prelevData?.actif?`<div style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:10px;padding:12px 14px;margin-bottom:14px"><div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px"><i class="ti ti-home"></i> Prélèvement à domicile disponible</div><div style="font-size:10.5px;color:var(--g600);margin-bottom:8px"><i class="ti ti-clock"></i> ${prelevData.delai} · <i class="ti ti-clock"></i> ${prelevData.horaires}</div>${prelevData.zones.map(z=>`<div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid var(--blue-m)"><span><i class="ti ti-map-pin"></i> ${z.nom}</span><span style="font-weight:700;color:${z.prix===0?'var(--green-d)':'var(--blue)'}">${z.prix===0?'Gratuit':z.prix.toLocaleString('fr-FR')+' FCFA'}</span></div>`).join('')}</div>`:''}
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g400);margin-bottom:8px">Actes disponibles · ${Object.keys(s.actes).length} actes</div>
       ${Object.entries(byCat).map(([cat,actes])=>{
         const catRate=insActives.length>0?Math.max(...insActives.map(ins=>COVERAGE_RATES[ins]?.[cat]||0)):0;
         return`<div style="border:1px solid var(--g200);border-radius:9px;overflow:hidden;margin-bottom:8px">
           <div style="padding:8px 12px;background:var(--g50);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--g100)">
             <span style="font-size:11px;font-weight:700;color:var(--text)">${cat}</span>
-            ${catRate>0?`<span style="font-size:9px;font-weight:700;background:var(--green-l);color:var(--green-d);padding:2px 7px;border-radius:20px">🛡 ${catRate}%</span>`:''}
+            ${catRate>0?`<span style="font-size:9px;font-weight:700;background:var(--green-l);color:var(--green-d);padding:2px 7px;border-radius:20px"><i class="ti ti-shield-check"></i> ${catRate}%</span>`:''}
           </div>
           ${actes.map(a=>{
             const inCart=cart.some(c=>c.acte===a.acte&&c.structId===structId);
@@ -3817,13 +3817,13 @@ function openProfilSheetM(structId) {
             return`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--g100);cursor:pointer;${inCart?'background:var(--green-l)':''}" onclick="toggleCartM('${a.acte.replace(/'/g,"\\'")}',${structId});updateProfilCartBadgeM(${structId})">
               <input type="checkbox" ${inCart?'checked':''} style="width:18px;height:18px;accent-color:var(--green);flex-shrink:0" onclick="event.stopPropagation();toggleCartM('${a.acte.replace(/'/g,"\\'")}',${structId});updateProfilCartBadgeM(${structId})">
               <div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.3">${a.acte}</div>${catRate>0?`<div style="font-size:10px;color:var(--green-d)">Reste : ${reste.toLocaleString('fr-FR')} F · Pris en charge : ${couvert.toLocaleString('fr-FR')} F</div>`:''}</div>
-              <div style="text-align:right;flex-shrink:0"><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:var(--blue)">${a.prix.toLocaleString('fr-FR')} F</div><div style="font-size:10px;color:var(--g400)">⏱ ${a.delai}</div></div>
+              <div style="text-align:right;flex-shrink:0"><div style="font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:var(--blue)">${a.prix.toLocaleString('fr-FR')} F</div><div style="font-size:10px;color:var(--g400)"><i class="ti ti-clock"></i> ${a.delai}</div></div>
             </div>`;
           }).join('')}
         </div>`;
       }).join('')}
       <div id="profil-cart-badge-m" style="margin-top:8px"></div>
-      <button class="devis-btn-m" style="margin-top:12px" onclick="closeProfilSheetM();switchView('panier');checkInscriptionThenDevisM()">💬 Obtenir mon devis WhatsApp</button>
+      <button class="devis-btn-m" style="margin-top:12px" onclick="closeProfilSheetM();switchView('panier');checkInscriptionThenDevisM()"><i class="ti ti-message"></i> Obtenir mon devis WhatsApp</button>
       <div style="height:20px"></div>
     </div>`;
 
@@ -3846,7 +3846,7 @@ function updateProfilCartBadgeM(structId) {
   if(!el)return;
   if(!items.length){el.innerHTML='';return;}
   el.innerHTML=`<div style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:10px;padding:11px 14px">
-    <div style="font-size:10px;font-weight:700;color:var(--blue);margin-bottom:7px">🛒 Sélection · ${items.length} acte${items.length>1?'s':''}</div>
+    <div style="font-size:10px;font-weight:700;color:var(--blue);margin-bottom:7px"><i class="ti ti-shopping-cart"></i> Sélection · ${items.length} acte${items.length>1?'s':''}</div>
     <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${items.map(c=>`<span style="font-size:10.5px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:20px">${c.acte}</span>`).join('')}</div>
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div style="font-family:Syne,sans-serif;font-size:17px;font-weight:800;color:var(--blue)">${total.toLocaleString('fr-FR')} FCFA estimé</div>
@@ -3869,7 +3869,7 @@ var RECEIVED_TICKETS=[{act:'Kiné respiratoire adulte, à domicile',prac:'Cheikh
 function renderReceivedTickets(){
   if(!RECEIVED_TICKETS.length) return '';
   return '<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 14px;margin-bottom:16px">'+
-    '<div style="font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:#92400e;margin-bottom:8px">🔗 Liens de prestation reçus</div>'+
+    '<div style="font-family:Syne,sans-serif;font-size:13px;font-weight:800;color:#92400e;margin-bottom:8px"><i class="ti ti-link"></i> Liens de prestation reçus</div>'+
     RECEIVED_TICKETS.map(function(t){return '<div style="background:#fff;border:1px solid #fde68a;border-radius:10px;padding:11px 12px;margin-bottom:8px"><div style="font-weight:700;font-size:13px">'+t.act+'</div><div style="font-size:11.5px;color:#64748b;margin:2px 0 9px">'+t.prac+' · '+t.mode+' · '+t.prix+'</div><button onclick="openTicket()" style="background:#0a5c8a;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer">Ouvrir le lien →</button></div>';}).join('')+
     '<div style="font-size:10px;color:#92400e;opacity:.85;margin-top:2px">Reçu via un lien direct du praticien · non répertorié, hors recherche.</div>'+
   '</div>';
@@ -3909,7 +3909,7 @@ RECEIVED_TICKETS = [{
 {% endif %}
 
 function tkInCart(){return (typeof cart!=='undefined') && cart.some(function(c){return c.structId===PRAC_ID&&c.acte===PRAC.acte;});}
-function tkSync(){var b=document.getElementById('tk-addbtn');if(!b)return;if(tkInCart()){b.classList.add('added');b.textContent='✓ Dans le panier';}else{b.classList.remove('added');b.textContent='Ajouter au panier';}}
+function tkSync(){var b=document.getElementById('tk-addbtn');if(!b)return;if(tkInCart()){b.classList.add('added');b.textContent='<i class="ti ti-check"></i> Dans le panier';}else{b.classList.remove('added');b.textContent='Ajouter au panier';}}
 function tkPush(){cart.push({acte:PRAC.acte,prix:PRAC.prix,delai:PRAC.delai,struct:PRAC.name,structId:PRAC_ID,zone:PRAC.zone});if(typeof updateCartFabM==='function')updateCartFabM();}
 function tkAddCart(){
   if(tkInCart()){var i=cart.findIndex(function(c){return c.structId===PRAC_ID&&c.acte===PRAC.acte;});if(i>-1)cart.splice(i,1);if(typeof updateCartFabM==='function')updateCartFabM();tkSync();tkToast('Retiré du panier');}
@@ -3935,7 +3935,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var nmEl = document.querySelector("#view-ticket .tk-name");
   if (nmEl) nmEl.textContent = "{{ praticien.name|escapejs }}";
   var roEl = document.querySelector("#view-ticket .tk-role");
-  if (roEl) roEl.innerHTML = "{{ ticket.praticien_title|default:'Praticien de santé'|escapejs }} · ✓ Titre vérifié";
+  if (roEl) roEl.innerHTML = "{{ ticket.praticien_title|default:'Praticien de santé'|escapejs }} · <i class="ti ti-check"></i> Titre vérifié";
   var actEl = document.querySelector("#view-ticket .tk-act");
   if (actEl) actEl.textContent = "{{ ticket.title|escapejs }}";
   var descEl = document.querySelector("#view-ticket .tk-desc");

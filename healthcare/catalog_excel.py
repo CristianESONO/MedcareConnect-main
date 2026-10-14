@@ -272,10 +272,10 @@ class ActeCatalogMatcher:
             self.by_norm_name[norm_name] = acte
             self.alias_map[norm_name] = acte
 
-            # Extraire les alias naturels issus des séparateurs (/ , ( ) - [ ])
+            # Extraire les alias naturels issus des séparateurs (/ , ( ) - [ ] + &)
             parts = [
                 _normalize_str(p)
-                for p in re.split(r"[/()\[\]\-]", acte.name)
+                for p in re.split(r"[/()\[\]\-+&]", acte.name)
                 if _normalize_str(p)
             ]
             for part in parts:
@@ -303,6 +303,26 @@ class ActeCatalogMatcher:
                     norm_syn = _normalize_str(syn)
                     if norm_syn and norm_syn not in self.alias_map:
                         self.alias_map[norm_syn] = matched_acte
+
+        # Intégrer le lexique d'intention complet (2 890 variantes médicales standardisées)
+        try:
+            from healthcare.lexique_intention import get_lexique_data
+            lex_data = get_lexique_data()
+            for variant, meta in lex_data.items():
+                norm_var = _normalize_str(variant)
+                target_name = meta.get("acte") or meta.get("prestation")
+                if target_name and norm_var:
+                    norm_target = _normalize_str(target_name)
+                    target_obj = self.by_norm_name.get(norm_target)
+                    if not target_obj:
+                        for ref_norm, act in self.by_norm_name.items():
+                            if norm_target in ref_norm or ref_norm in norm_target:
+                                target_obj = act
+                                break
+                    if target_obj and norm_var not in self.alias_map:
+                        self.alias_map[norm_var] = target_obj
+        except Exception:
+            pass
 
     def match(
         self,
@@ -344,21 +364,9 @@ class ActeCatalogMatcher:
         if norm_input in self.by_norm_name:
             return self.by_norm_name[norm_input], "nom_exact"
 
-        # 4. Alias naturel ou synonyme médical
+        # 4. Alias naturel ou synonyme médical (avec lexique d'intention)
         if norm_input in self.alias_map:
             return self.alias_map[norm_input], "alias_medical"
-
-        # 4b. Sous-composantes si l'entrée contient des séparateurs
-        input_subparts = [
-            _normalize_str(p)
-            for p in re.split(r"[/()\[\]\-]", name_str)
-            if _normalize_str(p)
-        ]
-        for sub in input_subparts:
-            if sub in self.by_norm_name:
-                return self.by_norm_name[sub], "sous_partie_nom"
-            if sub in self.alias_map:
-                return self.alias_map[sub], "sous_partie_alias"
 
         # 5. Inclusion des mots-clés significatifs
         input_tokens = _extract_significant_tokens(norm_input)
@@ -399,22 +407,27 @@ class ActeCatalogMatcher:
         return None, "non_trouve"
 
 
-def _parse_delai(raw_val: Any) -> str:
-    if not raw_val:
-        return ""
+def _parse_delai(raw_val: Any) -> tuple[str, str | None]:
+    """
+    Parse un délai indicatif.
+    Retourne (code_delai, error_code).
+    error_code = 'unrecognized' si une valeur a été saisie mais non reconnue.
+    """
+    if raw_val is None or str(raw_val).strip() == "":
+        return "", None
     s = _normalize_str(str(raw_val))
     if not s:
-        return ""
+        return "", None
     if s in DELAI_NORMALIZATION_MAP:
-        return DELAI_NORMALIZATION_MAP[s]
+        return DELAI_NORMALIZATION_MAP[s], None
     for key, val in DELAI_NORMALIZATION_MAP.items():
         if key in s or s in key:
-            return val
+            return val, None
     # Direct match with standard choices
     for code, _ in PrestataireActe.DELAI_CHOICES:
         if code and code.upper() == s:
-            return code
-    return ""
+            return code, None
+    return "", "unrecognized"
 
 
 def _parse_boolean(val: Any, default: bool = True) -> bool:
@@ -430,26 +443,51 @@ def _parse_boolean(val: Any, default: bool = True) -> bool:
     return default
 
 
-def _parse_price(val: Any) -> Decimal | None:
-    if val is None or val == "":
-        return None
+def _parse_price(val: Any) -> tuple[Decimal | None, str | None]:
+    """
+    Parse un tarif médical.
+    Retourne (price_decimal, error_code).
+    error_code:
+      - 'empty' si valeur vide/absente
+      - 'negative' si tarif négatif (< 0)
+      - 'invalid_format' si valeur non numérique / invalide (ex: 'prix inconnu')
+      - None si tarif valide
+    """
+    if val is None:
+        return None, "empty"
+    raw_s = str(val).strip()
+    if not raw_s:
+        return None, "empty"
+
     if isinstance(val, (int, float, Decimal)):
         try:
             p = Decimal(str(val)).quantize(Decimal("0.01"))
             if p < Decimal("0"):
-                return Decimal("0.00")
-            return min(p, Decimal("99999999.99"))
+                return None, "negative"
+            return min(p, Decimal("99999999.99")), None
         except (InvalidOperation, TypeError):
-            return None
-    s = str(val).strip().upper()
+            return None, "invalid_format"
+
+    s = raw_s.upper()
+
+    # Détecter si un signe moins est présent
+    is_negative = s.startswith("-") or " - " in s
+
     # Supprimer les devises et symboles monétaires
     for cur in ("FCFA", "CFA", "XOF", "F CFA", "FRANCS", "FRANC", "F", "$", "€"):
         s = s.replace(cur, "")
     s = s.replace(" ", "").replace("\xa0", "").strip()
+
     if s in ("GRATUIT", "OFFERT", "INCLUS", "0"):
-        return Decimal("0.00")
+        return Decimal("0.00"), None
+
     if not s:
-        return None
+        return None, "empty"
+
+    # Vérifier s'il y a un signe négatif
+    if is_negative or s.startswith("-"):
+        return None, "negative"
+
     # Gérer les séparateurs de milliers et décimales
     if "." in s and "," in s:
         if s.rfind(",") > s.rfind("."):
@@ -466,13 +504,15 @@ def _parse_price(val: Any) -> Decimal | None:
             s = parts[0] + parts[1]
         else:
             s = s.replace(",", ".")
+
     try:
         p = Decimal(s).quantize(Decimal("0.01"))
         if p < Decimal("0"):
-            return Decimal("0.00")
-        return min(p, Decimal("99999999.99"))
+            return None, "negative"
+        return min(p, Decimal("99999999.99")), None
     except (InvalidOperation, TypeError):
-        return None
+        return None, "invalid_format"
+
 
 
 def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
@@ -825,8 +865,10 @@ def import_catalog_from_file(
                 raw_available = get_val("available")
                 raw_prereq = get_val("prerequisites")
 
-                # Ignorer les lignes entièrement vides
-                if not any(str(get_val(k) or "").strip() for k in col_map):
+                # Vérifier si la désignation est vide
+                if not str(raw_name or "").strip() and not str(raw_code or "").strip() and not str(raw_id or "").strip():
+                    errors.append(f"Ligne {line_num} : Désignation d'acte vide. Ligne ignorée.")
+                    skipped_count += 1
                     continue
 
                 display_label = str(raw_name or raw_code or (f"ID {raw_id}" if raw_id else f"Ligne {line_num}")).strip()
@@ -839,22 +881,36 @@ def import_catalog_from_file(
                 )
 
                 if target_acte is None:
-                    errors.append(f"Ligne {line_num} : Acte '{display_label}' introuvable dans le référentiel médical.")
+                    errors.append(f"Ligne {line_num} : Acte '{display_label}' introuvable dans le référentiel médical. Ligne rejetée sans association arbitraire.")
                     skipped_count += 1
                     continue
 
-                # Parser le prix avec tolérance monétaire complète
-                parsed_price = _parse_price(raw_price)
-                if parsed_price is None:
+                # Parser le prix avec tolérance monétaire et diagnostic d'erreur
+                parsed_price, price_err = _parse_price(raw_price)
+                if price_err == "negative":
+                    errors.append(f"Ligne {line_num} : Tarif négatif invalide '{raw_price}' pour '{display_label}'. Ligne rejetée (aucun tarif négatif autorisé).")
+                    skipped_count += 1
+                    continue
+                elif price_err == "invalid_format":
+                    errors.append(f"Ligne {line_num} : Tarif non numérique invalide '{raw_price}' pour '{display_label}'. Ligne rejetée.")
+                    skipped_count += 1
+                    continue
+                elif price_err == "empty":
+                    # Tarif absent : conservation tarif existant ou référence
                     if target_acte.pk in existing_offers:
                         parsed_price = existing_offers[target_acte.pk].price
+                        errors.append(f"Ligne {line_num} : Tarif absent pour '{display_label}'. Tarif existant conservé ({parsed_price:,.0f} FCFA).")
                     elif target_acte.reference_price is not None:
                         parsed_price = target_acte.reference_price
+                        errors.append(f"Ligne {line_num} : Tarif absent pour '{display_label}'. Tarif de référence appliqué ({parsed_price:,.0f} FCFA).")
                     else:
                         parsed_price = Decimal("0.00")
+                        errors.append(f"Ligne {line_num} : Tarif absent pour '{display_label}'. Fixé à 0 FCFA.")
 
                 # Parser le délai indicatif
-                parsed_delai = _parse_delai(raw_delai)
+                parsed_delai, delai_err = _parse_delai(raw_delai)
+                if delai_err == "unrecognized":
+                    errors.append(f"Ligne {line_num} : Délai indicatif '{raw_delai}' non reconnu pour '{display_label}' (délai laissé vide).")
                 if not parsed_delai and target_acte.pk in existing_offers:
                     parsed_delai = existing_offers[target_acte.pk].delai
 

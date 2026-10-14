@@ -14,7 +14,7 @@
     </p>
   </div>
   {% if org.subscription_plan.is_pioneer_offer %}
-  <span class="inline-flex items-center gap-1 rounded-full mc-bg-accent-light px-3 py-1 text-[11px] font-bold mc-text-accent-dark">★ Partenaire Pionnier</span>
+  <span class="inline-flex items-center gap-1 rounded-full mc-bg-accent-light px-3 py-1 text-[11px] font-bold mc-text-accent-dark"><i class="ti ti-star"></i> Partenaire Pionnier</span>
   {% endif %}
 </div>
 
@@ -80,7 +80,7 @@
   <div class="mt-4 flex flex-wrap gap-1.5">
     {% for c in completion %}
     <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold {% if c.ok %}mc-bg-accent-light mc-text-accent-dark{% else %}bg-rose-50 text-rose-700{% endif %}">
-      {% if c.ok %}✓{% else %}✗{% endif %} {{ c.label }}
+      {% if c.ok %}<i class="ti ti-check"></i>{% else %}<i class="ti ti-x"></i>{% endif %} {{ c.label }}
     </span>
     {% endfor %}
   </div>

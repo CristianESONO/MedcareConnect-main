@@ -1130,7 +1130,7 @@
             {% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %} Près de moi
           </button>
           <div class="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2 py-1 text-xs">
-            <span class="pl-1 text-gray-500" aria-hidden="true">🏙️</span>
+            <span class="pl-1 text-gray-500" aria-hidden="true"></span>
             <input type="text" name="city" id="city-quick" list="city-options" value="{{ current_city }}" placeholder="Ville…"
               class="w-32 min-w-0 border-0 bg-transparent p-0 text-xs font-semibold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0">
             {% if current_city %}
@@ -1208,14 +1208,14 @@
           <label class="ml-auto flex min-w-0 flex-col gap-1 sm:items-end">
             <span class="dem-filters-section-title hidden sm:block">Tri des offres</span>
             <select name="sort" class="dem-select-sort max-w-full min-w-[12rem]" onchange="document.getElementById('search-form').submit()">
-              <option value="price_asc"  {% if current_sort == "price_asc" %}selected{% endif %}>💰 Prix croissant</option>
-              <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>💰 Prix décroissant</option>
-              <option value="popular"    {% if current_sort == "popular" %}selected{% endif %}>⭐ Populaires</option>
-              <option value="recent_pa"  {% if current_sort == "recent_pa" %}selected{% endif %}>🆕 Récents</option>
-              <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>🔤 Nom A→Z</option>
-              <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>⏱ Délai le plus court</option>
-              <option value="delai_desc" {% if current_sort == "delai_desc" %}selected{% endif %}>⏱ Délai le plus long</option>
-              {% if has_coordinates %}<option value="distance" {% if current_sort == "distance" %}selected{% endif %}>📍 Distance</option>{% endif %}
+              <option value="price_asc"  {% if current_sort == "price_asc" %}selected{% endif %}> Prix croissant</option>
+              <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
+              <option value="popular"    {% if current_sort == "popular" %}selected{% endif %}>Populaires</option>
+              <option value="recent_pa"  {% if current_sort == "recent_pa" %}selected{% endif %}>Récents</option>
+              <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>Nom A→Z</option>
+              <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>Délai le plus court</option>
+              <option value="delai_desc" {% if current_sort == "delai_desc" %}selected{% endif %}>Délai le plus long</option>
+              {% if has_coordinates %}<option value="distance" {% if current_sort == "distance" %}selected{% endif %}>Distance</option>{% endif %}
             </select>
           </label>
         </div>
@@ -1632,7 +1632,7 @@
     var sig = window.__hcAcController.signal;
     var acURL = '{% url "healthcare:api_search_autocomplete" %}';
     var typeLabels = {famille:'Familles de soins', acte:'Examens & actes', centre:'Centres de santé'};
-    var typeIcons  = {famille:'🏥', acte:'🔬', centre:'📍'};
+    var typeIcons  = {famille:'<i class="ti ti-building-hospital"></i>', acte:'<i class="ti ti-flask"></i>', centre:'<i class="ti ti-map-pin"></i>'};
     var timer = null, activeIdx = -1, items = [];
     function highlight(text, q){
       if (!q) return text;
@@ -1995,7 +1995,7 @@
         '<label class="block text-[10px] font-bold uppercase tracking-wide text-gray-500">Ville ou quartier</label>' +
         '<input type="text" name="city" id="dem-bar-city" list="city-options" autocomplete="address-level2" ' +
         'class="dem-field w-full py-2.5 text-sm" placeholder="Dakar, Mermoz, Thiès…" value="' + demEscapeAttr(curCity) + '">' +
-        '<button type="button" id="dem-zone-geo" class="btn-accent w-full rounded-xl py-2.5 text-sm font-bold">📡 Utiliser ma position</button>' +
+        '<button type="button" id="dem-zone-geo" class="btn-accent w-full rounded-xl py-2.5 text-sm font-bold"><i class="ti ti-antenna"></i> Utiliser ma position</button>' +
         '<button type="submit" class="w-full rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-800">Rechercher</button>' +
         '</div>';
       document.getElementById('dem-zone-geo').addEventListener('click', function(){
@@ -2895,12 +2895,12 @@
     function ambulanceBtnLabel(name){
       var low = String(name || '').toLowerCase();
       if (low.indexOf('couverture') !== -1 || low.indexOf('événement') !== -1 || low.indexOf('evenement') !== -1 || low.indexOf('assistance') !== -1 || low.indexOf('manifestation') !== -1 || low.indexOf('sportive') !== -1) {
-        return '🩺 Configurer ma couverture';
+        return '<i class="ti ti-stethoscope"></i> Configurer ma couverture';
       }
       if (low.indexOf('rapatriement') !== -1 || low.indexOf('évacuation') !== -1 || low.indexOf('evacuation') !== -1) {
-        return '🌍 Organiser le rapatriement';
+        return '<i class="ti ti-world"></i> Organiser le rapatriement';
       }
-      return '🚑 Configurer mon trajet';
+      return '<i class="ti ti-ambulance"></i> Configurer mon trajet';
     }
 
     function getActePksInCart(){
@@ -3058,23 +3058,23 @@
 
     function compOfferTags(offer, rank){
       var tags = [];
-      if (rank === 0 && compSort === 'prix') tags.push('<span class="csr-tag csr-tag--cheap">💰 Moins cher</span>');
+      if (rank === 0 && compSort === 'prix') tags.push('<span class="csr-tag csr-tag--cheap"><i class="ti ti-coin"></i> Moins cher</span>');
       if (rank === 0 && compSort === 'proximite' && offer.distanceKm != null) {
-        tags.push('<span class="csr-tag csr-tag--dist">📍 Plus proche</span>');
+        tags.push('<span class="csr-tag csr-tag--dist"><i class="ti ti-map-pin"></i> Plus proche</span>');
       }
       if (rank === 0 && compSort === 'assurance' && offer.insOk) {
-        tags.push('<span class="csr-tag csr-tag--ins">🛡 Couvert</span>');
+        tags.push('<span class="csr-tag csr-tag--ins"><i class="ti ti-shield-check"></i> Couvert</span>');
       }
       if (rank === 0 && compSort === 'delai' && offer.delaiRank <= 4) {
-        tags.push('<span class="csr-tag csr-tag--fast">⚡ Plus rapide</span>');
+        tags.push('<span class="csr-tag csr-tag--fast"><i class="ti ti-bolt"></i> Plus rapide</span>');
       }
       if (offer.insOk && compSort !== 'assurance') {
-        tags.push('<span class="csr-tag csr-tag--ins">🛡 Couvert</span>');
+        tags.push('<span class="csr-tag csr-tag--ins"><i class="ti ti-shield-check"></i> Couvert</span>');
       }
       if (offer.distanceKm != null && compSort === 'proximite') {
-        tags.push('<span class="csr-tag csr-tag--dist">📍 ' + offer.distanceKm + ' km</span>');
+        tags.push('<span class="csr-tag csr-tag--dist"><i class="ti ti-map-pin"></i> ' + offer.distanceKm + ' km</span>');
       } else if (offer.delai && offer.delaiRank <= 4 && compSort !== 'delai') {
-        tags.push('<span class="csr-tag csr-tag--fast">⏱ ' + escapeHtml(offer.delai) + '</span>');
+        tags.push('<span class="csr-tag csr-tag--fast"><i class="ti ti-clock"></i> ' + escapeHtml(offer.delai) + '</span>');
       }
       return tags.slice(0, 3).join('');
     }
@@ -3144,10 +3144,10 @@
       });
 
       var sortDefs = [
-        { val: 'prix', lbl: '💰 Prix' },
-        { val: 'proximite', lbl: '📍 Proximité' },
-        { val: 'assurance', lbl: '🛡 Assurance' },
-        { val: 'delai', lbl: '⚡ Délai' }
+        { val: 'prix', lbl: '<i class="ti ti-coin"></i> Prix' },
+        { val: 'proximite', lbl: '<i class="ti ti-map-pin"></i> Proximité' },
+        { val: 'assurance', lbl: '<i class="ti ti-shield-check"></i> Assurance' },
+        { val: 'delai', lbl: '<i class="ti ti-bolt"></i> Délai' }
       ];
       var sortBtns = sortDefs.map(function(o){
         return '<button type="button" class="csort-btn' + (compSort === o.val ? ' active' : '') + '" data-comp-sort="' + o.val + '">' + o.lbl + '</button>';
@@ -3169,11 +3169,11 @@
             acteNameLow.includes('evacuation') || 
             acteNameLow.includes('évacuation')
           );
-          var btnTxt = '🚑 Configurer mon trajet';
+          var btnTxt = '<i class="ti ti-ambulance"></i> Configurer mon trajet';
           if (acteNameLow.includes('couverture') || acteNameLow.includes('événement') || acteNameLow.includes('evenement') || acteNameLow.includes('assistance') || acteNameLow.includes('manifestation')) {
-            btnTxt = '🩺 Configurer ma couverture';
+            btnTxt = '<i class="ti ti-stethoscope"></i> Configurer ma couverture';
           } else if (acteNameLow.includes('rapatriement') || acteNameLow.includes('évacuation') || acteNameLow.includes('evacuation')) {
-            btnTxt = '🌍 Organiser le rapatriement';
+            btnTxt = '<i class="ti ti-world"></i> Organiser le rapatriement';
           }
           var trajetBtn = isAmbulanceActe ? '<button type="button" class="csr-trajet-btn" onclick="event.stopPropagation();openTrajetConfig(\'' + escapeHtml(String(o.orgId || '')) + '\', \'' + escapeHtml(actePk) + '\', true)">' + btnTxt + '</button>' : '';
           return '<div class="comp-struct-row' + (isSel ? ' sel' : '') + '" data-comp-acte="' + escapeHtml(actePk) + '" data-comp-pa="' + escapeHtml(o.paId) + '">' +
@@ -3181,7 +3181,7 @@
             '<div class="csr-info"><div class="csr-name">' + escapeHtml(o.orgName) + '</div>' +
             (tags ? '<div class="csr-tags">' + tags + '</div>' : '') + '</div>' +
             '<div class="csr-right"><div class="csr-prix">' + fnum(o.price) + ' F</div>' +
-            (o.delai ? '<div class="csr-delai">⏱ ' + escapeHtml(o.delai) + '</div>' : '') +
+            (o.delai ? '<div class="csr-delai"><i class="ti ti-clock"></i> ' + escapeHtml(o.delai) + '</div>' : '') +
             trajetBtn +
             '</div></div>';
         }).join('');
@@ -3202,11 +3202,11 @@
 
       container.innerHTML = '<div class="comp-panel">' +
         '<div class="comp-panel-head"><div class="cph-left">' +
-        '<div class="cph-icon" style="font-size:22px;margin-right:8px">🔔</div>' +
+        '<div class="cph-icon" style="font-size:22px;margin-right:8px"><i class="ti ti-bell"></i></div>' +
         '<div><div class="cph-title" style="font-family:\'Syne\',sans-serif;font-size:15px;font-weight:700">Complétez votre devis</div>' +
         '<div class="cph-sub" style="font-size:11.5px;color:#64748b;margin-top:2px">' + manquants.length + ' acte' + (manquants.length > 1 ? 's' : '') + ' non couvert' + (manquants.length > 1 ? 's' : '') + ' par votre sélection</div></div></div>' +
         (canTakeAll ? '<button type="button" class="cph-take-all" data-comp-take-all>Tout prendre</button>' : '') +
-        '<button type="button" class="cph-close" data-comp-close aria-label="Fermer">✕</button></div>' +
+        '<button type="button" class="cph-close" data-comp-close aria-label="Fermer"><i class="ti ti-x"></i></button></div>' +
         '<div class="comp-sort-bar">' + sortBtns + '</div>' + actesHtml +
         '<div class="comp-footer"><div class="cf-total">' +
         (nbChoix > 0
@@ -3366,7 +3366,7 @@
       var total = items.reduce(function(s, it){ return s + it.price; }, 0);
       recap.innerHTML =
         '<div class="profil-panier-box">'
-        + '<div class="profil-panier-title">🛒 Sélection · ' + items.length + ' acte' + (items.length > 1 ? 's' : '') + '</div>'
+        + '<div class="profil-panier-title"><i class="ti ti-shopping-cart"></i> Sélection · ' + items.length + ' acte' + (items.length > 1 ? 's' : '') + '</div>'
         + '<div class="profil-panier-cards">'
         + items.map(function(it){
             return '<div class="profil-panier-card">'
@@ -3472,7 +3472,7 @@
         var orgItems = byOrg[orgName];
         var sub = orgItems.reduce(function(s, it){ return s + it.price; }, 0);
         return '<div class="cart-struct-group">'
-          + '<div class="csg-head"><span>🏥 ' + escapeHtml(orgName) + '</span><span class="csg-sub">' + fnum(sub) + ' F</span></div>'
+          + '<div class="csg-head"><span><i class="ti ti-building-hospital"></i> ' + escapeHtml(orgName) + '</span><span class="csg-sub">' + fnum(sub) + ' F</span></div>'
           + orgItems.map(function(it){
             return '<div class="citem' + (it.insOk === false ? ' citem-ins-warn' : '') + '">'
               + '<div class="ci-info"><div class="ci-nom">' + escapeHtml(it.acte) + '</div>'
@@ -3694,7 +3694,7 @@
         syncAllCartCardStates();
         var pBody = document.getElementById('panier-body-m');
         if (pBody) {
-          pBody.innerHTML = '<div class="cart-empty-m"><div class="cemi">🛒</div><div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre parcours.</div><button type="button" class="cemt-cta" data-sipn-goto-tab="prestations">Rechercher des actes</button></div>';
+          pBody.innerHTML = '<div class="cart-empty-m"><div class="cemi"><i class="ti ti-shopping-cart"></i></div><div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre parcours.</div><button type="button" class="cemt-cta" data-sipn-goto-tab="prestations">Rechercher des actes</button></div>';
         }
         var pHeadCount = document.querySelector('.psh-count');
         if (pHeadCount) pHeadCount.textContent = '0';
@@ -3923,7 +3923,7 @@
       btn.type = 'button';
       btn.className = 'shrink-0 cursor-pointer rounded-xl border px-4 py-3 text-left shadow-sm transition w-44 sm:w-52 ' +
         (isSelected ? 'border-accent-500 bg-accent-50 ring-2 ring-accent-300/80' : 'border-gray-200 bg-white hover:border-accent-300 hover:shadow-md');
-      btn.innerHTML = '<span class="text-xl">' + (p.icon || '📋') + '</span>' +
+      btn.innerHTML = '<span class="text-xl">' + (p.icon || '<i class="ti ti-clipboard-list"></i>') + '</span>' +
         '<div class="mt-1 truncate font-semibold text-gray-900 text-sm">' + escapeHtml(p.name) + '</div>' +
         '<div class="line-clamp-2 text-xs text-gray-500">' + escapeHtml(p.teaser || '') + '</div>';
       btn.addEventListener('click', function(){
@@ -4179,7 +4179,7 @@
       pills.innerHTML = Array.from(selected).map(function(pk){
         var name = acteNames[pk] || ('Acte #' + pk);
         return '<div class="sel-pill-m">' + escapeHtml(name) +
-          '<button type="button" class="sel-pill-x" data-remove-pk="' + escapeHtml(pk) + '" aria-label="Retirer">✕</button></div>';
+          '<button type="button" class="sel-pill-x" data-remove-pk="' + escapeHtml(pk) + '" aria-label="Retirer"><i class="ti ti-x"></i></button></div>';
       }).join('');
       pills.querySelectorAll('[data-remove-pk]').forEach(function(btn){
         btn.addEventListener('click', function(ev){
@@ -4783,7 +4783,7 @@
         (d.verified ? '<span class="rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-semibold text-sky-800">Vérifié</span>' : '') +
         '</div>' +
         (d.type_label ? '<p class="text-xs text-gray-500">' + escapeHtml(d.type_label) + '</p>' : '') +
-        (loc ? '<p class="mt-1 text-xs text-gray-600">📍 ' + escapeHtml(loc) + '</p>' : '') +
+        (loc ? '<p class="mt-1 text-xs text-gray-600"><i class="ti ti-map-pin"></i> ' + escapeHtml(loc) + '</p>' : '') +
         rating + badgeDom +
         '<p class="mt-3 text-xs font-semibold uppercase tracking-wide text-gray-400">Assurances acceptées</p>' + insHtml +
         '<p class="mt-3 text-xs text-gray-500">' + escapeHtml(String(d.actes_count || 0)) + ' acte(s) au catalogue</p>' +
@@ -4873,10 +4873,10 @@
     bg.disabled = true; bg.textContent = 'Localisation…';
     navigator.geolocation.getCurrentPosition(function(p){
       setCoords(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6), true);
-      bg.disabled = false; bg.innerHTML = '<span>📡</span> Utiliser ma position GPS';
+      bg.disabled = false; bg.innerHTML = '<span><i class="ti ti-antenna"></i></span> Utiliser ma position GPS';
     }, function(){
       alert('Position refusée ou indisponible.');
-      bg.disabled = false; bg.innerHTML = '<span>📡</span> Utiliser ma position GPS';
+      bg.disabled = false; bg.innerHTML = '<span><i class="ti ti-antenna"></i></span> Utiliser ma position GPS';
     }, {enableHighAccuracy:true, timeout:15000});
   });
 
@@ -6023,7 +6023,7 @@
     }
     
     function useMyLocation(target, idx) {
-      var label = '📍 Ma position GPS (Dakar)';
+      var label = '<i class="ti ti-map-pin"></i> Ma position GPS (Dakar)';
       if (target === 'depart') TRAJET_STATE.depart = label;
       else if (target === 'arrivee') TRAJET_STATE.arrivee = label;
       else if (target === 'lieu') TRAJET_STATE.lieu = label;
@@ -6036,7 +6036,7 @@
         '<input type="text" placeholder="' + ph + '" value="' + (value || '').replace(/"/g, '&quot;') + '" ' +
         'oninput="' + onin + ';updateTrajetRecap()" style="flex:1;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
         '<button onclick="useMyLocation(\'' + locTarget + '\'' + (locIdx !== undefined ? ',' + locIdx : '') + ')" title="Utiliser ma position" ' +
-        'style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--blue)">📍</button></div>';
+        'style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--blue)"><i class="ti ti-map-pin"></i></button></div>';
     }
     
     function fLabel(t) { return '<label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)">' + t + '</label>'; }
@@ -6058,7 +6058,7 @@
       if (!cfg || !cfg.actes) return;
       var ac = acteCfg();
       var acteNames = Object.keys(cfg.actes);
-      var titleByFlow = {trajet: '🚑 Composez votre trajet', rapatriement: '🌍 Détails du rapatriement', evenement: '🩺 Détails de la couverture médicale'};
+      var titleByFlow = {trajet: '<i class="ti ti-ambulance"></i> Composez votre trajet', rapatriement: '<i class="ti ti-world"></i> Détails du rapatriement', evenement: '<i class="ti ti-stethoscope"></i> Détails de la couverture médicale'};
       var body = '';
       if (ac.flow === 'trajet') body = flowTrajet(st, ac);
       else if (ac.flow === 'rapatriement') body = flowRapatriement(st, ac);
@@ -6070,30 +6070,30 @@
         '<select onchange="TRAJET_STATE.acte=this.value;renderTrajetConfig()" style="width:100%;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue,#0a5c8a);border-radius:7px;margin:3px 0 6px;background:#fff;font-weight:600;color:#1f2937">' +
         acteNames.map(function(n) { return '<option value="' + n + '"' + (n === st.acte ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
         '</select>' +
-        (ac.medic ? '<div style="font-size:10px;color:var(--blue,#0a5c8a);margin-bottom:10px;font-weight:600">🩺 ' + ac.medic + (ac.urgence ? ' · ⚡ prise en charge d\'urgence' : '') + '</div>' : '<div style="margin-bottom:8px"></div>') +
+        (ac.medic ? '<div style="font-size:10px;color:var(--blue,#0a5c8a);margin-bottom:10px;font-weight:600"><i class="ti ti-stethoscope"></i> ' + ac.medic + (ac.urgence ? ' · <i class="ti ti-bolt"></i> prise en charge d\'urgence' : '') + '</div>' : '<div style="margin-bottom:8px"></div>') +
         body +
         '<div id="trajet-recap-' + sId + '"></div>' +
-        '<button onclick="obtenirDevisTrajet()" style="width:100%;margin-top:10px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">💬 Obtenir mon devis</button>' +
+        '<button onclick="obtenirDevisTrajet()" style="width:100%;margin-top:10px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif"><i class="ti ti-message"></i> Obtenir mon devis</button>' +
         '<div style="font-size:8px;color:var(--g400,#9ca3af);margin-top:6px;line-height:1.5">Estimation indicative. Le devis final vous sera confirmé par la structure après vérification des informations.</div>' +
         '</div>';
       updateTrajetRecap();
     }
     
     function flowTrajet(st, ac) {
-      return fLabel('📍 Point de départ') +
+      return fLabel('<i class="ti ti-map-pin"></i> Point de départ') +
         '<div style="margin:3px 0 8px">' + addrField('Adresse de départ...', st.depart, 'TRAJET_STATE.depart=this.value', 'depart') + '</div>' +
         st.etapes.map(function(e, i) {
-          return fLabel('🛑 Étape ' + (i + 1)) +
+          return fLabel('<i class="ti ti-circle-stop"></i> Étape ' + (i + 1)) +
             '<div style="display:flex;gap:6px;align-items:center;margin:3px 0 8px">' +
             '<div style="flex:1">' + addrField('Adresse de l\'étape...', e, 'TRAJET_STATE.etapes[' + i + ']=this.value', 'etape', i) + '</div>' +
-            '<button onclick="removeEtape(' + i + ')" style="background:var(--red-l,#fde8e8);border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:12px;color:var(--red,#c0392b);flex-shrink:0">✕</button></div>';
+            '<button onclick="removeEtape(' + i + ')" style="background:var(--red-l,#fde8e8);border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:12px;color:var(--red,#c0392b);flex-shrink:0"><i class="ti ti-x"></i></button></div>';
         }).join('') +
         '<button onclick="addEtape()" style="font-size:10px;background:#fff;color:var(--blue);border:1.5px dashed var(--blue-m);border-radius:7px;padding:6px 10px;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">+ Ajouter une étape sur le trajet</button>' +
-        fLabel('🏁 Point d\'arrivée') +
+        fLabel('<i class="ti ti-flag"></i> Point d\'arrivée') +
         '<div style="margin:3px 0 8px">' + addrField('Adresse d\'arrivée...', st.arrivee, 'TRAJET_STATE.arrivee=this.value', 'arrivee') + '</div>' +
-        '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:10px"><input type="checkbox"' + (st.allerRetour ? ' checked' : '') + ' onchange="TRAJET_STATE.allerRetour=this.checked;updateTrajetRecap()"> 🔁 Retour au point de départ (aller-retour)</label>' +
+        '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:10px"><input type="checkbox"' + (st.allerRetour ? ' checked' : '') + ' onchange="TRAJET_STATE.allerRetour=this.checked;updateTrajetRecap()"> <i class="ti ti-repeat"></i> Retour au point de départ (aller-retour)</label>' +
         fLabel('Distance estimée (km)') +
-        '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 10px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>' +
+        '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 10px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)"><i class="ti ti-satellite"></i> Calculée par GPS en production</span></div>' +
         supplNuit(st);
     }
     
@@ -6109,16 +6109,16 @@
         '</div>' +
         fLabel('Mode de transport') +
         '<div style="display:flex;gap:6px;margin:3px 0 8px">' +
-        modePill('routier', '🚑 Routier', st) + modePill('aérien', '✈️ Aérien', st) +
+        modePill('routier', '<i class="ti ti-ambulance"></i> Routier', st) + modePill('aérien', '<i class="ti ti-plane"></i> Aérien', st) +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
         '<div>' + fLabel('Date souhaitée') + '<input type="date" value="' + st.dateR + '" onchange="TRAJET_STATE.dateR=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
         '<div>' + fLabel('État du patient') + '<select onchange="TRAJET_STATE.etatPatient=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
         ['Stable, allongé', 'Sous oxygène', 'Soins intensifs / ventilé', 'Isolé (contagieux)'].map(function(o) { return '<option' + (o === st.etatPatient ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
         '</select></div></div>' +
-        '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:8px"><input type="checkbox"' + (st.accompagnant ? ' checked' : '') + ' onchange="TRAJET_STATE.accompagnant=this.checked;updateTrajetRecap()"> 👥 Présence d\'un accompagnant</label>' +
-        (intl ? '<div style="font-size:9px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-bottom:8px">📄 Documents requis : passeport, autorisation médicale de vol, coordination avec l\'assurance. Devis personnalisé selon destination.</div>' :
-        fLabel('Distance estimée (km)') + '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 8px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>') +
+        '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:8px"><input type="checkbox"' + (st.accompagnant ? ' checked' : '') + ' onchange="TRAJET_STATE.accompagnant=this.checked;updateTrajetRecap()"> <i class="ti ti-users"></i> Présence d\'un accompagnant</label>' +
+        (intl ? '<div style="font-size:9px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-bottom:8px"><i class="ti ti-file-text"></i> Documents requis : passeport, autorisation médicale de vol, coordination avec l\'assurance. Devis personnalisé selon destination.</div>' :
+        fLabel('Distance estimée (km)') + '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 8px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)"><i class="ti ti-satellite"></i> Calculée par GPS en production</span></div>') +
         supplNuit(st);
     }
     
@@ -6131,8 +6131,8 @@
       var eq = function(cle, txt) {
         return '<label style="display:flex;align-items:center;gap:5px;font-size:10px;background:#fff;border:1.5px solid var(--g200);border-radius:7px;padding:4px 9px;cursor:pointer"><input type="checkbox"' + (st.equipe[cle] ? ' checked' : '') + ' onchange="TRAJET_STATE.equipe.' + cle + '=this.checked;updateTrajetRecap()"> ' + txt + '</label>';
       };
-      return '<div style="font-size:10px;color:var(--blue);margin-bottom:8px">📋 Type : ' + ac.evt + '</div>' +
-        fLabel('📍 Lieu / site de l\'évènement') +
+      return '<div style="font-size:10px;color:var(--blue);margin-bottom:8px"><i class="ti ti-clipboard-list"></i> Type : ' + ac.evt + '</div>' +
+        fLabel('<i class="ti ti-map-pin"></i> Lieu / site de l\'évènement') +
         '<div style="margin:3px 0 8px">' + addrField('Adresse du site...', st.lieu, 'TRAJET_STATE.lieu=this.value', 'lieu') + '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
         '<div>' + fLabel('Date') + '<input type="date" value="' + st.dateE + '" onchange="TRAJET_STATE.dateE=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
@@ -6148,7 +6148,7 @@
     }
     
     function supplNuit(st) {
-      return '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:4px"><input type="checkbox"' + (st.nuit ? ' checked' : '') + ' onchange="TRAJET_STATE.nuit=this.checked;updateTrajetRecap()"> 🌙 Intervention de nuit / week-end (+8 000 F)</label>';
+      return '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:4px"><input type="checkbox"' + (st.nuit ? ' checked' : '') + ' onchange="TRAJET_STATE.nuit=this.checked;updateTrajetRecap()"> <i class="ti ti-moon"></i> Intervention de nuit / week-end (+8 000 F)</label>';
     }
     
     function addEtape() {
@@ -6189,7 +6189,7 @@
         itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Rapatriement ' + (ac.scope === 'international' ? 'international' : 'national') + '</div>' +
           '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">De :</span> ' + (st.villeDep || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysDep || 'Sénégal') : '') + '</div>' +
           '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">À :</span> ' + (st.villeArr || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysArr || '(à définir)') : '') + '</div>' +
-          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Mode :</span> ' + (st.mode === 'aérien' ? '✈️ Aérien' : '🚑 Routier') + '</div>';
+          '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Mode :</span> ' + (st.mode === 'aérien' ? '<i class="ti ti-plane"></i> Aérien' : '<i class="ti ti-ambulance"></i> Routier') + '</div>';
         lines = recapLine('Prix de base', money(r.base)) +
           recapLine('Distance (' + r.km + ' km × ' + money(cfg.tarif_km_long) + ')', money(r.coutKm)) +
           (r.aerien ? recapLine('Supplément aérien', money(r.aerien)) : '') +
@@ -6208,7 +6208,7 @@
       }
       
       box.innerHTML = itin + '<div style="margin-top:8px">' + lines + '</div>' +
-        (r.surDevis ? '<div style="font-size:10px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-top:8px">📋 Ce service nécessite un devis personnalisé. Contactez la structure pour une estimation précise.</div>' :
+        (r.surDevis ? '<div style="font-size:10px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-top:8px"><i class="ti ti-clipboard-list"></i> Ce service nécessite un devis personnalisé. Contactez la structure pour une estimation précise.</div>' :
         '<div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-top:1px solid var(--g200);margin-top:6px"><span style="font-weight:700;color:var(--g600)">Total estimé</span><span style="font-extrabold;color:var(--green-d)">' + money(r.total) + '</span></div>');
     }
     

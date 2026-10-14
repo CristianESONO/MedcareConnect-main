@@ -16,7 +16,7 @@ from healthcare.data.structure_types_demo import (
     pilier_slugs_for_demo_key,
 )
 from healthcare.models import ActeMedical, OrganismeDeSante, ServiceMedical
-from healthcare.service_icons import icon_for_subfamily_label
+from healthcare.service_icons import icon_for_subfamily_label, strip_leading_emoji
 
 
 def applicable_pilier_slugs(org: OrganismeDeSante) -> set[str] | None:
@@ -130,18 +130,20 @@ def _prereq_lines(text: str) -> list[str]:
     return [ln.strip() for ln in (text or "").splitlines() if ln.strip()]
 
 
+from django.utils.safestring import mark_safe
+
 PILIER_ICONS: dict[str, str] = {
-    "biologie-medicale": "🧬",
-    "imagerie-medicale": "🖥",
-    "explorations-fonctionnelles": "⚡",
-    "ambulance-medicalisee": "🚑",
-    "soins-specialises": "🩺",
-    "soins-dentaires": "🦷",
+    "biologie-medicale": mark_safe('<i class="ti ti-flask"></i>'),
+    "imagerie-medicale": mark_safe('<i class="ti ti-scan"></i>'),
+    "explorations-fonctionnelles": mark_safe('<i class="ti ti-activity"></i>'),
+    "ambulance-medicalisee": mark_safe('<i class="ti ti-ambulance"></i>'),
+    "soins-specialises": mark_safe('<i class="ti ti-stethoscope"></i>'),
+    "soins-dentaires": mark_safe('<i class="ti ti-dental"></i>'),
 }
 
 
 def pilier_icon_for_slug(slug: str) -> str:
-    return PILIER_ICONS.get(slug or "", "")
+    return PILIER_ICONS.get(slug or "", mark_safe('<i class="ti ti-building-hospital"></i>'))
 
 
 def prep_display_for_acte(acte, pa) -> dict:
@@ -173,11 +175,14 @@ def prep_panel_payload(acte, category: str, pilier: str, pa, org=None, pilier_sl
 
     prep = prep_display_for_acte(acte, pa)
     reminders = reminders_for_acte(org, acte.pk) if org else []
+    # Strip any leading emoji from the pilier name — the template prepends pilier_icon itself,
+    # so if the DB name already contains the emoji we'd get a duplicate (e.g. "🧬 🧬 Biologie").
+    clean_pilier = strip_leading_emoji(pilier)
     return {
         "acte_id": acte.pk,
         "name": acte.name,
         "category": category,
-        "pilier": pilier,
+        "pilier": clean_pilier,
         "pilier_slug": pilier_slug,
         "pilier_icon": pilier_icon_for_slug(pilier_slug),
         "reference": prep["reference"],

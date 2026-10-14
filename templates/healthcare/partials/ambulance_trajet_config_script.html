@@ -145,7 +145,7 @@ function computeTrajet() {
 }
 
 function useMyLocation(target, idx) {
-  var label = '📍 Ma position GPS (Dakar)';
+  var label = '<i class="ti ti-map-pin"></i> Ma position GPS (Dakar)';
   if (target === 'depart') TRAJET_STATE.depart = label;
   else if (target === 'arrivee') TRAJET_STATE.arrivee = label;
   else if (target === 'lieu') TRAJET_STATE.lieu = label;
@@ -158,7 +158,7 @@ function addrField(ph, value, onin, locTarget, locIdx) {
     '<input type="text" placeholder="' + ph + '" value="' + (value || '').replace(/"/g, '&quot;') + '" ' +
     'oninput="' + onin + ';updateTrajetRecap()" style="flex:1;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
     '<button onclick="useMyLocation(\'' + locTarget + '\'' + (locIdx !== undefined ? ',' + locIdx : '') + ')" title="Utiliser ma position" ' +
-    'style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--blue)">📍</button></div>';
+    'style="background:var(--blue-l);border:1.5px solid var(--blue-m);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px;color:var(--blue)"><i class="ti ti-map-pin"></i></button></div>';
 }
 
 function fLabel(t) { return '<label style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)">' + t + '</label>'; }
@@ -180,7 +180,7 @@ function renderTrajetConfig() {
   if (!cfg || !cfg.actes) return;
   var ac = acteCfg();
   var acteNames = Object.keys(cfg.actes);
-  var titleByFlow = {trajet: '🚑 Composez votre trajet', rapatriement: '🌍 Détails du rapatriement', evenement: '🩺 Détails de la couverture médicale'};
+  var titleByFlow = {trajet: '<i class="ti ti-ambulance"></i> Composez votre trajet', rapatriement: '<i class="ti ti-world"></i> Détails du rapatriement', evenement: '<i class="ti ti-stethoscope"></i> Détails de la couverture médicale'};
   var body = '';
   if (ac.flow === 'trajet') body = flowTrajet(st, ac);
   else if (ac.flow === 'rapatriement') body = flowRapatriement(st, ac);
@@ -192,30 +192,30 @@ function renderTrajetConfig() {
     '<select onchange="TRAJET_STATE.acte=this.value;renderTrajetConfig()" style="width:100%;font-size:11px;padding:7px 9px;border:1.5px solid var(--blue,#0a5c8a);border-radius:7px;margin:3px 0 6px;background:#fff;font-weight:600;color:#1f2937">' +
     acteNames.map(function(n) { return '<option value="' + n + '"' + (n === st.acte ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
     '</select>' +
-    (ac.medic ? '<div style="font-size:10px;color:var(--blue,#0a5c8a);margin-bottom:10px;font-weight:600">🩺 ' + ac.medic + (ac.urgence ? ' · ⚡ prise en charge d\'urgence' : '') + '</div>' : '<div style="margin-bottom:8px"></div>') +
+    (ac.medic ? '<div style="font-size:10px;color:var(--blue,#0a5c8a);margin-bottom:10px;font-weight:600"><i class="ti ti-stethoscope"></i> ' + ac.medic + (ac.urgence ? ' · <i class="ti ti-bolt"></i> prise en charge d\'urgence' : '') + '</div>' : '<div style="margin-bottom:8px"></div>') +
     body +
     '<div id="trajet-recap-' + sId + '"></div>' +
-    '<button onclick="obtenirDevisTrajet()" style="width:100%;margin-top:10px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">💬 Obtenir mon devis</button>' +
+    '<button onclick="obtenirDevisTrajet()" style="width:100%;margin-top:10px;background:#25d366;color:#fff;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif"><i class="ti ti-message"></i> Obtenir mon devis</button>' +
     '<div style="font-size:8px;color:var(--g400,#9ca3af);margin-top:6px;line-height:1.5">Estimation indicative. Le devis final vous sera confirmé par la structure après vérification des informations.</div>' +
     '</div>';
   updateTrajetRecap();
 }
 
 function flowTrajet(st, ac) {
-  return fLabel('📍 Point de départ') +
+  return fLabel('<i class="ti ti-map-pin"></i> Point de départ') +
     '<div style="margin:3px 0 8px">' + addrField('Adresse de départ...', st.depart, 'TRAJET_STATE.depart=this.value', 'depart') + '</div>' +
     st.etapes.map(function(e, i) {
-      return fLabel('🛑 Étape ' + (i + 1)) +
+      return fLabel('<i class="ti ti-circle-stop"></i> Étape ' + (i + 1)) +
         '<div style="display:flex;gap:6px;align-items:center;margin:3px 0 8px">' +
         '<div style="flex:1">' + addrField('Adresse de l\'étape...', e, 'TRAJET_STATE.etapes[' + i + ']=this.value', 'etape', i) + '</div>' +
-        '<button onclick="removeEtape(' + i + ')" style="background:var(--red-l,#fde8e8);border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:12px;color:var(--red,#c0392b);flex-shrink:0">✕</button></div>';
+        '<button onclick="removeEtape(' + i + ')" style="background:var(--red-l,#fde8e8);border:none;border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:12px;color:var(--red,#c0392b);flex-shrink:0"><i class="ti ti-x"></i></button></div>';
     }).join('') +
     '<button onclick="addEtape()" style="font-size:10px;background:#fff;color:var(--blue);border:1.5px dashed var(--blue-m);border-radius:7px;padding:6px 10px;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">+ Ajouter une étape sur le trajet</button>' +
-    fLabel('🏁 Point d\'arrivée') +
+    fLabel('<i class="ti ti-flag"></i> Point d\'arrivée') +
     '<div style="margin:3px 0 8px">' + addrField('Adresse d\'arrivée...', st.arrivee, 'TRAJET_STATE.arrivee=this.value', 'arrivee') + '</div>' +
-    '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:10px"><input type="checkbox"' + (st.allerRetour ? ' checked' : '') + ' onchange="TRAJET_STATE.allerRetour=this.checked;updateTrajetRecap()"> 🔁 Retour au point de départ (aller-retour)</label>' +
+    '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:10px"><input type="checkbox"' + (st.allerRetour ? ' checked' : '') + ' onchange="TRAJET_STATE.allerRetour=this.checked;updateTrajetRecap()"> <i class="ti ti-repeat"></i> Retour au point de départ (aller-retour)</label>' +
     fLabel('Distance estimée (km)') +
-    '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 10px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>' +
+    '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 10px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)"><i class="ti ti-satellite"></i> Calculée par GPS en production</span></div>' +
     supplNuit(st);
 }
 
@@ -231,16 +231,16 @@ function flowRapatriement(st, ac) {
     '</div>' +
     fLabel('Mode de transport') +
     '<div style="display:flex;gap:6px;margin:3px 0 8px">' +
-    modePill('routier', '🚑 Routier', st) + modePill('aérien', '✈️ Aérien', st) +
+    modePill('routier', '<i class="ti ti-ambulance"></i> Routier', st) + modePill('aérien', '<i class="ti ti-plane"></i> Aérien', st) +
     '</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
     '<div>' + fLabel('Date souhaitée') + '<input type="date" value="' + st.dateR + '" onchange="TRAJET_STATE.dateR=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
     '<div>' + fLabel('État du patient') + '<select onchange="TRAJET_STATE.etatPatient=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff">' +
     ['Stable, allongé', 'Sous oxygène', 'Soins intensifs / ventilé', 'Isolé (contagieux)'].map(function(o) { return '<option' + (o === st.etatPatient ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
     '</select></div></div>' +
-    '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:8px"><input type="checkbox"' + (st.accompagnant ? ' checked' : '') + ' onchange="TRAJET_STATE.accompagnant=this.checked;updateTrajetRecap()"> 👥 Présence d\'un accompagnant</label>' +
-    (intl ? '<div style="font-size:9px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-bottom:8px">📄 Documents requis : passeport, autorisation médicale de vol, coordination avec l\'assurance. Devis personnalisé selon destination.</div>' :
-    fLabel('Distance estimée (km)') + '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 8px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)">🛰 Calculée par GPS en production</span></div>') +
+    '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:8px"><input type="checkbox"' + (st.accompagnant ? ' checked' : '') + ' onchange="TRAJET_STATE.accompagnant=this.checked;updateTrajetRecap()"> <i class="ti ti-users"></i> Présence d\'un accompagnant</label>' +
+    (intl ? '<div style="font-size:9px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-bottom:8px"><i class="ti ti-file-text"></i> Documents requis : passeport, autorisation médicale de vol, coordination avec l\'assurance. Devis personnalisé selon destination.</div>' :
+    fLabel('Distance estimée (km)') + '<div style="display:flex;align-items:center;gap:8px;margin:3px 0 8px">' + numField(st.distance, 'TRAJET_STATE.distance=parseFloat(this.value)||0', 0) + '<span style="font-size:9px;color:var(--g400)"><i class="ti ti-satellite"></i> Calculée par GPS en production</span></div>') +
     supplNuit(st);
 }
 
@@ -253,8 +253,8 @@ function flowEvenement(st, cfg, ac) {
   var eq = function(cle, txt) {
     return '<label style="display:flex;align-items:center;gap:5px;font-size:10px;background:#fff;border:1.5px solid var(--g200);border-radius:7px;padding:4px 9px;cursor:pointer"><input type="checkbox"' + (st.equipe[cle] ? ' checked' : '') + ' onchange="TRAJET_STATE.equipe.' + cle + '=this.checked;updateTrajetRecap()"> ' + txt + '</label>';
   };
-  return '<div style="font-size:10px;color:var(--blue);margin-bottom:8px">📋 Type : ' + ac.evt + '</div>' +
-    fLabel('📍 Lieu / site de l\'évènement') +
+  return '<div style="font-size:10px;color:var(--blue);margin-bottom:8px"><i class="ti ti-clipboard-list"></i> Type : ' + ac.evt + '</div>' +
+    fLabel('<i class="ti ti-map-pin"></i> Lieu / site de l\'évènement') +
     '<div style="margin:3px 0 8px">' + addrField('Adresse du site...', st.lieu, 'TRAJET_STATE.lieu=this.value', 'lieu') + '</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">' +
     '<div>' + fLabel('Date') + '<input type="date" value="' + st.dateE + '" onchange="TRAJET_STATE.dateE=this.value;updateTrajetRecap()" style="width:100%;font-size:11px;padding:6px 9px;border:1.5px solid var(--blue-m);border-radius:7px;background:#fff;box-sizing:border-box"></div>' +
@@ -270,7 +270,7 @@ function flowEvenement(st, cfg, ac) {
 }
 
 function supplNuit(st) {
-  return '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:4px"><input type="checkbox"' + (st.nuit ? ' checked' : '') + ' onchange="TRAJET_STATE.nuit=this.checked;updateTrajetRecap()"> 🌙 Intervention de nuit / week-end (+8 000 F)</label>';
+  return '<label style="display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer;margin-bottom:4px"><input type="checkbox"' + (st.nuit ? ' checked' : '') + ' onchange="TRAJET_STATE.nuit=this.checked;updateTrajetRecap()"> <i class="ti ti-moon"></i> Intervention de nuit / week-end (+8 000 F)</label>';
 }
 
 function addEtape() {
@@ -311,7 +311,7 @@ function updateTrajetRecap() {
     itin = '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:4px">Rapatriement ' + (ac.scope === 'international' ? 'international' : 'national') + '</div>' +
       '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">De :</span> ' + (st.villeDep || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysDep || 'Sénégal') : '') + '</div>' +
       '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">À :</span> ' + (st.villeArr || '(à définir)') + (ac.scope === 'international' ? ', ' + (st.paysArr || '(à définir)') : '') + '</div>' +
-      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Mode :</span> ' + (st.mode === 'aérien' ? '✈️ Aérien' : '🚑 Routier') + '</div>';
+      '<div style="font-size:10px;color:var(--g600);padding:1px 0"><span style="color:var(--g400)">Mode :</span> ' + (st.mode === 'aérien' ? '<i class="ti ti-plane"></i> Aérien' : '<i class="ti ti-ambulance"></i> Routier') + '</div>';
     lines = recapLine('Prix de base', money(r.base)) +
       recapLine('Distance (' + r.km + ' km × ' + money(cfg.tarif_km_long) + ')', money(r.coutKm)) +
       (r.aerien ? recapLine('Supplément aérien', money(r.aerien)) : '') +
@@ -330,7 +330,7 @@ function updateTrajetRecap() {
   }
   
   box.innerHTML = itin + '<div style="margin-top:8px">' + lines + '</div>' +
-    (r.surDevis ? '<div style="font-size:10px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-top:8px">📋 Ce service nécessite un devis personnalisé. Contactez la structure pour une estimation précise.</div>' :
+    (r.surDevis ? '<div style="font-size:10px;color:var(--g600);background:#fff;border:1px solid var(--g100);border-radius:7px;padding:6px 9px;margin-top:8px"><i class="ti ti-clipboard-list"></i> Ce service nécessite un devis personnalisé. Contactez la structure pour une estimation précise.</div>' :
     '<div style="display:flex;justify-content:space-between;font-size:11px;padding:6px 0;border-top:1px solid var(--g200);margin-top:6px"><span style="font-weight:700;color:var(--g600)">Total estimé</span><span style="font-extrabold;color:var(--green-d)">' + money(r.total) + '</span></div>');
 }
 

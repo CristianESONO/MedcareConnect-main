@@ -1110,6 +1110,95 @@ def get_default_subscription_plan():
     return SubscriptionPlan.objects.order_by("order", "pk").first()
 
 
+class ExamenPanel(models.Model):
+    """
+    Panel d'examens constitué par une structure (ou un praticien).
+    Génère un lien court medcare.sn/t/<token> envoyable aux patients.
+    kind='panel'  → plusieurs actes regroupés (ex: bilan hépatique complet)
+    kind='ticket' → acte unique, même mécanique (alias léger)
+    """
+    KIND_PANEL = "panel"
+    KIND_TICKET = "ticket"
+    KIND_CHOICES = [
+        (KIND_PANEL, "Panel d'examens"),
+        (KIND_TICKET, "Ticket acte seul"),
+    ]
+
+    organisme = models.ForeignKey(
+        "OrganismeDeSante",
+        on_delete=models.CASCADE,
+        related_name="examens_panels",
+        verbose_name="Structure",
+    )
+    token = models.CharField(
+        max_length=24,
+        unique=True,
+        db_index=True,
+        help_text="Identifiant court unique du lien (ex: bio-comp-a3f2).",
+    )
+    kind = models.CharField(
+        max_length=10,
+        choices=KIND_CHOICES,
+        default=KIND_PANEL,
+        verbose_name="Type",
+    )
+    nom = models.CharField(
+        max_length=255,
+        verbose_name="Nom du panel",
+        help_text="Ex: Bilan hépatique complet, Bilan de fécondité…",
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Description / consignes",
+    )
+    actes = models.ManyToManyField(
+        "PrestataireActe",
+        blank=True,
+        related_name="panels",
+        verbose_name="Actes inclus",
+    )
+    is_active = models.BooleanField(default=True, verbose_name="Actif")
+    views_count = models.PositiveIntegerField(default=0, verbose_name="Consultations")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Panel d'examens"
+        verbose_name_plural = "Panels d'examens"
+
+    def __str__(self):
+        return f"{self.nom} — {self.organisme.name}"
+
+    def get_public_path(self):
+        return f"/t/{self.token}"
+
+    @property
+    def total_price(self):
+        total = sum(pa.price or 0 for pa in self.actes.all())
+        return total
+
+    @property
+    def acte_count(self):
+        return self.actes.count()
+
+    def generate_token(self):
+        """Génère un token court unique basé sur le nom du panel."""
+        from django.utils.text import slugify
+        from django.utils.crypto import get_random_string
+        base = slugify(self.nom)[:12] if self.nom else "panel"
+        for _ in range(10):
+            token = f"{base}-{get_random_string(4, 'abcdefghijklmnopqrstuvwxyz0123456789')}"
+            if not ExamenPanel.objects.filter(token=token).exists():
+                return token
+        return get_random_string(16)
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = self.generate_token()
+        super().save(*args, **kwargs)
+
+
 class PrestationTicket(models.Model):
     """
     Ticket de prestation privé (généré par le praticien indépendant).

@@ -6,7 +6,7 @@
 {% block dash_content %}
 <div class="flex flex-wrap items-center justify-between gap-4">
   <div>
-    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">🏠 Prestations à domicile</h1>
+    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl"><i class="ti ti-home"></i> Prestations à domicile</h1>
     <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Configurez vos zones de déplacement et les forfaits associés. Les patients verront ces informations sur votre profil.</p>
   </div>
 </div>
@@ -58,8 +58,8 @@
         <span class="font-semibold text-gray-700">Active</span>
       </label>
       <div class="flex gap-1.5 sm:justify-end">
-        <button type="submit" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-primary-600">💾</button>
-        <button type="submit" name="action" value="delete_zone" formnovalidate onclick="return confirm('Supprimer la zone « {{ z.label|escapejs }} » ?');" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50">✕</button>
+        <button type="submit" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-primary-600"><i class="ti ti-device-floppy"></i></button>
+        <button type="submit" name="action" value="delete_zone" formnovalidate onclick="return confirm('Supprimer la zone « {{ z.label|escapejs }} » ?');" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50"><i class="ti ti-x"></i></button>
       </div>
     </form>
     {% empty %}

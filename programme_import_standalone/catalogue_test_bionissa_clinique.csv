@@ -1,0 +1,26 @@
+﻿Designation Acte;Prix (FCFA);Delai de Rendu;Type Prestation;Commentaires
+Glycémie à jeun;2500;2h;Biologie;À jeun strict
+NFS;4000;3h;Biologie;Numération Formule Sanguine
+Créatininémie;3000;2h;Biologie;Évaluation fonction rénale
+Cholestérol total;2500;2h;Biologie;Bilan lipidique
+ECBU;6000;24h;Biologie;Examen cytobactériologique des urines
+Ionogramme sanguin;5000;3h;Biologie;Na, K, Cl
+RUGEOLE;12000;48h;Biologie;Typo CDC Bionissa §5.4
+Scoth test;3500;1h;Biologie;Typo CDC Bionissa §5.4
+ac anti CP 210;25000;72h;Biologie;Typo CDC Bionissa §5.4
+TPTCK;4500;2h;Biologie;Bilan d'hémostase (CDC §5.4)
+Sérologie Rubéole IgG;8500;24h;Biologie;Garde-fou IgG vs IgM actif
+Sérologie Rubéole IgM;8500;24h;Biologie;Garde-fou discriminant actif
+Hépatite B Ag HBs;7000;2h;Biologie;Garde-fou Hépatite B vs C
+Hépatite C sérologie;9000;2h;Biologie;Dépistage virale
+PV CHLAM MYCO;18000;48h;Biologie;Composite multi-actes §5.3 / §6
+Scanner thoracique avec injection;85000;4h;Imagerie;Avec produit de contraste
+IRM cérébrale;150000;24h;Imagerie;Séquences T1, T2, FLAIR
+Échographie abdomino-pelvienne;35000;1h;Imagerie;Vessie pleine
+Électrocardiogramme de repos (ECG);15000;30m;Explorations;12 dérivations
+Fibroscopie oeso-gastro-duodénale;65000;2h;Explorations;Sous anesthésie locale
+Transport médicalisé d'urgence VSL;25000;Immédiat;Ambulance;Agglomération Dakar
+Séance de dialyse péritonéale;75000;4h;Soins spécialisés;Néphrologie
+Détartrage supra et sous-gingival;25000;45m;Dentaire;Ultrasons + polissage
+Extraction dent de sagesse incluse;45000;1h;Dentaire;Chirurgie dentaire
+Prestation spéciale non répertoriée XYZ;10000;24h;Divers;Test acte inconnu

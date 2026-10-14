@@ -1,44 +1,46 @@
 """
-Icônes et libellés courts des familles d'assurance — alignés démo structures Thior.
+Icônes et libellés courts des familles d'assurance — Tabler Icons professionnels.
 """
 from __future__ import annotations
 
+from django.utils.safestring import mark_safe
+
 SEGMENT_CATALOG: dict[str, dict[str, str]] = {
     "privee_iard": {
-        "icon": "🏢",
-        "filter_icon": "✅",
+        "icon": mark_safe('<i class="ti ti-building"></i>'),
+        "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Privées traditionnelles",
         "filter_label": "Privées traditionnelles",
         "block_hint": "IARD et assureurs classiques.",
         "badge_color": "#0a5c8a",
     },
     "digitale": {
-        "icon": "📱",
-        "filter_icon": "🟢",
+        "icon": mark_safe('<i class="ti ti-device-mobile"></i>'),
+        "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Digitales & plateformes",
         "filter_label": "Digitales & plateformes",
         "block_hint": "Mutuelles modernes, cartes santé, 100 % digital.",
         "badge_color": "#14b87a",
     },
     "regime_public": {
-        "icon": "🏛️",
-        "filter_icon": "🟠",
+        "icon": mark_safe('<i class="ti ti-building-bank"></i>'),
+        "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Régimes publics",
         "filter_label": "Régimes publics & sociaux",
         "block_hint": "CNAM, IPM, CMU, IPRES…",
         "badge_color": "#d97706",
     },
     "mutuelle": {
-        "icon": "🤝",
-        "filter_icon": "🤝",
+        "icon": mark_safe('<i class="ti ti-users"></i>'),
+        "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Mutuelles solidaires",
         "filter_label": "Mutuelles solidaires",
         "block_hint": "Mutualité, communautaires, complémentaires.",
         "badge_color": "#7c3aed",
     },
     "programme": {
-        "icon": "📋",
-        "filter_icon": "📋",
+        "icon": mark_safe('<i class="ti ti-clipboard-list"></i>'),
+        "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Programmes & initiatives",
         "filter_label": "Programmes & initiatives",
         "block_hint": "Dispositifs ciblés, couvertures spéciales.",
@@ -46,7 +48,7 @@ SEGMENT_CATALOG: dict[str, dict[str, str]] = {
     },
 }
 
-DEFAULT_SEGMENT_ICON = "🛡️"
+DEFAULT_SEGMENT_ICON = mark_safe('<i class="ti ti-shield-check"></i>')
 
 
 def icon_for_assurance_segment(segment: str) -> str:

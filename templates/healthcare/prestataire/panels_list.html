@@ -1,0 +1,1385 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+{% block title %}Panels & Tickets d'examens · MedCare{% endblock %}
+
+{% block dash_extra_css %}
+<style>
+/* ── Variables & Thème Panels conforme V1 finale ── */
+:root {
+  --blue: #0a5c8a;
+  --blue-l: #e8f4fb;
+  --blue-m: #bfdbfe;
+  --green: #14b87a;
+  --green-d: #065f46;
+  --green-l: #ecfdf5;
+  --green-m: #a7f3d0;
+  --purple: #7c3aed;
+  --purple-l: #ede9fe;
+  --purple-m: #ddd6fe;
+  --amber: #d97706;
+  --amber-l: #fef3c7;
+  --red: #dc2626;
+  --red-l: #fee2e2;
+  --text: #0d1b2a;
+  --white: #ffffff;
+  --g50: #f9fafb;
+  --g100: #f3f4f6;
+  --g200: #e5e7eb;
+  --g300: #d1d5db;
+  --g400: #9ca3af;
+  --g600: #4b5563;
+  --g800: #1f2937;
+  --shadow: 0 2px 10px rgba(10, 92, 138, 0.08);
+}
+
+.pan-wrap {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+/* ── Section Head ── */
+.pan-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.pan-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pan-sub {
+  font-size: 13px;
+  color: var(--g600);
+  margin-top: 4px;
+}
+.pan-head-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-green-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .18s;
+  box-shadow: 0 4px 12px rgba(20, 184, 122, 0.25);
+}
+.btn-green-new:hover {
+  background: #0fa169;
+  transform: translateY(-1px);
+}
+.btn-purple-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .18s;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+.btn-purple-new:hover {
+  background: #6d28d9;
+  transform: translateY(-1px);
+}
+
+/* ── Garde-fou déontologique permanent (Amber Box) ── */
+.card-deonto {
+  border: 1.5px solid var(--amber);
+  border-radius: 12px;
+  margin-bottom: 22px;
+  background: var(--amber-l);
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.08);
+}
+.card-deonto-body {
+  padding: 14px 18px;
+}
+.card-deonto-title {
+  font-weight: 800;
+  color: #92400e;
+  font-size: 12.5px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-deonto-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 11.5px;
+  color: #7c4a12;
+  line-height: 1.7;
+}
+
+/* ── Titres de groupes ── */
+.pan-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 2px 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pan-group-title {
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pan-group-title.medcare { color: var(--blue); }
+.pan-group-title.my { color: var(--green-d); }
+.pan-group-sub {
+  font-size: 11px;
+  color: var(--g400);
+}
+
+/* Tabs Filter */
+.pan-tabs-filter {
+  display: inline-flex;
+  background: var(--g100);
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+.pan-tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--g600);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.pan-tab-btn.active {
+  background: #fff;
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* ── Grille et Cartes de Panels (mpanel-card) ── */
+.mpanel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  margin-bottom: 26px;
+}
+.mpanel-card {
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: all .18s;
+  position: relative;
+}
+.mpanel-card:hover {
+  box-shadow: 0 6px 20px rgba(10, 92, 138, 0.12);
+  border-color: var(--blue-m);
+}
+.mpanel-card.base {
+  border-left: 4px solid var(--blue);
+}
+.mpanel-card.ticket-card {
+  border-left: 4px solid var(--purple);
+}
+.mpanel-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.mpanel-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.3;
+}
+.mpanel-freq {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--blue-l);
+  border: 1px solid var(--blue-m);
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.mpanel-badge-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.mpanel-badge-kind.panel {
+  background: var(--blue-l);
+  color: var(--blue);
+  border: 1px solid var(--blue-m);
+}
+.mpanel-badge-kind.ticket {
+  background: var(--purple-l);
+  color: var(--purple);
+  border: 1px solid var(--purple-m);
+}
+.mpanel-desc {
+  font-size: 11px;
+  color: var(--g600);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.mpanel-actes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.mpanel-actes span {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--g600);
+  background: var(--g100);
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid var(--g200);
+}
+.mpanel-actes span.off {
+  background: var(--amber-l);
+  color: #92400e;
+  border-color: #fcd34d;
+}
+.mpanel-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--g400);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.mpanel-lock {
+  font-size: 9px;
+  font-weight: 700;
+  color: #92400e;
+  background: var(--amber-l);
+  border: 1px solid #fcd34d;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.mpanel-src {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--g600);
+  background: var(--g100);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.mpanel-total {
+  font-weight: 800;
+  color: var(--blue);
+  font-size: 12.5px;
+  margin-left: auto;
+}
+.mpanel-link-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--g50);
+  border: 1px dashed var(--g300);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+}
+.mpanel-link-text {
+  font-family: monospace;
+  font-size: 10.5px;
+  color: var(--g600);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mpanel-foot {
+  margin-top: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px solid var(--g100);
+}
+.btn-pan {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--g200);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+}
+.btn-pan:hover {
+  background: var(--g50);
+  border-color: var(--g400);
+}
+.btn-pan.primary {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+  font-weight: 700;
+}
+.btn-pan.primary:hover {
+  background: #08496e;
+}
+.btn-pan.danger:hover {
+  background: var(--red-l);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* Switch Toggle */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0;
+  background: var(--g300);
+  border-radius: 20px;
+  transition: .2s;
+}
+.toggle-track:before {
+  position: absolute; content: "";
+  height: 14px; width: 14px;
+  left: 3px; bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: .2s;
+}
+.toggle input:checked + .toggle-track { background: var(--green); }
+.toggle input:checked + .toggle-track:before { transform: translateX(16px); }
+
+/* ── Slide-Over Panel & Ticket Builder ── */
+.prep-overlay {
+  position: fixed; inset: 0;
+  background: rgba(13, 27, 42, .55);
+  opacity: 0; pointer-events: none;
+  transition: .2s; z-index: 900;
+}
+.prep-overlay.open { opacity: 1; pointer-events: auto; }
+.prep-panel {
+  position: fixed; top: 0; right: 0;
+  height: 100vh; width: 560px; max-width: 94vw;
+  background: var(--white);
+  box-shadow: -12px 0 40px -12px rgba(0,0,0,.3);
+  transform: translateX(100%);
+  transition: transform .25s cubic-bezier(.4, 0, .2, 1);
+  z-index: 910;
+  display: flex; flex-direction: column;
+}
+.prep-panel.open { transform: translateX(0); }
+.prep-panel-head {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--g200);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pph-acte { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); }
+.pph-cat { font-size: 11.5px; color: var(--g400); margin-top: 2px; }
+.prep-panel-close {
+  background: var(--g100); border: none; width: 32px; height: 32px;
+  border-radius: 50%; cursor: pointer; font-size: 14px; color: var(--g600);
+  display: flex; align-items: center; justify-content: center;
+}
+.prep-panel-close:hover { background: var(--g200); }
+.prep-panel-body {
+  padding: 20px 22px; overflow-y: auto; flex: 1;
+}
+.prep-panel-foot {
+  padding: 16px 22px; border-top: 1px solid var(--g200);
+  background: var(--g50); display: flex;
+}
+.field-label {
+  display: block; font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--g600); margin-bottom: 6px;
+}
+.search-input {
+  width: 100%; border: 1.5px solid var(--g200); border-radius: 9px;
+  padding: 9px 12px; font-size: 13px; font-family: inherit; color: var(--text);
+  box-sizing: border-box; outline: none; transition: border-color .15s;
+}
+.search-input:focus { border-color: var(--blue); }
+
+/* Type choice in builder */
+.kind-choice-wrap {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.kind-choice-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 2px solid var(--g200);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: all .15s;
+}
+.kind-choice-card.selected.panel {
+  border-color: var(--blue);
+  background: var(--blue-l);
+}
+.kind-choice-card.selected.ticket {
+  border-color: var(--purple);
+  background: var(--purple-l);
+}
+
+.pb-acte-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 13px; border-bottom: 1px solid var(--g100); cursor: pointer;
+}
+.pb-acte-row:last-child { border-bottom: none; }
+.pb-acte-row:hover { background: var(--g50); }
+.pb-acte-row input { width: 17px; height: 17px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+.pb-acte-name { flex: 1; font-size: 12px; color: var(--text); }
+.pb-acte-off { font-size: 8px; font-weight: 700; color: #92400e; background: var(--amber-l); border: 1px solid #fcd34d; padding: 1px 6px; border-radius: 20px; }
+.pb-acte-prix { font-size: 11px; color: var(--g400); white-space: nowrap; }
+.pb-cat-lbl { padding: 7px 13px; background: var(--g50); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--g400); position: sticky; top: 0; }
+
+/* ── Modal Aperçu Patient Centré ── */
+#pv-modal {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -48%) scale(.97);
+  opacity: 0; pointer-events: none; transition: .2s;
+  z-index: 1000; width: 380px; max-width: 92vw;
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 20px 60px -12px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+#pv-modal.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1; pointer-events: auto;
+}
+
+/* ── Modal Envoyer à un patient ── */
+.pan-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(13,27,42,.55); z-index: 800;
+  align-items: center; justify-content: center; padding: 16px;
+}
+.pan-modal-overlay.open { display: flex; }
+.pan-modal {
+  background: #fff; border-radius: 16px; width: 100%; max-width: 520px;
+  max-height: 90vh; display: flex; flex-direction: column;
+  box-shadow: 0 12px 50px rgba(10,92,138,.24);
+}
+.pan-modal-head {
+  padding: 16px 20px; border-bottom: 1px solid var(--g100);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pan-conv-item {
+  display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+  border: 1.5px solid var(--g200); border-radius: 10px; cursor: pointer; transition: all .15s;
+}
+.pan-conv-item:hover, .pan-conv-item.sel { border-color: var(--blue); background: var(--blue-l); }
+.pan-conv-avatar {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--blue);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+</style>
+{% endblock %}
+
+{% block dash_content %}
+<div class="pan-wrap">
+
+  <!-- ── Top bar : En-tête de section ── -->
+  <div class="pan-head">
+    <div>
+      <h1 class="pan-title"><i class="ti ti-components"></i> Panels & Tickets d'examens</h1>
+      <p class="pan-sub">Groupes d'actes (panels) ou actes uniques (tickets) prêts à réserver avec liens courts.</p>
+    </div>
+    <div class="pan-head-btns">
+      <button type="button" class="btn-green-new" onclick="openPanelBuilder(null, 'panel')">
+        <i class="ti ti-components"></i> + Nouveau panel
+      </button>
+      <button type="button" class="btn-purple-new" onclick="openPanelBuilder(null, 'ticket')">
+        <i class="ti ti-ticket"></i> + Nouveau ticket
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Garde-fou déontologique permanent (Amber Box conforme V1) ── -->
+  <div class="card-deonto">
+    <div class="card-deonto-body">
+      <div class="card-deonto-title">
+        <i class="ti ti-lock"></i> Règle déontologique appliquée à tous les panels & tickets
+      </div>
+      <ul class="card-deonto-list">
+        <li>Un panel ou ticket est un <b>modèle d'exécution groupé</b>, jamais une prescription.</li>
+        <li>Toute réservation exige un <b>bulletin d'analyse émis par un tiers</b> (médecin prescripteur indépendant). Ni MedCare ni votre structure n'émettent d'ordonnance.</li>
+        <li>Votre structure <b>exécute</b> les actes. L'ordonnance doit venir d'un prescripteur indépendant, jamais de votre structure (pas d'auto-adressage).</li>
+        <li>MedCare ne prélève <b>aucune commission</b> sur les actes. Les panels sont des référentiels de santé, pas des offres publicitaires.</li>
+      </ul>
+    </div>
+  </div>
+
+  {% if messages %}
+    {% for msg in messages %}
+    <div style="padding:10px 14px;border-radius:9px;margin-bottom:14px;font-size:12.5px;{% if msg.tags == 'success' %}background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46{% else %}background:#fee2e2;border:1px solid #fca5a5;color:#dc2626{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- ── 1. Modèles MedCare recommandés ── -->
+  <div class="pan-group-head">
+    <div class="pan-group-title medcare"><i class="ti ti-dna"></i> Modèles MedCare recommandés</div>
+    <div class="pan-group-sub">Référentiels OMS / PEV / usage sénégalais, adaptables</div>
+  </div>
+  <div id="medcare-panels-grid" class="mpanel-grid"></div>
+
+  <!-- ── 2. Mes panels & tickets ── -->
+  <div class="pan-group-head">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div class="pan-group-title my"><i class="ti ti-folder"></i> Mes panels & tickets</div>
+      <div class="pan-tabs-filter">
+        <button type="button" class="pan-tab-btn active" data-filter="all" onclick="filterMyPanels('all', this)">
+          Tous (<span id="count-all">0</span>)
+        </button>
+        <button type="button" class="pan-tab-btn" data-filter="panel" onclick="filterMyPanels('panel', this)">
+          <i class="ti ti-components"></i> Panels (<span id="count-panels">0</span>)
+        </button>
+        <button type="button" class="pan-tab-btn" data-filter="ticket" onclick="filterMyPanels('ticket', this)">
+          <i class="ti ti-ticket"></i> Tickets (<span id="count-tickets">0</span>)
+        </button>
+      </div>
+    </div>
+    <div class="pan-group-sub" id="my-panels-count">0 élément</div>
+  </div>
+  <div id="my-panels-grid" class="mpanel-grid"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- CONSTRUCTEUR DE PANEL / TICKET (Panneau latéral slide-over)        -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="prep-overlay" id="pb-overlay" onclick="closePanelBuilder()"></div>
+<div class="prep-panel" id="pb-panel">
+  <div class="prep-panel-head">
+    <div>
+      <div class="pph-acte" id="pb-title">Nouveau panel d'examens</div>
+      <div class="pph-cat" id="pb-subtitle">Sélectionnez les actes de votre catalogue à regrouper</div>
+    </div>
+    <button type="button" class="prep-panel-close" onclick="closePanelBuilder()" aria-label="Fermer">✕</button>
+  </div>
+  <div class="prep-panel-body">
+
+    <!-- Choix du Type : Panel vs Ticket -->
+    <div class="kind-choice-wrap">
+      <div class="kind-choice-card selected panel" id="choice-panel" onclick="setBuilderKind('panel')">
+        <i class="ti ti-components" style="font-size:22px;color:var(--blue)"></i>
+        <div>
+          <div style="font-weight:700;font-size:12.5px;color:var(--text)">Panel multi-actes</div>
+          <div style="font-size:10.5px;color:var(--g400)">Plusieurs examens regroupés (min. 2)</div>
+        </div>
+      </div>
+      <div class="kind-choice-card ticket" id="choice-ticket" onclick="setBuilderKind('ticket')">
+        <i class="ti ti-ticket" style="font-size:22px;color:var(--purple)"></i>
+        <div>
+          <div style="font-weight:700;font-size:12.5px;color:var(--text)">Ticket acte seul</div>
+          <div style="font-size:10.5px;color:var(--g400)">1 seul acte avec lien dédié direct</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:14px">
+      <div>
+        <label class="field-label" id="lbl-nom">Nom du panel <span style="color:var(--red)">*</span></label>
+        <input class="search-input" id="pb-nom" type="text" placeholder="Ex : Bilan prénatal 1er trimestre">
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px">
+        <div>
+          <label class="field-label">Description courte</label>
+          <input class="search-input" id="pb-desc" type="text" placeholder="Ex : NFS, groupe, toxoplasmose, glycémie">
+        </div>
+        <div>
+          <label class="field-label">Fréquence / libellé</label>
+          <input class="search-input" id="pb-freq" type="text" placeholder="Ex : 1er trimestre">
+        </div>
+      </div>
+    </div>
+
+    <!-- Garde-fou bulletin : verrouillé ON -->
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--amber-l);border:1px solid #fcd34d;border-radius:10px;padding:11px 14px;margin-bottom:16px">
+      <div style="padding-right:12px">
+        <div style="font-size:12px;font-weight:700;color:#92400e;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-lock"></i> Bulletin d'analyse tiers requis
+        </div>
+        <div style="font-size:10.5px;color:#7c4a12;margin-top:2px;line-height:1.5">
+          Obligatoire et non modifiable. Le patient devra présenter une ordonnance émise par un prescripteur indépendant. MedCare et votre structure n'émettent pas d'ordonnance.
+        </div>
+      </div>
+      <label class="toggle" title="Non modifiable">
+        <input type="checkbox" checked disabled>
+        <div class="toggle-track" style="opacity:.7;cursor:not-allowed"></div>
+      </label>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:6px 0 8px">
+      <label class="field-label" style="margin:0" id="lbl-actes-count">Actes du panel <span style="color:var(--red)">*</span> <span style="color:var(--g400);font-weight:500">(min. 2)</span></label>
+      <span style="font-size:11px;color:var(--g400)" id="pb-count">0 acte</span>
+    </div>
+    <input class="search-input" id="pb-search" type="text" placeholder="Filtrer un acte du catalogue..." oninput="renderBuilderActes(this.value)" style="margin-bottom:10px">
+    <div id="pb-actes-list" style="border:1px solid var(--g200);border-radius:10px;max-height:300px;overflow-y:auto"></div>
+    <div id="pb-error" style="display:none;font-size:11.5px;color:var(--red);background:var(--red-l);padding:8px 12px;border-radius:8px;margin-top:10px"></div>
+  </div>
+  <div class="prep-panel-foot" style="justify-content:space-between;align-items:center">
+    <div style="font-size:12px;color:var(--g600)">Total indicatif : <b id="pb-total" style="color:var(--blue);font-size:14px">0</b> FCFA</div>
+    <div style="display:flex;gap:10px">
+      <button type="button" class="btn-pan" onclick="closePanelBuilder()">Annuler</button>
+      <button type="button" class="btn-pan primary" id="btn-save-builder" onclick="savePanelFromBuilder()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- APERÇU PATIENT (Modale smartphone centrée conforme V1)             -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="prep-overlay" id="pv-overlay" onclick="closePanelPreview()"></div>
+<div id="pv-modal">
+  <div style="background:var(--g800);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+    <div style="color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:13px">Aperçu côté patient</div>
+    <button type="button" class="prep-panel-close" style="background:rgba(255,255,255,.15);color:#fff" onclick="closePanelPreview()">✕</button>
+  </div>
+  <div id="pv-body" style="padding:16px;max-height:75vh;overflow-y:auto"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- MODAL : ENVOYER À UN PATIENT                                       -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="pan-modal-overlay" id="send-modal" role="dialog" aria-modal="true">
+  <div class="pan-modal">
+    <div class="pan-modal-head">
+      <span style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text)"><i class="ti ti-send"></i> Envoyer le lien</span>
+      <button type="button" class="prep-panel-close" onclick="closeSendModal()">✕</button>
+    </div>
+    <form method="post" action="{% url 'healthcare:panel_send' %}">
+      {% csrf_token %}
+      <input type="hidden" name="panel_url" id="send-panel-url">
+      <input type="hidden" name="panel_nom" id="send-panel-nom">
+      <div style="padding:18px 20px">
+        <p style="font-size:12px;color:var(--g600);margin-bottom:12px">
+          Sélectionnez le patient dans vos discussions actives pour lui envoyer le lien prêt à réserver :
+        </p>
+        <div style="display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto" id="send-patient-list">
+          {% for conv in conversations %}
+          <label class="pan-conv-item">
+            <input type="checkbox" name="conv_ids" value="{{ conv.pk }}" style="display:none" onchange="toggleConvSel(this)">
+            <div class="pan-conv-avatar">{{ conv.patient.first_name|first|upper|default:"P" }}</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600;color:var(--text)">{{ conv.patient.get_full_name|default:conv.patient.username }}</div>
+              <div style="font-size:11px;color:var(--g400)">Fil actif · {{ conv.updated_at|date:"d/m/Y H:i" }}</div>
+            </div>
+            <i class="ti ti-check" style="color:var(--blue);font-size:16px"></i>
+          </label>
+          {% empty %}
+          <div style="text-align:center;padding:24px;color:var(--g400);font-size:12px">
+            Aucune conversation active pour le moment.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div style="padding:14px 20px;border-top:1px solid var(--g200);display:flex;justify-content:flex-end;gap:10px">
+        <button type="button" class="btn-pan" onclick="closeSendModal()">Annuler</button>
+        <button type="submit" class="btn-pan primary"><i class="ti ti-send"></i> Envoyer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ── Données injectées depuis Django ──
+const CATALOGUE_ACTES = {{ actes_json|safe }};
+let STRUCT_PANELS = {{ panels_json|safe }};
+let currentFilter = 'all';
+
+// ── Modèles MedCare Base (exacts selon V1 finale) ──
+const MEDCARE_PANELS_BASE = [
+  {
+    id: 'base_prenat_t1',
+    nom: 'Bilan prénatal — 1er trimestre',
+    freq: '1er trimestre',
+    desc: 'NFS, groupe, toxoplasmose, rubéole, VIH, HBsAg, glycémie — consultations T1.',
+    actes: ['NFS / Hémogramme', 'Groupe ABO / Rhésus', 'Toxoplasmose IgG/IgM', 'Rubéole IgG/IgM', 'VIH Ag/Ac', 'HBsAg', 'Glycémie à jeun']
+  },
+  {
+    id: 'base_annuel',
+    nom: 'Bilan sanguin annuel',
+    freq: 'Annuel',
+    desc: 'NFS, glycémie, créatinine, cholestérol — contrôle annuel après 30 ans.',
+    actes: ['NFS / Hémogramme', 'Glycémie à jeun', 'Créatininémie', 'Cholestérol total']
+  },
+  {
+    id: 'base_lipide',
+    nom: 'Bilan lipidique',
+    freq: 'Tous les 3 ans',
+    desc: 'Cholestérol total, HDL, LDL, triglycérides — risque cardiovasculaire.',
+    actes: ['Cholestérol total', 'HDL', 'LDL', 'Triglycérides']
+  },
+  {
+    id: 'base_thyro',
+    nom: 'Bilan thyroïdien complet',
+    freq: 'Sur symptômes',
+    desc: 'TSH, FT4, FT3 — exploration de la fonction thyroïdienne.',
+    actes: ['TSH', 'FT4', 'FT3']
+  },
+  {
+    id: 'base_prenup',
+    nom: 'Bilan prénuptial standard',
+    freq: 'Avant mariage',
+    desc: 'Groupe, VIH, hépatites, syphilis — recommandé avant mariage au Sénégal.',
+    actes: ['Groupe ABO / Rhésus', 'VIH Ag/Ac', 'HBsAg', 'Anti-VHC', 'Syphilis VDRL + TPHA']
+  },
+  {
+    id: 'base_ist',
+    nom: 'Dépistage IST',
+    freq: 'Annuel',
+    desc: 'VIH, hépatite B, syphilis — dépistage régulier (OMS).',
+    actes: ['VIH Ag/Ac', 'HBsAg', 'Syphilis VDRL + TPHA']
+  },
+  {
+    id: 'base_diab',
+    nom: 'Dépistage diabète',
+    freq: 'Tous les 2 ans',
+    desc: 'Glycémie à jeun, HbA1c — dépistage à partir de 40 ans ou surpoids (OMS).',
+    actes: ['Glycémie à jeun', 'HbA1c']
+  }
+];
+
+function findActe(nom) {
+  if (!nom) return null;
+  const n = nom.toLowerCase().trim();
+  return CATALOGUE_ACTES.find(x => x.nom.toLowerCase().trim() === n || x.nom.toLowerCase().includes(n) || n.includes(x.nom.toLowerCase())) || null;
+}
+
+function fmtF(n) {
+  return String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function panelStats(actes) {
+  let total = 0, off = 0, found = 0;
+  actes.forEach(nom => {
+    const a = findActe(nom);
+    if (a) {
+      found++;
+      total += a.prix || 0;
+      if (!a.actif) off++;
+    } else {
+      off++;
+    }
+  });
+  return { total, off, count: actes.length, found };
+}
+
+// ── Rendu des Modèles MedCare ──
+function renderMedcarePanels() {
+  const el = document.getElementById('medcare-panels-grid');
+  if (!el) return;
+  el.innerHTML = MEDCARE_PANELS_BASE.map(b => {
+    const st = panelStats(b.actes);
+    const pills = b.actes.map(a => {
+      const ac = findActe(a);
+      const off = !ac || !ac.actif;
+      return `<span class="${off ? 'off' : ''}">${escapeHtml(a)}</span>`;
+    }).join('');
+    const warn = st.off > 0 ? `<span class="mpanel-lock">${st.off} acte(s) à activer</span>` : '';
+    return `<div class="mpanel-card base">
+      <div class="mpanel-top">
+        <div>
+          <div class="mpanel-name">${escapeHtml(b.nom)}</div>
+          <div style="margin-top:4px"><span class="mpanel-badge-kind panel"><i class="ti ti-components"></i> Modèle panel</span></div>
+        </div>
+        <span class="mpanel-freq">${escapeHtml(b.freq)}</span>
+      </div>
+      <div class="mpanel-desc">${escapeHtml(b.desc)}</div>
+      <div class="mpanel-actes">${pills}</div>
+      <div class="mpanel-meta">
+        <span class="mpanel-src">Référentiel MedCare</span>
+        <span class="mpanel-lock"><i class="ti ti-lock"></i> Bulletin tiers requis</span>
+        ${warn}
+        <span class="mpanel-total">${fmtF(st.total)} FCFA</span>
+      </div>
+      <div class="mpanel-foot">
+        <button type="button" class="btn-pan primary" onclick="adoptPanel('${b.id}')">
+          Adopter / personnaliser →
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Filtrage Tabs ──
+function filterMyPanels(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.pan-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMyPanels();
+}
+
+function updateCounts() {
+  const cAll = STRUCT_PANELS.length;
+  const cPanels = STRUCT_PANELS.filter(p => p.kind !== 'ticket').length;
+  const cTickets = STRUCT_PANELS.filter(p => p.kind === 'ticket').length;
+
+  document.getElementById('count-all').textContent = cAll;
+  document.getElementById('count-panels').textContent = cPanels;
+  document.getElementById('count-tickets').textContent = cTickets;
+  document.getElementById('my-panels-count').textContent = cAll + ' élément' + (cAll > 1 ? 's' : '');
+}
+
+// ── Rendu de "Mes panels & tickets" ──
+function renderMyPanels() {
+  updateCounts();
+  const el = document.getElementById('my-panels-grid');
+  if (!el) return;
+
+  let items = STRUCT_PANELS;
+  if (currentFilter === 'panel') {
+    items = STRUCT_PANELS.filter(p => p.kind !== 'ticket');
+  } else if (currentFilter === 'ticket') {
+    items = STRUCT_PANELS.filter(p => p.kind === 'ticket');
+  }
+
+  if (!items.length) {
+    const emptyMsg = currentFilter === 'ticket'
+      ? "Aucun ticket d'acte pour le moment. Cliquez sur « + Nouveau ticket » pour générer un lien direct pour un acte unique."
+      : (currentFilter === 'panel'
+          ? "Aucun panel multi-actes pour le moment. Adoptez un modèle MedCare ci-dessus ou cliquez sur « + Nouveau panel »."
+          : "Aucun panel ni ticket pour le moment. Créez votre premier élément ou adoptez un modèle MedCare.");
+
+    el.innerHTML = `<div style="grid-column:1/-1;padding:36px 20px;text-align:center;color:var(--g400);font-size:13px;border:1.5px dashed var(--g300);border-radius:14px;background:#fff">
+      <i class="ti ti-ticket" style="font-size:32px;display:block;margin-bottom:8px"></i>
+      ${emptyMsg}
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = items.map(p => {
+    const isTicket = (p.kind === 'ticket');
+    const st = panelStats(p.actes);
+    const pills = (p.actes || []).map(a => {
+      const ac = findActe(a);
+      const off = !ac || !ac.actif;
+      return `<span class="${off ? 'off' : ''}">${escapeHtml(a)}</span>`;
+    }).join('');
+    const warn = st.off > 0 ? `<span class="mpanel-lock">${st.off} à activer</span>` : '';
+    const tokenDisplay = p.token ? `medcare.sn/t/${p.token}` : '';
+
+    const kindBadge = isTicket
+      ? `<span class="mpanel-badge-kind ticket"><i class="ti ti-ticket"></i> Ticket acte seul</span>`
+      : `<span class="mpanel-badge-kind panel"><i class="ti ti-components"></i> Panel multi-actes</span>`;
+
+    return `<div class="mpanel-card ${isTicket ? 'ticket-card' : ''}" id="mcard-${p.id}" style="${p.actif ? '' : 'opacity:.68'}">
+      <div class="mpanel-top">
+        <div>
+          <div class="mpanel-name">${escapeHtml(p.nom)}</div>
+          <div style="margin-top:4px">${kindBadge}</div>
+        </div>
+        <span class="mpanel-freq">${escapeHtml(p.freq || (isTicket ? 'Acte unique' : 'Sur prescription'))}</span>
+      </div>
+      <div class="mpanel-desc">${escapeHtml(p.desc || (isTicket ? 'Accès direct pour un acte réservable en ligne.' : 'Groupe d\'examens pré-configuré.'))}</div>
+      <div class="mpanel-actes">${pills || '<span style="color:#9ca3af">Aucun acte</span>'}</div>
+      <div class="mpanel-meta">
+        <span class="mpanel-src">${escapeHtml(p.source || (isTicket ? 'Ticket structure' : 'Personnalisé'))}</span>
+        <span class="mpanel-lock"><i class="ti ti-lock"></i> Bulletin requis</span>
+        ${warn}
+        <span class="mpanel-total">${fmtF(p.total_price || st.total)} FCFA</span>
+      </div>
+
+      ${p.token ? `
+      <div class="mpanel-link-box">
+        <span class="mpanel-link-text">${tokenDisplay}</span>
+        <button type="button" class="btn-pan" style="padding:4px 8px;font-size:10px" onclick="copyText('https://${tokenDisplay}', this)">
+          <i class="ti ti-copy"></i> Copier
+        </button>
+      </div>` : ''}
+
+      <div class="mpanel-foot">
+        <button type="button" class="btn-pan" onclick="previewPanelPatient('${p.id}')">
+          <i class="ti ti-eye"></i> Aperçu patient
+        </button>
+        <button type="button" class="btn-pan" onclick="openPanelBuilder('${p.id}', '${p.kind}')">
+          <i class="ti ti-pencil"></i> Modifier
+        </button>
+        <button type="button" class="btn-pan" onclick="openSendModalFor('${p.id}')">
+          <i class="ti ti-send"></i> Envoyer à…
+        </button>
+        <button type="button" class="btn-pan danger" onclick="deletePanel('${p.id}')" title="Supprimer">
+          <i class="ti ti-trash"></i>
+        </button>
+        <label class="toggle" style="margin-left:auto" title="${p.actif ? 'Publié' : 'Masqué'}">
+          <input type="checkbox" ${p.actif ? 'checked' : ''} onchange="togglePanelActive('${p.id}')">
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Constructeur de Panel / Ticket (Slide-Over) ──
+let pbEditingId = null;
+let pbSelected = new Set();
+let pbKind = 'panel';
+
+function setBuilderKind(k) {
+  pbKind = k;
+  const isTicket = (k === 'ticket');
+  document.getElementById('choice-panel').classList.toggle('selected', !isTicket);
+  document.getElementById('choice-ticket').classList.toggle('selected', isTicket);
+
+  document.getElementById('pb-title').textContent = pbEditingId
+    ? (isTicket ? 'Modifier le ticket' : 'Modifier le panel')
+    : (isTicket ? 'Nouveau ticket acte seul' : 'Nouveau panel d\'examens');
+
+  document.getElementById('pb-subtitle').textContent = isTicket
+    ? 'Sélectionnez 1 acte unique dans votre catalogue'
+    : 'Sélectionnez les actes de votre catalogue à regrouper';
+
+  document.getElementById('lbl-nom').innerHTML = (isTicket ? 'Nom du ticket ' : 'Nom du panel ') + '<span style="color:var(--red)">*</span>';
+  document.getElementById('lbl-actes-count').innerHTML = isTicket
+    ? 'Acte du ticket <span style="color:var(--red)">*</span> <span style="color:var(--g400);font-weight:500">(1 acte)</span>'
+    : 'Actes du panel <span style="color:var(--red)">*</span> <span style="color:var(--g400);font-weight:500">(min. 2)</span>';
+
+  // Si on passe en mode ticket et qu'on a plus d'1 acte sélectionné, garder le premier
+  if (isTicket && pbSelected.size > 1) {
+    const first = [...pbSelected][0];
+    pbSelected = new Set([first]);
+  }
+
+  renderBuilderActes(document.getElementById('pb-search').value);
+  updateBuilderTotals();
+}
+
+function adoptPanel(baseId) {
+  const b = MEDCARE_PANELS_BASE.find(x => x.id === baseId);
+  if (!b) return;
+  openBuilderWith({ nom: b.nom, desc: b.desc, freq: b.freq, actes: b.actes.slice(), kind: 'panel' }, null);
+}
+
+function openPanelBuilder(panelId, initialKind) {
+  if (panelId) {
+    const p = STRUCT_PANELS.find(x => String(x.id) === String(panelId));
+    if (p) openBuilderWith(p, p.id);
+  } else {
+    const k = initialKind || 'panel';
+    openBuilderWith({
+      nom: '',
+      desc: '',
+      freq: k === 'ticket' ? 'Acte unique' : '',
+      actes: [],
+      kind: k
+    }, null);
+  }
+}
+
+function openBuilderWith(data, editingId) {
+  pbEditingId = editingId;
+  pbSelected = new Set(data.actes || []);
+  pbKind = data.kind || 'panel';
+
+  document.getElementById('pb-nom').value = data.nom || '';
+  document.getElementById('pb-desc').value = data.desc || '';
+  document.getElementById('pb-freq').value = data.freq || (pbKind === 'ticket' ? 'Acte unique' : '');
+  document.getElementById('pb-error').style.display = 'none';
+  document.getElementById('pb-search').value = '';
+
+  setBuilderKind(pbKind);
+
+  document.getElementById('pb-overlay').classList.add('open');
+  document.getElementById('pb-panel').classList.add('open');
+}
+
+function closePanelBuilder() {
+  document.getElementById('pb-overlay').classList.remove('open');
+  document.getElementById('pb-panel').classList.remove('open');
+}
+
+function renderBuilderActes(filter) {
+  const f = (filter || '').trim().toLowerCase();
+  const groups = {};
+  const isTicket = (pbKind === 'ticket');
+
+  CATALOGUE_ACTES.forEach(a => {
+    const match = f ? a.nom.toLowerCase().includes(f) : true;
+    if (!match) return;
+    const cat = a.cat || 'Général';
+    (groups[cat] = groups[cat] || []).push(a);
+  });
+
+  const cats = Object.keys(groups);
+  const el = document.getElementById('pb-actes-list');
+  if (!cats.length) {
+    el.innerHTML = `<div style="padding:16px;text-align:center;color:var(--g400);font-size:12px">Aucun acte trouvé dans votre catalogue</div>`;
+    return;
+  }
+
+  el.innerHTML = cats.map(cat => `
+    <div class="pb-cat-lbl">${escapeHtml(cat)}</div>
+    ${groups[cat].map(a => {
+      const checked = pbSelected.has(a.nom) ? 'checked' : '';
+      const off = !a.actif ? `<span class="pb-acte-off">à activer</span>` : '';
+      const inputType = isTicket ? 'radio' : 'checkbox';
+      return `<label class="pb-acte-row">
+        <input type="${inputType}" name="builder_acte_input" ${checked} onchange="toggleBuilderActe(this.checked, '${escapeAttr(a.nom)}')">
+        <span class="pb-acte-name">${escapeHtml(a.nom)} ${off}</span>
+        <span class="pb-acte-prix">${fmtF(a.prix)} F</span>
+      </label>`;
+    }).join('')}
+  `).join('');
+}
+
+function toggleBuilderActe(checked, nom) {
+  if (pbKind === 'ticket') {
+    pbSelected = new Set(checked ? [nom] : []);
+    // Pré-remplir le nom du ticket si vide
+    const nomInp = document.getElementById('pb-nom');
+    if (!nomInp.value.trim() && checked) {
+      nomInp.value = nom;
+    }
+  } else {
+    if (checked) pbSelected.add(nom); else pbSelected.delete(nom);
+  }
+  updateBuilderTotals();
+}
+
+function updateBuilderTotals() {
+  let total = 0;
+  pbSelected.forEach(n => {
+    const a = findActe(n);
+    if (a) total += a.prix || 0;
+  });
+  document.getElementById('pb-count').textContent = pbSelected.size + ' acte' + (pbSelected.size > 1 ? 's' : '');
+  document.getElementById('pb-total').textContent = fmtF(total);
+}
+
+async function savePanelFromBuilder() {
+  const nom = document.getElementById('pb-nom').value.trim();
+  const desc = document.getElementById('pb-desc').value.trim();
+  const freq = document.getElementById('pb-freq').value.trim();
+  const actes = [...pbSelected];
+  const err = document.getElementById('pb-error');
+  const isTicket = (pbKind === 'ticket');
+
+  if (!nom) {
+    err.textContent = isTicket ? 'Donnez un nom au ticket.' : 'Donnez un nom au panel.';
+    err.style.display = 'block';
+    return;
+  }
+  if (isTicket && actes.length < 1) {
+    err.textContent = 'Sélectionnez l\'acte unique du ticket.';
+    err.style.display = 'block';
+    return;
+  }
+  if (!isTicket && actes.length < 2) {
+    err.textContent = 'Sélectionnez au moins 2 actes pour constituer un panel.';
+    err.style.display = 'block';
+    return;
+  }
+
+  // Identifier les IDs de PrestataireActe
+  const acteIds = [];
+  actes.forEach(nomA => {
+    const a = findActe(nomA);
+    if (a && a.id) acteIds.push(a.id);
+  });
+
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(r => r.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  const formData = new FormData();
+  if (pbEditingId && !String(pbEditingId).startsWith('pt_')) {
+    formData.append('panel_id', pbEditingId);
+  }
+  formData.append('nom', nom);
+  formData.append('description', desc);
+  formData.append('kind', pbKind);
+  formData.append('acte_ids', acteIds.join(','));
+  formData.append('acte_noms', actes.join('|||'));
+
+  const btn = document.getElementById('btn-save-builder');
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement…';
+
+  try {
+    const resp = await fetch("{% url 'healthcare:panel_create' %}", {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': csrfToken || '',
+      },
+      body: formData,
+    });
+    const data = await resp.json();
+    btn.disabled = false;
+    btn.textContent = '💾 Enregistrer';
+
+    if (data.ok) {
+      if (pbEditingId) {
+        const p = STRUCT_PANELS.find(x => String(x.id) === String(pbEditingId));
+        if (p) {
+          Object.assign(p, { nom, desc, freq, actes, kind: pbKind, total_price: data.total_price });
+        }
+      } else {
+        STRUCT_PANELS.unshift({
+          id: data.id,
+          kind: data.kind || pbKind,
+          nom: data.nom,
+          desc: data.desc || desc,
+          freq: freq || (isTicket ? 'Acte unique' : 'Sur prescription'),
+          actes: data.actes || actes,
+          actif: true,
+          source: isTicket ? 'Ticket structure' : 'Panel structure',
+          token: data.token,
+          public_path: data.url,
+          total_price: data.total_price,
+        });
+      }
+      closePanelBuilder();
+      renderMyPanels();
+    } else {
+      err.textContent = data.error || 'Erreur lors de l\'enregistrement.';
+      err.style.display = 'block';
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = '💾 Enregistrer';
+    err.textContent = 'Erreur réseau : ' + e.message;
+    err.style.display = 'block';
+  }
+}
+
+async function togglePanelActive(id) {
+  const p = STRUCT_PANELS.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(r => r.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  try {
+    const resp = await fetch(`/sante/prestataire/panels/${id}/activer/`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': csrfToken || '',
+      },
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      p.actif = data.is_active;
+      renderMyPanels();
+    }
+  } catch (e) {
+    p.actif = !p.actif;
+    renderMyPanels();
+  }
+}
+
+async function deletePanel(id) {
+  const isTicket = STRUCT_PANELS.find(x => String(x.id) === String(id))?.kind === 'ticket';
+  const label = isTicket ? 'ce ticket' : 'ce panel';
+  if (!confirm(`Supprimer définitivement ${label} ?`)) return;
+
+  const csrfToken = document.cookie
+    .split('; ')
+    .find(r => r.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  try {
+    const resp = await fetch(`/sante/prestataire/panels/${id}/supprimer/`, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': csrfToken || '',
+      },
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      STRUCT_PANELS = STRUCT_PANELS.filter(x => String(x.id) !== String(id));
+      renderMyPanels();
+    }
+  } catch (e) {
+    STRUCT_PANELS = STRUCT_PANELS.filter(x => String(x.id) !== String(id));
+    renderMyPanels();
+  }
+}
+
+// ── Aperçu Patient (Smartphone Modal) ──
+function previewPanelPatient(id) {
+  const p = STRUCT_PANELS.find(x => String(x.id) === String(id));
+  if (!p) return;
+  const isTicket = (p.kind === 'ticket');
+  const st = panelStats(p.actes);
+
+  const rows = (p.actes || []).map(a => {
+    const ac = findActe(a);
+    return `<div style="display:flex;justify-content:space-between;font-size:11.5px;padding:6px 0;border-bottom:1px solid var(--g100)">
+      <span style="color:var(--text)">${escapeHtml(a)}</span>
+      <span style="color:var(--g600);font-weight:600">${ac ? fmtF(ac.prix) + ' F' : '—'}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('pv-body').innerHTML = `
+    <div style="border:1px solid var(--g200);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text)">${escapeHtml(p.nom)}</div>
+          <span style="font-size:9px;font-weight:700;color:${isTicket ? 'var(--purple)' : 'var(--blue)'};background:${isTicket ? 'var(--purple-l)' : 'var(--blue-l)'};padding:2px 7px;border-radius:12px;margin-top:2px;display:inline-block">${isTicket ? 'Ticket prestation' : 'Panel examens'}</span>
+        </div>
+        <span style="font-size:9px;font-weight:700;color:var(--blue);background:var(--blue-l);border:1px solid var(--blue-m);padding:2px 8px;border-radius:20px;white-space:nowrap">${escapeHtml(p.freq || (isTicket ? 'Acte unique' : 'Sur prescription'))}</span>
+      </div>
+      <div style="font-size:11px;color:var(--g600);line-height:1.5;margin-bottom:10px">${escapeHtml(p.desc || '')}</div>
+      ${rows}
+      <div style="display:flex;justify-content:space-between;font-weight:800;color:var(--blue);font-size:13.5px;padding-top:10px">
+        <span>Total</span>
+        <span>${fmtF(p.total_price || st.total)} FCFA</span>
+      </div>
+    </div>
+
+    <button type="button" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:13px;cursor:pointer;margin-top:14px;font-family:'DM Sans',sans-serif">
+      📅 Réserver mon acte
+    </button>
+
+    <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:12px;padding:12px 14px;margin-top:12px">
+      <div style="font-size:11px;font-weight:800;color:var(--blue);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-mail"></i> Ensuite, dans la messagerie
+      </div>
+      <div style="font-size:11px;color:var(--g600);line-height:1.55;margin-bottom:8px">
+        Votre demande ouvre un fil de discussion avec la structure. Le bulletin d'analyse y est demandé :
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:8px;padding:7px 10px;font-size:11px;color:var(--text)">
+          ✅ Oui, j'ai le bulletin → j'envoie la photo → RDV confirmé
+        </div>
+        <div style="background:#fff;border:1px solid var(--g200);border-radius:8px;padding:7px 10px;font-size:11px;color:var(--text)">
+          🔎 Non → recherche d'une consultation sur MedCare pour obtenir un bulletin
+        </div>
+      </div>
+      <div style="font-size:9.5px;color:var(--g400);font-style:italic;margin-top:8px">
+        MedCare n'émet pas d'ordonnance. La confirmation exige un bulletin émis par un tiers.
+      </div>
+    </div>
+  `;
+
+  document.getElementById('pv-overlay').classList.add('open');
+  document.getElementById('pv-modal').classList.add('open');
+}
+
+function closePanelPreview() {
+  document.getElementById('pv-overlay').classList.remove('open');
+  document.getElementById('pv-modal').classList.remove('open');
+}
+
+// ── Modal Envoyer à ──
+function openSendModalFor(id) {
+  const p = STRUCT_PANELS.find(x => String(x.id) === String(id));
+  if (!p) return;
+  document.getElementById('send-panel-url').value = `https://medcare.sn/t/${p.token}`;
+  document.getElementById('send-panel-nom').value = p.nom;
+  document.querySelectorAll('#send-patient-list input[type=checkbox]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.pan-conv-item').classList.remove('sel');
+  });
+  document.getElementById('send-modal').classList.add('open');
+}
+
+function closeSendModal() {
+  document.getElementById('send-modal').classList.remove('open');
+}
+
+function toggleConvSel(cb) {
+  cb.closest('.pan-conv-item').classList.toggle('sel', cb.checked);
+}
+
+// ── Utilitaires ──
+function copyText(txt, btn) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="ti ti-check"></i> Copié !';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    });
+  }
+}
+
+function escapeHtml(s) {
+  return (s + '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
+function escapeAttr(s) {
+  return (s + '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', () => {
+  renderMedcarePanels();
+  renderMyPanels();
+});
+</script>
+{% endblock %}

@@ -543,18 +543,18 @@
               </span>
             </h1>
             <div class="hero-profession">
-              <span>🩺 {{ praticien.get_profession_display|default:"Praticien indépendant" }}</span>
+              <span><i class="ti ti-stethoscope"></i> {{ praticien.get_profession_display|default:"Praticien indépendant" }}</span>
               {% if praticien.ordre_numero %}
               <span style="color:var(--muted);font-weight:400">· N° {{ praticien.ordre_numero }}</span>
               {% endif %}
             </div>
             <div class="hero-submeta">
-              <span>📍 {{ praticien.quartier|default:praticien.city|default:"Dakar" }}</span>
+              <span><i class="ti ti-map-pin"></i> {{ praticien.quartier|default:praticien.city|default:"Dakar" }}</span>
               {% if praticien.exercise_modes %}
-              <span>💼 Modes : {{ praticien.exercise_modes|join:", "|title }}</span>
+              <span><i class="ti ti-briefcase"></i> Modes : {{ praticien.exercise_modes|join:", "|title }}</span>
               {% endif %}
               {% if praticien.intervention_zone %}
-              <span>🚗 Déplacement : {{ praticien.intervention_zone }}</span>
+              <span><i class="ti ti-car"></i> Déplacement : {{ praticien.intervention_zone }}</span>
               {% endif %}
             </div>
           </div>
@@ -600,7 +600,7 @@
         <!-- Actes & Consultations proposés -->
         <section class="section-card">
           <div class="section-title">
-            <span>📋 Actes & Consultations proposés</span>
+            <span><i class="ti ti-clipboard-list"></i> Actes & Consultations proposés</span>
             <span class="count-badge">{{ actes|length }} acte{{ actes|length|pluralize }}</span>
           </div>
 
@@ -611,13 +611,13 @@
                 <h2 class="acte-name">{{ pa.acte.name }}</h2>
                 <div class="acte-details">
                   {% if pa.acte.service_medical_category %}
-                  <span class="acte-badge">🏷️ {{ pa.acte.service_medical_category.name }}</span>
+                  <span class="acte-badge"><i class="ti ti-tag"></i> {{ pa.acte.service_medical_category.name }}</span>
                   {% endif %}
                   {% if pa.duration_minutes %}
-                  <span>⏱️ {{ pa.duration_minutes }} min</span>
+                  <span><i class="ti ti-clock"></i> {{ pa.duration_minutes }} min</span>
                   {% endif %}
                   {% if pa.delivrance %}
-                  <span>📍 {{ pa.get_delivrance_display }}</span>
+                  <span><i class="ti ti-map-pin"></i> {{ pa.get_delivrance_display }}</span>
                   {% endif %}
                 </div>
               </div>
@@ -639,7 +639,7 @@
             {% endfor %}
           {% else %}
             <div class="empty-state">
-              <div class="empty-state-icon">🩺</div>
+              <div class="empty-state-icon"><i class="ti ti-stethoscope"></i></div>
               <div>Aucun acte spécifié pour l'instant.</div>
             </div>
           {% endif %}
@@ -649,7 +649,7 @@
         {% if tickets %}
         <section class="section-card">
           <div class="section-title">
-            <span>🎟️ Prestations à accès direct</span>
+            <span><i class="ti ti-ticket"></i> Prestations à accès direct</span>
             <span class="count-badge">{{ tickets|length }}</span>
           </div>
           {% for t in tickets %}
@@ -676,7 +676,7 @@
         {% if praticien.description %}
         <section class="section-card">
           <div class="section-title">
-            <span>📝 À propos du praticien</span>
+            <span><i class="ti ti-notes"></i> À propos du praticien</span>
           </div>
           <p style="font-size:13.5px;color:#334155;line-height:1.7;white-space:pre-line">
             {{ praticien.description }}
@@ -692,7 +692,7 @@
         <!-- Lieux de consultation & Affiliations -->
         <section class="section-card">
           <div class="section-title">
-            <span>🏥 Lieux d'exercice</span>
+            <span><i class="ti ti-building-hospital"></i> Lieux d'exercice</span>
             <span class="count-badge">{{ affiliations|length }}</span>
           </div>
 
@@ -707,7 +707,7 @@
               <div class="aff-role">{{ aff.role_title }}</div>
               {% endif %}
               {% if aff.structure.address %}
-              <div class="aff-address">📍 {{ aff.structure.address }}{% if aff.structure.city %}, {{ aff.structure.city }}{% endif %}</div>
+              <div class="aff-address"><i class="ti ti-map-pin"></i> {{ aff.structure.address }}{% if aff.structure.city %}, {{ aff.structure.city }}{% endif %}</div>
               {% endif %}
 
               {% if aff.days_schedule %}
@@ -724,7 +724,7 @@
             {% endfor %}
           {% else %}
             <div class="empty-state">
-              <div class="empty-state-icon">🏥</div>
+              <div class="empty-state-icon"><i class="ti ti-building-hospital"></i></div>
               <div>Exerce en cabinet individuel / à domicile.</div>
             </div>
           {% endif %}
@@ -733,11 +733,11 @@
         <!-- Informations pratiques & Spécialités -->
         <section class="section-card">
           <div class="section-title">
-            <span>ℹ️ Informations pratiques</span>
+            <span><i class="ti ti-info-circle"></i> Informations pratiques</span>
           </div>
 
           <div class="info-list-item">
-            <div class="info-icon">📍</div>
+            <div class="info-icon"><i class="ti ti-map-pin"></i></div>
             <div>
               <div class="info-label">Localisation</div>
               <div class="info-value">{{ praticien.address|default:praticien.quartier|default:praticien.city }}</div>
@@ -746,7 +746,7 @@
 
           {% if praticien.specialties %}
           <div class="info-list-item">
-            <div class="info-icon">🎯</div>
+            <div class="info-icon"><i class="ti ti-target"></i></div>
             <div>
               <div class="info-label">Spécialités déclarées</div>
               <div class="info-value">
@@ -760,7 +760,7 @@
 
           {% if praticien.exercise_modes %}
           <div class="info-list-item">
-            <div class="info-icon">💼</div>
+            <div class="info-icon"><i class="ti ti-briefcase"></i></div>
             <div>
               <div class="info-label">Modes d'exercice</div>
               <div class="info-value">{{ praticien.exercise_modes|join:", "|title }}</div>
@@ -770,7 +770,7 @@
 
           {% if praticien.intervention_zone %}
           <div class="info-list-item">
-            <div class="info-icon">🚗</div>
+            <div class="info-icon"><i class="ti ti-car"></i></div>
             <div>
               <div class="info-label">Zone de déplacement</div>
               <div class="info-value">{{ praticien.intervention_zone }}</div>
@@ -780,7 +780,7 @@
 
           {% if praticien.website %}
           <div class="info-list-item">
-            <div class="info-icon">🌐</div>
+            <div class="info-icon"><i class="ti ti-world"></i></div>
             <div>
               <div class="info-label">Site internet</div>
               <div class="info-value"><a href="{{ praticien.website }}" target="_blank" rel="noopener" style="color:var(--primary);text-decoration:underline">{{ praticien.website }}</a></div>

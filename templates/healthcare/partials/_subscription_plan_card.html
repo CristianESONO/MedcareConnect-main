@@ -18,7 +18,7 @@
   <article class="mcc-sp-plan-card is-{{ theme }}{% if card_mode == 'current' %} is-current{% elif card_mode == 'disabled' %} is-disabled{% endif %}">
     <div class="mcc-sp-plan-head mcc-sp-ph-{{ theme }}">
       <div class="mcc-sp-plan-badge mcc-sp-pb-{{ theme }}">
-        {% if theme == "pionnier" %}★ Pionnier{% else %}{{ plan.name }}{% endif %}
+        {% if theme == "pionnier" %}<i class="ti ti-star"></i> Pionnier{% else %}{{ plan.name }}{% endif %}
       </div>
       <div class="mcc-sp-plan-name">{{ plan.name }}</div>
       <div class="mcc-sp-plan-target">{{ plan|sub_plan_target }}</div>
@@ -71,7 +71,7 @@
         </li>
         {% elif feature.code in included %}
         <li data-feature-code="{{ feature.code }}">
-          <span class="mcc-sp-feat-on">✓</span>
+          <span class="mcc-sp-feat-on"><i class="ti ti-check"></i></span>
           <div class="mcc-sp-feat-text">
             <strong>{{ feature.label }}</strong>
             {% if feature.description %}<span>{{ feature.description }}</span>{% endif %}
@@ -93,7 +93,7 @@
     {% if card_mode == "current" %}
     <div class="mcc-sp-card-footer is-current">Vous êtes déjà sur cette formule</div>
     {% elif card_mode == "selectable" %}
-    <div class="mcc-sp-card-footer is-selected">✓ Formule sélectionnée — validez ci-dessous</div>
+    <div class="mcc-sp-card-footer is-selected"><i class="ti ti-check"></i> Formule sélectionnée — validez ci-dessous</div>
     {% endif %}
   </article>
 

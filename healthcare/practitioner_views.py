@@ -15,6 +15,7 @@ from healthcare.models import (
     PrestationTicket,
     PractitionerAffiliation,
     PrestataireActe,
+    ExamenPanel,
 )
 from cart.models import Cart, CartItem
 from messaging.models import Conversation, Message
@@ -355,9 +356,15 @@ def prestataire_affiliation_delete(request, pk):
 
 # ==============================================================================
 # ÉTAPE 5 : VUE PATIENT DU TICKET DIRECT (/t/<identifiant>)
+# Résout à la fois les PrestationTicket (praticiens) et les ExamenPanel (structures)
 # ==============================================================================
 
 def patient_ticket_view(request, token):
+    # Essayer d'abord un ExamenPanel (structure multi-actes)
+    panel = ExamenPanel.objects.filter(token=token, is_active=True).first()
+    if panel:
+        return _panel_patient_view(request, panel)
+
     ticket = get_object_or_404(PrestationTicket, identifiant=token, is_active=True)
     PrestationTicket.objects.filter(pk=ticket.pk).update(views_count=F("views_count") + 1)
     ticket.refresh_from_db()
@@ -619,3 +626,379 @@ def praticien_public_detail(request, slug):
     return render(request, "healthcare/praticien_public.html", context)
 
 
+# ==============================================================================
+# PANELS D'EXAMENS (structures)
+# ==============================================================================
+
+@login_required
+def prestataire_panels(request):
+    """Liste des panels d'examens de la structure."""
+    org = _get_user_org(request)
+    if not org:
+        messages.error(request, "Veuillez d'abord créer votre établissement.")
+        return redirect("healthcare:organisme_create")
+
+    panels = ExamenPanel.objects.filter(organisme=org).prefetch_related("actes", "actes__acte")
+
+    # Actes disponibles pour la recherche JS et le constructeur
+    actes_qs = PrestataireActe.objects.filter(
+        organisme=org
+    ).select_related("acte", "acte__service_medical_category").order_by("acte__name")
+    actes_data = [
+        {
+            "id": pa.pk,
+            "nom": pa.acte.name,
+            "cat": (
+                pa.acte.service_medical_category.name
+                if pa.acte.service_medical_category
+                else "Biologie générale"
+            ),
+            "prix": float(pa.price) if pa.price else 0,
+            "actif": bool(pa.is_available),
+        }
+        for pa in actes_qs
+    ]
+    actes_json = json.dumps(actes_data, ensure_ascii=False)
+
+    # Sérialisation des panels existants pour affichage dynamique conforme V1
+    panels_list_data = []
+    for p in panels:
+        p_actes = [pa.acte.name for pa in p.actes.all()]
+        panels_list_data.append({
+            "id": p.pk,
+            "kind": p.kind,
+            "nom": p.nom,
+            "desc": p.description,
+            "freq": "Sur prescription" if p.kind == "panel" else "Acte unique",
+            "actes": p_actes,
+            "actif": p.is_active,
+            "source": "Panel structure" if p.kind == "panel" else "Ticket structure",
+            "token": p.token,
+            "public_path": p.get_public_path(),
+            "total_price": float(p.total_price),
+            "views_count": p.views_count,
+            "is_prestation_ticket": False,
+        })
+
+    # Intégrer également les PrestationTicket de l'organisme
+    from healthcare.models import PrestationTicket
+    for pt in PrestationTicket.objects.filter(organisme=org):
+        panels_list_data.append({
+            "id": f"pt_{pt.pk}",
+            "db_id": pt.pk,
+            "kind": "ticket",
+            "nom": pt.title,
+            "desc": pt.description or "",
+            "freq": "Acte unique",
+            "actes": [pt.acte.name] if pt.acte else [],
+            "actif": pt.is_active,
+            "source": "Ticket de prestation",
+            "token": pt.identifiant,
+            "public_path": f"/t/{pt.identifiant}",
+            "total_price": float(pt.price) if pt.price else 0,
+            "views_count": pt.views_count,
+            "is_prestation_ticket": True,
+        })
+    panels_json = json.dumps(panels_list_data, ensure_ascii=False)
+
+    # Conversations actives (pour le modal "Envoyer à")
+    from messaging.models import Conversation
+    conversations = Conversation.objects.filter(
+        prestataire=org.user,
+        is_active=True,
+    ).select_related("patient").order_by("-updated_at")[:50]
+
+    return render(request, "healthcare/prestataire/panels_list.html", {
+        "org": org,
+        "panels": panels,
+        "panels_json": panels_json,
+        "actes_json": actes_json,
+        "conversations": conversations,
+        "dash_active": "panels",
+    })
+
+
+@login_required
+def panel_create(request):
+    """Créer ou modifier un panel d'examens ou un ticket (supporte formulaire classique et AJAX)."""
+    if request.method != "POST":
+        return redirect("healthcare:prestataire_panels")
+
+    org = _get_user_org(request)
+    if not org:
+        return redirect("healthcare:organisme_create")
+
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    panel_id = request.POST.get("panel_id")
+    nom = request.POST.get("nom", "").strip()
+    kind = request.POST.get("kind", "panel")
+    description = request.POST.get("description", "").strip()
+    acte_ids_raw = request.POST.get("acte_ids", "")
+    acte_noms_raw = request.POST.get("acte_noms", "")
+
+    if not nom:
+        if is_ajax:
+            return JsonResponse({"ok": False, "error": "Le nom du panel ou du ticket est obligatoire."})
+        messages.error(request, "Le nom du panel ou du ticket est obligatoire.")
+        return redirect("healthcare:prestataire_panels")
+
+    if kind not in (ExamenPanel.KIND_PANEL, ExamenPanel.KIND_TICKET):
+        kind = ExamenPanel.KIND_PANEL
+
+    if panel_id:
+        try:
+            panel = ExamenPanel.objects.get(pk=int(panel_id), organisme=org)
+            panel.nom = nom
+            panel.kind = kind
+            panel.description = description
+            panel.save()
+        except (ExamenPanel.DoesNotExist, ValueError):
+            panel = ExamenPanel.objects.create(
+                organisme=org,
+                kind=kind,
+                nom=nom,
+                description=description,
+            )
+    else:
+        panel = ExamenPanel.objects.create(
+            organisme=org,
+            kind=kind,
+            nom=nom,
+            description=description,
+        )
+
+    # Attacher les actes sélectionnés
+    selected_pas = []
+    if acte_ids_raw:
+        acte_ids = [int(x) for x in acte_ids_raw.split(",") if x.strip().isdigit()]
+        selected_pas.extend(list(PrestataireActe.objects.filter(pk__in=acte_ids, organisme=org)))
+
+    if acte_noms_raw:
+        noms = [n.strip() for n in acte_noms_raw.split("|||") if n.strip()]
+        for nom_acte in noms:
+            pa = PrestataireActe.objects.filter(organisme=org, acte__name__iexact=nom_acte).first()
+            if not pa:
+                am = ActeMedical.objects.filter(name__iexact=nom_acte).first()
+                if not am:
+                    am = ActeMedical.objects.filter(name__icontains=nom_acte).first()
+                if am:
+                    pa, _ = PrestataireActe.objects.get_or_create(
+                        organisme=org,
+                        acte=am,
+                        defaults={"price": 0, "is_available": True}
+                    )
+            if pa and pa not in selected_pas:
+                selected_pas.append(pa)
+
+    panel.actes.set(selected_pas)
+
+    if is_ajax:
+        return JsonResponse({
+            "ok": True,
+            "id": panel.pk,
+            "kind": panel.kind,
+            "nom": panel.nom,
+            "desc": panel.description,
+            "token": panel.token,
+            "total_price": float(panel.total_price),
+            "actes": [pa.acte.name for pa in panel.actes.all()],
+            "url": panel.get_public_path(),
+        })
+
+    label_type = "Ticket" if panel.kind == ExamenPanel.KIND_TICKET else "Panel"
+    messages.success(request, f"{label_type} « {panel.nom} » enregistré avec succès !")
+    return redirect("healthcare:prestataire_panels")
+
+
+@login_required
+def panel_toggle(request, pk):
+    """Activer / désactiver un panel ou ticket."""
+    if request.method != "POST":
+        return redirect("healthcare:prestataire_panels")
+    org = _get_user_org(request)
+    pk_str = str(pk)
+    if pk_str.startswith("pt_"):
+        from healthcare.models import PrestationTicket
+        pt_pk = int(pk_str.replace("pt_", ""))
+        ticket = get_object_or_404(PrestationTicket, pk=pt_pk, organisme=org)
+        ticket.is_active = not ticket.is_active
+        ticket.save(update_fields=["is_active"])
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"ok": True, "is_active": ticket.is_active})
+        return redirect("healthcare:prestataire_panels")
+    panel = get_object_or_404(ExamenPanel, pk=pk, organisme=org)
+    panel.is_active = not panel.is_active
+    panel.save(update_fields=["is_active"])
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return JsonResponse({"ok": True, "is_active": panel.is_active})
+    return redirect("healthcare:prestataire_panels")
+
+
+@login_required
+def panel_delete(request, pk):
+    """Supprimer un panel ou ticket."""
+    if request.method != "POST":
+        return redirect("healthcare:prestataire_panels")
+    org = _get_user_org(request)
+    pk_str = str(pk)
+    if pk_str.startswith("pt_"):
+        from healthcare.models import PrestationTicket
+        pt_pk = int(pk_str.replace("pt_", ""))
+        ticket = get_object_or_404(PrestationTicket, pk=pt_pk, organisme=org)
+        ticket.delete()
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"ok": True})
+        messages.success(request, "Ticket supprimé.")
+        return redirect("healthcare:prestataire_panels")
+    panel = get_object_or_404(ExamenPanel, pk=pk, organisme=org)
+    panel.delete()
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return JsonResponse({"ok": True})
+    messages.success(request, "Panel supprimé.")
+    return redirect("healthcare:prestataire_panels")
+
+
+@login_required
+def panel_send(request):
+    """Envoyer le lien d'un panel dans la messagerie vers des patients sélectionnés."""
+    if request.method != "POST":
+        return redirect("healthcare:prestataire_panels")
+
+    org = _get_user_org(request)
+    if not org:
+        return redirect("healthcare:organisme_create")
+
+    panel_url = request.POST.get("panel_url", "").strip()
+    panel_nom = request.POST.get("panel_nom", "Panel d'examens").strip()
+    conv_ids = request.POST.getlist("conv_ids")
+
+    if not conv_ids:
+        messages.error(request, "Sélectionnez au moins un patient.")
+        return redirect("healthcare:prestataire_panels")
+
+    from messaging.models import Conversation, Message
+    sent = 0
+    for conv_id in conv_ids:
+        try:
+            conv = Conversation.objects.get(pk=int(conv_id), prestataire=org.user)
+        except (Conversation.DoesNotExist, ValueError):
+            continue
+        Message.objects.create(
+            conversation=conv,
+            sender=org.user,
+            receiver=conv.patient,
+            content=(
+                f"🧩 **{panel_nom}**\n"
+                f"Voici le lien pour accéder directement aux actes de ce panel :\n"
+                f"{panel_url}\n\n"
+                f"Cliquez sur le lien pour ajouter les examens à votre panier et obtenir votre devis personnalisé."
+            ),
+            message_type="internal",
+            payload={"type": "panel_link", "panel_url": panel_url, "panel_nom": panel_nom},
+        )
+        # Marquer la conversation comme mise à jour
+        conv.save(update_fields=["updated_at"])
+        sent += 1
+
+    if sent:
+        messages.success(request, f"Lien envoyé à {sent} patient{'s' if sent > 1 else ''}.")
+    else:
+        messages.error(request, "Aucun message envoyé.")
+    return redirect("healthcare:prestataire_panels")
+
+
+def _panel_patient_view(request, panel):
+    """
+    Affiche la fiche publique d'un ExamenPanel ou pré-sélectionne directement les actes au panier.
+    Conforme au brief : le lien /t/<token> pré-coche les actes au panier du patient.
+    """
+    from cart.models import Cart, CartItem
+
+    ExamenPanel.objects.filter(pk=panel.pk).update(views_count=F("views_count") + 1)
+    panel.refresh_from_db()
+
+    org = panel.organisme
+    actes_pa = list(panel.actes.select_related("acte").all())
+    preview_only = request.GET.get("preview") == "1"
+
+    # Action d'ajout au panier : par défaut lors de l'accès au lien court /t/<token>
+    should_add_to_cart = (not preview_only) or request.POST.get("action") == "add_cart" or request.GET.get("add") == "1"
+
+    if should_add_to_cart and actes_pa:
+        if request.user.is_authenticated and getattr(request.user, "is_patient", False):
+            cart = Cart.get_active_cart(request.user)
+            for pa in actes_pa:
+                CartItem.objects.get_or_create(cart=cart, prestataire_acte=pa)
+            messages.success(
+                request,
+                f"Les {len(actes_pa)} examen{'s' if len(actes_pa) > 1 else ''} de « {panel.nom} » ont été pré-sélectionnés dans votre panier !"
+            )
+        else:
+            # Panier invité en session (clé officielle MedCare)
+            guest_cart = request.session.get("medcare_guest_cart_session_v1") or {}
+            if not isinstance(guest_cart, dict):
+                guest_cart = {}
+            for pa in actes_pa:
+                guest_cart[str(pa.pk)] = 1
+            request.session["medcare_guest_cart_session_v1"] = guest_cart
+            request.session.modified = True
+            messages.success(
+                request,
+                f"Les {len(actes_pa)} examen{'s' if len(actes_pa) > 1 else ''} de « {panel.nom} » ont été pré-sélectionnés dans votre panier !"
+            )
+
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"status": "ok", "message": "Actes ajoutés au panier !"})
+
+        return redirect("cart:cart_view")
+
+    start_conv_url = f"/messaging/demarrer/{org.slug}/"
+
+    return render(request, "healthcare/panel_public.html", {
+        "panel": panel,
+        "org": org,
+        "actes_pa": actes_pa,
+        "start_conv_url": start_conv_url,
+        "page_title": f"{panel.nom} · MedCare",
+    })
+
+
+@login_required
+def start_predevis_conversation(request, slug):
+    """
+    Démarre ou reprend une conversation avec une structure en mode pré-devis.
+    Utilisé depuis le bouton « Messagerie » du profil public.
+    """
+    org = get_object_or_404(OrganismeDeSante, slug=slug, is_active=True)
+    prestataire_user = org.user
+
+    if not getattr(request.user, "is_patient", False):
+        return redirect("messaging:start_conversation", slug=slug)
+
+    # Reprendre une conversation existante ou en créer une nouvelle
+    conv = Conversation.objects.filter(
+        patient=request.user,
+        prestataire=prestataire_user,
+        is_active=True,
+    ).first()
+
+    if not conv:
+        conv = Conversation.objects.create(
+            patient=request.user,
+            prestataire=prestataire_user,
+            subject=f"Contact — {org.name}",
+            kind=Conversation.KIND_GENERAL,
+        )
+        # Message d'ouverture du fil pré-devis
+        Message.objects.create(
+            conversation=conv,
+            sender=request.user,
+            receiver=prestataire_user,
+            content=(
+                f"Bonjour, je vous contacte depuis votre profil public sur MedCare. "
+                f"Je souhaite obtenir des informations ou un pré-devis pour vos examens."
+            ),
+            payload={"type": "predevis"},
+        )
+
+    return redirect("messaging:conversation_detail", pk=conv.pk)

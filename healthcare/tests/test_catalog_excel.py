@@ -215,3 +215,70 @@ def test_fuzzy_typo_matching_and_price_variations():
     assert pa_c.price == Decimal("15000.00")
 
 
+@pytest.mark.django_db
+def test_15_scenarios_import_catalogue_erreurs():
+    """
+    Validation intégrale des 15 scénarios d'erreurs et cas limites du fichier de test.
+    """
+    user = User.objects.create_user(username="test_presta_15", email="p15@medcare.sn", password="pass")
+    org = OrganismeDeSante.objects.create(user=user, name="Clinique Test 15 Scenarios", is_active=True)
+
+    svc_bio = ServiceMedical.objects.create(name="Biologie médicale", slug="bio-15", order=1, is_active=True)
+    svc_cardio = ServiceMedical.objects.create(name="Cardiologie", slug="cardio-15", order=2, is_active=True)
+
+    nfs = ActeMedical.objects.create(name="NFS / Hémogramme", code="BIO-NFS-15", service_medical_category=svc_bio, level=3, reference_price=Decimal("5000"), is_active=True)
+    ecg = ActeMedical.objects.create(name="Électrocardiogramme (ECG)", code="CAR-ECG-15", service_medical_category=svc_cardio, level=3, reference_price=Decimal("15000"), is_active=True)
+    gly = ActeMedical.objects.create(name="Glycémie à jeun", code="BIO-GLY-15", service_medical_category=svc_bio, level=3, reference_price=Decimal("3000"), is_active=True)
+
+    csv_rows = [
+        "Nom de l'acte;Prix;Délai indicatif;Disponible",
+        "NFS;5000;24h;Oui",                                       # 1. Standard
+        "n.f.s.;5 000 FCFA;24 h;Oui",                             # 2. Variante sigle + 3. Devise (doublon NFS)
+        "E.C.G.;15000 CFA;immediat;Oui",                          # 2. Variante ECG + 3. Devise
+        "Glycémie à jeun;5.000;30 min;Oui",                       # 4. Séparateur millier point (5000 F) + 6. Délai 30 min
+        "Numération formule sanguine;5,000;1h;Oui",               # 4. Séparateur virgule + 5. Synonyme médical NFS + 6. Délai 1h
+        "NFS / Hémogramme;6000;24h;Oui",                          # 7. Nom combiné (harmonise NFS à 6000 F)
+        "Hemograme;6000;24h;Oui",                                 # 8. Faute de frappe
+        "Acte de test inexistant XYZ-TEST-999;10000;24h;Oui",     # 9. Acte inconnu (doit être rejeté)
+        "NFS;-500;24h;Oui",                                       # 10. Tarif négatif (rejeté, aucun prix négatif)
+        ";10000;24h;Oui",                                         # 11. Désignation vide (rejeté)
+        "Glycémie à jeun;prix inconnu;30 min;Oui",                # 12. Tarif non numérique (rejeté)
+        "Glycémie à jeun;;30 min;Oui",                            # 13. Tarif absent (garde le tarif existant)
+        "Glycémie à jeun;3500;Délai invalide;Oui",                # 14. Délai invalide (signalé, tarif mis à jour)
+        "Électrocardiogramme (ECG);18000;;Oui",                   # 15. Ligne sans délai (acceptée)
+    ]
+    csv_file = SimpleUploadedFile("medcare_tests_15.csv", "\n".join(csv_rows).encode("utf-8"), content_type="text/csv")
+    res = import_catalog_from_file(csv_file, org, auto_activate=True)
+
+    # Vérifications globales
+    assert res["success"] is True
+    # Aucun plantage, les erreurs sont capturées
+    assert len(res["errors"]) > 0
+
+    # Aucun tarif négatif n'a été enregistré
+    for pa in PrestataireActe.objects.filter(organisme=org):
+        assert pa.price >= Decimal("0.00"), f"Tarif négatif trouvé sur {pa.acte.name} !"
+
+    # Pas de doublon : seulement 3 actes distincts (nfs, ecg, gly)
+    assert PrestataireActe.objects.filter(organisme=org).count() == 3
+
+    # NFS a le tarif valide final (6000 FCFA), pas -500 !
+    pa_nfs = PrestataireActe.objects.get(organisme=org, acte=nfs)
+    assert pa_nfs.price == Decimal("6000.00")
+
+    # ECG a le tarif de la ligne 15 (18000 FCFA)
+    pa_ecg = PrestataireActe.objects.get(organisme=org, acte=ecg)
+    assert pa_ecg.price == Decimal("18000.00")
+
+    # Glycémie a le tarif valide (3500 FCFA)
+    pa_gly = PrestataireActe.objects.get(organisme=org, acte=gly)
+    assert pa_gly.price == Decimal("3500.00")
+
+    # Rejets bien identifiés
+    assert any("XYZ-TEST-999" in err for err in res["errors"])
+    assert any("négatif" in err.lower() for err in res["errors"])
+    assert any("non numérique" in err.lower() for err in res["errors"])
+    assert any("vide" in err.lower() for err in res["errors"])
+
+
+

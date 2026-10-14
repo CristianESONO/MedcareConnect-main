@@ -33,13 +33,16 @@ def ambulance_acte_flow(name: str) -> str:
     return "trajet"
 
 
+from django.utils.safestring import mark_safe
+
+
 def ambulance_configure_label(name: str) -> str:
     flow = ambulance_acte_flow(name)
     if flow == "evenement":
-        return "🩺 Configurer ma couverture"
+        return mark_safe('<i class="ti ti-stethoscope"></i> Configurer ma couverture')
     if flow == "rapatriement":
-        return "🌍 Organiser le rapatriement"
-    return "🚑 Configurer mon trajet"
+        return mark_safe('<i class="ti ti-plane"></i> Organiser le rapatriement')
+    return mark_safe('<i class="ti ti-ambulance"></i> Configurer mon trajet')
 
 
 def ambulance_configure_short(name: str, *, sur_devis: bool = False) -> str:

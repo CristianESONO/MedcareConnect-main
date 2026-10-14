@@ -54,7 +54,7 @@
       Expiré <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'expired' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.expired }}</span>
     </a>
     <a href="?status=archived" class="whitespace-nowrap rounded-lg px-3 py-1.5 transition {% if status_filter == 'archived' %}bg-gray-700 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">
-      📁 Archivés <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'archived' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.archived }}</span>
+      <i class="ti ti-folder"></i> Archivés <span class="ml-1 rounded-full px-1.5 py-0.5 text-[10px] {% if status_filter == 'archived' %}bg-white/30 text-white{% else %}bg-gray-100 text-gray-600{% endif %}">{{ counts.archived }}</span>
     </a>
   </div>
 </div>
@@ -74,11 +74,11 @@
           {% elif p.status == 'viewed' %}
             <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700">● Consulté</span>
           {% elif p.status == 'relanced' %}
-            <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-800">📲 Relancé {{ p.relance_count }}× · {{ p.relances_restantes }} restante(s)</span>
+            <span class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-800"><i class="ti ti-device-mobile"></i> Relancé {{ p.relance_count }}× · {{ p.relances_restantes }} restante(s)</span>
           {% elif p.status == 'expired' %}
             <span class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-rose-700">● Expiré</span>
           {% elif p.status == 'archived' %}
-            <span class="inline-flex items-center gap-1 rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-700">📁 Archivé{% if p.archived_reason %} · {{ p.archived_reason }}{% endif %}</span>
+            <span class="inline-flex items-center gap-1 rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-700"><i class="ti ti-folder"></i> Archivé{% if p.archived_reason %} · {{ p.archived_reason }}{% endif %}</span>
           {% else %}
             <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-600">{{ p.get_status_display }}</span>
           {% endif %}
@@ -93,11 +93,11 @@
         <p class="text-[11px] text-gray-400">sous-devis {{ p.created_at|date:"d F Y, H:i" }}{% if p.last_relanced_at %} · dernière relance {{ p.last_relanced_at|date:"d F Y, H:i" }}{% endif %}{% if p.archived_at %} · archivé {{ p.archived_at|date:"d F Y, H:i" }}{% endif %}</p>
         {% if r.creneau %}
         <div class="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
-          📅 Créneau souhaité : <strong>{{ r.creneau }}</strong>
+          <i class="ti ti-calendar"></i> Créneau souhaité : <strong>{{ r.creneau }}</strong>
         </div>
         {% else %}
         <div class="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800">
-          ⚠️ Aucun créneau choisi par le patient
+          <i class="ti ti-alert-triangle"></i> Aucun créneau choisi par le patient
         </div>
         {% endif %}
       </div>
@@ -128,7 +128,7 @@
       <form method="post" action="{% url 'healthcare:prestataire_devis_relance' p.reference %}" class="inline">
         {% csrf_token %}
         <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-amber-600">
-          🔄 Relancer ({{ p.relance_count }}/{{ p.MAX_RELANCES }})
+          <i class="ti ti-refresh"></i> Relancer ({{ p.relance_count }}/{{ p.MAX_RELANCES }})
         </button>
       </form>
       {% else %}
@@ -137,7 +137,7 @@
       <form method="post" action="{% url 'healthcare:prestataire_devis_archiver' p.reference %}" class="inline" onsubmit="return confirm('Archiver ce sous-devis ?');">
         {% csrf_token %}
         <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[11px] font-bold text-gray-600 hover:bg-gray-50">
-          ✕ Archiver
+          &times; Archiver
         </button>
       </form>
       <span class="ml-auto text-[10px] text-gray-400">Règle plateforme : 2 relances max puis archivage automatique.</span>

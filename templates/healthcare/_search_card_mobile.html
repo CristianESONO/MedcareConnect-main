@@ -17,16 +17,16 @@
       {% endif %}
     </div>
     {% if block.org.is_praticien %}
-    <div class="scard-m-type" style="color:#0a5c8a;font-weight:700">🩺 {{ block.org.get_profession_display|default:"Praticien indépendant" }}</div>
+    <div class="scard-m-type" style="color:#0a5c8a;font-weight:700"><i class="ti ti-stethoscope"></i> {{ block.org.get_profession_display|default:"Praticien indépendant" }}</div>
     {% elif block.org.type_organisme %}
     <div class="scard-m-type">{{ block.org.type_organisme.name }}</div>
     {% endif %}
     <div class="scard-m-meta flex items-center gap-3 mt-1">
-      <span class="smeta-m">📍 {{ block.org.city }}{% if block.org.quartier %}, {{ block.org.quartier }}{% endif %}</span>
+      <span class="smeta-m"><i class="ti ti-map-pin"></i> {{ block.org.city }}{% if block.org.quartier %}, {{ block.org.quartier }}{% endif %}</span>
       {% if block.org.horaires_ouverture %}
-      <span class="smeta-m">🕐 {{ block.org.horaires_ouverture }}</span>
+      <span class="smeta-m"><i class="ti ti-clock"></i> {{ block.org.horaires_ouverture }}</span>
       {% else %}
-      <span class="smeta-m">🕐 24h/24</span>
+      <span class="smeta-m"><i class="ti ti-clock"></i> 24h/24</span>
       {% endif %}
     </div>
   </div>
@@ -54,10 +54,10 @@
       {% if pa.delai or block.org.prises_sang_domicile %}
       <div class="scard-m-acte-meta mt-0.5">
         {% if pa.delai %}
-        <span class="scard-m-acte-delai">⏱ {{ pa.get_delai_display }}</span>
+        <span class="scard-m-acte-delai"><i class="ti ti-clock"></i> {{ pa.get_delai_display }}</span>
         {% endif %}
         {% if block.org.prises_sang_domicile %}
-        <span class="scard-m-acte-domicile">🏡 Prestations à domicile</span>
+        <span class="scard-m-acte-domicile"><i class="ti ti-home"></i> Prestations à domicile</span>
         {% endif %}
       </div>
       {% endif %}
@@ -69,7 +69,7 @@
 
   {% if block.missing_actes %}
   <div class="scard-missing p-3 bg-amber-50/70 border-t border-amber-100">
-    <div class="scm-title text-xs font-bold text-amber-800 flex items-center gap-1">⚠️ Actes non disponibles ici</div>
+    <div class="scm-title text-xs font-bold text-amber-800 flex items-center gap-1"><i class="ti ti-alert-triangle"></i> Actes non disponibles ici</div>
     <div class="scm-actes flex flex-wrap gap-1 mt-1.5 mb-2">
       {% for acte in block.missing_actes %}
       <span class="scm-pill px-2 py-0.5 bg-white border border-amber-200 text-amber-900 rounded-md text-[10.5px] font-medium" data-acte-pk="{{ acte.pk }}">{{ acte.name }}</span>
@@ -81,7 +81,7 @@
 
   <div class="scard-m-footer">
     <div class="scard-m-ins">
-      🛡
+      <i class="ti ti-shield-check"></i>
       {% if block.insurance_names %}
       {{ block.insurance_names|slice:":3"|join:" · " }}{% if block.insurance_names|length > 3 %} +{{ block.insurance_names|length|add:"-3" }}{% endif %}
       {% else %}
@@ -104,7 +104,7 @@
   <div class="scard-m-multiselect-footer" style="padding:8px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:8px">
     <span style="font-size:11px;font-weight:600;color:#64748b">{{ block.items|length }} actes</span>
     <span style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#0a5c8a" data-scard-total="{{ block.items_total|floatformat:0 }}">{{ block.items_total|floatformat:0 }} FCFA</span>
-    <button type="button" class="btn-select-all-m" style="background:#14b87a;color:#ffffff;border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;box-shadow:0 2px 8px rgba(20,184,122,0.25)" data-scard-add-all="{{ block.org.pk }}">➕ Tout</button>
+    <button type="button" class="btn-select-all-m" style="background:#14b87a;color:#ffffff;border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;box-shadow:0 2px 8px rgba(20,184,122,0.25)" data-scard-add-all="{{ block.org.pk }}"><i class="ti ti-plus"></i> Tout</button>
   </div>
   {% endif %}
 </article>

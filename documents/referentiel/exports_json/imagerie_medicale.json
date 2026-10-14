@@ -1,0 +1,2654 @@
+{
+  "pilier_id": 2,
+  "pilier_slug": "imagerie-medicale",
+  "pilier_nom": "Imagerie médicale",
+  "lexique_intention_uniquement": false,
+  "nb_actes": 220,
+  "actes": [
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Scanner thoraco-abdomino-pelvien (TAP)",
+      "actes_composants": [
+        "TDM thoracique",
+        "TDM abdomino-pelvienne"
+      ],
+      "lexique_intention": [
+        "TAP",
+        "scanner TAP",
+        "TDM thoraco-abdomino-pelvienne",
+        "thorax abdomen pelvis"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Radiographie du rachis complet",
+      "actes_composants": [
+        "Radiographie du rachis cervical",
+        "Radiographie du rachis dorsal",
+        "Radiographie du rachis lombaire"
+      ],
+      "lexique_intention": [
+        "rachis complet",
+        "rachis entier",
+        "cervical dorsal lombaire",
+        "rachis total"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Échographie abdomino-pelvienne",
+      "actes_composants": [
+        "Échographie abdominale",
+        "Échographie pelvienne sus-pubienne"
+      ],
+      "lexique_intention": [
+        "écho abdomino-pelvienne",
+        "échographie abdomen et pelvis",
+        "abdomino-pelvienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Écho-Doppler veineux + artériel des membres inférieurs",
+      "actes_composants": [
+        "Doppler veineux des membres inférieurs",
+        "Doppler artériel des membres inférieurs"
+      ],
+      "lexique_intention": [
+        "écho-doppler des membres inférieurs",
+        "doppler veineux et artériel MI",
+        "doppler complet jambes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Bilan sénologique (mammographie + échographie)",
+      "actes_composants": [
+        "Mammographie bilatérale (dépistage)",
+        "Échographie mammaire"
+      ],
+      "lexique_intention": [
+        "bilan sénologique",
+        "mammographie et échographie mammaire",
+        "bilan mammaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Échographie obstétricale + Doppler (3e trimestre)",
+      "actes_composants": [
+        "Échographie obstétricale du 3e trimestre (croissance)",
+        "Doppler obstétrical"
+      ],
+      "lexique_intention": [
+        "écho obstétricale avec doppler",
+        "échographie et doppler 3e trimestre",
+        "biométrie et doppler"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Bilan orthodontique (panoramique + téléradiographie)",
+      "actes_composants": [
+        "Panoramique dentaire (orthopantomogramme)",
+        "Téléradiographie de profil (céphalométrie)"
+      ],
+      "lexique_intention": [
+        "bilan orthodontique",
+        "panoramique et téléradiographie",
+        "bilan ortho"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Panel d'examens / Protocoles",
+      "code": "PAN",
+      "acte_standardise": "Angio-TDM aorte + membres inférieurs",
+      "actes_composants": [
+        "Angio-TDM de l'aorte",
+        "Angio-TDM des membres inférieurs"
+      ],
+      "lexique_intention": [
+        "angio-TDM aorto-iliaque et membres",
+        "angioscanner aorte et jambes",
+        "artériographie TDM MI"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du thorax",
+      "actes_composants": [],
+      "lexique_intention": [
+        "radio thorax",
+        "rx thorax",
+        "téléthorax",
+        "radiographie pulmonaire",
+        "chest x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du thorax (face + profil)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "thorax face profil",
+        "rx thorax 2 incidences"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Abdomen sans préparation (ASP)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ASP",
+        "abdomen sans préparation",
+        "radio abdomen"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du rachis cervical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rachis cervical",
+        "rx cervical",
+        "cervical spine",
+        "rachis cervical dynamique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du rachis dorsal",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rachis dorsal",
+        "rachis thoracique",
+        "rx dorsal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du rachis lombaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rachis lombaire",
+        "lombaire",
+        "lombo-sacré",
+        "rx lombaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du bassin",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bassin",
+        "rx bassin",
+        "radio bassin"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de la hanche",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hanche",
+        "rx hanche",
+        "coxo-fémorale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de l'épaule",
+      "actes_composants": [],
+      "lexique_intention": [
+        "épaule",
+        "rx épaule",
+        "shoulder x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du bras (humérus)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bras",
+        "humérus",
+        "rx humérus"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du coude",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coude",
+        "rx coude",
+        "elbow x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de l'avant-bras",
+      "actes_composants": [],
+      "lexique_intention": [
+        "avant-bras",
+        "deux os de l'avant-bras"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du poignet",
+      "actes_composants": [],
+      "lexique_intention": [
+        "poignet",
+        "rx poignet",
+        "wrist x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de la main",
+      "actes_composants": [],
+      "lexique_intention": [
+        "main",
+        "rx main",
+        "hand x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie des doigts",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doigt",
+        "doigts",
+        "rx doigt"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de la cuisse (fémur)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cuisse",
+        "fémur",
+        "rx fémur"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du genou",
+      "actes_composants": [],
+      "lexique_intention": [
+        "genou",
+        "rx genou",
+        "knee x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de la jambe",
+      "actes_composants": [],
+      "lexique_intention": [
+        "jambe",
+        "deux os de la jambe",
+        "tibia péroné"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de la cheville",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cheville",
+        "rx cheville",
+        "ankle x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du pied",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pied",
+        "rx pied",
+        "foot x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du calcanéus",
+      "actes_composants": [],
+      "lexique_intention": [
+        "calcanéus",
+        "calcanéum",
+        "talon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du crâne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "crâne",
+        "rx crâne",
+        "skull x-ray"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du massif facial",
+      "actes_composants": [],
+      "lexique_intention": [
+        "massif facial",
+        "face",
+        "os de la face"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie des sinus (Blondeau)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sinus",
+        "blondeau",
+        "rx sinus"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie des os propres du nez",
+      "actes_composants": [],
+      "lexique_intention": [
+        "os propres du nez",
+        "OPN",
+        "rx nez"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de l'articulation temporo-mandibulaire (ATM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ATM",
+        "temporo-mandibulaire",
+        "articulation temporo mandibulaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie des sacro-iliaques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sacro-iliaques",
+        "articulations sacro-iliaques"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du gril costal (côtes)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "gril costal",
+        "côtes",
+        "rx côtes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie du sternum",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sternum",
+        "rx sternum"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Radiographie de la clavicule",
+      "actes_composants": [],
+      "lexique_intention": [
+        "clavicule",
+        "rx clavicule"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Âge osseux (poignet-main)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "âge osseux",
+        "maturation osseuse",
+        "greulich pyle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Télérachis / rachis en charge (EOS)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "télérachis",
+        "rachis en charge",
+        "EOS",
+        "scoliose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Pangonogramme (membres inférieurs en charge)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pangonogramme",
+        "membres inférieurs en charge",
+        "goniométrie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Transit œso-gastro-duodénal (TOGD)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TOGD",
+        "transit oeso-gastro-duodénal",
+        "transit baryté"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Lavement baryté",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lavement baryté",
+        "opacification colique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Urographie intraveineuse (UIV)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "UIV",
+        "urographie intraveineuse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Hystérosalpingographie (HSG)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HSG",
+        "hystérosalpingographie",
+        "hystérographie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Urétrocystographie rétrograde et mictionnelle (UCRM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "UCRM",
+        "urétrocystographie",
+        "cystographie mictionnelle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Cystographie rétrograde",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cystographie rétrograde",
+        "cystographie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Fistulographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "fistulographie",
+        "opacification de fistule"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Sialographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sialographie",
+        "opacification des glandes salivaires"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Arthrographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "arthrographie",
+        "opacification articulaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Radiographie",
+      "code": "RX",
+      "acte_standardise": "Cholangiographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cholangiographie",
+        "opacification des voies biliaires"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie abdominale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho abdominale",
+        "échographie abdomen",
+        "abdominal ultrasound"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie hépato-biliaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho hépatique",
+        "foie et voies biliaires",
+        "hépato-biliaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie rénale et des voies urinaires",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho rénale",
+        "reins et voies urinaires",
+        "écho appareil urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie vésico-prostatique sus-pubienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho vésico-prostatique",
+        "prostate sus-pubienne",
+        "vessie prostate"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie prostatique endorectale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho prostatique endorectale",
+        "échographie transrectale prostate"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie pelvienne sus-pubienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho pelvienne",
+        "pelvis sus-pubien"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie pelvienne endovaginale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho endovaginale",
+        "échographie pelvienne par voie vaginale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie obstétricale du 1er trimestre (datation)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho T1",
+        "datation",
+        "première échographie grossesse",
+        "clarté nucale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie obstétricale morphologique (2e trimestre)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho morphologique",
+        "T2",
+        "échographie du 2e trimestre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie obstétricale du 3e trimestre (croissance)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho T3",
+        "croissance fœtale",
+        "biométrie 3e trimestre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie thyroïdienne et cervicale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho thyroïde",
+        "échographie cervicale",
+        "thyroïdienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie des parties molles",
+      "actes_composants": [],
+      "lexique_intention": [
+        "parties molles",
+        "écho des tissus mous"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie musculo-squelettique (articulaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho articulaire",
+        "musculo-squelettique",
+        "écho tendon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie testiculaire (scrotale)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho testiculaire",
+        "scrotale",
+        "bourses",
+        "échographie des bourses",
+        "écho des bourses",
+        "écho des testicules"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie des aires ganglionnaires",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho ganglionnaire",
+        "aires ganglionnaires",
+        "adénopathies"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie trans-fontanellaire (nourrisson)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "trans-fontanellaire",
+        "ETF",
+        "échographie cérébrale nourrisson"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie des hanches du nourrisson",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hanches nourrisson",
+        "dépistage luxation hanche",
+        "écho hanches bébé"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie oculaire / orbitaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho oculaire",
+        "orbitaire",
+        "échographie de l'œil"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie",
+      "code": "ECHO",
+      "acte_standardise": "Échographie pleurale / thoracique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho pleurale",
+        "échographie thoracique",
+        "épanchement pleural"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler veineux des membres inférieurs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler veineux MI",
+        "écho-doppler veineux jambes",
+        "recherche de thrombose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler artériel des membres inférieurs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler artériel MI",
+        "écho-doppler artériel jambes",
+        "artériopathie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler veineux des membres supérieurs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler veineux MS",
+        "écho-doppler veineux bras"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler artériel des membres supérieurs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler artériel MS",
+        "écho-doppler artériel bras"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Écho-Doppler des troncs supra-aortiques (TSA)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TSA",
+        "doppler carotidien",
+        "troncs supra-aortiques",
+        "carotides vertébrales"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler des artères rénales",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler rénal",
+        "artères rénales",
+        "HTA rénovasculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler du tronc porte et hépatique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler porte",
+        "doppler hépatique",
+        "hypertension portale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler des artères digestives (mésentériques)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler mésentérique",
+        "artères digestives"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler obstétrical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler obstétrical",
+        "doppler fœtal",
+        "utéro-ombilical",
+        "doppler ombilical"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler pénien",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler pénien",
+        "dysfonction érectile",
+        "doppler verge"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler transcrânien",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler transcrânien",
+        "DTC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler de fistule artério-veineuse (hémodialyse)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler FAV",
+        "fistule artério-veineuse",
+        "abord de dialyse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler de l'aorte abdominale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler aorte",
+        "anévrisme aorte abdominale",
+        "AAA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Échographie cardiaque",
+      "actes_composants": [],
+      "lexique_intention": [
+        "échographie cardiaque",
+        "échocardiographie",
+        "échocardiographie transthoracique",
+        "ETT",
+        "écho cœur",
+        "doppler cardiaque"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Échocardiographie transœsophagienne (ETO)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ETO",
+        "échocardiographie transoesophagienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler scrotal / testiculaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler testiculaire",
+        "doppler scrotal",
+        "torsion testiculaire",
+        "varicocèle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler thyroïdien",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler thyroïde",
+        "vascularisation thyroïdienne",
+        "hyperthyroïdie doppler"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Échocardiographie fœtale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "échocardiographie fœtale",
+        "doppler cardiaque fœtal",
+        "écho cœur fœtal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler du greffon rénal",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler greffon rénal",
+        "doppler de transplant rénal",
+        "surveillance de greffon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Cartographie veineuse pré-opératoire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cartographie veineuse",
+        "repérage veineux",
+        "bilan veineux avant pontage",
+        "avant fistule"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Échographie-Doppler",
+      "code": "DOP",
+      "acte_standardise": "Doppler trans-fontanellaire du nouveau-né",
+      "actes_composants": [],
+      "lexique_intention": [
+        "doppler trans-fontanellaire",
+        "doppler cérébral néonatal",
+        "doppler cérébral nourrisson"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM cérébrale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner cérébral",
+        "TDM crâne",
+        "scanner cerveau",
+        "CT brain"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Angio-TDM cérébrale (polygone de Willis)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angioscanner cérébral",
+        "angio-TDM intracrânien",
+        "polygone de Willis"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM du massif facial / sinus",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner sinus",
+        "TDM massif facial",
+        "CT sinus"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM des rochers",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner des rochers",
+        "TDM oreille",
+        "rochers"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM du cou",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner cervical",
+        "TDM du cou",
+        "CT neck"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM du rachis cervical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner rachis cervical",
+        "TDM cervical"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM du rachis dorsal",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner rachis dorsal",
+        "TDM dorsal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM du rachis lombaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner rachis lombaire",
+        "TDM lombaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM thoracique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner thoracique",
+        "TDM thorax",
+        "CT thorax",
+        "scanner poumon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Angio-TDM thoracique (embolie pulmonaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angioscanner thoracique",
+        "angio-TDM pulmonaire",
+        "recherche embolie pulmonaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Coroscanner (scanner coronaire)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coroscanner",
+        "scanner coronaire",
+        "coronaro-TDM",
+        "calcium score"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM abdomino-pelvienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner abdomino-pelvien",
+        "TDM abdomen pelvis",
+        "CT abdomen"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Uro-scanner (uro-TDM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "uroscanner",
+        "uro-TDM",
+        "scanner des voies urinaires",
+        "colique néphrétique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Entéro-scanner",
+      "actes_composants": [],
+      "lexique_intention": [
+        "entéroscanner",
+        "entéro-TDM",
+        "scanner du grêle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Colo-scanner (coloscopie virtuelle)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "coloscanner",
+        "coloscopie virtuelle",
+        "colo-TDM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Angio-TDM de l'aorte",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angioscanner aorte",
+        "angio-TDM aortique",
+        "aorte thoraco-abdominale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Angio-TDM des membres inférieurs",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angioscanner des membres inférieurs",
+        "angio-TDM jambes",
+        "artériographie TDM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM ostéo-articulaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner articulaire",
+        "TDM os",
+        "scanner membre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Arthro-scanner",
+      "actes_composants": [],
+      "lexique_intention": [
+        "arthroscanner",
+        "arthro-TDM",
+        "arthrographie scanner"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM du bassin",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scanner bassin",
+        "TDM pelvis osseux"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM corps entier (polytraumatisé)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "body scan",
+        "scanner corps entier",
+        "polytrauma",
+        "bodyscanner"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM cérébrale de perfusion",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDM de perfusion cérébrale",
+        "perfusion AVC",
+        "scanner de perfusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Angio-TDM des troncs supra-aortiques (cervico-encéphalique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angio-TDM TSA",
+        "angioscanner cervico-encéphalique",
+        "angio-TDM des carotides"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Angio-TDM des artères rénales",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angio-TDM rénal",
+        "angioscanner des artères rénales",
+        "HTA rénovasculaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM thoracique haute résolution (TDM-HR)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDM-HR",
+        "haute résolution",
+        "parenchyme pulmonaire",
+        "pneumopathie interstitielle"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM thoracique faible dose (dépistage)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDM faible dose",
+        "low dose",
+        "dépistage du cancer du poumon"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "Score calcique coronaire (Agatston)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "score calcique",
+        "calcium score",
+        "Agatston"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM hépatique multiphasique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDM foie multiphasique",
+        "protocole hépatique",
+        "triphasique du foie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM pancréatique (protocole)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDM pancréas",
+        "protocole pancréatique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Scanner (TDM)",
+      "code": "TDM",
+      "acte_standardise": "TDM des surrénales (protocole lavage)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TDM surrénales",
+        "protocole surrénalien",
+        "lavage surrénalien",
+        "wash-out"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM cérébrale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM cerveau",
+        "IRM encéphalique",
+        "MRI brain"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM hypophysaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM hypophyse",
+        "selle turcique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "Angio-IRM cérébrale et des TSA (ARM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angio-IRM",
+        "ARM cérébrale",
+        "ARM des TSA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM du rachis cervical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM cervical",
+        "IRM rachis cervical"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM du rachis dorsal",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM dorsal",
+        "IRM rachis thoracique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM du rachis lombaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM lombaire",
+        "IRM rachis lombaire",
+        "hernie discale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM médullaire complète",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM médullaire",
+        "IRM moelle",
+        "rachis complet IRM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM du massif facial / orbites",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM orbites",
+        "IRM massif facial",
+        "IRM de la face"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM des rochers / conduits auditifs internes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM rochers",
+        "IRM CAI",
+        "conduits auditifs internes"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM du cou",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM cervicale tissulaire",
+        "IRM du cou"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM cardiaque",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM cœur",
+        "IRM myocardique",
+        "cardiac MRI"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM abdominale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM abdomen",
+        "MRI abdomen"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM hépatique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM foie",
+        "IRM hépatique avec diffusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "Cholangio-IRM (bili-IRM)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cholangio-IRM",
+        "bili-IRM",
+        "IRM des voies biliaires",
+        "MRCP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM pancréatique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM pancréas"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM rénale et surrénalienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM reins",
+        "IRM surrénales"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM pelvienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM pelvis",
+        "IRM pelvienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM prostatique multiparamétrique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM prostate",
+        "IRM mp prostate",
+        "prostate multiparamétrique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM pelvienne gynécologique (utérus)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM utérus",
+        "IRM gynécologique",
+        "IRM pelvienne femme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "Entéro-IRM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "entéro-IRM",
+        "IRM du grêle",
+        "MICI"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM articulaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM genou",
+        "IRM épaule",
+        "IRM hanche",
+        "IRM cheville",
+        "IRM poignet",
+        "IRM articulation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "Arthro-IRM",
+      "actes_composants": [],
+      "lexique_intention": [
+        "arthro-IRM",
+        "arthrographie IRM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "Angio-IRM des membres / aorte",
+      "actes_composants": [],
+      "lexique_intention": [
+        "angio-IRM membres",
+        "ARM aorte",
+        "ARM périphérique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM mammaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM sein",
+        "IRM mammaire",
+        "breast MRI"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM fœtale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM fœtus",
+        "IRM obstétricale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "IRM",
+      "code": "IRM",
+      "acte_standardise": "IRM corps entier (diffusion)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "IRM corps entier",
+        "diffusion corps entier",
+        "whole body MRI"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Mammographie / Sénologie",
+      "code": "MAM",
+      "acte_standardise": "Mammographie bilatérale (dépistage)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "mammographie",
+        "mammo bilatérale",
+        "dépistage mammographique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Mammographie / Sénologie",
+      "code": "MAM",
+      "acte_standardise": "Mammographie diagnostique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "mammographie diagnostique",
+        "mammo diagnostique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Mammographie / Sénologie",
+      "code": "MAM",
+      "acte_standardise": "Mammographie unilatérale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "mammo unilatérale",
+        "mammographie d'un sein"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Mammographie / Sénologie",
+      "code": "MAM",
+      "acte_standardise": "Tomosynthèse mammaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "tomosynthèse",
+        "mammographie 3D",
+        "DBT"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Mammographie / Sénologie",
+      "code": "MAM",
+      "acte_standardise": "Échographie mammaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "écho mammaire",
+        "échographie des seins",
+        "échographie sénologique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Mammographie / Sénologie",
+      "code": "MAM",
+      "acte_standardise": "Galactographie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "galactographie",
+        "opacification des canaux galactophores"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ostéodensitométrie",
+      "code": "OST",
+      "acte_standardise": "Ostéodensitométrie (DMO) rachis et hanche",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ostéodensitométrie",
+        "DMO",
+        "densitométrie osseuse",
+        "absorptiométrie",
+        "DEXA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ostéodensitométrie",
+      "code": "OST",
+      "acte_standardise": "Ostéodensitométrie corps entier / composition corporelle",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DMO corps entier",
+        "composition corporelle",
+        "masse grasse DEXA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie osseuse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie osseuse",
+        "scinti os",
+        "bone scan"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie thyroïdienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie thyroïde",
+        "scinti thyroïdienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie myocardique de perfusion",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie myocardique",
+        "MIBI cœur",
+        "perfusion myocardique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie rénale (DMSA / MAG3)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie rénale",
+        "DMSA",
+        "MAG3",
+        "rénogramme"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie pulmonaire de ventilation/perfusion",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie pulmonaire",
+        "V/Q",
+        "ventilation perfusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie parathyroïdienne (MIBI)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie parathyroïde",
+        "MIBI parathyroïde"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie hépato-biliaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "scintigraphie hépatobiliaire",
+        "HIDA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Détection du ganglion sentinelle",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ganglion sentinelle",
+        "repérage isotopique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "TEP-TDM au 18F-FDG (PET-scan)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TEP",
+        "PET scan",
+        "PET-CT",
+        "TEP-TDM",
+        "FDG"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "TEP-TDM à la 68Ga-PSMA",
+      "actes_composants": [],
+      "lexique_intention": [
+        "TEP PSMA",
+        "PSMA PET",
+        "TEP prostate"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine nucléaire",
+      "code": "NUC",
+      "acte_standardise": "Scintigraphie cérébrale (DaTSCAN)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "DaTSCAN",
+        "scintigraphie cérébrale",
+        "transporteur dopaminergique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Imagerie dentaire & maxillo-faciale",
+      "code": "DENT",
+      "acte_standardise": "Panoramique dentaire (orthopantomogramme)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "panoramique dentaire",
+        "OPT",
+        "orthopantomogramme",
+        "panoramique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Imagerie dentaire & maxillo-faciale",
+      "code": "DENT",
+      "acte_standardise": "Radiographie rétro-alvéolaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rétro-alvéolaire",
+        "rétroalvéolaire",
+        "cliché rétro-dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Imagerie dentaire & maxillo-faciale",
+      "code": "DENT",
+      "acte_standardise": "Téléradiographie de profil (céphalométrie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "téléradiographie de profil",
+        "céphalométrie",
+        "télécrâne de profil"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Imagerie dentaire & maxillo-faciale",
+      "code": "DENT",
+      "acte_standardise": "Cone Beam CT (CBCT) / dentascanner",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cone beam",
+        "CBCT",
+        "dentascanner",
+        "scanner dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Imagerie dentaire & maxillo-faciale",
+      "code": "DENT",
+      "acte_standardise": "Radiographie occlusale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "occlusale",
+        "cliché occlusal"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Imagerie dentaire & maxillo-faciale",
+      "code": "DENT",
+      "acte_standardise": "Imagerie des sinus maxillaires",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sinus maxillaires",
+        "imagerie sinusienne dentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie pulmonaire (scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie pulmonaire",
+        "biopsie poumon sous scanner",
+        "biopsie transpariétale thoracique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie hépatique (écho/scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie hépatique",
+        "biopsie du foie guidée",
+        "PBH guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie rénale (écho/scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie rénale",
+        "PBR",
+        "biopsie du rein guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Microbiopsie mammaire (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "microbiopsie mammaire",
+        "biopsie du sein échoguidée",
+        "core biopsy sein"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Macrobiopsie mammaire (stéréotaxie / échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "macrobiopsie mammaire",
+        "stéréotaxie",
+        "mammotome",
+        "biopsie assistée par le vide"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie thyroïdienne (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie thyroïdienne",
+        "cytoponction thyroïde",
+        "FNA thyroïde"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie ganglionnaire (écho/scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie ganglionnaire",
+        "biopsie d'adénopathie guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie osseuse (scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie osseuse",
+        "biopsie de l'os sous scanner",
+        "biopsie vertébrale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie ORL / cervicale (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie ORL",
+        "biopsie cervicale guidée",
+        "biopsie masse du cou"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie prostatique échoguidée (endorectale)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie prostatique",
+        "biopsie de prostate échoguidée",
+        "biopsie transrectale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie des parties molles (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie des parties molles",
+        "biopsie masse des tissus mous"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie péritonéale / de masse abdominale (écho/scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie péritonéale",
+        "biopsie masse abdominale",
+        "biopsie de carcinose"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie surrénalienne (scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie surrénale",
+        "biopsie de la surrénale sous scanner"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Biopsie pleurale (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "biopsie pleurale",
+        "biopsie de plèvre guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Cytoponction échoguidée (thyroïde, ganglion, sein)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cytoponction échoguidée",
+        "ponction cytologique guidée",
+        "FNA"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Biopsies guidées",
+      "code": "INTB",
+      "acte_standardise": "Repérage mammaire pré-opératoire (harpon)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "repérage mammaire",
+        "harpon",
+        "hameçon pré-opératoire",
+        "localisation pré-opératoire sein"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction pleurale / thoracentèse (écho/scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction pleurale",
+        "thoracentèse",
+        "ponction d'épanchement pleural"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction péricardique (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction péricardique",
+        "péricardiocentèse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction d'ascite / paracentèse (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction d'ascite",
+        "paracentèse",
+        "ponction abdominale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction articulaire évacuatrice guidée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction articulaire",
+        "ponction évacuatrice",
+        "ponction du genou épaule hanche guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction rénale ou pelvienne (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction rénale",
+        "ponction pelvienne guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction mammaire diagnostique (kyste)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction mammaire",
+        "ponction de kyste du sein"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction-aspiration de kyste (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction de kyste",
+        "aspiration de kyste guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction de collection / sérome (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction de collection",
+        "ponction de sérome",
+        "ponction d'hématome"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Ponctions guidées",
+      "code": "INTP",
+      "acte_standardise": "Ponction lombaire radioguidée (scanner)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction lombaire guidée",
+        "PL sous scanner",
+        "ponction lombaire radioguidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Drainage pleural (thoracique) guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage pleural",
+        "drain thoracique guidé",
+        "exsufflation guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Drainage abdominal / rétro-péritonéal guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage abdominal",
+        "drainage rétro-péritonéal",
+        "drainage de collection abdominale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Drainage biliaire percutané",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage biliaire",
+        "CPTH",
+        "cholangiographie trans-hépatique percutanée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Néphrostomie percutanée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "néphrostomie",
+        "drainage rénal percutané",
+        "drainage des urines"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Drainage d'abcès / de collection guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage d'abcès",
+        "drainage de collection",
+        "drainage percutané"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Drainage de kyste guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage de kyste",
+        "kysto-drainage"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Drainage péricardique guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage péricardique",
+        "drain péricardique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Cathétérisme veineux central guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cathéter veineux central",
+        "KT central échoguidé",
+        "voie veineuse centrale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Pose de PICC-line guidée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PICC line",
+        "cathéter central à insertion périphérique",
+        "PICC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Pose de chambre implantable (PAC) guidée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chambre implantable",
+        "PAC",
+        "port-à-cath",
+        "site implantable"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Drainages & cathétérismes guidés",
+      "code": "INTD",
+      "acte_standardise": "Pose de cathéter sus-pubien guidé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cathéter sus-pubien",
+        "cystostomie percutanée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Infiltration articulaire guidée (échoguidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration articulaire",
+        "infiltration échoguidée",
+        "infiltration du genou épaule hanche"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Infiltration rachidienne / épidurale / foraminale (scanno-guidée)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration rachidienne",
+        "infiltration épidurale",
+        "infiltration foraminale",
+        "infiltration péridurale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Infiltration péri-radiculaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration péri-radiculaire",
+        "infiltration radiculaire guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Infiltration tendineuse / bursite guidée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration tendineuse",
+        "infiltration de bursite",
+        "infiltration péri-tendineuse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Viscosupplémentation guidée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "viscosupplémentation",
+        "injection d'acide hyaluronique guidée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Aspiration-lavage de calcifications (épaule)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aspiration de calcification",
+        "lavage de calcification",
+        "needling épaule"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Cimentoplastie / vertébroplastie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cimentoplastie",
+        "vertébroplastie",
+        "cimentage vertébral"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Cyphoplastie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cyphoplastie",
+        "kyphoplastie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Thermoablation tumorale (radiofréquence / micro-ondes)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "thermoablation",
+        "radiofréquence tumorale",
+        "ablation par micro-ondes",
+        "destruction tumorale percutanée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Alcoolisation de nodule / kyste",
+      "actes_composants": [],
+      "lexique_intention": [
+        "alcoolisation",
+        "sclérose percutanée de nodule",
+        "alcoolisation thyroïdienne"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Embolisation artérielle",
+      "actes_composants": [],
+      "lexique_intention": [
+        "embolisation",
+        "artério-embolisation",
+        "embolisation de fibrome utérin"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gestes thérapeutiques guidés",
+      "code": "INTG",
+      "acte_standardise": "Chimio-embolisation hépatique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chimio-embolisation",
+        "TACE",
+        "chimioembolisation du foie"
+      ],
+      "tarif_fcfa_indicatif": null
+    }
+  ]
+}

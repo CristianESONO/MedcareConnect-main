@@ -1,0 +1,1194 @@
+{
+  "pilier_id": 5,
+  "pilier_slug": "soins-specialises",
+  "pilier_nom": "Soins spécialisés",
+  "lexique_intention_uniquement": false,
+  "nb_actes": 100,
+  "actes": [
+    {
+      "type_service": "Prestation à domicile",
+      "code": "PADOM",
+      "acte_standardise": "Consultation médicale à domicile",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation à domicile",
+        "visite à domicile",
+        "médecin à domicile",
+        "médecine générale à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prestation à domicile",
+      "code": "PADOM",
+      "acte_standardise": "Consultation spécialisée à domicile (spécialité à choisir)",
+      "actes_composants": [
+        "Gériatrie",
+        "Pédiatrie",
+        "Psychiatrie",
+        "Soins palliatifs",
+        "Médecine physique et de réadaptation",
+        "Cardiologie (suivi)",
+        "Diabétologie (suivi)"
+      ],
+      "lexique_intention": [
+        "consultation spécialisée à domicile",
+        "spécialiste à domicile",
+        "consultation à domicile spécialisée"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Prestation à domicile",
+      "code": "PADOM",
+      "acte_standardise": "Visite médicale à domicile en urgence",
+      "actes_composants": [],
+      "lexique_intention": [
+        "visite d'urgence à domicile",
+        "médecin de garde à domicile",
+        "urgence à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Pansement simple",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pansement simple",
+        "réfection de pansement"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Pansement complexe",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pansement complexe",
+        "pansement de plaie étendue"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Soins de plaies chroniques / escarres",
+      "actes_composants": [],
+      "lexique_intention": [
+        "plaies chroniques",
+        "escarres",
+        "ulcère",
+        "plaie du pied diabétique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Soins post-opératoires (pansement)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins post-opératoires",
+        "pansement post-op",
+        "réfection post-opératoire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Injection IM / SC",
+      "actes_composants": [],
+      "lexique_intention": [
+        "injection intramusculaire",
+        "injection sous-cutanée",
+        "IM",
+        "SC"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Perfusion intraveineuse (IV)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "perfusion IV",
+        "perfusion intraveineuse",
+        "pose de perfusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Pose et surveillance de voie veineuse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "voie veineuse",
+        "cathéter périphérique",
+        "surveillance perfusion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Surveillance glycémique & éducation à l'insuline",
+      "actes_composants": [],
+      "lexique_intention": [
+        "surveillance glycémique",
+        "éducation insuline",
+        "dextro",
+        "auto-surveillance"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Soins de stomie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins de stomie",
+        "poche de stomie",
+        "colostomie",
+        "iléostomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Soins de trachéotomie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins de trachéotomie",
+        "canule de trachéotomie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Pose / entretien de sonde naso-gastrique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sonde naso-gastrique",
+        "SNG",
+        "alimentation entérale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Nursing / toilette médicalisée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "nursing",
+        "toilette médicalisée",
+        "soins de confort"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins infirmiers",
+      "code": "INF",
+      "acte_standardise": "Ablation de fils / agrafes",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ablation de fils",
+        "retrait d'agrafes",
+        "retrait de sutures"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Suture de plaie simple",
+      "actes_composants": [],
+      "lexique_intention": [
+        "suture simple",
+        "points de suture",
+        "plaie simple"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Suture de plaie complexe",
+      "actes_composants": [],
+      "lexique_intention": [
+        "suture complexe",
+        "plaie délabrée",
+        "parage de plaie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Incision & drainage d'abcès cutané",
+      "actes_composants": [],
+      "lexique_intention": [
+        "incision abcès",
+        "drainage abcès cutané",
+        "abcès de la peau"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Ablation de corps étranger cutané",
+      "actes_composants": [],
+      "lexique_intention": [
+        "corps étranger cutané",
+        "extraction d'écharde",
+        "retrait corps étranger peau"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Nébulisation thérapeutique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "nébulisation",
+        "aérosol thérapeutique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Oxygénothérapie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "oxygénothérapie",
+        "mise sous oxygène",
+        "O2"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Pose de contention veineuse (bandage)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "contention veineuse",
+        "bande de contention",
+        "bas de contention"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Médecine générale (petits gestes)",
+      "code": "MG",
+      "acte_standardise": "Cautérisation / électrocoagulation d'une lésion",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cautérisation",
+        "électrocoagulation",
+        "brûlure de lésion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation post-traumatique (entorse, fracture)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rééducation post-traumatique",
+        "entorse",
+        "fracture",
+        "rééducation traumato"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation post-opératoire (genou, hanche, épaule)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rééducation post-opératoire",
+        "post-op genou hanche épaule"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation lombalgie / cervicalgie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lombalgie",
+        "cervicalgie",
+        "rachis",
+        "mal de dos"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation des tendinopathies",
+      "actes_composants": [],
+      "lexique_intention": [
+        "tendinopathie",
+        "tendinite",
+        "coiffe des rotateurs",
+        "tendon d'Achille"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Renforcement musculaire / proprioception",
+      "actes_composants": [],
+      "lexique_intention": [
+        "renforcement musculaire",
+        "proprioception",
+        "reprogrammation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Kinésithérapie respiratoire adulte",
+      "actes_composants": [],
+      "lexique_intention": [
+        "kiné respiratoire",
+        "drainage bronchique adulte"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Kinésithérapie respiratoire pédiatrique / nourrisson",
+      "actes_composants": [],
+      "lexique_intention": [
+        "kiné respiratoire bébé",
+        "bronchiolite",
+        "kiné respiratoire nourrisson"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Désencombrement bronchique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "désencombrement",
+        "drainage bronchique",
+        "BPCO"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation neurologique (post-AVC, hémiplégie)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rééducation neurologique",
+        "post-AVC",
+        "hémiplégie",
+        "parésie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation périnéo-sphinctérienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rééducation périnéale",
+        "périnée",
+        "post-partum",
+        "incontinence"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Drainage lymphatique manuel",
+      "actes_composants": [],
+      "lexique_intention": [
+        "drainage lymphatique",
+        "lymphœdème",
+        "DLM"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Rééducation vestibulaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "rééducation vestibulaire",
+        "vertiges",
+        "équilibre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Kinésithérapie & rééducation",
+      "code": "KINE",
+      "acte_standardise": "Kinésithérapie à domicile",
+      "actes_composants": [],
+      "lexique_intention": [
+        "kiné à domicile",
+        "rééducation à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Infiltration articulaire (genou, épaule, hanche)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration articulaire",
+        "infiltration genou épaule hanche",
+        "infiltration corticoïde"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Infiltration péri-articulaire / tendineuse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration péri-articulaire",
+        "infiltration tendineuse",
+        "bursite"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Viscosupplémentation (acide hyaluronique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "viscosupplémentation",
+        "acide hyaluronique",
+        "gel articulaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Injection de PRP",
+      "actes_composants": [],
+      "lexique_intention": [
+        "PRP",
+        "plasma riche en plaquettes",
+        "injection PRP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Ponction articulaire évacuatrice",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ponction articulaire",
+        "ponction de genou",
+        "évacuation d'épanchement"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Immobilisation orthopédique (plâtre / attelle)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "immobilisation",
+        "plâtre",
+        "résine",
+        "attelle",
+        "contention rigide"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Rhumatologie / Orthopédie (gestes)",
+      "code": "RHUMO",
+      "acte_standardise": "Infiltration rachidienne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration rachidienne",
+        "infiltration du dos",
+        "infiltration épidurale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Pose de DIU (stérilet)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pose DIU",
+        "stérilet",
+        "pose de stérilet"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Retrait de DIU",
+      "actes_composants": [],
+      "lexique_intention": [
+        "retrait DIU",
+        "retrait de stérilet"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Pose d'implant contraceptif",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pose d'implant",
+        "implant contraceptif"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Retrait d'implant contraceptif",
+      "actes_composants": [],
+      "lexique_intention": [
+        "retrait d'implant contraceptif"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Cryothérapie cervicale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cryothérapie cervicale",
+        "cryothérapie du col"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Traitement des lésions cervicales",
+      "actes_composants": [],
+      "lexique_intention": [
+        "traitement lésions cervicales",
+        "électrocoagulation du col",
+        "conisation"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Gynécologie (gestes thérapeutiques)",
+      "code": "GYN",
+      "acte_standardise": "Aspiration endo-utérine",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aspiration endo-utérine",
+        "aspiration utérine",
+        "curetage aspiratif"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Urologie (gestes & soins)",
+      "code": "URO",
+      "acte_standardise": "Sondage vésical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "sondage vésical",
+        "pose de sonde urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Urologie (gestes & soins)",
+      "code": "URO",
+      "acte_standardise": "Changement de sonde urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "changement de sonde",
+        "remplacement sonde urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Urologie (gestes & soins)",
+      "code": "URO",
+      "acte_standardise": "Ablation de sonde urinaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "ablation de sonde",
+        "retrait sonde urinaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Urologie (gestes & soins)",
+      "code": "URO",
+      "acte_standardise": "Instillation vésicale thérapeutique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "instillation vésicale",
+        "instillation endovésicale",
+        "BCG-thérapie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Urologie (gestes & soins)",
+      "code": "URO",
+      "acte_standardise": "Soins post-urologiques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins post-urologiques",
+        "soins après chirurgie urologique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL (soins & gestes)",
+      "code": "ORL",
+      "acte_standardise": "Lavage d'oreille / extraction de bouchon de cérumen",
+      "actes_composants": [],
+      "lexique_intention": [
+        "bouchon de cérumen",
+        "lavage d'oreille",
+        "extraction cérumen"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL (soins & gestes)",
+      "code": "ORL",
+      "acte_standardise": "Ablation de corps étranger ORL",
+      "actes_composants": [],
+      "lexique_intention": [
+        "corps étranger ORL",
+        "extraction corps étranger nez oreille"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL (soins & gestes)",
+      "code": "ORL",
+      "acte_standardise": "Cautérisation d'épistaxis",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cautérisation épistaxis",
+        "saignement de nez",
+        "épistaxis"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL (soins & gestes)",
+      "code": "ORL",
+      "acte_standardise": "Pose / retrait de méchage nasal",
+      "actes_composants": [],
+      "lexique_intention": [
+        "méchage nasal",
+        "mèche nasale",
+        "tamponnement"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "ORL (soins & gestes)",
+      "code": "ORL",
+      "acte_standardise": "Aérosolthérapie ORL",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aérosol ORL",
+        "aérosolthérapie",
+        "nébulisation ORL"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Cryothérapie (verrue, lésion)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "cryothérapie",
+        "azote liquide",
+        "verrue",
+        "cryo"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Exérèse de lésion cutanée bénigne",
+      "actes_composants": [],
+      "lexique_intention": [
+        "exérèse cutanée",
+        "ablation de grain de beauté",
+        "exérèse de lésion"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Électrocoagulation cutanée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "électrocoagulation",
+        "bistouri électrique cutané"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Infiltration cutanée (corticoïdes)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "infiltration cutanée",
+        "infiltration de corticoïdes",
+        "chéloïde"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Pansement dermatologique spécialisé",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pansement dermatologique",
+        "pansement spécifique peau"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Peeling médical",
+      "actes_composants": [],
+      "lexique_intention": [
+        "peeling",
+        "peeling médical",
+        "exfoliation chimique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Laser dermatologique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "laser dermatologique",
+        "laser vasculaire",
+        "laser pigmentaire"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Dermatologie (gestes thérapeutiques)",
+      "code": "DERM",
+      "acte_standardise": "Laser épilatoire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "laser épilatoire",
+        "épilation laser",
+        "épilation définitive"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Néphrologie & dialyse",
+      "code": "NEPH",
+      "acte_standardise": "Séance d'hémodialyse chronique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hémodialyse chronique",
+        "séance de dialyse",
+        "dialyse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Néphrologie & dialyse",
+      "code": "NEPH",
+      "acte_standardise": "Hémodialyse aiguë / en urgence",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hémodialyse aiguë",
+        "dialyse d'urgence"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Néphrologie & dialyse",
+      "code": "NEPH",
+      "acte_standardise": "Dialyse péritonéale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "dialyse péritonéale",
+        "DP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Néphrologie & dialyse",
+      "code": "NEPH",
+      "acte_standardise": "Soins de cathéter de dialyse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins de cathéter de dialyse",
+        "pansement cathéter dialyse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Néphrologie & dialyse",
+      "code": "NEPH",
+      "acte_standardise": "Surveillance de fistule artério-veineuse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "surveillance fistule",
+        "FAV",
+        "abord vasculaire de dialyse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Néphrologie & dialyse",
+      "code": "NEPH",
+      "acte_standardise": "Pansement d'accès vasculaire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "pansement accès vasculaire",
+        "pansement de fistule"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Consultation d'oncologie médicale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation oncologie",
+        "consultation cancérologie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Administration de chimiothérapie ambulatoire",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chimiothérapie ambulatoire",
+        "administration de chimio",
+        "cure de chimiothérapie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Suivi de chimiothérapie orale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "chimiothérapie orale",
+        "suivi chimio orale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Hormonothérapie (suivi)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "hormonothérapie",
+        "suivi hormonothérapie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Immunothérapie (administration)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "immunothérapie",
+        "administration immunothérapie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Prise en charge de la douleur cancéreuse",
+      "actes_composants": [],
+      "lexique_intention": [
+        "douleur cancéreuse",
+        "soins de support douleur",
+        "antalgie cancer"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Soins de plaies tumorales",
+      "actes_composants": [],
+      "lexique_intention": [
+        "plaies tumorales",
+        "soins de plaie cancéreuse"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Oncologie (soins)",
+      "code": "ONCO",
+      "acte_standardise": "Soins palliatifs ambulatoires",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins palliatifs",
+        "accompagnement fin de vie",
+        "soins de confort oncologie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Consultation de psychologie",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation psychologie",
+        "consultation psychologue"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Séance de psychothérapie de suivi",
+      "actes_composants": [],
+      "lexique_intention": [
+        "psychothérapie",
+        "séance de suivi psychologique",
+        "thérapie"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Téléconsultation psychologique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "téléconsultation psychologique",
+        "psy à distance"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Thérapie de couple / familiale",
+      "actes_composants": [],
+      "lexique_intention": [
+        "thérapie de couple",
+        "thérapie familiale"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Consultation psychiatrique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "consultation psychiatrie",
+        "consultation psychiatre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Suivi psychiatrique (ajustement thérapeutique)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "suivi psychiatrique",
+        "ajustement traitement psychotrope",
+        "suivi psychiatre"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Santé mentale (psychologie & psychiatrie)",
+      "code": "PSY",
+      "acte_standardise": "Prise en charge des addictions",
+      "actes_composants": [],
+      "lexique_intention": [
+        "addictologie",
+        "sevrage",
+        "prise en charge addiction"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pédiatrie (soins)",
+      "code": "PED",
+      "acte_standardise": "Nébulisation pédiatrique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "nébulisation pédiatrique",
+        "aérosol enfant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pédiatrie (soins)",
+      "code": "PED",
+      "acte_standardise": "Lavage nasal médicalisé (nourrisson)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "lavage nasal",
+        "désobstruction rhinopharyngée",
+        "DRP"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pédiatrie (soins)",
+      "code": "PED",
+      "acte_standardise": "Soins de plaies pédiatriques",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins de plaie enfant",
+        "pansement pédiatrique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pédiatrie (soins)",
+      "code": "PED",
+      "acte_standardise": "Réhydratation orale supervisée",
+      "actes_composants": [],
+      "lexique_intention": [
+        "réhydratation orale",
+        "SRO",
+        "réhydratation enfant"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Pédiatrie (soins)",
+      "code": "PED",
+      "acte_standardise": "Perfusion pédiatrique",
+      "actes_composants": [],
+      "lexique_intention": [
+        "perfusion enfant",
+        "perfusion pédiatrique"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins & hospitalisation à domicile",
+      "code": "DOM",
+      "acte_standardise": "Hospitalisation à domicile (HAD)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "HAD",
+        "hospitalisation à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins & hospitalisation à domicile",
+      "code": "DOM",
+      "acte_standardise": "Soins infirmiers à domicile",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins infirmiers à domicile",
+        "IDE à domicile",
+        "infirmier à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins & hospitalisation à domicile",
+      "code": "DOM",
+      "acte_standardise": "Soins palliatifs à domicile",
+      "actes_composants": [],
+      "lexique_intention": [
+        "soins palliatifs à domicile",
+        "fin de vie à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins & hospitalisation à domicile",
+      "code": "DOM",
+      "acte_standardise": "Surveillance médicale à domicile",
+      "actes_composants": [],
+      "lexique_intention": [
+        "surveillance à domicile",
+        "télésurveillance",
+        "suivi à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    },
+    {
+      "type_service": "Soins & hospitalisation à domicile",
+      "code": "DOM",
+      "acte_standardise": "Aide aux actes de la vie quotidienne (toilette, mobilisation)",
+      "actes_composants": [],
+      "lexique_intention": [
+        "aide à domicile",
+        "toilette",
+        "mobilisation",
+        "aide-soignant à domicile"
+      ],
+      "tarif_fcfa_indicatif": null
+    }
+  ]
+}
