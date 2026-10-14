@@ -740,3 +740,55 @@
 .acte-domi-tag--all { border-color: #0a5c8a; }
 
 .cat-row-hidden { display: none; }
+
+/* ── Toggle Actif (colonne Actif du catalogue) ── */
+.cat-toggle {
+  position: relative;
+  width: 38px;
+  height: 20px;
+  display: inline-block;
+  flex-shrink: 0;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.cat-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.cat-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: #d1d5db;
+  border-radius: 20px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.cat-toggle input:checked + .cat-toggle-track {
+  background: #14b87a;
+}
+.cat-toggle-track::after {
+  content: '';
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+}
+.cat-toggle input:checked + .cat-toggle-track::after {
+  transform: translateX(18px);
+}
+
+/* ── Surbrillance ligne active ── */
+.js-cat-row:has(.js-acte-active:checked) {
+  background: #f0fdf8;
+}
+.js-cat-row:has(.js-acte-active:checked) .cat-acte-name {
+  font-weight: 600;
+  color: #0a6140;
+}

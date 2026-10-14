@@ -3,7 +3,7 @@
 {% block title %}Catalogue des actes{% endblock %}
 
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=6">
 {% endblock %}
 
 {% block dash_content %}
@@ -517,12 +517,17 @@ window.MEDCARE_CATALOGUE_PREP = {
   var saveTimer = null;
   var saving = false;
   var pendingSave = false;
+  // Empêche l'auto-save de se déclencher pendant le chargement initial de la page
+  // (le navigateur peut émettre des events "change" lors de la restauration de l'état des cases)
+  var pageReady = false;
+  setTimeout(function () { pageReady = true; }, 1200);
 
   function escapeHtml(s) {
     return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   function scheduleAutoSave() {
+    if (!pageReady) return; // Ignorer les events du chargement initial
     clearTimeout(saveTimer);
     saveTimer = setTimeout(autoSaveCatalogue, 700);
   }
