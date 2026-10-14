@@ -641,7 +641,9 @@ body { background: var(--mc-bg); }
     <p id="successMsg">
       Vos actes réconciliés ont été enregistrés dans votre catalogue. Vous pouvez dès à présent les consulter, ajuster vos tarifs et vos délais de rendu.
     </p>
-    <a href="{% url 'healthcare:actes_list' %}" class="btn-goto-cat">
+    <div id="successStats" style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:.75rem 0;font-size:.9rem;"></div>
+    <p id="successRedirectMsg" style="color:var(--text-muted,#888);font-size:.85rem;margin:.5rem 0 1rem;"></p>
+    <a href="{% url 'healthcare:actes_list' %}" class="btn-goto-cat" id="btnGotoCat">
       <i class="ti ti-list-details"></i> Accéder à mon catalogue d'actes
     </a>
   </div>
@@ -1018,8 +1020,41 @@ async function applyReconciliation() {
 
       document.getElementById('successMsg').textContent =
         data.message || `Félicitations ! ${data.total_count} actes ont été enregistrés avec succès dans votre catalogue.`;
+
+      // Afficher les statistiques d'import
+      const statsEl = document.getElementById('successStats');
+      if (statsEl && (data.created_count !== undefined || data.updated_count !== undefined)) {
+        statsEl.innerHTML = [
+          data.created_count > 0 ? `<span style="background:#e6f9f0;color:#16a34a;padding:.3rem .8rem;border-radius:99px;"><b>${data.created_count}</b> nouvel acte${data.created_count > 1 ? 's' : ''} ajouté${data.created_count > 1 ? 's' : ''}</span>` : '',
+          data.updated_count > 0 ? `<span style="background:#eff6ff;color:#2563eb;padding:.3rem .8rem;border-radius:99px;"><b>${data.updated_count}</b> acte${data.updated_count > 1 ? 's' : ''} mis à jour</span>` : '',
+        ].filter(Boolean).join('');
+      }
+
       document.getElementById('successCard').classList.add('visible');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Redirection automatique vers le catalogue après 4 secondes
+      const redirectUrl = data.redirect_url || '{% url "healthcare:actes_list" %}';
+      const msgEl = document.getElementById('successRedirectMsg');
+      let countdown = 4;
+      if (msgEl) msgEl.textContent = `Redirection vers votre catalogue dans ${countdown}s…`;
+      const timer = setInterval(() => {
+        countdown--;
+        if (msgEl) msgEl.textContent = `Redirection vers votre catalogue dans ${countdown}s…`;
+        if (countdown <= 0) {
+          clearInterval(timer);
+          window.location.href = redirectUrl;
+        }
+      }, 1000);
+
+      // Permettre de cliquer immédiatement sans attendre
+      const btnCat = document.getElementById('btnGotoCat');
+      if (btnCat) {
+        btnCat.addEventListener('click', () => {
+          clearInterval(timer);
+          if (msgEl) msgEl.textContent = 'Redirection en cours…';
+        });
+      }
     } else {
       btn.disabled = false;
       btn.innerHTML = '<i class="ti ti-device-floppy"></i> <span>Valider et enregistrer dans mon catalogue</span>';

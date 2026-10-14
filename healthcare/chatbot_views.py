@@ -402,6 +402,33 @@ def api_chatbot_apply_reconciliation(request):
                 pa.save()
 
     total_applied = created_count + updated_count
+
+    # Auto-configurer les piliers_actifs si l'org n'en a pas encore
+    # (garantit la visibilité des actes dans /prestataire/actes/)
+    if total_applied > 0 and not org.piliers_actifs.exists():
+        pilier_ids = set()
+        acte_ids_imported = [
+            item.get("acte_id") for item in items
+            if item.get("acte_id") and item.get("acte_id") > 0
+        ]
+        for acte in ActeMedical.objects.filter(pk__in=acte_ids_imported).select_related(
+            "service_medical_category", "parent_service"
+        ):
+            # Le pilier = service de niveau 1
+            cat = acte.service_medical_category
+            if cat is not None:
+                if cat.parent is None:
+                    pilier_ids.add(cat.pk)
+                elif cat.parent.parent is None:
+                    pilier_ids.add(cat.parent.pk)
+                elif cat.parent.parent.parent is None:
+                    pilier_ids.add(cat.parent.parent.pk)
+            if acte.parent_service_id:
+                pilier_ids.add(acte.parent_service_id)
+        if pilier_ids:
+            org.piliers_actifs.set(pilier_ids)
+
+
     msg = (
         f"Félicitations ! {total_applied} acte(s) ont été enregistrés dans votre catalogue "
         f"({created_count} nouveau(x), {updated_count} mis à jour)."
