@@ -263,15 +263,12 @@
 
       <!-- ── SECTION 4 : OUTILS & IA (GROUPE DÉROULANT) ── -->
       <div class="nav-group-wrap">
-        <button type="button" class="nav-group-btn {% if dash_active == 'chatbot' or dash_active == 'medplaque' %}is-parent-active is-open{% endif %}" data-group-target="navGroupOutils" onclick="toggleNavGroup('navGroupOutils', this)">
+        <button type="button" class="nav-group-btn {% if dash_active == 'medplaque' %}is-parent-active is-open{% endif %}" data-group-target="navGroupOutils" onclick="toggleNavGroup('navGroupOutils', this)">
           <span class="nav-icon"><i class="ti ti-sparkles text-base"></i></span>
           <span>Outils & IA</span>
           <i class="ti ti-chevron-down nav-group-chevron"></i>
         </button>
-        <div id="navGroupOutils" class="nav-sublist {% if dash_active == 'chatbot' or dash_active == 'medplaque' %}is-open{% endif %}">
-          <a href="{% url 'healthcare:chatbot_collecte' %}" class="nav-sublink {% if dash_active == 'chatbot' %}active{% endif %}">
-            Assistant MedCare
-          </a>
+        <div id="navGroupOutils" class="nav-sublist {% if dash_active == 'medplaque' %}is-open{% endif %}">
           <a href="{% url 'healthcare:prestataire_medplaque' %}" class="nav-sublink {% if dash_active == 'medplaque' %}active{% endif %}">
             MedPlaque NFC
           </a>
