@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 
 SEGMENT_CATALOG: dict[str, dict[str, str]] = {
     "privee_iard": {
-        "icon": mark_safe('<i class="ti ti-building"></i>'),
+        "icon": "🏛️",
         "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Privées traditionnelles",
         "filter_label": "Privées traditionnelles",
@@ -15,7 +15,7 @@ SEGMENT_CATALOG: dict[str, dict[str, str]] = {
         "badge_color": "#0a5c8a",
     },
     "digitale": {
-        "icon": mark_safe('<i class="ti ti-device-mobile"></i>'),
+        "icon": "📱",
         "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Digitales & plateformes",
         "filter_label": "Digitales & plateformes",
@@ -23,7 +23,7 @@ SEGMENT_CATALOG: dict[str, dict[str, str]] = {
         "badge_color": "#14b87a",
     },
     "regime_public": {
-        "icon": mark_safe('<i class="ti ti-building-bank"></i>'),
+        "icon": "🏢",
         "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Régimes publics",
         "filter_label": "Régimes publics & sociaux",
@@ -31,7 +31,7 @@ SEGMENT_CATALOG: dict[str, dict[str, str]] = {
         "badge_color": "#d97706",
     },
     "mutuelle": {
-        "icon": mark_safe('<i class="ti ti-users"></i>'),
+        "icon": "🤝",
         "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Mutuelles solidaires",
         "filter_label": "Mutuelles solidaires",
@@ -39,7 +39,7 @@ SEGMENT_CATALOG: dict[str, dict[str, str]] = {
         "badge_color": "#7c3aed",
     },
     "programme": {
-        "icon": mark_safe('<i class="ti ti-clipboard-list"></i>'),
+        "icon": "📋",
         "filter_icon": mark_safe('<i class="ti ti-circle-check"></i>'),
         "chip_label": "Programmes & initiatives",
         "filter_label": "Programmes & initiatives",
@@ -48,7 +48,7 @@ SEGMENT_CATALOG: dict[str, dict[str, str]] = {
     },
 }
 
-DEFAULT_SEGMENT_ICON = mark_safe('<i class="ti ti-shield-check"></i>')
+DEFAULT_SEGMENT_ICON = "🛡️"
 
 
 def icon_for_assurance_segment(segment: str) -> str:
