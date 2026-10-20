@@ -66,6 +66,7 @@
     <li class="mc-landing-drawer-group">
       <span class="mc-landing-drawer-group-label"><i class="ti ti-sparkles mc-landing-drawer-icon" aria-hidden="true"></i> Outils & IA</span>
       <ul class="mc-landing-drawer-sublist">
+        <li><a href="{% url 'healthcare:chatbot_collecte' %}" class="mc-landing-drawer-link{% if dash_active == 'chatbot' %} is-active{% endif %}">Assistant MedCare</a></li>
         <li><a href="{% url 'healthcare:prestataire_medplaque' %}" class="mc-landing-drawer-link{% if dash_active == 'medplaque' %} is-active{% endif %}">MedPlaque NFC</a></li>
       </ul>
     </li>

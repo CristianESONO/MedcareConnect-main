@@ -7,8 +7,10 @@ from __future__ import annotations
 import difflib
 import json
 import logging
+import os
 from decimal import Decimal
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
@@ -68,6 +70,17 @@ def chatbot_collecte_view(request):
             "c": code_tag,
         })
 
+    recommends_imagerie = False
+    recommends_biologie = False
+    if org:
+        p_names = [p.name.lower() for p in org.piliers_actifs.all()]
+        t_name = org.type_organisme.name.lower() if org.type_organisme else ""
+        org_name = org.name.lower()
+        if any("imagerie" in p for p in p_names) or "imagerie" in t_name or "scanner" in t_name or "radiologie" in t_name or "imagerie" in org_name:
+            recommends_imagerie = True
+        if any("biologie" in p for p in p_names) or "laboratoire" in t_name or "labo" in t_name or "bio" in org_name:
+            recommends_biologie = True
+
     return render(
         request,
         "healthcare/chatbot_collecte.html",
@@ -80,6 +93,9 @@ def chatbot_collecte_view(request):
             "ref_actes_json": ref_list,
             "page_title": "Assistant d'import · MedCare",
             "import_url": "/sante/prestataire/actes/import-excel/",
+            "dash_active": "chatbot",
+            "recommends_imagerie": recommends_imagerie,
+            "recommends_biologie": recommends_biologie,
         },
     )
 
@@ -164,22 +180,155 @@ def api_chatbot_submit(request):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# API : Réconciliation du fichier importé
+# Helper : Lecture et extraction d'un output JSON de réconciliation
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _parse_reconciled_json_data(json_data: dict | list, all_leaf_actes: list[ActeMedical], matcher: ActeCatalogMatcher) -> list[dict]:
+    exact_map = {a.name.lower(): a for a in all_leaf_actes}
+    exact_code_map = {a.code.lower(): a for a in all_leaf_actes if a.code}
+
+    if isinstance(json_data, dict) and "lines" in json_data:
+        items = json_data.get("lines", [])
+    elif isinstance(json_data, dict) and "rows" in json_data:
+        return json_data.get("rows", [])
+    elif isinstance(json_data, list):
+        items = json_data
+    else:
+        items = []
+
+    seen_nraw = set()
+    result_rows = []
+
+    for l in items:
+        if not isinstance(l, dict):
+            continue
+        if l.get("kind") and l.get("kind") != "acte":
+            continue
+
+        raw_name = l.get("label") or l.get("raw") or l.get("name") or ""
+        if not raw_name or str(raw_name).strip().lower() in ("nom", "libelle", "acte", "designation"):
+            continue
+
+        nraw = normalize_label(str(raw_name))
+        if not nraw or nraw in seen_nraw:
+            continue
+        seen_nraw.add(nraw)
+
+        issue = l.get("issue", "none")
+        cand = l.get("candidat_retenu") or {}
+        cand_act = cand.get("acte") or {}
+        cand_name = cand_act.get("name") or ""
+        cand_code = str(cand_act.get("id") or cand_act.get("code") or "")
+
+        matched_acte = None
+        method = "none"
+
+        if cand_name and cand_name.lower() in exact_map:
+            matched_acte = exact_map[cand_name.lower()]
+            method = "nom_exact"
+        elif cand_code and cand_code.lower() in exact_code_map:
+            matched_acte = exact_code_map[cand_code.lower()]
+            method = "code_exact"
+        else:
+            if cand_name:
+                matched_acte, method = matcher.match(raw_name=cand_name)
+            if not matched_acte:
+                ctx_or_raw = l.get("ctx") or raw_name
+                matched_acte, method = matcher.match(raw_name=ctx_or_raw)
+
+        p_val = l.get("price")
+        if isinstance(p_val, dict):
+            p_val = p_val.get("value")
+        price_val = None
+        if p_val is not None:
+            parsed_p, _ = _parse_price(p_val)
+            if parsed_p is not None:
+                price_val = float(parsed_p)
+
+        delai_val = l.get("delai") or ""
+        if delai_val:
+            parsed_d, _ = _parse_delai(delai_val)
+            delai_val = parsed_d or ""
+
+        if matched_acte:
+            best_id = matched_acte.pk
+            best_nom = matched_acte.name
+            st = "ok" if issue == "reconnu" else "confirm"
+            score_num = cand.get("score")
+            sc = int(score_num * 100) if score_num is not None else (100 if st == "ok" else 85)
+        else:
+            best_id = -1
+            best_nom = ""
+            st = "none"
+            sc = int(cand.get("score", 0) * 100) if cand.get("score") else 0
+
+        via = cand.get("via") or l.get("explication") or "rapprochement"
+
+        result_rows.append({
+            "raw": str(raw_name).strip(),
+            "nraw": nraw,
+            "st": st,
+            "via": str(via),
+            "sc": sc,
+            "best": best_id,
+            "best_nom": best_nom,
+            "price": price_val,
+            "delai": delai_val,
+        })
+
+    return result_rows
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# API : Réconciliation du fichier importé (Excel, CSV ou JSON pré-rapproché)
 # ─────────────────────────────────────────────────────────────────────────────
 
 @require_POST
 @login_required
 def api_chatbot_reconcile(request):
     """
-    Reçoit un fichier Excel ou CSV, extrait les lignes et exécute la
-    réconciliation contre le référentiel des actes standardisés MedCare.
-    Retourne la liste des lignes avec statuts (ok / confirm / none), score,
-    actes correspondants et statistiques.
+    Reçoit un fichier Excel, CSV ou JSON issu du programme de rapprochement,
+    extrait les lignes et exécute la réconciliation contre le référentiel des actes standardisés.
     """
     upload = request.FILES.get("file") or request.FILES.get("catalog_file")
     if not upload:
-        return JsonResponse({"ok": False, "error": "Veuillez sélectionner un fichier Excel (.xlsx) ou CSV (.csv)."}, status=400)
+        return JsonResponse({"ok": False, "error": "Veuillez sélectionner un fichier Excel (.xlsx), CSV (.csv) ou JSON de réconciliation (.json)."}, status=400)
 
+    filename = getattr(upload, "name", "fichier")
+    all_leaf_actes = list(
+        ActeMedical.objects.filter(is_active=True).select_related("service_medical_category", "parent_service")
+    )
+    matcher = ActeCatalogMatcher(all_leaf_actes)
+
+    # 1. Cas particulier : fichier JSON pré-rapproché (output du programme autonome)
+    if filename.lower().endswith(".json"):
+        try:
+            content = upload.read().decode("utf-8")
+            json_data = json.loads(content)
+        except Exception as exc:
+            return JsonResponse({"ok": False, "error": f"Fichier JSON de rapprochement invalide : {exc}"}, status=400)
+
+        result_rows = _parse_reconciled_json_data(json_data, all_leaf_actes, matcher)
+        if not result_rows:
+            return JsonResponse({"ok": False, "error": "Aucun acte exploitable trouvé dans ce fichier JSON."}, status=400)
+
+        c_ok = sum(1 for row in result_rows if row["st"] == "ok")
+        c_cf = sum(1 for row in result_rows if row["st"] == "confirm")
+        c_no = sum(1 for row in result_rows if row["st"] == "none")
+
+        return JsonResponse({
+            "ok": True,
+            "filename": filename,
+            "rows": result_rows,
+            "stats": {
+                "ok": c_ok,
+                "cf": c_cf,
+                "no": c_no,
+                "total": len(result_rows),
+            },
+        })
+
+    # 2. Fichier tabulaire Excel / CSV
     try:
         raw_rows, fmt = _read_rows_from_file(upload)
     except Exception as exc:
@@ -283,7 +432,7 @@ def api_chatbot_reconcile(request):
                     best_ratio = r_sim
                     closest_acte = a
 
-            if closest_acte and best_ratio >= 0.55:
+            if closest_acte and best_ratio >= 0.72:
                 st = "confirm"
                 sc = int(best_ratio * 100)
                 via = "flou"
@@ -291,10 +440,10 @@ def api_chatbot_reconcile(request):
                 best_nom = closest_acte.name
             else:
                 st = "none"
-                sc = int(best_ratio * 100) if best_ratio >= 0.3 else 0
+                sc = int(best_ratio * 100) if best_ratio >= 0.45 else 0
                 via = "—"
-                best_id = closest_acte.pk if (closest_acte and best_ratio >= 0.4) else -1
-                best_nom = closest_acte.name if (closest_acte and best_ratio >= 0.4) else ""
+                best_id = closest_acte.pk if (closest_acte and best_ratio >= 0.55) else -1
+                best_nom = closest_acte.name if (closest_acte and best_ratio >= 0.55) else ""
 
         result_rows.append({
             "raw": raw_name,
@@ -315,6 +464,66 @@ def api_chatbot_reconcile(request):
     return JsonResponse({
         "ok": True,
         "filename": getattr(upload, "name", "fichier"),
+        "rows": result_rows,
+        "stats": {
+            "ok": c_ok,
+            "cf": c_cf,
+            "no": c_no,
+            "total": len(result_rows),
+        },
+    })
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# API : Chargement direct d'un rapprochement pré-généré (Programme autonome)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@login_required
+def api_chatbot_load_preset(request):
+    """
+    Charge directement un fichier de rapprochement pré-généré par le programme autonome.
+    presets disponibles :
+      - 'imagerie' -> ACTES_ET_TARIFICATIONS_reconcilie.json (81 actes · Écho, Scanner, IRM, Radio)
+      - 'biologie' / 'bionissa' -> catalogue_test_bionissa_clinique_reconcilie.json (26 actes)
+    """
+    preset = (request.GET.get("preset") or request.POST.get("preset") or "").lower().strip()
+
+    preset_files = {
+        "imagerie": ("ACTES_ET_TARIFICATIONS_reconcilie.json", "Catalogue Imagerie (ACTES ET TARIFICATIONS · 81 actes)"),
+        "biologie": ("catalogue_test_bionissa_clinique_reconcilie.json", "Catalogue Biologie (Test Bionissa · 26 actes)"),
+        "bionissa": ("catalogue_test_bionissa_clinique_reconcilie.json", "Catalogue Biologie (Test Bionissa · 26 actes)"),
+    }
+
+    if preset not in preset_files:
+        return JsonResponse({"ok": False, "error": f"Modèle inconnu '{preset}'. Choix disponibles : 'imagerie', 'biologie'."}, status=400)
+
+    fname, display_name = preset_files[preset]
+    file_path = os.path.join(settings.BASE_DIR, "documents", "programme_import", fname)
+    if not os.path.exists(file_path):
+        return JsonResponse({"ok": False, "error": f"Fichier de rapprochement introuvable sur le serveur : {fname}"}, status=404)
+
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as exc:
+        return JsonResponse({"ok": False, "error": f"Erreur lors de la lecture du fichier JSON : {exc}"}, status=500)
+
+    all_leaf_actes = list(
+        ActeMedical.objects.filter(is_active=True).select_related("service_medical_category", "parent_service")
+    )
+    matcher = ActeCatalogMatcher(all_leaf_actes)
+
+    result_rows = _parse_reconciled_json_data(data, all_leaf_actes, matcher)
+
+    c_ok = sum(1 for row in result_rows if row["st"] == "ok")
+    c_cf = sum(1 for row in result_rows if row["st"] == "confirm")
+    c_no = sum(1 for row in result_rows if row["st"] == "none")
+
+    return JsonResponse({
+        "ok": True,
+        "filename": fname,
+        "display_name": display_name,
+        "preset": preset,
         "rows": result_rows,
         "stats": {
             "ok": c_ok,

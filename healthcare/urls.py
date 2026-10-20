@@ -41,6 +41,7 @@ urlpatterns = [
     path("assistant-collecte/", chatbot_views.chatbot_collecte_view, name="chatbot_collecte"),
     path("api/chatbot/submit/", chatbot_views.api_chatbot_submit, name="api_chatbot_submit"),
     path("api/chatbot/reconcile/", chatbot_views.api_chatbot_reconcile, name="api_chatbot_reconcile"),
+    path("api/chatbot/load-preset/", chatbot_views.api_chatbot_load_preset, name="api_chatbot_load_preset"),
     path("api/chatbot/apply-reconciliation/", chatbot_views.api_chatbot_apply_reconciliation, name="api_chatbot_apply_reconciliation"),
 
     # Prestataire

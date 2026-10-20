@@ -1,0 +1,6169 @@
+{
+  "filepath": "ACTES_ET_TARIFICATIONS.ods",
+  "summary": {
+    "total_rows": 112,
+    "total_lines": 112,
+    "actes_count": 81,
+    "reconnus": 61,
+    "a_confirmer": 9,
+    "inconnus": 11,
+    "prix_manquants": 1,
+    "prix_anomalies": 1,
+    "sections": [
+      "ECHOGRAPHIES",
+      "SCANNER",
+      "IRM",
+      "EXAMENS SPECIAUX",
+      "RADIOGRAPHIES"
+    ]
+  },
+  "schema": {
+    "ncol": 8,
+    "roles": [
+      "libelle",
+      "texte",
+      "vide",
+      "vide",
+      "vide",
+      "vide",
+      "vide",
+      "prix"
+    ],
+    "profile": [
+      {
+        "text": 86,
+        "price": 0,
+        "len": 1890,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 1,
+        "price": 0,
+        "len": 13,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 0,
+        "price": 0,
+        "len": 0,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 0,
+        "price": 0,
+        "len": 0,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 0,
+        "price": 0,
+        "len": 0,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 0,
+        "price": 0,
+        "len": 0,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 0,
+        "price": 0,
+        "len": 0,
+        "header": 0,
+        "labelHeader": 0
+      },
+      {
+        "text": 0,
+        "price": 80,
+        "len": 0,
+        "header": 5,
+        "labelHeader": 0
+      }
+    ],
+    "confidence": 1.0
+  },
+  "lines": [
+    {
+      "num": 1,
+      "kind": "section",
+      "label": "ECHOGRAPHIES",
+      "pillar": "img"
+    },
+    {
+      "num": 2,
+      "kind": "vide"
+    },
+    {
+      "num": 3,
+      "kind": "acte",
+      "label": "ABDOMINALE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "echographie ABDOMINALE",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact (avec la section)",
+        "cands": [
+          {
+            "acte": {
+              "id": "I001",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie abdominale",
+              "kind": "acte",
+              "lexique": [
+                "echo abdominale",
+                "échographie de l'abdomen"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie abdominale",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "echographie ABDOMINALE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact (avec la section)",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I001",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie abdominale",
+          "kind": "acte",
+          "lexique": [
+            "echo abdominale",
+            "échographie de l'abdomen"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie abdominale",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 4,
+      "kind": "acte",
+      "label": "PELVIENNE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "echographie PELVIENNE",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact (avec la section)",
+        "cands": [
+          {
+            "acte": {
+              "id": "I002",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie pelvienne",
+              "kind": "acte",
+              "lexique": [
+                "echo pelvienne",
+                "échographie pelvienne sus-pubienne"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie pelvienne",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "echographie PELVIENNE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact (avec la section)",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I002",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie pelvienne",
+          "kind": "acte",
+          "lexique": [
+            "echo pelvienne",
+            "échographie pelvienne sus-pubienne"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie pelvienne",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 5,
+      "kind": "acte",
+      "label": "OBSTETRICALE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "echographie OBSTETRICALE",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact (avec la section)",
+        "cands": [
+          {
+            "acte": {
+              "id": "I005",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie obstétricale",
+              "kind": "acte",
+              "lexique": [
+                "echo obstétricale",
+                "échographie de grossesse",
+                "echo de grossesse"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie obstétricale",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "echographie OBSTETRICALE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact (avec la section)",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I005",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie obstétricale",
+          "kind": "acte",
+          "lexique": [
+            "echo obstétricale",
+            "échographie de grossesse",
+            "echo de grossesse"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie obstétricale",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 6,
+      "kind": "acte",
+      "label": "OBSTETRICALE DE CONTRÔLE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "echographie OBSTETRICALE DE CONTRÔLE",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I005",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie obstétricale",
+              "kind": "acte",
+              "lexique": [
+                "echo obstétricale",
+                "échographie de grossesse",
+                "echo de grossesse"
+              ],
+              "composants": []
+            },
+            "score": 0.4837221431958274,
+            "disc": [
+              "controle"
+            ],
+            "comp": false,
+            "via": "Échographie obstétricale",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I020",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler obstétrical",
+              "kind": "acte",
+              "lexique": [
+                "doppler obstétrical",
+                "doppler foeto-placentaire"
+              ],
+              "composants": []
+            },
+            "score": 0.2337221431958274,
+            "disc": [
+              "doppler",
+              "controle"
+            ],
+            "comp": false,
+            "via": "doppler obstétrical",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I008",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cervicale",
+              "kind": "acte",
+              "lexique": [
+                "echo cervicale",
+                "échographie du cou"
+              ],
+              "composants": []
+            },
+            "score": 0.0,
+            "disc": [
+              "controle"
+            ],
+            "comp": false,
+            "via": "Échographie cervicale",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "OBSTETRICALE DE CONTRÔLE"
+      },
+      "issue": "inconnu",
+      "explication": "flou 48 % · marge 25 · conflit : controle",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I005",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie obstétricale",
+          "kind": "acte",
+          "lexique": [
+            "echo obstétricale",
+            "échographie de grossesse",
+            "echo de grossesse"
+          ],
+          "composants": []
+        },
+        "score": 0.4837221431958274,
+        "disc": [
+          "controle"
+        ],
+        "comp": false,
+        "via": "Échographie obstétricale",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 7,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DES PARTIES MOLLES",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DES PARTIES MOLLES",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I006",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie des parties molles",
+              "kind": "acte",
+              "lexique": [
+                "echo parties molles"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie des parties molles",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DES PARTIES MOLLES"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I006",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie des parties molles",
+          "kind": "acte",
+          "lexique": [
+            "echo parties molles"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie des parties molles",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 8,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE THYROIDIENNE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE THYROIDIENNE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I007",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie thyroïdienne",
+              "kind": "acte",
+              "lexique": [
+                "echo thyroïde",
+                "échographie de la thyroïde"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie thyroïdienne",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE THYROIDIENNE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I007",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie thyroïdienne",
+          "kind": "acte",
+          "lexique": [
+            "echo thyroïde",
+            "échographie de la thyroïde"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie thyroïdienne",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 9,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DES BOURSES",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DES BOURSES",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I009",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie scrotale",
+              "kind": "acte",
+              "lexique": [
+                "échographie des bourses",
+                "echo testiculaire",
+                "echo scrotale"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "échographie des bourses",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DES BOURSES"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I009",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie scrotale",
+          "kind": "acte",
+          "lexique": [
+            "échographie des bourses",
+            "echo testiculaire",
+            "echo scrotale"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "échographie des bourses",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 10,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE CERVICALE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE CERVICALE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I008",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cervicale",
+              "kind": "acte",
+              "lexique": [
+                "echo cervicale",
+                "échographie du cou"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie cervicale",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE CERVICALE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I008",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie cervicale",
+          "kind": "acte",
+          "lexique": [
+            "echo cervicale",
+            "échographie du cou"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie cervicale",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 11,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE ABDOMINO-PELVIENNE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE ABDOMINO-PELVIENNE",
+      "price": {
+        "value": 35000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "35000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I004",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie abdomino-pelvienne",
+              "kind": "acte",
+              "lexique": [
+                "echo abdomino-pelvienne",
+                "echo AP"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie abdomino-pelvienne",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE ABDOMINO-PELVIENNE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I004",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie abdomino-pelvienne",
+          "kind": "acte",
+          "lexique": [
+            "echo abdomino-pelvienne",
+            "echo AP"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie abdomino-pelvienne",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 12,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DU POIGNET",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DU POIGNET",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I014",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cardiaque (ETT)",
+              "kind": "acte",
+              "lexique": [
+                "ETT",
+                "échocardiographie",
+                "echo cardiaque"
+              ],
+              "composants": []
+            },
+            "score": 0.3845748744372024,
+            "disc": [],
+            "comp": false,
+            "via": "échocardiographie",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I002",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie pelvienne",
+              "kind": "acte",
+              "lexique": [
+                "echo pelvienne",
+                "échographie pelvienne sus-pubienne"
+              ],
+              "composants": []
+            },
+            "score": 0.3597740065293256,
+            "disc": [],
+            "comp": false,
+            "via": "Échographie pelvienne",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I007",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie thyroïdienne",
+              "kind": "acte",
+              "lexique": [
+                "echo thyroïde",
+                "échographie de la thyroïde"
+              ],
+              "composants": []
+            },
+            "score": 0.33977400652932566,
+            "disc": [],
+            "comp": false,
+            "via": "echo thyroïde",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DU POIGNET"
+      },
+      "issue": "inconnu",
+      "explication": "flou 38 % · marge 2",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I014",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie cardiaque (ETT)",
+          "kind": "acte",
+          "lexique": [
+            "ETT",
+            "échocardiographie",
+            "echo cardiaque"
+          ],
+          "composants": []
+        },
+        "score": 0.3845748744372024,
+        "disc": [],
+        "comp": false,
+        "via": "échocardiographie",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 13,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DE L'EPAULE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DE L'EPAULE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I012",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie de l'épaule",
+              "kind": "acte",
+              "lexique": [
+                "echo épaule"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie de l'épaule",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DE L'EPAULE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I012",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie de l'épaule",
+          "kind": "acte",
+          "lexique": [
+            "echo épaule"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie de l'épaule",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 14,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE ARTICULAIRE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE ARTICULAIRE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I011",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie ostéo-articulaire",
+              "kind": "acte",
+              "lexique": [
+                "échographie articulaire",
+                "echo articulaire",
+                "échographie musculo-squelettique"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "échographie articulaire",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE ARTICULAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I011",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie ostéo-articulaire",
+          "kind": "acte",
+          "lexique": [
+            "échographie articulaire",
+            "echo articulaire",
+            "échographie musculo-squelettique"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "échographie articulaire",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 15,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DE LA MAIN",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DE LA MAIN",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I014",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cardiaque (ETT)",
+              "kind": "acte",
+              "lexique": [
+                "ETT",
+                "échocardiographie",
+                "echo cardiaque"
+              ],
+              "composants": []
+            },
+            "score": 0.41566731141199226,
+            "disc": [],
+            "comp": false,
+            "via": "échocardiographie",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I010",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie mammaire",
+              "kind": "acte",
+              "lexique": [
+                "echo mammaire",
+                "échographie des seins"
+              ],
+              "composants": []
+            },
+            "score": 0.3894168636721828,
+            "disc": [],
+            "comp": false,
+            "via": "Échographie mammaire",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I001",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie abdominale",
+              "kind": "acte",
+              "lexique": [
+                "echo abdominale",
+                "échographie de l'abdomen"
+              ],
+              "composants": []
+            },
+            "score": 0.3677501970055161,
+            "disc": [],
+            "comp": false,
+            "via": "Échographie abdominale",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DE LA MAIN"
+      },
+      "issue": "inconnu",
+      "explication": "flou 42 % · marge 3",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I014",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie cardiaque (ETT)",
+          "kind": "acte",
+          "lexique": [
+            "ETT",
+            "échocardiographie",
+            "echo cardiaque"
+          ],
+          "composants": []
+        },
+        "score": 0.41566731141199226,
+        "disc": [],
+        "comp": false,
+        "via": "échocardiographie",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 16,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE MAMMAIRE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE MAMMAIRE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I010",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie mammaire",
+              "kind": "acte",
+              "lexique": [
+                "echo mammaire",
+                "échographie des seins"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Échographie mammaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE MAMMAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I010",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie mammaire",
+          "kind": "acte",
+          "lexique": [
+            "echo mammaire",
+            "échographie des seins"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Échographie mammaire",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 17,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DOPPLER ARTERIEL DES MEMBRES INFERIEURS",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DOPPLER ARTERIEL DES MEMBRES INFERIEURS",
+      "price": {
+        "value": 50000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "50000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I016",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler artériel des membres inférieurs",
+              "kind": "acte",
+              "lexique": [
+                "doppler artériel des membres inférieurs",
+                "doppler artériel MI"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Écho-doppler artériel des membres inférieurs",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DOPPLER ARTERIEL DES MEMBRES INFERIEURS"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I016",
+          "pillar": "img",
+          "type": "Écho-doppler",
+          "name": "Écho-doppler artériel des membres inférieurs",
+          "kind": "acte",
+          "lexique": [
+            "doppler artériel des membres inférieurs",
+            "doppler artériel MI"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Écho-doppler artériel des membres inférieurs",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 18,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DOPPLER VEINEUX DES MEMBRES INFERIEURS",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DOPPLER VEINEUX DES MEMBRES INFERIEURS",
+      "price": {
+        "value": 50000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "50000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I017",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler veineux des membres inférieurs",
+              "kind": "acte",
+              "lexique": [
+                "doppler veineux des membres inférieurs",
+                "doppler veineux MI"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Écho-doppler veineux des membres inférieurs",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DOPPLER VEINEUX DES MEMBRES INFERIEURS"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I017",
+          "pillar": "img",
+          "type": "Écho-doppler",
+          "name": "Écho-doppler veineux des membres inférieurs",
+          "kind": "acte",
+          "lexique": [
+            "doppler veineux des membres inférieurs",
+            "doppler veineux MI"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Écho-doppler veineux des membres inférieurs",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 19,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DOPPLER ARTERIO-VEINEUX DES MEMBRES INFERIEURS",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DOPPLER ARTERIO-VEINEUX DES MEMBRES INFERIEURS",
+      "price": {
+        "value": 100000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "100000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I016",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler artériel des membres inférieurs",
+              "kind": "acte",
+              "lexique": [
+                "doppler artériel des membres inférieurs",
+                "doppler artériel MI"
+              ],
+              "composants": []
+            },
+            "score": 0.6045545084600557,
+            "disc": [
+              "veineux"
+            ],
+            "comp": false,
+            "via": "Écho-doppler artériel des membres inférieurs",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I017",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler veineux des membres inférieurs",
+              "kind": "acte",
+              "lexique": [
+                "doppler veineux des membres inférieurs",
+                "doppler veineux MI"
+              ],
+              "composants": []
+            },
+            "score": 0.37169406697142826,
+            "disc": [
+              "arteriel",
+              "arterio"
+            ],
+            "comp": false,
+            "via": "Écho-doppler veineux des membres inférieurs",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I019",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler des artères rénales",
+              "kind": "acte",
+              "lexique": [
+                "doppler rénal",
+                "doppler des artères rénales"
+              ],
+              "composants": []
+            },
+            "score": 0.2315661570167582,
+            "disc": [
+              "veineux"
+            ],
+            "comp": false,
+            "via": "Écho-doppler des artères rénales",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DOPPLER ARTERIO-VEINEUX DES MEMBRES INFERIEURS"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 60 % · marge 23 · conflit : veineux",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I016",
+          "pillar": "img",
+          "type": "Écho-doppler",
+          "name": "Écho-doppler artériel des membres inférieurs",
+          "kind": "acte",
+          "lexique": [
+            "doppler artériel des membres inférieurs",
+            "doppler artériel MI"
+          ],
+          "composants": []
+        },
+        "score": 0.6045545084600557,
+        "disc": [
+          "veineux"
+        ],
+        "comp": false,
+        "via": "Écho-doppler artériel des membres inférieurs",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 20,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DOPPLER DES TSA",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DOPPLER DES TSA",
+      "price": {
+        "value": 50000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "50000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I018",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler des troncs supra-aortiques (TSA)",
+              "kind": "acte",
+              "lexique": [
+                "doppler des TSA",
+                "doppler TSA",
+                "echo doppler des vaisseaux du cou"
+              ],
+              "composants": []
+            },
+            "score": 0.901446480231437,
+            "disc": [],
+            "comp": false,
+            "via": "doppler des TSA",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I020",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler obstétrical",
+              "kind": "acte",
+              "lexique": [
+                "doppler obstétrical",
+                "doppler foeto-placentaire"
+              ],
+              "composants": []
+            },
+            "score": 0.39258268964151316,
+            "disc": [],
+            "comp": false,
+            "via": "Écho-doppler obstétrical",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I019",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler des artères rénales",
+              "kind": "acte",
+              "lexique": [
+                "doppler rénal",
+                "doppler des artères rénales"
+              ],
+              "composants": []
+            },
+            "score": 0.294013357619915,
+            "disc": [],
+            "comp": false,
+            "via": "doppler rénal",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DOPPLER DES TSA"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 90 % · marge 51",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I018",
+          "pillar": "img",
+          "type": "Écho-doppler",
+          "name": "Écho-doppler des troncs supra-aortiques (TSA)",
+          "kind": "acte",
+          "lexique": [
+            "doppler des TSA",
+            "doppler TSA",
+            "echo doppler des vaisseaux du cou"
+          ],
+          "composants": []
+        },
+        "score": 0.901446480231437,
+        "disc": [],
+        "comp": false,
+        "via": "doppler des TSA",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 21,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE TRANSCRANIENNE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE TRANSCRANIENNE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I014",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cardiaque (ETT)",
+              "kind": "acte",
+              "lexique": [
+                "ETT",
+                "échocardiographie",
+                "echo cardiaque"
+              ],
+              "composants": []
+            },
+            "score": 0.23632044955574372,
+            "disc": [
+              "transcranien"
+            ],
+            "comp": false,
+            "via": "échocardiographie",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I015",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie transfontanellaire",
+              "kind": "acte",
+              "lexique": [
+                "ETF",
+                "echo transfontanellaire"
+              ],
+              "composants": []
+            },
+            "score": 0.19826208026208025,
+            "disc": [
+              "transcranien"
+            ],
+            "comp": false,
+            "via": "Échographie transfontanellaire",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I011",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie ostéo-articulaire",
+              "kind": "acte",
+              "lexique": [
+                "échographie articulaire",
+                "echo articulaire",
+                "échographie musculo-squelettique"
+              ],
+              "composants": []
+            },
+            "score": 0.15507268632268628,
+            "disc": [
+              "transcranien"
+            ],
+            "comp": false,
+            "via": "échographie articulaire",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE TRANSCRANIENNE"
+      },
+      "issue": "inconnu",
+      "explication": "flou 24 % · marge 4 · conflit : transcranien",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I014",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie cardiaque (ETT)",
+          "kind": "acte",
+          "lexique": [
+            "ETT",
+            "échocardiographie",
+            "echo cardiaque"
+          ],
+          "composants": []
+        },
+        "score": 0.23632044955574372,
+        "disc": [
+          "transcranien"
+        ],
+        "comp": false,
+        "via": "échocardiographie",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 22,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DOPPPLER RENAL",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DOPPPLER RENAL",
+      "price": {
+        "value": 50000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "50000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I019",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler des artères rénales",
+              "kind": "acte",
+              "lexique": [
+                "doppler rénal",
+                "doppler des artères rénales"
+              ],
+              "composants": []
+            },
+            "score": 0.6276005813505814,
+            "disc": [],
+            "comp": false,
+            "via": "doppler rénal",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I020",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler obstétrical",
+              "kind": "acte",
+              "lexique": [
+                "doppler obstétrical",
+                "doppler foeto-placentaire"
+              ],
+              "composants": []
+            },
+            "score": 0.41175475592142263,
+            "disc": [],
+            "comp": false,
+            "via": "Écho-doppler obstétrical",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I018",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler des troncs supra-aortiques (TSA)",
+              "kind": "acte",
+              "lexique": [
+                "doppler des TSA",
+                "doppler TSA",
+                "echo doppler des vaisseaux du cou"
+              ],
+              "composants": []
+            },
+            "score": 0.3465736119438458,
+            "disc": [],
+            "comp": false,
+            "via": "echo doppler des vaisseaux du cou",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DOPPPLER RENAL"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 63 % · marge 22",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I019",
+          "pillar": "img",
+          "type": "Écho-doppler",
+          "name": "Écho-doppler des artères rénales",
+          "kind": "acte",
+          "lexique": [
+            "doppler rénal",
+            "doppler des artères rénales"
+          ],
+          "composants": []
+        },
+        "score": 0.6276005813505814,
+        "disc": [],
+        "comp": false,
+        "via": "doppler rénal",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 23,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DOPPLER OBSTRECTRICALE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DOPPLER OBSTRECTRICALE",
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "25000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I020",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler obstétrical",
+              "kind": "acte",
+              "lexique": [
+                "doppler obstétrical",
+                "doppler foeto-placentaire"
+              ],
+              "composants": []
+            },
+            "score": 0.8065659612718435,
+            "disc": [],
+            "comp": false,
+            "via": "Écho-doppler obstétrical",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I005",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie obstétricale",
+              "kind": "acte",
+              "lexique": [
+                "echo obstétricale",
+                "échographie de grossesse",
+                "echo de grossesse"
+              ],
+              "composants": []
+            },
+            "score": 0.47069034183788283,
+            "disc": [
+              "doppler"
+            ],
+            "comp": false,
+            "via": "Échographie obstétricale",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I018",
+              "pillar": "img",
+              "type": "Écho-doppler",
+              "name": "Écho-doppler des troncs supra-aortiques (TSA)",
+              "kind": "acte",
+              "lexique": [
+                "doppler des TSA",
+                "doppler TSA",
+                "echo doppler des vaisseaux du cou"
+              ],
+              "composants": []
+            },
+            "score": 0.33603131103131095,
+            "disc": [],
+            "comp": false,
+            "via": "echo doppler des vaisseaux du cou",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DOPPLER OBSTRECTRICALE"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 81 % · marge 34",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I020",
+          "pillar": "img",
+          "type": "Écho-doppler",
+          "name": "Écho-doppler obstétrical",
+          "kind": "acte",
+          "lexique": [
+            "doppler obstétrical",
+            "doppler foeto-placentaire"
+          ],
+          "composants": []
+        },
+        "score": 0.8065659612718435,
+        "disc": [],
+        "comp": false,
+        "via": "Écho-doppler obstétrical",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 24,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DU GENOU",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DU GENOU",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I014",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cardiaque (ETT)",
+              "kind": "acte",
+              "lexique": [
+                "ETT",
+                "échocardiographie",
+                "echo cardiaque"
+              ],
+              "composants": []
+            },
+            "score": 0.4056673114119923,
+            "disc": [],
+            "comp": false,
+            "via": "échocardiographie",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I010",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie mammaire",
+              "kind": "acte",
+              "lexique": [
+                "echo mammaire",
+                "échographie des seins"
+              ],
+              "composants": []
+            },
+            "score": 0.3494168636721828,
+            "disc": [],
+            "comp": false,
+            "via": "échographie des seins",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I013",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie rénale",
+              "kind": "acte",
+              "lexique": [
+                "echo rénale",
+                "échographie des reins",
+                "échographie de l appareil urinaire"
+              ],
+              "composants": []
+            },
+            "score": 0.3494168636721828,
+            "disc": [],
+            "comp": false,
+            "via": "échographie des reins",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DU GENOU"
+      },
+      "issue": "inconnu",
+      "explication": "flou 41 % · marge 6",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I014",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie cardiaque (ETT)",
+          "kind": "acte",
+          "lexique": [
+            "ETT",
+            "échocardiographie",
+            "echo cardiaque"
+          ],
+          "composants": []
+        },
+        "score": 0.4056673114119923,
+        "disc": [],
+        "comp": false,
+        "via": "échocardiographie",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 25,
+      "kind": "acte",
+      "label": "ECHOGRAPHIE DE TENDON D'ACHILLE",
+      "section": "ECHOGRAPHIES",
+      "ctx": "ECHOGRAPHIE DE TENDON D'ACHILLE",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Échographie",
+        "Écho-doppler"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I014",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie cardiaque (ETT)",
+              "kind": "acte",
+              "lexique": [
+                "ETT",
+                "échocardiographie",
+                "echo cardiaque"
+              ],
+              "composants": []
+            },
+            "score": 0.35545806805135166,
+            "disc": [],
+            "comp": false,
+            "via": "échocardiographie",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I009",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie scrotale",
+              "kind": "acte",
+              "lexique": [
+                "échographie des bourses",
+                "echo testiculaire",
+                "echo scrotale"
+              ],
+              "composants": []
+            },
+            "score": 0.32809084958338686,
+            "disc": [],
+            "comp": false,
+            "via": "echo testiculaire",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I015",
+              "pillar": "img",
+              "type": "Échographie",
+              "name": "Échographie transfontanellaire",
+              "kind": "acte",
+              "lexique": [
+                "ETF",
+                "echo transfontanellaire"
+              ],
+              "composants": []
+            },
+            "score": 0.31279780929034656,
+            "disc": [],
+            "comp": false,
+            "via": "Échographie transfontanellaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ECHOGRAPHIE DE TENDON D'ACHILLE"
+      },
+      "issue": "inconnu",
+      "explication": "flou 36 % · marge 3",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I014",
+          "pillar": "img",
+          "type": "Échographie",
+          "name": "Échographie cardiaque (ETT)",
+          "kind": "acte",
+          "lexique": [
+            "ETT",
+            "échocardiographie",
+            "echo cardiaque"
+          ],
+          "composants": []
+        },
+        "score": 0.35545806805135166,
+        "disc": [],
+        "comp": false,
+        "via": "échocardiographie",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 26,
+      "kind": "vide"
+    },
+    {
+      "num": 27,
+      "kind": "vide"
+    },
+    {
+      "num": 28,
+      "kind": "vide"
+    },
+    {
+      "num": 29,
+      "kind": "vide"
+    },
+    {
+      "num": 30,
+      "kind": "section",
+      "label": "SCANNER",
+      "pillar": "img"
+    },
+    {
+      "num": 31,
+      "kind": "vide"
+    },
+    {
+      "num": 32,
+      "kind": "acte",
+      "label": "SCANNER LOMBAIRE",
+      "section": "SCANNER",
+      "ctx": "SCANNER LOMBAIRE",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I028",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis lombaire",
+              "kind": "acte",
+              "lexique": [
+                "scanner lombaire",
+                "TDM lombaire"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "scanner lombaire",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "SCANNER LOMBAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I028",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner du rachis lombaire",
+          "kind": "acte",
+          "lexique": [
+            "scanner lombaire",
+            "TDM lombaire"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "scanner lombaire",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 33,
+      "kind": "acte",
+      "label": "SCANNER CEREBRALE",
+      "section": "SCANNER",
+      "ctx": "SCANNER CEREBRALE",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I021",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner cérébral",
+              "kind": "acte",
+              "lexique": [
+                "TDM cérébrale",
+                "scanner du crâne",
+                "TDM encéphalique"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner cérébral",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER CEREBRALE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I021",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner cérébral",
+          "kind": "acte",
+          "lexique": [
+            "TDM cérébrale",
+            "scanner du crâne",
+            "TDM encéphalique"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner cérébral",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 34,
+      "kind": "acte",
+      "label": "SCANNER ABDOMINO-PELVIENNE",
+      "section": "SCANNER",
+      "ctx": "SCANNER ABDOMINO-PELVIENNE",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I024",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner abdomino-pelvien",
+              "kind": "acte",
+              "lexique": [
+                "TDM abdomino-pelvienne",
+                "scanner AP"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner abdomino-pelvien",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER ABDOMINO-PELVIENNE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I024",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner abdomino-pelvien",
+          "kind": "acte",
+          "lexique": [
+            "TDM abdomino-pelvienne",
+            "scanner AP"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner abdomino-pelvien",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 35,
+      "kind": "acte",
+      "label": "SCANNER ABDOMINAL",
+      "section": "SCANNER",
+      "ctx": "SCANNER ABDOMINAL",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I023",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner abdominal",
+              "kind": "acte",
+              "lexique": [
+                "TDM abdominale"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner abdominal",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER ABDOMINAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I023",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner abdominal",
+          "kind": "acte",
+          "lexique": [
+            "TDM abdominale"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner abdominal",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 36,
+      "kind": "acte",
+      "label": "SCANNER DU MASSIF FACIAL",
+      "section": "SCANNER",
+      "ctx": "SCANNER DU MASSIF FACIAL",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": true,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I026",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du massif facial",
+              "kind": "acte",
+              "lexique": [
+                "scanner des sinus",
+                "TDM sinus",
+                "scanner facial"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner du massif facial",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER DU MASSIF FACIAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I026",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner du massif facial",
+          "kind": "acte",
+          "lexique": [
+            "scanner des sinus",
+            "TDM sinus",
+            "scanner facial"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner du massif facial",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 37,
+      "kind": "acte",
+      "label": "SCANNER CERVICAL",
+      "section": "SCANNER",
+      "ctx": "SCANNER CERVICAL",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I027",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner cervical",
+              "kind": "acte",
+              "lexique": [
+                "TDM cervicale",
+                "scanner du cou"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner cervical",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER CERVICAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I027",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner cervical",
+          "kind": "acte",
+          "lexique": [
+            "TDM cervicale",
+            "scanner du cou"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner cervical",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 38,
+      "kind": "acte",
+      "label": "SCANNER THORACIQUE",
+      "section": "SCANNER",
+      "ctx": "SCANNER THORACIQUE",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I022",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner thoracique",
+              "kind": "acte",
+              "lexique": [
+                "TDM thoracique",
+                "scanner du thorax"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner thoracique",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER THORACIQUE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I022",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner thoracique",
+          "kind": "acte",
+          "lexique": [
+            "TDM thoracique",
+            "scanner du thorax"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner thoracique",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 39,
+      "kind": "acte",
+      "label": "SCANNER THORACO-ABDOMINO-PELVIEN",
+      "section": "SCANNER",
+      "ctx": "SCANNER THORACO-ABDOMINO-PELVIEN",
+      "price": {
+        "value": 100000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "100000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I025",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner thoraco-abdomino-pelvien",
+              "kind": "acte",
+              "lexique": [
+                "TAP",
+                "TDM TAP"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner thoraco-abdomino-pelvien",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER THORACO-ABDOMINO-PELVIEN"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I025",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner thoraco-abdomino-pelvien",
+          "kind": "acte",
+          "lexique": [
+            "TAP",
+            "TDM TAP"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner thoraco-abdomino-pelvien",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 40,
+      "kind": "acte",
+      "label": "SCANNER DORSO-LOMBAIRE",
+      "section": "SCANNER",
+      "ctx": "SCANNER DORSO-LOMBAIRE",
+      "price": {
+        "value": 120000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "120000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I028",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis lombaire",
+              "kind": "acte",
+              "lexique": [
+                "scanner lombaire",
+                "TDM lombaire"
+              ],
+              "composants": []
+            },
+            "score": 0.697546943424603,
+            "disc": [],
+            "comp": false,
+            "via": "scanner lombaire",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I029",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis dorsal",
+              "kind": "acte",
+              "lexique": [
+                "TDM dorsale",
+                "scanner dorsal"
+              ],
+              "composants": []
+            },
+            "score": 0.6146238661164035,
+            "disc": [],
+            "comp": false,
+            "via": "TDM dorsale",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I032",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Uro-scanner",
+              "kind": "acte",
+              "lexique": [
+                "uroscanner",
+                "scanner des voies urinaires"
+              ],
+              "composants": []
+            },
+            "score": 0.3541637964026024,
+            "disc": [],
+            "comp": false,
+            "via": "uroscanner",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "SCANNER DORSO-LOMBAIRE"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 70 % · marge 8",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I028",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner du rachis lombaire",
+          "kind": "acte",
+          "lexique": [
+            "scanner lombaire",
+            "TDM lombaire"
+          ],
+          "composants": []
+        },
+        "score": 0.697546943424603,
+        "disc": [],
+        "comp": false,
+        "via": "scanner lombaire",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 41,
+      "kind": "acte",
+      "label": "SCANNER CERVICO-THORACIQUE",
+      "section": "SCANNER",
+      "ctx": "SCANNER CERVICO-THORACIQUE",
+      "price": {
+        "value": 120000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "120000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I022",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner thoracique",
+              "kind": "acte",
+              "lexique": [
+                "TDM thoracique",
+                "scanner du thorax"
+              ],
+              "composants": []
+            },
+            "score": 0.7035820112979062,
+            "disc": [],
+            "comp": false,
+            "via": "Scanner thoracique",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I027",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner cervical",
+              "kind": "acte",
+              "lexique": [
+                "TDM cervicale",
+                "scanner du cou"
+              ],
+              "composants": []
+            },
+            "score": 0.6217307483703445,
+            "disc": [],
+            "comp": false,
+            "via": "Scanner cervical",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I030",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis cervical",
+              "kind": "acte",
+              "lexique": [
+                "TDM du rachis cervical"
+              ],
+              "composants": []
+            },
+            "score": 0.49047539286199676,
+            "disc": [],
+            "comp": false,
+            "via": "Scanner du rachis cervical",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER CERVICO-THORACIQUE"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 70 % · marge 8",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I022",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner thoracique",
+          "kind": "acte",
+          "lexique": [
+            "TDM thoracique",
+            "scanner du thorax"
+          ],
+          "composants": []
+        },
+        "score": 0.7035820112979062,
+        "disc": [],
+        "comp": false,
+        "via": "Scanner thoracique",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 42,
+      "kind": "acte",
+      "label": "SCANNER CERVICO-DORSO-LOMBAIRE",
+      "section": "SCANNER",
+      "ctx": "SCANNER CERVICO-DORSO-LOMBAIRE",
+      "price": {
+        "value": null,
+        "statut": "manquant"
+      },
+      "priceRaw": "",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I027",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner cervical",
+              "kind": "acte",
+              "lexique": [
+                "TDM cervicale",
+                "scanner du cou"
+              ],
+              "composants": []
+            },
+            "score": 0.5401086713482164,
+            "disc": [],
+            "comp": false,
+            "via": "Scanner cervical",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I028",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis lombaire",
+              "kind": "acte",
+              "lexique": [
+                "scanner lombaire",
+                "TDM lombaire"
+              ],
+              "composants": []
+            },
+            "score": 0.497617364486693,
+            "disc": [],
+            "comp": false,
+            "via": "Scanner du rachis lombaire",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I029",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis dorsal",
+              "kind": "acte",
+              "lexique": [
+                "TDM dorsale",
+                "scanner dorsal"
+              ],
+              "composants": []
+            },
+            "score": 0.46896429444852045,
+            "disc": [],
+            "comp": false,
+            "via": "TDM dorsale",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "SCANNER CERVICO-DORSO-LOMBAIRE"
+      },
+      "issue": "inconnu",
+      "explication": "flou 54 % · marge 4",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I027",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner cervical",
+          "kind": "acte",
+          "lexique": [
+            "TDM cervicale",
+            "scanner du cou"
+          ],
+          "composants": []
+        },
+        "score": 0.5401086713482164,
+        "disc": [],
+        "comp": false,
+        "via": "Scanner cervical",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 43,
+      "kind": "acte",
+      "label": "URO-SCANNER",
+      "section": "SCANNER",
+      "ctx": "URO-SCANNER",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I032",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Uro-scanner",
+              "kind": "acte",
+              "lexique": [
+                "uroscanner",
+                "scanner des voies urinaires"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Uro-scanner",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "URO-SCANNER"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I032",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Uro-scanner",
+          "kind": "acte",
+          "lexique": [
+            "uroscanner",
+            "scanner des voies urinaires"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Uro-scanner",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 44,
+      "kind": "acte",
+      "label": "ANGIOSCANNER THORACIQUE",
+      "section": "SCANNER",
+      "ctx": "ANGIOSCANNER THORACIQUE",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I033",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Angioscanner thoracique",
+              "kind": "acte",
+              "lexique": [
+                "angio-TDM thoracique",
+                "angioscanner pulmonaire"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Angioscanner thoracique",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ANGIOSCANNER THORACIQUE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I033",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Angioscanner thoracique",
+          "kind": "acte",
+          "lexique": [
+            "angio-TDM thoracique",
+            "angioscanner pulmonaire"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Angioscanner thoracique",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 45,
+      "kind": "acte",
+      "label": "ANGIOSCANNER CEREBRAL",
+      "section": "SCANNER",
+      "ctx": "ANGIOSCANNER CEREBRAL",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I034",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Angioscanner cérébral",
+              "kind": "acte",
+              "lexique": [
+                "angio-TDM cérébrale"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Angioscanner cérébral",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ANGIOSCANNER CEREBRAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I034",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Angioscanner cérébral",
+          "kind": "acte",
+          "lexique": [
+            "angio-TDM cérébrale"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Angioscanner cérébral",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 46,
+      "kind": "acte",
+      "label": "ANGIOSCANNER TSA",
+      "section": "SCANNER",
+      "ctx": "ANGIOSCANNER TSA",
+      "price": {
+        "value": 100000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "100000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I035",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Angioscanner des troncs supra-aortiques",
+              "kind": "acte",
+              "lexique": [
+                "angioscanner des TSA"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "angioscanner des TSA",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ANGIOSCANNER TSA"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I035",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Angioscanner des troncs supra-aortiques",
+          "kind": "acte",
+          "lexique": [
+            "angioscanner des TSA"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "angioscanner des TSA",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 47,
+      "kind": "acte",
+      "label": "ANGIOSCANNER DES MEMBRES INFERIEURS",
+      "section": "SCANNER",
+      "ctx": "ANGIOSCANNER DES MEMBRES INFERIEURS",
+      "price": {
+        "value": 100000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "100000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I036",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Angioscanner des membres inférieurs",
+              "kind": "acte",
+              "lexique": [
+                "angio-TDM des membres inférieurs"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Angioscanner des membres inférieurs",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "ANGIOSCANNER DES MEMBRES INFERIEURS"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I036",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Angioscanner des membres inférieurs",
+          "kind": "acte",
+          "lexique": [
+            "angio-TDM des membres inférieurs"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Angioscanner des membres inférieurs",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 48,
+      "kind": "acte",
+      "label": "SCANNER DU RACHIS DORSAL",
+      "section": "SCANNER",
+      "ctx": "SCANNER DU RACHIS DORSAL",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I029",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner du rachis dorsal",
+              "kind": "acte",
+              "lexique": [
+                "TDM dorsale",
+                "scanner dorsal"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner du rachis dorsal",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER DU RACHIS DORSAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I029",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner du rachis dorsal",
+          "kind": "acte",
+          "lexique": [
+            "TDM dorsale",
+            "scanner dorsal"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner du rachis dorsal",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 49,
+      "kind": "acte",
+      "label": "SCANNER DES ROCHERS",
+      "section": "SCANNER",
+      "ctx": "SCANNER DES ROCHERS",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I031",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Scanner des rochers",
+              "kind": "acte",
+              "lexique": [
+                "TDM des rochers"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Scanner des rochers",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "SCANNER DES ROCHERS"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I031",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Scanner des rochers",
+          "kind": "acte",
+          "lexique": [
+            "TDM des rochers"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Scanner des rochers",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 50,
+      "kind": "vide"
+    },
+    {
+      "num": 51,
+      "kind": "vide"
+    },
+    {
+      "num": 52,
+      "kind": "vide"
+    },
+    {
+      "num": 53,
+      "kind": "vide"
+    },
+    {
+      "num": 54,
+      "kind": "vide"
+    },
+    {
+      "num": 55,
+      "kind": "vide"
+    },
+    {
+      "num": 56,
+      "kind": "vide"
+    },
+    {
+      "num": 57,
+      "kind": "vide"
+    },
+    {
+      "num": 58,
+      "kind": "section",
+      "label": "IRM",
+      "pillar": "img"
+    },
+    {
+      "num": 59,
+      "kind": "vide"
+    },
+    {
+      "num": 60,
+      "kind": "acte",
+      "label": "IRM DU RACHIS LOMBAIRE",
+      "section": "IRM",
+      "ctx": "IRM DU RACHIS LOMBAIRE",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I039",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du rachis lombaire",
+              "kind": "acte",
+              "lexique": [
+                "IRM lombaire"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM du rachis lombaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM DU RACHIS LOMBAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I039",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM du rachis lombaire",
+          "kind": "acte",
+          "lexique": [
+            "IRM lombaire"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM du rachis lombaire",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 61,
+      "kind": "acte",
+      "label": "IRM DU RACHIS CERVICAL",
+      "section": "IRM",
+      "ctx": "IRM DU RACHIS CERVICAL",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I040",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du rachis cervical",
+              "kind": "acte",
+              "lexique": [
+                "IRM cervicale"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM du rachis cervical",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM DU RACHIS CERVICAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I040",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM du rachis cervical",
+          "kind": "acte",
+          "lexique": [
+            "IRM cervicale"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM du rachis cervical",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 62,
+      "kind": "acte",
+      "label": "IRM GENOU",
+      "section": "IRM",
+      "ctx": "IRM GENOU",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I043",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du genou",
+              "kind": "acte",
+              "lexique": [
+                "IRM genou"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM du genou",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM GENOU"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I043",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM du genou",
+          "kind": "acte",
+          "lexique": [
+            "IRM genou"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM du genou",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 63,
+      "kind": "acte",
+      "label": "IRM DES GENOUX",
+      "section": "IRM",
+      "ctx": "IRM DES GENOUX",
+      "price": {
+        "value": 300000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "300000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I043",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du genou",
+              "kind": "acte",
+              "lexique": [
+                "IRM genou"
+              ],
+              "composants": []
+            },
+            "score": 0.4194168636721827,
+            "disc": [],
+            "comp": false,
+            "via": "IRM du genou",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I044",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM de l'épaule",
+              "kind": "acte",
+              "lexique": [
+                "IRM épaule"
+              ],
+              "composants": []
+            },
+            "score": 0.35275019700551613,
+            "disc": [],
+            "comp": false,
+            "via": "IRM de l'épaule",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I046",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du poignet",
+              "kind": "acte",
+              "lexique": [
+                "IRM poignet"
+              ],
+              "composants": []
+            },
+            "score": 0.34346448271980184,
+            "disc": [],
+            "comp": false,
+            "via": "IRM du poignet",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM DES GENOUX"
+      },
+      "issue": "inconnu",
+      "explication": "flou 42 % · marge 7",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I043",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM du genou",
+          "kind": "acte",
+          "lexique": [
+            "IRM genou"
+          ],
+          "composants": []
+        },
+        "score": 0.4194168636721827,
+        "disc": [],
+        "comp": false,
+        "via": "IRM du genou",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 64,
+      "kind": "acte",
+      "label": "IRM CEREBRALE",
+      "section": "IRM",
+      "ctx": "IRM CEREBRALE",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I038",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM cérébrale",
+              "kind": "acte",
+              "lexique": [
+                "IRM encéphalique",
+                "IRM du cerveau"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM cérébrale",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM CEREBRALE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I038",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM cérébrale",
+          "kind": "acte",
+          "lexique": [
+            "IRM encéphalique",
+            "IRM du cerveau"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM cérébrale",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 65,
+      "kind": "acte",
+      "label": "IRM MEDULLAIRE",
+      "section": "IRM",
+      "ctx": "IRM MEDULLAIRE",
+      "price": {
+        "value": 350000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "350000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I041",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM médullaire",
+              "kind": "acte",
+              "lexique": [
+                "IRM de la moelle"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM médullaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM MEDULLAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I041",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM médullaire",
+          "kind": "acte",
+          "lexique": [
+            "IRM de la moelle"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM médullaire",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 66,
+      "kind": "acte",
+      "label": "IRM HYPOPHYSAIRE",
+      "section": "IRM",
+      "ctx": "IRM HYPOPHYSAIRE",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I042",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM hypophysaire",
+              "kind": "acte",
+              "lexique": [
+                "IRM de l hypophyse"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM hypophysaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM HYPOPHYSAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I042",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM hypophysaire",
+          "kind": "acte",
+          "lexique": [
+            "IRM de l hypophyse"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM hypophysaire",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 67,
+      "kind": "acte",
+      "label": "IRM EPAULE",
+      "section": "IRM",
+      "ctx": "IRM EPAULE",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I044",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM de l'épaule",
+              "kind": "acte",
+              "lexique": [
+                "IRM épaule"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM de l'épaule",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM EPAULE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I044",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM de l'épaule",
+          "kind": "acte",
+          "lexique": [
+            "IRM épaule"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM de l'épaule",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 68,
+      "kind": "acte",
+      "label": "IRM CHEVILLE",
+      "section": "IRM",
+      "ctx": "IRM CHEVILLE",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I045",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM de la cheville",
+              "kind": "acte",
+              "lexique": [
+                "IRM cheville"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM de la cheville",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM CHEVILLE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I045",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM de la cheville",
+          "kind": "acte",
+          "lexique": [
+            "IRM cheville"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM de la cheville",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 69,
+      "kind": "acte",
+      "label": "IRM MAIN",
+      "section": "IRM",
+      "ctx": "IRM MAIN",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I039",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du rachis lombaire",
+              "kind": "acte",
+              "lexique": [
+                "IRM lombaire"
+              ],
+              "composants": []
+            },
+            "score": 0.3719168636721828,
+            "disc": [],
+            "comp": false,
+            "via": "IRM lombaire",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I046",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du poignet",
+              "kind": "acte",
+              "lexique": [
+                "IRM poignet"
+              ],
+              "composants": []
+            },
+            "score": 0.3379882922436114,
+            "disc": [],
+            "comp": false,
+            "via": "IRM du poignet",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I041",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM médullaire",
+              "kind": "acte",
+              "lexique": [
+                "IRM de la moelle"
+              ],
+              "composants": []
+            },
+            "score": 0.3169168636721828,
+            "disc": [],
+            "comp": false,
+            "via": "IRM de la moelle",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "IRM MAIN"
+      },
+      "issue": "inconnu",
+      "explication": "flou 37 % · marge 3",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I039",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM du rachis lombaire",
+          "kind": "acte",
+          "lexique": [
+            "IRM lombaire"
+          ],
+          "composants": []
+        },
+        "score": 0.3719168636721828,
+        "disc": [],
+        "comp": false,
+        "via": "IRM lombaire",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 70,
+      "kind": "acte",
+      "label": "IRM POIGNET",
+      "section": "IRM",
+      "ctx": "IRM POIGNET",
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "150000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "IRM"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I046",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM du poignet",
+              "kind": "acte",
+              "lexique": [
+                "IRM poignet"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "IRM du poignet",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "IRM POIGNET"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I046",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM du poignet",
+          "kind": "acte",
+          "lexique": [
+            "IRM poignet"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "IRM du poignet",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 71,
+      "kind": "vide"
+    },
+    {
+      "num": 72,
+      "kind": "vide"
+    },
+    {
+      "num": 73,
+      "kind": "vide"
+    },
+    {
+      "num": 74,
+      "kind": "section",
+      "label": "EXAMENS SPECIAUX",
+      "pillar": "img"
+    },
+    {
+      "num": 75,
+      "kind": "vide"
+    },
+    {
+      "num": 76,
+      "kind": "acte",
+      "label": "HSG(hysterosalpingographie)",
+      "section": "EXAMENS SPECIAUX",
+      "ctx": "HSG(hysterosalpingographie)",
+      "price": {
+        "value": 70000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "70000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiologie spéciale",
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I068",
+              "pillar": "img",
+              "type": "Radiologie spéciale",
+              "name": "Hystérosalpingographie (HSG)",
+              "kind": "acte",
+              "lexique": [
+                "HSG"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Hystérosalpingographie (HSG)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "HSG(hysterosalpingographie)"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I068",
+          "pillar": "img",
+          "type": "Radiologie spéciale",
+          "name": "Hystérosalpingographie (HSG)",
+          "kind": "acte",
+          "lexique": [
+            "HSG"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Hystérosalpingographie (HSG)",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 77,
+      "kind": "acte",
+      "label": "LAVEMENT BARYTE",
+      "section": "EXAMENS SPECIAUX",
+      "ctx": "LAVEMENT BARYTE",
+      "price": {
+        "value": 60000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "60000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiologie spéciale",
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I069",
+              "pillar": "img",
+              "type": "Radiologie spéciale",
+              "name": "Lavement baryté",
+              "kind": "acte",
+              "lexique": [
+                "lavement opaque"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Lavement baryté",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "LAVEMENT BARYTE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I069",
+          "pillar": "img",
+          "type": "Radiologie spéciale",
+          "name": "Lavement baryté",
+          "kind": "acte",
+          "lexique": [
+            "lavement opaque"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Lavement baryté",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 78,
+      "kind": "acte",
+      "label": "UCR",
+      "section": "EXAMENS SPECIAUX",
+      "ctx": "UCR",
+      "price": {
+        "value": 60000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "60000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiologie spéciale",
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I070",
+              "pillar": "img",
+              "type": "Radiologie spéciale",
+              "name": "Urétrocystographie rétrograde (UCR)",
+              "kind": "acte",
+              "lexique": [
+                "UCR",
+                "cystographie rétrograde"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "UCR",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "UCR"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I070",
+          "pillar": "img",
+          "type": "Radiologie spéciale",
+          "name": "Urétrocystographie rétrograde (UCR)",
+          "kind": "acte",
+          "lexique": [
+            "UCR",
+            "cystographie rétrograde"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "UCR",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 79,
+      "kind": "acte",
+      "label": "TOGD",
+      "section": "EXAMENS SPECIAUX",
+      "ctx": "TOGD",
+      "price": {
+        "value": 700000,
+        "statut": "anomalie",
+        "note": "prix 10 × la médiane de la section"
+      },
+      "priceRaw": "700000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiologie spéciale",
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I071",
+              "pillar": "img",
+              "type": "Radiologie spéciale",
+              "name": "Transit œso-gastro-duodénal (TOGD)",
+              "kind": "acte",
+              "lexique": [
+                "TOGD",
+                "TOGD baryté"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "TOGD",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "TOGD"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I071",
+          "pillar": "img",
+          "type": "Radiologie spéciale",
+          "name": "Transit œso-gastro-duodénal (TOGD)",
+          "kind": "acte",
+          "lexique": [
+            "TOGD",
+            "TOGD baryté"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "TOGD",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 80,
+      "kind": "acte",
+      "label": "COLOSCANNER",
+      "section": "EXAMENS SPECIAUX",
+      "ctx": "COLOSCANNER",
+      "price": {
+        "value": 100000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "100000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiologie spéciale",
+        "Scanner"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I037",
+              "pillar": "img",
+              "type": "Scanner",
+              "name": "Coloscanner",
+              "kind": "acte",
+              "lexique": [
+                "coloscopie virtuelle"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Coloscanner",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "COLOSCANNER"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I037",
+          "pillar": "img",
+          "type": "Scanner",
+          "name": "Coloscanner",
+          "kind": "acte",
+          "lexique": [
+            "coloscopie virtuelle"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Coloscanner",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 81,
+      "kind": "vide"
+    },
+    {
+      "num": 82,
+      "kind": "vide"
+    },
+    {
+      "num": 83,
+      "kind": "vide"
+    },
+    {
+      "num": 84,
+      "kind": "vide"
+    },
+    {
+      "num": 85,
+      "kind": "vide"
+    },
+    {
+      "num": 86,
+      "kind": "vide"
+    },
+    {
+      "num": 87,
+      "kind": "section",
+      "label": "RADIOGRAPHIES",
+      "pillar": "img"
+    },
+    {
+      "num": 88,
+      "kind": "vide"
+    },
+    {
+      "num": 89,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU THORAX DE FACE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU THORAX DE FACE",
+      "price": {
+        "value": 17500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "17500 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I047",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du thorax (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio thorax",
+                "RX thorax",
+                "téléthorax",
+                "radiographie pulmonaire"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du thorax (face)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU THORAX DE FACE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I047",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du thorax (face)",
+          "kind": "acte",
+          "lexique": [
+            "radio thorax",
+            "RX thorax",
+            "téléthorax",
+            "radiographie pulmonaire"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du thorax (face)",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 90,
+      "kind": "acte",
+      "label": "RAIDOGRAPHIE DU THORAX FACE & PROFIL",
+      "section": "RADIOGRAPHIES",
+      "ctx": "radiographie RAIDOGRAPHIE DU THORAX FACE & PROFIL",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I048",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du thorax (face et profil)",
+              "kind": "acte",
+              "lexique": [
+                "radio thorax face et profil",
+                "téléthorax face et profil"
+              ],
+              "composants": []
+            },
+            "score": 0.8268671038997271,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie du thorax (face et profil)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I047",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du thorax (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio thorax",
+                "RX thorax",
+                "téléthorax",
+                "radiographie pulmonaire"
+              ],
+              "composants": []
+            },
+            "score": 0.47562734926252404,
+            "disc": [
+              "profil"
+            ],
+            "comp": false,
+            "via": "Radiographie du thorax (face)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I062",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du bassin (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio bassin",
+                "radiographie du bassin"
+              ],
+              "composants": []
+            },
+            "score": 0.16025900157432332,
+            "disc": [
+              "profil"
+            ],
+            "comp": false,
+            "via": "Radiographie du bassin (face)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RAIDOGRAPHIE DU THORAX FACE & PROFIL"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 83 % · marge 35",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I048",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du thorax (face et profil)",
+          "kind": "acte",
+          "lexique": [
+            "radio thorax face et profil",
+            "téléthorax face et profil"
+          ],
+          "composants": []
+        },
+        "score": 0.8268671038997271,
+        "disc": [],
+        "comp": false,
+        "via": "Radiographie du thorax (face et profil)",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 91,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU CAVUM",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU CAVUM",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I049",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du cavum",
+              "kind": "acte",
+              "lexique": [
+                "radio cavum"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du cavum",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU CAVUM"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I049",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du cavum",
+          "kind": "acte",
+          "lexique": [
+            "radio cavum"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du cavum",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 92,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE LA MAIN",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE LA MAIN",
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "10000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I050",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de la main",
+              "kind": "acte",
+              "lexique": [
+                "radio main"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie de la main",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE LA MAIN"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I050",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie de la main",
+          "kind": "acte",
+          "lexique": [
+            "radio main"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie de la main",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 93,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE LA CHEVILLE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE LA CHEVILLE",
+      "price": {
+        "value": 12500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "12500 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I055",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de la cheville",
+              "kind": "acte",
+              "lexique": [
+                "radio cheville"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie de la cheville",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE LA CHEVILLE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I055",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie de la cheville",
+          "kind": "acte",
+          "lexique": [
+            "radio cheville"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie de la cheville",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 94,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU RACHIS LOMBAIRE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU RACHIS LOMBAIRE",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I057",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du rachis lombaire",
+              "kind": "acte",
+              "lexique": [
+                "radio lombaire",
+                "radio du rachis lombaire"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du rachis lombaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU RACHIS LOMBAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I057",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du rachis lombaire",
+          "kind": "acte",
+          "lexique": [
+            "radio lombaire",
+            "radio du rachis lombaire"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du rachis lombaire",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 95,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU RACHIS DORSAL",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU RACHIS DORSAL",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I058",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du rachis dorsal",
+              "kind": "acte",
+              "lexique": [
+                "radio dorsale"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du rachis dorsal",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU RACHIS DORSAL"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I058",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du rachis dorsal",
+          "kind": "acte",
+          "lexique": [
+            "radio dorsale"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du rachis dorsal",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 96,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE L'OS PROPRE DU NEZ",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE L'OS PROPRE DU NEZ",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I061",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie des os propres du nez",
+              "kind": "acte",
+              "lexique": [
+                "radio OPN",
+                "radiographie OPN"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie des os propres du nez",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE L'OS PROPRE DU NEZ"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I061",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie des os propres du nez",
+          "kind": "acte",
+          "lexique": [
+            "radio OPN",
+            "radiographie OPN"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie des os propres du nez",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 97,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU GENOU",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU GENOU",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I054",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du genou",
+              "kind": "acte",
+              "lexique": [
+                "radio genou"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du genou",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU GENOU"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I054",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du genou",
+          "kind": "acte",
+          "lexique": [
+            "radio genou"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du genou",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 98,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU PIED",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU PIED",
+      "price": {
+        "value": 12500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "12500 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I056",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du pied",
+              "kind": "acte",
+              "lexique": [
+                "radio pied"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du pied",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU PIED"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I056",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du pied",
+          "kind": "acte",
+          "lexique": [
+            "radio pied"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du pied",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 99,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU COUDE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU COUDE",
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "10000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I052",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du coude",
+              "kind": "acte",
+              "lexique": [
+                "radio coude"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du coude",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU COUDE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I052",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du coude",
+          "kind": "acte",
+          "lexique": [
+            "radio coude"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du coude",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 100,
+      "kind": "acte",
+      "label": "RADIOGEPHIE DU POIGNET",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGEPHIE DU POIGNET",
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "10000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I051",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du poignet",
+              "kind": "acte",
+              "lexique": [
+                "radio poignet"
+              ],
+              "composants": []
+            },
+            "score": 0.7258731121036615,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie du poignet",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I056",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du pied",
+              "kind": "acte",
+              "lexique": [
+                "radio pied"
+              ],
+              "composants": []
+            },
+            "score": 0.38027513945424396,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie du pied",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I067",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Abdomen sans préparation (ASP)",
+              "kind": "acte",
+              "lexique": [
+                "ASP",
+                "radiographie ASP",
+                "radio de l'abdomen"
+              ],
+              "composants": []
+            },
+            "score": 0.36241799659710106,
+            "disc": [],
+            "comp": false,
+            "via": "radio de l'abdomen",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "RADIOGEPHIE DU POIGNET"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 73 % · marge 35",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I051",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du poignet",
+          "kind": "acte",
+          "lexique": [
+            "radio poignet"
+          ],
+          "composants": []
+        },
+        "score": 0.7258731121036615,
+        "disc": [],
+        "comp": false,
+        "via": "Radiographie du poignet",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 101,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU BRAS",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU BRAS",
+      "price": {
+        "value": 12500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "12500 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I065",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de l'humérus",
+              "kind": "acte",
+              "lexique": [
+                "radiographie du bras",
+                "radio bras"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "radiographie du bras",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU BRAS"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I065",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie de l'humérus",
+          "kind": "acte",
+          "lexique": [
+            "radiographie du bras",
+            "radio bras"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "radiographie du bras",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 102,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE L'AVANT BRAS",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE L'AVANT BRAS",
+      "price": {
+        "value": 12500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "12500 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I066",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de l'avant-bras",
+              "kind": "acte",
+              "lexique": [
+                "radio avant-bras"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie de l'avant-bras",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE L'AVANT BRAS"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I066",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie de l'avant-bras",
+          "kind": "acte",
+          "lexique": [
+            "radio avant-bras"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie de l'avant-bras",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 103,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE L'EPAULE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE L'EPAULE",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I053",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de l'épaule",
+              "kind": "acte",
+              "lexique": [
+                "radio épaule"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie de l'épaule",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE L'EPAULE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I053",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie de l'épaule",
+          "kind": "acte",
+          "lexique": [
+            "radio épaule"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie de l'épaule",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 104,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU RACHIS DORSO-LOMBAIRE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU RACHIS DORSO-LOMBAIRE",
+      "price": {
+        "value": 35000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "35000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I059",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du rachis dorso-lombaire",
+              "kind": "acte",
+              "lexique": [
+                "radio dorso-lombaire"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du rachis dorso-lombaire",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU RACHIS DORSO-LOMBAIRE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I059",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du rachis dorso-lombaire",
+          "kind": "acte",
+          "lexique": [
+            "radio dorso-lombaire"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du rachis dorso-lombaire",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 105,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU DOIGT",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU DOIGT",
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "10000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I051",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du poignet",
+              "kind": "acte",
+              "lexique": [
+                "radio poignet"
+              ],
+              "composants": []
+            },
+            "score": 0.39655972081503993,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie du poignet",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I058",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du rachis dorsal",
+              "kind": "acte",
+              "lexique": [
+                "radio dorsale"
+              ],
+              "composants": []
+            },
+            "score": 0.3580835303388495,
+            "disc": [],
+            "comp": false,
+            "via": "radio dorsale",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I067",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Abdomen sans préparation (ASP)",
+              "kind": "acte",
+              "lexique": [
+                "ASP",
+                "radiographie ASP",
+                "radio de l'abdomen"
+              ],
+              "composants": []
+            },
+            "score": 0.32798829224361137,
+            "disc": [],
+            "comp": false,
+            "via": "radio de l'abdomen",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU DOIGT"
+      },
+      "issue": "inconnu",
+      "explication": "flou 40 % · marge 4",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I051",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du poignet",
+          "kind": "acte",
+          "lexique": [
+            "radio poignet"
+          ],
+          "composants": []
+        },
+        "score": 0.39655972081503993,
+        "disc": [],
+        "comp": false,
+        "via": "Radiographie du poignet",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 106,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU CRANE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU CRANE",
+      "price": {
+        "value": 20000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "20000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I060",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du crâne",
+              "kind": "acte",
+              "lexique": [
+                "radio crâne"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du crâne",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU CRANE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I060",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du crâne",
+          "kind": "acte",
+          "lexique": [
+            "radio crâne"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du crâne",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 107,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE L'HEMITHORAX",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE L'HEMITHORAX",
+      "price": {
+        "value": 17500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "17500 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I047",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du thorax (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio thorax",
+                "RX thorax",
+                "téléthorax",
+                "radiographie pulmonaire"
+              ],
+              "composants": []
+            },
+            "score": 0.4027501970055161,
+            "disc": [],
+            "comp": false,
+            "via": "radio thorax",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "I065",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de l'humérus",
+              "kind": "acte",
+              "lexique": [
+                "radiographie du bras",
+                "radio bras"
+              ],
+              "composants": []
+            },
+            "score": 0.35291686367218283,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie de l'humérus",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I064",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du fémur",
+              "kind": "acte",
+              "lexique": [
+                "radiographie de la cuisse",
+                "radio cuisse"
+              ],
+              "composants": []
+            },
+            "score": 0.3494168636721828,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie du fémur",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE L'HEMITHORAX"
+      },
+      "issue": "inconnu",
+      "explication": "flou 40 % · marge 5",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I047",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du thorax (face)",
+          "kind": "acte",
+          "lexique": [
+            "radio thorax",
+            "RX thorax",
+            "téléthorax",
+            "radiographie pulmonaire"
+          ],
+          "composants": []
+        },
+        "score": 0.4027501970055161,
+        "disc": [],
+        "comp": false,
+        "via": "radio thorax",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 108,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE LA CUISSE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE LA CUISSE",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I064",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du fémur",
+              "kind": "acte",
+              "lexique": [
+                "radiographie de la cuisse",
+                "radio cuisse"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "radiographie de la cuisse",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE LA CUISSE"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I064",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du fémur",
+          "kind": "acte",
+          "lexique": [
+            "radiographie de la cuisse",
+            "radio cuisse"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "radiographie de la cuisse",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 109,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU BASSIN DE FACE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU BASSIN DE FACE",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I062",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du bassin (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio bassin",
+                "radiographie du bassin"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie du bassin (face)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU BASSIN DE FACE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I062",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du bassin (face)",
+          "kind": "acte",
+          "lexique": [
+            "radio bassin",
+            "radiographie du bassin"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie du bassin (face)",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 110,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DU BASSIN DE FACE ET PROFIL",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DU BASSIN DE FACE ET PROFIL",
+      "price": {
+        "value": 30000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "30000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "I062",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du bassin (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio bassin",
+                "radiographie du bassin"
+              ],
+              "composants": []
+            },
+            "score": 0.6254229989868288,
+            "disc": [
+              "profil"
+            ],
+            "comp": false,
+            "via": "Radiographie du bassin (face)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I048",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du thorax (face et profil)",
+              "kind": "acte",
+              "lexique": [
+                "radio thorax face et profil",
+                "téléthorax face et profil"
+              ],
+              "composants": []
+            },
+            "score": 0.6053310574785646,
+            "disc": [],
+            "comp": false,
+            "via": "Radiographie du thorax (face et profil)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "I047",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie du thorax (face)",
+              "kind": "acte",
+              "lexique": [
+                "radio thorax",
+                "RX thorax",
+                "téléthorax",
+                "radiographie pulmonaire"
+              ],
+              "composants": []
+            },
+            "score": 0.1843772210376688,
+            "disc": [
+              "profil"
+            ],
+            "comp": false,
+            "via": "Radiographie du thorax (face)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DU BASSIN DE FACE ET PROFIL"
+      },
+      "issue": "a_confirmer",
+      "explication": "flou 63 % · marge 2 · conflit : profil",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I062",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie du bassin (face)",
+          "kind": "acte",
+          "lexique": [
+            "radio bassin",
+            "radiographie du bassin"
+          ],
+          "composants": []
+        },
+        "score": 0.6254229989868288,
+        "disc": [
+          "profil"
+        ],
+        "comp": false,
+        "via": "Radiographie du bassin (face)",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 111,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE DE LA HANCHE",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE DE LA HANCHE",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "I063",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Radiographie de la hanche",
+              "kind": "acte",
+              "lexique": [
+                "radio hanche"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Radiographie de la hanche",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE DE LA HANCHE"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I063",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Radiographie de la hanche",
+          "kind": "acte",
+          "lexique": [
+            "radio hanche"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Radiographie de la hanche",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 112,
+      "kind": "acte",
+      "label": "RADIOGRAPHIE ASP",
+      "section": "RADIOGRAPHIES",
+      "ctx": "RADIOGRAPHIE ASP",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000 F",
+      "delai": "",
+      "pillar": "img",
+      "types": [
+        "Radiographie"
+      ],
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "I067",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Abdomen sans préparation (ASP)",
+              "kind": "acte",
+              "lexique": [
+                "ASP",
+                "radiographie ASP",
+                "radio de l'abdomen"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "radiographie ASP",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "RADIOGRAPHIE ASP"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "I067",
+          "pillar": "img",
+          "type": "Radiographie",
+          "name": "Abdomen sans préparation (ASP)",
+          "kind": "acte",
+          "lexique": [
+            "ASP",
+            "radiographie ASP",
+            "radio de l'abdomen"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "radiographie ASP",
+        "kind": "lexique"
+      }
+    }
+  ]
+}

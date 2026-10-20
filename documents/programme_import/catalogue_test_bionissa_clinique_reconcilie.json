@@ -1,1120 +1,2337 @@
-[
-  {
-    "libelle_source": "Glycémie à jeun",
-    "libelle_norm": "glycemie a jeun",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
+{
+  "filepath": "catalogue_test_bionissa_clinique.xlsx",
+  "summary": {
+    "total_rows": 26,
+    "total_lines": 26,
+    "actes_count": 26,
+    "reconnus": 12,
+    "a_confirmer": 0,
+    "inconnus": 14,
+    "prix_manquants": 0,
+    "prix_anomalies": 6,
+    "sections": []
+  },
+  "schema": {
+    "ncol": 5,
+    "roles": [
+      "libelle",
+      "prix",
+      "delai",
+      "attribut",
+      "attribut"
+    ],
+    "profile": [
       {
-        "act": {
-          "id": 66,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Glycémie à jeun",
-          "nom_norm": "glycemie a jeun",
-          "type": "Biochimie & ionogramme",
-          "code": "BIO"
-        },
-        "score": 100
+        "text": 26,
+        "price": 0,
+        "len": 526,
+        "header": 0,
+        "labelHeader": 0,
+        "attrHeader": 0
+      },
+      {
+        "text": 1,
+        "price": 25,
+        "len": 11,
+        "header": 0,
+        "labelHeader": 0,
+        "attrHeader": 0
+      },
+      {
+        "text": 26,
+        "price": 0,
+        "len": 80,
+        "header": 0,
+        "labelHeader": 0,
+        "attrHeader": 0
+      },
+      {
+        "text": 25,
+        "price": 0,
+        "len": 216,
+        "header": 0,
+        "labelHeader": 0,
+        "attrHeader": 1
+      },
+      {
+        "text": 25,
+        "price": 0,
+        "len": 530,
+        "header": 0,
+        "labelHeader": 0,
+        "attrHeader": 1
       }
     ],
-    "meilleur_acte": {
-      "id": 66,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Glycémie à jeun",
-      "nom_norm": "glycemie a jeun",
-      "type": "Biochimie & ionogramme",
-      "code": "BIO"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "2500",
-    "source_delai": "2h"
+    "confidence": 1.0
   },
-  {
-    "libelle_source": "NFS",
-    "libelle_norm": "nfs",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 18,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "NFS (hémogramme)",
-          "nom_norm": "nfs hemogramme",
+  "lines": [
+    {
+      "num": 1,
+      "kind": "acte",
+      "label": "Designation Acte",
+      "section": "",
+      "ctx": "Designation Acte",
+      "price": {
+        "value": null,
+        "statut": "anomalie",
+        "note": "illisible : Prix (FCFA)"
+      },
+      "priceRaw": "Prix (FCFA)",
+      "delai": "Delai de Rendu",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B178",
+              "pillar": "bio",
+              "type": "Endocrinologie & hormonologie",
+              "name": "Test au Synacthène (dynamique)",
+              "kind": "acte",
+              "lexique": [
+                "test au synacthène",
+                "synacthène",
+                "stimulation ACTH"
+              ],
+              "composants": []
+            },
+            "score": 0.42916666666666664,
+            "disc": [],
+            "comp": false,
+            "via": "stimulation ACTH",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B256",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "Anticorps anti-substance intercellulaire",
+              "kind": "acte",
+              "lexique": [
+                "anti substance intercellulaire",
+                "desmogléine",
+                "pemphigus",
+                "ac anti substance intra cellulaire"
+              ],
+              "composants": []
+            },
+            "score": 0.23511742424242424,
+            "disc": [],
+            "comp": false,
+            "via": "desmogléine",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B349",
+              "pillar": "bio",
+              "type": "Parasitologie & mycologie",
+              "name": "Examen mycologique (peau, ongles, cheveux)",
+              "kind": "acte",
+              "lexique": [
+                "examen mycologique",
+                "mycologie",
+                "dermatophyte",
+                "recherche de champignons"
+              ],
+              "composants": []
+            },
+            "score": 0.22399999999999998,
+            "disc": [],
+            "comp": false,
+            "via": "dermatophyte",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Designation Acte"
+      },
+      "issue": "inconnu",
+      "explication": "flou 43 % · marge 19",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B178",
+          "pillar": "bio",
+          "type": "Endocrinologie & hormonologie",
+          "name": "Test au Synacthène (dynamique)",
+          "kind": "acte",
+          "lexique": [
+            "test au synacthène",
+            "synacthène",
+            "stimulation ACTH"
+          ],
+          "composants": []
+        },
+        "score": 0.42916666666666664,
+        "disc": [],
+        "comp": false,
+        "via": "stimulation ACTH",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 2,
+      "kind": "acte",
+      "label": "Glycémie à jeun",
+      "section": "",
+      "ctx": "Glycémie à jeun",
+      "price": {
+        "value": 2500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "2500",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "B066",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "Glycémie à jeun",
+              "kind": "acte",
+              "lexique": [
+                "glycémie",
+                "glucose",
+                "GAJ"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Glycémie à jeun",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Glycémie à jeun"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B066",
+          "pillar": "bio",
+          "type": "Biochimie & ionogramme",
+          "name": "Glycémie à jeun",
+          "kind": "acte",
+          "lexique": [
+            "glycémie",
+            "glucose",
+            "GAJ"
+          ],
+          "composants": []
+        },
+        "score": 1.0,
+        "disc": [],
+        "via": "Glycémie à jeun",
+        "kind": "nom"
+      }
+    },
+    {
+      "num": 3,
+      "kind": "acte",
+      "label": "NFS",
+      "section": "",
+      "ctx": "NFS",
+      "price": {
+        "value": 4000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "4000",
+      "delai": "3h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B018",
+              "pillar": "bio",
+              "type": "Hématologie",
+              "name": "NFS (hémogramme)",
+              "kind": "acte",
+              "lexique": [
+                "NFS",
+                "numération formule sanguine",
+                "hémogramme",
+                "FNS",
+                "CBC"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "NFS",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "NFS"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B018",
+          "pillar": "bio",
           "type": "Hématologie",
-          "code": "HEM"
+          "name": "NFS (hémogramme)",
+          "kind": "acte",
+          "lexique": [
+            "NFS",
+            "numération formule sanguine",
+            "hémogramme",
+            "FNS",
+            "CBC"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "NFS",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 18,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "NFS (hémogramme)",
-      "nom_norm": "nfs hemogramme",
-      "type": "Hématologie",
-      "code": "HEM"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "4000",
-    "source_delai": "3h"
-  },
-  {
-    "libelle_source": "Créatininémie",
-    "libelle_norm": "creatininemie",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 74,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Créatininémie",
-          "nom_norm": "creatininemie",
+    {
+      "num": 4,
+      "kind": "acte",
+      "label": "Créatininémie",
+      "section": "",
+      "ctx": "Créatininémie",
+      "price": {
+        "value": 3000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "3000",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "B074",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "Créatininémie",
+              "kind": "acte",
+              "lexique": [
+                "créatinine",
+                "créatininémie",
+                "créat"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Créatininémie",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Créatininémie"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B074",
+          "pillar": "bio",
           "type": "Biochimie & ionogramme",
-          "code": "BIO"
+          "name": "Créatininémie",
+          "kind": "acte",
+          "lexique": [
+            "créatinine",
+            "créatininémie",
+            "créat"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "Créatininémie",
+        "kind": "nom"
       }
-    ],
-    "meilleur_acte": {
-      "id": 74,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Créatininémie",
-      "nom_norm": "creatininemie",
-      "type": "Biochimie & ionogramme",
-      "code": "BIO"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "3000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Cholestérol total",
-    "libelle_norm": "cholesterol total",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 104,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Cholestérol total",
-          "nom_norm": "cholesterol total",
+    {
+      "num": 5,
+      "kind": "acte",
+      "label": "Cholestérol total",
+      "section": "",
+      "ctx": "Cholestérol total",
+      "price": {
+        "value": 2500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "2500",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "nom exact",
+        "cands": [
+          {
+            "acte": {
+              "id": "B104",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "Cholestérol total",
+              "kind": "acte",
+              "lexique": [
+                "cholestérol total",
+                "cholestérol"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "Cholestérol total",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Cholestérol total"
+      },
+      "issue": "reconnu",
+      "explication": "nom exact",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B104",
+          "pillar": "bio",
           "type": "Biochimie & ionogramme",
-          "code": "BIO"
+          "name": "Cholestérol total",
+          "kind": "acte",
+          "lexique": [
+            "cholestérol total",
+            "cholestérol"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "Cholestérol total",
+        "kind": "nom"
       }
-    ],
-    "meilleur_acte": {
-      "id": 104,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Cholestérol total",
-      "nom_norm": "cholesterol total",
-      "type": "Biochimie & ionogramme",
-      "code": "BIO"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "2500",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "ECBU",
-    "libelle_norm": "ecbu",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 317,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "ECBU + antibiogramme",
-          "nom_norm": "ecbu antibiogramme",
+    {
+      "num": 6,
+      "kind": "acte",
+      "label": "ECBU",
+      "section": "",
+      "ctx": "ECBU",
+      "price": {
+        "value": 6000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "6000",
+      "delai": "24h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B317",
+              "pillar": "bio",
+              "type": "Bactériologie",
+              "name": "ECBU + antibiogramme",
+              "kind": "acte",
+              "lexique": [
+                "ECBU",
+                "examen cytobactériologique des urines",
+                "uroculture + antibiogramme"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "ECBU",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ECBU"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B317",
+          "pillar": "bio",
           "type": "Bactériologie",
-          "code": "BAC"
+          "name": "ECBU + antibiogramme",
+          "kind": "acte",
+          "lexique": [
+            "ECBU",
+            "examen cytobactériologique des urines",
+            "uroculture + antibiogramme"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "ECBU",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 317,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "ECBU + antibiogramme",
-      "nom_norm": "ecbu antibiogramme",
-      "type": "Bactériologie",
-      "code": "BAC"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "6000",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Ionogramme sanguin",
-    "libelle_norm": "ionogramme sanguin",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 5,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Ionogramme sanguin (Na + K + Cl)",
-          "nom_norm": "ionogramme sanguin na k cl",
+    {
+      "num": 7,
+      "kind": "acte",
+      "label": "Ionogramme sanguin",
+      "section": "",
+      "ctx": "Ionogramme sanguin",
+      "price": {
+        "value": 5000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "5000",
+      "delai": "3h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B005",
+              "pillar": "bio",
+              "type": "Panel d'examens",
+              "name": "Ionogramme sanguin (Na + K + Cl)",
+              "kind": "bilan",
+              "lexique": [
+                "ionogramme sanguin",
+                "iono sang",
+                "Na K Cl",
+                "ionogramme"
+              ],
+              "composants": [
+                "Natrémie",
+                "Kaliémie",
+                "Chlorémie"
+              ]
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "ionogramme sanguin",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Ionogramme sanguin"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B005",
+          "pillar": "bio",
           "type": "Panel d'examens",
-          "code": "PAN"
+          "name": "Ionogramme sanguin (Na + K + Cl)",
+          "kind": "bilan",
+          "lexique": [
+            "ionogramme sanguin",
+            "iono sang",
+            "Na K Cl",
+            "ionogramme"
+          ],
+          "composants": [
+            "Natrémie",
+            "Kaliémie",
+            "Chlorémie"
+          ]
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "ionogramme sanguin",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 5,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Ionogramme sanguin (Na + K + Cl)",
-      "nom_norm": "ionogramme sanguin na k cl",
-      "type": "Panel d'examens",
-      "code": "PAN"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "5000",
-    "source_delai": "3h"
-  },
-  {
-    "libelle_source": "RUGEOLE",
-    "libelle_norm": "rugeole",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 295,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rougeole",
-          "nom_norm": "serologie rougeole",
+    {
+      "num": 8,
+      "kind": "acte",
+      "label": "RUGEOLE",
+      "section": "",
+      "ctx": "RUGEOLE",
+      "price": {
+        "value": 12000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "12000",
+      "delai": "48h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B295",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Sérologie rougeole",
+              "kind": "acte",
+              "lexique": [
+                "rougeole",
+                "measles",
+                "morbillivirus",
+                "rugeole"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "rugeole",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "RUGEOLE"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B295",
+          "pillar": "bio",
           "type": "Sérologie & virologie",
-          "code": "SER"
+          "name": "Sérologie rougeole",
+          "kind": "acte",
+          "lexique": [
+            "rougeole",
+            "measles",
+            "morbillivirus",
+            "rugeole"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "rugeole",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 295,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Sérologie rougeole",
-      "nom_norm": "serologie rougeole",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "12000",
-    "source_delai": "48h"
-  },
-  {
-    "libelle_source": "Scoth test",
-    "libelle_norm": "scoth test",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 347,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Scotch-test anal (test de Graham)",
-          "nom_norm": "scotch test anal test de graham",
+    {
+      "num": 9,
+      "kind": "acte",
+      "label": "Scoth test",
+      "section": "",
+      "ctx": "Scoth test",
+      "price": {
+        "value": 3500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "3500",
+      "delai": "1h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B347",
+              "pillar": "bio",
+              "type": "Parasitologie & mycologie",
+              "name": "Scotch-test anal (test de Graham)",
+              "kind": "acte",
+              "lexique": [
+                "scotch test",
+                "test de Graham",
+                "oxyure",
+                "scoth test"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "scoth test",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Scoth test"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B347",
+          "pillar": "bio",
           "type": "Parasitologie & mycologie",
-          "code": "PAR"
+          "name": "Scotch-test anal (test de Graham)",
+          "kind": "acte",
+          "lexique": [
+            "scotch test",
+            "test de Graham",
+            "oxyure",
+            "scoth test"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "scoth test",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 347,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Scotch-test anal (test de Graham)",
-      "nom_norm": "scotch test anal test de graham",
-      "type": "Parasitologie & mycologie",
-      "code": "PAR"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "3500",
-    "source_delai": "1h"
-  },
-  {
-    "libelle_source": "ac anti CP 210",
-    "libelle_norm": "ac anti cp 210",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 239,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-gp210 (CP210)",
-          "nom_norm": "anticorps anti gp210 cp210",
+    {
+      "num": 10,
+      "kind": "acte",
+      "label": "ac anti CP 210",
+      "section": "",
+      "ctx": "ac anti CP 210",
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "25000",
+      "delai": "72h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B239",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "Anticorps anti-gp210 (CP210)",
+              "kind": "acte",
+              "lexique": [
+                "anti gp210",
+                "CP210",
+                "ac anti cp 210"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "ac anti cp 210",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "ac anti CP 210"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B239",
+          "pillar": "bio",
           "type": "Immunologie, auto-immunité & allergologie",
-          "code": "IMM"
+          "name": "Anticorps anti-gp210 (CP210)",
+          "kind": "acte",
+          "lexique": [
+            "anti gp210",
+            "CP210",
+            "ac anti cp 210"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "ac anti cp 210",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 239,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Anticorps anti-gp210 (CP210)",
-      "nom_norm": "anticorps anti gp210 cp210",
-      "type": "Immunologie, auto-immunité & allergologie",
-      "code": "IMM"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "25000",
-    "source_delai": "72h"
-  },
-  {
-    "libelle_source": "TPTCK",
-    "libelle_norm": "tptck",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 7,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Bilan d'hémostase (TP + TCK + TS)",
-          "nom_norm": "bilan d hemostase tp tck ts",
+    {
+      "num": 11,
+      "kind": "acte",
+      "label": "TPTCK",
+      "section": "",
+      "ctx": "TPTCK",
+      "price": {
+        "value": 4500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "4500",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B007",
+              "pillar": "bio",
+              "type": "Panel d'examens",
+              "name": "Bilan d'hémostase (TP + TCK + TS)",
+              "kind": "bilan",
+              "lexique": [
+                "TPTCK",
+                "TC TS",
+                "bilan d'hémostase",
+                "TP TCK TS",
+                "bilan de coagulation",
+                "tptck tc ts"
+              ],
+              "composants": [
+                "TP / INR",
+                "TCA / TCK",
+                "Temps de saignement (TS)"
+              ]
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "TPTCK",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "TPTCK"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B007",
+          "pillar": "bio",
           "type": "Panel d'examens",
-          "code": "PAN"
+          "name": "Bilan d'hémostase (TP + TCK + TS)",
+          "kind": "bilan",
+          "lexique": [
+            "TPTCK",
+            "TC TS",
+            "bilan d'hémostase",
+            "TP TCK TS",
+            "bilan de coagulation",
+            "tptck tc ts"
+          ],
+          "composants": [
+            "TP / INR",
+            "TCA / TCK",
+            "Temps de saignement (TS)"
+          ]
         },
-        "score": 100
+        "score": 1.0,
+        "disc": [],
+        "via": "TPTCK",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 7,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Bilan d'hémostase (TP + TCK + TS)",
-      "nom_norm": "bilan d hemostase tp tck ts",
-      "type": "Panel d'examens",
-      "code": "PAN"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "4500",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Sérologie Rubéole IgG",
-    "libelle_norm": "serologie rubeole igg",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Garde-fou)",
-    "score": 91.3,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 288,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rubéole (IgG + IgM)",
-          "nom_norm": "serologie rubeole igg igm",
+    {
+      "num": 12,
+      "kind": "acte",
+      "label": "Sérologie Rubéole IgG",
+      "section": "",
+      "ctx": "Sérologie Rubéole IgG",
+      "price": {
+        "value": 8500,
+        "statut": "renseigne"
+      },
+      "priceRaw": "8500",
+      "delai": "24h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B283",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Anticorps anti-VHA IgG",
+              "kind": "acte",
+              "lexique": [
+                "VHA IgG",
+                "hépatite A IgG",
+                "serologie vha igg"
+              ],
+              "composants": []
+            },
+            "score": 0.46937885253674727,
+            "disc": [],
+            "comp": false,
+            "via": "serologie vha igg",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B288",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Sérologie rubéole (IgG + IgM)",
+              "kind": "acte",
+              "lexique": [
+                "rubéole IgG IgM",
+                "rubella",
+                "rubeole igg et igm"
+              ],
+              "composants": []
+            },
+            "score": 0.43407684514067496,
+            "disc": [
+              "igm"
+            ],
+            "comp": true,
+            "via": "Sérologie rubéole (IgG + IgM)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B289",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Sérologie CMV (IgG/IgM)",
+              "kind": "acte",
+              "lexique": [
+                "CMV",
+                "cytomégalovirus"
+              ],
+              "composants": []
+            },
+            "score": 0.1664605543710021,
+            "disc": [
+              "igm"
+            ],
+            "comp": false,
+            "via": "Sérologie CMV (IgG/IgM)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Sérologie Rubéole IgG"
+      },
+      "issue": "inconnu",
+      "explication": "flou 47 % · marge 4",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B283",
+          "pillar": "bio",
           "type": "Sérologie & virologie",
-          "code": "SER"
+          "name": "Anticorps anti-VHA IgG",
+          "kind": "acte",
+          "lexique": [
+            "VHA IgG",
+            "hépatite A IgG",
+            "serologie vha igg"
+          ],
+          "composants": []
         },
-        "score": 91.3
+        "score": 0.46937885253674727,
+        "disc": [],
+        "comp": false,
+        "via": "serologie vha igg",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 13,
+      "kind": "acte",
+      "label": "Sérologie Rubéole IgM",
+      "section": "",
+      "ctx": "Sérologie Rubéole IgM",
+      "price": {
+        "value": 8500,
+        "statut": "renseigne"
       },
-      {
-        "act": {
-          "id": 295,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rougeole",
-          "nom_norm": "serologie rougeole",
+      "priceRaw": "8500",
+      "delai": "24h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B282",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Anticorps anti-VHA IgM",
+              "kind": "acte",
+              "lexique": [
+                "VHA IgM",
+                "hépatite A IgM",
+                "serologie vha igm"
+              ],
+              "composants": []
+            },
+            "score": 0.46937885253674727,
+            "disc": [],
+            "comp": false,
+            "via": "serologie vha igm",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B288",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Sérologie rubéole (IgG + IgM)",
+              "kind": "acte",
+              "lexique": [
+                "rubéole IgG IgM",
+                "rubella",
+                "rubeole igg et igm"
+              ],
+              "composants": []
+            },
+            "score": 0.43407684514067496,
+            "disc": [
+              "igg"
+            ],
+            "comp": true,
+            "via": "Sérologie rubéole (IgG + IgM)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B289",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Sérologie CMV (IgG/IgM)",
+              "kind": "acte",
+              "lexique": [
+                "CMV",
+                "cytomégalovirus"
+              ],
+              "composants": []
+            },
+            "score": 0.1664605543710021,
+            "disc": [
+              "igg"
+            ],
+            "comp": false,
+            "via": "Sérologie CMV (IgG/IgM)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Sérologie Rubéole IgM"
+      },
+      "issue": "inconnu",
+      "explication": "flou 47 % · marge 4",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B282",
+          "pillar": "bio",
           "type": "Sérologie & virologie",
-          "code": "SER"
+          "name": "Anticorps anti-VHA IgM",
+          "kind": "acte",
+          "lexique": [
+            "VHA IgM",
+            "hépatite A IgM",
+            "serologie vha igm"
+          ],
+          "composants": []
         },
-        "score": 82.1
+        "score": 0.46937885253674727,
+        "disc": [],
+        "comp": false,
+        "via": "serologie vha igm",
+        "kind": "lexique"
+      }
+    },
+    {
+      "num": 14,
+      "kind": "acte",
+      "label": "Hépatite B Ag HBs",
+      "section": "",
+      "ctx": "Hépatite B Ag HBs",
+      "price": {
+        "value": 7000,
+        "statut": "renseigne"
       },
-      {
-        "act": {
-          "id": 306,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie brucellose (Wright)",
-          "nom_norm": "serologie brucellose wright",
+      "priceRaw": "7000",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B275",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Anticorps anti-HBs",
+              "kind": "acte",
+              "lexique": [
+                "anti HBs",
+                "immunité hépatite B",
+                "ac anti hbs"
+              ],
+              "composants": []
+            },
+            "score": 0.5610310277957336,
+            "disc": [],
+            "comp": false,
+            "via": "immunité hépatite B",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B274",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Antigène HBs",
+              "kind": "acte",
+              "lexique": [
+                "antigène HBs",
+                "AgHBs",
+                "HBsAg"
+              ],
+              "composants": []
+            },
+            "score": 0.39742424242424235,
+            "disc": [
+              "b"
+            ],
+            "comp": false,
+            "via": "Antigène HBs",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B284",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Anticorps anti-VHD (delta)",
+              "kind": "acte",
+              "lexique": [
+                "anti VHD",
+                "hépatite delta",
+                "ac anticorps anti vhd"
+              ],
+              "composants": []
+            },
+            "score": 0.21498135198135204,
+            "disc": [
+              "b"
+            ],
+            "comp": false,
+            "via": "hépatite delta",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Hépatite B Ag HBs"
+      },
+      "issue": "inconnu",
+      "explication": "flou 56 % · marge 16",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B275",
+          "pillar": "bio",
           "type": "Sérologie & virologie",
-          "code": "SER"
+          "name": "Anticorps anti-HBs",
+          "kind": "acte",
+          "lexique": [
+            "anti HBs",
+            "immunité hépatite B",
+            "ac anti hbs"
+          ],
+          "composants": []
         },
-        "score": 75.0
+        "score": 0.5610310277957336,
+        "disc": [],
+        "comp": false,
+        "via": "immunité hépatite B",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 288,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Sérologie rubéole (IgG + IgM)",
-      "nom_norm": "serologie rubeole igg igm",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igg' vs 'igg/igm'.",
-    "auto_valide": false,
-    "source_prix": "8500",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Sérologie Rubéole IgM",
-    "libelle_norm": "serologie rubeole igm",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Garde-fou)",
-    "score": 91.3,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 288,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rubéole (IgG + IgM)",
-          "nom_norm": "serologie rubeole igg igm",
+    {
+      "num": 15,
+      "kind": "acte",
+      "label": "Hépatite C sérologie",
+      "section": "",
+      "ctx": "Hépatite C sérologie",
+      "price": {
+        "value": 9000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "9000",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B281",
+              "pillar": "bio",
+              "type": "Sérologie & virologie",
+              "name": "Anticorps anti-VHC",
+              "kind": "acte",
+              "lexique": [
+                "anti VHC",
+                "hépatite C sérologie",
+                "HCV Ab",
+                "ac anti vhc",
+                "ac anticorps anti vhc"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "hépatite C sérologie",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Hépatite C sérologie"
+      },
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B281",
+          "pillar": "bio",
           "type": "Sérologie & virologie",
-          "code": "SER"
+          "name": "Anticorps anti-VHC",
+          "kind": "acte",
+          "lexique": [
+            "anti VHC",
+            "hépatite C sérologie",
+            "HCV Ab",
+            "ac anti vhc",
+            "ac anticorps anti vhc"
+          ],
+          "composants": []
         },
-        "score": 91.3
-      },
-      {
-        "act": {
-          "id": 295,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rougeole",
-          "nom_norm": "serologie rougeole",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 82.1
-      },
-      {
-        "act": {
-          "id": 306,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie brucellose (Wright)",
-          "nom_norm": "serologie brucellose wright",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 75.0
+        "score": 1.0,
+        "disc": [],
+        "via": "hépatite C sérologie",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 288,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Sérologie rubéole (IgG + IgM)",
-      "nom_norm": "serologie rubeole igg igm",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igm' vs 'igg/igm'.",
-    "auto_valide": false,
-    "source_prix": "8500",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Hépatite B Ag HBs",
-    "libelle_norm": "hepatite b ag hbs",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Garde-fou)",
-    "score": 71.0,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 282,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHA IgM",
-          "nom_norm": "anticorps anti vha igm",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 71.0
+    {
+      "num": 16,
+      "kind": "acte",
+      "label": "PV CHLAM MYCO",
+      "section": "",
+      "ctx": "PV CHLAM MYCO",
+      "price": {
+        "value": 18000,
+        "statut": "renseigne"
       },
-      {
-        "act": {
-          "id": 283,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHA IgG",
-          "nom_norm": "anticorps anti vha igg",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 71.0
+      "priceRaw": "18000",
+      "delai": "48h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": true,
+        "method": "lexique",
+        "cands": [
+          {
+            "acte": {
+              "id": "B326",
+              "pillar": "bio",
+              "type": "Bactériologie",
+              "name": "Prélèvement vaginal (PV) + culture",
+              "kind": "acte",
+              "lexique": [
+                "PV",
+                "prélèvement vaginal",
+                "cervico-vaginal",
+                "pv chlam myco"
+              ],
+              "composants": []
+            },
+            "score": 1.0,
+            "disc": [],
+            "via": "pv chlam myco",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "PV CHLAM MYCO"
       },
-      {
-        "act": {
-          "id": 285,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHE",
-          "nom_norm": "anticorps anti vhe",
-          "type": "Sérologie & virologie",
-          "code": "SER"
+      "issue": "reconnu",
+      "explication": "lexique",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B326",
+          "pillar": "bio",
+          "type": "Bactériologie",
+          "name": "Prélèvement vaginal (PV) + culture",
+          "kind": "acte",
+          "lexique": [
+            "PV",
+            "prélèvement vaginal",
+            "cervico-vaginal",
+            "pv chlam myco"
+          ],
+          "composants": []
         },
-        "score": 66.7
+        "score": 1.0,
+        "disc": [],
+        "via": "pv chlam myco",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 282,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Anticorps anti-VHA IgM",
-      "nom_norm": "anticorps anti vha igm",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": "Garde-fou actif : Spécification discriminante (Immunoglobulines) non concordante : 'igm'.",
-    "auto_valide": false,
-    "source_prix": "7000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Hépatite C sérologie",
-    "libelle_norm": "hepatite c serologie",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 281,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHC",
-          "nom_norm": "anticorps anti vhc",
-          "type": "Sérologie & virologie",
-          "code": "SER"
+    {
+      "num": 17,
+      "kind": "acte",
+      "label": "Scanner thoracique avec injection",
+      "section": "",
+      "ctx": "Scanner thoracique avec injection",
+      "price": {
+        "value": 85000,
+        "statut": "anomalie",
+        "note": "prix 8 × la médiane de la section"
+      },
+      "priceRaw": "85000",
+      "delai": "4h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B216",
+              "pillar": "bio",
+              "type": "Marqueurs tumoraux",
+              "name": "SCC (antigène du carcinome épidermoïde)",
+              "kind": "acte",
+              "lexique": [
+                "SCC",
+                "carcinome épidermoïde"
+              ],
+              "composants": []
+            },
+            "score": 0.22923076923076924,
+            "disc": [],
+            "comp": false,
+            "via": "SCC",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B043",
+              "pillar": "bio",
+              "type": "Hématologie",
+              "name": "Coefficient de saturation de la transferrine (CST)",
+              "kind": "acte",
+              "lexique": [
+                "CST",
+                "saturation de la transferrine"
+              ],
+              "composants": []
+            },
+            "score": 0.2127141608391608,
+            "disc": [],
+            "comp": false,
+            "via": "saturation de la transferrine",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B346",
+              "pillar": "bio",
+              "type": "Parasitologie & mycologie",
+              "name": "Confirmation bilharziose",
+              "kind": "acte",
+              "lexique": [
+                "confirmation bilharziose",
+                "schistosomiase confirmation"
+              ],
+              "composants": []
+            },
+            "score": 0.21167420814479634,
+            "disc": [],
+            "comp": false,
+            "via": "schistosomiase confirmation",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Scanner thoracique avec injection"
+      },
+      "issue": "inconnu",
+      "explication": "flou 23 % · marge 2",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B216",
+          "pillar": "bio",
+          "type": "Marqueurs tumoraux",
+          "name": "SCC (antigène du carcinome épidermoïde)",
+          "kind": "acte",
+          "lexique": [
+            "SCC",
+            "carcinome épidermoïde"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 0.22923076923076924,
+        "disc": [],
+        "comp": false,
+        "via": "SCC",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 281,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Anticorps anti-VHC",
-      "nom_norm": "anticorps anti vhc",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "9000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "PV CHLAM MYCO",
-    "libelle_norm": "pv chlam myco",
-    "statut": "composite",
-    "statut_label": "Composite (multi-actes)",
-    "score": 70,
-    "via": "aucun",
-    "candidats": [],
-    "meilleur_acte": null,
-    "avertissement": "Libellé composite (§5.3 / §6) : vise plusieurs actes distincts.",
-    "auto_valide": false,
-    "source_prix": "18000",
-    "source_delai": "48h"
-  },
-  {
-    "libelle_source": "Scanner thoracique avec injection",
-    "libelle_norm": "scanner thoracique avec injection",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 70.6,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 515,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "TDM thoracique",
-          "nom_norm": "tdm thoracique",
-          "type": "Scanner (TDM)",
-          "code": "TDM"
-        },
-        "score": 70.6
+    {
+      "num": 18,
+      "kind": "acte",
+      "label": "IRM cérébrale",
+      "section": "",
+      "ctx": "IRM cérébrale",
+      "price": {
+        "value": 150000,
+        "statut": "anomalie",
+        "note": "prix 15 × la médiane de la section"
       },
-      {
-        "act": {
-          "id": 516,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Angio-TDM thoracique (embolie pulmonaire)",
-          "nom_norm": "angio tdm thoracique embolie pulmonaire",
-          "type": "Scanner (TDM)",
-          "code": "TDM"
-        },
-        "score": 64.3
+      "priceRaw": "150000",
+      "delai": "24h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B047",
+              "pillar": "bio",
+              "type": "Hémostase / Coagulation",
+              "name": "TP / INR",
+              "kind": "acte",
+              "lexique": [
+                "TP",
+                "INR",
+                "taux de prothrombine",
+                "temps de prothrombine"
+              ],
+              "composants": []
+            },
+            "score": 0.19636363636363635,
+            "disc": [],
+            "comp": false,
+            "via": "INR",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B254",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "Anticorps anti-îlots (ICA)",
+              "kind": "acte",
+              "lexique": [
+                "anti îlots",
+                "ICA"
+              ],
+              "composants": []
+            },
+            "score": 0.19636363636363635,
+            "disc": [],
+            "comp": false,
+            "via": "ICA",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B266",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "IDR à la tuberculine (IDRt)",
+              "kind": "acte",
+              "lexique": [
+                "IDR",
+                "intradermoréaction",
+                "tuberculine",
+                "Mantoux",
+                "idrt"
+              ],
+              "composants": []
+            },
+            "score": 0.19636363636363635,
+            "disc": [],
+            "comp": false,
+            "via": "IDR",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "IRM cérébrale"
       },
-      {
-        "act": {
-          "id": 416,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Scanner thoraco-abdomino-pelvien (TAP)",
-          "nom_norm": "scanner thoraco abdomino pelvien tap",
-          "type": "Panel d'examens / Protocoles",
-          "code": "PAN"
+      "issue": "inconnu",
+      "explication": "flou 20 % · marge 0",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B047",
+          "pillar": "bio",
+          "type": "Hémostase / Coagulation",
+          "name": "TP / INR",
+          "kind": "acte",
+          "lexique": [
+            "TP",
+            "INR",
+            "taux de prothrombine",
+            "temps de prothrombine"
+          ],
+          "composants": []
         },
-        "score": 58.0
+        "score": 0.19636363636363635,
+        "disc": [],
+        "comp": false,
+        "via": "INR",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 515,
-      "pid": 2,
-      "slug": "imagerie-medicale",
-      "nom": "TDM thoracique",
-      "nom_norm": "tdm thoracique",
-      "type": "Scanner (TDM)",
-      "code": "TDM"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "85000",
-    "source_delai": "4h"
-  },
-  {
-    "libelle_source": "IRM cérébrale",
-    "libelle_norm": "irm cerebrale",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 537,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "IRM cérébrale",
-          "nom_norm": "irm cerebrale",
-          "type": "IRM",
-          "code": "IRM"
+    {
+      "num": 19,
+      "kind": "acte",
+      "label": "Échographie abdomino-pelvienne",
+      "section": "",
+      "ctx": "Échographie abdomino-pelvienne",
+      "price": {
+        "value": 35000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "35000",
+      "delai": "1h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B271",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "ECP (protéine cationique des éosinophiles)",
+              "kind": "acte",
+              "lexique": [
+                "ECP",
+                "protéine cationique éosinophiles"
+              ],
+              "composants": []
+            },
+            "score": 0.22923076923076924,
+            "disc": [],
+            "comp": false,
+            "via": "ECP",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B329",
+              "pillar": "bio",
+              "type": "Bactériologie",
+              "name": "Écouvillonnage + ECB + antibiogramme",
+              "kind": "acte",
+              "lexique": [
+                "écouvillonnage ECB ATB",
+                "écouvillon culture antibiogramme",
+                "econvillonage ecb atb"
+              ],
+              "composants": []
+            },
+            "score": 0.21754925775978406,
+            "disc": [],
+            "comp": false,
+            "via": "écouvillonnage ECB ATB",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B317",
+              "pillar": "bio",
+              "type": "Bactériologie",
+              "name": "ECBU + antibiogramme",
+              "kind": "acte",
+              "lexique": [
+                "ECBU",
+                "examen cytobactériologique des urines",
+                "uroculture + antibiogramme"
+              ],
+              "composants": []
+            },
+            "score": 0.20923076923076922,
+            "disc": [],
+            "comp": false,
+            "via": "ECBU",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Échographie abdomino-pelvienne"
+      },
+      "issue": "inconnu",
+      "explication": "flou 23 % · marge 1",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B271",
+          "pillar": "bio",
+          "type": "Immunologie, auto-immunité & allergologie",
+          "name": "ECP (protéine cationique des éosinophiles)",
+          "kind": "acte",
+          "lexique": [
+            "ECP",
+            "protéine cationique éosinophiles"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 0.22923076923076924,
+        "disc": [],
+        "comp": false,
+        "via": "ECP",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 537,
-      "pid": 2,
-      "slug": "imagerie-medicale",
-      "nom": "IRM cérébrale",
-      "nom_norm": "irm cerebrale",
-      "type": "IRM",
-      "code": "IRM"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "150000",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Échographie abdomino-pelvienne",
-    "libelle_norm": "echographie abdomino pelvienne",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 418,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Échographie abdomino-pelvienne",
-          "nom_norm": "echographie abdomino pelvienne",
-          "type": "Panel d'examens / Protocoles",
-          "code": "PAN"
+    {
+      "num": 20,
+      "kind": "acte",
+      "label": "Électrocardiogramme de repos (ECG)",
+      "section": "",
+      "ctx": "Électrocardiogramme de repos (ECG)",
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      },
+      "priceRaw": "15000",
+      "delai": "30m",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B097",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "Électrophorèse des protéines sériques (EPP)",
+              "kind": "acte",
+              "lexique": [
+                "électrophorèse des protéines",
+                "EPP",
+                "protidogramme",
+                "protéinogramme"
+              ],
+              "composants": []
+            },
+            "score": 0.24368444055944055,
+            "disc": [],
+            "comp": false,
+            "via": "électrophorèse des protéines",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B030",
+              "pillar": "bio",
+              "type": "Hématologie",
+              "name": "Électrophorèse de l'hémoglobine",
+              "kind": "acte",
+              "lexique": [
+                "électrophorèse de l'hémoglobine",
+                "EPH",
+                "Hb électrophorèse",
+                "electrophorese de l hemoglobine protidogramme"
+              ],
+              "composants": []
+            },
+            "score": 0.23844807692307693,
+            "disc": [],
+            "comp": false,
+            "via": "Électrophorèse de l'hémoglobine",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B415",
+              "pillar": "bio",
+              "type": "Génétique & cytogénétique",
+              "name": "Étude moléculaire de la drépanocytose",
+              "kind": "acte",
+              "lexique": [
+                "drépanocytose moléculaire",
+                "mutation bêta-globine",
+                "HBB"
+              ],
+              "composants": []
+            },
+            "score": 0.2152997347480106,
+            "disc": [],
+            "comp": false,
+            "via": "Étude moléculaire de la drépanocytose",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Électrocardiogramme de repos (ECG)"
+      },
+      "issue": "inconnu",
+      "explication": "flou 24 % · marge 1",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B097",
+          "pillar": "bio",
+          "type": "Biochimie & ionogramme",
+          "name": "Électrophorèse des protéines sériques (EPP)",
+          "kind": "acte",
+          "lexique": [
+            "électrophorèse des protéines",
+            "EPP",
+            "protidogramme",
+            "protéinogramme"
+          ],
+          "composants": []
         },
-        "score": 100
+        "score": 0.24368444055944055,
+        "disc": [],
+        "comp": false,
+        "via": "électrophorèse des protéines",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 418,
-      "pid": 2,
-      "slug": "imagerie-medicale",
-      "nom": "Échographie abdomino-pelvienne",
-      "nom_norm": "echographie abdomino pelvienne",
-      "type": "Panel d'examens / Protocoles",
-      "code": "PAN"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "35000",
-    "source_delai": "1h"
-  },
-  {
-    "libelle_source": "Électrocardiogramme de repos (ECG)",
-    "libelle_norm": "electrocardiogramme de repos ecg",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 74.5,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 644,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "ECG de repos",
-          "nom_norm": "ecg de repos",
-          "type": "Cardiologie & explorations vasculaires",
-          "code": "CARD"
-        },
-        "score": 74.5
+    {
+      "num": 21,
+      "kind": "acte",
+      "label": "Fibroscopie oeso-gastro-duodénale",
+      "section": "",
+      "ctx": "Fibroscopie oeso-gastro-duodénale",
+      "price": {
+        "value": 65000,
+        "statut": "anomalie",
+        "note": "prix 6 × la médiane de la section"
       },
-      {
-        "act": {
-          "id": 727,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Électrorétinogramme (ERG)",
-          "nom_norm": "electroretinogramme erg",
-          "type": "Ophtalmologie",
-          "code": "OPH"
-        },
-        "score": 72.7
+      "priceRaw": "65000",
+      "delai": "2h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B118",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "FibroTest-ActiTest",
+              "kind": "acte",
+              "lexique": [
+                "fibrotest",
+                "actitest",
+                "fibrose hépatique non invasive"
+              ],
+              "composants": []
+            },
+            "score": 0.35315047021943574,
+            "disc": [],
+            "comp": false,
+            "via": "fibrose hépatique non invasive",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B192",
+              "pillar": "bio",
+              "type": "Endocrinologie & hormonologie",
+              "name": "Gastrine",
+              "kind": "acte",
+              "lexique": [
+                "gastrine"
+              ],
+              "composants": []
+            },
+            "score": 0.31712643678160923,
+            "disc": [],
+            "comp": false,
+            "via": "Gastrine",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B218",
+              "pillar": "bio",
+              "type": "Marqueurs tumoraux",
+              "name": "ProGRP",
+              "kind": "acte",
+              "lexique": [
+                "ProGRP",
+                "pro-gastrin releasing peptide"
+              ],
+              "composants": []
+            },
+            "score": 0.29357813417144046,
+            "disc": [],
+            "comp": false,
+            "via": "pro-gastrin releasing peptide",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Fibroscopie oeso-gastro-duodénale"
       },
-      {
-        "act": {
-          "id": 728,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Électro-oculogramme (EOG)",
-          "nom_norm": "electro oculogramme eog",
-          "type": "Ophtalmologie",
-          "code": "OPH"
+      "issue": "inconnu",
+      "explication": "flou 35 % · marge 4",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B118",
+          "pillar": "bio",
+          "type": "Biochimie & ionogramme",
+          "name": "FibroTest-ActiTest",
+          "kind": "acte",
+          "lexique": [
+            "fibrotest",
+            "actitest",
+            "fibrose hépatique non invasive"
+          ],
+          "composants": []
         },
-        "score": 69.1
+        "score": 0.35315047021943574,
+        "disc": [],
+        "comp": false,
+        "via": "fibrose hépatique non invasive",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 644,
-      "pid": 3,
-      "slug": "explorations-fonctionnelles",
-      "nom": "ECG de repos",
-      "nom_norm": "ecg de repos",
-      "type": "Cardiologie & explorations vasculaires",
-      "code": "CARD"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "15000",
-    "source_delai": "30m"
-  },
-  {
-    "libelle_source": "Fibroscopie oeso-gastro-duodénale",
-    "libelle_norm": "fibroscopie oeso gastro duodenale",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 93.0,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 681,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
-          "nom_norm": "fibroscopie oeso gastro duodenale fogd",
-          "type": "Gastro-entérologie & endoscopie digestive",
-          "code": "GAST"
-        },
-        "score": 93.0
+    {
+      "num": 22,
+      "kind": "acte",
+      "label": "Transport médicalisé d'urgence VSL",
+      "section": "",
+      "ctx": "Transport médicalisé d'urgence VSL",
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
       },
-      {
-        "act": {
-          "id": 457,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Transit œso-gastro-duodénal (TOGD)",
-          "nom_norm": "transit oeso gastro duodenal togd",
-          "type": "Radiographie",
-          "code": "RX"
-        },
-        "score": 72.1
+      "priceRaw": "25000",
+      "delai": "Immédiat",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B186",
+              "pillar": "bio",
+              "type": "Endocrinologie & hormonologie",
+              "name": "SHBG",
+              "kind": "acte",
+              "lexique": [
+                "SHBG",
+                "protéine de transport des hormones sexuelles"
+              ],
+              "composants": []
+            },
+            "score": 0.35113403119868636,
+            "disc": [],
+            "comp": false,
+            "via": "protéine de transport des hormones sexuelles",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B042",
+              "pillar": "bio",
+              "type": "Hématologie",
+              "name": "Transferrine",
+              "kind": "acte",
+              "lexique": [
+                "transferrine"
+              ],
+              "composants": []
+            },
+            "score": 0.24139498432601877,
+            "disc": [],
+            "comp": false,
+            "via": "Transferrine",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B096",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "Préalbumine",
+              "kind": "acte",
+              "lexique": [
+                "préalbumine",
+                "transthyrétine"
+              ],
+              "composants": []
+            },
+            "score": 0.2389923869234214,
+            "disc": [],
+            "comp": false,
+            "via": "transthyrétine",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Transport médicalisé d'urgence VSL"
       },
-      {
-        "act": {
-          "id": 710,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Fibroscopie naso-pharyngée",
-          "nom_norm": "fibroscopie naso pharyngee",
-          "type": "ORL & explorations audio-vestibulaires",
-          "code": "ORL"
+      "issue": "inconnu",
+      "explication": "flou 35 % · marge 11",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B186",
+          "pillar": "bio",
+          "type": "Endocrinologie & hormonologie",
+          "name": "SHBG",
+          "kind": "acte",
+          "lexique": [
+            "SHBG",
+            "protéine de transport des hormones sexuelles"
+          ],
+          "composants": []
         },
-        "score": 66.7
+        "score": 0.35113403119868636,
+        "disc": [],
+        "comp": false,
+        "via": "protéine de transport des hormones sexuelles",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 681,
-      "pid": 3,
-      "slug": "explorations-fonctionnelles",
-      "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
-      "nom_norm": "fibroscopie oeso gastro duodenale fogd",
-      "type": "Gastro-entérologie & endoscopie digestive",
-      "code": "GAST"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "65000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Transport médicalisé d'urgence VSL",
-    "libelle_norm": "transport medicalise d urgence vsl",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 77.4,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 781,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport médicalisé avec médecin",
-          "nom_norm": "transport medicalise avec medecin",
-          "type": "Ambulance médicalisée",
-          "code": "AMBU"
-        },
-        "score": 77.4
+    {
+      "num": 23,
+      "kind": "acte",
+      "label": "Séance de dialyse péritonéale",
+      "section": "",
+      "ctx": "Séance de dialyse péritonéale",
+      "price": {
+        "value": 75000,
+        "statut": "anomalie",
+        "note": "prix 8 × la médiane de la section"
       },
-      {
-        "act": {
-          "id": 796,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport médicalisé longue distance",
-          "nom_norm": "transport medicalise longue distance",
-          "type": "Transport sanitaire spécialisé",
-          "code": "AMBU"
-        },
-        "score": 71.4
+      "priceRaw": "75000",
+      "delai": "4h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B021",
+              "pillar": "bio",
+              "type": "Hématologie",
+              "name": "Vitesse de sédimentation (VS)",
+              "kind": "acte",
+              "lexique": [
+                "VS",
+                "vitesse de sédimentation",
+                "sédimentation",
+                "ESR"
+              ],
+              "composants": []
+            },
+            "score": 0.22413499543934326,
+            "disc": [],
+            "comp": false,
+            "via": "sédimentation",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B067",
+              "pillar": "bio",
+              "type": "Biochimie & ionogramme",
+              "name": "Glycémie post-prandiale",
+              "kind": "acte",
+              "lexique": [
+                "glycémie post-prandiale",
+                "glycémie 2h"
+              ],
+              "composants": []
+            },
+            "score": 0.223618925831202,
+            "disc": [],
+            "comp": false,
+            "via": "Glycémie post-prandiale",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B147",
+              "pillar": "bio",
+              "type": "Vitamines & oligo-éléments",
+              "name": "Sélénium",
+              "kind": "acte",
+              "lexique": [
+                "sélénium",
+                "sélénémie"
+              ],
+              "composants": []
+            },
+            "score": 0.21893719806763284,
+            "disc": [],
+            "comp": false,
+            "via": "sélénémie",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Séance de dialyse péritonéale"
       },
-      {
-        "act": {
-          "id": 780,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport médicalisé avec infirmier",
-          "nom_norm": "transport medicalise avec infirmier",
-          "type": "Ambulance médicalisée",
-          "code": "AMBU"
+      "issue": "inconnu",
+      "explication": "flou 22 % · marge 0",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B021",
+          "pillar": "bio",
+          "type": "Hématologie",
+          "name": "Vitesse de sédimentation (VS)",
+          "kind": "acte",
+          "lexique": [
+            "VS",
+            "vitesse de sédimentation",
+            "sédimentation",
+            "ESR"
+          ],
+          "composants": []
         },
-        "score": 69.6
+        "score": 0.22413499543934326,
+        "disc": [],
+        "comp": false,
+        "via": "sédimentation",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 781,
-      "pid": 4,
-      "slug": "ambulance-medicalisee",
-      "nom": "Transport médicalisé avec médecin",
-      "nom_norm": "transport medicalise avec medecin",
-      "type": "Ambulance médicalisée",
-      "code": "AMBU"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "25000",
-    "source_delai": "Immédiat"
-  },
-  {
-    "libelle_source": "Séance de dialyse péritonéale",
-    "libelle_norm": "seance de dialyse peritoneale",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 79.2,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 883,
-          "pid": 5,
-          "slug": "soins-specialises",
-          "nom": "Dialyse péritonéale",
-          "nom_norm": "dialyse peritoneale",
-          "type": "Néphrologie & dialyse",
-          "code": "NEPH"
-        },
-        "score": 79.2
+    {
+      "num": 24,
+      "kind": "acte",
+      "label": "Détartrage supra et sous-gingival",
+      "section": "",
+      "ctx": "Détartrage supra et sous-gingival",
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
       },
-      {
-        "act": {
-          "id": 881,
-          "pid": 5,
-          "slug": "soins-specialises",
-          "nom": "Séance d'hémodialyse chronique",
-          "nom_norm": "seance d hemodialyse chronique",
-          "type": "Néphrologie & dialyse",
-          "code": "NEPH"
-        },
-        "score": 73.9
+      "priceRaw": "25000",
+      "delai": "45m",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B412",
+              "pillar": "bio",
+              "type": "Génétique & cytogénétique",
+              "name": "Dépistage prénatal non invasif (DPNI)",
+              "kind": "acte",
+              "lexique": [
+                "DPNI",
+                "trisomie 21 dépistage",
+                "ADN libre circulant"
+              ],
+              "composants": []
+            },
+            "score": 0.22461586411095527,
+            "disc": [],
+            "comp": false,
+            "via": "Dépistage prénatal non invasif (DPNI)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B247",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "Anticorps anti-gliadine déamidée",
+              "kind": "acte",
+              "lexique": [
+                "anti gliadine déamidée",
+                "DGP"
+              ],
+              "composants": []
+            },
+            "score": 0.22173913043478258,
+            "disc": [],
+            "comp": false,
+            "via": "DGP",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B359",
+              "pillar": "bio",
+              "type": "Biologie moléculaire / PCR",
+              "name": "Charge virale VHD (ADN)",
+              "kind": "acte",
+              "lexique": [
+                "charge virale VHD",
+                "ADN VHD",
+                "delta",
+                "charge virale adn vhd"
+              ],
+              "composants": []
+            },
+            "score": 0.21791304347826085,
+            "disc": [],
+            "comp": false,
+            "via": "delta",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Détartrage supra et sous-gingival"
       },
-      {
-        "act": {
-          "id": 599,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Biopsie péritonéale / de masse abdominale (écho/scanno-guidée)",
-          "nom_norm": "biopsie peritoneale de masse abdominale echo scanno guidee",
-          "type": "Biopsies guidées",
-          "code": "INTB"
+      "issue": "inconnu",
+      "explication": "flou 22 % · marge 0",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B412",
+          "pillar": "bio",
+          "type": "Génétique & cytogénétique",
+          "name": "Dépistage prénatal non invasif (DPNI)",
+          "kind": "acte",
+          "lexique": [
+            "DPNI",
+            "trisomie 21 dépistage",
+            "ADN libre circulant"
+          ],
+          "composants": []
         },
-        "score": 62.5
+        "score": 0.22461586411095527,
+        "disc": [],
+        "comp": false,
+        "via": "Dépistage prénatal non invasif (DPNI)",
+        "kind": "nom"
       }
-    ],
-    "meilleur_acte": {
-      "id": 883,
-      "pid": 5,
-      "slug": "soins-specialises",
-      "nom": "Dialyse péritonéale",
-      "nom_norm": "dialyse peritoneale",
-      "type": "Néphrologie & dialyse",
-      "code": "NEPH"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "75000",
-    "source_delai": "4h"
-  },
-  {
-    "libelle_source": "Détartrage supra et sous-gingival",
-    "libelle_norm": "detartrage supra et sous gingival",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 86.2,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 923,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Détartrage",
-          "nom_norm": "detartrage",
-          "type": "Prévention & prophylaxie",
-          "code": "PREV"
-        },
-        "score": 86.2
+    {
+      "num": 25,
+      "kind": "acte",
+      "label": "Extraction dent de sagesse incluse",
+      "section": "",
+      "ctx": "Extraction dent de sagesse incluse",
+      "price": {
+        "value": 45000,
+        "statut": "anomalie",
+        "note": "prix 4 × la médiane de la section"
       },
-      {
-        "act": {
-          "id": 946,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Surfaçage radiculaire (détartrage sous-gingival)",
-          "nom_norm": "surfacage radiculaire detartrage sous gingival",
-          "type": "Parodontologie",
-          "code": "PARO"
-        },
-        "score": 84.2
+      "priceRaw": "45000",
+      "delai": "1h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B399",
+              "pillar": "bio",
+              "type": "Anatomie & cytopathologie",
+              "name": "Examen extemporané",
+              "kind": "acte",
+              "lexique": [
+                "extemporané",
+                "examen per-opératoire"
+              ],
+              "composants": []
+            },
+            "score": 0.22032828282828282,
+            "disc": [],
+            "comp": false,
+            "via": "extemporané",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B320",
+              "pillar": "bio",
+              "type": "Bactériologie",
+              "name": "ECBC (expectorations)",
+              "kind": "acte",
+              "lexique": [
+                "ECBC",
+                "examen cytobactériologique des crachats",
+                "expectorations"
+              ],
+              "composants": []
+            },
+            "score": 0.2063936063936064,
+            "disc": [],
+            "comp": false,
+            "via": "expectorations",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B271",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "ECP (protéine cationique des éosinophiles)",
+              "kind": "acte",
+              "lexique": [
+                "ECP",
+                "protéine cationique éosinophiles"
+              ],
+              "composants": []
+            },
+            "score": 0.20228571428571432,
+            "disc": [],
+            "comp": false,
+            "via": "ECP (protéine cationique des éosinophiles)",
+            "kind": "nom"
+          }
+        ],
+        "usedText": "Extraction dent de sagesse incluse"
       },
-      {
-        "act": {
-          "id": 782,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport sous oxygénothérapie",
-          "nom_norm": "transport sous oxygenotherapie",
-          "type": "Ambulance médicalisée",
-          "code": "AMBU"
+      "issue": "inconnu",
+      "explication": "flou 22 % · marge 1",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B399",
+          "pillar": "bio",
+          "type": "Anatomie & cytopathologie",
+          "name": "Examen extemporané",
+          "kind": "acte",
+          "lexique": [
+            "extemporané",
+            "examen per-opératoire"
+          ],
+          "composants": []
         },
-        "score": 54.5
+        "score": 0.22032828282828282,
+        "disc": [],
+        "comp": false,
+        "via": "extemporané",
+        "kind": "lexique"
       }
-    ],
-    "meilleur_acte": {
-      "id": 923,
-      "pid": 6,
-      "slug": "soins-dentaires",
-      "nom": "Détartrage",
-      "nom_norm": "detartrage",
-      "type": "Prévention & prophylaxie",
-      "code": "PREV"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "25000",
-    "source_delai": "45m"
-  },
-  {
-    "libelle_source": "Extraction dent de sagesse incluse",
-    "libelle_norm": "extraction dent de sagesse incluse",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 73.7,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 1002,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Extraction de dent temporaire",
-          "nom_norm": "extraction de dent temporaire",
-          "type": "Odontologie pédiatrique (pédodontie)",
-          "code": "PEDO"
-        },
-        "score": 73.7
+    {
+      "num": 26,
+      "kind": "acte",
+      "label": "Prestation spéciale non répertoriée XYZ",
+      "section": "",
+      "ctx": "Prestation spéciale non répertoriée XYZ",
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
       },
-      {
-        "act": {
-          "id": 956,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Avulsion de dent de sagesse (incluse / enclavée)",
-          "nom_norm": "avulsion de dent de sagesse incluse enclavee",
-          "type": "Chirurgie buccale & orale",
-          "code": "CHIR"
-        },
-        "score": 71.8
+      "priceRaw": "10000",
+      "delai": "24h",
+      "pillar": null,
+      "types": null,
+      "merged": false,
+      "match": {
+        "exact": false,
+        "method": "flou",
+        "cands": [
+          {
+            "acte": {
+              "id": "B412",
+              "pillar": "bio",
+              "type": "Génétique & cytogénétique",
+              "name": "Dépistage prénatal non invasif (DPNI)",
+              "kind": "acte",
+              "lexique": [
+                "DPNI",
+                "trisomie 21 dépistage",
+                "ADN libre circulant"
+              ],
+              "composants": []
+            },
+            "score": 0.3131243308662663,
+            "disc": [],
+            "comp": false,
+            "via": "Dépistage prénatal non invasif (DPNI)",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": "B413",
+              "pillar": "bio",
+              "type": "Génétique & cytogénétique",
+              "name": "Recherche de mutations BRCA1/BRCA2",
+              "kind": "acte",
+              "lexique": [
+                "BRCA",
+                "BRCA1 BRCA2",
+                "prédisposition cancer sein"
+              ],
+              "composants": []
+            },
+            "score": 0.23450757575757575,
+            "disc": [],
+            "comp": false,
+            "via": "prédisposition cancer sein",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": "B271",
+              "pillar": "bio",
+              "type": "Immunologie, auto-immunité & allergologie",
+              "name": "ECP (protéine cationique des éosinophiles)",
+              "kind": "acte",
+              "lexique": [
+                "ECP",
+                "protéine cationique éosinophiles"
+              ],
+              "composants": []
+            },
+            "score": 0.22616237335877518,
+            "disc": [],
+            "comp": false,
+            "via": "protéine cationique éosinophiles",
+            "kind": "lexique"
+          }
+        ],
+        "usedText": "Prestation spéciale non répertoriée XYZ"
       },
-      {
-        "act": {
-          "id": 999,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Soin de carie sur dent temporaire",
-          "nom_norm": "soin de carie sur dent temporaire",
-          "type": "Odontologie pédiatrique (pédodontie)",
-          "code": "PEDO"
+      "issue": "inconnu",
+      "explication": "flou 31 % · marge 8",
+      "candidat_retenu": {
+        "acte": {
+          "id": "B412",
+          "pillar": "bio",
+          "type": "Génétique & cytogénétique",
+          "name": "Dépistage prénatal non invasif (DPNI)",
+          "kind": "acte",
+          "lexique": [
+            "DPNI",
+            "trisomie 21 dépistage",
+            "ADN libre circulant"
+          ],
+          "composants": []
         },
-        "score": 63.2
+        "score": 0.3131243308662663,
+        "disc": [],
+        "comp": false,
+        "via": "Dépistage prénatal non invasif (DPNI)",
+        "kind": "nom"
       }
-    ],
-    "meilleur_acte": {
-      "id": 1002,
-      "pid": 6,
-      "slug": "soins-dentaires",
-      "nom": "Extraction de dent temporaire",
-      "nom_norm": "extraction de dent temporaire",
-      "type": "Odontologie pédiatrique (pédodontie)",
-      "code": "PEDO"
-    },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "45000",
-    "source_delai": "1h"
-  },
-  {
-    "libelle_source": "Prestation spéciale non répertoriée XYZ",
-    "libelle_norm": "prestation speciale non repertoriee xyz",
-    "statut": "inconnu",
-    "statut_label": "Score trop faible (<65%)",
-    "score": 57.1,
-    "via": "aucun",
-    "candidats": [
-      {
-        "act": {
-          "id": 918,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Consultation dentaire spécialisée",
-          "nom_norm": "consultation dentaire specialisee",
-          "type": "Consultations & diagnostic",
-          "code": "CONS"
-        },
-        "score": 57.1
-      },
-      {
-        "act": {
-          "id": 961,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Résection apicale (apicectomie)",
-          "nom_norm": "resection apicale apicectomie",
-          "type": "Chirurgie buccale & orale",
-          "code": "CHIR"
-        },
-        "score": 55.9
-      },
-      {
-        "act": {
-          "id": 905,
-          "pid": 5,
-          "slug": "soins-specialises",
-          "nom": "Réhydratation orale supervisée",
-          "nom_norm": "rehydratation orale supervisee",
-          "type": "Pédiatrie (soins)",
-          "code": "PED"
-        },
-        "score": 55.1
-      }
-    ],
-    "meilleur_acte": {
-      "id": 918,
-      "pid": 6,
-      "slug": "soins-dentaires",
-      "nom": "Consultation dentaire spécialisée",
-      "nom_norm": "consultation dentaire specialisee",
-      "type": "Consultations & diagnostic",
-      "code": "CONS"
-    },
-    "avertissement": "Candidat proposé à titre indicatif.",
-    "auto_valide": false,
-    "source_prix": "10000",
-    "source_delai": "24h"
-  }
-]
+    }
+  ]
+}

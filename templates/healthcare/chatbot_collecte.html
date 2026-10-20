@@ -485,10 +485,10 @@ body { background: var(--mc-bg); }
          ondragover="handleDrag(event, true)"
          ondragleave="handleDrag(event, false)"
          ondrop="handleDrop(event)">
-      <input type="file" id="catalogFile" accept=".xlsx,.xls,.csv" onchange="onFileSelect(this)">
+      <input type="file" id="catalogFile" accept=".xlsx,.xls,.csv,.json" onchange="onFileSelect(this)">
       <div class="uz-icon"><i class="ti ti-file-spreadsheet"></i></div>
-      <div class="uz-title">Glissez votre fichier Excel ou CSV ici ou cliquez pour choisir</div>
-      <div class="uz-sub">Formats acceptés : .xlsx · .csv · .xls · Max 15 Mo</div>
+      <div class="uz-title">Glissez votre fichier Excel, CSV ou JSON de réconciliation ici ou cliquez pour choisir</div>
+      <div class="uz-sub">Formats acceptés : .xlsx · .csv · .xls · .json (output du programme autonome)</div>
     </div>
 
     <div class="upload-chosen" id="uploadChosen">
@@ -562,6 +562,9 @@ body { background: var(--mc-bg); }
       <div class="reconcil-search">
         <input id="qSearch" type="text" placeholder="Rechercher un libellé ou un acte…">
       </div>
+      <button type="button" class="btn-back" style="padding:6px 12px;font-size:12px;display:inline-flex;align-items:center;gap:6px" onclick="exportReconcilJson()" title="Télécharger le fichier de rapprochement au format JSON">
+        <i class="ti ti-download"></i> Exporter JSON
+      </button>
     </div>
 
     <!-- Tableau -->
@@ -804,6 +807,74 @@ function backToUpload() {
     document.getElementById('ps1').classList.remove('done');
     document.getElementById('ps1').classList.add('active');
   }
+}
+
+async function loadPreset(presetName) {
+  clearError();
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('loadingBox').classList.add('visible');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  try {
+    const resp = await fetch("{% url 'healthcare:api_chatbot_load_preset' %}?preset=" + encodeURIComponent(presetName));
+    const data = await resp.json();
+    document.getElementById('loadingBox').classList.remove('visible');
+
+    if (data.ok && data.rows) {
+      state.reconcilRows = data.rows;
+      document.getElementById('reconcilFileName').textContent = data.display_name || data.filename;
+
+      state.donePick = {};
+      state.reconcilRows.forEach((r, idx) => {
+        state.donePick[idx] = {
+          acte_id: r.best,
+          done: r.st === 'ok'
+        };
+      });
+
+      document.getElementById('stepReconcil').classList.add('active');
+      if (document.getElementById('ps2')) {
+        document.getElementById('ps1').classList.add('done');
+        document.getElementById('ps2').classList.add('active');
+      }
+
+      refreshReconciliationView();
+    } else {
+      document.getElementById('stepUpload').classList.add('active');
+      showError(data.error || "Impossible de charger ce rapprochement.");
+    }
+  } catch (err) {
+    document.getElementById('loadingBox').classList.remove('visible');
+    document.getElementById('stepUpload').classList.add('active');
+    showError("Erreur réseau : " + err.message);
+  }
+}
+
+function exportReconcilJson() {
+  if (!state.reconcilRows || !state.reconcilRows.length) return;
+  const exportData = {
+    fichier_origine: document.getElementById('reconcilFileName').textContent,
+    date_export: new Date().toISOString(),
+    total_lignes: state.reconcilRows.length,
+    rows: state.reconcilRows.map((r, idx) => {
+      const pick = state.donePick[idx] || { acte_id: r.best, done: r.st === 'ok' };
+      return {
+        ...r,
+        valide: pick.done,
+        acte_final_id: pick.acte_id,
+        acte_final_nom: (REF_BY_ID[pick.acte_id]?.n) || r.best_nom || ''
+      };
+    })
+  };
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'rapprochement_medcare_' + (new Date().toISOString().slice(0, 10)) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ── Rendu et Filtrage du Tableau de Réconciliation ──

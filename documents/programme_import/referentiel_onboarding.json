@@ -1,0 +1,6244 @@
+[
+  {
+    "id": "B001",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "NFS + réticulocytes",
+    "kind": "bilan",
+    "lexique": [
+      "NFS+TR",
+      "NFS + réticulocytes",
+      "hémogramme + réticulocytes"
+    ],
+    "composants": [
+      "NFS (hémogramme)",
+      "Réticulocytes (taux)"
+    ]
+  },
+  {
+    "id": "B002",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "NFS + frottis sanguin",
+    "kind": "bilan",
+    "lexique": [
+      "NFS + frottis sanguin",
+      "NFS + frotis",
+      "hémogramme + frottis",
+      "nfs frotis sanguin"
+    ],
+    "composants": [
+      "NFS (hémogramme)",
+      "Frottis sanguin (étude morphologique)"
+    ]
+  },
+  {
+    "id": "B003",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Transaminases (ASAT + ALAT)",
+    "kind": "bilan",
+    "lexique": [
+      "transaminases",
+      "ASAT ALAT",
+      "ASAT + ALAT",
+      "TGO TGP"
+    ],
+    "composants": [
+      "ASAT (TGO)",
+      "ALAT (TGP)"
+    ]
+  },
+  {
+    "id": "B004",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilirubine totale et conjuguée",
+    "kind": "bilan",
+    "lexique": [
+      "bilirubine totale et directe",
+      "bilirubine T et D",
+      "bilirubine totale et conjuguée"
+    ],
+    "composants": [
+      "Bilirubine totale",
+      "Bilirubine conjuguée (directe)"
+    ]
+  },
+  {
+    "id": "B005",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Ionogramme sanguin (Na + K + Cl)",
+    "kind": "bilan",
+    "lexique": [
+      "ionogramme sanguin",
+      "iono sang",
+      "Na K Cl",
+      "ionogramme"
+    ],
+    "composants": [
+      "Natrémie",
+      "Kaliémie",
+      "Chlorémie"
+    ]
+  },
+  {
+    "id": "B006",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan lipidique (EAL)",
+    "kind": "bilan",
+    "lexique": [
+      "bilan lipidique",
+      "EAL",
+      "lipidogramme",
+      "cholestérol HDL LDL triglycérides"
+    ],
+    "composants": [
+      "Cholestérol total",
+      "HDL-cholestérol",
+      "LDL-cholestérol",
+      "Triglycérides"
+    ]
+  },
+  {
+    "id": "B007",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan d'hémostase (TP + TCK + TS)",
+    "kind": "bilan",
+    "lexique": [
+      "TPTCK",
+      "TC TS",
+      "bilan d'hémostase",
+      "TP TCK TS",
+      "bilan de coagulation",
+      "tptck tc ts"
+    ],
+    "composants": [
+      "TP / INR",
+      "TCA / TCK",
+      "Temps de saignement (TS)"
+    ]
+  },
+  {
+    "id": "B008",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Dosage pondéral des immunoglobulines (IgG + IgA + IgM)",
+    "kind": "bilan",
+    "lexique": [
+      "dosage pondéral des Ig",
+      "immunoglobulines IgG IgA IgM",
+      "EPP immunoglobulines"
+    ],
+    "composants": [
+      "Dosage des IgG",
+      "Dosage des IgA",
+      "Dosage des IgM"
+    ]
+  },
+  {
+    "id": "B009",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Panel myosite (anti-Jo1, Mi-2, SRP, MDA5…)",
+    "kind": "bilan",
+    "lexique": [
+      "panel myosite",
+      "anti Jo1 Mi-2 SRP MDA5",
+      "myosite panel",
+      "Dotmyosite",
+      "dot myosite",
+      "dot blot myosite"
+    ],
+    "composants": [
+      "anti-Jo1",
+      "anti-Mi-2",
+      "anti-SRP",
+      "anti-MDA5",
+      "anti-TIF1γ",
+      "anti-NXP2",
+      "anti-PL7/PL12"
+    ]
+  },
+  {
+    "id": "B010",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Panel d'allergènes (Phadiatop, trophallergènes, pneumallergènes)",
+    "kind": "bilan",
+    "lexique": [
+      "Phadiatop",
+      "panel pneumallergènes",
+      "trophallergènes",
+      "multi-allergènes"
+    ],
+    "composants": [
+      "IgE spécifiques (pneumallergènes)",
+      "IgE spécifiques (trophallergènes)"
+    ]
+  },
+  {
+    "id": "B011",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan martial (fer + ferritine + CST/CTF)",
+    "kind": "bilan",
+    "lexique": [
+      "bilan martial",
+      "fer ferritine",
+      "bilan du fer",
+      "statut martial"
+    ],
+    "composants": [
+      "Fer sérique",
+      "Ferritine",
+      "Transferrine",
+      "Coefficient de saturation de la transferrine (CST)",
+      "Capacité totale de fixation de la transferrine (CTF)"
+    ]
+  },
+  {
+    "id": "B012",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan hépatique complet",
+    "kind": "bilan",
+    "lexique": [
+      "bilan hépatique",
+      "ASAT ALAT GGT PAL bilirubine",
+      "BHC"
+    ],
+    "composants": [
+      "ASAT (TGO)",
+      "ALAT (TGP)",
+      "Gamma-GT (GGT)",
+      "Phosphatases alcalines (PAL)",
+      "Bilirubine totale",
+      "Bilirubine conjuguée (directe)"
+    ]
+  },
+  {
+    "id": "B013",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan rénal",
+    "kind": "bilan",
+    "lexique": [
+      "bilan rénal",
+      "urée créatinine ionogramme",
+      "fonction rénale"
+    ],
+    "composants": [
+      "Urée (azotémie)",
+      "Créatininémie",
+      "Clairance de la créatinine (DFG)",
+      "Ionogramme sanguin (Na + K + Cl)"
+    ]
+  },
+  {
+    "id": "B014",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan thyroïdien (TSH, FT4 ± FT3)",
+    "kind": "bilan",
+    "lexique": [
+      "bilan thyroïdien",
+      "TSH FT4 FT3",
+      "exploration thyroïdienne"
+    ],
+    "composants": [
+      "TSH ultrasensible",
+      "T4 libre (FT4)",
+      "T3 libre (FT3)"
+    ]
+  },
+  {
+    "id": "B015",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan phosphocalcique",
+    "kind": "bilan",
+    "lexique": [
+      "bilan phosphocalcique",
+      "calcémie phosphorémie PTH vitamine D"
+    ],
+    "composants": [
+      "Calcémie",
+      "Phosphorémie",
+      "Parathormone (PTH intacte)",
+      "Vitamine D (25-OH)"
+    ]
+  },
+  {
+    "id": "B016",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan inflammatoire (VS, CRP, fibrinogène)",
+    "kind": "bilan",
+    "lexique": [
+      "bilan inflammatoire",
+      "VS CRP fibrinogène",
+      "syndrome inflammatoire"
+    ],
+    "composants": [
+      "Vitesse de sédimentation (VS)",
+      "CRP (protéine C réactive)",
+      "Fibrinogène"
+    ]
+  },
+  {
+    "id": "B017",
+    "pillar": "bio",
+    "type": "Panel d'examens",
+    "name": "Bilan préopératoire standard",
+    "kind": "bilan",
+    "lexique": [
+      "bilan préopératoire",
+      "préop",
+      "NFS TP TCK groupe glycémie"
+    ],
+    "composants": [
+      "NFS (hémogramme)",
+      "TP / INR",
+      "TCA / TCK",
+      "Groupe sanguin ABO-Rhésus",
+      "Glycémie à jeun"
+    ]
+  },
+  {
+    "id": "B018",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "NFS (hémogramme)",
+    "kind": "acte",
+    "lexique": [
+      "NFS",
+      "numération formule sanguine",
+      "hémogramme",
+      "FNS",
+      "CBC"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B019",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Réticulocytes (taux)",
+    "kind": "acte",
+    "lexique": [
+      "réticulocytes",
+      "TR",
+      "taux de réticulocytes"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B020",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Frottis sanguin (étude morphologique)",
+    "kind": "acte",
+    "lexique": [
+      "frottis sanguin",
+      "frottis",
+      "étude morphologique du sang"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B021",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Vitesse de sédimentation (VS)",
+    "kind": "acte",
+    "lexique": [
+      "VS",
+      "vitesse de sédimentation",
+      "sédimentation",
+      "ESR"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B022",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Groupe sanguin ABO-Rhésus",
+    "kind": "acte",
+    "lexique": [
+      "GSRH",
+      "groupe sanguin",
+      "groupage ABO Rh",
+      "GS RH"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B023",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Phénotype érythrocytaire étendu (Rh-Kell)",
+    "kind": "acte",
+    "lexique": [
+      "phénotype érythrocytaire",
+      "Rh Kell",
+      "phénotype étendu"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B024",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Antigène D faible (Du)",
+    "kind": "acte",
+    "lexique": [
+      "antigène D faible",
+      "Du",
+      "Rh faible"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B025",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Recherche d'agglutinines irrégulières (RAI)",
+    "kind": "acte",
+    "lexique": [
+      "RAI",
+      "agglutinines irrégulières",
+      "anticorps irréguliers"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B026",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Test de Coombs direct",
+    "kind": "acte",
+    "lexique": [
+      "coombs direct",
+      "TDA",
+      "test direct à l'antiglobuline"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B027",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Test de Coombs indirect",
+    "kind": "acte",
+    "lexique": [
+      "coombs indirect",
+      "TIA",
+      "test indirect à l'antiglobuline"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B028",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Test d'Emmel (falciformation)",
+    "kind": "acte",
+    "lexique": [
+      "TE",
+      "test d'Emmel",
+      "falciformation",
+      "Emmel",
+      "drépanocytose test"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B029",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Test de solubilité de l'hémoglobine S",
+    "kind": "acte",
+    "lexique": [
+      "test de solubilité",
+      "solubilité HbS",
+      "Itano"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B030",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Électrophorèse de l'hémoglobine",
+    "kind": "acte",
+    "lexique": [
+      "électrophorèse de l'hémoglobine",
+      "EPH",
+      "Hb électrophorèse",
+      "electrophorese de l hemoglobine protidogramme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B031",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Dosage HbA2 / HbF",
+    "kind": "acte",
+    "lexique": [
+      "HbA2",
+      "HbF",
+      "hémoglobine foetale",
+      "hémoglobine A2"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B032",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Myélogramme",
+    "kind": "acte",
+    "lexique": [
+      "myélogramme",
+      "ponction médullaire",
+      "moelle osseuse cytologie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B033",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Test de fragilité osmotique (résistance globulaire)",
+    "kind": "acte",
+    "lexique": [
+      "fragilité osmotique",
+      "résistance globulaire",
+      "sphérocytose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B034",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Dosage G6PD",
+    "kind": "acte",
+    "lexique": [
+      "G6PD",
+      "glucose-6-phosphate déshydrogénase",
+      "déficit G6PD"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B035",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Dosage pyruvate kinase érythrocytaire",
+    "kind": "acte",
+    "lexique": [
+      "pyruvate kinase",
+      "PK érythrocytaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B036",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Recherche de schizocytes",
+    "kind": "acte",
+    "lexique": [
+      "schizocytes",
+      "microangiopathie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B037",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Test de Kleihauer",
+    "kind": "acte",
+    "lexique": [
+      "Kleihauer",
+      "hémorragie foeto-maternelle"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B038",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Immunophénotypage lymphocytaire (cytométrie)",
+    "kind": "acte",
+    "lexique": [
+      "immunophénotypage",
+      "cytométrie en flux",
+      "CD4 CD8",
+      "phénotypage lymphocytaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B039",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Fer sérique",
+    "kind": "acte",
+    "lexique": [
+      "fer sérique",
+      "sidérémie",
+      "fer",
+      "Fe"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B040",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Ferritine",
+    "kind": "acte",
+    "lexique": [
+      "ferritine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B041",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Fraction glycosylée de la ferritine",
+    "kind": "acte",
+    "lexique": [
+      "fraction glycosylée de la ferritine",
+      "ferritine glyquée",
+      "fraction glycosylee ferritine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B042",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Transferrine",
+    "kind": "acte",
+    "lexique": [
+      "transferrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B043",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Coefficient de saturation de la transferrine (CST)",
+    "kind": "acte",
+    "lexique": [
+      "CST",
+      "saturation de la transferrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B044",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Capacité totale de fixation de la transferrine (CTF)",
+    "kind": "acte",
+    "lexique": [
+      "CTF",
+      "TIBC",
+      "capacité de fixation",
+      "capacite totale de fixation de la tranferrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B045",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Récepteur soluble de la transferrine",
+    "kind": "acte",
+    "lexique": [
+      "récepteur soluble de la transferrine",
+      "RsTf",
+      "sTfR"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B046",
+    "pillar": "bio",
+    "type": "Hématologie",
+    "name": "Haptoglobine",
+    "kind": "acte",
+    "lexique": [
+      "haptoglobine",
+      "hapto",
+      "hémolyse",
+      "hapto globine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B047",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "TP / INR",
+    "kind": "acte",
+    "lexique": [
+      "TP",
+      "INR",
+      "taux de prothrombine",
+      "temps de prothrombine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B048",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "TCA / TCK",
+    "kind": "acte",
+    "lexique": [
+      "TCA",
+      "TCK",
+      "temps de céphaline activée",
+      "temps de céphaline kaolin"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B049",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Temps de saignement (TS)",
+    "kind": "acte",
+    "lexique": [
+      "temps de saignement",
+      "TS",
+      "Ivy",
+      "Duke"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B050",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Temps de thrombine (TT)",
+    "kind": "acte",
+    "lexique": [
+      "temps de thrombine",
+      "TT",
+      "anti thrombine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B051",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Fibrinogène",
+    "kind": "acte",
+    "lexique": [
+      "fibrinogène",
+      "fibrinémie",
+      "fibrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B052",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "D-Dimères",
+    "kind": "acte",
+    "lexique": [
+      "D-dimères",
+      "DDimères",
+      "DD"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B053",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Produits de dégradation de la fibrine (PDF)",
+    "kind": "acte",
+    "lexique": [
+      "PDF",
+      "produits de dégradation de la fibrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B054",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Dosage des facteurs de coagulation (II, V, VII, X)",
+    "kind": "acte",
+    "lexique": [
+      "facteur II V VII X",
+      "dosage de facteurs",
+      "facteurs vitamine K"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B055",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Dosage du facteur VIII",
+    "kind": "acte",
+    "lexique": [
+      "facteur 8",
+      "facteur VIII",
+      "FVIII",
+      "hémophilie A"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B056",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Dosage du facteur IX",
+    "kind": "acte",
+    "lexique": [
+      "facteur 9",
+      "facteur IX",
+      "FIX",
+      "hémophilie B"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B057",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Dosage du facteur XIII",
+    "kind": "acte",
+    "lexique": [
+      "facteur 13",
+      "facteur XIII",
+      "FXIII"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B058",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Facteur Willebrand (antigène + activité)",
+    "kind": "acte",
+    "lexique": [
+      "facteur Willebrand",
+      "vWF",
+      "von Willebrand",
+      "dosage facteur willebrand"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B059",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Protéine C",
+    "kind": "acte",
+    "lexique": [
+      "protéine C",
+      "dosage protéine C"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B060",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Protéine S",
+    "kind": "acte",
+    "lexique": [
+      "protéine S",
+      "dosage protéine S"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B061",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Antithrombine (III)",
+    "kind": "acte",
+    "lexique": [
+      "antithrombine",
+      "ATIII",
+      "AT3"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B062",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Résistance à la protéine C activée (RPCa)",
+    "kind": "acte",
+    "lexique": [
+      "résistance protéine C activée",
+      "RPCa",
+      "facteur V Leiden fonctionnel"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B063",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Anticoagulant circulant / lupique (LA)",
+    "kind": "acte",
+    "lexique": [
+      "anticoagulant lupique",
+      "LA",
+      "anticoagulant circulant"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B064",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Activité anti-Xa (héparine)",
+    "kind": "acte",
+    "lexique": [
+      "anti-Xa",
+      "activité anti Xa",
+      "héparinémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B065",
+    "pillar": "bio",
+    "type": "Hémostase / Coagulation",
+    "name": "Agrégation plaquettaire",
+    "kind": "acte",
+    "lexique": [
+      "agrégation plaquettaire",
+      "agrégométrie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B066",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Glycémie à jeun",
+    "kind": "acte",
+    "lexique": [
+      "glycémie",
+      "glucose",
+      "GAJ"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B067",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Glycémie post-prandiale",
+    "kind": "acte",
+    "lexique": [
+      "glycémie post-prandiale",
+      "glycémie 2h"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B068",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "HGPO (hyperglycémie provoquée orale)",
+    "kind": "acte",
+    "lexique": [
+      "HGPO",
+      "hyperglycémie provoquée",
+      "OGTT",
+      "O'Sullivan",
+      "hgpo hyperglycemie provoque par voie orale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B069",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Hémoglobine glyquée (HbA1c)",
+    "kind": "acte",
+    "lexique": [
+      "HbA1c",
+      "hémoglobine glyquée",
+      "A1c"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B070",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Fructosamine",
+    "kind": "acte",
+    "lexique": [
+      "fructosamine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B071",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Insulinémie",
+    "kind": "acte",
+    "lexique": [
+      "insulinémie",
+      "insuline"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B072",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Peptide C",
+    "kind": "acte",
+    "lexique": [
+      "peptide C",
+      "C-peptide"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B073",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Urée (azotémie)",
+    "kind": "acte",
+    "lexique": [
+      "azotémie",
+      "urée",
+      "urémie",
+      "BUN"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B074",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Créatininémie",
+    "kind": "acte",
+    "lexique": [
+      "créatinine",
+      "créatininémie",
+      "créat"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B075",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Clairance de la créatinine (DFG)",
+    "kind": "acte",
+    "lexique": [
+      "clairance de la créatinine",
+      "DFG estimé",
+      "Cockcroft",
+      "clairance rénale",
+      "clairance de la creat"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B076",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Cystatine C",
+    "kind": "acte",
+    "lexique": [
+      "cystatine C",
+      "cystatine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B077",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Uricémie (acide urique)",
+    "kind": "acte",
+    "lexique": [
+      "uricémie",
+      "acide urique",
+      "urate"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B078",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Natrémie",
+    "kind": "acte",
+    "lexique": [
+      "natrémie",
+      "sodium",
+      "Na"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B079",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Kaliémie",
+    "kind": "acte",
+    "lexique": [
+      "kaliémie",
+      "potassium",
+      "K"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B080",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Chlorémie",
+    "kind": "acte",
+    "lexique": [
+      "chlorémie",
+      "chlore",
+      "Cl"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B081",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Réserve alcaline (bicarbonates / CO2 total)",
+    "kind": "acte",
+    "lexique": [
+      "réserve alcaline",
+      "bicarbonates",
+      "CO2 total",
+      "HCO3"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B082",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Calcémie",
+    "kind": "acte",
+    "lexique": [
+      "calcémie",
+      "calcium",
+      "Ca"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B083",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Calcium ionisé",
+    "kind": "acte",
+    "lexique": [
+      "calcium ionisé",
+      "calcium libre"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B084",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Phosphorémie",
+    "kind": "acte",
+    "lexique": [
+      "phosphore",
+      "phosphorémie",
+      "phosphate",
+      "P"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B085",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Magnésémie",
+    "kind": "acte",
+    "lexique": [
+      "magnésémie",
+      "magnésium",
+      "Mg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B086",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "ASAT (TGO)",
+    "kind": "acte",
+    "lexique": [
+      "ASAT",
+      "SGOT",
+      "TGO",
+      "aspartate aminotransférase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B087",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "ALAT (TGP)",
+    "kind": "acte",
+    "lexique": [
+      "ALAT",
+      "SGPT",
+      "TGP",
+      "alanine aminotransférase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B088",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Gamma-GT (GGT)",
+    "kind": "acte",
+    "lexique": [
+      "GGT",
+      "gamma GT",
+      "gamma-glutamyl transférase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B089",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Phosphatases alcalines (PAL)",
+    "kind": "acte",
+    "lexique": [
+      "PAL",
+      "phosphatase alcaline",
+      "ALP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B090",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "5'-nucléotidase",
+    "kind": "acte",
+    "lexique": [
+      "5 nucléotidase",
+      "5'-nucléotidase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B091",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Bilirubine totale",
+    "kind": "acte",
+    "lexique": [
+      "bilirubine totale",
+      "BT"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B092",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Bilirubine conjuguée (directe)",
+    "kind": "acte",
+    "lexique": [
+      "bilirubine conjuguée",
+      "bilirubine directe",
+      "BD"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B093",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Ammoniémie",
+    "kind": "acte",
+    "lexique": [
+      "ammoniémie",
+      "ammoniac",
+      "NH3"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B094",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Protéines totales (protidémie)",
+    "kind": "acte",
+    "lexique": [
+      "protidémie",
+      "protéines totales",
+      "protéine",
+      "protides"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B095",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Albuminémie",
+    "kind": "acte",
+    "lexique": [
+      "albumine",
+      "albuminémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B096",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Préalbumine",
+    "kind": "acte",
+    "lexique": [
+      "préalbumine",
+      "transthyrétine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B097",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Électrophorèse des protéines sériques (EPP)",
+    "kind": "acte",
+    "lexique": [
+      "électrophorèse des protéines",
+      "EPP",
+      "protidogramme",
+      "protéinogramme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B098",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Immunofixation des protéines sériques",
+    "kind": "acte",
+    "lexique": [
+      "immunofixation",
+      "IEPP",
+      "pic monoclonal"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B099",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Bêta-2-microglobuline",
+    "kind": "acte",
+    "lexique": [
+      "beta-2-microglobuline",
+      "B2M"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B100",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Céruloplasmine",
+    "kind": "acte",
+    "lexique": [
+      "céruloplasmine",
+      "Wilson"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B101",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "CRP (protéine C réactive)",
+    "kind": "acte",
+    "lexique": [
+      "CRP",
+      "protéine C réactive"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B102",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "CRP ultrasensible",
+    "kind": "acte",
+    "lexique": [
+      "CRP ultrasensible",
+      "CRPus",
+      "hs-CRP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B103",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Procalcitonine (PCT)",
+    "kind": "acte",
+    "lexique": [
+      "procalcitonine",
+      "PCT"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B104",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Cholestérol total",
+    "kind": "acte",
+    "lexique": [
+      "cholestérol total",
+      "cholestérol"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B105",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "HDL-cholestérol",
+    "kind": "acte",
+    "lexique": [
+      "HDL",
+      "cholestérol HDL"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B106",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "LDL-cholestérol",
+    "kind": "acte",
+    "lexique": [
+      "LDL",
+      "cholestérol LDL"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B107",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Triglycérides",
+    "kind": "acte",
+    "lexique": [
+      "triglycérides",
+      "TG"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B108",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Apolipoprotéine A1",
+    "kind": "acte",
+    "lexique": [
+      "apolipoprotéine A1",
+      "ApoA1"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B109",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Apolipoprotéine B",
+    "kind": "acte",
+    "lexique": [
+      "apolipoprotéine B",
+      "ApoB"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B110",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Lipoprotéine (a)",
+    "kind": "acte",
+    "lexique": [
+      "lipoprotéine a",
+      "Lp(a)",
+      "Lpa"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B111",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Amylasémie",
+    "kind": "acte",
+    "lexique": [
+      "amylase",
+      "amylasémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B112",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Lipase",
+    "kind": "acte",
+    "lexique": [
+      "lipase",
+      "lipasémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B113",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "LDH (lactate déshydrogénase)",
+    "kind": "acte",
+    "lexique": [
+      "LDH",
+      "lactate déshydrogénase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B114",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Aldolase",
+    "kind": "acte",
+    "lexique": [
+      "aldolase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B115",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Cholinestérases",
+    "kind": "acte",
+    "lexique": [
+      "cholinestérase",
+      "pseudocholinestérase",
+      "butyrylcholinestérase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B116",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Homocystéine",
+    "kind": "acte",
+    "lexique": [
+      "homocystéine",
+      "homocysteine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B117",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Osmolalité plasmatique",
+    "kind": "acte",
+    "lexique": [
+      "osmolalité",
+      "osmolarité plasmatique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B118",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "FibroTest-ActiTest",
+    "kind": "acte",
+    "lexique": [
+      "fibrotest",
+      "actitest",
+      "fibrose hépatique non invasive"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B119",
+    "pillar": "bio",
+    "type": "Biochimie & ionogramme",
+    "name": "Chimie des liquides (LCR, ascite, pleural)",
+    "kind": "acte",
+    "lexique": [
+      "chimie LCR",
+      "glycorachie",
+      "protéinorachie",
+      "biochimie liquide de ponction"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B120",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Bandelette urinaire",
+    "kind": "acte",
+    "lexique": [
+      "bandelette urinaire",
+      "BU",
+      "dipstick",
+      "albumine sucre",
+      "bandelettes alb sucre"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B121",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Protéinurie des 24 h",
+    "kind": "acte",
+    "lexique": [
+      "Pu 24h",
+      "protéinurie 24h",
+      "protéinurie des 24 heures",
+      "pu 24 h"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B122",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Microalbuminurie",
+    "kind": "acte",
+    "lexique": [
+      "microalbuminurie",
+      "albuminurie",
+      "micro-albumine urinaire",
+      "micro albuminurie albuminurie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B123",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Rapport protéinurie / créatininurie (RPC)",
+    "kind": "acte",
+    "lexique": [
+      "RPC",
+      "rapport protéinurie créatininurie",
+      "ratio albumine créatinine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B124",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Ionogramme urinaire",
+    "kind": "acte",
+    "lexique": [
+      "ionogramme urinaire",
+      "iono urines",
+      "Na K urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B125",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Urée urinaire",
+    "kind": "acte",
+    "lexique": [
+      "urée urinaire",
+      "urée des urines"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B126",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Créatininurie",
+    "kind": "acte",
+    "lexique": [
+      "créatininurie",
+      "créatinine urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B127",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Calciurie",
+    "kind": "acte",
+    "lexique": [
+      "calciurie",
+      "calcium urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B128",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Phosphaturie",
+    "kind": "acte",
+    "lexique": [
+      "phosphaturie",
+      "phosphore urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B129",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Uricurie (acide urique urinaire)",
+    "kind": "acte",
+    "lexique": [
+      "uricurie",
+      "acide urique urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B130",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Oxalurie",
+    "kind": "acte",
+    "lexique": [
+      "oxalurie",
+      "oxaturie",
+      "oxalate urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B131",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Glycosurie",
+    "kind": "acte",
+    "lexique": [
+      "glycosurie",
+      "glucose urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B132",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Culot urinaire (sédiment)",
+    "kind": "acte",
+    "lexique": [
+      "culot urinaire",
+      "sédiment urinaire",
+      "culot urinaire sediment urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B133",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Compte d'Addis (HLM)",
+    "kind": "acte",
+    "lexique": [
+      "HLM",
+      "compte d'Addis",
+      "hématies leucocytes minute",
+      "hlm compte d addis"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B134",
+    "pillar": "bio",
+    "type": "Explorations urinaires",
+    "name": "Protéinurie de Bence-Jones",
+    "kind": "acte",
+    "lexique": [
+      "Bence-Jones",
+      "chaînes légères urinaires",
+      "protéinurie de surcharge"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B135",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine A (rétinol)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine A",
+      "rétinol"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B136",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine B1 (thiamine)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine B1",
+      "thiamine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B137",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine B6 (pyridoxine)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine B6",
+      "pyridoxine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B138",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine B9 (folates)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine B9",
+      "folates",
+      "acide folique",
+      "folate",
+      "vitamine b9 folate"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B139",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine B12 (cobalamine)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine B12",
+      "cobalamine",
+      "B12"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B140",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine C (acide ascorbique)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine C",
+      "acide ascorbique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B141",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine D (25-OH)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine D",
+      "25 OH vitamine D",
+      "25-hydroxyvitamine D",
+      "calcidiol",
+      "vitamine d 25 oh vit d"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B142",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "1,25-OH vitamine D (calcitriol)",
+    "kind": "acte",
+    "lexique": [
+      "1,25 OH vitamine D",
+      "calcitriol",
+      "vitamine D active"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B143",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine E (tocophérol)",
+    "kind": "acte",
+    "lexique": [
+      "vitamine E",
+      "tocophérol"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B144",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Vitamine K",
+    "kind": "acte",
+    "lexique": [
+      "vitamine K",
+      "phylloquinone"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B145",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Zinc (zincémie)",
+    "kind": "acte",
+    "lexique": [
+      "zinc",
+      "zincémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B146",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Cuivre (cuprémie)",
+    "kind": "acte",
+    "lexique": [
+      "cuivre",
+      "cuprémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B147",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Sélénium",
+    "kind": "acte",
+    "lexique": [
+      "sélénium",
+      "sélénémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B148",
+    "pillar": "bio",
+    "type": "Vitamines & oligo-éléments",
+    "name": "Iodurie",
+    "kind": "acte",
+    "lexique": [
+      "iodurie",
+      "iode urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B149",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "Troponine",
+    "kind": "acte",
+    "lexique": [
+      "troponine",
+      "Tnc",
+      "troponine T",
+      "troponine I"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B150",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "Troponine ultrasensible",
+    "kind": "acte",
+    "lexique": [
+      "troponine ultrasensible",
+      "troponine US",
+      "hs-troponine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B151",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "Myoglobine",
+    "kind": "acte",
+    "lexique": [
+      "myoglobine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B152",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "CPK (créatine phosphokinase)",
+    "kind": "acte",
+    "lexique": [
+      "CPK",
+      "CK",
+      "créatine kinase"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B153",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "CPK-MB",
+    "kind": "acte",
+    "lexique": [
+      "CPK-MB",
+      "CK-MB"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B154",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "BNP",
+    "kind": "acte",
+    "lexique": [
+      "BNP",
+      "peptide natriurétique B"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B155",
+    "pillar": "bio",
+    "type": "Marqueurs cardiaques",
+    "name": "NT-proBNP",
+    "kind": "acte",
+    "lexique": [
+      "NT proBNP",
+      "NTproBNP",
+      "peptide natriurétique",
+      "nt pro bnp"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B156",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "TSH ultrasensible",
+    "kind": "acte",
+    "lexique": [
+      "TSH",
+      "TSHus",
+      "thyréostimuline"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B157",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "T4 libre (FT4)",
+    "kind": "acte",
+    "lexique": [
+      "T4",
+      "FT4",
+      "T4 libre",
+      "thyroxine libre"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B158",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "T3 libre (FT3)",
+    "kind": "acte",
+    "lexique": [
+      "T3",
+      "FT3",
+      "T3 libre",
+      "triiodothyronine libre"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B159",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "T4 totale",
+    "kind": "acte",
+    "lexique": [
+      "T4 totale",
+      "thyroxine totale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B160",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "T3 totale",
+    "kind": "acte",
+    "lexique": [
+      "T3 totale",
+      "triiodothyronine totale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B161",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Thyroglobuline",
+    "kind": "acte",
+    "lexique": [
+      "thyroglobuline",
+      "Tg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B162",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Calcitonine",
+    "kind": "acte",
+    "lexique": [
+      "calcitonine",
+      "thyrocalcitonine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B163",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Parathormone (PTH intacte)",
+    "kind": "acte",
+    "lexique": [
+      "PTH",
+      "parathormone",
+      "PTHi",
+      "pthi parathormone"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B164",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Cortisolémie (8h)",
+    "kind": "acte",
+    "lexique": [
+      "cortisol",
+      "cortisolémie",
+      "cortisol 8h"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B165",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Cycle du cortisol",
+    "kind": "acte",
+    "lexique": [
+      "cycle du cortisol",
+      "cortisol 8h 16h minuit"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B166",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Cortisol libre urinaire (CLU)",
+    "kind": "acte",
+    "lexique": [
+      "cortisol urinaire",
+      "CLU",
+      "cortisol libre urinaire",
+      "cortisol urines"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B167",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "ACTH",
+    "kind": "acte",
+    "lexique": [
+      "ACTH",
+      "corticotrophine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B168",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Aldostérone",
+    "kind": "acte",
+    "lexique": [
+      "aldostérone"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B169",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Rénine (activité rénine plasmatique)",
+    "kind": "acte",
+    "lexique": [
+      "rénine",
+      "activité rénine plasmatique",
+      "ARP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B170",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Rapport aldostérone / rénine",
+    "kind": "acte",
+    "lexique": [
+      "rapport aldostérone rénine",
+      "ARR"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B171",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Métanéphrines plasmatiques",
+    "kind": "acte",
+    "lexique": [
+      "métanéphrines plasmatiques",
+      "normétanéphrine plasmatique",
+      "phéochromocytome",
+      "metanephrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B172",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Métanéphrines urinaires",
+    "kind": "acte",
+    "lexique": [
+      "métanéphrines urinaires",
+      "dérivés méthoxylés urinaires",
+      "phéochromocytome"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B173",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Catécholamines",
+    "kind": "acte",
+    "lexique": [
+      "catécholamines",
+      "adrénaline noradrénaline dopamine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B174",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "17-OH-progestérone",
+    "kind": "acte",
+    "lexique": [
+      "17 OH progestérone",
+      "17OHP",
+      "bloc enzymatique surrénalien"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B175",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Delta-4-androstènedione",
+    "kind": "acte",
+    "lexique": [
+      "delta 4 androstènedione",
+      "androstènedione"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B176",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "SDHEA (sulfate de DHEA)",
+    "kind": "acte",
+    "lexique": [
+      "SDHEA",
+      "sulfate de DHEA",
+      "DHEAS"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B177",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "DHEA",
+    "kind": "acte",
+    "lexique": [
+      "DHEA",
+      "déhydroépiandrostérone"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B178",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Test au Synacthène (dynamique)",
+    "kind": "acte",
+    "lexique": [
+      "test au synacthène",
+      "synacthène",
+      "stimulation ACTH"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B179",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "FSH",
+    "kind": "acte",
+    "lexique": [
+      "FSH",
+      "hormone folliculo-stimulante"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B180",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "LH",
+    "kind": "acte",
+    "lexique": [
+      "LH",
+      "hormone lutéinisante"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B181",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Prolactine",
+    "kind": "acte",
+    "lexique": [
+      "prolactine",
+      "PRL"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B182",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Œstradiol (E2)",
+    "kind": "acte",
+    "lexique": [
+      "oestradiol",
+      "estradiol",
+      "E2"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B183",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Progestérone",
+    "kind": "acte",
+    "lexique": [
+      "progestérone"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B184",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Testostérone totale",
+    "kind": "acte",
+    "lexique": [
+      "testostérone",
+      "testostérone totale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B185",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Testostérone biodisponible / libre",
+    "kind": "acte",
+    "lexique": [
+      "testostérone biodisponible",
+      "testostérone libre"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B186",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "SHBG",
+    "kind": "acte",
+    "lexique": [
+      "SHBG",
+      "protéine de transport des hormones sexuelles"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B187",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Hormone anti-müllérienne (AMH)",
+    "kind": "acte",
+    "lexique": [
+      "AMH",
+      "hormone anti-mullérienne",
+      "amh hormone anti mullerienne"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B188",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Inhibine B",
+    "kind": "acte",
+    "lexique": [
+      "inhibine B"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B189",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Hormone de croissance (GH)",
+    "kind": "acte",
+    "lexique": [
+      "GH",
+      "hormone de croissance",
+      "somatotropine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B190",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "IGF-1 (somatomédine C)",
+    "kind": "acte",
+    "lexique": [
+      "IGF1",
+      "IGF-1",
+      "somatomédine C"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B191",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Glucagon",
+    "kind": "acte",
+    "lexique": [
+      "glucagon"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B192",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Gastrine",
+    "kind": "acte",
+    "lexique": [
+      "gastrine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B193",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Érythropoïétine (EPO)",
+    "kind": "acte",
+    "lexique": [
+      "EPO",
+      "érythropoïétine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B194",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Chromogranine A",
+    "kind": "acte",
+    "lexique": [
+      "chromogranine A",
+      "CgA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B195",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "CrossLaps (CTX) / marqueurs du remodelage osseux",
+    "kind": "acte",
+    "lexique": [
+      "crosslaps",
+      "CTX",
+      "télopeptide",
+      "remodelage osseux"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B196",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Ostéocalcine",
+    "kind": "acte",
+    "lexique": [
+      "ostéocalcine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B197",
+    "pillar": "bio",
+    "type": "Endocrinologie & hormonologie",
+    "name": "Sérotonine plasmatique",
+    "kind": "acte",
+    "lexique": [
+      "sérotonine",
+      "5-HT"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B198",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Spermogramme",
+    "kind": "acte",
+    "lexique": [
+      "spermogramme",
+      "sperme numération mobilité"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B199",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Spermocytogramme",
+    "kind": "acte",
+    "lexique": [
+      "spermocytogramme",
+      "morphologie des spermatozoïdes"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B200",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Test de migration-survie (TMS)",
+    "kind": "acte",
+    "lexique": [
+      "TMS",
+      "test de migration survie",
+      "capacitation"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B201",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Spermoculture",
+    "kind": "acte",
+    "lexique": [
+      "spermoculture",
+      "culture du sperme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B202",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Biochimie du sperme (fructose, zinc, carnitine)",
+    "kind": "acte",
+    "lexique": [
+      "biochimie du sperme",
+      "fructose séminal",
+      "zinc séminal",
+      "carnitine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B203",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Test post-coïtal (Hühner)",
+    "kind": "acte",
+    "lexique": [
+      "test post-coïtal",
+      "Hühner",
+      "test de Huhner"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B204",
+    "pillar": "bio",
+    "type": "Fertilité & spermiologie",
+    "name": "Anticorps anti-spermatozoïdes (MAR test)",
+    "kind": "acte",
+    "lexique": [
+      "anticorps anti-spermatozoïdes",
+      "MAR test"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B205",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "PSA total",
+    "kind": "acte",
+    "lexique": [
+      "PSAt",
+      "PSA total",
+      "antigène prostatique spécifique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B206",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "PSA libre + rapport libre/total",
+    "kind": "acte",
+    "lexique": [
+      "PSA libre",
+      "rapport PSA libre total",
+      "PSA ratio"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B207",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "ACE (antigène carcino-embryonnaire / CEA)",
+    "kind": "acte",
+    "lexique": [
+      "ACE",
+      "CEA",
+      "antigène carcino-embryonnaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B208",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "Alpha-fœtoprotéine (AFP)",
+    "kind": "acte",
+    "lexique": [
+      "AFP",
+      "alpha foetoprotéine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B209",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "Bêta-HCG (quantitatif)",
+    "kind": "acte",
+    "lexique": [
+      "beta HCG",
+      "βHCG",
+      "HCG",
+      "gonadotrophine chorionique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B210",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "CA 125",
+    "kind": "acte",
+    "lexique": [
+      "CA125",
+      "CA 125",
+      "marqueur ovarien"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B211",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "CA 15-3",
+    "kind": "acte",
+    "lexique": [
+      "CA15-3",
+      "marqueur sein"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B212",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "CA 19-9",
+    "kind": "acte",
+    "lexique": [
+      "CA19-9",
+      "marqueur digestif pancréas"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B213",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "CA 72-4",
+    "kind": "acte",
+    "lexique": [
+      "CA72-4",
+      "marqueur gastrique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B214",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "CYFRA 21-1",
+    "kind": "acte",
+    "lexique": [
+      "CYFRA 21-1",
+      "cytokératine 19"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B215",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "NSE (énolase neurospécifique)",
+    "kind": "acte",
+    "lexique": [
+      "NSE",
+      "énolase neurospécifique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B216",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "SCC (antigène du carcinome épidermoïde)",
+    "kind": "acte",
+    "lexique": [
+      "SCC",
+      "carcinome épidermoïde"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B217",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "HE4",
+    "kind": "acte",
+    "lexique": [
+      "HE4",
+      "human epididymis protein 4"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B218",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "ProGRP",
+    "kind": "acte",
+    "lexique": [
+      "ProGRP",
+      "pro-gastrin releasing peptide"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B219",
+    "pillar": "bio",
+    "type": "Marqueurs tumoraux",
+    "name": "S100",
+    "kind": "acte",
+    "lexique": [
+      "S100",
+      "protéine S100",
+      "mélanome"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B220",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Complément C3",
+    "kind": "acte",
+    "lexique": [
+      "complément C3",
+      "C3"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B221",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Complément C4",
+    "kind": "acte",
+    "lexique": [
+      "complément C4",
+      "C4"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B222",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "CH50 (complément total)",
+    "kind": "acte",
+    "lexique": [
+      "CH50",
+      "complément hémolytique 50",
+      "complément total"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B223",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Facteur rhumatoïde (latex)",
+    "kind": "acte",
+    "lexique": [
+      "facteur rhumatoïde",
+      "FR",
+      "latex",
+      "RF"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B224",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Réaction de Waaler-Rose",
+    "kind": "acte",
+    "lexique": [
+      "Waaler Rose",
+      "Waler Rose",
+      "latex waaler rose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B225",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-CCP",
+    "kind": "acte",
+    "lexique": [
+      "anti CCP",
+      "anti-peptide citrulliné",
+      "ACPA",
+      "ac anti ccp"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B226",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-nucléaires (AAN/FAN)",
+    "kind": "acte",
+    "lexique": [
+      "anti nucléaire",
+      "AAN",
+      "ANA",
+      "FAN",
+      "ac anti nucleaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B227",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-ADN natif (anti-dsDNA)",
+    "kind": "acte",
+    "lexique": [
+      "anti DNA natif",
+      "anti dsDNA",
+      "anti-ADN double brin",
+      "ac anti adn",
+      "ac anti dna natif"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B228",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-ENA (anti-ECT)",
+    "kind": "acte",
+    "lexique": [
+      "anti ECT",
+      "ENA",
+      "anti-Sm RNP SSA SSB Scl70 Jo1",
+      "ac anti ect"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B229",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-nucléosomes",
+    "kind": "acte",
+    "lexique": [
+      "anti nucléosome"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B230",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "ANCA (p-ANCA/MPO, c-ANCA/PR3)",
+    "kind": "acte",
+    "lexique": [
+      "ANCA",
+      "p-ANCA",
+      "c-ANCA",
+      "MPO",
+      "PR3",
+      "vascularite"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B231",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps antiphospholipides (bilan SAPL)",
+    "kind": "acte",
+    "lexique": [
+      "anti phospholipides",
+      "antiphospholipides",
+      "APL",
+      "aPL",
+      "syndrome des antiphospholipides",
+      "SAPL",
+      "ac anti phospholipides"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B232",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticardiolipines IgG",
+    "kind": "acte",
+    "lexique": [
+      "anticardiolipine IgG",
+      "aCL IgG"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B233",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticardiolipines IgM",
+    "kind": "acte",
+    "lexique": [
+      "anticardiolipine IgM",
+      "aCL IgM"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B234",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-β2-glycoprotéine 1 IgG",
+    "kind": "acte",
+    "lexique": [
+      "anti beta2GP1 IgG",
+      "anti-β2GP1 IgG",
+      "beta 2 glycoprotéine IgG"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B235",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-β2-glycoprotéine 1 IgM",
+    "kind": "acte",
+    "lexique": [
+      "anti beta2GP1 IgM",
+      "anti-β2GP1 IgM",
+      "beta 2 glycoprotéine IgM"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B236",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-muscle lisse (AML)",
+    "kind": "acte",
+    "lexique": [
+      "anti muscle lisse",
+      "ASMA",
+      "anti-actine",
+      "ac anti muscle lisse"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B237",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-mitochondries (AMA)",
+    "kind": "acte",
+    "lexique": [
+      "anti mitochondrie",
+      "AMA",
+      "M2",
+      "ac anti mitochondrie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B238",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-LKM1",
+    "kind": "acte",
+    "lexique": [
+      "anti LKM",
+      "LKM1"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B239",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-gp210 (CP210)",
+    "kind": "acte",
+    "lexique": [
+      "anti gp210",
+      "CP210",
+      "ac anti cp 210"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B240",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-SLA",
+    "kind": "acte",
+    "lexique": [
+      "anti SLA",
+      "soluble liver antigen"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B241",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-PLA2R",
+    "kind": "acte",
+    "lexique": [
+      "anti PLA2R",
+      "phospholipase A2 récepteur",
+      "ac anti pla 2r"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B242",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-membrane basale glomérulaire",
+    "kind": "acte",
+    "lexique": [
+      "anti membrane basale",
+      "anti-MBG",
+      "Goodpasture",
+      "anti-GBM",
+      "ac anti membrane basale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B243",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-récepteur de l'acétylcholine (RACh)",
+    "kind": "acte",
+    "lexique": [
+      "anti récepteur acétylcholine",
+      "anti-RACh",
+      "RATH",
+      "myasthénie",
+      "rath anticorps anti recepteur de l acethyle choline"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B244",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-MuSK",
+    "kind": "acte",
+    "lexique": [
+      "anti MuSK",
+      "myasthénie MuSK",
+      "ac anti musk"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B245",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-transglutaminase (IgA)",
+    "kind": "acte",
+    "lexique": [
+      "anti transglutaminase",
+      "tTG",
+      "cœliaque"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B246",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-endomysium (EMA)",
+    "kind": "acte",
+    "lexique": [
+      "anti endomysium",
+      "EMA",
+      "ac anti endomysium"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B247",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-gliadine déamidée",
+    "kind": "acte",
+    "lexique": [
+      "anti gliadine déamidée",
+      "DGP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B248",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-facteur intrinsèque",
+    "kind": "acte",
+    "lexique": [
+      "anti facteur intrinsèque",
+      "Biermer",
+      "ac anti facteur intrinseque",
+      "facteur intrinseque"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B249",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-TPO",
+    "kind": "acte",
+    "lexique": [
+      "anti TPO",
+      "anti-thyroperoxydase",
+      "ATPO",
+      "TPO"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B250",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-thyroglobuline",
+    "kind": "acte",
+    "lexique": [
+      "anti thyroglobuline",
+      "anti Tg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B251",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-récepteurs de la TSH (TRAK)",
+    "kind": "acte",
+    "lexique": [
+      "anti récepteur TSH",
+      "TRAK",
+      "TRAb",
+      "Basedow",
+      "anticorps anti recepteur de la tsh"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B252",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-GAD",
+    "kind": "acte",
+    "lexique": [
+      "anti GAD",
+      "GAD65",
+      "diabète auto-immun"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B253",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-IA2",
+    "kind": "acte",
+    "lexique": [
+      "anti IA2"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B254",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-îlots (ICA)",
+    "kind": "acte",
+    "lexique": [
+      "anti îlots",
+      "ICA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B255",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-insuline",
+    "kind": "acte",
+    "lexique": [
+      "anti insuline",
+      "IAA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B256",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-substance intercellulaire",
+    "kind": "acte",
+    "lexique": [
+      "anti substance intercellulaire",
+      "desmogléine",
+      "pemphigus",
+      "ac anti substance intra cellulaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B257",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Anticorps anti-membrane basale cutanée (BP180/BP230)",
+    "kind": "acte",
+    "lexique": [
+      "anti BP180",
+      "BP230",
+      "pemphigoïde"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B258",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Dosage des IgG",
+    "kind": "acte",
+    "lexique": [
+      "IgG",
+      "immunoglobuline G",
+      "gammaglobulines G"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B259",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Dosage des IgA",
+    "kind": "acte",
+    "lexique": [
+      "IgA",
+      "immunoglobuline A"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B260",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Dosage des IgM",
+    "kind": "acte",
+    "lexique": [
+      "IgM",
+      "immunoglobuline M"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B261",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Sous-classes d'IgG",
+    "kind": "acte",
+    "lexique": [
+      "sous-classes IgG",
+      "IgG1 IgG2 IgG3 IgG4"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B262",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "IgG4",
+    "kind": "acte",
+    "lexique": [
+      "IgG4",
+      "maladie à IgG4"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B263",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Cryoglobulines",
+    "kind": "acte",
+    "lexique": [
+      "cryoglobuline",
+      "cryoglobulinémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B264",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "HLA-B27",
+    "kind": "acte",
+    "lexique": [
+      "HLA B27",
+      "spondylarthrite"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B265",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "QuantiFERON-TB (IGRA)",
+    "kind": "acte",
+    "lexique": [
+      "quantiferon",
+      "IGRA",
+      "TB gold",
+      "tuberculose interféron"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B266",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "IDR à la tuberculine (IDRt)",
+    "kind": "acte",
+    "lexique": [
+      "IDR",
+      "intradermoréaction",
+      "tuberculine",
+      "Mantoux",
+      "idrt"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B267",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "IgE totales sériques",
+    "kind": "acte",
+    "lexique": [
+      "IgE totales",
+      "IgE sérum",
+      "IgE total"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B268",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "IgE spécifiques (allergène unique)",
+    "kind": "acte",
+    "lexique": [
+      "IgE spécifique",
+      "RAST",
+      "allergène unique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B269",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "IgE spécifiques — protéines de lait de vache",
+    "kind": "acte",
+    "lexique": [
+      "IgE lait de vache",
+      "APLV",
+      "ige serique specifique proteine lait de vache"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B270",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "Tryptase",
+    "kind": "acte",
+    "lexique": [
+      "tryptase",
+      "mastocytose",
+      "anaphylaxie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B271",
+    "pillar": "bio",
+    "type": "Immunologie, auto-immunité & allergologie",
+    "name": "ECP (protéine cationique des éosinophiles)",
+    "kind": "acte",
+    "lexique": [
+      "ECP",
+      "protéine cationique éosinophiles"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B272",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie VIH (Ag/Ac)",
+    "kind": "acte",
+    "lexique": [
+      "VIH",
+      "HIV",
+      "sérologie VIH",
+      "Ag/Ac VIH",
+      "PTME",
+      "hiv ptme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B273",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Confirmation VIH (Western blot)",
+    "kind": "acte",
+    "lexique": [
+      "western blot VIH",
+      "confirmation VIH"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B274",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Antigène HBs",
+    "kind": "acte",
+    "lexique": [
+      "antigène HBs",
+      "AgHBs",
+      "HBsAg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B275",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-HBs",
+    "kind": "acte",
+    "lexique": [
+      "anti HBs",
+      "immunité hépatite B",
+      "ac anti hbs"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B276",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Antigène HBe",
+    "kind": "acte",
+    "lexique": [
+      "Ag HBe",
+      "AgHBe",
+      "HBeAg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B277",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-HBe",
+    "kind": "acte",
+    "lexique": [
+      "anti HBe",
+      "ac anti hbe"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B278",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-HBc totaux",
+    "kind": "acte",
+    "lexique": [
+      "anti HBc totaux",
+      "HBc total",
+      "ac anti hbc totaux"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B279",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-HBc IgM",
+    "kind": "acte",
+    "lexique": [
+      "anti HBc IgM",
+      "ac anti hbc igm"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B280",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-HBc IgG",
+    "kind": "acte",
+    "lexique": [
+      "anti HBc IgG",
+      "ac anti hbc igg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B281",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-VHC",
+    "kind": "acte",
+    "lexique": [
+      "anti VHC",
+      "hépatite C sérologie",
+      "HCV Ab",
+      "ac anti vhc",
+      "ac anticorps anti vhc"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B282",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-VHA IgM",
+    "kind": "acte",
+    "lexique": [
+      "VHA IgM",
+      "hépatite A IgM",
+      "serologie vha igm"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B283",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-VHA IgG",
+    "kind": "acte",
+    "lexique": [
+      "VHA IgG",
+      "hépatite A IgG",
+      "serologie vha igg"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B284",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-VHD (delta)",
+    "kind": "acte",
+    "lexique": [
+      "anti VHD",
+      "hépatite delta",
+      "ac anticorps anti vhd"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B285",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Anticorps anti-VHE",
+    "kind": "acte",
+    "lexique": [
+      "anti VHE",
+      "hépatite E"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B286",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie toxoplasmose (IgG + IgM)",
+    "kind": "acte",
+    "lexique": [
+      "toxo IgG IgM",
+      "toxoplasmose",
+      "toxoplasma",
+      "toxo igg et igm"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B287",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Avidité toxoplasmose",
+    "kind": "acte",
+    "lexique": [
+      "avidité toxoplasmose",
+      "avidité IgG toxo"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B288",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie rubéole (IgG + IgM)",
+    "kind": "acte",
+    "lexique": [
+      "rubéole IgG IgM",
+      "rubella",
+      "rubeole igg et igm"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B289",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie CMV (IgG/IgM)",
+    "kind": "acte",
+    "lexique": [
+      "CMV",
+      "cytomégalovirus"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B290",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Avidité CMV",
+    "kind": "acte",
+    "lexique": [
+      "avidité CMV",
+      "avidité IgG CMV"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B291",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie HSV1/HSV2",
+    "kind": "acte",
+    "lexique": [
+      "herpès",
+      "HSV",
+      "HSV1 HSV2",
+      "herpes simplex",
+      "hsv1 et hsv2"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B292",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie VZV (varicelle-zona)",
+    "kind": "acte",
+    "lexique": [
+      "VZV",
+      "varicelle",
+      "zona"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B293",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie parvovirus B19",
+    "kind": "acte",
+    "lexique": [
+      "parvovirus B19",
+      "B19"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B294",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie EBV (MNI, VCA, EBNA)",
+    "kind": "acte",
+    "lexique": [
+      "EBV",
+      "MNI test",
+      "mononucléose",
+      "VCA EBNA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B295",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie rougeole",
+    "kind": "acte",
+    "lexique": [
+      "rougeole",
+      "measles",
+      "morbillivirus",
+      "rugeole"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B296",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie oreillons",
+    "kind": "acte",
+    "lexique": [
+      "oreillons",
+      "mumps"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B297",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie dengue (NS1, IgM, IgG)",
+    "kind": "acte",
+    "lexique": [
+      "dengue",
+      "NS1",
+      "dengue IgM IgG"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B298",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie chikungunya (IgM/IgG)",
+    "kind": "acte",
+    "lexique": [
+      "chikungunya"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B299",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie SARS-CoV-2",
+    "kind": "acte",
+    "lexique": [
+      "sérologie covid",
+      "SARS-CoV-2 sérologie",
+      "anticorps covid"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B300",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérodiagnostic de Widal et Félix",
+    "kind": "acte",
+    "lexique": [
+      "Widal",
+      "Widal Félix",
+      "salmonella",
+      "TO TH"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B301",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie syphilis (TPHA-VDRL/RPR, BW)",
+    "kind": "acte",
+    "lexique": [
+      "TPHA RPR",
+      "BW",
+      "TPHA VDRL",
+      "syphilis",
+      "tpha rpr bw"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B302",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "ASLO (antistreptolysines O)",
+    "kind": "acte",
+    "lexique": [
+      "ASLO",
+      "antistreptolysine",
+      "ASO"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B303",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Antistreptodornase (ASD)",
+    "kind": "acte",
+    "lexique": [
+      "ASDOR",
+      "antistreptodornase",
+      "ASD"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B304",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie Chlamydia",
+    "kind": "acte",
+    "lexique": [
+      "sérologie chlamydiae",
+      "anticorps chlamydia"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B305",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie Mycoplasme",
+    "kind": "acte",
+    "lexique": [
+      "sérologie mycoplasme",
+      "anticorps mycoplasma"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B306",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie brucellose (Wright)",
+    "kind": "acte",
+    "lexique": [
+      "brucellose",
+      "Wright",
+      "brucella"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B307",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie leptospirose",
+    "kind": "acte",
+    "lexique": [
+      "leptospirose",
+      "leptospira"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B308",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie borréliose (Lyme)",
+    "kind": "acte",
+    "lexique": [
+      "Lyme",
+      "borréliose",
+      "Borrelia"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B309",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie coqueluche",
+    "kind": "acte",
+    "lexique": [
+      "coqueluche",
+      "Bordetella"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B310",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie légionelle",
+    "kind": "acte",
+    "lexique": [
+      "légionelle",
+      "Legionella"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B311",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie bilharziose",
+    "kind": "acte",
+    "lexique": [
+      "sérologie bilharziose",
+      "schistosomiase sérologie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B312",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie amibiase",
+    "kind": "acte",
+    "lexique": [
+      "sérologie amibienne",
+      "amibiase",
+      "entamoeba"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B313",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie hydatidose",
+    "kind": "acte",
+    "lexique": [
+      "hydatidose",
+      "échinococcose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B314",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Sérologie aspergillaire",
+    "kind": "acte",
+    "lexique": [
+      "sérologie aspergillaire",
+      "aspergillose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B315",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Antigène cryptocoque",
+    "kind": "acte",
+    "lexique": [
+      "antigène cryptocoque",
+      "cryptococcose Ag"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B316",
+    "pillar": "bio",
+    "type": "Sérologie & virologie",
+    "name": "Antigène galactomannane (aspergillus)",
+    "kind": "acte",
+    "lexique": [
+      "galactomannane",
+      "aspergillus Ag"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B317",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "ECBU + antibiogramme",
+    "kind": "acte",
+    "lexique": [
+      "ECBU",
+      "examen cytobactériologique des urines",
+      "uroculture + antibiogramme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B318",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Hémoculture",
+    "kind": "acte",
+    "lexique": [
+      "hémoculture",
+      "blood culture"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B319",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Coproculture",
+    "kind": "acte",
+    "lexique": [
+      "coproculture",
+      "culture des selles"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B320",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "ECBC (expectorations)",
+    "kind": "acte",
+    "lexique": [
+      "ECBC",
+      "examen cytobactériologique des crachats",
+      "expectorations"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B321",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Recherche de BAAR (Ziehl)",
+    "kind": "acte",
+    "lexique": [
+      "crachat BAAR",
+      "BK crachats",
+      "Ziehl",
+      "bacille acido-alcoolo-résistant",
+      "crachat barr"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B322",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Culture de mycobactéries (Löwenstein)",
+    "kind": "acte",
+    "lexique": [
+      "culture mycobactérie",
+      "Löwenstein",
+      "BK culture"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B323",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Prélèvement de pus + culture",
+    "kind": "acte",
+    "lexique": [
+      "prélèvement de pus",
+      "pus culture",
+      "plaie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B324",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Prélèvement de gorge + culture",
+    "kind": "acte",
+    "lexique": [
+      "prélèvement de gorge",
+      "gorge culture",
+      "angine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B325",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Prélèvement nasal / portage SARM",
+    "kind": "acte",
+    "lexique": [
+      "prélèvement nasal",
+      "portage SARM",
+      "écouvillon nasal"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B326",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Prélèvement vaginal (PV) + culture",
+    "kind": "acte",
+    "lexique": [
+      "PV",
+      "prélèvement vaginal",
+      "cervico-vaginal",
+      "pv chlam myco"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B327",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Prélèvement endocervical",
+    "kind": "acte",
+    "lexique": [
+      "prélèvement endocervical",
+      "col utérin"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B328",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Prélèvement urétral + culture",
+    "kind": "acte",
+    "lexique": [
+      "prélèvement urétral",
+      "urètre",
+      "écoulement urétral"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B329",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Écouvillonnage + ECB + antibiogramme",
+    "kind": "acte",
+    "lexique": [
+      "écouvillonnage ECB ATB",
+      "écouvillon culture antibiogramme",
+      "econvillonage ecb atb"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B330",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Culture de cathéter",
+    "kind": "acte",
+    "lexique": [
+      "culture cathéter",
+      "KT culture"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B331",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Cytobactériologie du LCR",
+    "kind": "acte",
+    "lexique": [
+      "cytobactério LCR",
+      "LCR",
+      "méningite",
+      "cytochimie bacterio du lcr"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B332",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Cytobactériologie du liquide pleural",
+    "kind": "acte",
+    "lexique": [
+      "liquide pleural",
+      "plèvre",
+      "cyto bacterio du liquide pleural"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B333",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Cytobactériologie du liquide d'ascite",
+    "kind": "acte",
+    "lexique": [
+      "liquide d'ascite",
+      "ascite",
+      "cytobacterio du liquide d ascite"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B334",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Cytobactériologie d'un liquide articulaire",
+    "kind": "acte",
+    "lexique": [
+      "liquide articulaire",
+      "synovie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B335",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Cytobactériologie d'un liquide de ponction",
+    "kind": "acte",
+    "lexique": [
+      "liquide de ponction",
+      "ponction",
+      "cyto bacterio du liquide de ponction"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B336",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Antibiogramme (seul)",
+    "kind": "acte",
+    "lexique": [
+      "antibiogramme",
+      "ATB"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B337",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Antigènes solubles urinaires (pneumocoque, légionelle)",
+    "kind": "acte",
+    "lexique": [
+      "antigène urinaire pneumocoque",
+      "antigène légionelle urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B338",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Antigène H. pylori dans les selles",
+    "kind": "acte",
+    "lexique": [
+      "H pylori selles",
+      "Helicobacter pylori antigène",
+      "HpSA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B339",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Test respiratoire à l'urée (H. pylori)",
+    "kind": "acte",
+    "lexique": [
+      "test respiratoire à l'urée",
+      "breath test",
+      "H pylori respiratoire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B340",
+    "pillar": "bio",
+    "type": "Bactériologie",
+    "name": "Recherche toxine Clostridioides difficile",
+    "kind": "acte",
+    "lexique": [
+      "clostridium difficile",
+      "toxine C difficile"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B341",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Examen parasitologique des selles (KAOP / EPS)",
+    "kind": "acte",
+    "lexique": [
+      "KAOP",
+      "EPS",
+      "examen parasitologique des selles",
+      "kystes amibes œufs parasites"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B342",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Goutte épaisse + frottis (paludisme)",
+    "kind": "acte",
+    "lexique": [
+      "goutte épaisse",
+      "GE frottis",
+      "paludisme",
+      "frottis paludisme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B343",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "TDR paludisme (antigène HRP2)",
+    "kind": "acte",
+    "lexique": [
+      "TDR palu",
+      "test rapide paludisme",
+      "HRP2"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B344",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de microfilaires (filariose)",
+    "kind": "acte",
+    "lexique": [
+      "microfilaires",
+      "filariose",
+      "filaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B345",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de Schistosoma (urines / selles)",
+    "kind": "acte",
+    "lexique": [
+      "schistosome",
+      "bilharziose urinaire",
+      "hématurie bilharzienne",
+      "recherche de schistosome dans les urines"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B346",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Confirmation bilharziose",
+    "kind": "acte",
+    "lexique": [
+      "confirmation bilharziose",
+      "schistosomiase confirmation"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B347",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Scotch-test anal (test de Graham)",
+    "kind": "acte",
+    "lexique": [
+      "scotch test",
+      "test de Graham",
+      "oxyure",
+      "scoth test"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B348",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de sang occulte dans les selles",
+    "kind": "acte",
+    "lexique": [
+      "hemocult",
+      "sang occulte selles",
+      "FOBT",
+      "hemocult recherche d hematies occultes dans les selles"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B349",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Examen mycologique (peau, ongles, cheveux)",
+    "kind": "acte",
+    "lexique": [
+      "examen mycologique",
+      "mycologie",
+      "dermatophyte",
+      "recherche de champignons"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B350",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de Candida",
+    "kind": "acte",
+    "lexique": [
+      "recherche candida",
+      "candidose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B351",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Prélèvement mycologique",
+    "kind": "acte",
+    "lexique": [
+      "prélèvement mycologique",
+      "myco prélèvement"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B352",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de Cryptococcus (encre de Chine)",
+    "kind": "acte",
+    "lexique": [
+      "cryptococcus",
+      "encre de Chine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B353",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de leishmanies",
+    "kind": "acte",
+    "lexique": [
+      "leishmanies",
+      "leishmaniose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B354",
+    "pillar": "bio",
+    "type": "Parasitologie & mycologie",
+    "name": "Recherche de trypanosomes",
+    "kind": "acte",
+    "lexique": [
+      "trypanosome",
+      "trypanosomiase",
+      "THA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B355",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Charge virale VIH",
+    "kind": "acte",
+    "lexique": [
+      "charge virale VIH",
+      "ARN VIH",
+      "HIV viral load"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B356",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Charge virale VHB (ADN)",
+    "kind": "acte",
+    "lexique": [
+      "charge virale VHB",
+      "ADN VHB",
+      "HBV DNA",
+      "PCR VHB",
+      "charge virale b adn vhb"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B357",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Charge virale VHC (ARN)",
+    "kind": "acte",
+    "lexique": [
+      "charge virale VHC",
+      "ARN VHC",
+      "HCV RNA",
+      "PCR VHC"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B358",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Génotypage VHC",
+    "kind": "acte",
+    "lexique": [
+      "génotypage VHC",
+      "HCV génotype"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B359",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Charge virale VHD (ADN)",
+    "kind": "acte",
+    "lexique": [
+      "charge virale VHD",
+      "ADN VHD",
+      "delta",
+      "charge virale adn vhd"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B360",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Charge virale CMV",
+    "kind": "acte",
+    "lexique": [
+      "charge virale CMV",
+      "PCR CMV",
+      "ADN CMV"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B361",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Charge virale EBV",
+    "kind": "acte",
+    "lexique": [
+      "charge virale EBV",
+      "PCR EBV"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B362",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "PCR SARS-CoV-2",
+    "kind": "acte",
+    "lexique": [
+      "PCR covid",
+      "SARS-CoV-2 PCR"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B363",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "PCR Chlamydia / Gonocoque",
+    "kind": "acte",
+    "lexique": [
+      "PCR chlamydia",
+      "gonocoque",
+      "Neisseria gonorrhoeae",
+      "recherche chlamydia"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B364",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "PCR Mycoplasme / Ureaplasma",
+    "kind": "acte",
+    "lexique": [
+      "PCR mycoplasme",
+      "ureaplasma",
+      "recherche mycoplasme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B365",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "PCR HSV",
+    "kind": "acte",
+    "lexique": [
+      "PCR HSV",
+      "herpès PCR"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B366",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Test HPV (détection)",
+    "kind": "acte",
+    "lexique": [
+      "HPV test",
+      "papillomavirus"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B367",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Typage HPV oncogène",
+    "kind": "acte",
+    "lexique": [
+      "typage HPV oncogène",
+      "génotypage HPV haut risque"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B368",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "GeneXpert MTB/RIF (tuberculose)",
+    "kind": "acte",
+    "lexique": [
+      "GeneXpert",
+      "MTB RIF",
+      "PCR tuberculose"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B369",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "PCR respiratoire (multiplex)",
+    "kind": "acte",
+    "lexique": [
+      "PCR respiratoire",
+      "panel respiratoire multiplex"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B370",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "PCR entéropathogènes",
+    "kind": "acte",
+    "lexique": [
+      "PCR selles",
+      "entéropathogènes"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B371",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Recherche Facteur V Leiden",
+    "kind": "acte",
+    "lexique": [
+      "facteur V Leiden",
+      "FV Leiden mutation"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B372",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Recherche mutation prothrombine G20210A",
+    "kind": "acte",
+    "lexique": [
+      "prothrombine G20210A",
+      "FII mutation"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B373",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "Recherche hémochromatose (gène HFE)",
+    "kind": "acte",
+    "lexique": [
+      "HFE",
+      "hémochromatose génétique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B374",
+    "pillar": "bio",
+    "type": "Biologie moléculaire / PCR",
+    "name": "BCR-ABL / JAK2 (hémopathies)",
+    "kind": "acte",
+    "lexique": [
+      "BCR-ABL",
+      "JAK2",
+      "hémopathie moléculaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B375",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Alcoolémie",
+    "kind": "acte",
+    "lexique": [
+      "alcoolémie",
+      "éthanol"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B376",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Recherche de drogues urinaires (panel)",
+    "kind": "acte",
+    "lexique": [
+      "recherche drogue urines",
+      "toxiques urinaires",
+      "drogues panel",
+      "recherche de drogue dans les urines"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B377",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Paracétamol",
+    "kind": "acte",
+    "lexique": [
+      "paracétamol",
+      "acétaminophène"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B378",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Salicylés",
+    "kind": "acte",
+    "lexique": [
+      "salicylés",
+      "aspirine dosage"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B379",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Carboxyhémoglobine",
+    "kind": "acte",
+    "lexique": [
+      "carboxyhémoglobine",
+      "HbCO",
+      "CO"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B380",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Méthémoglobine",
+    "kind": "acte",
+    "lexique": [
+      "méthémoglobine",
+      "MetHb"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B381",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Plombémie",
+    "kind": "acte",
+    "lexique": [
+      "plomb",
+      "plombémie",
+      "saturnisme"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B382",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Métaux lourds (arsenic, mercure, cadmium)",
+    "kind": "acte",
+    "lexique": [
+      "métaux lourds",
+      "arsenic",
+      "mercure",
+      "cadmium"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B383",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Digoxine",
+    "kind": "acte",
+    "lexique": [
+      "digoxine",
+      "digoxinémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B384",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Lithium (lithémie)",
+    "kind": "acte",
+    "lexique": [
+      "lithium",
+      "lithémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B385",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Acide valproïque",
+    "kind": "acte",
+    "lexique": [
+      "acide valproïque",
+      "valproate",
+      "dépakine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B386",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Phénobarbital",
+    "kind": "acte",
+    "lexique": [
+      "phénobarbital",
+      "gardénal"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B387",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Phénytoïne",
+    "kind": "acte",
+    "lexique": [
+      "phénytoïne",
+      "diphantoïne"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B388",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Carbamazépine",
+    "kind": "acte",
+    "lexique": [
+      "carbamazépine",
+      "tégrétol"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B389",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Vancomycine",
+    "kind": "acte",
+    "lexique": [
+      "vancomycine",
+      "vancomycinémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B390",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Ciclosporine",
+    "kind": "acte",
+    "lexique": [
+      "ciclosporine",
+      "cyclosporine"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B391",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Tacrolimus",
+    "kind": "acte",
+    "lexique": [
+      "tacrolimus",
+      "FK506"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B392",
+    "pillar": "bio",
+    "type": "Pharmaco-toxicologie & suivi thérapeutique",
+    "name": "Méthotrexate",
+    "kind": "acte",
+    "lexique": [
+      "méthotrexate",
+      "MTX dosage"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B393",
+    "pillar": "bio",
+    "type": "Gaz du sang & équilibre acido-basique",
+    "name": "Gaz du sang artériel",
+    "kind": "acte",
+    "lexique": [
+      "gaz du sang artériel",
+      "GDS artériel",
+      "gazométrie artérielle"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B394",
+    "pillar": "bio",
+    "type": "Gaz du sang & équilibre acido-basique",
+    "name": "Gaz du sang veineux / capillaire",
+    "kind": "acte",
+    "lexique": [
+      "gaz du sang veineux",
+      "gaz du sang capillaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B395",
+    "pillar": "bio",
+    "type": "Gaz du sang & équilibre acido-basique",
+    "name": "Lactates (acide lactique)",
+    "kind": "acte",
+    "lexique": [
+      "lactates",
+      "acide lactique",
+      "lactacidémie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B396",
+    "pillar": "bio",
+    "type": "Gaz du sang & équilibre acido-basique",
+    "name": "Bicarbonates / réserve alcaline",
+    "kind": "acte",
+    "lexique": [
+      "bicarbonates",
+      "réserve alcaline",
+      "HCO3",
+      "CO2 total"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B397",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Examen anatomopathologique de biopsie",
+    "kind": "acte",
+    "lexique": [
+      "biopsie",
+      "anatomopathologie biopsie",
+      "histologie"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B398",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Examen anatomopathologique de pièce opératoire",
+    "kind": "acte",
+    "lexique": [
+      "pièce opératoire",
+      "anapath pièce",
+      "histologie pièce"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B399",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Examen extemporané",
+    "kind": "acte",
+    "lexique": [
+      "extemporané",
+      "examen per-opératoire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B400",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Immunohistochimie",
+    "kind": "acte",
+    "lexique": [
+      "immunohistochimie",
+      "IHC"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B401",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Immunofluorescence (cutanée / rénale)",
+    "kind": "acte",
+    "lexique": [
+      "immunofluorescence",
+      "IFD",
+      "biopsie rénale IF"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B402",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Biopsie ostéomédullaire (lecture)",
+    "kind": "acte",
+    "lexique": [
+      "biopsie ostéomédullaire",
+      "BOM"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B403",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Frottis cervico-vaginal (FCV / Pap)",
+    "kind": "acte",
+    "lexique": [
+      "FCV",
+      "frottis cervico-vaginal",
+      "cytologie cervicale",
+      "Pap"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B404",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Cytologie en milieu liquide",
+    "kind": "acte",
+    "lexique": [
+      "cytologie en milieu liquide",
+      "ThinPrep",
+      "monocouche"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B405",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Cytoponction (thyroïde, ganglion, sein)",
+    "kind": "acte",
+    "lexique": [
+      "cytoponction",
+      "ponction cytologique",
+      "FNA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B406",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Cytologie des épanchements (pleural, ascite, LCR)",
+    "kind": "acte",
+    "lexique": [
+      "cytologie des épanchements",
+      "cytologie liquide pleural ascite LCR"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B407",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Cytologie urinaire",
+    "kind": "acte",
+    "lexique": [
+      "cytologie urinaire",
+      "recherche de cellules tumorales urines"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B408",
+    "pillar": "bio",
+    "type": "Anatomie & cytopathologie",
+    "name": "Cytologie des expectorations",
+    "kind": "acte",
+    "lexique": [
+      "cytologie des crachats",
+      "cytologie expectorations"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B409",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "Caryotype sanguin",
+    "kind": "acte",
+    "lexique": [
+      "caryotype",
+      "caryotype sanguin",
+      "cytogénétique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B410",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "Caryotype médullaire",
+    "kind": "acte",
+    "lexique": [
+      "caryotype médullaire",
+      "cytogénétique hématologique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B411",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "FISH (hybridation in situ)",
+    "kind": "acte",
+    "lexique": [
+      "FISH",
+      "hybridation in situ"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B412",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "Dépistage prénatal non invasif (DPNI)",
+    "kind": "acte",
+    "lexique": [
+      "DPNI",
+      "trisomie 21 dépistage",
+      "ADN libre circulant"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B413",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "Recherche de mutations BRCA1/BRCA2",
+    "kind": "acte",
+    "lexique": [
+      "BRCA",
+      "BRCA1 BRCA2",
+      "prédisposition cancer sein"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B414",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "Typage HLA (greffe)",
+    "kind": "acte",
+    "lexique": [
+      "typage HLA",
+      "groupage HLA",
+      "compatibilité greffe"
+    ],
+    "composants": []
+  },
+  {
+    "id": "B415",
+    "pillar": "bio",
+    "type": "Génétique & cytogénétique",
+    "name": "Étude moléculaire de la drépanocytose",
+    "kind": "acte",
+    "lexique": [
+      "drépanocytose moléculaire",
+      "mutation bêta-globine",
+      "HBB"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I001",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie abdominale",
+    "kind": "acte",
+    "lexique": [
+      "echo abdominale",
+      "échographie de l'abdomen"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I002",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie pelvienne",
+    "kind": "acte",
+    "lexique": [
+      "echo pelvienne",
+      "échographie pelvienne sus-pubienne"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I003",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie pelvienne endovaginale",
+    "kind": "acte",
+    "lexique": [
+      "echo endovaginale",
+      "échographie endovaginale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I004",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie abdomino-pelvienne",
+    "kind": "acte",
+    "lexique": [
+      "echo abdomino-pelvienne",
+      "echo AP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I005",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie obstétricale",
+    "kind": "acte",
+    "lexique": [
+      "echo obstétricale",
+      "échographie de grossesse",
+      "echo de grossesse"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I006",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie des parties molles",
+    "kind": "acte",
+    "lexique": [
+      "echo parties molles"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I007",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie thyroïdienne",
+    "kind": "acte",
+    "lexique": [
+      "echo thyroïde",
+      "échographie de la thyroïde"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I008",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie cervicale",
+    "kind": "acte",
+    "lexique": [
+      "echo cervicale",
+      "échographie du cou"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I009",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie scrotale",
+    "kind": "acte",
+    "lexique": [
+      "échographie des bourses",
+      "echo testiculaire",
+      "echo scrotale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I010",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie mammaire",
+    "kind": "acte",
+    "lexique": [
+      "echo mammaire",
+      "échographie des seins"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I011",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie ostéo-articulaire",
+    "kind": "acte",
+    "lexique": [
+      "échographie articulaire",
+      "echo articulaire",
+      "échographie musculo-squelettique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I012",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie de l'épaule",
+    "kind": "acte",
+    "lexique": [
+      "echo épaule"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I013",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie rénale",
+    "kind": "acte",
+    "lexique": [
+      "echo rénale",
+      "échographie des reins",
+      "échographie de l appareil urinaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I014",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie cardiaque (ETT)",
+    "kind": "acte",
+    "lexique": [
+      "ETT",
+      "échocardiographie",
+      "echo cardiaque"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I015",
+    "pillar": "img",
+    "type": "Échographie",
+    "name": "Échographie transfontanellaire",
+    "kind": "acte",
+    "lexique": [
+      "ETF",
+      "echo transfontanellaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I016",
+    "pillar": "img",
+    "type": "Écho-doppler",
+    "name": "Écho-doppler artériel des membres inférieurs",
+    "kind": "acte",
+    "lexique": [
+      "doppler artériel des membres inférieurs",
+      "doppler artériel MI"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I017",
+    "pillar": "img",
+    "type": "Écho-doppler",
+    "name": "Écho-doppler veineux des membres inférieurs",
+    "kind": "acte",
+    "lexique": [
+      "doppler veineux des membres inférieurs",
+      "doppler veineux MI"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I018",
+    "pillar": "img",
+    "type": "Écho-doppler",
+    "name": "Écho-doppler des troncs supra-aortiques (TSA)",
+    "kind": "acte",
+    "lexique": [
+      "doppler des TSA",
+      "doppler TSA",
+      "echo doppler des vaisseaux du cou"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I019",
+    "pillar": "img",
+    "type": "Écho-doppler",
+    "name": "Écho-doppler des artères rénales",
+    "kind": "acte",
+    "lexique": [
+      "doppler rénal",
+      "doppler des artères rénales"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I020",
+    "pillar": "img",
+    "type": "Écho-doppler",
+    "name": "Écho-doppler obstétrical",
+    "kind": "acte",
+    "lexique": [
+      "doppler obstétrical",
+      "doppler foeto-placentaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I021",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner cérébral",
+    "kind": "acte",
+    "lexique": [
+      "TDM cérébrale",
+      "scanner du crâne",
+      "TDM encéphalique"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I022",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner thoracique",
+    "kind": "acte",
+    "lexique": [
+      "TDM thoracique",
+      "scanner du thorax"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I023",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner abdominal",
+    "kind": "acte",
+    "lexique": [
+      "TDM abdominale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I024",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner abdomino-pelvien",
+    "kind": "acte",
+    "lexique": [
+      "TDM abdomino-pelvienne",
+      "scanner AP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I025",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner thoraco-abdomino-pelvien",
+    "kind": "acte",
+    "lexique": [
+      "TAP",
+      "TDM TAP"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I026",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner du massif facial",
+    "kind": "acte",
+    "lexique": [
+      "scanner des sinus",
+      "TDM sinus",
+      "scanner facial"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I027",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner cervical",
+    "kind": "acte",
+    "lexique": [
+      "TDM cervicale",
+      "scanner du cou"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I028",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner du rachis lombaire",
+    "kind": "acte",
+    "lexique": [
+      "scanner lombaire",
+      "TDM lombaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I029",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner du rachis dorsal",
+    "kind": "acte",
+    "lexique": [
+      "TDM dorsale",
+      "scanner dorsal"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I030",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner du rachis cervical",
+    "kind": "acte",
+    "lexique": [
+      "TDM du rachis cervical"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I031",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Scanner des rochers",
+    "kind": "acte",
+    "lexique": [
+      "TDM des rochers"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I032",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Uro-scanner",
+    "kind": "acte",
+    "lexique": [
+      "uroscanner",
+      "scanner des voies urinaires"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I033",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Angioscanner thoracique",
+    "kind": "acte",
+    "lexique": [
+      "angio-TDM thoracique",
+      "angioscanner pulmonaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I034",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Angioscanner cérébral",
+    "kind": "acte",
+    "lexique": [
+      "angio-TDM cérébrale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I035",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Angioscanner des troncs supra-aortiques",
+    "kind": "acte",
+    "lexique": [
+      "angioscanner des TSA"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I036",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Angioscanner des membres inférieurs",
+    "kind": "acte",
+    "lexique": [
+      "angio-TDM des membres inférieurs"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I037",
+    "pillar": "img",
+    "type": "Scanner",
+    "name": "Coloscanner",
+    "kind": "acte",
+    "lexique": [
+      "coloscopie virtuelle"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I038",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM cérébrale",
+    "kind": "acte",
+    "lexique": [
+      "IRM encéphalique",
+      "IRM du cerveau"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I039",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM du rachis lombaire",
+    "kind": "acte",
+    "lexique": [
+      "IRM lombaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I040",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM du rachis cervical",
+    "kind": "acte",
+    "lexique": [
+      "IRM cervicale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I041",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM médullaire",
+    "kind": "acte",
+    "lexique": [
+      "IRM de la moelle"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I042",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM hypophysaire",
+    "kind": "acte",
+    "lexique": [
+      "IRM de l hypophyse"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I043",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM du genou",
+    "kind": "acte",
+    "lexique": [
+      "IRM genou"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I044",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM de l'épaule",
+    "kind": "acte",
+    "lexique": [
+      "IRM épaule"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I045",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM de la cheville",
+    "kind": "acte",
+    "lexique": [
+      "IRM cheville"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I046",
+    "pillar": "img",
+    "type": "IRM",
+    "name": "IRM du poignet",
+    "kind": "acte",
+    "lexique": [
+      "IRM poignet"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I047",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du thorax (face)",
+    "kind": "acte",
+    "lexique": [
+      "radio thorax",
+      "RX thorax",
+      "téléthorax",
+      "radiographie pulmonaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I048",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du thorax (face et profil)",
+    "kind": "acte",
+    "lexique": [
+      "radio thorax face et profil",
+      "téléthorax face et profil"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I049",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du cavum",
+    "kind": "acte",
+    "lexique": [
+      "radio cavum"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I050",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie de la main",
+    "kind": "acte",
+    "lexique": [
+      "radio main"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I051",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du poignet",
+    "kind": "acte",
+    "lexique": [
+      "radio poignet"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I052",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du coude",
+    "kind": "acte",
+    "lexique": [
+      "radio coude"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I053",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie de l'épaule",
+    "kind": "acte",
+    "lexique": [
+      "radio épaule"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I054",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du genou",
+    "kind": "acte",
+    "lexique": [
+      "radio genou"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I055",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie de la cheville",
+    "kind": "acte",
+    "lexique": [
+      "radio cheville"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I056",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du pied",
+    "kind": "acte",
+    "lexique": [
+      "radio pied"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I057",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du rachis lombaire",
+    "kind": "acte",
+    "lexique": [
+      "radio lombaire",
+      "radio du rachis lombaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I058",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du rachis dorsal",
+    "kind": "acte",
+    "lexique": [
+      "radio dorsale"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I059",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du rachis dorso-lombaire",
+    "kind": "acte",
+    "lexique": [
+      "radio dorso-lombaire"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I060",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du crâne",
+    "kind": "acte",
+    "lexique": [
+      "radio crâne"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I061",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie des os propres du nez",
+    "kind": "acte",
+    "lexique": [
+      "radio OPN",
+      "radiographie OPN"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I062",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du bassin (face)",
+    "kind": "acte",
+    "lexique": [
+      "radio bassin",
+      "radiographie du bassin"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I063",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie de la hanche",
+    "kind": "acte",
+    "lexique": [
+      "radio hanche"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I064",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie du fémur",
+    "kind": "acte",
+    "lexique": [
+      "radiographie de la cuisse",
+      "radio cuisse"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I065",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie de l'humérus",
+    "kind": "acte",
+    "lexique": [
+      "radiographie du bras",
+      "radio bras"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I066",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Radiographie de l'avant-bras",
+    "kind": "acte",
+    "lexique": [
+      "radio avant-bras"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I067",
+    "pillar": "img",
+    "type": "Radiographie",
+    "name": "Abdomen sans préparation (ASP)",
+    "kind": "acte",
+    "lexique": [
+      "ASP",
+      "radiographie ASP",
+      "radio de l'abdomen"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I068",
+    "pillar": "img",
+    "type": "Radiologie spéciale",
+    "name": "Hystérosalpingographie (HSG)",
+    "kind": "acte",
+    "lexique": [
+      "HSG"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I069",
+    "pillar": "img",
+    "type": "Radiologie spéciale",
+    "name": "Lavement baryté",
+    "kind": "acte",
+    "lexique": [
+      "lavement opaque"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I070",
+    "pillar": "img",
+    "type": "Radiologie spéciale",
+    "name": "Urétrocystographie rétrograde (UCR)",
+    "kind": "acte",
+    "lexique": [
+      "UCR",
+      "cystographie rétrograde"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I071",
+    "pillar": "img",
+    "type": "Radiologie spéciale",
+    "name": "Transit œso-gastro-duodénal (TOGD)",
+    "kind": "acte",
+    "lexique": [
+      "TOGD",
+      "TOGD baryté"
+    ],
+    "composants": []
+  },
+  {
+    "id": "I072",
+    "pillar": "img",
+    "type": "Radiologie spéciale",
+    "name": "Mammographie",
+    "kind": "acte",
+    "lexique": [
+      "mammo",
+      "mammographie bilatérale"
+    ],
+    "composants": []
+  }
+]

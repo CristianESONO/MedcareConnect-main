@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>MedCare Assistant d'onboarding</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : la conversation de la structure à gauche (format téléphone), le suivi MedCare à droite. */
+:root{
+  --bg:#EEF2F2; --surface:#FFFFFF; --sunk:#E8EDEE; --line:#D9E1E3; --line2:#E7ECEE;
+  --ink:#14202B; --ink2:#566370; --ink3:#8793A0;
+  --teal:#0F766E; --teal-ink:#0B5A54; --teal-bg:#E1F1EF; --me:#D6EFEA; --wall:#E4EBEA;
+  --ok:#157A3D; --okbg:#E4F3E8; --cf:#A85407; --cfbg:#FCEFD9; --no:#B42318; --nobg:#FBE9E7; --info:#2346B8; --infobg:#E8EDFB;
+  --f-display:"Fraunces", Georgia, "Times New Roman", serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0D1317; --surface:#151D23; --sunk:#10171C; --line:#25303A; --line2:#1C252D;
+  --ink:#E6ECF1; --ink2:#9AA7B4; --ink3:#6E7B88;
+  --teal:#3FC1B1; --teal-ink:#7DD8CC; --teal-bg:#123330; --me:#14403A; --wall:#0F181D;
+  --ok:#5FCE8A; --okbg:#143021; --cf:#E3A343; --cfbg:#3A2B12; --no:#FF8E83; --nobg:#3A1A17; --info:#8EA8FF; --infobg:#1A2446;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0D1317; --surface:#151D23; --sunk:#10171C; --line:#25303A; --line2:#1C252D;
+  --ink:#E6ECF1; --ink2:#9AA7B4; --ink3:#6E7B88;
+  --teal:#3FC1B1; --teal-ink:#7DD8CC; --teal-bg:#123330; --me:#14403A; --wall:#0F181D;
+  --ok:#5FCE8A; --okbg:#143021; --cf:#E3A343; --cfbg:#3A2B12; --no:#FF8E83; --nobg:#3A1A17; --info:#8EA8FF; --infobg:#1A2446;
+  color-scheme:dark; }
+*,*::before,*::after{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:14px;line-height:1.5;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 32px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-size:12.5px}
+h1,h2,h3{margin:0;text-wrap:balance}
+
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:14px;margin-bottom:14px;border-bottom:1px solid var(--line);max-width:1240px;margin-inline:auto}
+.brand b{font-family:var(--f-display);font-weight:600;font-size:21px}
+.brand span{color:var(--ink2);font-size:13px;margin-left:8px}
+.proto{font-size:12px;color:var(--cf);background:var(--cfbg);border-radius:999px;padding:3px 10px}
+.top .r{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 11px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--ink3)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:var(--surface)}
+.btn.sm{padding:3px 9px;font-size:12.5px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+.views{display:none;gap:4px;margin:0 auto 12px;max-width:1240px}
+.views button{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px;cursor:pointer;font-weight:600;color:var(--ink2)}
+.views button[aria-pressed="true"]{border-color:var(--teal);color:var(--teal-ink);background:var(--teal-bg)}
+
+.shell{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:20px;max-width:1240px;margin:0 auto;align-items:start}
+@media (max-width:900px){.shell{grid-template-columns:minmax(0,1fr)}.views{display:flex}.shell[data-show="chat"] .ops{display:none}.shell[data-show="ops"] .phone{display:none}}
+
+/* téléphone */
+.phone{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--wall);display:flex;flex-direction:column;height:min(780px, calc(100vh - 120px));min-height:520px;position:sticky;top:12px}
+@media (max-width:900px){.phone{position:static;height:calc(100vh - 150px)}}
+.ph-head{background:var(--teal);color:var(--surface);padding:12px 14px;display:flex;gap:10px;align-items:center}
+.av{width:36px;height:36px;border-radius:50%;background:color-mix(in srgb,var(--surface) 22%,transparent);display:grid;place-items:center;font-family:var(--f-display);font-weight:600;flex:none}
+.ph-head b{display:block;font-size:15px;line-height:1.2}
+.ph-head span{font-size:12px;opacity:.85}
+.steps{display:flex;gap:3px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto}
+.st{flex:1 0 auto;display:flex;flex-direction:column;gap:4px;min-width:58px}
+.st i{display:block;height:4px;border-radius:999px;background:var(--line)}
+.st span{font-size:10.5px;color:var(--ink3);white-space:nowrap;font-weight:600;letter-spacing:.02em}
+.st.done i{background:var(--teal)} .st.done span{color:var(--ink2)}
+.st.now i{background:color-mix(in srgb,var(--teal) 55%,var(--line))} .st.now span{color:var(--teal-ink)}
+.msgs{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:86%;padding:8px 11px;border-radius:12px;font-size:14px;line-height:1.45;box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 8%,transparent);overflow-wrap:anywhere}
+.m.bot{background:var(--surface);align-self:flex-start;border-top-left-radius:4px}
+.m.me{background:var(--me);align-self:flex-end;border-top-right-radius:4px}
+.m .t{display:block;text-align:right;font-size:10.5px;color:var(--ink3);margin-top:2px}
+.m b{font-weight:600}
+.m .card{margin-top:6px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--sunk);font-size:13px}
+.m .card .k{color:var(--ink2);font-size:12px}
+.m ul{margin:6px 0 0;padding-left:18px}
+.m .q{font-size:11.5px;color:var(--teal-ink);font-weight:600;letter-spacing:.03em;text-transform:uppercase;display:block;margin-bottom:2px}
+.sys{align-self:center;font-size:11.5px;color:var(--ink2);background:color-mix(in srgb,var(--surface) 70%,transparent);border-radius:999px;padding:3px 10px;text-align:center}
+.quick{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start;max-width:92%}
+.quick button{border:1px solid var(--teal);color:var(--teal-ink);background:var(--surface);border-radius:999px;padding:5px 12px;cursor:pointer;font-weight:600;font-size:13px;text-align:left}
+.quick button:hover{background:var(--teal-bg)}
+.quick button.alt{border-color:var(--line);color:var(--ink2);font-weight:500}
+.typing{align-self:flex-start;background:var(--surface);border-radius:12px;padding:9px 12px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--ink3);animation:bl 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,100%{opacity:.3}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.typing i{animation:none}}
+.bar{display:flex;gap:8px;padding:10px;background:var(--surface);border-top:1px solid var(--line);align-items:center}
+.bar input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:999px;padding:9px 14px;background:var(--sunk)}
+.att{position:relative;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;flex:none;color:var(--ink2);font-size:20px;line-height:1}
+.att input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.send{width:38px;height:38px;border-radius:50%;border:none;background:var(--teal);color:var(--surface);cursor:pointer;flex:none;font-weight:700}
+
+/* suivi MedCare */
+.ops{display:flex;flex-direction:column;gap:14px;min-width:0}
+.ops h1{font-family:var(--f-display);font-weight:500;font-size:24px}
+.sub{color:var(--ink2);font-size:13px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.panel h2{font-size:14.5px;font-weight:600;margin-bottom:8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13.5px}
+.kv dt{color:var(--ink2)} .kv dd{margin:0}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{color:var(--ok);background:var(--okbg)} .p-cf{color:var(--cf);background:var(--cfbg)} .p-no{color:var(--no);background:var(--nobg)} .p-info{color:var(--info);background:var(--infobg)} .p-teal{color:var(--teal-ink);background:var(--teal-bg)} .p-neutral{color:var(--ink2);background:var(--sunk)}
+.sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:600px){.sum{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sum div{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.sum b{display:block;font-family:var(--f-display);font-size:22px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.sum span{font-size:12px;color:var(--ink2)}
+.sum .ok b{color:var(--ok)} .sum .cf b{color:var(--cf)} .sum .no b{color:var(--no)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px;max-height:360px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:600;color:var(--ink2);font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:8px 9px;border-bottom:1px solid var(--line);background:var(--sunk);position:sticky;top:0}
+td{padding:8px 9px;border-bottom:1px solid var(--line2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.ln{color:var(--ink3);font-family:var(--f-mono);font-size:12px}
+.why{font-size:12px;color:var(--ink2)}
+.log{display:flex;flex-direction:column;gap:6px;font-size:13px;max-height:220px;overflow-y:auto}
+.log div{display:flex;gap:10px}
+.log .ln{flex:none}
+.callout{border-left:3px solid var(--teal);background:var(--teal-bg);padding:9px 12px;border-radius:0 8px 8px 0;font-size:13px}
+.empty{color:var(--ink2);font-size:13px;padding:6px 0}
+</style>
+
+<div class="top">
+  <div class="brand"><a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:8px"><b>MedCare</b><span>Assistant d'onboarding · scénario D (chatbot)</span></a></div>
+  <span class="proto">Prototype · structure d'exemple · rien n'est envoyé à un serveur</span>
+  <div class="r">
+    <a href="index.html" class="btn sm" style="text-decoration:none">⌂ Accueil</a>
+    <a href="medcare_onboarding.html" class="btn sm" style="text-decoration:none">🖥️ Back-office</a>
+    <button class="btn sm" id="restart">Recommencer la conversation</button>
+  </div>
+</div>
+<div class="views" role="group" aria-label="Vue">
+  <button id="v-chat" aria-pressed="true" data-view="chat">Conversation</button>
+  <button id="v-ops" aria-pressed="false" data-view="ops">Côté MedCare</button>
+</div>
+<div class="shell" id="shell" data-show="chat">
+  <section class="phone" aria-label="Conversation avec la structure">
+    <div class="ph-head"><span class="av">M</span><div><b>Assistant MedCare</b><span id="ph-status">en ligne · répond en quelques secondes</span></div></div>
+    <div class="steps" id="steps"></div>
+    <div class="msgs" id="msgs" aria-live="polite"></div>
+    <form class="bar" id="bar" autocomplete="off">
+      <label class="att" title="Joindre un fichier">+<input type="file" id="file" accept=".xlsx,.xlsm,.xls,.ods,.csv,.txt,image/*" aria-label="Joindre un fichier"></label>
+      <input type="text" id="txt" placeholder="Écrire un message" aria-label="Message">
+      <button class="send" type="submit" aria-label="Envoyer">›</button>
+    </form>
+  </section>
+  <section class="ops" id="ops" aria-label="Suivi MedCare"></section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* MedCare — moteur d'onboarding (prototype). Miroir JS de la spec du paquet Python medcare_matching. */
+var ENGINE = (function () {
+  'use strict';
+
+  var STOP = new Set(['de','du','des','la','le','les','et','au','aux','en','sur','sous','avec','par','pour','un','une']);
+
+  var PILLARS = {
+    bio: {
+      id: 'bio', name: 'Biologie médicale',
+      abbrev: { ac: 'anticorps', ag: 'antigene', cv: 'charge virale', bu: 'bandelette urinaire', hb: 'hemoglobine', hiv: 'vih', hcv: 'vhc', hbv: 'vhb', atb: 'antibiogramme', sedim: 'sedimentation', us: 'ultrasensible' },
+      disc: ['igg','igm','iga','ige','t3','t4','ft3','ft4','recherche','serologie','pcr','urinaire','urine','plasmatique','serique','total','conjugue','libre','direct','indirect','24h','quantitatif','qualitatif'],
+      generic: ['bilan','serologie','dosage','examen','analyse']
+    },
+    img: {
+      id: 'img', name: 'Imagerie médicale',
+      abbrev: { echo: 'echographie', radio: 'radiographie', rx: 'radiographie', tdm: 'scanner', genoux: 'genou bilateral', epaules: 'epaule bilateral', hanches: 'hanche bilateral', mains: 'main bilateral', pieds: 'pied bilateral' },
+      disc: ['echographie','scanner','irm','radiographie','face','profil','bilateral','droit','gauche','injection','doppler','angio','angioscanner','arteriel','arterio','veineux','controle','endovaginal','transcranien'],
+      generic: ['echographie','scanner','irm','radiographie','examen','doppler']
+    }
+  };
+
+  var SECTION_MAP = [
+    { re: /echograph/, pillar: 'img', term: 'echographie', types: ['Échographie', 'Écho-doppler'] },
+    { re: /doppler/, pillar: 'img', term: 'echographie doppler', types: ['Écho-doppler'] },
+    { re: /scanner|tdm|tomodensito/, pillar: 'img', term: 'scanner', types: ['Scanner'] },
+    { re: /\birm\b/, pillar: 'img', term: 'irm', types: ['IRM'] },
+    { re: /radiograph|\bradio\b/, pillar: 'img', term: 'radiographie', types: ['Radiographie'] },
+    { re: /mammograph/, pillar: 'img', term: '', types: ['Radiologie spéciale'] },
+    { re: /examens? speciaux|radiologie speciale/, pillar: 'img', term: '', types: ['Radiologie spéciale', 'Scanner'] },
+    { re: /hemato|hemostase|coagul|biochim|ionogram|urinaire|vitamine|cardiaque|endocrin|hormon|fertilit|spermio|tumora|immuno|allergo|serolog|virolog|bacterio|parasito|mycolog|moleculaire|pcr|toxico|gaz du sang|cytopath|genetique|biologie|analyses?/, pillar: 'bio', term: '' }
+  ];
+
+  function stripAccents(s) { return String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+
+  function stem(w) {
+    if (w.length <= 3) return w;
+    if (/ales$/.test(w)) return w.slice(0, -1).replace(/e$/, '');
+    if (/ale$/.test(w)) return w.slice(0, -1);
+    if (/iennes?$/.test(w)) return w.replace(/iennes?$/, 'ien');
+    if (/ees?$/.test(w)) return w.replace(/ees?$/, 'e');
+    if (/ines?$/.test(w) && w.length > 5) return w.replace(/s$/, '');
+    if (/[^s]s$/.test(w) && w.length > 4) return w.slice(0, -1);
+    return w;
+  }
+
+  /* Normalisation : forme seulement, jamais le sens. Renvoie la chaîne et les mots significatifs. */
+  function normalize(raw, pillarId) {
+    var s = stripAccents(raw).toLowerCase().replace(/\b([dl])['\u2019]\s*/g, '').replace(/(\d+)\s*(h|j|min)\b/g, '$1$2');
+    s = s.replace(/\b([a-z0-9])\.(?=[a-z0-9]\b)/g, '$1').replace(/\b([a-z0-9])\.(?=\s|$)/g, '$1');
+    var composite = /[a-z)]\s*\+\s*[a-z(]/.test(s) || /\bbilan\b/.test(s);
+    s = s.replace(/[^a-z0-9+\/\s]/g, ' ').replace(/[+\/]/g, ' + ').replace(/\s+/g, ' ').trim();
+    var ab = PILLARS[pillarId] ? PILLARS[pillarId].abbrev : {};
+    var words = s.split(' ').filter(Boolean).map(function (w) { return ab[w] || w; }).join(' ').split(' ');
+    var full = words.join(' ').replace(/\s*\+\s*/g, ' + ').trim();
+    var sig = words.filter(function (w) { return w !== '+' && !STOP.has(w) && w.length > 0; }).map(stem);
+    return { full: full, sig: sig, key: sig.slice().sort().join(' '), compact: sig.join(''), composite: composite };
+  }
+
+  /* --- similarités --- */
+  function jaro(a, b) {
+    if (a === b) return 1;
+    var la = a.length, lb = b.length; if (!la || !lb) return 0;
+    var md = Math.max(0, Math.floor(Math.max(la, lb) / 2) - 1);
+    var ma = new Array(la).fill(false), mb = new Array(lb).fill(false), m = 0, t = 0, k = 0, i, j;
+    for (i = 0; i < la; i++) {
+      var lo = Math.max(0, i - md), hi = Math.min(i + md + 1, lb);
+      for (j = lo; j < hi; j++) { if (!mb[j] && a[i] === b[j]) { ma[i] = mb[j] = true; m++; break; } }
+    }
+    if (!m) return 0;
+    for (i = 0; i < la; i++) { if (ma[i]) { while (!mb[k]) k++; if (a[i] !== b[k]) t++; k++; } }
+    return (m / la + m / lb + (m - t / 2) / m) / 3;
+  }
+  function jw(a, b) {
+    var j = jaro(a, b), p = 0;
+    while (p < 4 && p < a.length && p < b.length && a[p] === b[p]) p++;
+    return j + p * 0.1 * (1 - j);
+  }
+  function trigrams(s) { var g = new Set(), x = '  ' + s + ' '; for (var i = 0; i < x.length - 2; i++) g.add(x.substr(i, 3)); return g; }
+  function dice(A, B) { var n = 0; A.forEach(function (x) { if (B.has(x)) n++; }); return (2 * n) / ((A.size + B.size) || 1); }
+
+  /* Dice « souple » pondéré : un mot proche (faute de frappe) compte pour sa similarité ;
+     les mots génériques du pilier (échographie, scanner, dosage…) pèsent moins que les mots précis. */
+  function weight(w, pillarId) { var P = PILLARS[pillarId]; if (!P) return 1; if (P.generic.indexOf(w) >= 0) return 0.35; if (P.disc.indexOf(w) >= 0) return 0.5; return 1; }
+  function softTokens(A, B, pillarId) {
+    if (!A.length || !B.length) return { dice: 0, jac: 0 };
+    var used = new Array(B.length).fill(false), sum = 0, exact = 0, wa = 0, wb = 0;
+    A.forEach(function (a) { wa += weight(a, pillarId); });
+    B.forEach(function (b) { wb += weight(b, pillarId); });
+    A.forEach(function (a) {
+      var best = 0, bi = -1;
+      B.forEach(function (b, i) {
+        if (used[i]) return;
+        var v = a === b ? 1 : (a.length > 3 && b.length > 3 ? jw(a, b) : 0);
+        if (v > best) { best = v; bi = i; }
+      });
+      if (bi >= 0 && best >= 0.88) { used[bi] = true; var w = (weight(a, pillarId) + weight(B[bi], pillarId)) / 2; sum += best * w; if (best === 1) exact += w; }
+    });
+    return { dice: (2 * sum) / (wa + wb), jac: exact / (wa + wb - exact) };
+  }
+  function specificCompact(sig, pillarId) {
+    var sp = sig.filter(function (w) { return weight(w, pillarId) > 0.4; });
+    return (sp.length ? sp : sig).join('');
+  }
+
+  var MODALITIES = ['echographie','scanner','irm','radiographie'];
+  function hasFuzzy(set, w) { if (set.has(w)) return true; var ok = false; set.forEach(function (x) { if (!ok && x.length > 3 && w.length > 3 && jw(x, w) >= 0.9) ok = true; }); return ok; }
+  function discConflicts(A, B, pillarId) {
+    var d = PILLARS[pillarId] ? PILLARS[pillarId].disc : [];
+    var sa = new Set(A), sb = new Set(B), out = [];
+    d.forEach(function (w) {
+      if (MODALITIES.indexOf(w) >= 0) return;
+      if (hasFuzzy(sa, w) !== hasFuzzy(sb, w)) out.push(w);
+    });
+    // mots courts ou chiffrés (vitamine A / D, T3 / T4, 25-OH…) : toujours discriminants
+    A.concat(B).forEach(function (w) {
+      if ((/^[a-z]$/.test(w) || /\d/.test(w)) && (sa.has(w) !== sb.has(w)) && out.indexOf(w) < 0) out.push(w);
+    });
+    // modalité : conflit seulement si les deux côtés en nomment une, et pas la même
+    var ma = MODALITIES.filter(function (m) { return hasFuzzy(sa, m); }), mb = MODALITIES.filter(function (m) { return hasFuzzy(sb, m); });
+    if (ma.length && mb.length && ma.join() !== mb.join()) out.push(ma.concat(mb).filter(function (v, i, x) { return x.indexOf(v) === i; }).join('/'));
+    return out;
+  }
+
+  /* --- index du référentiel --- */
+  function buildIndex(actes, aliases) {
+    var idx = { actes: actes, byId: {}, entries: [], exact: {} };
+    actes.forEach(function (a) {
+      idx.byId[a.id] = a;
+      var forms = [{ text: a.name, kind: 'nom' }].concat((a.lexique || []).map(function (x) { return { text: x, kind: 'lexique' }; }));
+      forms.forEach(function (f) { addEntry(idx, a, f.text, f.kind, 'global', null); });
+    });
+    (aliases || []).forEach(function (al) {
+      var a = idx.byId[al.acteId]; if (!a || al.statut === 'suspendu') return;
+      addEntry(idx, a, al.brut, al.statut === 'actif' ? 'alias' : 'alias_candidat', al.scope, al.organisme, al);
+    });
+    return idx;
+  }
+  function addEntry(idx, a, text, kind, scope, org, al) {
+    var n = normalize(text, a.pillar);
+    if (!n.sig.length) return;
+    var e = { acte: a, text: text, kind: kind, scope: scope, org: org, n: n, tri: trigrams(n.compact), alias: al || null };
+    idx.entries.push(e);
+    var k = a.pillar + '|' + n.key;
+    (idx.exact[k] = idx.exact[k] || []).push(e);
+  }
+
+  /* --- section et contexte --- */
+  function sectionInfo(label) {
+    var s = stripAccents(label).toLowerCase();
+    for (var i = 0; i < SECTION_MAP.length; i++) if (SECTION_MAP[i].re.test(s)) return SECTION_MAP[i];
+    return null;
+  }
+  function contextualize(label, sec) {
+    if (!sec || !sec.term) return label;
+    var s = stripAccents(label).toLowerCase();
+    var head = sec.term.split(' ')[0].slice(0, 6);
+    if (s.indexOf(head) >= 0 || /angio|uro|colo|scan|irm|radio|echo|doppler|mammo/.test(s)) return label;
+    return sec.term + ' ' + label;
+  }
+
+  /* --- rapprochement d'une ligne --- */
+  function exactLookup(idx, n, pillars, orgId) {
+    for (var p = 0; p < pillars.length; p++) {
+      var list = idx.exact[pillars[p] + '|' + n.key] || [];
+      var own = list.filter(function (e) { return e.scope === 'structure' && e.org === orgId && e.kind === 'alias'; });
+      if (own.length) return { e: own[0], method: 'alias de la structure' };
+      var nom = list.filter(function (e) { return e.kind === 'nom'; });
+      if (nom.length) return { e: nom[0], method: 'nom exact' };
+      var glob = list.filter(function (e) { return (e.kind === 'lexique' || e.kind === 'alias') && e.scope === 'global'; });
+      var ids = new Set(glob.map(function (e) { return e.acte.id; }));
+      if (glob.length && ids.size === 1) return { e: glob[0], method: glob[0].kind === 'alias' ? 'alias validé' : 'lexique' };
+      if (ids.size > 1) return { ambiguous: true };
+    }
+    return null;
+  }
+
+  function scoreEntry(n, e, pillarId) {
+    var st = softTokens(n.sig, e.n.sig, pillarId);
+    var j = jw(specificCompact(n.sig, pillarId), specificCompact(e.n.sig, pillarId));
+    var s = 0.5 * st.dice + 0.3 * j + 0.2 * st.jac;
+    var dc = discConflicts(n.sig, e.n.sig, pillarId);
+    s -= 0.25 * dc.length;
+    var comp = n.composite !== (e.acte.kind === 'bilan' || e.n.composite);
+    if (comp) s -= 0.2;
+    return { s: Math.max(0, Math.min(1, s)), disc: dc, comp: comp };
+  }
+
+  function matchLine(idx, label, ctxLabel, pillars, orgId, types) {
+    var tries = [{ text: label, ctx: false }];
+    if (ctxLabel && ctxLabel !== label) tries.unshift({ text: ctxLabel, ctx: true });
+    for (var t = 0; t < tries.length; t++) {
+      var pid = pillars[0];
+      var n = normalize(tries[t].text, pid);
+      var ex = exactLookup(idx, n, pillars, orgId);
+      if (ex && ex.e) return { exact: true, method: ex.method + (tries[t].ctx ? ' (avec la section)' : ''), cands: [{ acte: ex.e.acte, s: 1, disc: [], via: ex.e.text }], usedText: tries[t].text };
+    }
+    // flou
+    var pid0 = pillars[0];
+    var n0 = normalize(tries[0].text, pid0);
+    var tri = trigrams(n0.compact);
+    var pool = idx.entries.filter(function (e) { return pillars.indexOf(e.acte.pillar) >= 0 && (e.scope === 'global' || e.org === orgId) && (!types || types.indexOf(e.acte.type) >= 0); });
+    var pre = pool.map(function (e) { return { e: e, d: dice(tri, e.tri) }; }).sort(function (a, b) { return b.d - a.d; }).slice(0, 60);
+    var best = {};
+    pre.forEach(function (p) {
+      var sc = scoreEntry(n0, p.e, p.e.acte.pillar);
+      if (p.e.kind === 'alias_candidat') sc.s = Math.min(1, sc.s + 0.03);
+      var cur = best[p.e.acte.id];
+      if (!cur || sc.s > cur.s) best[p.e.acte.id] = { acte: p.e.acte, s: sc.s, disc: sc.disc, comp: sc.comp, via: p.e.text, kind: p.e.kind };
+    });
+    var cands = Object.keys(best).map(function (k) { return best[k]; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 3);
+    if (types && (!cands[0] || cands[0].s < 0.6)) {
+      var wide = matchLine(idx, label, ctxLabel, pillars, orgId, null);
+      if (wide.cands[0] && !wide.cands[0].disc.length && (!cands[0] || wide.cands[0].s > cands[0].s + 0.1)) { wide.widened = true; return wide; }
+    }
+    return { exact: false, method: 'flou', cands: cands, usedText: tries[0].text };
+  }
+
+  function classify(m, rule, th) {
+    var c1 = m.cands[0], c2 = m.cands[1];
+    if (!c1) return 'inconnu';
+    if (m.exact) return 'reconnu';
+    var margin = c1.s - (c2 ? c2.s : 0);
+    if (rule === 'V2' && c1.s >= th.auto && margin >= th.margin && !c1.disc.length && !c1.comp) return 'reconnu';
+    if (c1.s >= th.prop) return 'confirmer';
+    return 'inconnu';
+  }
+
+  function explain(m, issue, th) {
+    var c1 = m.cands[0]; if (!c1) return 'aucun candidat';
+    if (m.exact) return m.method;
+    var parts = ['flou ' + Math.round(c1.s * 100) + ' %'];
+    if (m.cands[1]) parts.push('marge ' + Math.round((c1.s - m.cands[1].s) * 100));
+    if (c1.disc.length) parts.push('conflit : ' + c1.disc.join(', '));
+    if (c1.comp) parts.push('bilan / acte');
+    if (issue === 'reconnu') parts.push('équivalence de forme');
+    return parts.join(' · ');
+  }
+
+  /* --- prix --- */
+  function parsePrice(v) {
+    if (v == null || String(v).trim() === '') return { value: null, statut: 'manquant' };
+    if (typeof v === 'number') return v < 0 ? { value: null, statut: 'anomalie', note: 'négatif' } : { value: Math.round(v), statut: 'renseigne' };
+    var s = stripAccents(String(v)).toUpperCase().trim();
+    if (/DEVIS|VARIABLE/.test(s)) return { value: null, statut: 'sur_devis' };
+    if (/GRATUIT|OFFERT/.test(s)) return { value: 0, statut: 'renseigne', note: 'gratuit, à confirmer' };
+    s = s.replace(/F\s*CFA|FCFA|CFA|XOF|FRANCS?|\bF\b|F$/g, '').replace(/[\s ]/g, '');
+    if (/^\d{1,3}([.,]\d{3})+$/.test(s)) s = s.replace(/[.,]/g, '');
+    s = s.replace(',', '.');
+    var x = Number(s);
+    if (!isFinite(x) || s === '') return { value: null, statut: 'anomalie', note: 'illisible : ' + v };
+    if (x < 0) return { value: null, statut: 'anomalie', note: 'négatif' };
+    return { value: Math.round(x), statut: 'renseigne' };
+  }
+  function isPriceLike(v) {
+    if (typeof v === 'number') return true;
+    return /^\s*\d[\d\s., ]*\s*(F|FCFA|CFA|XOF)?\s*$/i.test(String(v == null ? '' : v)) && String(v).trim() !== '';
+  }
+  function isHeaderWord(v) { return /^(prix|tarifs?|montant|cout|co[uû]t|pu|prix unitaire)$/i.test(stripAccents(String(v == null ? '' : v)).trim()); }
+  function isLabelHeader(v) { return /^(actes?|examens?|designation|libelle|prestations?|analyses?|nom|intitule)( de l acte)?$/i.test(stripAccents(String(v == null ? '' : v)).toLowerCase().replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim()); }
+
+  /* --- lecture et détection de schéma --- */
+  function detectSchema(rows) {
+    var ncol = rows.reduce(function (m, r) { return Math.max(m, r.length); }, 0);
+    var prof = [];
+    for (var c = 0; c < ncol; c++) prof.push({ text: 0, price: 0, len: 0, header: 0, labelHeader: 0 });
+    rows.forEach(function (r) {
+      for (var c = 0; c < ncol; c++) {
+        var v = r[c]; if (v == null || String(v).trim() === '') continue;
+        if (isHeaderWord(v)) { prof[c].header++; continue; }
+        if (isLabelHeader(v)) { prof[c].labelHeader++; continue; }
+        if (isPriceLike(v)) prof[c].price++; else { prof[c].text++; prof[c].len += String(v).trim().length; }
+      }
+    });
+    var priceCol = -1, pmax = 0;
+    prof.forEach(function (p, c) { var sc = p.price + 3 * p.header; if (sc > pmax) { pmax = sc; priceCol = c; } });
+    var labelCol = -1, lmax = 0;
+    prof.forEach(function (p, c) { if (c === priceCol) return; var sc = p.text * Math.min(1, (p.len / (p.text || 1)) / 6) + 3 * p.labelHeader; if (sc > lmax) { lmax = sc; labelCol = c; } });
+    var delaiCol = -1;
+    prof.forEach(function (p, c) {
+      if (c === priceCol || c === labelCol) return;
+      var n = 0; rows.forEach(function (r) { if (/\b(\d+\s*(h|j|min|jours?|heures?)|rdv|immediat|urgence)\b/i.test(stripAccents(String(r[c] == null ? '' : r[c])))) n++; });
+      if (n >= 3 && delaiCol < 0) delaiCol = c;
+    });
+    var roles = []; for (c = 0; c < ncol; c++) roles.push(c === labelCol ? 'libelle' : c === priceCol ? 'prix' : c === delaiCol ? 'delai' : (prof[c].text ? 'texte' : 'vide'));
+    var conf = Math.min(1, (labelCol >= 0 ? 0.5 : 0) + (priceCol >= 0 ? 0.3 : 0) + (prof[priceCol] && prof[priceCol].price > 5 ? 0.2 : 0));
+    return { ncol: ncol, roles: roles, profile: prof, confidence: conf };
+  }
+
+  function readRows(rows, roles, filePillar) {
+    var labelCols = [], priceCol = roles.indexOf('prix'), delaiCol = roles.indexOf('delai');
+    roles.forEach(function (r, c) { if (r === 'libelle' || r === 'texte') labelCols.push(c); });
+    var out = [], section = null, prevEmpty = true;
+    rows.forEach(function (r, i) {
+      var cells = labelCols.map(function (c) { return r[c]; }).filter(function (v) { return v != null && String(v).trim() !== '' && !isPriceLike(v); });
+      var label = cells.map(function (v) { return String(v).trim(); }).join(' ').replace(/\s+/g, ' ');
+      var pv = priceCol >= 0 ? r[priceCol] : null;
+      var empty = !label && (pv == null || String(pv).trim() === '');
+      if (empty) { out.push({ num: i + 1, kind: 'vide' }); prevEmpty = true; return; }
+      if (isLabelHeader(label) && (pv == null || isHeaderWord(pv))) { out.push({ num: i + 1, kind: 'entete', label: label }); prevEmpty = true; section = null; return; }
+      var priceEmpty = pv == null || String(pv).trim() === '';
+      var sec = label ? sectionInfo(label) : null;
+      var isSection = label && ((pv != null && isHeaderWord(pv)) || (priceEmpty && prevEmpty && (sec || (priceCol >= 0 && label === label.toUpperCase())) && label.split(' ').length <= 3));
+      if (isSection) {
+        section = { label: label, info: sec };
+        out.push({ num: i + 1, kind: 'section', label: label, pillar: sec ? sec.pillar : null });
+        prevEmpty = false; return;
+      }
+      var info = section && section.info;
+      var pillar = (info && info.pillar) || filePillar || null;
+      out.push({
+        num: i + 1, kind: 'acte', label: label, section: section ? section.label : '', ctx: contextualize(label, info),
+        price: parsePrice(pv), priceRaw: pv == null ? '' : String(pv), delai: delaiCol >= 0 && r[delaiCol] != null ? String(r[delaiCol]) : '',
+        pillar: pillar, types: info && info.types ? info.types : null, merged: cells.length > 1
+      });
+      prevEmpty = false;
+    });
+    // lignes avant l'en-tête = titre du document
+    var hi = -1; out.forEach(function (l, k) { if (hi < 0 && l.kind === 'entete') hi = k; });
+    for (var k = 0; k < hi; k++) if (out[k].kind !== 'vide') { out[k] = { num: out[k].num, kind: 'titre', label: out[k].label }; }
+    // pilier du fichier = majorité des sections
+    var votes = {}; out.forEach(function (l) { if (l.kind === 'section' && l.pillar) votes[l.pillar] = (votes[l.pillar] || 0) + 1; });
+    var maj = Object.keys(votes).sort(function (a, b) { return votes[b] - votes[a]; })[0] || null;
+    out.forEach(function (l) { if (l.kind === 'acte' && !l.pillar) l.pillar = maj; });
+    // prix aberrants : > 4 × médiane de la section
+    var bySec = {};
+    out.forEach(function (l) { if (l.kind === 'acte' && l.price.value) (bySec[l.section] = bySec[l.section] || []).push(l.price.value); });
+    out.forEach(function (l) {
+      if (l.kind !== 'acte' || !l.price.value) return;
+      var a = (bySec[l.section] || []).slice().sort(function (x, y) { return x - y; });
+      var med = a[Math.floor(a.length / 2)];
+      if (a.length >= 4 && l.price.value > 4 * med) { l.price.statut = 'anomalie'; l.price.note = 'prix ' + Math.round(l.price.value / med) + ' × la médiane de la section'; }
+    });
+    return { lines: out, pillar: maj };
+  }
+
+  return { PILLARS: PILLARS, normalize: normalize, buildIndex: buildIndex, matchLine: matchLine, classify: classify, explain: explain, detectSchema: detectSchema, readRows: readRows, parsePrice: parsePrice };
+})();
+
+
+</script>
+<script>
+var REF = [{"id":"B001","pillar":"bio","type":"Panel d'examens","name":"NFS + réticulocytes","kind":"bilan","lexique":["NFS+TR","NFS + réticulocytes","hémogramme + réticulocytes"],"composants":["NFS (hémogramme)","Réticulocytes (taux)"]},{"id":"B002","pillar":"bio","type":"Panel d'examens","name":"NFS + frottis sanguin","kind":"bilan","lexique":["NFS + frottis sanguin","NFS + frotis","hémogramme + frottis","nfs frotis sanguin"],"composants":["NFS (hémogramme)","Frottis sanguin (étude morphologique)"]},{"id":"B003","pillar":"bio","type":"Panel d'examens","name":"Transaminases (ASAT + ALAT)","kind":"bilan","lexique":["transaminases","ASAT ALAT","ASAT + ALAT","TGO TGP"],"composants":["ASAT (TGO)","ALAT (TGP)"]},{"id":"B004","pillar":"bio","type":"Panel d'examens","name":"Bilirubine totale et conjuguée","kind":"bilan","lexique":["bilirubine totale et directe","bilirubine T et D","bilirubine totale et conjuguée"],"composants":["Bilirubine totale","Bilirubine conjuguée (directe)"]},{"id":"B005","pillar":"bio","type":"Panel d'examens","name":"Ionogramme sanguin (Na + K + Cl)","kind":"bilan","lexique":["ionogramme sanguin","iono sang","Na K Cl","ionogramme"],"composants":["Natrémie","Kaliémie","Chlorémie"]},{"id":"B006","pillar":"bio","type":"Panel d'examens","name":"Bilan lipidique (EAL)","kind":"bilan","lexique":["bilan lipidique","EAL","lipidogramme","cholestérol HDL LDL triglycérides"],"composants":["Cholestérol total","HDL-cholestérol","LDL-cholestérol","Triglycérides"]},{"id":"B007","pillar":"bio","type":"Panel d'examens","name":"Bilan d'hémostase (TP + TCK + TS)","kind":"bilan","lexique":["TPTCK","TC TS","bilan d'hémostase","TP TCK TS","bilan de coagulation","tptck tc ts"],"composants":["TP / INR","TCA / TCK","Temps de saignement (TS)"]},{"id":"B008","pillar":"bio","type":"Panel d'examens","name":"Dosage pondéral des immunoglobulines (IgG + IgA + IgM)","kind":"bilan","lexique":["dosage pondéral des Ig","immunoglobulines IgG IgA IgM","EPP immunoglobulines"],"composants":["Dosage des IgG","Dosage des IgA","Dosage des IgM"]},{"id":"B009","pillar":"bio","type":"Panel d'examens","name":"Panel myosite (anti-Jo1, Mi-2, SRP, MDA5…)","kind":"bilan","lexique":["panel myosite","anti Jo1 Mi-2 SRP MDA5","myosite panel","Dotmyosite","dot myosite","dot blot myosite"],"composants":["anti-Jo1","anti-Mi-2","anti-SRP","anti-MDA5","anti-TIF1γ","anti-NXP2","anti-PL7/PL12"]},{"id":"B010","pillar":"bio","type":"Panel d'examens","name":"Panel d'allergènes (Phadiatop, trophallergènes, pneumallergènes)","kind":"bilan","lexique":["Phadiatop","panel pneumallergènes","trophallergènes","multi-allergènes"],"composants":["IgE spécifiques (pneumallergènes)","IgE spécifiques (trophallergènes)"]},{"id":"B011","pillar":"bio","type":"Panel d'examens","name":"Bilan martial (fer + ferritine + CST/CTF)","kind":"bilan","lexique":["bilan martial","fer ferritine","bilan du fer","statut martial"],"composants":["Fer sérique","Ferritine","Transferrine","Coefficient de saturation de la transferrine (CST)","Capacité totale de fixation de la transferrine (CTF)"]},{"id":"B012","pillar":"bio","type":"Panel d'examens","name":"Bilan hépatique complet","kind":"bilan","lexique":["bilan hépatique","ASAT ALAT GGT PAL bilirubine","BHC"],"composants":["ASAT (TGO)","ALAT (TGP)","Gamma-GT (GGT)","Phosphatases alcalines (PAL)","Bilirubine totale","Bilirubine conjuguée (directe)"]},{"id":"B013","pillar":"bio","type":"Panel d'examens","name":"Bilan rénal","kind":"bilan","lexique":["bilan rénal","urée créatinine ionogramme","fonction rénale"],"composants":["Urée (azotémie)","Créatininémie","Clairance de la créatinine (DFG)","Ionogramme sanguin (Na + K + Cl)"]},{"id":"B014","pillar":"bio","type":"Panel d'examens","name":"Bilan thyroïdien (TSH, FT4 ± FT3)","kind":"bilan","lexique":["bilan thyroïdien","TSH FT4 FT3","exploration thyroïdienne"],"composants":["TSH ultrasensible","T4 libre (FT4)","T3 libre (FT3)"]},{"id":"B015","pillar":"bio","type":"Panel d'examens","name":"Bilan phosphocalcique","kind":"bilan","lexique":["bilan phosphocalcique","calcémie phosphorémie PTH vitamine D"],"composants":["Calcémie","Phosphorémie","Parathormone (PTH intacte)","Vitamine D (25-OH)"]},{"id":"B016","pillar":"bio","type":"Panel d'examens","name":"Bilan inflammatoire (VS, CRP, fibrinogène)","kind":"bilan","lexique":["bilan inflammatoire","VS CRP fibrinogène","syndrome inflammatoire"],"composants":["Vitesse de sédimentation (VS)","CRP (protéine C réactive)","Fibrinogène"]},{"id":"B017","pillar":"bio","type":"Panel d'examens","name":"Bilan préopératoire standard","kind":"bilan","lexique":["bilan préopératoire","préop","NFS TP TCK groupe glycémie"],"composants":["NFS (hémogramme)","TP / INR","TCA / TCK","Groupe sanguin ABO-Rhésus","Glycémie à jeun"]},{"id":"B018","pillar":"bio","type":"Hématologie","name":"NFS (hémogramme)","kind":"acte","lexique":["NFS","numération formule sanguine","hémogramme","FNS","CBC"],"composants":[]},{"id":"B019","pillar":"bio","type":"Hématologie","name":"Réticulocytes (taux)","kind":"acte","lexique":["réticulocytes","TR","taux de réticulocytes"],"composants":[]},{"id":"B020","pillar":"bio","type":"Hématologie","name":"Frottis sanguin (étude morphologique)","kind":"acte","lexique":["frottis sanguin","frottis","étude morphologique du sang"],"composants":[]},{"id":"B021","pillar":"bio","type":"Hématologie","name":"Vitesse de sédimentation (VS)","kind":"acte","lexique":["VS","vitesse de sédimentation","sédimentation","ESR"],"composants":[]},{"id":"B022","pillar":"bio","type":"Hématologie","name":"Groupe sanguin ABO-Rhésus","kind":"acte","lexique":["GSRH","groupe sanguin","groupage ABO Rh","GS RH"],"composants":[]},{"id":"B023","pillar":"bio","type":"Hématologie","name":"Phénotype érythrocytaire étendu (Rh-Kell)","kind":"acte","lexique":["phénotype érythrocytaire","Rh Kell","phénotype étendu"],"composants":[]},{"id":"B024","pillar":"bio","type":"Hématologie","name":"Antigène D faible (Du)","kind":"acte","lexique":["antigène D faible","Du","Rh faible"],"composants":[]},{"id":"B025","pillar":"bio","type":"Hématologie","name":"Recherche d'agglutinines irrégulières (RAI)","kind":"acte","lexique":["RAI","agglutinines irrégulières","anticorps irréguliers"],"composants":[]},{"id":"B026","pillar":"bio","type":"Hématologie","name":"Test de Coombs direct","kind":"acte","lexique":["coombs direct","TDA","test direct à l'antiglobuline"],"composants":[]},{"id":"B027","pillar":"bio","type":"Hématologie","name":"Test de Coombs indirect","kind":"acte","lexique":["coombs indirect","TIA","test indirect à l'antiglobuline"],"composants":[]},{"id":"B028","pillar":"bio","type":"Hématologie","name":"Test d'Emmel (falciformation)","kind":"acte","lexique":["TE","test d'Emmel","falciformation","Emmel","drépanocytose test"],"composants":[]},{"id":"B029","pillar":"bio","type":"Hématologie","name":"Test de solubilité de l'hémoglobine S","kind":"acte","lexique":["test de solubilité","solubilité HbS","Itano"],"composants":[]},{"id":"B030","pillar":"bio","type":"Hématologie","name":"Électrophorèse de l'hémoglobine","kind":"acte","lexique":["électrophorèse de l'hémoglobine","EPH","Hb électrophorèse","electrophorese de l hemoglobine protidogramme"],"composants":[]},{"id":"B031","pillar":"bio","type":"Hématologie","name":"Dosage HbA2 / HbF","kind":"acte","lexique":["HbA2","HbF","hémoglobine foetale","hémoglobine A2"],"composants":[]},{"id":"B032","pillar":"bio","type":"Hématologie","name":"Myélogramme","kind":"acte","lexique":["myélogramme","ponction médullaire","moelle osseuse cytologie"],"composants":[]},{"id":"B033","pillar":"bio","type":"Hématologie","name":"Test de fragilité osmotique (résistance globulaire)","kind":"acte","lexique":["fragilité osmotique","résistance globulaire","sphérocytose"],"composants":[]},{"id":"B034","pillar":"bio","type":"Hématologie","name":"Dosage G6PD","kind":"acte","lexique":["G6PD","glucose-6-phosphate déshydrogénase","déficit G6PD"],"composants":[]},{"id":"B035","pillar":"bio","type":"Hématologie","name":"Dosage pyruvate kinase érythrocytaire","kind":"acte","lexique":["pyruvate kinase","PK érythrocytaire"],"composants":[]},{"id":"B036","pillar":"bio","type":"Hématologie","name":"Recherche de schizocytes","kind":"acte","lexique":["schizocytes","microangiopathie"],"composants":[]},{"id":"B037","pillar":"bio","type":"Hématologie","name":"Test de Kleihauer","kind":"acte","lexique":["Kleihauer","hémorragie foeto-maternelle"],"composants":[]},{"id":"B038","pillar":"bio","type":"Hématologie","name":"Immunophénotypage lymphocytaire (cytométrie)","kind":"acte","lexique":["immunophénotypage","cytométrie en flux","CD4 CD8","phénotypage lymphocytaire"],"composants":[]},{"id":"B039","pillar":"bio","type":"Hématologie","name":"Fer sérique","kind":"acte","lexique":["fer sérique","sidérémie","fer","Fe"],"composants":[]},{"id":"B040","pillar":"bio","type":"Hématologie","name":"Ferritine","kind":"acte","lexique":["ferritine"],"composants":[]},{"id":"B041","pillar":"bio","type":"Hématologie","name":"Fraction glycosylée de la ferritine","kind":"acte","lexique":["fraction glycosylée de la ferritine","ferritine glyquée","fraction glycosylee ferritine"],"composants":[]},{"id":"B042","pillar":"bio","type":"Hématologie","name":"Transferrine","kind":"acte","lexique":["transferrine"],"composants":[]},{"id":"B043","pillar":"bio","type":"Hématologie","name":"Coefficient de saturation de la transferrine (CST)","kind":"acte","lexique":["CST","saturation de la transferrine"],"composants":[]},{"id":"B044","pillar":"bio","type":"Hématologie","name":"Capacité totale de fixation de la transferrine (CTF)","kind":"acte","lexique":["CTF","TIBC","capacité de fixation","capacite totale de fixation de la tranferrine"],"composants":[]},{"id":"B045","pillar":"bio","type":"Hématologie","name":"Récepteur soluble de la transferrine","kind":"acte","lexique":["récepteur soluble de la transferrine","RsTf","sTfR"],"composants":[]},{"id":"B046","pillar":"bio","type":"Hématologie","name":"Haptoglobine","kind":"acte","lexique":["haptoglobine","hapto","hémolyse","hapto globine"],"composants":[]},{"id":"B047","pillar":"bio","type":"Hémostase / Coagulation","name":"TP / INR","kind":"acte","lexique":["TP","INR","taux de prothrombine","temps de prothrombine"],"composants":[]},{"id":"B048","pillar":"bio","type":"Hémostase / Coagulation","name":"TCA / TCK","kind":"acte","lexique":["TCA","TCK","temps de céphaline activée","temps de céphaline kaolin"],"composants":[]},{"id":"B049","pillar":"bio","type":"Hémostase / Coagulation","name":"Temps de saignement (TS)","kind":"acte","lexique":["temps de saignement","TS","Ivy","Duke"],"composants":[]},{"id":"B050","pillar":"bio","type":"Hémostase / Coagulation","name":"Temps de thrombine (TT)","kind":"acte","lexique":["temps de thrombine","TT","anti thrombine"],"composants":[]},{"id":"B051","pillar":"bio","type":"Hémostase / Coagulation","name":"Fibrinogène","kind":"acte","lexique":["fibrinogène","fibrinémie","fibrine"],"composants":[]},{"id":"B052","pillar":"bio","type":"Hémostase / Coagulation","name":"D-Dimères","kind":"acte","lexique":["D-dimères","DDimères","DD"],"composants":[]},{"id":"B053","pillar":"bio","type":"Hémostase / Coagulation","name":"Produits de dégradation de la fibrine (PDF)","kind":"acte","lexique":["PDF","produits de dégradation de la fibrine"],"composants":[]},{"id":"B054","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage des facteurs de coagulation (II, V, VII, X)","kind":"acte","lexique":["facteur II V VII X","dosage de facteurs","facteurs vitamine K"],"composants":[]},{"id":"B055","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage du facteur VIII","kind":"acte","lexique":["facteur 8","facteur VIII","FVIII","hémophilie A"],"composants":[]},{"id":"B056","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage du facteur IX","kind":"acte","lexique":["facteur 9","facteur IX","FIX","hémophilie B"],"composants":[]},{"id":"B057","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage du facteur XIII","kind":"acte","lexique":["facteur 13","facteur XIII","FXIII"],"composants":[]},{"id":"B058","pillar":"bio","type":"Hémostase / Coagulation","name":"Facteur Willebrand (antigène + activité)","kind":"acte","lexique":["facteur Willebrand","vWF","von Willebrand","dosage facteur willebrand"],"composants":[]},{"id":"B059","pillar":"bio","type":"Hémostase / Coagulation","name":"Protéine C","kind":"acte","lexique":["protéine C","dosage protéine C"],"composants":[]},{"id":"B060","pillar":"bio","type":"Hémostase / Coagulation","name":"Protéine S","kind":"acte","lexique":["protéine S","dosage protéine S"],"composants":[]},{"id":"B061","pillar":"bio","type":"Hémostase / Coagulation","name":"Antithrombine (III)","kind":"acte","lexique":["antithrombine","ATIII","AT3"],"composants":[]},{"id":"B062","pillar":"bio","type":"Hémostase / Coagulation","name":"Résistance à la protéine C activée (RPCa)","kind":"acte","lexique":["résistance protéine C activée","RPCa","facteur V Leiden fonctionnel"],"composants":[]},{"id":"B063","pillar":"bio","type":"Hémostase / Coagulation","name":"Anticoagulant circulant / lupique (LA)","kind":"acte","lexique":["anticoagulant lupique","LA","anticoagulant circulant"],"composants":[]},{"id":"B064","pillar":"bio","type":"Hémostase / Coagulation","name":"Activité anti-Xa (héparine)","kind":"acte","lexique":["anti-Xa","activité anti Xa","héparinémie"],"composants":[]},{"id":"B065","pillar":"bio","type":"Hémostase / Coagulation","name":"Agrégation plaquettaire","kind":"acte","lexique":["agrégation plaquettaire","agrégométrie"],"composants":[]},{"id":"B066","pillar":"bio","type":"Biochimie & ionogramme","name":"Glycémie à jeun","kind":"acte","lexique":["glycémie","glucose","GAJ"],"composants":[]},{"id":"B067","pillar":"bio","type":"Biochimie & ionogramme","name":"Glycémie post-prandiale","kind":"acte","lexique":["glycémie post-prandiale","glycémie 2h"],"composants":[]},{"id":"B068","pillar":"bio","type":"Biochimie & ionogramme","name":"HGPO (hyperglycémie provoquée orale)","kind":"acte","lexique":["HGPO","hyperglycémie provoquée","OGTT","O'Sullivan","hgpo hyperglycemie provoque par voie orale"],"composants":[]},{"id":"B069","pillar":"bio","type":"Biochimie & ionogramme","name":"Hémoglobine glyquée (HbA1c)","kind":"acte","lexique":["HbA1c","hémoglobine glyquée","A1c"],"composants":[]},{"id":"B070","pillar":"bio","type":"Biochimie & ionogramme","name":"Fructosamine","kind":"acte","lexique":["fructosamine"],"composants":[]},{"id":"B071","pillar":"bio","type":"Biochimie & ionogramme","name":"Insulinémie","kind":"acte","lexique":["insulinémie","insuline"],"composants":[]},{"id":"B072","pillar":"bio","type":"Biochimie & ionogramme","name":"Peptide C","kind":"acte","lexique":["peptide C","C-peptide"],"composants":[]},{"id":"B073","pillar":"bio","type":"Biochimie & ionogramme","name":"Urée (azotémie)","kind":"acte","lexique":["azotémie","urée","urémie","BUN"],"composants":[]},{"id":"B074","pillar":"bio","type":"Biochimie & ionogramme","name":"Créatininémie","kind":"acte","lexique":["créatinine","créatininémie","créat"],"composants":[]},{"id":"B075","pillar":"bio","type":"Biochimie & ionogramme","name":"Clairance de la créatinine (DFG)","kind":"acte","lexique":["clairance de la créatinine","DFG estimé","Cockcroft","clairance rénale","clairance de la creat"],"composants":[]},{"id":"B076","pillar":"bio","type":"Biochimie & ionogramme","name":"Cystatine C","kind":"acte","lexique":["cystatine C","cystatine"],"composants":[]},{"id":"B077","pillar":"bio","type":"Biochimie & ionogramme","name":"Uricémie (acide urique)","kind":"acte","lexique":["uricémie","acide urique","urate"],"composants":[]},{"id":"B078","pillar":"bio","type":"Biochimie & ionogramme","name":"Natrémie","kind":"acte","lexique":["natrémie","sodium","Na"],"composants":[]},{"id":"B079","pillar":"bio","type":"Biochimie & ionogramme","name":"Kaliémie","kind":"acte","lexique":["kaliémie","potassium","K"],"composants":[]},{"id":"B080","pillar":"bio","type":"Biochimie & ionogramme","name":"Chlorémie","kind":"acte","lexique":["chlorémie","chlore","Cl"],"composants":[]},{"id":"B081","pillar":"bio","type":"Biochimie & ionogramme","name":"Réserve alcaline (bicarbonates / CO2 total)","kind":"acte","lexique":["réserve alcaline","bicarbonates","CO2 total","HCO3"],"composants":[]},{"id":"B082","pillar":"bio","type":"Biochimie & ionogramme","name":"Calcémie","kind":"acte","lexique":["calcémie","calcium","Ca"],"composants":[]},{"id":"B083","pillar":"bio","type":"Biochimie & ionogramme","name":"Calcium ionisé","kind":"acte","lexique":["calcium ionisé","calcium libre"],"composants":[]},{"id":"B084","pillar":"bio","type":"Biochimie & ionogramme","name":"Phosphorémie","kind":"acte","lexique":["phosphore","phosphorémie","phosphate","P"],"composants":[]},{"id":"B085","pillar":"bio","type":"Biochimie & ionogramme","name":"Magnésémie","kind":"acte","lexique":["magnésémie","magnésium","Mg"],"composants":[]},{"id":"B086","pillar":"bio","type":"Biochimie & ionogramme","name":"ASAT (TGO)","kind":"acte","lexique":["ASAT","SGOT","TGO","aspartate aminotransférase"],"composants":[]},{"id":"B087","pillar":"bio","type":"Biochimie & ionogramme","name":"ALAT (TGP)","kind":"acte","lexique":["ALAT","SGPT","TGP","alanine aminotransférase"],"composants":[]},{"id":"B088","pillar":"bio","type":"Biochimie & ionogramme","name":"Gamma-GT (GGT)","kind":"acte","lexique":["GGT","gamma GT","gamma-glutamyl transférase"],"composants":[]},{"id":"B089","pillar":"bio","type":"Biochimie & ionogramme","name":"Phosphatases alcalines (PAL)","kind":"acte","lexique":["PAL","phosphatase alcaline","ALP"],"composants":[]},{"id":"B090","pillar":"bio","type":"Biochimie & ionogramme","name":"5'-nucléotidase","kind":"acte","lexique":["5 nucléotidase","5'-nucléotidase"],"composants":[]},{"id":"B091","pillar":"bio","type":"Biochimie & ionogramme","name":"Bilirubine totale","kind":"acte","lexique":["bilirubine totale","BT"],"composants":[]},{"id":"B092","pillar":"bio","type":"Biochimie & ionogramme","name":"Bilirubine conjuguée (directe)","kind":"acte","lexique":["bilirubine conjuguée","bilirubine directe","BD"],"composants":[]},{"id":"B093","pillar":"bio","type":"Biochimie & ionogramme","name":"Ammoniémie","kind":"acte","lexique":["ammoniémie","ammoniac","NH3"],"composants":[]},{"id":"B094","pillar":"bio","type":"Biochimie & ionogramme","name":"Protéines totales (protidémie)","kind":"acte","lexique":["protidémie","protéines totales","protéine","protides"],"composants":[]},{"id":"B095","pillar":"bio","type":"Biochimie & ionogramme","name":"Albuminémie","kind":"acte","lexique":["albumine","albuminémie"],"composants":[]},{"id":"B096","pillar":"bio","type":"Biochimie & ionogramme","name":"Préalbumine","kind":"acte","lexique":["préalbumine","transthyrétine"],"composants":[]},{"id":"B097","pillar":"bio","type":"Biochimie & ionogramme","name":"Électrophorèse des protéines sériques (EPP)","kind":"acte","lexique":["électrophorèse des protéines","EPP","protidogramme","protéinogramme"],"composants":[]},{"id":"B098","pillar":"bio","type":"Biochimie & ionogramme","name":"Immunofixation des protéines sériques","kind":"acte","lexique":["immunofixation","IEPP","pic monoclonal"],"composants":[]},{"id":"B099","pillar":"bio","type":"Biochimie & ionogramme","name":"Bêta-2-microglobuline","kind":"acte","lexique":["beta-2-microglobuline","B2M"],"composants":[]},{"id":"B100","pillar":"bio","type":"Biochimie & ionogramme","name":"Céruloplasmine","kind":"acte","lexique":["céruloplasmine","Wilson"],"composants":[]},{"id":"B101","pillar":"bio","type":"Biochimie & ionogramme","name":"CRP (protéine C réactive)","kind":"acte","lexique":["CRP","protéine C réactive"],"composants":[]},{"id":"B102","pillar":"bio","type":"Biochimie & ionogramme","name":"CRP ultrasensible","kind":"acte","lexique":["CRP ultrasensible","CRPus","hs-CRP"],"composants":[]},{"id":"B103","pillar":"bio","type":"Biochimie & ionogramme","name":"Procalcitonine (PCT)","kind":"acte","lexique":["procalcitonine","PCT"],"composants":[]},{"id":"B104","pillar":"bio","type":"Biochimie & ionogramme","name":"Cholestérol total","kind":"acte","lexique":["cholestérol total","cholestérol"],"composants":[]},{"id":"B105","pillar":"bio","type":"Biochimie & ionogramme","name":"HDL-cholestérol","kind":"acte","lexique":["HDL","cholestérol HDL"],"composants":[]},{"id":"B106","pillar":"bio","type":"Biochimie & ionogramme","name":"LDL-cholestérol","kind":"acte","lexique":["LDL","cholestérol LDL"],"composants":[]},{"id":"B107","pillar":"bio","type":"Biochimie & ionogramme","name":"Triglycérides","kind":"acte","lexique":["triglycérides","TG"],"composants":[]},{"id":"B108","pillar":"bio","type":"Biochimie & ionogramme","name":"Apolipoprotéine A1","kind":"acte","lexique":["apolipoprotéine A1","ApoA1"],"composants":[]},{"id":"B109","pillar":"bio","type":"Biochimie & ionogramme","name":"Apolipoprotéine B","kind":"acte","lexique":["apolipoprotéine B","ApoB"],"composants":[]},{"id":"B110","pillar":"bio","type":"Biochimie & ionogramme","name":"Lipoprotéine (a)","kind":"acte","lexique":["lipoprotéine a","Lp(a)","Lpa"],"composants":[]},{"id":"B111","pillar":"bio","type":"Biochimie & ionogramme","name":"Amylasémie","kind":"acte","lexique":["amylase","amylasémie"],"composants":[]},{"id":"B112","pillar":"bio","type":"Biochimie & ionogramme","name":"Lipase","kind":"acte","lexique":["lipase","lipasémie"],"composants":[]},{"id":"B113","pillar":"bio","type":"Biochimie & ionogramme","name":"LDH (lactate déshydrogénase)","kind":"acte","lexique":["LDH","lactate déshydrogénase"],"composants":[]},{"id":"B114","pillar":"bio","type":"Biochimie & ionogramme","name":"Aldolase","kind":"acte","lexique":["aldolase"],"composants":[]},{"id":"B115","pillar":"bio","type":"Biochimie & ionogramme","name":"Cholinestérases","kind":"acte","lexique":["cholinestérase","pseudocholinestérase","butyrylcholinestérase"],"composants":[]},{"id":"B116","pillar":"bio","type":"Biochimie & ionogramme","name":"Homocystéine","kind":"acte","lexique":["homocystéine","homocysteine"],"composants":[]},{"id":"B117","pillar":"bio","type":"Biochimie & ionogramme","name":"Osmolalité plasmatique","kind":"acte","lexique":["osmolalité","osmolarité plasmatique"],"composants":[]},{"id":"B118","pillar":"bio","type":"Biochimie & ionogramme","name":"FibroTest-ActiTest","kind":"acte","lexique":["fibrotest","actitest","fibrose hépatique non invasive"],"composants":[]},{"id":"B119","pillar":"bio","type":"Biochimie & ionogramme","name":"Chimie des liquides (LCR, ascite, pleural)","kind":"acte","lexique":["chimie LCR","glycorachie","protéinorachie","biochimie liquide de ponction"],"composants":[]},{"id":"B120","pillar":"bio","type":"Explorations urinaires","name":"Bandelette urinaire","kind":"acte","lexique":["bandelette urinaire","BU","dipstick","albumine sucre","bandelettes alb sucre"],"composants":[]},{"id":"B121","pillar":"bio","type":"Explorations urinaires","name":"Protéinurie des 24 h","kind":"acte","lexique":["Pu 24h","protéinurie 24h","protéinurie des 24 heures","pu 24 h"],"composants":[]},{"id":"B122","pillar":"bio","type":"Explorations urinaires","name":"Microalbuminurie","kind":"acte","lexique":["microalbuminurie","albuminurie","micro-albumine urinaire","micro albuminurie albuminurie"],"composants":[]},{"id":"B123","pillar":"bio","type":"Explorations urinaires","name":"Rapport protéinurie / créatininurie (RPC)","kind":"acte","lexique":["RPC","rapport protéinurie créatininurie","ratio albumine créatinine"],"composants":[]},{"id":"B124","pillar":"bio","type":"Explorations urinaires","name":"Ionogramme urinaire","kind":"acte","lexique":["ionogramme urinaire","iono urines","Na K urinaire"],"composants":[]},{"id":"B125","pillar":"bio","type":"Explorations urinaires","name":"Urée urinaire","kind":"acte","lexique":["urée urinaire","urée des urines"],"composants":[]},{"id":"B126","pillar":"bio","type":"Explorations urinaires","name":"Créatininurie","kind":"acte","lexique":["créatininurie","créatinine urinaire"],"composants":[]},{"id":"B127","pillar":"bio","type":"Explorations urinaires","name":"Calciurie","kind":"acte","lexique":["calciurie","calcium urinaire"],"composants":[]},{"id":"B128","pillar":"bio","type":"Explorations urinaires","name":"Phosphaturie","kind":"acte","lexique":["phosphaturie","phosphore urinaire"],"composants":[]},{"id":"B129","pillar":"bio","type":"Explorations urinaires","name":"Uricurie (acide urique urinaire)","kind":"acte","lexique":["uricurie","acide urique urinaire"],"composants":[]},{"id":"B130","pillar":"bio","type":"Explorations urinaires","name":"Oxalurie","kind":"acte","lexique":["oxalurie","oxaturie","oxalate urinaire"],"composants":[]},{"id":"B131","pillar":"bio","type":"Explorations urinaires","name":"Glycosurie","kind":"acte","lexique":["glycosurie","glucose urinaire"],"composants":[]},{"id":"B132","pillar":"bio","type":"Explorations urinaires","name":"Culot urinaire (sédiment)","kind":"acte","lexique":["culot urinaire","sédiment urinaire","culot urinaire sediment urinaire"],"composants":[]},{"id":"B133","pillar":"bio","type":"Explorations urinaires","name":"Compte d'Addis (HLM)","kind":"acte","lexique":["HLM","compte d'Addis","hématies leucocytes minute","hlm compte d addis"],"composants":[]},{"id":"B134","pillar":"bio","type":"Explorations urinaires","name":"Protéinurie de Bence-Jones","kind":"acte","lexique":["Bence-Jones","chaînes légères urinaires","protéinurie de surcharge"],"composants":[]},{"id":"B135","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine A (rétinol)","kind":"acte","lexique":["vitamine A","rétinol"],"composants":[]},{"id":"B136","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B1 (thiamine)","kind":"acte","lexique":["vitamine B1","thiamine"],"composants":[]},{"id":"B137","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B6 (pyridoxine)","kind":"acte","lexique":["vitamine B6","pyridoxine"],"composants":[]},{"id":"B138","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B9 (folates)","kind":"acte","lexique":["vitamine B9","folates","acide folique","folate","vitamine b9 folate"],"composants":[]},{"id":"B139","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B12 (cobalamine)","kind":"acte","lexique":["vitamine B12","cobalamine","B12"],"composants":[]},{"id":"B140","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine C (acide ascorbique)","kind":"acte","lexique":["vitamine C","acide ascorbique"],"composants":[]},{"id":"B141","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine D (25-OH)","kind":"acte","lexique":["vitamine D","25 OH vitamine D","25-hydroxyvitamine D","calcidiol","vitamine d 25 oh vit d"],"composants":[]},{"id":"B142","pillar":"bio","type":"Vitamines & oligo-éléments","name":"1,25-OH vitamine D (calcitriol)","kind":"acte","lexique":["1,25 OH vitamine D","calcitriol","vitamine D active"],"composants":[]},{"id":"B143","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine E (tocophérol)","kind":"acte","lexique":["vitamine E","tocophérol"],"composants":[]},{"id":"B144","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine K","kind":"acte","lexique":["vitamine K","phylloquinone"],"composants":[]},{"id":"B145","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Zinc (zincémie)","kind":"acte","lexique":["zinc","zincémie"],"composants":[]},{"id":"B146","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Cuivre (cuprémie)","kind":"acte","lexique":["cuivre","cuprémie"],"composants":[]},{"id":"B147","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Sélénium","kind":"acte","lexique":["sélénium","sélénémie"],"composants":[]},{"id":"B148","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Iodurie","kind":"acte","lexique":["iodurie","iode urinaire"],"composants":[]},{"id":"B149","pillar":"bio","type":"Marqueurs cardiaques","name":"Troponine","kind":"acte","lexique":["troponine","Tnc","troponine T","troponine I"],"composants":[]},{"id":"B150","pillar":"bio","type":"Marqueurs cardiaques","name":"Troponine ultrasensible","kind":"acte","lexique":["troponine ultrasensible","troponine US","hs-troponine"],"composants":[]},{"id":"B151","pillar":"bio","type":"Marqueurs cardiaques","name":"Myoglobine","kind":"acte","lexique":["myoglobine"],"composants":[]},{"id":"B152","pillar":"bio","type":"Marqueurs cardiaques","name":"CPK (créatine phosphokinase)","kind":"acte","lexique":["CPK","CK","créatine kinase"],"composants":[]},{"id":"B153","pillar":"bio","type":"Marqueurs cardiaques","name":"CPK-MB","kind":"acte","lexique":["CPK-MB","CK-MB"],"composants":[]},{"id":"B154","pillar":"bio","type":"Marqueurs cardiaques","name":"BNP","kind":"acte","lexique":["BNP","peptide natriurétique B"],"composants":[]},{"id":"B155","pillar":"bio","type":"Marqueurs cardiaques","name":"NT-proBNP","kind":"acte","lexique":["NT proBNP","NTproBNP","peptide natriurétique","nt pro bnp"],"composants":[]},{"id":"B156","pillar":"bio","type":"Endocrinologie & hormonologie","name":"TSH ultrasensible","kind":"acte","lexique":["TSH","TSHus","thyréostimuline"],"composants":[]},{"id":"B157","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T4 libre (FT4)","kind":"acte","lexique":["T4","FT4","T4 libre","thyroxine libre"],"composants":[]},{"id":"B158","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T3 libre (FT3)","kind":"acte","lexique":["T3","FT3","T3 libre","triiodothyronine libre"],"composants":[]},{"id":"B159","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T4 totale","kind":"acte","lexique":["T4 totale","thyroxine totale"],"composants":[]},{"id":"B160","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T3 totale","kind":"acte","lexique":["T3 totale","triiodothyronine totale"],"composants":[]},{"id":"B161","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Thyroglobuline","kind":"acte","lexique":["thyroglobuline","Tg"],"composants":[]},{"id":"B162","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Calcitonine","kind":"acte","lexique":["calcitonine","thyrocalcitonine"],"composants":[]},{"id":"B163","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Parathormone (PTH intacte)","kind":"acte","lexique":["PTH","parathormone","PTHi","pthi parathormone"],"composants":[]},{"id":"B164","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Cortisolémie (8h)","kind":"acte","lexique":["cortisol","cortisolémie","cortisol 8h"],"composants":[]},{"id":"B165","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Cycle du cortisol","kind":"acte","lexique":["cycle du cortisol","cortisol 8h 16h minuit"],"composants":[]},{"id":"B166","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Cortisol libre urinaire (CLU)","kind":"acte","lexique":["cortisol urinaire","CLU","cortisol libre urinaire","cortisol urines"],"composants":[]},{"id":"B167","pillar":"bio","type":"Endocrinologie & hormonologie","name":"ACTH","kind":"acte","lexique":["ACTH","corticotrophine"],"composants":[]},{"id":"B168","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Aldostérone","kind":"acte","lexique":["aldostérone"],"composants":[]},{"id":"B169","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Rénine (activité rénine plasmatique)","kind":"acte","lexique":["rénine","activité rénine plasmatique","ARP"],"composants":[]},{"id":"B170","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Rapport aldostérone / rénine","kind":"acte","lexique":["rapport aldostérone rénine","ARR"],"composants":[]},{"id":"B171","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Métanéphrines plasmatiques","kind":"acte","lexique":["métanéphrines plasmatiques","normétanéphrine plasmatique","phéochromocytome","metanephrine"],"composants":[]},{"id":"B172","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Métanéphrines urinaires","kind":"acte","lexique":["métanéphrines urinaires","dérivés méthoxylés urinaires","phéochromocytome"],"composants":[]},{"id":"B173","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Catécholamines","kind":"acte","lexique":["catécholamines","adrénaline noradrénaline dopamine"],"composants":[]},{"id":"B174","pillar":"bio","type":"Endocrinologie & hormonologie","name":"17-OH-progestérone","kind":"acte","lexique":["17 OH progestérone","17OHP","bloc enzymatique surrénalien"],"composants":[]},{"id":"B175","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Delta-4-androstènedione","kind":"acte","lexique":["delta 4 androstènedione","androstènedione"],"composants":[]},{"id":"B176","pillar":"bio","type":"Endocrinologie & hormonologie","name":"SDHEA (sulfate de DHEA)","kind":"acte","lexique":["SDHEA","sulfate de DHEA","DHEAS"],"composants":[]},{"id":"B177","pillar":"bio","type":"Endocrinologie & hormonologie","name":"DHEA","kind":"acte","lexique":["DHEA","déhydroépiandrostérone"],"composants":[]},{"id":"B178","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Test au Synacthène (dynamique)","kind":"acte","lexique":["test au synacthène","synacthène","stimulation ACTH"],"composants":[]},{"id":"B179","pillar":"bio","type":"Endocrinologie & hormonologie","name":"FSH","kind":"acte","lexique":["FSH","hormone folliculo-stimulante"],"composants":[]},{"id":"B180","pillar":"bio","type":"Endocrinologie & hormonologie","name":"LH","kind":"acte","lexique":["LH","hormone lutéinisante"],"composants":[]},{"id":"B181","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Prolactine","kind":"acte","lexique":["prolactine","PRL"],"composants":[]},{"id":"B182","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Œstradiol (E2)","kind":"acte","lexique":["oestradiol","estradiol","E2"],"composants":[]},{"id":"B183","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Progestérone","kind":"acte","lexique":["progestérone"],"composants":[]},{"id":"B184","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Testostérone totale","kind":"acte","lexique":["testostérone","testostérone totale"],"composants":[]},{"id":"B185","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Testostérone biodisponible / libre","kind":"acte","lexique":["testostérone biodisponible","testostérone libre"],"composants":[]},{"id":"B186","pillar":"bio","type":"Endocrinologie & hormonologie","name":"SHBG","kind":"acte","lexique":["SHBG","protéine de transport des hormones sexuelles"],"composants":[]},{"id":"B187","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Hormone anti-müllérienne (AMH)","kind":"acte","lexique":["AMH","hormone anti-mullérienne","amh hormone anti mullerienne"],"composants":[]},{"id":"B188","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Inhibine B","kind":"acte","lexique":["inhibine B"],"composants":[]},{"id":"B189","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Hormone de croissance (GH)","kind":"acte","lexique":["GH","hormone de croissance","somatotropine"],"composants":[]},{"id":"B190","pillar":"bio","type":"Endocrinologie & hormonologie","name":"IGF-1 (somatomédine C)","kind":"acte","lexique":["IGF1","IGF-1","somatomédine C"],"composants":[]},{"id":"B191","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Glucagon","kind":"acte","lexique":["glucagon"],"composants":[]},{"id":"B192","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Gastrine","kind":"acte","lexique":["gastrine"],"composants":[]},{"id":"B193","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Érythropoïétine (EPO)","kind":"acte","lexique":["EPO","érythropoïétine"],"composants":[]},{"id":"B194","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Chromogranine A","kind":"acte","lexique":["chromogranine A","CgA"],"composants":[]},{"id":"B195","pillar":"bio","type":"Endocrinologie & hormonologie","name":"CrossLaps (CTX) / marqueurs du remodelage osseux","kind":"acte","lexique":["crosslaps","CTX","télopeptide","remodelage osseux"],"composants":[]},{"id":"B196","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Ostéocalcine","kind":"acte","lexique":["ostéocalcine"],"composants":[]},{"id":"B197","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Sérotonine plasmatique","kind":"acte","lexique":["sérotonine","5-HT"],"composants":[]},{"id":"B198","pillar":"bio","type":"Fertilité & spermiologie","name":"Spermogramme","kind":"acte","lexique":["spermogramme","sperme numération mobilité"],"composants":[]},{"id":"B199","pillar":"bio","type":"Fertilité & spermiologie","name":"Spermocytogramme","kind":"acte","lexique":["spermocytogramme","morphologie des spermatozoïdes"],"composants":[]},{"id":"B200","pillar":"bio","type":"Fertilité & spermiologie","name":"Test de migration-survie (TMS)","kind":"acte","lexique":["TMS","test de migration survie","capacitation"],"composants":[]},{"id":"B201","pillar":"bio","type":"Fertilité & spermiologie","name":"Spermoculture","kind":"acte","lexique":["spermoculture","culture du sperme"],"composants":[]},{"id":"B202","pillar":"bio","type":"Fertilité & spermiologie","name":"Biochimie du sperme (fructose, zinc, carnitine)","kind":"acte","lexique":["biochimie du sperme","fructose séminal","zinc séminal","carnitine"],"composants":[]},{"id":"B203","pillar":"bio","type":"Fertilité & spermiologie","name":"Test post-coïtal (Hühner)","kind":"acte","lexique":["test post-coïtal","Hühner","test de Huhner"],"composants":[]},{"id":"B204","pillar":"bio","type":"Fertilité & spermiologie","name":"Anticorps anti-spermatozoïdes (MAR test)","kind":"acte","lexique":["anticorps anti-spermatozoïdes","MAR test"],"composants":[]},{"id":"B205","pillar":"bio","type":"Marqueurs tumoraux","name":"PSA total","kind":"acte","lexique":["PSAt","PSA total","antigène prostatique spécifique"],"composants":[]},{"id":"B206","pillar":"bio","type":"Marqueurs tumoraux","name":"PSA libre + rapport libre/total","kind":"acte","lexique":["PSA libre","rapport PSA libre total","PSA ratio"],"composants":[]},{"id":"B207","pillar":"bio","type":"Marqueurs tumoraux","name":"ACE (antigène carcino-embryonnaire / CEA)","kind":"acte","lexique":["ACE","CEA","antigène carcino-embryonnaire"],"composants":[]},{"id":"B208","pillar":"bio","type":"Marqueurs tumoraux","name":"Alpha-fœtoprotéine (AFP)","kind":"acte","lexique":["AFP","alpha foetoprotéine"],"composants":[]},{"id":"B209","pillar":"bio","type":"Marqueurs tumoraux","name":"Bêta-HCG (quantitatif)","kind":"acte","lexique":["beta HCG","βHCG","HCG","gonadotrophine chorionique"],"composants":[]},{"id":"B210","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 125","kind":"acte","lexique":["CA125","CA 125","marqueur ovarien"],"composants":[]},{"id":"B211","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 15-3","kind":"acte","lexique":["CA15-3","marqueur sein"],"composants":[]},{"id":"B212","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 19-9","kind":"acte","lexique":["CA19-9","marqueur digestif pancréas"],"composants":[]},{"id":"B213","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 72-4","kind":"acte","lexique":["CA72-4","marqueur gastrique"],"composants":[]},{"id":"B214","pillar":"bio","type":"Marqueurs tumoraux","name":"CYFRA 21-1","kind":"acte","lexique":["CYFRA 21-1","cytokératine 19"],"composants":[]},{"id":"B215","pillar":"bio","type":"Marqueurs tumoraux","name":"NSE (énolase neurospécifique)","kind":"acte","lexique":["NSE","énolase neurospécifique"],"composants":[]},{"id":"B216","pillar":"bio","type":"Marqueurs tumoraux","name":"SCC (antigène du carcinome épidermoïde)","kind":"acte","lexique":["SCC","carcinome épidermoïde"],"composants":[]},{"id":"B217","pillar":"bio","type":"Marqueurs tumoraux","name":"HE4","kind":"acte","lexique":["HE4","human epididymis protein 4"],"composants":[]},{"id":"B218","pillar":"bio","type":"Marqueurs tumoraux","name":"ProGRP","kind":"acte","lexique":["ProGRP","pro-gastrin releasing peptide"],"composants":[]},{"id":"B219","pillar":"bio","type":"Marqueurs tumoraux","name":"S100","kind":"acte","lexique":["S100","protéine S100","mélanome"],"composants":[]},{"id":"B220","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Complément C3","kind":"acte","lexique":["complément C3","C3"],"composants":[]},{"id":"B221","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Complément C4","kind":"acte","lexique":["complément C4","C4"],"composants":[]},{"id":"B222","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"CH50 (complément total)","kind":"acte","lexique":["CH50","complément hémolytique 50","complément total"],"composants":[]},{"id":"B223","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Facteur rhumatoïde (latex)","kind":"acte","lexique":["facteur rhumatoïde","FR","latex","RF"],"composants":[]},{"id":"B224","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Réaction de Waaler-Rose","kind":"acte","lexique":["Waaler Rose","Waler Rose","latex waaler rose"],"composants":[]},{"id":"B225","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-CCP","kind":"acte","lexique":["anti CCP","anti-peptide citrulliné","ACPA","ac anti ccp"],"composants":[]},{"id":"B226","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-nucléaires (AAN/FAN)","kind":"acte","lexique":["anti nucléaire","AAN","ANA","FAN","ac anti nucleaire"],"composants":[]},{"id":"B227","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-ADN natif (anti-dsDNA)","kind":"acte","lexique":["anti DNA natif","anti dsDNA","anti-ADN double brin","ac anti adn","ac anti dna natif"],"composants":[]},{"id":"B228","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-ENA (anti-ECT)","kind":"acte","lexique":["anti ECT","ENA","anti-Sm RNP SSA SSB Scl70 Jo1","ac anti ect"],"composants":[]},{"id":"B229","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-nucléosomes","kind":"acte","lexique":["anti nucléosome"],"composants":[]},{"id":"B230","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"ANCA (p-ANCA/MPO, c-ANCA/PR3)","kind":"acte","lexique":["ANCA","p-ANCA","c-ANCA","MPO","PR3","vascularite"],"composants":[]},{"id":"B231","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps antiphospholipides (bilan SAPL)","kind":"acte","lexique":["anti phospholipides","antiphospholipides","APL","aPL","syndrome des antiphospholipides","SAPL","ac anti phospholipides"],"composants":[]},{"id":"B232","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticardiolipines IgG","kind":"acte","lexique":["anticardiolipine IgG","aCL IgG"],"composants":[]},{"id":"B233","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticardiolipines IgM","kind":"acte","lexique":["anticardiolipine IgM","aCL IgM"],"composants":[]},{"id":"B234","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-β2-glycoprotéine 1 IgG","kind":"acte","lexique":["anti beta2GP1 IgG","anti-β2GP1 IgG","beta 2 glycoprotéine IgG"],"composants":[]},{"id":"B235","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-β2-glycoprotéine 1 IgM","kind":"acte","lexique":["anti beta2GP1 IgM","anti-β2GP1 IgM","beta 2 glycoprotéine IgM"],"composants":[]},{"id":"B236","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-muscle lisse (AML)","kind":"acte","lexique":["anti muscle lisse","ASMA","anti-actine","ac anti muscle lisse"],"composants":[]},{"id":"B237","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-mitochondries (AMA)","kind":"acte","lexique":["anti mitochondrie","AMA","M2","ac anti mitochondrie"],"composants":[]},{"id":"B238","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-LKM1","kind":"acte","lexique":["anti LKM","LKM1"],"composants":[]},{"id":"B239","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-gp210 (CP210)","kind":"acte","lexique":["anti gp210","CP210","ac anti cp 210"],"composants":[]},{"id":"B240","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-SLA","kind":"acte","lexique":["anti SLA","soluble liver antigen"],"composants":[]},{"id":"B241","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-PLA2R","kind":"acte","lexique":["anti PLA2R","phospholipase A2 récepteur","ac anti pla 2r"],"composants":[]},{"id":"B242","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-membrane basale glomérulaire","kind":"acte","lexique":["anti membrane basale","anti-MBG","Goodpasture","anti-GBM","ac anti membrane basale"],"composants":[]},{"id":"B243","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-récepteur de l'acétylcholine (RACh)","kind":"acte","lexique":["anti récepteur acétylcholine","anti-RACh","RATH","myasthénie","rath anticorps anti recepteur de l acethyle choline"],"composants":[]},{"id":"B244","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-MuSK","kind":"acte","lexique":["anti MuSK","myasthénie MuSK","ac anti musk"],"composants":[]},{"id":"B245","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-transglutaminase (IgA)","kind":"acte","lexique":["anti transglutaminase","tTG","cœliaque"],"composants":[]},{"id":"B246","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-endomysium (EMA)","kind":"acte","lexique":["anti endomysium","EMA","ac anti endomysium"],"composants":[]},{"id":"B247","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-gliadine déamidée","kind":"acte","lexique":["anti gliadine déamidée","DGP"],"composants":[]},{"id":"B248","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-facteur intrinsèque","kind":"acte","lexique":["anti facteur intrinsèque","Biermer","ac anti facteur intrinseque","facteur intrinseque"],"composants":[]},{"id":"B249","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-TPO","kind":"acte","lexique":["anti TPO","anti-thyroperoxydase","ATPO","TPO"],"composants":[]},{"id":"B250","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-thyroglobuline","kind":"acte","lexique":["anti thyroglobuline","anti Tg"],"composants":[]},{"id":"B251","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-récepteurs de la TSH (TRAK)","kind":"acte","lexique":["anti récepteur TSH","TRAK","TRAb","Basedow","anticorps anti recepteur de la tsh"],"composants":[]},{"id":"B252","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-GAD","kind":"acte","lexique":["anti GAD","GAD65","diabète auto-immun"],"composants":[]},{"id":"B253","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-IA2","kind":"acte","lexique":["anti IA2"],"composants":[]},{"id":"B254","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-îlots (ICA)","kind":"acte","lexique":["anti îlots","ICA"],"composants":[]},{"id":"B255","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-insuline","kind":"acte","lexique":["anti insuline","IAA"],"composants":[]},{"id":"B256","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-substance intercellulaire","kind":"acte","lexique":["anti substance intercellulaire","desmogléine","pemphigus","ac anti substance intra cellulaire"],"composants":[]},{"id":"B257","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-membrane basale cutanée (BP180/BP230)","kind":"acte","lexique":["anti BP180","BP230","pemphigoïde"],"composants":[]},{"id":"B258","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Dosage des IgG","kind":"acte","lexique":["IgG","immunoglobuline G","gammaglobulines G"],"composants":[]},{"id":"B259","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Dosage des IgA","kind":"acte","lexique":["IgA","immunoglobuline A"],"composants":[]},{"id":"B260","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Dosage des IgM","kind":"acte","lexique":["IgM","immunoglobuline M"],"composants":[]},{"id":"B261","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Sous-classes d'IgG","kind":"acte","lexique":["sous-classes IgG","IgG1 IgG2 IgG3 IgG4"],"composants":[]},{"id":"B262","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgG4","kind":"acte","lexique":["IgG4","maladie à IgG4"],"composants":[]},{"id":"B263","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Cryoglobulines","kind":"acte","lexique":["cryoglobuline","cryoglobulinémie"],"composants":[]},{"id":"B264","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"HLA-B27","kind":"acte","lexique":["HLA B27","spondylarthrite"],"composants":[]},{"id":"B265","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"QuantiFERON-TB (IGRA)","kind":"acte","lexique":["quantiferon","IGRA","TB gold","tuberculose interféron"],"composants":[]},{"id":"B266","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IDR à la tuberculine (IDRt)","kind":"acte","lexique":["IDR","intradermoréaction","tuberculine","Mantoux","idrt"],"composants":[]},{"id":"B267","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgE totales sériques","kind":"acte","lexique":["IgE totales","IgE sérum","IgE total"],"composants":[]},{"id":"B268","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgE spécifiques (allergène unique)","kind":"acte","lexique":["IgE spécifique","RAST","allergène unique"],"composants":[]},{"id":"B269","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgE spécifiques — protéines de lait de vache","kind":"acte","lexique":["IgE lait de vache","APLV","ige serique specifique proteine lait de vache"],"composants":[]},{"id":"B270","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Tryptase","kind":"acte","lexique":["tryptase","mastocytose","anaphylaxie"],"composants":[]},{"id":"B271","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"ECP (protéine cationique des éosinophiles)","kind":"acte","lexique":["ECP","protéine cationique éosinophiles"],"composants":[]},{"id":"B272","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie VIH (Ag/Ac)","kind":"acte","lexique":["VIH","HIV","sérologie VIH","Ag/Ac VIH","PTME","hiv ptme"],"composants":[]},{"id":"B273","pillar":"bio","type":"Sérologie & virologie","name":"Confirmation VIH (Western blot)","kind":"acte","lexique":["western blot VIH","confirmation VIH"],"composants":[]},{"id":"B274","pillar":"bio","type":"Sérologie & virologie","name":"Antigène HBs","kind":"acte","lexique":["antigène HBs","AgHBs","HBsAg"],"composants":[]},{"id":"B275","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBs","kind":"acte","lexique":["anti HBs","immunité hépatite B","ac anti hbs"],"composants":[]},{"id":"B276","pillar":"bio","type":"Sérologie & virologie","name":"Antigène HBe","kind":"acte","lexique":["Ag HBe","AgHBe","HBeAg"],"composants":[]},{"id":"B277","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBe","kind":"acte","lexique":["anti HBe","ac anti hbe"],"composants":[]},{"id":"B278","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBc totaux","kind":"acte","lexique":["anti HBc totaux","HBc total","ac anti hbc totaux"],"composants":[]},{"id":"B279","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBc IgM","kind":"acte","lexique":["anti HBc IgM","ac anti hbc igm"],"composants":[]},{"id":"B280","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBc IgG","kind":"acte","lexique":["anti HBc IgG","ac anti hbc igg"],"composants":[]},{"id":"B281","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHC","kind":"acte","lexique":["anti VHC","hépatite C sérologie","HCV Ab","ac anti vhc","ac anticorps anti vhc"],"composants":[]},{"id":"B282","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHA IgM","kind":"acte","lexique":["VHA IgM","hépatite A IgM","serologie vha igm"],"composants":[]},{"id":"B283","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHA IgG","kind":"acte","lexique":["VHA IgG","hépatite A IgG","serologie vha igg"],"composants":[]},{"id":"B284","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHD (delta)","kind":"acte","lexique":["anti VHD","hépatite delta","ac anticorps anti vhd"],"composants":[]},{"id":"B285","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHE","kind":"acte","lexique":["anti VHE","hépatite E"],"composants":[]},{"id":"B286","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie toxoplasmose (IgG + IgM)","kind":"acte","lexique":["toxo IgG IgM","toxoplasmose","toxoplasma","toxo igg et igm"],"composants":[]},{"id":"B287","pillar":"bio","type":"Sérologie & virologie","name":"Avidité toxoplasmose","kind":"acte","lexique":["avidité toxoplasmose","avidité IgG toxo"],"composants":[]},{"id":"B288","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie rubéole (IgG + IgM)","kind":"acte","lexique":["rubéole IgG IgM","rubella","rubeole igg et igm"],"composants":[]},{"id":"B289","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie CMV (IgG/IgM)","kind":"acte","lexique":["CMV","cytomégalovirus"],"composants":[]},{"id":"B290","pillar":"bio","type":"Sérologie & virologie","name":"Avidité CMV","kind":"acte","lexique":["avidité CMV","avidité IgG CMV"],"composants":[]},{"id":"B291","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie HSV1/HSV2","kind":"acte","lexique":["herpès","HSV","HSV1 HSV2","herpes simplex","hsv1 et hsv2"],"composants":[]},{"id":"B292","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie VZV (varicelle-zona)","kind":"acte","lexique":["VZV","varicelle","zona"],"composants":[]},{"id":"B293","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie parvovirus B19","kind":"acte","lexique":["parvovirus B19","B19"],"composants":[]},{"id":"B294","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie EBV (MNI, VCA, EBNA)","kind":"acte","lexique":["EBV","MNI test","mononucléose","VCA EBNA"],"composants":[]},{"id":"B295","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie rougeole","kind":"acte","lexique":["rougeole","measles","morbillivirus","rugeole"],"composants":[]},{"id":"B296","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie oreillons","kind":"acte","lexique":["oreillons","mumps"],"composants":[]},{"id":"B297","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie dengue (NS1, IgM, IgG)","kind":"acte","lexique":["dengue","NS1","dengue IgM IgG"],"composants":[]},{"id":"B298","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie chikungunya (IgM/IgG)","kind":"acte","lexique":["chikungunya"],"composants":[]},{"id":"B299","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie SARS-CoV-2","kind":"acte","lexique":["sérologie covid","SARS-CoV-2 sérologie","anticorps covid"],"composants":[]},{"id":"B300","pillar":"bio","type":"Sérologie & virologie","name":"Sérodiagnostic de Widal et Félix","kind":"acte","lexique":["Widal","Widal Félix","salmonella","TO TH"],"composants":[]},{"id":"B301","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie syphilis (TPHA-VDRL/RPR, BW)","kind":"acte","lexique":["TPHA RPR","BW","TPHA VDRL","syphilis","tpha rpr bw"],"composants":[]},{"id":"B302","pillar":"bio","type":"Sérologie & virologie","name":"ASLO (antistreptolysines O)","kind":"acte","lexique":["ASLO","antistreptolysine","ASO"],"composants":[]},{"id":"B303","pillar":"bio","type":"Sérologie & virologie","name":"Antistreptodornase (ASD)","kind":"acte","lexique":["ASDOR","antistreptodornase","ASD"],"composants":[]},{"id":"B304","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie Chlamydia","kind":"acte","lexique":["sérologie chlamydiae","anticorps chlamydia"],"composants":[]},{"id":"B305","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie Mycoplasme","kind":"acte","lexique":["sérologie mycoplasme","anticorps mycoplasma"],"composants":[]},{"id":"B306","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie brucellose (Wright)","kind":"acte","lexique":["brucellose","Wright","brucella"],"composants":[]},{"id":"B307","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie leptospirose","kind":"acte","lexique":["leptospirose","leptospira"],"composants":[]},{"id":"B308","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie borréliose (Lyme)","kind":"acte","lexique":["Lyme","borréliose","Borrelia"],"composants":[]},{"id":"B309","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie coqueluche","kind":"acte","lexique":["coqueluche","Bordetella"],"composants":[]},{"id":"B310","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie légionelle","kind":"acte","lexique":["légionelle","Legionella"],"composants":[]},{"id":"B311","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie bilharziose","kind":"acte","lexique":["sérologie bilharziose","schistosomiase sérologie"],"composants":[]},{"id":"B312","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie amibiase","kind":"acte","lexique":["sérologie amibienne","amibiase","entamoeba"],"composants":[]},{"id":"B313","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie hydatidose","kind":"acte","lexique":["hydatidose","échinococcose"],"composants":[]},{"id":"B314","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie aspergillaire","kind":"acte","lexique":["sérologie aspergillaire","aspergillose"],"composants":[]},{"id":"B315","pillar":"bio","type":"Sérologie & virologie","name":"Antigène cryptocoque","kind":"acte","lexique":["antigène cryptocoque","cryptococcose Ag"],"composants":[]},{"id":"B316","pillar":"bio","type":"Sérologie & virologie","name":"Antigène galactomannane (aspergillus)","kind":"acte","lexique":["galactomannane","aspergillus Ag"],"composants":[]},{"id":"B317","pillar":"bio","type":"Bactériologie","name":"ECBU + antibiogramme","kind":"acte","lexique":["ECBU","examen cytobactériologique des urines","uroculture + antibiogramme"],"composants":[]},{"id":"B318","pillar":"bio","type":"Bactériologie","name":"Hémoculture","kind":"acte","lexique":["hémoculture","blood culture"],"composants":[]},{"id":"B319","pillar":"bio","type":"Bactériologie","name":"Coproculture","kind":"acte","lexique":["coproculture","culture des selles"],"composants":[]},{"id":"B320","pillar":"bio","type":"Bactériologie","name":"ECBC (expectorations)","kind":"acte","lexique":["ECBC","examen cytobactériologique des crachats","expectorations"],"composants":[]},{"id":"B321","pillar":"bio","type":"Bactériologie","name":"Recherche de BAAR (Ziehl)","kind":"acte","lexique":["crachat BAAR","BK crachats","Ziehl","bacille acido-alcoolo-résistant","crachat barr"],"composants":[]},{"id":"B322","pillar":"bio","type":"Bactériologie","name":"Culture de mycobactéries (Löwenstein)","kind":"acte","lexique":["culture mycobactérie","Löwenstein","BK culture"],"composants":[]},{"id":"B323","pillar":"bio","type":"Bactériologie","name":"Prélèvement de pus + culture","kind":"acte","lexique":["prélèvement de pus","pus culture","plaie"],"composants":[]},{"id":"B324","pillar":"bio","type":"Bactériologie","name":"Prélèvement de gorge + culture","kind":"acte","lexique":["prélèvement de gorge","gorge culture","angine"],"composants":[]},{"id":"B325","pillar":"bio","type":"Bactériologie","name":"Prélèvement nasal / portage SARM","kind":"acte","lexique":["prélèvement nasal","portage SARM","écouvillon nasal"],"composants":[]},{"id":"B326","pillar":"bio","type":"Bactériologie","name":"Prélèvement vaginal (PV) + culture","kind":"acte","lexique":["PV","prélèvement vaginal","cervico-vaginal","pv chlam myco"],"composants":[]},{"id":"B327","pillar":"bio","type":"Bactériologie","name":"Prélèvement endocervical","kind":"acte","lexique":["prélèvement endocervical","col utérin"],"composants":[]},{"id":"B328","pillar":"bio","type":"Bactériologie","name":"Prélèvement urétral + culture","kind":"acte","lexique":["prélèvement urétral","urètre","écoulement urétral"],"composants":[]},{"id":"B329","pillar":"bio","type":"Bactériologie","name":"Écouvillonnage + ECB + antibiogramme","kind":"acte","lexique":["écouvillonnage ECB ATB","écouvillon culture antibiogramme","econvillonage ecb atb"],"composants":[]},{"id":"B330","pillar":"bio","type":"Bactériologie","name":"Culture de cathéter","kind":"acte","lexique":["culture cathéter","KT culture"],"composants":[]},{"id":"B331","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie du LCR","kind":"acte","lexique":["cytobactério LCR","LCR","méningite","cytochimie bacterio du lcr"],"composants":[]},{"id":"B332","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie du liquide pleural","kind":"acte","lexique":["liquide pleural","plèvre","cyto bacterio du liquide pleural"],"composants":[]},{"id":"B333","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie du liquide d'ascite","kind":"acte","lexique":["liquide d'ascite","ascite","cytobacterio du liquide d ascite"],"composants":[]},{"id":"B334","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie d'un liquide articulaire","kind":"acte","lexique":["liquide articulaire","synovie"],"composants":[]},{"id":"B335","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie d'un liquide de ponction","kind":"acte","lexique":["liquide de ponction","ponction","cyto bacterio du liquide de ponction"],"composants":[]},{"id":"B336","pillar":"bio","type":"Bactériologie","name":"Antibiogramme (seul)","kind":"acte","lexique":["antibiogramme","ATB"],"composants":[]},{"id":"B337","pillar":"bio","type":"Bactériologie","name":"Antigènes solubles urinaires (pneumocoque, légionelle)","kind":"acte","lexique":["antigène urinaire pneumocoque","antigène légionelle urinaire"],"composants":[]},{"id":"B338","pillar":"bio","type":"Bactériologie","name":"Antigène H. pylori dans les selles","kind":"acte","lexique":["H pylori selles","Helicobacter pylori antigène","HpSA"],"composants":[]},{"id":"B339","pillar":"bio","type":"Bactériologie","name":"Test respiratoire à l'urée (H. pylori)","kind":"acte","lexique":["test respiratoire à l'urée","breath test","H pylori respiratoire"],"composants":[]},{"id":"B340","pillar":"bio","type":"Bactériologie","name":"Recherche toxine Clostridioides difficile","kind":"acte","lexique":["clostridium difficile","toxine C difficile"],"composants":[]},{"id":"B341","pillar":"bio","type":"Parasitologie & mycologie","name":"Examen parasitologique des selles (KAOP / EPS)","kind":"acte","lexique":["KAOP","EPS","examen parasitologique des selles","kystes amibes œufs parasites"],"composants":[]},{"id":"B342","pillar":"bio","type":"Parasitologie & mycologie","name":"Goutte épaisse + frottis (paludisme)","kind":"acte","lexique":["goutte épaisse","GE frottis","paludisme","frottis paludisme"],"composants":[]},{"id":"B343","pillar":"bio","type":"Parasitologie & mycologie","name":"TDR paludisme (antigène HRP2)","kind":"acte","lexique":["TDR palu","test rapide paludisme","HRP2"],"composants":[]},{"id":"B344","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de microfilaires (filariose)","kind":"acte","lexique":["microfilaires","filariose","filaire"],"composants":[]},{"id":"B345","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de Schistosoma (urines / selles)","kind":"acte","lexique":["schistosome","bilharziose urinaire","hématurie bilharzienne","recherche de schistosome dans les urines"],"composants":[]},{"id":"B346","pillar":"bio","type":"Parasitologie & mycologie","name":"Confirmation bilharziose","kind":"acte","lexique":["confirmation bilharziose","schistosomiase confirmation"],"composants":[]},{"id":"B347","pillar":"bio","type":"Parasitologie & mycologie","name":"Scotch-test anal (test de Graham)","kind":"acte","lexique":["scotch test","test de Graham","oxyure","scoth test"],"composants":[]},{"id":"B348","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de sang occulte dans les selles","kind":"acte","lexique":["hemocult","sang occulte selles","FOBT","hemocult recherche d hematies occultes dans les selles"],"composants":[]},{"id":"B349","pillar":"bio","type":"Parasitologie & mycologie","name":"Examen mycologique (peau, ongles, cheveux)","kind":"acte","lexique":["examen mycologique","mycologie","dermatophyte","recherche de champignons"],"composants":[]},{"id":"B350","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de Candida","kind":"acte","lexique":["recherche candida","candidose"],"composants":[]},{"id":"B351","pillar":"bio","type":"Parasitologie & mycologie","name":"Prélèvement mycologique","kind":"acte","lexique":["prélèvement mycologique","myco prélèvement"],"composants":[]},{"id":"B352","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de Cryptococcus (encre de Chine)","kind":"acte","lexique":["cryptococcus","encre de Chine"],"composants":[]},{"id":"B353","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de leishmanies","kind":"acte","lexique":["leishmanies","leishmaniose"],"composants":[]},{"id":"B354","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de trypanosomes","kind":"acte","lexique":["trypanosome","trypanosomiase","THA"],"composants":[]},{"id":"B355","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VIH","kind":"acte","lexique":["charge virale VIH","ARN VIH","HIV viral load"],"composants":[]},{"id":"B356","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VHB (ADN)","kind":"acte","lexique":["charge virale VHB","ADN VHB","HBV DNA","PCR VHB","charge virale b adn vhb"],"composants":[]},{"id":"B357","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VHC (ARN)","kind":"acte","lexique":["charge virale VHC","ARN VHC","HCV RNA","PCR VHC"],"composants":[]},{"id":"B358","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Génotypage VHC","kind":"acte","lexique":["génotypage VHC","HCV génotype"],"composants":[]},{"id":"B359","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VHD (ADN)","kind":"acte","lexique":["charge virale VHD","ADN VHD","delta","charge virale adn vhd"],"composants":[]},{"id":"B360","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale CMV","kind":"acte","lexique":["charge virale CMV","PCR CMV","ADN CMV"],"composants":[]},{"id":"B361","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale EBV","kind":"acte","lexique":["charge virale EBV","PCR EBV"],"composants":[]},{"id":"B362","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR SARS-CoV-2","kind":"acte","lexique":["PCR covid","SARS-CoV-2 PCR"],"composants":[]},{"id":"B363","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR Chlamydia / Gonocoque","kind":"acte","lexique":["PCR chlamydia","gonocoque","Neisseria gonorrhoeae","recherche chlamydia"],"composants":[]},{"id":"B364","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR Mycoplasme / Ureaplasma","kind":"acte","lexique":["PCR mycoplasme","ureaplasma","recherche mycoplasme"],"composants":[]},{"id":"B365","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR HSV","kind":"acte","lexique":["PCR HSV","herpès PCR"],"composants":[]},{"id":"B366","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Test HPV (détection)","kind":"acte","lexique":["HPV test","papillomavirus"],"composants":[]},{"id":"B367","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Typage HPV oncogène","kind":"acte","lexique":["typage HPV oncogène","génotypage HPV haut risque"],"composants":[]},{"id":"B368","pillar":"bio","type":"Biologie moléculaire / PCR","name":"GeneXpert MTB/RIF (tuberculose)","kind":"acte","lexique":["GeneXpert","MTB RIF","PCR tuberculose"],"composants":[]},{"id":"B369","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR respiratoire (multiplex)","kind":"acte","lexique":["PCR respiratoire","panel respiratoire multiplex"],"composants":[]},{"id":"B370","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR entéropathogènes","kind":"acte","lexique":["PCR selles","entéropathogènes"],"composants":[]},{"id":"B371","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Recherche Facteur V Leiden","kind":"acte","lexique":["facteur V Leiden","FV Leiden mutation"],"composants":[]},{"id":"B372","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Recherche mutation prothrombine G20210A","kind":"acte","lexique":["prothrombine G20210A","FII mutation"],"composants":[]},{"id":"B373","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Recherche hémochromatose (gène HFE)","kind":"acte","lexique":["HFE","hémochromatose génétique"],"composants":[]},{"id":"B374","pillar":"bio","type":"Biologie moléculaire / PCR","name":"BCR-ABL / JAK2 (hémopathies)","kind":"acte","lexique":["BCR-ABL","JAK2","hémopathie moléculaire"],"composants":[]},{"id":"B375","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Alcoolémie","kind":"acte","lexique":["alcoolémie","éthanol"],"composants":[]},{"id":"B376","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Recherche de drogues urinaires (panel)","kind":"acte","lexique":["recherche drogue urines","toxiques urinaires","drogues panel","recherche de drogue dans les urines"],"composants":[]},{"id":"B377","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Paracétamol","kind":"acte","lexique":["paracétamol","acétaminophène"],"composants":[]},{"id":"B378","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Salicylés","kind":"acte","lexique":["salicylés","aspirine dosage"],"composants":[]},{"id":"B379","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Carboxyhémoglobine","kind":"acte","lexique":["carboxyhémoglobine","HbCO","CO"],"composants":[]},{"id":"B380","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Méthémoglobine","kind":"acte","lexique":["méthémoglobine","MetHb"],"composants":[]},{"id":"B381","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Plombémie","kind":"acte","lexique":["plomb","plombémie","saturnisme"],"composants":[]},{"id":"B382","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Métaux lourds (arsenic, mercure, cadmium)","kind":"acte","lexique":["métaux lourds","arsenic","mercure","cadmium"],"composants":[]},{"id":"B383","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Digoxine","kind":"acte","lexique":["digoxine","digoxinémie"],"composants":[]},{"id":"B384","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Lithium (lithémie)","kind":"acte","lexique":["lithium","lithémie"],"composants":[]},{"id":"B385","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Acide valproïque","kind":"acte","lexique":["acide valproïque","valproate","dépakine"],"composants":[]},{"id":"B386","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Phénobarbital","kind":"acte","lexique":["phénobarbital","gardénal"],"composants":[]},{"id":"B387","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Phénytoïne","kind":"acte","lexique":["phénytoïne","diphantoïne"],"composants":[]},{"id":"B388","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Carbamazépine","kind":"acte","lexique":["carbamazépine","tégrétol"],"composants":[]},{"id":"B389","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Vancomycine","kind":"acte","lexique":["vancomycine","vancomycinémie"],"composants":[]},{"id":"B390","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Ciclosporine","kind":"acte","lexique":["ciclosporine","cyclosporine"],"composants":[]},{"id":"B391","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Tacrolimus","kind":"acte","lexique":["tacrolimus","FK506"],"composants":[]},{"id":"B392","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Méthotrexate","kind":"acte","lexique":["méthotrexate","MTX dosage"],"composants":[]},{"id":"B393","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Gaz du sang artériel","kind":"acte","lexique":["gaz du sang artériel","GDS artériel","gazométrie artérielle"],"composants":[]},{"id":"B394","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Gaz du sang veineux / capillaire","kind":"acte","lexique":["gaz du sang veineux","gaz du sang capillaire"],"composants":[]},{"id":"B395","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Lactates (acide lactique)","kind":"acte","lexique":["lactates","acide lactique","lactacidémie"],"composants":[]},{"id":"B396","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Bicarbonates / réserve alcaline","kind":"acte","lexique":["bicarbonates","réserve alcaline","HCO3","CO2 total"],"composants":[]},{"id":"B397","pillar":"bio","type":"Anatomie & cytopathologie","name":"Examen anatomopathologique de biopsie","kind":"acte","lexique":["biopsie","anatomopathologie biopsie","histologie"],"composants":[]},{"id":"B398","pillar":"bio","type":"Anatomie & cytopathologie","name":"Examen anatomopathologique de pièce opératoire","kind":"acte","lexique":["pièce opératoire","anapath pièce","histologie pièce"],"composants":[]},{"id":"B399","pillar":"bio","type":"Anatomie & cytopathologie","name":"Examen extemporané","kind":"acte","lexique":["extemporané","examen per-opératoire"],"composants":[]},{"id":"B400","pillar":"bio","type":"Anatomie & cytopathologie","name":"Immunohistochimie","kind":"acte","lexique":["immunohistochimie","IHC"],"composants":[]},{"id":"B401","pillar":"bio","type":"Anatomie & cytopathologie","name":"Immunofluorescence (cutanée / rénale)","kind":"acte","lexique":["immunofluorescence","IFD","biopsie rénale IF"],"composants":[]},{"id":"B402","pillar":"bio","type":"Anatomie & cytopathologie","name":"Biopsie ostéomédullaire (lecture)","kind":"acte","lexique":["biopsie ostéomédullaire","BOM"],"composants":[]},{"id":"B403","pillar":"bio","type":"Anatomie & cytopathologie","name":"Frottis cervico-vaginal (FCV / Pap)","kind":"acte","lexique":["FCV","frottis cervico-vaginal","cytologie cervicale","Pap"],"composants":[]},{"id":"B404","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie en milieu liquide","kind":"acte","lexique":["cytologie en milieu liquide","ThinPrep","monocouche"],"composants":[]},{"id":"B405","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytoponction (thyroïde, ganglion, sein)","kind":"acte","lexique":["cytoponction","ponction cytologique","FNA"],"composants":[]},{"id":"B406","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie des épanchements (pleural, ascite, LCR)","kind":"acte","lexique":["cytologie des épanchements","cytologie liquide pleural ascite LCR"],"composants":[]},{"id":"B407","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie urinaire","kind":"acte","lexique":["cytologie urinaire","recherche de cellules tumorales urines"],"composants":[]},{"id":"B408","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie des expectorations","kind":"acte","lexique":["cytologie des crachats","cytologie expectorations"],"composants":[]},{"id":"B409","pillar":"bio","type":"Génétique & cytogénétique","name":"Caryotype sanguin","kind":"acte","lexique":["caryotype","caryotype sanguin","cytogénétique"],"composants":[]},{"id":"B410","pillar":"bio","type":"Génétique & cytogénétique","name":"Caryotype médullaire","kind":"acte","lexique":["caryotype médullaire","cytogénétique hématologique"],"composants":[]},{"id":"B411","pillar":"bio","type":"Génétique & cytogénétique","name":"FISH (hybridation in situ)","kind":"acte","lexique":["FISH","hybridation in situ"],"composants":[]},{"id":"B412","pillar":"bio","type":"Génétique & cytogénétique","name":"Dépistage prénatal non invasif (DPNI)","kind":"acte","lexique":["DPNI","trisomie 21 dépistage","ADN libre circulant"],"composants":[]},{"id":"B413","pillar":"bio","type":"Génétique & cytogénétique","name":"Recherche de mutations BRCA1/BRCA2","kind":"acte","lexique":["BRCA","BRCA1 BRCA2","prédisposition cancer sein"],"composants":[]},{"id":"B414","pillar":"bio","type":"Génétique & cytogénétique","name":"Typage HLA (greffe)","kind":"acte","lexique":["typage HLA","groupage HLA","compatibilité greffe"],"composants":[]},{"id":"B415","pillar":"bio","type":"Génétique & cytogénétique","name":"Étude moléculaire de la drépanocytose","kind":"acte","lexique":["drépanocytose moléculaire","mutation bêta-globine","HBB"],"composants":[]},{"id":"I001","pillar":"img","type":"Échographie","name":"Échographie abdominale","kind":"acte","lexique":["echo abdominale","échographie de l'abdomen"],"composants":[]},{"id":"I002","pillar":"img","type":"Échographie","name":"Échographie pelvienne","kind":"acte","lexique":["echo pelvienne","échographie pelvienne sus-pubienne"],"composants":[]},{"id":"I003","pillar":"img","type":"Échographie","name":"Échographie pelvienne endovaginale","kind":"acte","lexique":["echo endovaginale","échographie endovaginale"],"composants":[]},{"id":"I004","pillar":"img","type":"Échographie","name":"Échographie abdomino-pelvienne","kind":"acte","lexique":["echo abdomino-pelvienne","echo AP"],"composants":[]},{"id":"I005","pillar":"img","type":"Échographie","name":"Échographie obstétricale","kind":"acte","lexique":["echo obstétricale","échographie de grossesse","echo de grossesse"],"composants":[]},{"id":"I006","pillar":"img","type":"Échographie","name":"Échographie des parties molles","kind":"acte","lexique":["echo parties molles"],"composants":[]},{"id":"I007","pillar":"img","type":"Échographie","name":"Échographie thyroïdienne","kind":"acte","lexique":["echo thyroïde","échographie de la thyroïde"],"composants":[]},{"id":"I008","pillar":"img","type":"Échographie","name":"Échographie cervicale","kind":"acte","lexique":["echo cervicale","échographie du cou"],"composants":[]},{"id":"I009","pillar":"img","type":"Échographie","name":"Échographie scrotale","kind":"acte","lexique":["échographie des bourses","echo testiculaire","echo scrotale"],"composants":[]},{"id":"I010","pillar":"img","type":"Échographie","name":"Échographie mammaire","kind":"acte","lexique":["echo mammaire","échographie des seins"],"composants":[]},{"id":"I011","pillar":"img","type":"Échographie","name":"Échographie ostéo-articulaire","kind":"acte","lexique":["échographie articulaire","echo articulaire","échographie musculo-squelettique"],"composants":[]},{"id":"I012","pillar":"img","type":"Échographie","name":"Échographie de l'épaule","kind":"acte","lexique":["echo épaule"],"composants":[]},{"id":"I013","pillar":"img","type":"Échographie","name":"Échographie rénale","kind":"acte","lexique":["echo rénale","échographie des reins","échographie de l appareil urinaire"],"composants":[]},{"id":"I014","pillar":"img","type":"Échographie","name":"Échographie cardiaque (ETT)","kind":"acte","lexique":["ETT","échocardiographie","echo cardiaque"],"composants":[]},{"id":"I015","pillar":"img","type":"Échographie","name":"Échographie transfontanellaire","kind":"acte","lexique":["ETF","echo transfontanellaire"],"composants":[]},{"id":"I016","pillar":"img","type":"Écho-doppler","name":"Écho-doppler artériel des membres inférieurs","kind":"acte","lexique":["doppler artériel des membres inférieurs","doppler artériel MI"],"composants":[]},{"id":"I017","pillar":"img","type":"Écho-doppler","name":"Écho-doppler veineux des membres inférieurs","kind":"acte","lexique":["doppler veineux des membres inférieurs","doppler veineux MI"],"composants":[]},{"id":"I018","pillar":"img","type":"Écho-doppler","name":"Écho-doppler des troncs supra-aortiques (TSA)","kind":"acte","lexique":["doppler des TSA","doppler TSA","echo doppler des vaisseaux du cou"],"composants":[]},{"id":"I019","pillar":"img","type":"Écho-doppler","name":"Écho-doppler des artères rénales","kind":"acte","lexique":["doppler rénal","doppler des artères rénales"],"composants":[]},{"id":"I020","pillar":"img","type":"Écho-doppler","name":"Écho-doppler obstétrical","kind":"acte","lexique":["doppler obstétrical","doppler foeto-placentaire"],"composants":[]},{"id":"I021","pillar":"img","type":"Scanner","name":"Scanner cérébral","kind":"acte","lexique":["TDM cérébrale","scanner du crâne","TDM encéphalique"],"composants":[]},{"id":"I022","pillar":"img","type":"Scanner","name":"Scanner thoracique","kind":"acte","lexique":["TDM thoracique","scanner du thorax"],"composants":[]},{"id":"I023","pillar":"img","type":"Scanner","name":"Scanner abdominal","kind":"acte","lexique":["TDM abdominale"],"composants":[]},{"id":"I024","pillar":"img","type":"Scanner","name":"Scanner abdomino-pelvien","kind":"acte","lexique":["TDM abdomino-pelvienne","scanner AP"],"composants":[]},{"id":"I025","pillar":"img","type":"Scanner","name":"Scanner thoraco-abdomino-pelvien","kind":"acte","lexique":["TAP","TDM TAP"],"composants":[]},{"id":"I026","pillar":"img","type":"Scanner","name":"Scanner du massif facial","kind":"acte","lexique":["scanner des sinus","TDM sinus","scanner facial"],"composants":[]},{"id":"I027","pillar":"img","type":"Scanner","name":"Scanner cervical","kind":"acte","lexique":["TDM cervicale","scanner du cou"],"composants":[]},{"id":"I028","pillar":"img","type":"Scanner","name":"Scanner du rachis lombaire","kind":"acte","lexique":["scanner lombaire","TDM lombaire"],"composants":[]},{"id":"I029","pillar":"img","type":"Scanner","name":"Scanner du rachis dorsal","kind":"acte","lexique":["TDM dorsale","scanner dorsal"],"composants":[]},{"id":"I030","pillar":"img","type":"Scanner","name":"Scanner du rachis cervical","kind":"acte","lexique":["TDM du rachis cervical"],"composants":[]},{"id":"I031","pillar":"img","type":"Scanner","name":"Scanner des rochers","kind":"acte","lexique":["TDM des rochers"],"composants":[]},{"id":"I032","pillar":"img","type":"Scanner","name":"Uro-scanner","kind":"acte","lexique":["uroscanner","scanner des voies urinaires"],"composants":[]},{"id":"I033","pillar":"img","type":"Scanner","name":"Angioscanner thoracique","kind":"acte","lexique":["angio-TDM thoracique","angioscanner pulmonaire"],"composants":[]},{"id":"I034","pillar":"img","type":"Scanner","name":"Angioscanner cérébral","kind":"acte","lexique":["angio-TDM cérébrale"],"composants":[]},{"id":"I035","pillar":"img","type":"Scanner","name":"Angioscanner des troncs supra-aortiques","kind":"acte","lexique":["angioscanner des TSA"],"composants":[]},{"id":"I036","pillar":"img","type":"Scanner","name":"Angioscanner des membres inférieurs","kind":"acte","lexique":["angio-TDM des membres inférieurs"],"composants":[]},{"id":"I037","pillar":"img","type":"Scanner","name":"Coloscanner","kind":"acte","lexique":["coloscopie virtuelle"],"composants":[]},{"id":"I038","pillar":"img","type":"IRM","name":"IRM cérébrale","kind":"acte","lexique":["IRM encéphalique","IRM du cerveau"],"composants":[]},{"id":"I039","pillar":"img","type":"IRM","name":"IRM du rachis lombaire","kind":"acte","lexique":["IRM lombaire"],"composants":[]},{"id":"I040","pillar":"img","type":"IRM","name":"IRM du rachis cervical","kind":"acte","lexique":["IRM cervicale"],"composants":[]},{"id":"I041","pillar":"img","type":"IRM","name":"IRM médullaire","kind":"acte","lexique":["IRM de la moelle"],"composants":[]},{"id":"I042","pillar":"img","type":"IRM","name":"IRM hypophysaire","kind":"acte","lexique":["IRM de l hypophyse"],"composants":[]},{"id":"I043","pillar":"img","type":"IRM","name":"IRM du genou","kind":"acte","lexique":["IRM genou"],"composants":[]},{"id":"I044","pillar":"img","type":"IRM","name":"IRM de l'épaule","kind":"acte","lexique":["IRM épaule"],"composants":[]},{"id":"I045","pillar":"img","type":"IRM","name":"IRM de la cheville","kind":"acte","lexique":["IRM cheville"],"composants":[]},{"id":"I046","pillar":"img","type":"IRM","name":"IRM du poignet","kind":"acte","lexique":["IRM poignet"],"composants":[]},{"id":"I047","pillar":"img","type":"Radiographie","name":"Radiographie du thorax (face)","kind":"acte","lexique":["radio thorax","RX thorax","téléthorax","radiographie pulmonaire"],"composants":[]},{"id":"I048","pillar":"img","type":"Radiographie","name":"Radiographie du thorax (face et profil)","kind":"acte","lexique":["radio thorax face et profil","téléthorax face et profil"],"composants":[]},{"id":"I049","pillar":"img","type":"Radiographie","name":"Radiographie du cavum","kind":"acte","lexique":["radio cavum"],"composants":[]},{"id":"I050","pillar":"img","type":"Radiographie","name":"Radiographie de la main","kind":"acte","lexique":["radio main"],"composants":[]},{"id":"I051","pillar":"img","type":"Radiographie","name":"Radiographie du poignet","kind":"acte","lexique":["radio poignet"],"composants":[]},{"id":"I052","pillar":"img","type":"Radiographie","name":"Radiographie du coude","kind":"acte","lexique":["radio coude"],"composants":[]},{"id":"I053","pillar":"img","type":"Radiographie","name":"Radiographie de l'épaule","kind":"acte","lexique":["radio épaule"],"composants":[]},{"id":"I054","pillar":"img","type":"Radiographie","name":"Radiographie du genou","kind":"acte","lexique":["radio genou"],"composants":[]},{"id":"I055","pillar":"img","type":"Radiographie","name":"Radiographie de la cheville","kind":"acte","lexique":["radio cheville"],"composants":[]},{"id":"I056","pillar":"img","type":"Radiographie","name":"Radiographie du pied","kind":"acte","lexique":["radio pied"],"composants":[]},{"id":"I057","pillar":"img","type":"Radiographie","name":"Radiographie du rachis lombaire","kind":"acte","lexique":["radio lombaire","radio du rachis lombaire"],"composants":[]},{"id":"I058","pillar":"img","type":"Radiographie","name":"Radiographie du rachis dorsal","kind":"acte","lexique":["radio dorsale"],"composants":[]},{"id":"I059","pillar":"img","type":"Radiographie","name":"Radiographie du rachis dorso-lombaire","kind":"acte","lexique":["radio dorso-lombaire"],"composants":[]},{"id":"I060","pillar":"img","type":"Radiographie","name":"Radiographie du crâne","kind":"acte","lexique":["radio crâne"],"composants":[]},{"id":"I061","pillar":"img","type":"Radiographie","name":"Radiographie des os propres du nez","kind":"acte","lexique":["radio OPN","radiographie OPN"],"composants":[]},{"id":"I062","pillar":"img","type":"Radiographie","name":"Radiographie du bassin (face)","kind":"acte","lexique":["radio bassin","radiographie du bassin"],"composants":[]},{"id":"I063","pillar":"img","type":"Radiographie","name":"Radiographie de la hanche","kind":"acte","lexique":["radio hanche"],"composants":[]},{"id":"I064","pillar":"img","type":"Radiographie","name":"Radiographie du fémur","kind":"acte","lexique":["radiographie de la cuisse","radio cuisse"],"composants":[]},{"id":"I065","pillar":"img","type":"Radiographie","name":"Radiographie de l'humérus","kind":"acte","lexique":["radiographie du bras","radio bras"],"composants":[]},{"id":"I066","pillar":"img","type":"Radiographie","name":"Radiographie de l'avant-bras","kind":"acte","lexique":["radio avant-bras"],"composants":[]},{"id":"I067","pillar":"img","type":"Radiographie","name":"Abdomen sans préparation (ASP)","kind":"acte","lexique":["ASP","radiographie ASP","radio de l'abdomen"],"composants":[]},{"id":"I068","pillar":"img","type":"Radiologie spéciale","name":"Hystérosalpingographie (HSG)","kind":"acte","lexique":["HSG"],"composants":[]},{"id":"I069","pillar":"img","type":"Radiologie spéciale","name":"Lavement baryté","kind":"acte","lexique":["lavement opaque"],"composants":[]},{"id":"I070","pillar":"img","type":"Radiologie spéciale","name":"Urétrocystographie rétrograde (UCR)","kind":"acte","lexique":["UCR","cystographie rétrograde"],"composants":[]},{"id":"I071","pillar":"img","type":"Radiologie spéciale","name":"Transit œso-gastro-duodénal (TOGD)","kind":"acte","lexique":["TOGD","TOGD baryté"],"composants":[]},{"id":"I072","pillar":"img","type":"Radiologie spéciale","name":"Mammographie","kind":"acte","lexique":["mammo","mammographie bilatérale"],"composants":[]}];
+var SAMPLES = { ods: [["ECHOGRAPHIES",null,null,null,null,null,null,"PRIX"],[null,null,null,null,null,null,null,null],["ABDOMINALE",null,null,null,null,null,null,"20000 F"],["PELVIENNE",null,null,null,null,null,null,"20000 F"],["OBSTETRICALE",null,null,null,null,null,null,"20000 F"],["OBSTETRICALE DE CONTRÔLE",null,null,null,null,null,null,"15000 F"],["ECHOGRAPHIE DES PARTIES MOLLES",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE THYROIDIENNE",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE DES BOURSES",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE CERVICALE",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE ABDOMINO-PELVIENNE",null,null,null,null,null,null,"35000 F"],["ECHOGRAPHIE DU POIGNET ",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE DE L'EPAULE",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE ARTICULAIRE",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE DE LA MAIN",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE MAMMAIRE",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE DOPPLER ARTERIEL DES MEMBRES INFERIEURS",null,null,null,null,null,null,"50000 F"],["ECHOGRAPHIE DOPPLER VEINEUX  DES MEMBRES INFERIEURS",null,null,null,null,null,null,"50000 F"],["ECHOGRAPHIE DOPPLER ARTERIO-VEINEUX  DES MEMBRES INFERIEURS",null,null,null,null,null,null,"100000 F"],["ECHOGRAPHIE DOPPLER DES TSA",null,null,null,null,null,null,"50000 F"],["ECHOGRAPHIE TRANSCRANIENNE ",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE DOPPPLER RENAL",null,null,null,null,null,null,"50000 F"],["ECHOGRAPHIE DOPPLER OBSTRECTRICALE ",null,null,null,null,null,null,"25000 F"],["ECHOGRAPHIE DU GENOU",null,null,null,null,null,null,"30000 F"],["ECHOGRAPHIE DE TENDON D'ACHILLE",null,null,null,null,null,null,"30000 F"],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],["SCANNER",null,null,null,null,null,null,"PRIX"],[null,null,null,null,null,null,null,null],["SCANNER LOMBAIRE",null,null,null,null,null,null,"70000 F"],["SCANNER CEREBRALE",null,null,null,null,null,null,"70000 F"],["SCANNER ABDOMINO-PELVIENNE",null,null,null,null,null,null,"70000 F"],["SCANNER ABDOMINAL",null,null,null,null,null,null,"70000 F"],["SCANNER DU  ","MASSIF FACIAL",null,null,null,null,null,"70000 F"],["SCANNER CERVICAL",null,null,null,null,null,null,"70000 F"],["SCANNER THORACIQUE",null,null,null,null,null,null,"70000 F"],["SCANNER THORACO-ABDOMINO-PELVIEN",null,null,null,null,null,null,"100000 F"],["SCANNER DORSO-LOMBAIRE ",null,null,null,null,null,null,"120000 F"],["SCANNER CERVICO-THORACIQUE",null,null,null,null,null,null,"120000 F"],["SCANNER CERVICO-DORSO-LOMBAIRE",null,null,null,null,null,null,null],["URO-SCANNER",null,null,null,null,null,null,"70000 F"],["ANGIOSCANNER THORACIQUE",null,null,null,null,null,null,"70000 F"],["ANGIOSCANNER CEREBRAL",null,null,null,null,null,null,"70000 F"],["ANGIOSCANNER TSA",null,null,null,null,null,null,"100000 F"],["ANGIOSCANNER DES MEMBRES INFERIEURS",null,null,null,null,null,null,"100000 F"],["SCANNER DU RACHIS DORSAL",null,null,null,null,null,null,"70000 F"],["SCANNER DES ROCHERS ",null,null,null,null,null,null,"70000 F"],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],["IRM",null,null,null,null,null,null,"PRIX"],[null,null,null,null,null,null,null,null],["IRM DU RACHIS LOMBAIRE",null,null,null,null,null,null,"150000 F"],["IRM DU RACHIS CERVICAL",null,null,null,null,null,null,"150000 F"],["IRM GENOU",null,null,null,null,null,null,"150000 F"],["IRM DES GENOUX",null,null,null,null,null,null,"300000 F"],["IRM  CEREBRALE",null,null,null,null,null,null,"150000 F"],["IRM MEDULLAIRE",null,null,null,null,null,null,"350000 F"],["IRM HYPOPHYSAIRE",null,null,null,null,null,null,"150000 F"],["IRM EPAULE",null,null,null,null,null,null,"150000 F"],["IRM CHEVILLE",null,null,null,null,null,null,"150000 F"],["IRM MAIN",null,null,null,null,null,null,"150000 F"],["IRM POIGNET",null,null,null,null,null,null,"150000 F"],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],["EXAMENS SPECIAUX",null,null,null,null,null,null,"PRIX"],[null,null,null,null,null,null,null,null],["HSG(hysterosalpingographie)",null,null,null,null,null,null,"70000 F"],["LAVEMENT BARYTE",null,null,null,null,null,null,"60000 F"],["UCR",null,null,null,null,null,null,"60000 F"],["TOGD",null,null,null,null,null,null,"700000 F"],["COLOSCANNER",null,null,null,null,null,null,"100000 F"],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],["RADIOGRAPHIES ",null,null,null,null,null,null,"PRIX"],[null,null,null,null,null,null,null,null],["RADIOGRAPHIE DU THORAX DE FACE",null,null,null,null,null,null,"17500 F"],["RAIDOGRAPHIE DU THORAX FACE & PROFIL",null,null,null,null,null,null,"20000 F"],["RADIOGRAPHIE DU CAVUM",null,null,null,null,null,null,"20000 F"],["RADIOGRAPHIE DE LA MAIN",null,null,null,null,null,null,"10000 F"],["RADIOGRAPHIE DE LA CHEVILLE ",null,null,null,null,null,null,"12500 F"],["RADIOGRAPHIE DU RACHIS LOMBAIRE",null,null,null,null,null,null,"20000 F"],["RADIOGRAPHIE DU RACHIS DORSAL",null,null,null,null,null,null,"20000 F"],["RADIOGRAPHIE DE L'OS PROPRE DU NEZ",null,null,null,null,null,null,"20000 F"],["RADIOGRAPHIE DU GENOU",null,null,null,null,null,null,"15000 F"],["RADIOGRAPHIE DU PIED ",null,null,null,null,null,null,"12500 F"],["RADIOGRAPHIE DU COUDE ",null,null,null,null,null,null,"10000 F"],["RADIOGEPHIE DU POIGNET ",null,null,null,null,null,null,"10000 F"],["RADIOGRAPHIE DU BRAS",null,null,null,null,null,null,"12500 F"],["RADIOGRAPHIE DE L'AVANT BRAS ",null,null,null,null,null,null,"12500 F"],["RADIOGRAPHIE DE L'EPAULE ",null,null,null,null,null,null,"15000 F"],["RADIOGRAPHIE DU RACHIS DORSO-LOMBAIRE ",null,null,null,null,null,null,"35000 F"],["RADIOGRAPHIE DU DOIGT ",null,null,null,null,null,null,"10000 F"],["RADIOGRAPHIE DU CRANE",null,null,null,null,null,null,"20000 F"],["RADIOGRAPHIE DE L'HEMITHORAX",null,null,null,null,null,null,"17500 F"],["RADIOGRAPHIE DE LA CUISSE",null,null,null,null,null,null,"15000 F"],["RADIOGRAPHIE DU BASSIN DE FACE",null,null,null,null,null,null,"15000 F"],["RADIOGRAPHIE DU BASSIN DE FACE ET PROFIL",null,null,null,null,null,null,"30000 F"],["RADIOGRAPHIE DE LA HANCHE",null,null,null,null,null,null,"15000 F"],["RADIOGRAPHIE ASP",null,null,null,null,null,null,"15000 F"]], bio: [["LABORATOIRE — EXEMPLE FICTIF","",""],["",""," "],["Désignation","Tarif","Délai"],["HEMATOLOGIE","",""],["Numération formule sanguine (NFS)","5 000","24h"],["N.F.S + Réticulocytes","7 500","24h"],["Vitesse de sédim.","2 000","24h"],["Groupage sanguin ABO RH","3 500","24h"],["Test d'Emmel","3 000","24h"],["Electrophorese Hb","15 000","72h"],["TP-INR","5 000","24h"],["TCK","5 000","24h"],["",""],["BIOCHIMIE","",""],["Glycemie a jeun","2 000","2h"],["Hb glyquée (HbA1c)","10 000","48h"],["Urée sanguine","2 500","24h"],["Créatinine","3 000","24h"],["Ionogramme (Na K Cl)","9 000","24h"],["Transaminases ASAT/ALAT","6 000","24h"],["Gamma GT","4 000","24h"],["Bilan lipidique complet","12 000","24h"],["Cholesterol total","3 000","24h"],["Triglycéride","3 000","24h"],["Acide urique","3 000","24h"],["CRP ultrasensible","6 000","24h"],["Ferritinemie","12 000","48h"],["Calcémie","3 000","24h"],["Magnésium sérique","4 000","24h"],["",""],["SEROLOGIE","",""],["Sérologie HIV 1+2","5 000","24h"],["Ag HBs","5 000","24h"],["Anticorps anti HCV","10 000","48h"],["Toxoplasmose IgG","8 000","48h"],["Toxoplasmose IgM","8 000","48h"],["Rubéole IgG/IgM","15 000","72h"],["Widal et Félix","4 000","24h"],["TPHA-VDRL","5 000","24h"],["Chlamydiae (sérologie)","12 000","72h"],["Beta HCG plasmatique","8 000","24h"],["",""],["URINES / PARASITO","",""],["ECBU + ATB","10 000","72h"],["Protéinurie de 24h","4 000","24h"],["Goutte épaisse","2 000","2h"],["Selles KAOP","3 000","24h"],["Recherche de sang dans les selles","4 000","24h"],["Spermogramme + spermocytogramme","25 000","72h"],["Dosage PSA total","12 000","48h"],["TSH us","10 000","48h"],["Vitamine D","25 000",""],["Hormone anti-mullérienne","",""]] };
+</script>
+<script>
+(function () {
+'use strict';
+var E = ENGINE;
+var REFBY = {}; REF.forEach(function (a) { REFBY[a.id] = a; });
+var TH = { prop: 0.60, auto: 0.95, margin: 0.10 };
+var STEPS = [['id', 'Identité'], ['fichier', 'Fichier'], ['lecture', 'Lecture'], ['questions', 'Questions'], ['tarifs', 'Tarifs'], ['compte', 'Compte']];
+var STATUS = { pre_inscrite: ['Pré-inscrite', 'p-neutral'], fichier_recu: ['Fichier reçu', 'p-info'], en_validation: ['En validation', 'p-cf'], pret_a_publier: ['Prêt à publier', 'p-teal'], publie: ['Publié', 'p-teal'], actif: ['Actif', 'p-ok'] };
+var STRUCTS = {
+  img: { id: 'MC-STR-0041', name: "Centre d'imagerie (exemple)", pillar: 'img', sample: 'ods', fname: 'ACTES ET TARIFICATIONS (7).ods', phone: '+221 77 000 00 41' },
+  bio: { id: 'MC-STR-0042', name: 'Laboratoire exemple (fictif)', pillar: 'bio', sample: 'bio', fname: 'tarifs_laboratoire.xlsx', phone: '+221 77 000 00 42' }
+};
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function fcfa(v) { return v == null ? '—' : Number(v).toLocaleString('fr-FR') + ' F'; }
+function clock() { return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); }
+var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+var S, IDX = E.buildIndex(REF, []);
+function fresh(kind) {
+  var st = STRUCTS[kind || 'img'];
+  return { st: st, step: 'id', status: 'pre_inscrite', compte: false, msgs: [], quick: null, waiting: null, lines: [], m: {}, issues: {},
+    questions: [], qi: 0, answers: {}, prices: {}, left: [], confirmed: false, published: false, aliases: [], log: [], busy: false };
+}
+function log(msg) { S.log.unshift({ at: clock(), msg: msg }); }
+
+/* ---------- messages ---------- */
+var queue = [], playing = false;
+function bot(html, quick, opts) { queue.push({ kind: 'bot', html: html, quick: quick || null, opts: opts || {} }); play(); }
+function sys(text) { queue.push({ kind: 'sys', html: esc(text) }); play(); }
+function me(text) { S.msgs.push({ from: 'me', html: esc(text), at: clock() }); S.quick = null; render(); }
+function play() {
+  if (playing) return; var x = queue.shift(); if (!x) { render(); return; }
+  playing = true;
+  if (x.kind === 'sys') { S.msgs.push({ from: 'sys', html: x.html }); playing = false; render(); play(); return; }
+  S.typing = true; render();
+  setTimeout(function () {
+    S.typing = false; S.msgs.push({ from: 'bot', html: x.html, at: clock() });
+    if (x.quick) S.quick = x.quick;
+    if (x.opts.then) x.opts.then();
+    playing = false; render(); play();
+  }, REDUCED ? 60 : Math.min(900, 280 + x.html.length * 2));
+}
+
+/* ---------- flux ---------- */
+function start(kind) {
+  S = fresh(kind); queue = []; playing = false;
+  sys('Lien d’onboarding ouvert · jeton valide, rattaché à ' + S.st.id);
+  log('Lien d’onboarding ouvert par la structure');
+  bot('Bonjour, je suis l’assistant MedCare. Je vais vous aider à mettre votre catalogue en ligne, <b>sans rien ressaisir</b> : vous m’envoyez votre fichier de tarifs tel qu’il est, je le lis, et je ne vous pose que les questions utiles.');
+  bot('Ce lien est rattaché à <b>' + esc(S.st.name) + '</b> (identifiant ' + esc(S.st.id) + '). C’est bien votre structure ?', [
+    { l: 'Oui, c’est nous', a: function () { me('Oui, c’est nous'); askFile(); } },
+    { l: 'Non', alt: true, a: function () { me('Non'); bot('D’accord. Je préviens l’équipe MedCare, un conseiller vous rappelle pour corriger le rattachement. Dans cette démo, on continue avec la structure d’exemple.'); log('La structure conteste le rattachement du lien : rappel conseiller à prévoir'); askFile(); } },
+    { l: 'Essayer avec un laboratoire (biologie)', alt: true, a: function () { me('Essayer avec un laboratoire'); start('bio'); } }
+  ]);
+  render();
+}
+function askFile() {
+  S.step = 'fichier';
+  bot('Envoyez-moi votre <b>fichier de tarifs</b> : Excel, LibreOffice ou CSV, comme vous l’avez. Utilisez le bouton <b>+</b> en bas à gauche.', [
+    { l: 'Envoyer le fichier d’exemple', a: function () { me('📎 ' + S.st.fname); ingest(JSON.parse(JSON.stringify(SAMPLES[S.st.sample])), S.st.fname); } },
+    { l: 'Je n’ai pas de fichier', alt: true, a: function () { me('Je n’ai pas de fichier'); bot('Pas de souci. Je vous envoie le <b>gabarit MedCare</b> de votre pilier : la liste des examens est déjà remplie, il ne reste que vos prix à mettre. (Scénario B, hors de cette démo.)', [{ l: 'Finalement, envoyer le fichier d’exemple', a: function () { me('📎 ' + S.st.fname); ingest(JSON.parse(JSON.stringify(SAMPLES[S.st.sample])), S.st.fname); } }]); } }
+  ]);
+}
+function ingest(rows, name) {
+  S.step = 'lecture'; S.status = 'fichier_recu'; log('Fichier reçu par le chat : ' + name);
+  var sch = E.detectSchema(rows);
+  var r = E.readRows(rows, sch.roles, S.st.pillar);
+  S.lines = r.lines.filter(function (l) { return l.kind === 'acte'; });
+  if (!S.lines.length) { bot('Je n’arrive pas à trouver d’examens dans ce fichier. Pouvez-vous m’envoyer le fichier Excel d’origine plutôt qu’un export ?', [{ l: 'Envoyer le fichier d’exemple', a: function () { me('📎 ' + S.st.fname); ingest(JSON.parse(JSON.stringify(SAMPLES[S.st.sample])), S.st.fname); } }]); return; }
+  var secs = {}; S.lines.forEach(function (l) { var k = l.section || 'Sans rubrique'; secs[k] = (secs[k] || 0) + 1; });
+  S.lines.forEach(function (l) {
+    S.m[l.num] = E.matchLine(IDX, l.label, l.ctx, [l.pillar || S.st.pillar], S.st.id, l.types);
+    S.issues[l.num] = E.classify(S.m[l.num], 'V1', TH);
+  });
+  log('Lecture : ' + S.lines.length + ' examens, ' + Object.keys(secs).length + ' rubriques');
+  var list = Object.keys(secs).map(function (k) { return '<li>' + esc(cap(k)) + ' : ' + secs[k] + '</li>'; }).join('');
+  bot('Fichier bien reçu. J’ai lu <b>' + S.lines.length + ' examens</b> répartis ainsi :<ul>' + list + '</ul>', null);
+  bot('C’est bien tout votre catalogue ?', [
+    { l: 'Oui, c’est complet', a: function () { me('Oui, c’est complet'); afterRead(); } },
+    { l: 'Il manque des examens', alt: true, a: function () { me('Il manque des examens'); bot('Envoyez-moi l’autre fichier ou l’autre feuille avec le bouton +, je l’ajouterai. Pour la démo, on continue avec celui-ci.'); log('La structure signale un catalogue incomplet'); afterRead(); } }
+  ]);
+}
+function cap(s) { s = String(s).toLowerCase(); return s.charAt(0).toUpperCase() + s.slice(1); }
+function afterRead() {
+  S.step = 'questions'; S.status = 'en_validation';
+  var ok = S.lines.filter(function (l) { return S.issues[l.num] === 'reconnu'; });
+  // questions : sens d'abord, puis prix
+  var qs = [];
+  S.lines.forEach(function (l) { if (S.issues[l.num] !== 'reconnu') qs.push({ type: 'sens', l: l }); });
+  S.lines.forEach(function (l) { if (l.price.statut === 'manquant' || l.price.statut === 'anomalie') qs.push({ type: 'prix', l: l }); });
+  S.questions = qs; S.qi = 0;
+  bot('J’ai reconnu <b>' + ok.length + ' examens sur ' + S.lines.length + '</b> sans rien vous demander.' + (qs.length ? ' Il me reste <b>' + qs.length + ' questions</b> courtes, une à la fois. Vous pouvez vous arrêter quand vous voulez : l’équipe MedCare terminera.' : ''));
+  if (qs.length) bot('On y va ?', [{ l: 'Oui, allons-y', a: function () { me('Oui, allons-y'); ask(); } }, { l: 'Laisser MedCare s’en charger', alt: true, a: function () { me('Laissez MedCare s’en charger'); skipRest(); } }]);
+  else toTarifs();
+}
+function ask() {
+  if (S.qi >= S.questions.length) { toTarifs(); return; }
+  if (S.qi > 0 && S.qi % 6 === 0 && !S.questions[S.qi].pausedAsk) {
+    S.questions[S.qi].pausedAsk = true;
+    bot('Merci, ça avance bien. Il reste <b>' + (S.questions.length - S.qi) + ' questions</b>. On continue ?', [{ l: 'Continuer', a: function () { me('Continuer'); ask(); } }, { l: 'MedCare finira', alt: true, a: function () { me('MedCare finira'); skipRest(); } }]);
+    return;
+  }
+  var q = S.questions[S.qi], l = q.l, n = S.qi + 1, tot = S.questions.length;
+  var head = '<span class="q">Question ' + n + ' sur ' + tot + '</span>';
+  if (q.type === 'sens') {
+    var m = S.m[l.num], cands = m.cands.filter(function (c) { return c.s >= 0.35; }).slice(0, 3);
+    var src = '« ' + esc(l.label) + ' »' + (l.section && l.ctx !== l.label ? ' (rubrique ' + esc(cap(l.section)) + ')' : '');
+    var quick = cands.map(function (c) { return { l: c.acte.name, a: function () { me(c.acte.name); answerSens(q, c.acte.id, null); } }; });
+    quick.push({ l: 'Aucun de ceux-là', alt: true, a: function () { me('Aucun de ceux-là'); S.waiting = { kind: 'precise', q: q }; bot('Décrivez-moi l’examen en quelques mots, je transmets à l’équipe MedCare.', [{ l: 'Passer', alt: true, a: function () { me('Passer'); S.waiting = null; answerSens(q, null, null, true); } }]); } });
+    quick.push({ l: 'Passer', alt: true, a: function () { me('Passer'); answerSens(q, null, null, true); } });
+    bot(head + 'Dans votre fichier : ' + src + '. ' + (cands.length ? 'Voulez-vous dire :' : 'Je ne le trouve pas dans notre liste. De quel examen s’agit-il ?'), quick);
+  } else {
+    var p = S.prices[l.num] || l.price;
+    if (p.statut === 'manquant') {
+      S.waiting = { kind: 'prix', q: q };
+      bot(head + '« ' + esc(l.label) + ' » n’a pas de tarif dans votre fichier. Quel est votre prix ? Écrivez le montant en francs.', [
+        { l: 'Sur devis', alt: true, a: function () { me('Sur devis'); setPrice(q, { value: null, statut: 'sur_devis' }); } },
+        { l: 'Nous ne le faisons plus', alt: true, a: function () { me('Nous ne le faisons plus'); S.answers[l.num] = { ignore: true }; S.waiting = null; log('Ligne ' + l.num + ' retirée par la structure (« ne le fait plus »)'); next(); } }
+      ]);
+    } else {
+      var guess = p.value && p.value >= 100000 ? Math.round(p.value / 10) : null;
+      var quick2 = [{ l: 'Oui, ' + fcfa(p.value), a: function () { me('Oui, ' + fcfa(p.value)); setPrice(q, { value: p.value, statut: 'renseigne' }); } }];
+      if (guess) quick2.push({ l: 'Non, ' + fcfa(guess), a: function () { me('Non, ' + fcfa(guess)); setPrice(q, { value: guess, statut: 'renseigne' }); } });
+      quick2.push({ l: 'Autre montant', alt: true, a: function () { me('Autre montant'); S.waiting = { kind: 'prix', q: q }; bot('Écrivez le bon montant en francs.'); } });
+      bot(head + '« ' + esc(l.label) + ' » est à <b>' + fcfa(p.value) + '</b>, nettement au-dessus de vos autres examens de la rubrique. C’est bien le bon tarif ?', quick2);
+    }
+  }
+}
+function answerSens(q, acteId, text, skipped) {
+  var l = q.l;
+  if (skipped) { S.left.push(l.num); log('Question passée : « ' + l.label + ' » laissée à MedCare'); }
+  else { S.answers[l.num] = { acteId: acteId, text: text }; log('Réponse de la structure : « ' + l.label + ' » → ' + (acteId ? REFBY[acteId].name : 'précision « ' + text + ' »') + ' · à valider'); }
+  next();
+}
+function setPrice(q, p) { S.prices[q.l.num] = p; S.waiting = null; log('Prix confirmé par la structure : « ' + q.l.label + ' » → ' + (p.statut === 'sur_devis' ? 'sur devis' : fcfa(p.value))); next(); }
+function next() { S.qi++; ask(); }
+function skipRest() {
+  for (var i = S.qi; i < S.questions.length; i++) if (S.questions[i].type === 'sens') S.left.push(S.questions[i].l.num);
+  log((S.questions.length - S.qi) + ' questions laissées à l’équipe MedCare');
+  S.qi = S.questions.length;
+  bot('Entendu, l’équipe MedCare s’occupe des points restants.');
+  toTarifs();
+}
+function finalLines() {
+  return S.lines.filter(function (l) { return !(S.answers[l.num] && S.answers[l.num].ignore); });
+}
+function toTarifs() {
+  S.step = 'tarifs';
+  var L = finalLines(), vals = L.map(function (l) { var p = S.prices[l.num] || l.price; return p.value; }).filter(function (v) { return v != null; });
+  var miss = L.filter(function (l) { var p = S.prices[l.num] || l.price; return p.statut === 'manquant'; }).length;
+  var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+  var pend = Object.keys(S.answers).filter(function (k) { return S.answers[k].acteId || S.answers[k].text; }).length + S.left.length;
+  bot('Voici votre catalogue prêt :<div class="card"><div><b>' + L.length + ' examens</b>, de ' + fcfa(min) + ' à ' + fcfa(max) + '</div>' +
+    (miss ? '<div class="k">' + miss + ' tarif(s) encore manquant(s), non publiés tant qu’ils sont vides</div>' : '') +
+    (pend ? '<div class="k">' + pend + ' examen(s) en vérification par l’équipe MedCare</div>' : '') + '</div>', null);
+  bot('Les tarifs vous engagent : ils ne seront visibles des patients qu’après votre confirmation. Vous confirmez ces tarifs ?', [
+    { l: 'Je confirme mes tarifs', a: function () { me('Je confirme mes tarifs'); S.confirmed = true; log('Tarifs confirmés par la structure dans le chat'); toCompte(); } },
+    { l: 'Voir le détail', alt: true, a: function () { me('Voir le détail'); detail(); } }
+  ]);
+}
+function detail() {
+  var L = finalLines().slice(0, 12);
+  var rows = L.map(function (l) { var p = S.prices[l.num] || l.price; var a = S.issues[l.num] === 'reconnu' ? S.m[l.num].cands[0].acte.name : (S.answers[l.num] && S.answers[l.num].acteId ? REFBY[S.answers[l.num].acteId].name : 'en vérification'); return '<li>' + esc(a) + ' · ' + (p.statut === 'sur_devis' ? 'sur devis' : fcfa(p.value)) + '</li>'; }).join('');
+  bot('Les premiers examens :<ul>' + rows + '</ul>' + (finalLines().length > 12 ? '<div class="k" style="margin-top:4px;color:var(--ink2)">… et ' + (finalLines().length - 12) + ' autres. La liste complète sera dans votre espace MedCare.</div>' : ''), [
+    { l: 'Je confirme mes tarifs', a: function () { me('Je confirme mes tarifs'); S.confirmed = true; log('Tarifs confirmés par la structure dans le chat'); toCompte(); } }
+  ]);
+}
+function toCompte() {
+  S.step = 'compte';
+  bot('Merci. Dernière étape : <b>activez votre compte</b> pour gérer votre catalogue vous-même ensuite. Vous choisirez juste un mot de passe.', [
+    { l: 'Activer mon compte', a: function () { me('Activer mon compte'); S.compte = true; log('Compte réclamé par la structure via le chat'); sys('Compte activé pour ' + S.st.phone); bot('C’est fait, votre compte est actif. L’équipe MedCare vérifie les derniers points, puis votre catalogue part en ligne. Je vous préviens ici dès que c’est le cas.'); S.step = 'fin'; } },
+    { l: 'Plus tard', alt: true, a: function () { me('Plus tard'); log('Activation du compte reportée'); bot('Pas de problème. Le lien reste valable 30 jours, et je vous le renverrai au moment de la mise en ligne.'); S.step = 'fin'; } }
+  ]);
+}
+
+/* ---------- côté MedCare ---------- */
+function opsValidate(num) {
+  var a = S.answers[num]; if (!a || !a.acteId || a.validated) return;
+  a.validated = true;
+  var l = S.lines.filter(function (x) { return x.num === Number(num); })[0];
+  var key = E.normalize(S.m[l.num].usedText, REFBY[a.acteId].pillar).key;
+  S.aliases.push({ brut: S.m[l.num].usedText, key: key, acte: REFBY[a.acteId].name });
+  log('Opérateur : réponse validée pour « ' + l.label + ' » · alias ajouté au lexique');
+}
+function pending() {
+  var p = []; S.lines.forEach(function (l) { var a = S.answers[l.num]; if (a && (a.acteId || a.text) && !a.validated) p.push(l); });
+  return p;
+}
+function canPublish() { return S.confirmed && !pending().length && !S.published; }
+function publish() {
+  S.published = true; S.status = S.compte ? 'actif' : 'publie';
+  log('Catalogue publié par MedCare' + (S.compte ? ' · visible des patients' : ' · en attente de l’activation du compte'));
+  bot(S.compte ? 'Bonne nouvelle : votre catalogue est <b>en ligne sur MedCare</b>. Les patients peuvent maintenant trouver vos examens et vos tarifs.' : 'Votre catalogue est prêt sur MedCare. Activez votre compte pour le rendre visible des patients.', S.compte ? null : [{ l: 'Activer mon compte', a: function () { me('Activer mon compte'); S.compte = true; S.status = 'actif'; log('Compte réclamé · catalogue visible des patients'); bot('Compte activé, votre catalogue est en ligne.'); } }]);
+}
+
+/* ---------- saisie libre ---------- */
+function onText(t) {
+  t = t.trim(); if (!t) return;
+  me(t);
+  var low = E.normalize(t, 'bio').full;
+  if (S.waiting && S.waiting.kind === 'prix') {
+    var p = E.parsePrice(t);
+    if (p.statut === 'renseigne' || p.statut === 'sur_devis') { setPrice(S.waiting.q, p); return; }
+    bot('Je n’ai pas compris le montant. Écrivez-le en chiffres, par exemple 70000.'); return;
+  }
+  if (S.waiting && S.waiting.kind === 'precise') { var q = S.waiting.q; S.waiting = null; bot('Merci, je transmets votre précision à l’équipe MedCare.'); answerSens(q, null, t); return; }
+  if (/\b(statut|etat|ou en est|avancement)\b/.test(low)) { bot('Votre dossier est à l’étape <b>' + (STEPS.filter(function (s) { return s[0] === S.step; })[0] || ['', 'terminée'])[1].toLowerCase() + '</b>. Statut : ' + STATUS[S.status][0].toLowerCase() + '.'); return; }
+  if (/\b(aide|help|comment)\b/.test(low)) { bot('Je peux lire votre fichier de tarifs, vous poser les questions utiles et activer votre compte. Pour parler à une personne, écrivez « conseiller ».'); return; }
+  if (/\b(conseiller|humain|appel|appeler)\b/.test(low)) { log('La structure demande un conseiller'); bot('C’est noté, un conseiller MedCare vous rappelle au ' + esc(S.st.phone) + '.'); return; }
+  bot('Je note. Utilisez les boutons de réponse ci-dessus, ou écrivez « aide » ou « conseiller ».');
+}
+
+/* ---------- rendu ---------- */
+function renderSteps() {
+  var order = STEPS.map(function (s) { return s[0]; }), i = S.step === 'fin' ? STEPS.length : order.indexOf(S.step);
+  document.getElementById('steps').innerHTML = STEPS.map(function (s, k) { return '<div class="st ' + (k < i ? 'done' : k === i ? 'now' : '') + '"><i></i><span>' + s[1] + '</span></div>'; }).join('');
+}
+function renderMsgs() {
+  var box = document.getElementById('msgs');
+  var h = S.msgs.map(function (m) {
+    if (m.from === 'sys') return '<div class="sys">' + m.html + '</div>';
+    return '<div class="m ' + (m.from === 'me' ? 'me' : 'bot') + '">' + m.html + '<span class="t">' + m.at + '</span></div>';
+  }).join('');
+  if (S.typing) h += '<div class="typing" aria-label="L’assistant écrit"><i></i><i></i><i></i></div>';
+  if (S.quick && !S.typing && !queue.length) h += '<div class="quick">' + S.quick.map(function (q, k) { return '<button type="button" class="' + (q.alt ? 'alt' : '') + '" data-q="' + k + '">' + esc(q.l) + '</button>'; }).join('') + '</div>';
+  box.innerHTML = h; box.scrollTop = box.scrollHeight;
+}
+function renderOps() {
+  var ok = S.lines.filter(function (l) { return S.issues[l.num] === 'reconnu'; }).length;
+  var ans = Object.keys(S.answers).filter(function (k) { return S.answers[k].acteId || S.answers[k].text; }).length;
+  var st = STATUS[S.status];
+  var h = '<div><h1>Ce que voit MedCare</h1><div class="sub">Le dossier se remplit pendant que la structure répond. L’assistant ne rattache jamais seul un examen : chaque réponse de la structure est validée ici.</div></div>';
+  h += '<div class="panel"><h2>Dossier</h2><dl class="kv"><dt>Structure</dt><dd>' + esc(S.st.name) + '</dd><dt>Identifiant</dt><dd class="mono">' + esc(S.st.id) + '</dd><dt>Statut</dt><dd><span class="pill ' + st[1] + '">' + st[0] + '</span></dd>' +
+    '<dt>Compte</dt><dd>' + (S.compte ? '<span class="pill p-ok">Réclamé</span>' : '<span class="pill p-cf">Pas encore réclamé</span>') + '</dd><dt>Tarifs</dt><dd>' + (S.confirmed ? '<span class="pill p-ok">Confirmés par la structure</span>' : '<span class="pill p-neutral">Non confirmés</span>') + '</dd><dt>Canal</dt><dd>Chatbot (lien d’onboarding)</dd></dl></div>';
+  if (S.lines.length) {
+    h += '<div class="sum"><div class="ok"><b>' + ok + '</b><span>reconnus automatiquement</span></div><div class="cf"><b>' + ans + '</b><span>réponses de la structure</span></div><div class="no"><b>' + S.left.length + '</b><span>laissés à MedCare</span></div><div><b>' + Object.keys(S.prices).length + '</b><span>prix confirmés ou saisis</span></div></div>';
+    var P = pending();
+    h += '<div class="panel"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><h2 style="margin:0">Réponses à valider</h2>' + (P.length ? '<button class="btn sm" data-op="all">Tout valider (' + P.filter(function (l) { return S.answers[l.num].acteId; }).length + ')</button>' : '') + '</div>';
+    if (!P.length) h += '<div class="empty">' + (ans ? 'Toutes les réponses de la structure sont validées.' : 'Aucune réponse de la structure pour l’instant.') + '</div>';
+    else {
+      h += '<div class="tw"><table><thead><tr><th>Ligne</th><th>Libellé du fichier</th><th>Réponse de la structure</th><th></th></tr></thead><tbody>';
+      P.forEach(function (l) { var a = S.answers[l.num]; h += '<tr><td class="ln">' + l.num + '</td><td>' + esc(l.label) + '</td><td>' + (a.acteId ? esc(REFBY[a.acteId].name) : '<span class="why">précision : « ' + esc(a.text) + ' »</span>') + '</td><td>' + (a.acteId ? '<button class="btn sm" data-op="v" data-n="' + l.num + '">Valider</button>' : '<span class="why">à traiter dans le back-office</span>') + '</td></tr>'; });
+      h += '</tbody></table></div>';
+    }
+    if (S.left.length) h += '<p class="why" style="margin:8px 0 0">' + S.left.length + ' examen(s) laissé(s) par la structure : l’opérateur les traite dans l’écran de rapprochement du back-office.</p>';
+    h += '</div>';
+    h += '<div class="panel"><h2>Publication</h2>' + (S.published ? '<div class="callout">Lot publié. ' + (S.compte ? 'Catalogue visible des patients.' : 'Visible des patients dès l’activation du compte.') + '</div>' :
+      '<p class="why" style="margin:0 0 10px">Possible quand la structure a confirmé ses tarifs et que ses réponses sont validées.</p><button class="btn primary" data-op="pub"' + (canPublish() ? '' : ' disabled') + '>Valider et publier le catalogue</button>') + '</div>';
+    if (S.aliases.length) h += '<div class="panel"><h2>Lexique appris dans ce dossier</h2><div class="tw"><table><thead><tr><th>Écriture de la structure</th><th>Acte MedCare</th></tr></thead><tbody>' + S.aliases.map(function (a) { return '<tr><td>' + esc(a.brut.toLowerCase()) + '</td><td>' + esc(a.acte) + '</td></tr>'; }).join('') + '</tbody></table></div><p class="why" style="margin:8px 0 0">Alias propres à la structure + candidats globaux : la prochaine fois, ces examens seront reconnus sans question.</p></div>';
+  }
+  h += '<div class="panel"><h2>Journal</h2><div class="log">' + S.log.map(function (x) { return '<div><span class="ln">' + x.at + '</span><span>' + esc(x.msg) + '</span></div>'; }).join('') + '</div></div>';
+  document.getElementById('ops').innerHTML = h;
+}
+function render() { renderSteps(); renderMsgs(); renderOps(); }
+
+/* ---------- événements ---------- */
+document.getElementById('msgs').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-q]'); if (!b || !S.quick) return;
+  var q = S.quick[Number(b.dataset.q)]; S.quick = null; q.a();
+});
+document.getElementById('bar').addEventListener('submit', function (e) { e.preventDefault(); var i = document.getElementById('txt'); var v = i.value; i.value = ''; onText(v); });
+document.getElementById('file').addEventListener('change', function (e) {
+  var f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  me('📎 ' + f.name);
+  if (/^image\//.test(f.type)) { log('Photo reçue : ' + f.name + ' · lecture par OCR prévue en V2'); bot('Photo bien reçue. La lecture des photos arrive dans une prochaine version : l’équipe MedCare la saisit pour vous. Si vous avez le fichier Excel, envoyez-le, c’est plus rapide.'); return; }
+  if (S.step !== 'fichier' && S.step !== 'lecture') { bot('Je garde ce fichier pour l’équipe MedCare.'); log('Fichier supplémentaire reçu : ' + f.name); return; }
+  var rd = new FileReader();
+  rd.onload = function () {
+    try {
+      if (!window.XLSX) throw new Error('lecteur indisponible');
+      var wb = XLSX.read(new Uint8Array(rd.result), { type: 'array' }), best = null;
+      wb.SheetNames.forEach(function (n) { var r = XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: true, defval: null, blankrows: true }); if (!best || r.length > best.length) best = r; });
+      S.quick = null; ingest(best.map(function (r) { return (r || []).map(function (v) { return v === undefined ? null : v; }); }), f.name);
+    } catch (x) { bot('Je n’arrive pas à ouvrir ce fichier. Pouvez-vous l’envoyer en .xlsx, .ods ou .csv ?'); }
+  };
+  rd.readAsArrayBuffer(f);
+});
+document.getElementById('ops').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-op]'); if (!b) return;
+  if (b.dataset.op === 'v') opsValidate(b.dataset.n);
+  else if (b.dataset.op === 'all') pending().forEach(function (l) { opsValidate(l.num); });
+  else if (b.dataset.op === 'pub' && canPublish()) publish();
+  render();
+});
+document.getElementById('restart').addEventListener('click', function () { start(S.st.pillar === 'bio' ? 'bio' : 'img'); });
+document.querySelectorAll('[data-view]').forEach(function (b) { b.addEventListener('click', function () {
+  document.getElementById('shell').dataset.show = b.dataset.view;
+  document.querySelectorAll('[data-view]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+}); });
+
+start('img');
+})();
+</script>
+
+</body></html>
