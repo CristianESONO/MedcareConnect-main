@@ -82,6 +82,7 @@
     </div>
   </div>
 
+  {% if not org.is_praticien %}
   {# Accès & utilisateurs (démo) #}
   <div class="param-card">
     <div class="param-card-head">
@@ -127,6 +128,7 @@
       <p class="text-[9px] leading-relaxed text-gray-400">Rôles disponibles : Administrateur · Secrétaire (Devis + RDV) · Lecture seule.</p>
     </div>
   </div>
+  {% endif %}
 
   {# Notifications #}
   <div class="param-card">
@@ -239,6 +241,7 @@
     {% endif %}
   </div>
 
+  {% if not org.is_praticien %}
   {# Zone de danger #}
   <div class="param-card border-rose-200 lg:col-span-2">
     <div class="param-card-head border-rose-100">
@@ -255,6 +258,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
 </form>
 <script>
 (function () {

@@ -129,23 +129,37 @@ def build_pioneer_bilan(org: OrganismeDeSante) -> dict[str, Any]:
         .count()
     )
 
-    section_a = [
-        _kpi_row("Vues de la page", _fmt_int(total_views), total_views, 500),
-        _kpi_row("Scans MedPlaque NFC", _fmt_int(nfc_scans), nfc_scans, 100),
-        _kpi_row(
-            "Taux de clic annuaire",
-            _fmt_pct(annuaire_rate),
-            annuaire_rate,
-            8.0,
-            cible_display="≥ 8%",
-        ),
-        _kpi_row(
-            "Requêtes aboutissant à la page",
-            _fmt_int(total_views),
-            total_views,
-            200,
-        ),
-    ]
+    if getattr(org, "is_praticien", False) or getattr(org, "account_nature", None) == "praticien":
+        from healthcare.models import PrestataireActe, PrestationTicket
+        actes_count = PrestataireActe.objects.filter(organisme=org, is_available=True).count()
+        tickets_qs = PrestationTicket.objects.filter(organisme=org)
+        tickets_count = tickets_qs.count()
+        tickets_views = sum(t.views_count for t in tickets_qs)
+
+        section_a = [
+            _kpi_row("Actes actifs au catalogue", _fmt_int(actes_count), actes_count, 5, cible_display="≥ 5 actes"),
+            _kpi_row("Tickets de prestation créés", _fmt_int(tickets_count), tickets_count, 3, cible_display="≥ 3 tickets"),
+            _kpi_row("Consultations des tickets partagés", _fmt_int(tickets_views), tickets_views, 30, cible_display="≥ 30 vues"),
+            _kpi_row("Recherches d'actes qualifiées", _fmt_int(total_views), total_views, 50, cible_display="≥ 50 recherches"),
+        ]
+    else:
+        section_a = [
+            _kpi_row("Vues de la page", _fmt_int(total_views), total_views, 500),
+            _kpi_row("Scans MedPlaque NFC", _fmt_int(nfc_scans), nfc_scans, 100),
+            _kpi_row(
+                "Taux de clic annuaire",
+                _fmt_pct(annuaire_rate),
+                annuaire_rate,
+                8.0,
+                cible_display="≥ 8%",
+            ),
+            _kpi_row(
+                "Requêtes aboutissant à la page",
+                _fmt_int(total_views),
+                total_views,
+                200,
+            ),
+        ]
 
     section_b = [
         _kpi_row("Devis WhatsApp générés", _fmt_int(devis_total), devis_total, 50),

@@ -13,6 +13,9 @@
     <p class="ins-page-sub">Cochez les organismes que vous acceptez · Visible par les patients dans l&apos;annuaire</p>
   </div>
   <div class="ins-page-actions">
+    <button type="button" class="ins-btn-add" id="btn-open-add-assurance">
+      <i class="ti ti-plus"></i> Ajouter une assurance
+    </button>
     <span class="ins-count-label" id="js-ins-count-label">{{ insurance_selected_count }} organisme{{ insurance_selected_count|pluralize }} sélectionné{{ insurance_selected_count|pluralize }}</span>
     <button type="submit" form="frm-assurances" class="ins-btn-save"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
   </div>
@@ -96,6 +99,56 @@
 </div>
 {% endif %}
 
+<!-- Modal Saisie Libre d'Assurance -->
+<div class="ins-modal-backdrop" id="modal-add-assurance" hidden aria-hidden="true" role="dialog" aria-labelledby="modal-add-title">
+  <div class="ins-modal">
+    <div class="ins-modal-header">
+      <div class="ins-modal-title" id="modal-add-title">
+        <i class="ti ti-shield-plus"></i>
+        <span>Ajouter une assurance non répertoriée</span>
+      </div>
+      <button type="button" class="ins-modal-close" id="btn-close-modal" aria-label="Fermer la boîte de dialogue">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+
+    <form method="post" id="frm-add-custom-assurance">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add_custom_assurance">
+
+      <div class="ins-modal-body">
+        <div class="ins-form-group">
+          <label for="ins-custom-name" class="ins-form-label">Nom de l'organisme / assurance <span class="req">*</span></label>
+          <input type="text" id="ins-custom-name" name="name" class="ins-form-input" placeholder="Ex. Mutuelle Générale des Cadres, Ascoma Santé…" required autocomplete="off">
+          <p class="ins-form-help">Saisie libre : le nom sera automatiquement rendu disponible et rattaché à votre catalogue.</p>
+        </div>
+
+        <div class="ins-form-group">
+          <label for="ins-custom-segment" class="ins-form-label">Catégorie d'organisme <span class="req">*</span></label>
+          <select id="ins-custom-segment" name="segment" class="ins-form-select" required>
+            {% for s_val, s_lbl in segment_choices %}
+            <option value="{{ s_val }}"{% if s_val == "privee_iard" %} selected{% endif %}>{{ s_lbl }}</option>
+            {% endfor %}
+          </select>
+          <p class="ins-form-help">Permet de classer l'organisme dans le bon onglet (Privée, Digitale, Mutuelle, etc.).</p>
+        </div>
+
+        <div class="ins-form-group">
+          <label for="ins-custom-desc" class="ins-form-label">Description ou précision complémentaire <span class="text-xs text-gray-400 font-normal">(optionnel)</span></label>
+          <textarea id="ins-custom-desc" name="description" class="ins-form-textarea" rows="2" placeholder="Ex. Formule Tiers-Payant d'entreprise, Délégation régionale…"></textarea>
+        </div>
+      </div>
+
+      <div class="ins-modal-footer">
+        <button type="button" class="ins-btn-cancel" id="btn-cancel-modal">Annuler</button>
+        <button type="submit" class="ins-btn-confirm">
+          <i class="ti ti-check"></i> Valider et enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 (function () {
   var form = document.getElementById('frm-assurances');
@@ -104,6 +157,46 @@
   var countEl = document.getElementById('js-ins-count-label');
   var searchEl = document.getElementById('ins-search');
   var currentFilter = 'all';
+
+  // Modal logic
+  var modalBackdrop = document.getElementById('modal-add-assurance');
+  var btnOpen = document.getElementById('btn-open-add-assurance');
+  var btnClose = document.getElementById('btn-close-modal');
+  var btnCancel = document.getElementById('btn-cancel-modal');
+  var customNameInput = document.getElementById('ins-custom-name');
+
+  function openModal() {
+    if (!modalBackdrop) return;
+    modalBackdrop.removeAttribute('hidden');
+    modalBackdrop.setAttribute('aria-hidden', 'false');
+    setTimeout(function () {
+      if (customNameInput) customNameInput.focus();
+    }, 50);
+  }
+
+  function closeModal() {
+    if (!modalBackdrop) return;
+    modalBackdrop.setAttribute('hidden', 'true');
+    modalBackdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  if (btnOpen) btnOpen.addEventListener('click', openModal);
+  if (btnClose) btnClose.addEventListener('click', closeModal);
+  if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', function (e) {
+      if (e.target === modalBackdrop) {
+        closeModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modalBackdrop && !modalBackdrop.hasAttribute('hidden')) {
+      closeModal();
+    }
+  });
 
   function refreshCounts() {
     var checked = form.querySelectorAll('.js-ins-cb:checked').length;
@@ -140,7 +233,7 @@
     if (!cb) return;
     cb.addEventListener('change', function () {
       card.classList.toggle('is-checked', cb.checked);
-      if (mark) mark.textContent = cb.checked ? '<i class="ti ti-circle-check"></i>' : '⬜';
+      if (mark) mark.innerHTML = cb.checked ? '<i class="ti ti-circle-check"></i>' : '⬜';
       refreshCounts();
     });
   });

@@ -22,9 +22,15 @@
         </button>
         <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
       </div>
-      <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
-        <i class="ti ti-search" aria-hidden="true"></i> Prestations
-      </a>
+      <div class="flex items-center gap-2">
+        <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
+          <i class="ti ti-mail" aria-hidden="true"></i> Messages
+          {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
+        </a>
+        <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
+          <i class="ti ti-search" aria-hidden="true"></i> Prestations
+        </a>
+      </div>
     </header>
     <div class="pac-main-body" id="pac-content">
       <div class="pac-inner">

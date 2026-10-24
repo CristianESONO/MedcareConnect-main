@@ -75,7 +75,7 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
 .opt-card:hover { border-color: var(--blue); }
 .opt-card.on { border-color: var(--blue); background: #eef6fb; box-shadow: 0 0 0 3px rgba(10,92,138,.08); }
 .opt-card .ic { font-size: 22px; line-height: 1; }
-.opt-card .nm { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14.5px; color: var(--navy); }
+.opt-card .nm { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13.5px; color: var(--navy); white-space: nowrap; }
 .opt-card .d { font-size: 11.5px; color: var(--g600); line-height: 1.45; margin-top: 2px; }
 .switch { font-size: 12px; color: var(--blue); font-weight: 600; text-decoration: none; margin-top: 8px; margin-bottom: 14px; display: inline-block; cursor: pointer; }
 
@@ -170,7 +170,7 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
         <div id="fork-container">
           <div class="tc-head">
             <div class="lbl" style="margin:0">Type de compte <span class="req">*</span></div>
-            <div class="tc-badge" id="mode-badge">Mode structure</div>
+            <div class="tc-badge" id="mode-badge">Mode soignant</div>
           </div>
           <div class="fork">
             <div class="opt-card on" id="fk-structure" onclick="setAccount('structure')">
@@ -191,22 +191,17 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
           <a class="switch" href="#" id="switch-link-patient" onclick="togglePatientMode(); return false;">Vous êtes un particulier ? Basculer sur compte Patient →</a>
         </div>
 
-        <!-- Responsable / Identité -->
-        <div class="row">
-          <div class="f">
-            <label id="lbl-prenom">Prénom du responsable <span class="opt">(optionnel)</span></label>
-            <input type="text" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}" placeholder="Prénom" oninput="autoUser()">
-          </div>
-          <div class="f">
-            <label id="lbl-nom">Nom du responsable <span class="opt">(optionnel)</span></label>
-            <input type="text" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}" placeholder="Nom de famille" oninput="autoUser()">
-          </div>
-        </div>
+
+        <!-- Les champs first_name / last_name restent dans le DOM (masqués) pour les praticiens -->
+        <input type="hidden" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}">
+        <input type="hidden" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}">
+
 
         <div class="f">
           <label id="lbl-username">Nom d'utilisateur <span class="opt">(identifiant de connexion)</span> <span class="req">*</span></label>
           <input type="text" name="username" id="username" value="{{ form.username.value|default:'' }}" required placeholder="ex : polyclinique_de_libe, dr_diagne">
-          <div class="hint" id="username-hint"><i class="ti ti-bulb"></i> <span>Cet identifiant est le username de connexion. Il se génère automatiquement à partir du nom ci-dessous, vous pouvez le modifier.</span></div>
+          <div class="hint" id="username-hint"><i class="ti ti-bulb"></i> <span>Cet identifiant est le username de connexion.</span></div>
+
         </div>
 
         <div class="f">
@@ -237,15 +232,7 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
               <input type="text" name="organisme_name" id="enseigne" value="{{ form.organisme_name.value|default:'' }}" placeholder="Ex : Clinique Les Almadies" oninput="autoUser()">
             </div>
 
-            <div class="f">
-              <label>Raison sociale <span class="opt">(légale)</span></label>
-              <input type="text" name="organisme_raison_sociale" id="id_organisme_raison_sociale" value="{{ form.organisme_raison_sociale.value|default:'' }}" placeholder="Si différent du nom affiché">
-            </div>
 
-            <div class="f">
-              <label>NINEA <span class="opt">(optionnel)</span></label>
-              <input type="text" name="organisme_ninea" id="id_organisme_ninea" value="{{ form.organisme_ninea.value|default:'' }}" placeholder="Numéro d'identification entreprise">
-            </div>
 
             <div class="f">
               <label>Type d'établissement <span class="req">*</span></label>
@@ -480,7 +467,8 @@ function setAccount(t) {
   document.getElementById('fk-praticien').classList.toggle('on', t === 'praticien');
   document.getElementById('block-structure').classList.toggle('hide', t !== 'structure');
   document.getElementById('block-praticien').classList.toggle('hide', t !== 'praticien');
-  document.getElementById('mode-badge').textContent = (t === 'structure') ? 'Mode structure' : 'Mode praticien';
+  document.getElementById('mode-badge').textContent = (t === 'structure') ? 'Mode soignant' : 'Mode praticien';
+
   document.getElementById('title').textContent = (t === 'structure') ? 'Créer un compte établissement' : 'Créer un compte praticien';
   document.getElementById('subt').textContent = (t === 'structure')
     ? 'Renseignez les informations de votre établissement pour créer votre fiche.'
@@ -594,8 +582,9 @@ function tgpw(id) {
 
 function togglePatientMode() {
   isPatient = !isPatient;
-  applyMode(isPatient ? 'patient' : 'structure', true);
+  applyMode(isPatient ? 'patient' : 'structure', false);
 }
+
 
 function applyMode(mode, triggerHeaderSwitch) {
   var userTypeInput = document.getElementById('id_user_type');
@@ -649,8 +638,16 @@ function applyMode(mode, triggerHeaderSwitch) {
 
   if (triggerHeaderSwitch && typeof window.switchMode === 'function') {
     window.switchMode(mode);
+  } else {
+    // Synchroniser le pill du toggle sans déclencher moveForm
+    var toggleMode = (mode === 'patient') ? 'patient' : 'structure';
+    document.querySelectorAll('.toggle__btn').forEach(function(b) {
+      b.setAttribute('aria-selected', String(b.getAttribute('data-mode') === toggleMode));
+    });
+    if (typeof window.movePill === 'function') window.movePill();
   }
 }
+
 
 // Intercepter et synchroniser le switchMode de _landing_marketing_js.html
 var origSwitch = window.switchMode;
@@ -671,18 +668,7 @@ document.querySelectorAll('.toggle__btn').forEach(function(btn) {
 
 // Initialisation au chargement
 document.addEventListener('DOMContentLoaded', function() {
-  var urlParams = new URLSearchParams(window.location.search);
-  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
-  
-  if (urlType === 'prestataire' || urlType === 'structure' || urlType === 'soignant') {
-    setTimeout(function() {
-      applyMode('structure', true);
-    }, 50);
-  } else {
-    applyMode('patient', true);
-  }
-
-  // Restaurer les champs sélectionnés si rechargement
+  // Restaurer les champs sélectionnés si rechargement après erreur de formulaire
   var selectedProf = document.getElementById('id_praticien_profession') ? document.getElementById('id_praticien_profession').value : '';
   if (selectedProf) {
     var profEl = document.querySelector('[data-prof="' + selectedProf + '"]');
@@ -694,5 +680,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 });
+
+// Initialisation du mode APRÈS le handler window.load du marketing JS
+// (qui remet tout sur "patient" — on doit l'écraser ensuite)
+window.addEventListener('load', function() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
+
+  setTimeout(function() {
+    if (urlType === 'patient' || urlType === 'particulier') {
+      applyMode('patient', true);
+    } else {
+      // Soignant par défaut : true = switchMode marketing pour afficher la section Partenaire Pionnier
+      applyMode('structure', true);
+    }
+  }, 80);
+});
+
 </script>
 {% endblock %}

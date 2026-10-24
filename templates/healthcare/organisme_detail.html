@@ -787,7 +787,7 @@ function updateCartRecap() {
   }
   
   box.style.display = 'block';
-  titleEl.textContent = `<i class="ti ti-shopping-cart"></i> Sélection (${selectedActes.length} acte${selectedActes.length > 1 ? 's' : ''})`;
+  titleEl.innerHTML = `<i class="ti ti-shopping-cart"></i> Sélection (${selectedActes.length} acte${selectedActes.length > 1 ? 's' : ''})`;
   
   let total = 0;
   itemsContainer.innerHTML = selectedActes.map(a => {

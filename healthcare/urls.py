@@ -90,6 +90,7 @@ urlpatterns = [
     path("prestataire/tickets/creer/", practitioner_views.prestataire_ticket_create, name="prestataire_ticket_create"),
     path("prestataire/tickets/<int:pk>/activer/", practitioner_views.prestataire_ticket_toggle, name="prestataire_ticket_toggle"),
     path("prestataire/tickets/<int:pk>/supprimer/", practitioner_views.prestataire_ticket_delete, name="prestataire_ticket_delete"),
+    path("prestataire/tickets/envoyer/", practitioner_views.ticket_send, name="ticket_send"),
     path("patient-mobile/", practitioner_views.patient_mobile_view, name="patient_mobile"),
 
     # Panels d'examens (structures + praticiens)

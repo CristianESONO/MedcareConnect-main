@@ -72,9 +72,11 @@
     }, 300);
   };
 
+  window.movePill = movePill;
   window.addEventListener('resize', movePill);
   window.addEventListener('load', function(){ movePill(); moveForm('patient'); observeReveals(stages.patient); });
   movePill(); moveForm('patient'); observeReveals(stages.patient);
+
 
   /* Retour haut */
   var fabTop = document.getElementById('mcFabTop');

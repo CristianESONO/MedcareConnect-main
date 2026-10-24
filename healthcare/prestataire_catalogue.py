@@ -22,8 +22,11 @@ from healthcare.service_icons import icon_for_subfamily_label, strip_leading_emo
 def applicable_pilier_slugs(org: OrganismeDeSante) -> set[str] | None:
     """
     Découplage V1 : les piliers applicables sont ceux choisis librement par la structure.
-    Si aucun n'a encore été sélectionné, tous sont applicables par défaut.
+    Pour les praticiens indépendants : uniquement Explorations fonctionnelles et Soins spécialisés.
+    Si aucun n'a encore été sélectionné pour une structure, tous sont applicables par défaut.
     """
+    if org and (getattr(org, "account_nature", None) == "praticien" or getattr(org, "is_praticien", False)):
+        return {"explorations-fonctionnelles", "soins-specialises"}
     if org and org.piliers_actifs.exists():
         return set(org.piliers_actifs.values_list("slug", flat=True))
     return None
@@ -104,11 +107,15 @@ def merge_catalog_blocks(catalog_by_pilier: list, org: OrganismeDeSante) -> list
     """
     Réordonne les 6 piliers référentiel (ordre démo) et marque applicabilité.
     Les piliers hors référentiel (imports legacy) sont exclus.
+    Pour un praticien indépendant, seuls Explorations fonctionnelles et Soins spécialisés sont retournés.
     """
     by_pk = {b["pilier"].pk: b for b in catalog_by_pilier}
+    is_praticien = bool(org and (getattr(org, "account_nature", None) == "praticien" or getattr(org, "is_praticien", False)))
     applicable = applicable_pilier_slugs(org)
     out = []
     for pilier in official_pilier_services():
+        if is_praticien and pilier.slug not in {"explorations-fonctionnelles", "soins-specialises"}:
+            continue
         block = by_pk.get(pilier.pk)
         if block is None:
             block = {

@@ -215,6 +215,9 @@
 .mpanel-card.base {
   border-left: 4px solid var(--blue);
 }
+.mpanel-card.panel-card {
+  border-left: 4px solid #0284c7;
+}
 .mpanel-card.ticket-card {
   border-left: 4px solid var(--purple);
 }
@@ -553,28 +556,12 @@
     </div>
     <div class="pan-head-btns">
       <button type="button" class="btn-green-new" onclick="openPanelBuilder(null, 'panel')">
-        <i class="ti ti-components"></i> + Nouveau panel
-      </button>
-      <button type="button" class="btn-purple-new" onclick="openPanelBuilder(null, 'ticket')">
-        <i class="ti ti-ticket"></i> + Nouveau ticket
+        <i class="ti ti-plus"></i> Nouveau
       </button>
     </div>
   </div>
 
-  <!-- ── Garde-fou déontologique permanent (Amber Box conforme V1) ── -->
-  <div class="card-deonto">
-    <div class="card-deonto-body">
-      <div class="card-deonto-title">
-        <i class="ti ti-lock"></i> Règle déontologique appliquée à tous les panels & tickets
-      </div>
-      <ul class="card-deonto-list">
-        <li>Un panel ou ticket est un <b>modèle d'exécution groupé</b>, jamais une prescription.</li>
-        <li>Toute réservation exige un <b>bulletin d'analyse émis par un tiers</b> (médecin prescripteur indépendant). Ni MedCare ni votre structure n'émettent d'ordonnance.</li>
-        <li>Votre structure <b>exécute</b> les actes. L'ordonnance doit venir d'un prescripteur indépendant, jamais de votre structure (pas d'auto-adressage).</li>
-        <li>MedCare ne prélève <b>aucune commission</b> sur les actes. Les panels sont des référentiels de santé, pas des offres publicitaires.</li>
-      </ul>
-    </div>
-  </div>
+
 
   {% if messages %}
     {% for msg in messages %}
@@ -584,14 +571,7 @@
     {% endfor %}
   {% endif %}
 
-  <!-- ── 1. Modèles MedCare recommandés ── -->
-  <div class="pan-group-head">
-    <div class="pan-group-title medcare"><i class="ti ti-dna"></i> Modèles MedCare recommandés</div>
-    <div class="pan-group-sub">Référentiels OMS / PEV / usage sénégalais, adaptables</div>
-  </div>
-  <div id="medcare-panels-grid" class="mpanel-grid"></div>
-
-  <!-- ── 2. Mes panels & tickets ── -->
+  <!-- ── 1. Mes panels & tickets ── -->
   <div class="pan-group-head">
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <div class="pan-group-title my"><i class="ti ti-folder"></i> Mes panels & tickets</div>
@@ -610,6 +590,15 @@
     <div class="pan-group-sub" id="my-panels-count">0 élément</div>
   </div>
   <div id="my-panels-grid" class="mpanel-grid"></div>
+
+
+  <!-- ── 2. Modèles MedCare recommandés ── -->
+  <div class="pan-group-head">
+    <div class="pan-group-title medcare"><i class="ti ti-dna"></i> Modèles MedCare recommandés</div>
+    <div class="pan-group-sub">Référentiels OMS / PEV / usage sénégalais, adaptables</div>
+  </div>
+  <div id="medcare-panels-grid" class="mpanel-grid"></div>
+
 
 </div>
 
@@ -662,21 +651,7 @@
       </div>
     </div>
 
-    <!-- Garde-fou bulletin : verrouillé ON -->
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--amber-l);border:1px solid #fcd34d;border-radius:10px;padding:11px 14px;margin-bottom:16px">
-      <div style="padding-right:12px">
-        <div style="font-size:12px;font-weight:700;color:#92400e;display:flex;align-items:center;gap:6px">
-          <i class="ti ti-lock"></i> Bulletin d'analyse tiers requis
-        </div>
-        <div style="font-size:10.5px;color:#7c4a12;margin-top:2px;line-height:1.5">
-          Obligatoire et non modifiable. Le patient devra présenter une ordonnance émise par un prescripteur indépendant. MedCare et votre structure n'émettent pas d'ordonnance.
-        </div>
-      </div>
-      <label class="toggle" title="Non modifiable">
-        <input type="checkbox" checked disabled>
-        <div class="toggle-track" style="opacity:.7;cursor:not-allowed"></div>
-      </label>
-    </div>
+
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin:6px 0 8px">
       <label class="field-label" style="margin:0" id="lbl-actes-count">Actes du panel <span style="color:var(--red)">*</span> <span style="color:var(--g400);font-weight:500">(min. 2)</span></label>
@@ -858,7 +833,6 @@ function renderMedcarePanels() {
       <div class="mpanel-actes">${pills}</div>
       <div class="mpanel-meta">
         <span class="mpanel-src">Référentiel MedCare</span>
-        <span class="mpanel-lock"><i class="ti ti-lock"></i> Bulletin tiers requis</span>
         ${warn}
         <span class="mpanel-total">${fmtF(st.total)} FCFA</span>
       </div>
@@ -932,7 +906,7 @@ function renderMyPanels() {
       ? `<span class="mpanel-badge-kind ticket"><i class="ti ti-ticket"></i> Ticket acte seul</span>`
       : `<span class="mpanel-badge-kind panel"><i class="ti ti-components"></i> Panel multi-actes</span>`;
 
-    return `<div class="mpanel-card ${isTicket ? 'ticket-card' : ''}" id="mcard-${p.id}" style="${p.actif ? '' : 'opacity:.68'}">
+    return `<div class="mpanel-card ${isTicket ? 'ticket-card' : 'panel-card'}" id="mcard-${p.id}" style="${p.actif ? '' : 'opacity:.68'}">
       <div class="mpanel-top">
         <div>
           <div class="mpanel-name">${escapeHtml(p.nom)}</div>
@@ -944,7 +918,6 @@ function renderMyPanels() {
       <div class="mpanel-actes">${pills || '<span style="color:#9ca3af">Aucun acte</span>'}</div>
       <div class="mpanel-meta">
         <span class="mpanel-src">${escapeHtml(p.source || (isTicket ? 'Ticket structure' : 'Personnalisé'))}</span>
-        <span class="mpanel-lock"><i class="ti ti-lock"></i> Bulletin requis</span>
         ${warn}
         <span class="mpanel-total">${fmtF(p.total_price || st.total)} FCFA</span>
       </div>

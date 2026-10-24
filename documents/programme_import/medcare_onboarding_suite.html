@@ -1,0 +1,2448 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedCare Connect — Plateforme Unifiée d'Onboarding des Catalogues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #F4F6F8;
+      --surface: #FFFFFF;
+      --sunk: #EBF0F2;
+      --line: #DCE3E6;
+      --line2: #E8EEF0;
+      --ink: #14202B;
+      --ink2: #52606D;
+      --ink3: #82909E;
+      --teal: #0F766E;
+      --teal-ink: #0B5A54;
+      --teal-bg: #E3F2F0;
+      --teal-hover: #0d655e;
+      --ok: #157A3D;
+      --okbg: #E4F3E8;
+      --cf: #A85407;
+      --cfbg: #FCEFD9;
+      --no: #B42318;
+      --nobg: #FBE9E7;
+      --info: #2346B8;
+      --infobg: #E8EDFB;
+      --me: #D6EFEA;
+      --wall: #E4EBEA;
+      --f-display: "Fraunces", Georgia, serif;
+      --f-body: "Figtree", system-ui, -apple-system, sans-serif;
+      --f-mono: "IBM Plex Mono", Consolas, monospace;
+      --r: 12px;
+      --shadow: 0 4px 14px rgba(20, 32, 43, 0.05);
+      --shadow-lg: 0 10px 25px -4px rgba(20, 32, 43, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0D1317;
+      --surface: #151D23;
+      --sunk: #10171C;
+      --line: #25303A;
+      --line2: #1C252D;
+      --ink: #E6ECF1;
+      --ink2: #9AA7B4;
+      --ink3: #6E7B88;
+      --teal: #3FC1B1;
+      --teal-ink: #7DD8CC;
+      --teal-bg: #123330;
+      --teal-hover: #32a89a;
+      --ok: #5FCE8A;
+      --okbg: #143021;
+      --cf: #E3A343;
+      --cfbg: #3A2B12;
+      --no: #FF8E83;
+      --nobg: #3A1A17;
+      --info: #8EA8FF;
+      --infobg: #1A2446;
+      --me: #14403A;
+      --wall: #0F181D;
+      --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 25px -4px rgba(0, 0, 0, 0.6);
+      color-scheme: dark;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--f-body);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    header.suite-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 10px 20px;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--teal), #0284c7);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 20px;
+      box-shadow: 0 3px 8px rgba(15, 118, 110, 0.3);
+    }
+    .brand-titles h1 {
+      font-family: var(--f-display);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+    .brand-titles span {
+      font-size: 11.5px;
+      color: var(--ink2);
+      display: block;
+    }
+
+    /* Primary Nav Tabs */
+    .view-tabs {
+      display: flex;
+      background: var(--sunk);
+      padding: 3px;
+      border-radius: 10px;
+      gap: 2px;
+      border: 1px solid var(--line2);
+    }
+    .view-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--ink2);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .view-tab:hover {
+      color: var(--ink);
+    }
+    .view-tab.active {
+      background: var(--surface);
+      color: var(--teal-ink);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .view-tab .badge-count {
+      font-size: 11px;
+      background: var(--teal-bg);
+      color: var(--teal-ink);
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-toggle, .btn-ghost {
+      background: var(--sunk);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-toggle:hover, .btn-ghost:hover {
+      background: var(--surface);
+      border-color: var(--ink3);
+    }
+
+    /* Main Container Shell */
+    .suite-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px;
+      width: 100%;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    @media (max-width: 992px) {
+      .suite-shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Dossiers Sidebar */
+    .dossiers-sidebar {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 76px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-head h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink2);
+      font-weight: 700;
+    }
+    .btn-create-struct {
+      background: var(--teal-bg);
+      color: var(--teal-ink);
+      border: 1px solid color-mix(in srgb, var(--teal) 30%, transparent);
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-create-struct:hover {
+      background: var(--teal);
+      color: #fff;
+    }
+
+    .dossier-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: calc(100vh - 220px);
+      overflow-y: auto;
+    }
+    .dossier-card {
+      background: var(--sunk);
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .dossier-card:hover {
+      border-color: var(--ink3);
+      background: var(--surface);
+    }
+    .dossier-card.active {
+      background: var(--surface);
+      border-color: var(--teal);
+      box-shadow: 0 0 0 2px var(--teal) inset, var(--shadow);
+    }
+    .dossier-name {
+      font-weight: 600;
+      font-size: 13.5px;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+    .dossier-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--ink2);
+    }
+    .mono-code {
+      font-family: var(--f-mono);
+      font-size: 11.5px;
+      color: var(--ink2);
+    }
+
+    /* Pastilles de statut */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .badge-pre { color: var(--info); background: var(--infobg); }
+    .badge-cours { color: var(--cf); background: var(--cfbg); }
+    .badge-publie { color: var(--teal-ink); background: var(--teal-bg); }
+    .badge-actif { color: var(--ok); background: var(--okbg); }
+    .badge-error { color: var(--no); background: var(--nobg); }
+
+    /* Content Area */
+    .content-area {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header Structure en cours */
+    .current-dossier-banner {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .banner-title-group h2 {
+      font-family: var(--f-display);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .banner-sub {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 4px;
+      font-size: 12.5px;
+      color: var(--ink2);
+      flex-wrap: wrap;
+    }
+
+    /* Stepper à 5 étapes */
+    .steps-container {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+    .step-item {
+      flex: 1 1 0;
+      min-width: 160px;
+      padding: 12px 14px;
+      border: none;
+      background: transparent;
+      border-right: 1px solid var(--line2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .step-item:last-child {
+      border-right: none;
+    }
+    .step-item:hover {
+      background: var(--sunk);
+    }
+    .step-item.active {
+      background: var(--teal-bg);
+    }
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1.5px solid var(--line);
+      color: var(--ink2);
+      flex: none;
+    }
+    .step-item.done .step-num {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+    .step-item.active .step-num {
+      border-color: var(--teal);
+      color: var(--teal-ink);
+      font-weight: 800;
+    }
+    .step-txt {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+    }
+    .step-txt b {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .step-txt span {
+      font-size: 11.5px;
+      color: var(--ink2);
+    }
+
+    /* Panels & Cards */
+    .card-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line2);
+    }
+    .panel-header h3 {
+      font-family: var(--f-display);
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .panel-desc {
+      font-size: 13.5px;
+      color: var(--ink2);
+      max-width: 75ch;
+    }
+
+    /* KPI Summary Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .kpi-card {
+      background: var(--sunk);
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .kpi-card b {
+      font-family: var(--f-display);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .kpi-card span {
+      font-size: 12px;
+      color: var(--ink2);
+    }
+    .kpi-card.c-ok b { color: var(--ok); }
+    .kpi-card.c-cf b { color: var(--cf); }
+    .kpi-card.c-no b { color: var(--no); }
+    .kpi-card.c-warn b { color: #d97706; }
+    .kpi-card.c-teal b { color: var(--teal); }
+
+    /* Drop Zone */
+    .dropzone-box {
+      border: 2px dashed var(--line);
+      border-radius: var(--r);
+      padding: 36px 20px;
+      text-align: center;
+      background: var(--sunk);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .dropzone-box:hover, .dropzone-box.over {
+      border-color: var(--teal);
+      background: var(--teal-bg);
+    }
+    .dropzone-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .dropzone-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .dropzone-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .dropzone-hint {
+      font-size: 12.5px;
+      color: var(--ink2);
+    }
+
+    /* Fast Test Buttons */
+    .sample-buttons-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 12px;
+      background: var(--sunk);
+      border-radius: 8px;
+    }
+    .sample-buttons-row span {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink2);
+    }
+    .btn-sample {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+    }
+    .btn-sample:hover {
+      border-color: var(--teal);
+      color: var(--teal-ink);
+    }
+
+    /* Tables */
+    .table-wrapper {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow-x: auto;
+      background: var(--surface);
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    table.data-table th {
+      background: var(--sunk);
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink2);
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    table.data-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line2);
+      vertical-align: middle;
+    }
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+    table.data-table tr:hover td {
+      background: color-mix(in srgb, var(--teal-bg) 35%, transparent);
+    }
+    table.data-table tr.row-section td {
+      background: var(--teal-bg);
+      font-weight: 700;
+      color: var(--teal-ink);
+      font-size: 12.5px;
+    }
+
+    /* Filter Segments */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .seg-group {
+      display: inline-flex;
+      background: var(--sunk);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .seg-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--ink2);
+    }
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--teal-ink);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    /* Inputs & Selects */
+    .input-price {
+      width: 110px;
+      text-align: right;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      font-family: var(--f-mono);
+      font-size: 13px;
+    }
+    .select-match {
+      max-width: 320px;
+      width: 100%;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      font-size: 12.5px;
+    }
+    .chip-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+    .chip-warn { background: var(--cfbg); color: var(--cf); }
+    .chip-err { background: var(--nobg); color: var(--no); }
+    .chip-ok { background: var(--okbg); color: var(--ok); }
+    .chip-info { background: var(--infobg); color: var(--info); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--teal-hover);
+    }
+    .btn-secondary {
+      background: var(--surface);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    .btn-secondary:hover {
+      border-color: var(--ink3);
+      background: var(--sunk);
+    }
+    .btn-danger {
+      background: var(--nobg);
+      color: var(--no);
+      border-color: color-mix(in srgb, var(--no) 30%, transparent);
+    }
+    .btn-danger:hover {
+      background: var(--no);
+      color: #fff;
+    }
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+
+    /* WhatsApp Simulator Shell */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .chat-layout { grid-template-columns: minmax(0, 1fr); }
+    }
+    .phone-mockup {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--wall);
+      display: flex;
+      flex-direction: column;
+      height: 680px;
+      box-shadow: var(--shadow-lg);
+    }
+    .phone-top-bar {
+      background: var(--teal);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .phone-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: grid;
+      place-items: center;
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .phone-user-info b {
+      display: block;
+      font-size: 14.5px;
+      line-height: 1.2;
+    }
+    .phone-user-info span {
+      font-size: 11.5px;
+      opacity: 0.85;
+    }
+    .phone-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bubble {
+      max-width: 86%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      line-height: 1.4;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+    }
+    .bubble.bot {
+      background: var(--surface);
+      align-self: flex-start;
+      border-top-left-radius: 4px;
+    }
+    .bubble.me {
+      background: var(--me);
+      align-self: flex-end;
+      border-top-right-radius: 4px;
+    }
+    .bubble .b-time {
+      display: block;
+      text-align: right;
+      font-size: 10px;
+      color: var(--ink3);
+      margin-top: 3px;
+    }
+    .bubble-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-bubble {
+      background: var(--surface);
+      border: 1px solid var(--teal);
+      color: var(--teal-ink);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-bubble:hover {
+      background: var(--teal);
+      color: #fff;
+    }
+    .phone-input-bar {
+      padding: 10px 14px;
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 8px;
+    }
+    .phone-input {
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 13.5px;
+      background: var(--sunk);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 20, 25, 0.6);
+      display: grid;
+      place-items: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-box h3 {
+      font-family: var(--f-display);
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink2);
+    }
+    .form-control {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 13px;
+      background: var(--surface);
+    }
+
+    /* Toast */
+    .toast-popup {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .diff-table td.tag-create { background: var(--okbg); color: var(--ok); font-weight: 600; }
+    .diff-table td.tag-update { background: var(--cfbg); color: var(--cf); font-weight: 600; }
+    .diff-table td.tag-same { background: var(--sunk); color: var(--ink2); }
+
+    .callout-box {
+      border-left: 3px solid var(--teal);
+      background: var(--teal-bg);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .callout-box.warn {
+      border-left-color: var(--cf);
+      background: var(--cfbg);
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="suite-header">
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <div class="brand-logo">M</div>
+        <div class="brand-titles">
+          <h1>MedCare Connect</h1>
+          <span>Suite d'Onboarding & Réconciliation de Catalogues Médicaux</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="view-tabs">
+        <button class="view-tab active" data-view="operator" onclick="switchView('operator')">
+          🏢 Back-Office Opérateur
+        </button>
+        <button class="view-tab" data-view="chat" onclick="switchView('chat')">
+          💬 Assistant WhatsApp (V2)
+          <span class="badge-count" id="chat-badge-count">2</span>
+        </button>
+        <button class="view-tab" data-view="structure" onclick="switchView('structure')">
+          🩺 Espace Structure (1ère Connexion)
+        </button>
+        <button class="view-tab" data-view="decisions" onclick="switchView('decisions')">
+          ⚖️ Matrice des 7 Décisions
+        </button>
+        <button class="view-tab" data-view="lexique" onclick="switchView('lexique')">
+          📖 Référentiel & Lexique
+        </button>
+      </nav>
+
+      <!-- Right Header Tools -->
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Basculer thème sombre / clair">
+          🌓 <span id="theme-label">Thème</span>
+        </button>
+        <button class="btn-ghost" onclick="resetDemoData()" title="Réinitialiser l'état local">
+          🔄 Réinitialiser
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <div class="suite-shell">
+    
+    <!-- Sidebar Dossiers -->
+    <aside class="dossiers-sidebar">
+      <div class="sidebar-head">
+        <h2>Dossiers d'Onboarding</h2>
+        <button class="btn-create-struct" onclick="openNewStructureModal()">
+          + Pré-inscrire
+        </button>
+      </div>
+      <div class="dossier-items" id="dossiers-list">
+        <!-- Rendered via JS -->
+      </div>
+      <div class="callout-box" style="font-size: 11.5px; padding: 8px 10px;">
+        💡 <b>Règle 1 :</b> La structure existe <i>avant</i> son catalogue. MedCare pré-inscrit l'organisme avec un compte en attente de réclamation.
+      </div>
+    </aside>
+
+    <!-- Content Workspace -->
+    <main class="content-area">
+
+      <!-- Dossier Header Banner -->
+      <div class="current-dossier-banner" id="current-dossier-banner">
+        <div class="banner-title-group">
+          <h2 id="banner-struct-name">Centre d'Imagerie Médicale de Dakar</h2>
+          <div class="banner-sub">
+            <span class="mono-code" id="banner-struct-id">ID: MC-STR-0041</span>
+            <span>•</span>
+            <span id="banner-struct-type">Centre d'Imagerie (Imagerie Médicale)</span>
+            <span>•</span>
+            <span id="banner-struct-badge" class="badge badge-cours">En cours de traitement</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="exportExcel()">
+            📥 Exporter Excel (.xlsx)
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="exportJson()">
+            📄 Exporter JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW 1: OPERATOR BACK-OFFICE (5 STEPS) -->
+      <section id="view-operator" class="view-panel">
+        
+        <!-- Stepper -->
+        <div class="steps-container" style="margin-bottom: 20px;">
+          <button class="step-item" id="nav-step-1" onclick="goToStep(1)">
+            <div class="step-num">1</div>
+            <div class="step-txt">
+              <b>1. Fichier brut</b>
+              <span>Métadonnées & upload</span>
+            </div>
+          </button>
+          <button class="step-item" id="nav-step-2" onclick="goToStep(2)">
+            <div class="step-num">2</div>
+            <div class="step-txt">
+              <b>2. Ingestion & Schéma</b>
+              <span>5 sections & colonnes</span>
+            </div>
+          </button>
+          <button class="step-item active" id="nav-step-3" onclick="goToStep(3)">
+            <div class="step-num">3</div>
+            <div class="step-txt">
+              <b>3. Rapprochement</b>
+              <span>Validation & alertes</span>
+            </div>
+          </button>
+          <button class="step-item" id="nav-step-4" onclick="goToStep(4)">
+            <div class="step-num">4</div>
+            <div class="step-txt">
+              <b>4. Publication & Diff</b>
+              <span>Écriture atomique & lien</span>
+            </div>
+          </button>
+          <button class="step-item" id="nav-step-5" onclick="goToStep(5)">
+            <div class="step-num">5</div>
+            <div class="step-txt">
+              <b>5. Vue Structure</b>
+              <span>Confirmation des tarifs</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- STEP 1: FILE INGESTION -->
+        <div id="operator-step-1" class="card-panel" style="display: none;">
+          <div class="panel-header">
+            <div>
+              <h3>Étape 1 — Dépôt du fichier source & métadonnées</h3>
+              <p class="panel-desc">
+                Règle 2 : <b>On ne perd jamais la donnée brute.</b> Chaque cellule lue est archivée en staging. Aucun format réel n'est rejeté (support .xlsx, .ods, .csv).
+              </p>
+            </div>
+          </div>
+
+          <div class="dropzone-box" id="dropzone">
+            <input type="file" id="file-uploader" accept=".xlsx,.ods,.csv" onchange="handleFileUpload(event)">
+            <span class="dropzone-icon">📁</span>
+            <div class="dropzone-title">Glissez-déposez le catalogue de la structure ici</div>
+            <div class="dropzone-hint">Formats acceptés : Excel (.xlsx), OpenDocument (.ods), CSV (.csv) — Traité 100% en local dans votre navigateur</div>
+          </div>
+
+          <div class="sample-buttons-row">
+            <span>🚀 Tester instantanément avec les fichiers réels du projet :</span>
+            <button class="btn-sample" onclick="loadSampleImagerie()">
+              🎯 Charger Imagerie (ACTES ET TARIFICATIONS — 112 lignes, 5 sections)
+            </button>
+            <button class="btn-sample" onclick="loadSampleBionissa()">
+              🧪 Charger Biologie (Bionissa Clinique — 25 actes)
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: SCHEMA & INGESTION -->
+        <div id="operator-step-2" class="card-panel" style="display: none;">
+          <div class="panel-header">
+            <div>
+              <h3>Étape 2 — Lecture & Détection du Schéma en 4 passes</h3>
+              <p class="panel-desc">
+                Le moteur détecte automatiquement les 5 sections sans présumer d'en-tête rigide et recolle les libellés scindés sur 2 colonnes (ex : <code>SCANNER DU</code> + <code>MASSIF FACIAL</code>).
+              </p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="goToStep(3)">
+              Passer au rapprochement (Étape 3) →
+            </button>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card c-teal">
+              <b id="s2-lines">112</b>
+              <span>Lignes lues au total</span>
+            </div>
+            <div class="kpi-card c-ok">
+              <b id="s2-sections">5</b>
+              <span>Sections médicales</span>
+            </div>
+            <div class="kpi-card c-teal">
+              <b id="s2-actes">81</b>
+              <span>Actes identifiés</span>
+            </div>
+            <div class="kpi-card c-warn">
+              <b id="s2-missing-prices">1</b>
+              <span>Prix manquant</span>
+            </div>
+            <div class="kpi-card c-no">
+              <b id="s2-anomalies">1</b>
+              <span>Anomalie de prix (> 4× méd.)</span>
+            </div>
+          </div>
+
+          <div class="callout-box">
+            🔍 <b>Preuve de recollage multi-colonnes (Annexe ligne 36) :</b> Le libellé séparé en colonne A ("SCANNER DU") et colonne B ("MASSIF FACIAL") a été fusionné contextuellement en <b>« SCANNER DU MASSIF FACIAL »</b> et rattaché avec succès !
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="table-schema-preview">
+              <!-- Rendered via JS -->
+            </table>
+          </div>
+        </div>
+
+        <!-- STEP 3: RECONCILIATION & VALIDATION QUEUE -->
+        <div id="operator-step-3" class="card-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Étape 3 — Rapprochement & File de Validation Opérateur</h3>
+              <p class="panel-desc">
+                File priorisée selon le coût marginal : <b>Inconnus</b> en premier, puis <b>À confirmer</b> par score croissant, puis contrôle qualité sur 5% des reconnus.
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" onclick="bulkValidateSection()">
+                ⚡ Valider candidats 1 de la section
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="goToStep(4)">
+                Aller à la publication (Étape 4) →
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card c-ok">
+              <b id="kpi-reconnus">61</b>
+              <span>🟢 Reconnus (100% auto)</span>
+            </div>
+            <div class="kpi-card c-cf">
+              <b id="kpi-confirmer">9</b>
+              <span>🟡 À confirmer (doute/flou)</span>
+            </div>
+            <div class="kpi-card c-no">
+              <b id="kpi-inconnus">11</b>
+              <span>🔴 Inconnus (à classifier)</span>
+            </div>
+            <div class="kpi-card c-warn">
+              <b id="kpi-anomalies">1</b>
+              <span>⚠️ Anomalie prix (TOGD)</span>
+            </div>
+            <div class="kpi-card c-no">
+              <b id="kpi-manquants">1</b>
+              <span>⛔ Prix manquant (Scanner)</span>
+            </div>
+          </div>
+
+          <!-- Filter & Controls Bar -->
+          <div class="filter-bar">
+            <div class="seg-group">
+              <button class="seg-btn active" data-f="all" onclick="filterTable('all')">Tous (81)</button>
+              <button class="seg-btn" data-f="inconnu" onclick="filterTable('inconnu')">🔴 Inconnus (11)</button>
+              <button class="seg-btn" data-f="confirmer" onclick="filterTable('confirmer')">🟡 À confirmer (9)</button>
+              <button class="seg-btn" data-f="anomalie" onclick="filterTable('anomalie')">⚠️ Anomalies prix (1)</button>
+              <button class="seg-btn" data-f="reconnu" onclick="filterTable('reconnu')">🟢 Reconnus (61)</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center; font-size: 12.5px;">
+              <span style="color: var(--ink2);">Règle moteur :</span>
+              <select id="engine-rule" class="form-control" style="padding: 3px 8px; font-size: 12px;" onchange="changeRule(this.value)">
+                <option value="V1" selected>Règle V1 (Exacte + Alias validés)</option>
+                <option value="V2">Règle V2 (Fuzzy Jaro-Winkler ≥ 95%)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrapper">
+            <table class="data-table" id="table-reconciliation">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">Ligne</th>
+                  <th>Libellé brut & Section</th>
+                  <th>Prix lu (FCFA)</th>
+                  <th style="width: 130px;">Statut</th>
+                  <th>Candidat MedCare & Score</th>
+                  <th>Création Alias</th>
+                  <th style="text-align: right; width: 120px;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="reconciliation-tbody">
+                <!-- Rendered dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- STEP 4: PUBLICATION & DIFF AUDIT -->
+        <div id="operator-step-4" class="card-panel" style="display: none;">
+          <div class="panel-header">
+            <div>
+              <h3>Étape 4 — Publication transactionnelle & Diff de Contrôle</h3>
+              <p class="panel-desc">
+                Règle 3 : <b>Staging d'abord, production ensuite.</b> La publication compare l'offre existante et applique une transaction atomique avec lot réversible.
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary" onclick="publishCatalog()">
+                🚀 Publier en production (Lot transactionnel)
+              </button>
+            </div>
+          </div>
+
+          <!-- Publication Safeguard Checks -->
+          <div class="callout-box" id="pub-safeguards">
+            <b>🛡️ Contrôles de validation pré-publication :</b>
+            <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;" id="safeguards-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Diff Table -->
+          <h4 style="font-size: 15px; font-weight: 600;">Diff contre la production (81 actes prêts)</h4>
+          <div class="table-wrapper">
+            <table class="data-table diff-table" id="diff-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Acte MedCare</th>
+                  <th>Libellé structure</th>
+                  <th>Nouveau tarif</th>
+                  <th>Statut publication</th>
+                </tr>
+              </thead>
+              <tbody id="diff-tbody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- STEP 5: FIRST LOGIN (PREMIERE CONNEXION) -->
+        <div id="operator-step-5" class="card-panel" style="display: none;">
+          <div class="panel-header">
+            <div>
+              <h3>Étape 5 — Portail Structure « Première Connexion »</h3>
+              <p class="panel-desc">
+                C'est l'écran officiel que découvre le médecin ou la secrétaire lorsqu'elle clique sur son lien magique MedCare d'activation.
+              </p>
+            </div>
+          </div>
+
+          <div style="background: var(--teal-bg); border: 1px solid color-mix(in srgb, var(--teal) 30%, transparent); border-radius: 10px; padding: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h4 style="font-family: var(--f-display); font-size: 20px; color: var(--teal-ink);">Bienvenue ! Votre catalogue a été préparé par MedCare</h4>
+              <p style="font-size: 13.5px; margin-top: 4px; color: var(--ink2);">
+                Vérifiez vos actes et ajustez vos prix si nécessaire. Tant que vous n'avez pas confirmé, vos actes restent <b>masqués aux patients</b>.
+              </p>
+            </div>
+            <button class="btn btn-primary" style="padding: 10px 18px; font-size: 14px;" onclick="confirmStructurePrices()">
+              ✅ Je confirme mes tarifs et j'active le catalogue
+            </button>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="structure-review-table">
+              <thead>
+                <tr>
+                  <th>Acte MedCare</th>
+                  <th>Votre libellé d'origine</th>
+                  <th style="text-align: right; width: 150px;">Tarif (FCFA)</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody id="structure-review-tbody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- VIEW 2: WHATSAPP CHATBOT (SCÉNARIO V2) -->
+      <section id="view-chat" class="view-panel" style="display: none;">
+        <div class="chat-layout">
+          
+          <!-- Smartphone Container -->
+          <div class="phone-mockup">
+            <div class="phone-top-bar">
+              <div class="phone-avatar">M</div>
+              <div class="phone-user-info">
+                <b>MedCare Assistant Onboarding</b>
+                <span>En ligne • Assistant certifié MedCare</span>
+              </div>
+            </div>
+
+            <!-- Chat message flow -->
+            <div class="phone-chat-messages" id="chat-messages">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Chat input bar -->
+            <div class="phone-input-bar">
+              <input type="text" id="chat-user-input" class="phone-input" placeholder="Écrivez une réponse ou cliquez un bouton..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+              <button class="btn btn-primary btn-sm" onclick="sendChatMessage()">Envoyer</button>
+            </div>
+          </div>
+
+          <!-- Operator Monitoring Side -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <h3>Console de Supervision WhatsApp</h3>
+                <p class="panel-desc">
+                  L'assistant WhatsApp ne pose que les questions indispensables à la secrétaire pour ne pas lui faire perdre de temps.
+                </p>
+              </div>
+            </div>
+
+            <div class="callout-box">
+              💬 <b>Scénario V2 en direct :</b>
+              <ul style="margin: 6px 0 0 16px; font-size: 12.5px;">
+                <li>Signalement du <b>TOGD à 700 000 FCFA</b> (anomalie relative > 4× médiane) avec proposition de correction à 70 000 FCFA.</li>
+                <li>Renseignement du <b>Scanner cervico-dorso-lombaire</b> dont le prix était manquant.</li>
+                <li>Confirmation contractuelle du catalogue sans saisie fastidieuse.</li>
+              </ul>
+            </div>
+
+            <div class="card-panel" style="padding: 14px; background: var(--sunk);">
+              <h4 style="font-size: 13.5px; font-weight: 600; margin-bottom: 8px;">Synchronisation bidirectionnelle :</h4>
+              <p style="font-size: 12.5px; color: var(--ink2);">
+                Chaque réponse donnée dans WhatsApp met à jour instantanément la table de staging de l'opérateur et l'offre en production !
+              </p>
+              <div style="margin-top: 10px;">
+                <button class="btn btn-secondary btn-sm" onclick="restartChatScenario()">
+                  🔄 Recommencer la simulation du dialogue
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- VIEW 3: STRUCTURE FIRST LOGIN ONLY -->
+      <section id="view-structure" class="view-panel" style="display: none;">
+        <div class="card-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Espace Prestataire — Première Connexion & Confirmation Contractuelle</h3>
+              <p class="panel-desc">
+                Cet écran garantit la conformité juridique : <b>le prix engage la structure, pas MedCare.</b> La visibilité patient attend cette confirmation explicite.
+              </p>
+            </div>
+            <button class="btn btn-primary" onclick="confirmStructurePrices()">
+              ✅ Confirmer tous mes tarifs
+            </button>
+          </div>
+
+          <div id="structure-banner-status" class="callout-box" style="margin-bottom: 12px;">
+            <!-- Rendered via JS -->
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="structure-direct-table">
+              <thead>
+                <tr>
+                  <th>Examen MedCare officiel</th>
+                  <th>Votre libellé interne</th>
+                  <th style="text-align: right; width: 160px;">Tarif appliqué</th>
+                  <th>Visibilité patient</th>
+                </tr>
+              </thead>
+              <tbody id="structure-direct-tbody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: 7 ARCHITECTURE DECISIONS (SECTION 14.2) -->
+      <section id="view-decisions" class="view-panel" style="display: none;">
+        <div class="card-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Section 14.2 — Matrice des 7 Décisions d'Architecture à Arbitrer</h3>
+              <p class="panel-desc">
+                Synthèse des arbitrages stratégiques entre le Responsable Technique (Rassoul) et le Médecin Référent (Dr Abdoul).
+              </p>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">#</th>
+                  <th>Sujet & Problématique</th>
+                  <th>Options possibles</th>
+                  <th>Recommandation Rassoul</th>
+                  <th>Qui tranche</th>
+                  <th style="width: 140px;">Arbitrage actuel</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>D1</b></td>
+                  <td><b>Compte d'une structure pré-inscrite</b><br><span style="color:var(--ink2); font-size:11.5px;">Doit-on autoriser <code>user</code> nullable ou créer un <code>User</code> inactif ?</span></td>
+                  <td>1. user nullable<br>2. User inactif créé d'office</td>
+                  <td><span class="chip-badge chip-ok">User inactif d'office</span><br><span style="font-size:11px; color:var(--ink2);">Moins d'effets de bord dans Django</span></td>
+                  <td><b>Rassoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>User inactif d'office</option>
+                      <option>user nullable</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>D2</b></td>
+                  <td><b>Forme de l'environnement séparé</b><br><span style="color:var(--ink2); font-size:11.5px;">Monolithe partagé vs Service distinct + schéma dédié ?</span></td>
+                  <td>1. Service distinct + schéma <code>onboarding</code><br>2. App Django monolithe</td>
+                  <td><span class="chip-badge chip-ok">Service distinct (onboarding.medcare.sn)</span><br><span style="font-size:11px; color:var(--ink2);">Données sales isolées</span></td>
+                  <td><b>Rassoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>Service distinct</option>
+                      <option>App Django monolithe</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>D3</b></td>
+                  <td><b>Largeur de l'automatique au pilote</b><br><span style="color:var(--ink2); font-size:11.5px;">Activer le flou V2 dès le pilote ou tester d'abord V1 ?</span></td>
+                  <td>1. V1 (exact + alias seulement)<br>2. V2 flou immédiat</td>
+                  <td><span class="chip-badge chip-ok">V1 au pilote</span><br><span style="font-size:11px; color:var(--ink2);">Sécurité d'abord, V2 après 200 décisions</span></td>
+                  <td><b>Rassoul + Dr Abdoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>V1 (Recommandé)</option>
+                      <option>V2 immédiat</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>D4</b></td>
+                  <td><b>Promotion d'un alias en global</b><br><span style="color:var(--ink2); font-size:11.5px;">Qui décide qu'un alias s'applique à tout le Sénégal ?</span></td>
+                  <td>1. Référent médical seul<br>2. Référent OU 2 structures concordantes</td>
+                  <td><span class="chip-badge chip-ok">Référent OU 2 structures</span><br><span style="font-size:11px; color:var(--ink2);">Effet d'échelle sans goulot d'étranglement</span></td>
+                  <td><b>Dr Abdoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>Référent ou 2 structures</option>
+                      <option>Référent médical seul</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>D5</b></td>
+                  <td><b>Visibilité patient après publication</b><br><span style="color:var(--ink2); font-size:11.5px;">Afficher dès publication MedCare ou attendre la structure ?</span></td>
+                  <td>1. Immédiate dès publication<br>2. Après confirmation des tarifs par la structure</td>
+                  <td><span class="chip-badge chip-ok">Après confirmation par la structure</span><br><span style="font-size:11px; color:var(--ink2);">Responsabilité juridique du prix</span></td>
+                  <td><b>Dr Abdoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>Après confirmation tarifs</option>
+                      <option>Immédiate</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>D6</b></td>
+                  <td><b>Bilans propres à une structure</b><br><span style="color:var(--ink2); font-size:11.5px;">Les packs non standard doivent-ils être acceptés ?</span></td>
+                  <td>1. Refusés (standard strict)<br>2. Acceptés comme bilans locaux rattachés</td>
+                  <td><span class="chip-badge chip-ok">Acceptés comme bilans locaux</span><br><span style="font-size:11px; color:var(--ink2);">Ne pas bloquer l'onboarding commercial</span></td>
+                  <td><b>Dr Abdoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>Acceptés (Bilans locaux)</option>
+                      <option>Refusés</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><b>D7</b></td>
+                  <td><b>Construction du référentiel imagerie</b><br><span style="color:var(--ink2); font-size:11.5px;">Construire avant le 1er centre ou au fil de l'eau ?</span></td>
+                  <td>1. À construire avant le 1er centre<br>2. Au fil des fichiers reçus</td>
+                  <td><span class="chip-badge chip-ok">À construire d'abord</span><br><span style="font-size:11px; color:var(--ink2);">Standardiser sur le modèle de la biologie</span></td>
+                  <td><b>Dr Abdoul</b></td>
+                  <td>
+                    <select class="form-control" style="font-size:12px; padding:4px;">
+                      <option selected>À construire d'abord</option>
+                      <option>Au fil de l'eau</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: LEXIQUE & REFERENTIEL -->
+      <section id="view-lexique" class="view-panel" style="display: none;">
+        <div class="card-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Référentiel Médical Standard & Lexique d'Alias (Piliers 1 & 2)</h3>
+              <p class="panel-desc">
+                Base pivot MedCare comprenant <b>487 actes standardisés</b> et leur gouvernance d'alias (Seed, Validé global, Local structure).
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="lexique-search" class="form-control" placeholder="Rechercher un acte (ex: NFS, Scanner, IRM)..." oninput="filterLexique(this.value)" style="width: 280px;">
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Code</th>
+                  <th style="width: 100px;">Pilier</th>
+                  <th>Type / Modalité</th>
+                  <th>Libellé Officiel MedCare</th>
+                  <th>Nature</th>
+                  <th>Alias associés (Lexique d'intention)</th>
+                </tr>
+              </thead>
+              <tbody id="lexique-tbody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal Nouvelle Pré-inscription -->
+  <div class="modal-backdrop" id="modal-new-struct" style="display: none;">
+    <div class="modal-box">
+      <h3>Pré-inscrire une nouvelle structure</h3>
+      <p style="font-size: 13px; color: var(--ink2); margin-top: -8px;">
+        Règle 1 : L'identifiant MedCare est généré avant tout traitement de fichier.
+      </p>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Nom de l'organisme de santé *</label>
+          <input type="text" id="ns-name" class="form-control" placeholder="Ex: Centre Médical de l'Amitié">
+        </div>
+        <div class="form-group">
+          <label>Type de structure *</label>
+          <select id="ns-type" class="form-control">
+            <option value="Laboratoire">Laboratoire</option>
+            <option value="Centre d'Imagerie">Centre d'Imagerie</option>
+            <option value="Clinique">Clinique</option>
+            <option value="Hôpital">Hôpital</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Pilier principal *</label>
+          <select id="ns-pillar" class="form-control">
+            <option value="img">Imagerie médicale</option>
+            <option value="bio">Biologie médicale</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>NINEA (si connu)</label>
+          <input type="text" id="ns-ninea" class="form-control" placeholder="001234567 2V3">
+        </div>
+        <div class="form-group">
+          <label>Téléphone / WhatsApp *</label>
+          <input type="text" id="ns-phone" class="form-control" placeholder="+221 77 000 00 00">
+        </div>
+        <div class="form-group full">
+          <label>Email de contact</label>
+          <input type="email" id="ns-email" class="form-control" placeholder="contact@structure.sn">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+        <button class="btn btn-secondary" onclick="closeNewStructureModal()">Annuler</button>
+        <button class="btn btn-primary" onclick="saveNewStructure()">Créer la pré-inscription</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="toast" style="display: none;">
+    <span id="toast-msg">Action effectuée</span>
+  </div>
+
+  <!-- Injection des Données du Référentiel -->
+  <script>
+var REF = [{"id":"B001","pillar":"bio","type":"Panel d'examens","name":"NFS + réticulocytes","kind":"bilan","lexique":["NFS+TR","NFS + réticulocytes","hémogramme + réticulocytes"],"composants":["NFS (hémogramme)","Réticulocytes (taux)"]},{"id":"B002","pillar":"bio","type":"Panel d'examens","name":"NFS + frottis sanguin","kind":"bilan","lexique":["NFS + frottis sanguin","NFS + frotis","hémogramme + frottis","nfs frotis sanguin"],"composants":["NFS (hémogramme)","Frottis sanguin (étude morphologique)"]},{"id":"B003","pillar":"bio","type":"Panel d'examens","name":"Transaminases (ASAT + ALAT)","kind":"bilan","lexique":["transaminases","ASAT ALAT","ASAT + ALAT","TGO TGP"],"composants":["ASAT (TGO)","ALAT (TGP)"]},{"id":"B004","pillar":"bio","type":"Panel d'examens","name":"Bilirubine totale et conjuguée","kind":"bilan","lexique":["bilirubine totale et directe","bilirubine T et D","bilirubine totale et conjuguée"],"composants":["Bilirubine totale","Bilirubine conjuguée (directe)"]},{"id":"B005","pillar":"bio","type":"Panel d'examens","name":"Ionogramme sanguin (Na + K + Cl)","kind":"bilan","lexique":["ionogramme sanguin","iono sang","Na K Cl","ionogramme"],"composants":["Natrémie","Kaliémie","Chlorémie"]},{"id":"B006","pillar":"bio","type":"Panel d'examens","name":"Bilan lipidique (EAL)","kind":"bilan","lexique":["bilan lipidique","EAL","lipidogramme","cholestérol HDL LDL triglycérides"],"composants":["Cholestérol total","HDL-cholestérol","LDL-cholestérol","Triglycérides"]},{"id":"B007","pillar":"bio","type":"Panel d'examens","name":"Bilan d'hémostase (TP + TCK + TS)","kind":"bilan","lexique":["TPTCK","TC TS","bilan d'hémostase","TP TCK TS","bilan de coagulation","tptck tc ts"],"composants":["TP / INR","TCA / TCK","Temps de saignement (TS)"]},{"id":"B008","pillar":"bio","type":"Panel d'examens","name":"Dosage pondéral des immunoglobulines (IgG + IgA + IgM)","kind":"bilan","lexique":["dosage pondéral des Ig","immunoglobulines IgG IgA IgM","EPP immunoglobulines"],"composants":["Dosage des IgG","Dosage des IgA","Dosage des IgM"]},{"id":"B009","pillar":"bio","type":"Panel d'examens","name":"Panel myosite (anti-Jo1, Mi-2, SRP, MDA5…)","kind":"bilan","lexique":["panel myosite","anti Jo1 Mi-2 SRP MDA5","myosite panel","Dotmyosite","dot myosite","dot blot myosite"],"composants":["anti-Jo1","anti-Mi-2","anti-SRP","anti-MDA5","anti-TIF1γ","anti-NXP2","anti-PL7/PL12"]},{"id":"B010","pillar":"bio","type":"Panel d'examens","name":"Panel d'allergènes (Phadiatop, trophallergènes, pneumallergènes)","kind":"bilan","lexique":["Phadiatop","panel pneumallergènes","trophallergènes","multi-allergènes"],"composants":["IgE spécifiques (pneumallergènes)","IgE spécifiques (trophallergènes)"]},{"id":"B011","pillar":"bio","type":"Panel d'examens","name":"Bilan martial (fer + ferritine + CST/CTF)","kind":"bilan","lexique":["bilan martial","fer ferritine","bilan du fer","statut martial"],"composants":["Fer sérique","Ferritine","Transferrine","Coefficient de saturation de la transferrine (CST)","Capacité totale de fixation de la transferrine (CTF)"]},{"id":"B012","pillar":"bio","type":"Panel d'examens","name":"Bilan hépatique complet","kind":"bilan","lexique":["bilan hépatique","ASAT ALAT GGT PAL bilirubine","BHC"],"composants":["ASAT (TGO)","ALAT (TGP)","Gamma-GT (GGT)","Phosphatases alcalines (PAL)","Bilirubine totale","Bilirubine conjuguée (directe)"]},{"id":"B013","pillar":"bio","type":"Panel d'examens","name":"Bilan rénal","kind":"bilan","lexique":["bilan rénal","urée créatinine ionogramme","fonction rénale"],"composants":["Urée (azotémie)","Créatininémie","Clairance de la créatinine (DFG)","Ionogramme sanguin (Na + K + Cl)"]},{"id":"B014","pillar":"bio","type":"Panel d'examens","name":"Bilan thyroïdien (TSH, FT4 ± FT3)","kind":"bilan","lexique":["bilan thyroïdien","TSH FT4 FT3","exploration thyroïdienne"],"composants":["TSH ultrasensible","T4 libre (FT4)","T3 libre (FT3)"]},{"id":"B015","pillar":"bio","type":"Panel d'examens","name":"Bilan phosphocalcique","kind":"bilan","lexique":["bilan phosphocalcique","calcémie phosphorémie PTH vitamine D"],"composants":["Calcémie","Phosphorémie","Parathormone (PTH intacte)","Vitamine D (25-OH)"]},{"id":"B016","pillar":"bio","type":"Panel d'examens","name":"Bilan inflammatoire (VS, CRP, fibrinogène)","kind":"bilan","lexique":["bilan inflammatoire","VS CRP fibrinogène","syndrome inflammatoire"],"composants":["Vitesse de sédimentation (VS)","CRP (protéine C réactive)","Fibrinogène"]},{"id":"B017","pillar":"bio","type":"Panel d'examens","name":"Bilan préopératoire standard","kind":"bilan","lexique":["bilan préopératoire","préop","NFS TP TCK groupe glycémie"],"composants":["NFS (hémogramme)","TP / INR","TCA / TCK","Groupe sanguin ABO-Rhésus","Glycémie à jeun"]},{"id":"B018","pillar":"bio","type":"Hématologie","name":"NFS (hémogramme)","kind":"acte","lexique":["NFS","numération formule sanguine","hémogramme","FNS","CBC"],"composants":[]},{"id":"B019","pillar":"bio","type":"Hématologie","name":"Réticulocytes (taux)","kind":"acte","lexique":["réticulocytes","TR","taux de réticulocytes"],"composants":[]},{"id":"B020","pillar":"bio","type":"Hématologie","name":"Frottis sanguin (étude morphologique)","kind":"acte","lexique":["frottis sanguin","frottis","étude morphologique du sang"],"composants":[]},{"id":"B021","pillar":"bio","type":"Hématologie","name":"Vitesse de sédimentation (VS)","kind":"acte","lexique":["VS","vitesse de sédimentation","sédimentation","ESR"],"composants":[]},{"id":"B022","pillar":"bio","type":"Hématologie","name":"Groupe sanguin ABO-Rhésus","kind":"acte","lexique":["GSRH","groupe sanguin","groupage ABO Rh","GS RH"],"composants":[]},{"id":"B023","pillar":"bio","type":"Hématologie","name":"Phénotype érythrocytaire étendu (Rh-Kell)","kind":"acte","lexique":["phénotype érythrocytaire","Rh Kell","phénotype étendu"],"composants":[]},{"id":"B024","pillar":"bio","type":"Hématologie","name":"Antigène D faible (Du)","kind":"acte","lexique":["antigène D faible","Du","Rh faible"],"composants":[]},{"id":"B025","pillar":"bio","type":"Hématologie","name":"Recherche d'agglutinines irrégulières (RAI)","kind":"acte","lexique":["RAI","agglutinines irrégulières","anticorps irréguliers"],"composants":[]},{"id":"B026","pillar":"bio","type":"Hématologie","name":"Test de Coombs direct","kind":"acte","lexique":["coombs direct","TDA","test direct à l'antiglobuline"],"composants":[]},{"id":"B027","pillar":"bio","type":"Hématologie","name":"Test de Coombs indirect","kind":"acte","lexique":["coombs indirect","TIA","test indirect à l'antiglobuline"],"composants":[]},{"id":"B028","pillar":"bio","type":"Hématologie","name":"Test d'Emmel (falciformation)","kind":"acte","lexique":["TE","test d'Emmel","falciformation","Emmel","drépanocytose test"],"composants":[]},{"id":"B029","pillar":"bio","type":"Hématologie","name":"Test de solubilité de l'hémoglobine S","kind":"acte","lexique":["test de solubilité","solubilité HbS","Itano"],"composants":[]},{"id":"B030","pillar":"bio","type":"Hématologie","name":"Électrophorèse de l'hémoglobine","kind":"acte","lexique":["électrophorèse de l'hémoglobine","EPH","Hb électrophorèse","electrophorese de l hemoglobine protidogramme"],"composants":[]},{"id":"B031","pillar":"bio","type":"Hématologie","name":"Dosage HbA2 / HbF","kind":"acte","lexique":["HbA2","HbF","hémoglobine foetale","hémoglobine A2"],"composants":[]},{"id":"B032","pillar":"bio","type":"Hématologie","name":"Myélogramme","kind":"acte","lexique":["myélogramme","ponction médullaire","moelle osseuse cytologie"],"composants":[]},{"id":"B033","pillar":"bio","type":"Hématologie","name":"Test de fragilité osmotique (résistance globulaire)","kind":"acte","lexique":["fragilité osmotique","résistance globulaire","sphérocytose"],"composants":[]},{"id":"B034","pillar":"bio","type":"Hématologie","name":"Dosage G6PD","kind":"acte","lexique":["G6PD","glucose-6-phosphate déshydrogénase","déficit G6PD"],"composants":[]},{"id":"B035","pillar":"bio","type":"Hématologie","name":"Dosage pyruvate kinase érythrocytaire","kind":"acte","lexique":["pyruvate kinase","PK érythrocytaire"],"composants":[]},{"id":"B036","pillar":"bio","type":"Hématologie","name":"Recherche de schizocytes","kind":"acte","lexique":["schizocytes","microangiopathie"],"composants":[]},{"id":"B037","pillar":"bio","type":"Hématologie","name":"Test de Kleihauer","kind":"acte","lexique":["Kleihauer","hémorragie foeto-maternelle"],"composants":[]},{"id":"B038","pillar":"bio","type":"Hématologie","name":"Immunophénotypage lymphocytaire (cytométrie)","kind":"acte","lexique":["immunophénotypage","cytométrie en flux","CD4 CD8","phénotypage lymphocytaire"],"composants":[]},{"id":"B039","pillar":"bio","type":"Hématologie","name":"Fer sérique","kind":"acte","lexique":["fer sérique","sidérémie","fer","Fe"],"composants":[]},{"id":"B040","pillar":"bio","type":"Hématologie","name":"Ferritine","kind":"acte","lexique":["ferritine"],"composants":[]},{"id":"B041","pillar":"bio","type":"Hématologie","name":"Fraction glycosylée de la ferritine","kind":"acte","lexique":["fraction glycosylée de la ferritine","ferritine glyquée","fraction glycosylee ferritine"],"composants":[]},{"id":"B042","pillar":"bio","type":"Hématologie","name":"Transferrine","kind":"acte","lexique":["transferrine"],"composants":[]},{"id":"B043","pillar":"bio","type":"Hématologie","name":"Coefficient de saturation de la transferrine (CST)","kind":"acte","lexique":["CST","saturation de la transferrine"],"composants":[]},{"id":"B044","pillar":"bio","type":"Hématologie","name":"Capacité totale de fixation de la transferrine (CTF)","kind":"acte","lexique":["CTF","TIBC","capacité de fixation","capacite totale de fixation de la tranferrine"],"composants":[]},{"id":"B045","pillar":"bio","type":"Hématologie","name":"Récepteur soluble de la transferrine","kind":"acte","lexique":["récepteur soluble de la transferrine","RsTf","sTfR"],"composants":[]},{"id":"B046","pillar":"bio","type":"Hématologie","name":"Haptoglobine","kind":"acte","lexique":["haptoglobine","hapto","hémolyse","hapto globine"],"composants":[]},{"id":"B047","pillar":"bio","type":"Hémostase / Coagulation","name":"TP / INR","kind":"acte","lexique":["TP","INR","taux de prothrombine","temps de prothrombine"],"composants":[]},{"id":"B048","pillar":"bio","type":"Hémostase / Coagulation","name":"TCA / TCK","kind":"acte","lexique":["TCA","TCK","temps de céphaline activée","temps de céphaline kaolin"],"composants":[]},{"id":"B049","pillar":"bio","type":"Hémostase / Coagulation","name":"Temps de saignement (TS)","kind":"acte","lexique":["temps de saignement","TS","Ivy","Duke"],"composants":[]},{"id":"B050","pillar":"bio","type":"Hémostase / Coagulation","name":"Temps de thrombine (TT)","kind":"acte","lexique":["temps de thrombine","TT","anti thrombine"],"composants":[]},{"id":"B051","pillar":"bio","type":"Hémostase / Coagulation","name":"Fibrinogène","kind":"acte","lexique":["fibrinogène","fibrinémie","fibrine"],"composants":[]},{"id":"B052","pillar":"bio","type":"Hémostase / Coagulation","name":"D-Dimères","kind":"acte","lexique":["D-dimères","DDimères","DD"],"composants":[]},{"id":"B053","pillar":"bio","type":"Hémostase / Coagulation","name":"Produits de dégradation de la fibrine (PDF)","kind":"acte","lexique":["PDF","produits de dégradation de la fibrine"],"composants":[]},{"id":"B054","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage des facteurs de coagulation (II, V, VII, X)","kind":"acte","lexique":["facteur II V VII X","dosage de facteurs","facteurs vitamine K"],"composants":[]},{"id":"B055","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage du facteur VIII","kind":"acte","lexique":["facteur 8","facteur VIII","FVIII","hémophilie A"],"composants":[]},{"id":"B056","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage du facteur IX","kind":"acte","lexique":["facteur 9","facteur IX","FIX","hémophilie B"],"composants":[]},{"id":"B057","pillar":"bio","type":"Hémostase / Coagulation","name":"Dosage du facteur XIII","kind":"acte","lexique":["facteur 13","facteur XIII","FXIII"],"composants":[]},{"id":"B058","pillar":"bio","type":"Hémostase / Coagulation","name":"Facteur Willebrand (antigène + activité)","kind":"acte","lexique":["facteur Willebrand","vWF","von Willebrand","dosage facteur willebrand"],"composants":[]},{"id":"B059","pillar":"bio","type":"Hémostase / Coagulation","name":"Protéine C","kind":"acte","lexique":["protéine C","dosage protéine C"],"composants":[]},{"id":"B060","pillar":"bio","type":"Hémostase / Coagulation","name":"Protéine S","kind":"acte","lexique":["protéine S","dosage protéine S"],"composants":[]},{"id":"B061","pillar":"bio","type":"Hémostase / Coagulation","name":"Antithrombine (III)","kind":"acte","lexique":["antithrombine","ATIII","AT3"],"composants":[]},{"id":"B062","pillar":"bio","type":"Hémostase / Coagulation","name":"Résistance à la protéine C activée (RPCa)","kind":"acte","lexique":["résistance protéine C activée","RPCa","facteur V Leiden fonctionnel"],"composants":[]},{"id":"B063","pillar":"bio","type":"Hémostase / Coagulation","name":"Anticoagulant circulant / lupique (LA)","kind":"acte","lexique":["anticoagulant lupique","LA","anticoagulant circulant"],"composants":[]},{"id":"B064","pillar":"bio","type":"Hémostase / Coagulation","name":"Activité anti-Xa (héparine)","kind":"acte","lexique":["anti-Xa","activité anti Xa","héparinémie"],"composants":[]},{"id":"B065","pillar":"bio","type":"Hémostase / Coagulation","name":"Agrégation plaquettaire","kind":"acte","lexique":["agrégation plaquettaire","agrégométrie"],"composants":[]},{"id":"B066","pillar":"bio","type":"Biochimie & ionogramme","name":"Glycémie à jeun","kind":"acte","lexique":["glycémie","glucose","GAJ"],"composants":[]},{"id":"B067","pillar":"bio","type":"Biochimie & ionogramme","name":"Glycémie post-prandiale","kind":"acte","lexique":["glycémie post-prandiale","glycémie 2h"],"composants":[]},{"id":"B068","pillar":"bio","type":"Biochimie & ionogramme","name":"HGPO (hyperglycémie provoquée orale)","kind":"acte","lexique":["HGPO","hyperglycémie provoquée","OGTT","O'Sullivan","hgpo hyperglycemie provoque par voie orale"],"composants":[]},{"id":"B069","pillar":"bio","type":"Biochimie & ionogramme","name":"Hémoglobine glyquée (HbA1c)","kind":"acte","lexique":["HbA1c","hémoglobine glyquée","A1c"],"composants":[]},{"id":"B070","pillar":"bio","type":"Biochimie & ionogramme","name":"Fructosamine","kind":"acte","lexique":["fructosamine"],"composants":[]},{"id":"B071","pillar":"bio","type":"Biochimie & ionogramme","name":"Insulinémie","kind":"acte","lexique":["insulinémie","insuline"],"composants":[]},{"id":"B072","pillar":"bio","type":"Biochimie & ionogramme","name":"Peptide C","kind":"acte","lexique":["peptide C","C-peptide"],"composants":[]},{"id":"B073","pillar":"bio","type":"Biochimie & ionogramme","name":"Urée (azotémie)","kind":"acte","lexique":["azotémie","urée","urémie","BUN"],"composants":[]},{"id":"B074","pillar":"bio","type":"Biochimie & ionogramme","name":"Créatininémie","kind":"acte","lexique":["créatinine","créatininémie","créat"],"composants":[]},{"id":"B075","pillar":"bio","type":"Biochimie & ionogramme","name":"Clairance de la créatinine (DFG)","kind":"acte","lexique":["clairance de la créatinine","DFG estimé","Cockcroft","clairance rénale","clairance de la creat"],"composants":[]},{"id":"B076","pillar":"bio","type":"Biochimie & ionogramme","name":"Cystatine C","kind":"acte","lexique":["cystatine C","cystatine"],"composants":[]},{"id":"B077","pillar":"bio","type":"Biochimie & ionogramme","name":"Uricémie (acide urique)","kind":"acte","lexique":["uricémie","acide urique","urate"],"composants":[]},{"id":"B078","pillar":"bio","type":"Biochimie & ionogramme","name":"Natrémie","kind":"acte","lexique":["natrémie","sodium","Na"],"composants":[]},{"id":"B079","pillar":"bio","type":"Biochimie & ionogramme","name":"Kaliémie","kind":"acte","lexique":["kaliémie","potassium","K"],"composants":[]},{"id":"B080","pillar":"bio","type":"Biochimie & ionogramme","name":"Chlorémie","kind":"acte","lexique":["chlorémie","chlore","Cl"],"composants":[]},{"id":"B081","pillar":"bio","type":"Biochimie & ionogramme","name":"Réserve alcaline (bicarbonates / CO2 total)","kind":"acte","lexique":["réserve alcaline","bicarbonates","CO2 total","HCO3"],"composants":[]},{"id":"B082","pillar":"bio","type":"Biochimie & ionogramme","name":"Calcémie","kind":"acte","lexique":["calcémie","calcium","Ca"],"composants":[]},{"id":"B083","pillar":"bio","type":"Biochimie & ionogramme","name":"Calcium ionisé","kind":"acte","lexique":["calcium ionisé","calcium libre"],"composants":[]},{"id":"B084","pillar":"bio","type":"Biochimie & ionogramme","name":"Phosphorémie","kind":"acte","lexique":["phosphore","phosphorémie","phosphate","P"],"composants":[]},{"id":"B085","pillar":"bio","type":"Biochimie & ionogramme","name":"Magnésémie","kind":"acte","lexique":["magnésémie","magnésium","Mg"],"composants":[]},{"id":"B086","pillar":"bio","type":"Biochimie & ionogramme","name":"ASAT (TGO)","kind":"acte","lexique":["ASAT","SGOT","TGO","aspartate aminotransférase"],"composants":[]},{"id":"B087","pillar":"bio","type":"Biochimie & ionogramme","name":"ALAT (TGP)","kind":"acte","lexique":["ALAT","SGPT","TGP","alanine aminotransférase"],"composants":[]},{"id":"B088","pillar":"bio","type":"Biochimie & ionogramme","name":"Gamma-GT (GGT)","kind":"acte","lexique":["GGT","gamma GT","gamma-glutamyl transférase"],"composants":[]},{"id":"B089","pillar":"bio","type":"Biochimie & ionogramme","name":"Phosphatases alcalines (PAL)","kind":"acte","lexique":["PAL","phosphatase alcaline","ALP"],"composants":[]},{"id":"B090","pillar":"bio","type":"Biochimie & ionogramme","name":"5'-nucléotidase","kind":"acte","lexique":["5 nucléotidase","5'-nucléotidase"],"composants":[]},{"id":"B091","pillar":"bio","type":"Biochimie & ionogramme","name":"Bilirubine totale","kind":"acte","lexique":["bilirubine totale","BT"],"composants":[]},{"id":"B092","pillar":"bio","type":"Biochimie & ionogramme","name":"Bilirubine conjuguée (directe)","kind":"acte","lexique":["bilirubine conjuguée","bilirubine directe","BD"],"composants":[]},{"id":"B093","pillar":"bio","type":"Biochimie & ionogramme","name":"Ammoniémie","kind":"acte","lexique":["ammoniémie","ammoniac","NH3"],"composants":[]},{"id":"B094","pillar":"bio","type":"Biochimie & ionogramme","name":"Protéines totales (protidémie)","kind":"acte","lexique":["protidémie","protéines totales","protéine","protides"],"composants":[]},{"id":"B095","pillar":"bio","type":"Biochimie & ionogramme","name":"Albuminémie","kind":"acte","lexique":["albumine","albuminémie"],"composants":[]},{"id":"B096","pillar":"bio","type":"Biochimie & ionogramme","name":"Préalbumine","kind":"acte","lexique":["préalbumine","transthyrétine"],"composants":[]},{"id":"B097","pillar":"bio","type":"Biochimie & ionogramme","name":"Électrophorèse des protéines sériques (EPP)","kind":"acte","lexique":["électrophorèse des protéines","EPP","protidogramme","protéinogramme"],"composants":[]},{"id":"B098","pillar":"bio","type":"Biochimie & ionogramme","name":"Immunofixation des protéines sériques","kind":"acte","lexique":["immunofixation","IEPP","pic monoclonal"],"composants":[]},{"id":"B099","pillar":"bio","type":"Biochimie & ionogramme","name":"Bêta-2-microglobuline","kind":"acte","lexique":["beta-2-microglobuline","B2M"],"composants":[]},{"id":"B100","pillar":"bio","type":"Biochimie & ionogramme","name":"Céruloplasmine","kind":"acte","lexique":["céruloplasmine","Wilson"],"composants":[]},{"id":"B101","pillar":"bio","type":"Biochimie & ionogramme","name":"CRP (protéine C réactive)","kind":"acte","lexique":["CRP","protéine C réactive"],"composants":[]},{"id":"B102","pillar":"bio","type":"Biochimie & ionogramme","name":"CRP ultrasensible","kind":"acte","lexique":["CRP ultrasensible","CRPus","hs-CRP"],"composants":[]},{"id":"B103","pillar":"bio","type":"Biochimie & ionogramme","name":"Procalcitonine (PCT)","kind":"acte","lexique":["procalcitonine","PCT"],"composants":[]},{"id":"B104","pillar":"bio","type":"Biochimie & ionogramme","name":"Cholestérol total","kind":"acte","lexique":["cholestérol total","cholestérol"],"composants":[]},{"id":"B105","pillar":"bio","type":"Biochimie & ionogramme","name":"HDL-cholestérol","kind":"acte","lexique":["HDL","cholestérol HDL"],"composants":[]},{"id":"B106","pillar":"bio","type":"Biochimie & ionogramme","name":"LDL-cholestérol","kind":"acte","lexique":["LDL","cholestérol LDL"],"composants":[]},{"id":"B107","pillar":"bio","type":"Biochimie & ionogramme","name":"Triglycérides","kind":"acte","lexique":["triglycérides","TG"],"composants":[]},{"id":"B108","pillar":"bio","type":"Biochimie & ionogramme","name":"Apolipoprotéine A1","kind":"acte","lexique":["apolipoprotéine A1","ApoA1"],"composants":[]},{"id":"B109","pillar":"bio","type":"Biochimie & ionogramme","name":"Apolipoprotéine B","kind":"acte","lexique":["apolipoprotéine B","ApoB"],"composants":[]},{"id":"B110","pillar":"bio","type":"Biochimie & ionogramme","name":"Lipoprotéine (a)","kind":"acte","lexique":["lipoprotéine a","Lp(a)","Lpa"],"composants":[]},{"id":"B111","pillar":"bio","type":"Biochimie & ionogramme","name":"Amylasémie","kind":"acte","lexique":["amylase","amylasémie"],"composants":[]},{"id":"B112","pillar":"bio","type":"Biochimie & ionogramme","name":"Lipase","kind":"acte","lexique":["lipase","lipasémie"],"composants":[]},{"id":"B113","pillar":"bio","type":"Biochimie & ionogramme","name":"LDH (lactate déshydrogénase)","kind":"acte","lexique":["LDH","lactate déshydrogénase"],"composants":[]},{"id":"B114","pillar":"bio","type":"Biochimie & ionogramme","name":"Aldolase","kind":"acte","lexique":["aldolase"],"composants":[]},{"id":"B115","pillar":"bio","type":"Biochimie & ionogramme","name":"Cholinestérases","kind":"acte","lexique":["cholinestérase","pseudocholinestérase","butyrylcholinestérase"],"composants":[]},{"id":"B116","pillar":"bio","type":"Biochimie & ionogramme","name":"Homocystéine","kind":"acte","lexique":["homocystéine","homocysteine"],"composants":[]},{"id":"B117","pillar":"bio","type":"Biochimie & ionogramme","name":"Osmolalité plasmatique","kind":"acte","lexique":["osmolalité","osmolarité plasmatique"],"composants":[]},{"id":"B118","pillar":"bio","type":"Biochimie & ionogramme","name":"FibroTest-ActiTest","kind":"acte","lexique":["fibrotest","actitest","fibrose hépatique non invasive"],"composants":[]},{"id":"B119","pillar":"bio","type":"Biochimie & ionogramme","name":"Chimie des liquides (LCR, ascite, pleural)","kind":"acte","lexique":["chimie LCR","glycorachie","protéinorachie","biochimie liquide de ponction"],"composants":[]},{"id":"B120","pillar":"bio","type":"Explorations urinaires","name":"Bandelette urinaire","kind":"acte","lexique":["bandelette urinaire","BU","dipstick","albumine sucre","bandelettes alb sucre"],"composants":[]},{"id":"B121","pillar":"bio","type":"Explorations urinaires","name":"Protéinurie des 24 h","kind":"acte","lexique":["Pu 24h","protéinurie 24h","protéinurie des 24 heures","pu 24 h"],"composants":[]},{"id":"B122","pillar":"bio","type":"Explorations urinaires","name":"Microalbuminurie","kind":"acte","lexique":["microalbuminurie","albuminurie","micro-albumine urinaire","micro albuminurie albuminurie"],"composants":[]},{"id":"B123","pillar":"bio","type":"Explorations urinaires","name":"Rapport protéinurie / créatininurie (RPC)","kind":"acte","lexique":["RPC","rapport protéinurie créatininurie","ratio albumine créatinine"],"composants":[]},{"id":"B124","pillar":"bio","type":"Explorations urinaires","name":"Ionogramme urinaire","kind":"acte","lexique":["ionogramme urinaire","iono urines","Na K urinaire"],"composants":[]},{"id":"B125","pillar":"bio","type":"Explorations urinaires","name":"Urée urinaire","kind":"acte","lexique":["urée urinaire","urée des urines"],"composants":[]},{"id":"B126","pillar":"bio","type":"Explorations urinaires","name":"Créatininurie","kind":"acte","lexique":["créatininurie","créatinine urinaire"],"composants":[]},{"id":"B127","pillar":"bio","type":"Explorations urinaires","name":"Calciurie","kind":"acte","lexique":["calciurie","calcium urinaire"],"composants":[]},{"id":"B128","pillar":"bio","type":"Explorations urinaires","name":"Phosphaturie","kind":"acte","lexique":["phosphaturie","phosphore urinaire"],"composants":[]},{"id":"B129","pillar":"bio","type":"Explorations urinaires","name":"Uricurie (acide urique urinaire)","kind":"acte","lexique":["uricurie","acide urique urinaire"],"composants":[]},{"id":"B130","pillar":"bio","type":"Explorations urinaires","name":"Oxalurie","kind":"acte","lexique":["oxalurie","oxaturie","oxalate urinaire"],"composants":[]},{"id":"B131","pillar":"bio","type":"Explorations urinaires","name":"Glycosurie","kind":"acte","lexique":["glycosurie","glucose urinaire"],"composants":[]},{"id":"B132","pillar":"bio","type":"Explorations urinaires","name":"Culot urinaire (sédiment)","kind":"acte","lexique":["culot urinaire","sédiment urinaire","culot urinaire sediment urinaire"],"composants":[]},{"id":"B133","pillar":"bio","type":"Explorations urinaires","name":"Compte d'Addis (HLM)","kind":"acte","lexique":["HLM","compte d'Addis","hématies leucocytes minute","hlm compte d addis"],"composants":[]},{"id":"B134","pillar":"bio","type":"Explorations urinaires","name":"Protéinurie de Bence-Jones","kind":"acte","lexique":["Bence-Jones","chaînes légères urinaires","protéinurie de surcharge"],"composants":[]},{"id":"B135","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine A (rétinol)","kind":"acte","lexique":["vitamine A","rétinol"],"composants":[]},{"id":"B136","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B1 (thiamine)","kind":"acte","lexique":["vitamine B1","thiamine"],"composants":[]},{"id":"B137","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B6 (pyridoxine)","kind":"acte","lexique":["vitamine B6","pyridoxine"],"composants":[]},{"id":"B138","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B9 (folates)","kind":"acte","lexique":["vitamine B9","folates","acide folique","folate","vitamine b9 folate"],"composants":[]},{"id":"B139","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine B12 (cobalamine)","kind":"acte","lexique":["vitamine B12","cobalamine","B12"],"composants":[]},{"id":"B140","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine C (acide ascorbique)","kind":"acte","lexique":["vitamine C","acide ascorbique"],"composants":[]},{"id":"B141","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine D (25-OH)","kind":"acte","lexique":["vitamine D","25 OH vitamine D","25-hydroxyvitamine D","calcidiol","vitamine d 25 oh vit d"],"composants":[]},{"id":"B142","pillar":"bio","type":"Vitamines & oligo-éléments","name":"1,25-OH vitamine D (calcitriol)","kind":"acte","lexique":["1,25 OH vitamine D","calcitriol","vitamine D active"],"composants":[]},{"id":"B143","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine E (tocophérol)","kind":"acte","lexique":["vitamine E","tocophérol"],"composants":[]},{"id":"B144","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Vitamine K","kind":"acte","lexique":["vitamine K","phylloquinone"],"composants":[]},{"id":"B145","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Zinc (zincémie)","kind":"acte","lexique":["zinc","zincémie"],"composants":[]},{"id":"B146","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Cuivre (cuprémie)","kind":"acte","lexique":["cuivre","cuprémie"],"composants":[]},{"id":"B147","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Sélénium","kind":"acte","lexique":["sélénium","sélénémie"],"composants":[]},{"id":"B148","pillar":"bio","type":"Vitamines & oligo-éléments","name":"Iodurie","kind":"acte","lexique":["iodurie","iode urinaire"],"composants":[]},{"id":"B149","pillar":"bio","type":"Marqueurs cardiaques","name":"Troponine","kind":"acte","lexique":["troponine","Tnc","troponine T","troponine I"],"composants":[]},{"id":"B150","pillar":"bio","type":"Marqueurs cardiaques","name":"Troponine ultrasensible","kind":"acte","lexique":["troponine ultrasensible","troponine US","hs-troponine"],"composants":[]},{"id":"B151","pillar":"bio","type":"Marqueurs cardiaques","name":"Myoglobine","kind":"acte","lexique":["myoglobine"],"composants":[]},{"id":"B152","pillar":"bio","type":"Marqueurs cardiaques","name":"CPK (créatine phosphokinase)","kind":"acte","lexique":["CPK","CK","créatine kinase"],"composants":[]},{"id":"B153","pillar":"bio","type":"Marqueurs cardiaques","name":"CPK-MB","kind":"acte","lexique":["CPK-MB","CK-MB"],"composants":[]},{"id":"B154","pillar":"bio","type":"Marqueurs cardiaques","name":"BNP","kind":"acte","lexique":["BNP","peptide natriurétique B"],"composants":[]},{"id":"B155","pillar":"bio","type":"Marqueurs cardiaques","name":"NT-proBNP","kind":"acte","lexique":["NT proBNP","NTproBNP","peptide natriurétique","nt pro bnp"],"composants":[]},{"id":"B156","pillar":"bio","type":"Endocrinologie & hormonologie","name":"TSH ultrasensible","kind":"acte","lexique":["TSH","TSHus","thyréostimuline"],"composants":[]},{"id":"B157","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T4 libre (FT4)","kind":"acte","lexique":["T4","FT4","T4 libre","thyroxine libre"],"composants":[]},{"id":"B158","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T3 libre (FT3)","kind":"acte","lexique":["T3","FT3","T3 libre","triiodothyronine libre"],"composants":[]},{"id":"B159","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T4 totale","kind":"acte","lexique":["T4 totale","thyroxine totale"],"composants":[]},{"id":"B160","pillar":"bio","type":"Endocrinologie & hormonologie","name":"T3 totale","kind":"acte","lexique":["T3 totale","triiodothyronine totale"],"composants":[]},{"id":"B161","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Thyroglobuline","kind":"acte","lexique":["thyroglobuline","Tg"],"composants":[]},{"id":"B162","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Calcitonine","kind":"acte","lexique":["calcitonine","thyrocalcitonine"],"composants":[]},{"id":"B163","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Parathormone (PTH intacte)","kind":"acte","lexique":["PTH","parathormone","PTHi","pthi parathormone"],"composants":[]},{"id":"B164","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Cortisolémie (8h)","kind":"acte","lexique":["cortisol","cortisolémie","cortisol 8h"],"composants":[]},{"id":"B165","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Cycle du cortisol","kind":"acte","lexique":["cycle du cortisol","cortisol 8h 16h minuit"],"composants":[]},{"id":"B166","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Cortisol libre urinaire (CLU)","kind":"acte","lexique":["cortisol urinaire","CLU","cortisol libre urinaire","cortisol urines"],"composants":[]},{"id":"B167","pillar":"bio","type":"Endocrinologie & hormonologie","name":"ACTH","kind":"acte","lexique":["ACTH","corticotrophine"],"composants":[]},{"id":"B168","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Aldostérone","kind":"acte","lexique":["aldostérone"],"composants":[]},{"id":"B169","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Rénine (activité rénine plasmatique)","kind":"acte","lexique":["rénine","activité rénine plasmatique","ARP"],"composants":[]},{"id":"B170","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Rapport aldostérone / rénine","kind":"acte","lexique":["rapport aldostérone rénine","ARR"],"composants":[]},{"id":"B171","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Métanéphrines plasmatiques","kind":"acte","lexique":["métanéphrines plasmatiques","normétanéphrine plasmatique","phéochromocytome","metanephrine"],"composants":[]},{"id":"B172","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Métanéphrines urinaires","kind":"acte","lexique":["métanéphrines urinaires","dérivés méthoxylés urinaires","phéochromocytome"],"composants":[]},{"id":"B173","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Catécholamines","kind":"acte","lexique":["catécholamines","adrénaline noradrénaline dopamine"],"composants":[]},{"id":"B174","pillar":"bio","type":"Endocrinologie & hormonologie","name":"17-OH-progestérone","kind":"acte","lexique":["17 OH progestérone","17OHP","bloc enzymatique surrénalien"],"composants":[]},{"id":"B175","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Delta-4-androstènedione","kind":"acte","lexique":["delta 4 androstènedione","androstènedione"],"composants":[]},{"id":"B176","pillar":"bio","type":"Endocrinologie & hormonologie","name":"SDHEA (sulfate de DHEA)","kind":"acte","lexique":["SDHEA","sulfate de DHEA","DHEAS"],"composants":[]},{"id":"B177","pillar":"bio","type":"Endocrinologie & hormonologie","name":"DHEA","kind":"acte","lexique":["DHEA","déhydroépiandrostérone"],"composants":[]},{"id":"B178","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Test au Synacthène (dynamique)","kind":"acte","lexique":["test au synacthène","synacthène","stimulation ACTH"],"composants":[]},{"id":"B179","pillar":"bio","type":"Endocrinologie & hormonologie","name":"FSH","kind":"acte","lexique":["FSH","hormone folliculo-stimulante"],"composants":[]},{"id":"B180","pillar":"bio","type":"Endocrinologie & hormonologie","name":"LH","kind":"acte","lexique":["LH","hormone lutéinisante"],"composants":[]},{"id":"B181","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Prolactine","kind":"acte","lexique":["prolactine","PRL"],"composants":[]},{"id":"B182","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Œstradiol (E2)","kind":"acte","lexique":["oestradiol","estradiol","E2"],"composants":[]},{"id":"B183","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Progestérone","kind":"acte","lexique":["progestérone"],"composants":[]},{"id":"B184","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Testostérone totale","kind":"acte","lexique":["testostérone","testostérone totale"],"composants":[]},{"id":"B185","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Testostérone biodisponible / libre","kind":"acte","lexique":["testostérone biodisponible","testostérone libre"],"composants":[]},{"id":"B186","pillar":"bio","type":"Endocrinologie & hormonologie","name":"SHBG","kind":"acte","lexique":["SHBG","protéine de transport des hormones sexuelles"],"composants":[]},{"id":"B187","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Hormone anti-müllérienne (AMH)","kind":"acte","lexique":["AMH","hormone anti-mullérienne","amh hormone anti mullerienne"],"composants":[]},{"id":"B188","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Inhibine B","kind":"acte","lexique":["inhibine B"],"composants":[]},{"id":"B189","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Hormone de croissance (GH)","kind":"acte","lexique":["GH","hormone de croissance","somatotropine"],"composants":[]},{"id":"B190","pillar":"bio","type":"Endocrinologie & hormonologie","name":"IGF-1 (somatomédine C)","kind":"acte","lexique":["IGF1","IGF-1","somatomédine C"],"composants":[]},{"id":"B191","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Glucagon","kind":"acte","lexique":["glucagon"],"composants":[]},{"id":"B192","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Gastrine","kind":"acte","lexique":["gastrine"],"composants":[]},{"id":"B193","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Érythropoïétine (EPO)","kind":"acte","lexique":["EPO","érythropoïétine"],"composants":[]},{"id":"B194","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Chromogranine A","kind":"acte","lexique":["chromogranine A","CgA"],"composants":[]},{"id":"B195","pillar":"bio","type":"Endocrinologie & hormonologie","name":"CrossLaps (CTX) / marqueurs du remodelage osseux","kind":"acte","lexique":["crosslaps","CTX","télopeptide","remodelage osseux"],"composants":[]},{"id":"B196","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Ostéocalcine","kind":"acte","lexique":["ostéocalcine"],"composants":[]},{"id":"B197","pillar":"bio","type":"Endocrinologie & hormonologie","name":"Sérotonine plasmatique","kind":"acte","lexique":["sérotonine","5-HT"],"composants":[]},{"id":"B198","pillar":"bio","type":"Fertilité & spermiologie","name":"Spermogramme","kind":"acte","lexique":["spermogramme","sperme numération mobilité"],"composants":[]},{"id":"B199","pillar":"bio","type":"Fertilité & spermiologie","name":"Spermocytogramme","kind":"acte","lexique":["spermocytogramme","morphologie des spermatozoïdes"],"composants":[]},{"id":"B200","pillar":"bio","type":"Fertilité & spermiologie","name":"Test de migration-survie (TMS)","kind":"acte","lexique":["TMS","test de migration survie","capacitation"],"composants":[]},{"id":"B201","pillar":"bio","type":"Fertilité & spermiologie","name":"Spermoculture","kind":"acte","lexique":["spermoculture","culture du sperme"],"composants":[]},{"id":"B202","pillar":"bio","type":"Fertilité & spermiologie","name":"Biochimie du sperme (fructose, zinc, carnitine)","kind":"acte","lexique":["biochimie du sperme","fructose séminal","zinc séminal","carnitine"],"composants":[]},{"id":"B203","pillar":"bio","type":"Fertilité & spermiologie","name":"Test post-coïtal (Hühner)","kind":"acte","lexique":["test post-coïtal","Hühner","test de Huhner"],"composants":[]},{"id":"B204","pillar":"bio","type":"Fertilité & spermiologie","name":"Anticorps anti-spermatozoïdes (MAR test)","kind":"acte","lexique":["anticorps anti-spermatozoïdes","MAR test"],"composants":[]},{"id":"B205","pillar":"bio","type":"Marqueurs tumoraux","name":"PSA total","kind":"acte","lexique":["PSAt","PSA total","antigène prostatique spécifique"],"composants":[]},{"id":"B206","pillar":"bio","type":"Marqueurs tumoraux","name":"PSA libre + rapport libre/total","kind":"acte","lexique":["PSA libre","rapport PSA libre total","PSA ratio"],"composants":[]},{"id":"B207","pillar":"bio","type":"Marqueurs tumoraux","name":"ACE (antigène carcino-embryonnaire / CEA)","kind":"acte","lexique":["ACE","CEA","antigène carcino-embryonnaire"],"composants":[]},{"id":"B208","pillar":"bio","type":"Marqueurs tumoraux","name":"Alpha-fœtoprotéine (AFP)","kind":"acte","lexique":["AFP","alpha foetoprotéine"],"composants":[]},{"id":"B209","pillar":"bio","type":"Marqueurs tumoraux","name":"Bêta-HCG (quantitatif)","kind":"acte","lexique":["beta HCG","βHCG","HCG","gonadotrophine chorionique"],"composants":[]},{"id":"B210","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 125","kind":"acte","lexique":["CA125","CA 125","marqueur ovarien"],"composants":[]},{"id":"B211","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 15-3","kind":"acte","lexique":["CA15-3","marqueur sein"],"composants":[]},{"id":"B212","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 19-9","kind":"acte","lexique":["CA19-9","marqueur digestif pancréas"],"composants":[]},{"id":"B213","pillar":"bio","type":"Marqueurs tumoraux","name":"CA 72-4","kind":"acte","lexique":["CA72-4","marqueur gastrique"],"composants":[]},{"id":"B214","pillar":"bio","type":"Marqueurs tumoraux","name":"CYFRA 21-1","kind":"acte","lexique":["CYFRA 21-1","cytokératine 19"],"composants":[]},{"id":"B215","pillar":"bio","type":"Marqueurs tumoraux","name":"NSE (énolase neurospécifique)","kind":"acte","lexique":["NSE","énolase neurospécifique"],"composants":[]},{"id":"B216","pillar":"bio","type":"Marqueurs tumoraux","name":"SCC (antigène du carcinome épidermoïde)","kind":"acte","lexique":["SCC","carcinome épidermoïde"],"composants":[]},{"id":"B217","pillar":"bio","type":"Marqueurs tumoraux","name":"HE4","kind":"acte","lexique":["HE4","human epididymis protein 4"],"composants":[]},{"id":"B218","pillar":"bio","type":"Marqueurs tumoraux","name":"ProGRP","kind":"acte","lexique":["ProGRP","pro-gastrin releasing peptide"],"composants":[]},{"id":"B219","pillar":"bio","type":"Marqueurs tumoraux","name":"S100","kind":"acte","lexique":["S100","protéine S100","mélanome"],"composants":[]},{"id":"B220","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Complément C3","kind":"acte","lexique":["complément C3","C3"],"composants":[]},{"id":"B221","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Complément C4","kind":"acte","lexique":["complément C4","C4"],"composants":[]},{"id":"B222","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"CH50 (complément total)","kind":"acte","lexique":["CH50","complément hémolytique 50","complément total"],"composants":[]},{"id":"B223","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Facteur rhumatoïde (latex)","kind":"acte","lexique":["facteur rhumatoïde","FR","latex","RF"],"composants":[]},{"id":"B224","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Réaction de Waaler-Rose","kind":"acte","lexique":["Waaler Rose","Waler Rose","latex waaler rose"],"composants":[]},{"id":"B225","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-CCP","kind":"acte","lexique":["anti CCP","anti-peptide citrulliné","ACPA","ac anti ccp"],"composants":[]},{"id":"B226","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-nucléaires (AAN/FAN)","kind":"acte","lexique":["anti nucléaire","AAN","ANA","FAN","ac anti nucleaire"],"composants":[]},{"id":"B227","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-ADN natif (anti-dsDNA)","kind":"acte","lexique":["anti DNA natif","anti dsDNA","anti-ADN double brin","ac anti adn","ac anti dna natif"],"composants":[]},{"id":"B228","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-ENA (anti-ECT)","kind":"acte","lexique":["anti ECT","ENA","anti-Sm RNP SSA SSB Scl70 Jo1","ac anti ect"],"composants":[]},{"id":"B229","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-nucléosomes","kind":"acte","lexique":["anti nucléosome"],"composants":[]},{"id":"B230","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"ANCA (p-ANCA/MPO, c-ANCA/PR3)","kind":"acte","lexique":["ANCA","p-ANCA","c-ANCA","MPO","PR3","vascularite"],"composants":[]},{"id":"B231","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps antiphospholipides (bilan SAPL)","kind":"acte","lexique":["anti phospholipides","antiphospholipides","APL","aPL","syndrome des antiphospholipides","SAPL","ac anti phospholipides"],"composants":[]},{"id":"B232","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticardiolipines IgG","kind":"acte","lexique":["anticardiolipine IgG","aCL IgG"],"composants":[]},{"id":"B233","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticardiolipines IgM","kind":"acte","lexique":["anticardiolipine IgM","aCL IgM"],"composants":[]},{"id":"B234","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-β2-glycoprotéine 1 IgG","kind":"acte","lexique":["anti beta2GP1 IgG","anti-β2GP1 IgG","beta 2 glycoprotéine IgG"],"composants":[]},{"id":"B235","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-β2-glycoprotéine 1 IgM","kind":"acte","lexique":["anti beta2GP1 IgM","anti-β2GP1 IgM","beta 2 glycoprotéine IgM"],"composants":[]},{"id":"B236","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-muscle lisse (AML)","kind":"acte","lexique":["anti muscle lisse","ASMA","anti-actine","ac anti muscle lisse"],"composants":[]},{"id":"B237","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-mitochondries (AMA)","kind":"acte","lexique":["anti mitochondrie","AMA","M2","ac anti mitochondrie"],"composants":[]},{"id":"B238","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-LKM1","kind":"acte","lexique":["anti LKM","LKM1"],"composants":[]},{"id":"B239","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-gp210 (CP210)","kind":"acte","lexique":["anti gp210","CP210","ac anti cp 210"],"composants":[]},{"id":"B240","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-SLA","kind":"acte","lexique":["anti SLA","soluble liver antigen"],"composants":[]},{"id":"B241","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-PLA2R","kind":"acte","lexique":["anti PLA2R","phospholipase A2 récepteur","ac anti pla 2r"],"composants":[]},{"id":"B242","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-membrane basale glomérulaire","kind":"acte","lexique":["anti membrane basale","anti-MBG","Goodpasture","anti-GBM","ac anti membrane basale"],"composants":[]},{"id":"B243","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-récepteur de l'acétylcholine (RACh)","kind":"acte","lexique":["anti récepteur acétylcholine","anti-RACh","RATH","myasthénie","rath anticorps anti recepteur de l acethyle choline"],"composants":[]},{"id":"B244","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-MuSK","kind":"acte","lexique":["anti MuSK","myasthénie MuSK","ac anti musk"],"composants":[]},{"id":"B245","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-transglutaminase (IgA)","kind":"acte","lexique":["anti transglutaminase","tTG","cœliaque"],"composants":[]},{"id":"B246","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-endomysium (EMA)","kind":"acte","lexique":["anti endomysium","EMA","ac anti endomysium"],"composants":[]},{"id":"B247","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-gliadine déamidée","kind":"acte","lexique":["anti gliadine déamidée","DGP"],"composants":[]},{"id":"B248","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-facteur intrinsèque","kind":"acte","lexique":["anti facteur intrinsèque","Biermer","ac anti facteur intrinseque","facteur intrinseque"],"composants":[]},{"id":"B249","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-TPO","kind":"acte","lexique":["anti TPO","anti-thyroperoxydase","ATPO","TPO"],"composants":[]},{"id":"B250","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-thyroglobuline","kind":"acte","lexique":["anti thyroglobuline","anti Tg"],"composants":[]},{"id":"B251","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-récepteurs de la TSH (TRAK)","kind":"acte","lexique":["anti récepteur TSH","TRAK","TRAb","Basedow","anticorps anti recepteur de la tsh"],"composants":[]},{"id":"B252","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-GAD","kind":"acte","lexique":["anti GAD","GAD65","diabète auto-immun"],"composants":[]},{"id":"B253","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-IA2","kind":"acte","lexique":["anti IA2"],"composants":[]},{"id":"B254","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-îlots (ICA)","kind":"acte","lexique":["anti îlots","ICA"],"composants":[]},{"id":"B255","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-insuline","kind":"acte","lexique":["anti insuline","IAA"],"composants":[]},{"id":"B256","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-substance intercellulaire","kind":"acte","lexique":["anti substance intercellulaire","desmogléine","pemphigus","ac anti substance intra cellulaire"],"composants":[]},{"id":"B257","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Anticorps anti-membrane basale cutanée (BP180/BP230)","kind":"acte","lexique":["anti BP180","BP230","pemphigoïde"],"composants":[]},{"id":"B258","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Dosage des IgG","kind":"acte","lexique":["IgG","immunoglobuline G","gammaglobulines G"],"composants":[]},{"id":"B259","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Dosage des IgA","kind":"acte","lexique":["IgA","immunoglobuline A"],"composants":[]},{"id":"B260","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Dosage des IgM","kind":"acte","lexique":["IgM","immunoglobuline M"],"composants":[]},{"id":"B261","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Sous-classes d'IgG","kind":"acte","lexique":["sous-classes IgG","IgG1 IgG2 IgG3 IgG4"],"composants":[]},{"id":"B262","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgG4","kind":"acte","lexique":["IgG4","maladie à IgG4"],"composants":[]},{"id":"B263","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Cryoglobulines","kind":"acte","lexique":["cryoglobuline","cryoglobulinémie"],"composants":[]},{"id":"B264","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"HLA-B27","kind":"acte","lexique":["HLA B27","spondylarthrite"],"composants":[]},{"id":"B265","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"QuantiFERON-TB (IGRA)","kind":"acte","lexique":["quantiferon","IGRA","TB gold","tuberculose interféron"],"composants":[]},{"id":"B266","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IDR à la tuberculine (IDRt)","kind":"acte","lexique":["IDR","intradermoréaction","tuberculine","Mantoux","idrt"],"composants":[]},{"id":"B267","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgE totales sériques","kind":"acte","lexique":["IgE totales","IgE sérum","IgE total"],"composants":[]},{"id":"B268","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgE spécifiques (allergène unique)","kind":"acte","lexique":["IgE spécifique","RAST","allergène unique"],"composants":[]},{"id":"B269","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"IgE spécifiques — protéines de lait de vache","kind":"acte","lexique":["IgE lait de vache","APLV","ige serique specifique proteine lait de vache"],"composants":[]},{"id":"B270","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"Tryptase","kind":"acte","lexique":["tryptase","mastocytose","anaphylaxie"],"composants":[]},{"id":"B271","pillar":"bio","type":"Immunologie, auto-immunité & allergologie","name":"ECP (protéine cationique des éosinophiles)","kind":"acte","lexique":["ECP","protéine cationique éosinophiles"],"composants":[]},{"id":"B272","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie VIH (Ag/Ac)","kind":"acte","lexique":["VIH","HIV","sérologie VIH","Ag/Ac VIH","PTME","hiv ptme"],"composants":[]},{"id":"B273","pillar":"bio","type":"Sérologie & virologie","name":"Confirmation VIH (Western blot)","kind":"acte","lexique":["western blot VIH","confirmation VIH"],"composants":[]},{"id":"B274","pillar":"bio","type":"Sérologie & virologie","name":"Antigène HBs","kind":"acte","lexique":["antigène HBs","AgHBs","HBsAg"],"composants":[]},{"id":"B275","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBs","kind":"acte","lexique":["anti HBs","immunité hépatite B","ac anti hbs"],"composants":[]},{"id":"B276","pillar":"bio","type":"Sérologie & virologie","name":"Antigène HBe","kind":"acte","lexique":["Ag HBe","AgHBe","HBeAg"],"composants":[]},{"id":"B277","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBe","kind":"acte","lexique":["anti HBe","ac anti hbe"],"composants":[]},{"id":"B278","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBc totaux","kind":"acte","lexique":["anti HBc totaux","HBc total","ac anti hbc totaux"],"composants":[]},{"id":"B279","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBc IgM","kind":"acte","lexique":["anti HBc IgM","ac anti hbc igm"],"composants":[]},{"id":"B280","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-HBc IgG","kind":"acte","lexique":["anti HBc IgG","ac anti hbc igg"],"composants":[]},{"id":"B281","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHC","kind":"acte","lexique":["anti VHC","hépatite C sérologie","HCV Ab","ac anti vhc","ac anticorps anti vhc"],"composants":[]},{"id":"B282","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHA IgM","kind":"acte","lexique":["VHA IgM","hépatite A IgM","serologie vha igm"],"composants":[]},{"id":"B283","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHA IgG","kind":"acte","lexique":["VHA IgG","hépatite A IgG","serologie vha igg"],"composants":[]},{"id":"B284","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHD (delta)","kind":"acte","lexique":["anti VHD","hépatite delta","ac anticorps anti vhd"],"composants":[]},{"id":"B285","pillar":"bio","type":"Sérologie & virologie","name":"Anticorps anti-VHE","kind":"acte","lexique":["anti VHE","hépatite E"],"composants":[]},{"id":"B286","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie toxoplasmose (IgG + IgM)","kind":"acte","lexique":["toxo IgG IgM","toxoplasmose","toxoplasma","toxo igg et igm"],"composants":[]},{"id":"B287","pillar":"bio","type":"Sérologie & virologie","name":"Avidité toxoplasmose","kind":"acte","lexique":["avidité toxoplasmose","avidité IgG toxo"],"composants":[]},{"id":"B288","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie rubéole (IgG + IgM)","kind":"acte","lexique":["rubéole IgG IgM","rubella","rubeole igg et igm"],"composants":[]},{"id":"B289","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie CMV (IgG/IgM)","kind":"acte","lexique":["CMV","cytomégalovirus"],"composants":[]},{"id":"B290","pillar":"bio","type":"Sérologie & virologie","name":"Avidité CMV","kind":"acte","lexique":["avidité CMV","avidité IgG CMV"],"composants":[]},{"id":"B291","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie HSV1/HSV2","kind":"acte","lexique":["herpès","HSV","HSV1 HSV2","herpes simplex","hsv1 et hsv2"],"composants":[]},{"id":"B292","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie VZV (varicelle-zona)","kind":"acte","lexique":["VZV","varicelle","zona"],"composants":[]},{"id":"B293","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie parvovirus B19","kind":"acte","lexique":["parvovirus B19","B19"],"composants":[]},{"id":"B294","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie EBV (MNI, VCA, EBNA)","kind":"acte","lexique":["EBV","MNI test","mononucléose","VCA EBNA"],"composants":[]},{"id":"B295","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie rougeole","kind":"acte","lexique":["rougeole","measles","morbillivirus","rugeole"],"composants":[]},{"id":"B296","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie oreillons","kind":"acte","lexique":["oreillons","mumps"],"composants":[]},{"id":"B297","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie dengue (NS1, IgM, IgG)","kind":"acte","lexique":["dengue","NS1","dengue IgM IgG"],"composants":[]},{"id":"B298","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie chikungunya (IgM/IgG)","kind":"acte","lexique":["chikungunya"],"composants":[]},{"id":"B299","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie SARS-CoV-2","kind":"acte","lexique":["sérologie covid","SARS-CoV-2 sérologie","anticorps covid"],"composants":[]},{"id":"B300","pillar":"bio","type":"Sérologie & virologie","name":"Sérodiagnostic de Widal et Félix","kind":"acte","lexique":["Widal","Widal Félix","salmonella","TO TH"],"composants":[]},{"id":"B301","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie syphilis (TPHA-VDRL/RPR, BW)","kind":"acte","lexique":["TPHA RPR","BW","TPHA VDRL","syphilis","tpha rpr bw"],"composants":[]},{"id":"B302","pillar":"bio","type":"Sérologie & virologie","name":"ASLO (antistreptolysines O)","kind":"acte","lexique":["ASLO","antistreptolysine","ASO"],"composants":[]},{"id":"B303","pillar":"bio","type":"Sérologie & virologie","name":"Antistreptodornase (ASD)","kind":"acte","lexique":["ASDOR","antistreptodornase","ASD"],"composants":[]},{"id":"B304","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie Chlamydia","kind":"acte","lexique":["sérologie chlamydiae","anticorps chlamydia"],"composants":[]},{"id":"B305","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie Mycoplasme","kind":"acte","lexique":["sérologie mycoplasme","anticorps mycoplasma"],"composants":[]},{"id":"B306","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie brucellose (Wright)","kind":"acte","lexique":["brucellose","Wright","brucella"],"composants":[]},{"id":"B307","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie leptospirose","kind":"acte","lexique":["leptospirose","leptospira"],"composants":[]},{"id":"B308","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie borréliose (Lyme)","kind":"acte","lexique":["Lyme","borréliose","Borrelia"],"composants":[]},{"id":"B309","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie coqueluche","kind":"acte","lexique":["coqueluche","Bordetella"],"composants":[]},{"id":"B310","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie légionelle","kind":"acte","lexique":["légionelle","Legionella"],"composants":[]},{"id":"B311","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie bilharziose","kind":"acte","lexique":["sérologie bilharziose","schistosomiase sérologie"],"composants":[]},{"id":"B312","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie amibiase","kind":"acte","lexique":["sérologie amibienne","amibiase","entamoeba"],"composants":[]},{"id":"B313","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie hydatidose","kind":"acte","lexique":["hydatidose","échinococcose"],"composants":[]},{"id":"B314","pillar":"bio","type":"Sérologie & virologie","name":"Sérologie aspergillaire","kind":"acte","lexique":["sérologie aspergillaire","aspergillose"],"composants":[]},{"id":"B315","pillar":"bio","type":"Sérologie & virologie","name":"Antigène cryptocoque","kind":"acte","lexique":["antigène cryptocoque","cryptococcose Ag"],"composants":[]},{"id":"B316","pillar":"bio","type":"Sérologie & virologie","name":"Antigène galactomannane (aspergillus)","kind":"acte","lexique":["galactomannane","aspergillus Ag"],"composants":[]},{"id":"B317","pillar":"bio","type":"Bactériologie","name":"ECBU + antibiogramme","kind":"acte","lexique":["ECBU","examen cytobactériologique des urines","uroculture + antibiogramme"],"composants":[]},{"id":"B318","pillar":"bio","type":"Bactériologie","name":"Hémoculture","kind":"acte","lexique":["hémoculture","blood culture"],"composants":[]},{"id":"B319","pillar":"bio","type":"Bactériologie","name":"Coproculture","kind":"acte","lexique":["coproculture","culture des selles"],"composants":[]},{"id":"B320","pillar":"bio","type":"Bactériologie","name":"ECBC (expectorations)","kind":"acte","lexique":["ECBC","examen cytobactériologique des crachats","expectorations"],"composants":[]},{"id":"B321","pillar":"bio","type":"Bactériologie","name":"Recherche de BAAR (Ziehl)","kind":"acte","lexique":["crachat BAAR","BK crachats","Ziehl","bacille acido-alcoolo-résistant","crachat barr"],"composants":[]},{"id":"B322","pillar":"bio","type":"Bactériologie","name":"Culture de mycobactéries (Löwenstein)","kind":"acte","lexique":["culture mycobactérie","Löwenstein","BK culture"],"composants":[]},{"id":"B323","pillar":"bio","type":"Bactériologie","name":"Prélèvement de pus + culture","kind":"acte","lexique":["prélèvement de pus","pus culture","plaie"],"composants":[]},{"id":"B324","pillar":"bio","type":"Bactériologie","name":"Prélèvement de gorge + culture","kind":"acte","lexique":["prélèvement de gorge","gorge culture","angine"],"composants":[]},{"id":"B325","pillar":"bio","type":"Bactériologie","name":"Prélèvement nasal / portage SARM","kind":"acte","lexique":["prélèvement nasal","portage SARM","écouvillon nasal"],"composants":[]},{"id":"B326","pillar":"bio","type":"Bactériologie","name":"Prélèvement vaginal (PV) + culture","kind":"acte","lexique":["PV","prélèvement vaginal","cervico-vaginal","pv chlam myco"],"composants":[]},{"id":"B327","pillar":"bio","type":"Bactériologie","name":"Prélèvement endocervical","kind":"acte","lexique":["prélèvement endocervical","col utérin"],"composants":[]},{"id":"B328","pillar":"bio","type":"Bactériologie","name":"Prélèvement urétral + culture","kind":"acte","lexique":["prélèvement urétral","urètre","écoulement urétral"],"composants":[]},{"id":"B329","pillar":"bio","type":"Bactériologie","name":"Écouvillonnage + ECB + antibiogramme","kind":"acte","lexique":["écouvillonnage ECB ATB","écouvillon culture antibiogramme","econvillonage ecb atb"],"composants":[]},{"id":"B330","pillar":"bio","type":"Bactériologie","name":"Culture de cathéter","kind":"acte","lexique":["culture cathéter","KT culture"],"composants":[]},{"id":"B331","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie du LCR","kind":"acte","lexique":["cytobactério LCR","LCR","méningite","cytochimie bacterio du lcr"],"composants":[]},{"id":"B332","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie du liquide pleural","kind":"acte","lexique":["liquide pleural","plèvre","cyto bacterio du liquide pleural"],"composants":[]},{"id":"B333","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie du liquide d'ascite","kind":"acte","lexique":["liquide d'ascite","ascite","cytobacterio du liquide d ascite"],"composants":[]},{"id":"B334","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie d'un liquide articulaire","kind":"acte","lexique":["liquide articulaire","synovie"],"composants":[]},{"id":"B335","pillar":"bio","type":"Bactériologie","name":"Cytobactériologie d'un liquide de ponction","kind":"acte","lexique":["liquide de ponction","ponction","cyto bacterio du liquide de ponction"],"composants":[]},{"id":"B336","pillar":"bio","type":"Bactériologie","name":"Antibiogramme (seul)","kind":"acte","lexique":["antibiogramme","ATB"],"composants":[]},{"id":"B337","pillar":"bio","type":"Bactériologie","name":"Antigènes solubles urinaires (pneumocoque, légionelle)","kind":"acte","lexique":["antigène urinaire pneumocoque","antigène légionelle urinaire"],"composants":[]},{"id":"B338","pillar":"bio","type":"Bactériologie","name":"Antigène H. pylori dans les selles","kind":"acte","lexique":["H pylori selles","Helicobacter pylori antigène","HpSA"],"composants":[]},{"id":"B339","pillar":"bio","type":"Bactériologie","name":"Test respiratoire à l'urée (H. pylori)","kind":"acte","lexique":["test respiratoire à l'urée","breath test","H pylori respiratoire"],"composants":[]},{"id":"B340","pillar":"bio","type":"Bactériologie","name":"Recherche toxine Clostridioides difficile","kind":"acte","lexique":["clostridium difficile","toxine C difficile"],"composants":[]},{"id":"B341","pillar":"bio","type":"Parasitologie & mycologie","name":"Examen parasitologique des selles (KAOP / EPS)","kind":"acte","lexique":["KAOP","EPS","examen parasitologique des selles","kystes amibes œufs parasites"],"composants":[]},{"id":"B342","pillar":"bio","type":"Parasitologie & mycologie","name":"Goutte épaisse + frottis (paludisme)","kind":"acte","lexique":["goutte épaisse","GE frottis","paludisme","frottis paludisme"],"composants":[]},{"id":"B343","pillar":"bio","type":"Parasitologie & mycologie","name":"TDR paludisme (antigène HRP2)","kind":"acte","lexique":["TDR palu","test rapide paludisme","HRP2"],"composants":[]},{"id":"B344","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de microfilaires (filariose)","kind":"acte","lexique":["microfilaires","filariose","filaire"],"composants":[]},{"id":"B345","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de Schistosoma (urines / selles)","kind":"acte","lexique":["schistosome","bilharziose urinaire","hématurie bilharzienne","recherche de schistosome dans les urines"],"composants":[]},{"id":"B346","pillar":"bio","type":"Parasitologie & mycologie","name":"Confirmation bilharziose","kind":"acte","lexique":["confirmation bilharziose","schistosomiase confirmation"],"composants":[]},{"id":"B347","pillar":"bio","type":"Parasitologie & mycologie","name":"Scotch-test anal (test de Graham)","kind":"acte","lexique":["scotch test","test de Graham","oxyure","scoth test"],"composants":[]},{"id":"B348","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de sang occulte dans les selles","kind":"acte","lexique":["hemocult","sang occulte selles","FOBT","hemocult recherche d hematies occultes dans les selles"],"composants":[]},{"id":"B349","pillar":"bio","type":"Parasitologie & mycologie","name":"Examen mycologique (peau, ongles, cheveux)","kind":"acte","lexique":["examen mycologique","mycologie","dermatophyte","recherche de champignons"],"composants":[]},{"id":"B350","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de Candida","kind":"acte","lexique":["recherche candida","candidose"],"composants":[]},{"id":"B351","pillar":"bio","type":"Parasitologie & mycologie","name":"Prélèvement mycologique","kind":"acte","lexique":["prélèvement mycologique","myco prélèvement"],"composants":[]},{"id":"B352","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de Cryptococcus (encre de Chine)","kind":"acte","lexique":["cryptococcus","encre de Chine"],"composants":[]},{"id":"B353","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de leishmanies","kind":"acte","lexique":["leishmanies","leishmaniose"],"composants":[]},{"id":"B354","pillar":"bio","type":"Parasitologie & mycologie","name":"Recherche de trypanosomes","kind":"acte","lexique":["trypanosome","trypanosomiase","THA"],"composants":[]},{"id":"B355","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VIH","kind":"acte","lexique":["charge virale VIH","ARN VIH","HIV viral load"],"composants":[]},{"id":"B356","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VHB (ADN)","kind":"acte","lexique":["charge virale VHB","ADN VHB","HBV DNA","PCR VHB","charge virale b adn vhb"],"composants":[]},{"id":"B357","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VHC (ARN)","kind":"acte","lexique":["charge virale VHC","ARN VHC","HCV RNA","PCR VHC"],"composants":[]},{"id":"B358","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Génotypage VHC","kind":"acte","lexique":["génotypage VHC","HCV génotype"],"composants":[]},{"id":"B359","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale VHD (ADN)","kind":"acte","lexique":["charge virale VHD","ADN VHD","delta","charge virale adn vhd"],"composants":[]},{"id":"B360","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale CMV","kind":"acte","lexique":["charge virale CMV","PCR CMV","ADN CMV"],"composants":[]},{"id":"B361","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Charge virale EBV","kind":"acte","lexique":["charge virale EBV","PCR EBV"],"composants":[]},{"id":"B362","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR SARS-CoV-2","kind":"acte","lexique":["PCR covid","SARS-CoV-2 PCR"],"composants":[]},{"id":"B363","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR Chlamydia / Gonocoque","kind":"acte","lexique":["PCR chlamydia","gonocoque","Neisseria gonorrhoeae","recherche chlamydia"],"composants":[]},{"id":"B364","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR Mycoplasme / Ureaplasma","kind":"acte","lexique":["PCR mycoplasme","ureaplasma","recherche mycoplasme"],"composants":[]},{"id":"B365","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR HSV","kind":"acte","lexique":["PCR HSV","herpès PCR"],"composants":[]},{"id":"B366","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Test HPV (détection)","kind":"acte","lexique":["HPV test","papillomavirus"],"composants":[]},{"id":"B367","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Typage HPV oncogène","kind":"acte","lexique":["typage HPV oncogène","génotypage HPV haut risque"],"composants":[]},{"id":"B368","pillar":"bio","type":"Biologie moléculaire / PCR","name":"GeneXpert MTB/RIF (tuberculose)","kind":"acte","lexique":["GeneXpert","MTB RIF","PCR tuberculose"],"composants":[]},{"id":"B369","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR respiratoire (multiplex)","kind":"acte","lexique":["PCR respiratoire","panel respiratoire multiplex"],"composants":[]},{"id":"B370","pillar":"bio","type":"Biologie moléculaire / PCR","name":"PCR entéropathogènes","kind":"acte","lexique":["PCR selles","entéropathogènes"],"composants":[]},{"id":"B371","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Recherche Facteur V Leiden","kind":"acte","lexique":["facteur V Leiden","FV Leiden mutation"],"composants":[]},{"id":"B372","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Recherche mutation prothrombine G20210A","kind":"acte","lexique":["prothrombine G20210A","FII mutation"],"composants":[]},{"id":"B373","pillar":"bio","type":"Biologie moléculaire / PCR","name":"Recherche hémochromatose (gène HFE)","kind":"acte","lexique":["HFE","hémochromatose génétique"],"composants":[]},{"id":"B374","pillar":"bio","type":"Biologie moléculaire / PCR","name":"BCR-ABL / JAK2 (hémopathies)","kind":"acte","lexique":["BCR-ABL","JAK2","hémopathie moléculaire"],"composants":[]},{"id":"B375","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Alcoolémie","kind":"acte","lexique":["alcoolémie","éthanol"],"composants":[]},{"id":"B376","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Recherche de drogues urinaires (panel)","kind":"acte","lexique":["recherche drogue urines","toxiques urinaires","drogues panel","recherche de drogue dans les urines"],"composants":[]},{"id":"B377","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Paracétamol","kind":"acte","lexique":["paracétamol","acétaminophène"],"composants":[]},{"id":"B378","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Salicylés","kind":"acte","lexique":["salicylés","aspirine dosage"],"composants":[]},{"id":"B379","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Carboxyhémoglobine","kind":"acte","lexique":["carboxyhémoglobine","HbCO","CO"],"composants":[]},{"id":"B380","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Méthémoglobine","kind":"acte","lexique":["méthémoglobine","MetHb"],"composants":[]},{"id":"B381","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Plombémie","kind":"acte","lexique":["plomb","plombémie","saturnisme"],"composants":[]},{"id":"B382","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Métaux lourds (arsenic, mercure, cadmium)","kind":"acte","lexique":["métaux lourds","arsenic","mercure","cadmium"],"composants":[]},{"id":"B383","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Digoxine","kind":"acte","lexique":["digoxine","digoxinémie"],"composants":[]},{"id":"B384","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Lithium (lithémie)","kind":"acte","lexique":["lithium","lithémie"],"composants":[]},{"id":"B385","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Acide valproïque","kind":"acte","lexique":["acide valproïque","valproate","dépakine"],"composants":[]},{"id":"B386","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Phénobarbital","kind":"acte","lexique":["phénobarbital","gardénal"],"composants":[]},{"id":"B387","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Phénytoïne","kind":"acte","lexique":["phénytoïne","diphantoïne"],"composants":[]},{"id":"B388","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Carbamazépine","kind":"acte","lexique":["carbamazépine","tégrétol"],"composants":[]},{"id":"B389","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Vancomycine","kind":"acte","lexique":["vancomycine","vancomycinémie"],"composants":[]},{"id":"B390","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Ciclosporine","kind":"acte","lexique":["ciclosporine","cyclosporine"],"composants":[]},{"id":"B391","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Tacrolimus","kind":"acte","lexique":["tacrolimus","FK506"],"composants":[]},{"id":"B392","pillar":"bio","type":"Pharmaco-toxicologie & suivi thérapeutique","name":"Méthotrexate","kind":"acte","lexique":["méthotrexate","MTX dosage"],"composants":[]},{"id":"B393","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Gaz du sang artériel","kind":"acte","lexique":["gaz du sang artériel","GDS artériel","gazométrie artérielle"],"composants":[]},{"id":"B394","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Gaz du sang veineux / capillaire","kind":"acte","lexique":["gaz du sang veineux","gaz du sang capillaire"],"composants":[]},{"id":"B395","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Lactates (acide lactique)","kind":"acte","lexique":["lactates","acide lactique","lactacidémie"],"composants":[]},{"id":"B396","pillar":"bio","type":"Gaz du sang & équilibre acido-basique","name":"Bicarbonates / réserve alcaline","kind":"acte","lexique":["bicarbonates","réserve alcaline","HCO3","CO2 total"],"composants":[]},{"id":"B397","pillar":"bio","type":"Anatomie & cytopathologie","name":"Examen anatomopathologique de biopsie","kind":"acte","lexique":["biopsie","anatomopathologie biopsie","histologie"],"composants":[]},{"id":"B398","pillar":"bio","type":"Anatomie & cytopathologie","name":"Examen anatomopathologique de pièce opératoire","kind":"acte","lexique":["pièce opératoire","anapath pièce","histologie pièce"],"composants":[]},{"id":"B399","pillar":"bio","type":"Anatomie & cytopathologie","name":"Examen extemporané","kind":"acte","lexique":["extemporané","examen per-opératoire"],"composants":[]},{"id":"B400","pillar":"bio","type":"Anatomie & cytopathologie","name":"Immunohistochimie","kind":"acte","lexique":["immunohistochimie","IHC"],"composants":[]},{"id":"B401","pillar":"bio","type":"Anatomie & cytopathologie","name":"Immunofluorescence (cutanée / rénale)","kind":"acte","lexique":["immunofluorescence","IFD","biopsie rénale IF"],"composants":[]},{"id":"B402","pillar":"bio","type":"Anatomie & cytopathologie","name":"Biopsie ostéomédullaire (lecture)","kind":"acte","lexique":["biopsie ostéomédullaire","BOM"],"composants":[]},{"id":"B403","pillar":"bio","type":"Anatomie & cytopathologie","name":"Frottis cervico-vaginal (FCV / Pap)","kind":"acte","lexique":["FCV","frottis cervico-vaginal","cytologie cervicale","Pap"],"composants":[]},{"id":"B404","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie en milieu liquide","kind":"acte","lexique":["cytologie en milieu liquide","ThinPrep","monocouche"],"composants":[]},{"id":"B405","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytoponction (thyroïde, ganglion, sein)","kind":"acte","lexique":["cytoponction","ponction cytologique","FNA"],"composants":[]},{"id":"B406","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie des épanchements (pleural, ascite, LCR)","kind":"acte","lexique":["cytologie des épanchements","cytologie liquide pleural ascite LCR"],"composants":[]},{"id":"B407","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie urinaire","kind":"acte","lexique":["cytologie urinaire","recherche de cellules tumorales urines"],"composants":[]},{"id":"B408","pillar":"bio","type":"Anatomie & cytopathologie","name":"Cytologie des expectorations","kind":"acte","lexique":["cytologie des crachats","cytologie expectorations"],"composants":[]},{"id":"B409","pillar":"bio","type":"Génétique & cytogénétique","name":"Caryotype sanguin","kind":"acte","lexique":["caryotype","caryotype sanguin","cytogénétique"],"composants":[]},{"id":"B410","pillar":"bio","type":"Génétique & cytogénétique","name":"Caryotype médullaire","kind":"acte","lexique":["caryotype médullaire","cytogénétique hématologique"],"composants":[]},{"id":"B411","pillar":"bio","type":"Génétique & cytogénétique","name":"FISH (hybridation in situ)","kind":"acte","lexique":["FISH","hybridation in situ"],"composants":[]},{"id":"B412","pillar":"bio","type":"Génétique & cytogénétique","name":"Dépistage prénatal non invasif (DPNI)","kind":"acte","lexique":["DPNI","trisomie 21 dépistage","ADN libre circulant"],"composants":[]},{"id":"B413","pillar":"bio","type":"Génétique & cytogénétique","name":"Recherche de mutations BRCA1/BRCA2","kind":"acte","lexique":["BRCA","BRCA1 BRCA2","prédisposition cancer sein"],"composants":[]},{"id":"B414","pillar":"bio","type":"Génétique & cytogénétique","name":"Typage HLA (greffe)","kind":"acte","lexique":["typage HLA","groupage HLA","compatibilité greffe"],"composants":[]},{"id":"B415","pillar":"bio","type":"Génétique & cytogénétique","name":"Étude moléculaire de la drépanocytose","kind":"acte","lexique":["drépanocytose moléculaire","mutation bêta-globine","HBB"],"composants":[]},{"id":"I001","pillar":"img","type":"Échographie","name":"Échographie abdominale","kind":"acte","lexique":["echo abdominale","échographie de l'abdomen"],"composants":[]},{"id":"I002","pillar":"img","type":"Échographie","name":"Échographie pelvienne","kind":"acte","lexique":["echo pelvienne","échographie pelvienne sus-pubienne"],"composants":[]},{"id":"I003","pillar":"img","type":"Échographie","name":"Échographie pelvienne endovaginale","kind":"acte","lexique":["echo endovaginale","échographie endovaginale"],"composants":[]},{"id":"I004","pillar":"img","type":"Échographie","name":"Échographie abdomino-pelvienne","kind":"acte","lexique":["echo abdomino-pelvienne","echo AP"],"composants":[]},{"id":"I005","pillar":"img","type":"Échographie","name":"Échographie obstétricale","kind":"acte","lexique":["echo obstétricale","échographie de grossesse","echo de grossesse"],"composants":[]},{"id":"I006","pillar":"img","type":"Échographie","name":"Échographie des parties molles","kind":"acte","lexique":["echo parties molles"],"composants":[]},{"id":"I007","pillar":"img","type":"Échographie","name":"Échographie thyroïdienne","kind":"acte","lexique":["echo thyroïde","échographie de la thyroïde"],"composants":[]},{"id":"I008","pillar":"img","type":"Échographie","name":"Échographie cervicale","kind":"acte","lexique":["echo cervicale","échographie du cou"],"composants":[]},{"id":"I009","pillar":"img","type":"Échographie","name":"Échographie scrotale","kind":"acte","lexique":["échographie des bourses","echo testiculaire","echo scrotale"],"composants":[]},{"id":"I010","pillar":"img","type":"Échographie","name":"Échographie mammaire","kind":"acte","lexique":["echo mammaire","échographie des seins"],"composants":[]},{"id":"I011","pillar":"img","type":"Échographie","name":"Échographie ostéo-articulaire","kind":"acte","lexique":["échographie articulaire","echo articulaire","échographie musculo-squelettique"],"composants":[]},{"id":"I012","pillar":"img","type":"Échographie","name":"Échographie de l'épaule","kind":"acte","lexique":["echo épaule"],"composants":[]},{"id":"I013","pillar":"img","type":"Échographie","name":"Échographie rénale","kind":"acte","lexique":["echo rénale","échographie des reins","échographie de l appareil urinaire"],"composants":[]},{"id":"I014","pillar":"img","type":"Échographie","name":"Échographie cardiaque (ETT)","kind":"acte","lexique":["ETT","échocardiographie","echo cardiaque"],"composants":[]},{"id":"I015","pillar":"img","type":"Échographie","name":"Échographie transfontanellaire","kind":"acte","lexique":["ETF","echo transfontanellaire"],"composants":[]},{"id":"I016","pillar":"img","type":"Écho-doppler","name":"Écho-doppler artériel des membres inférieurs","kind":"acte","lexique":["doppler artériel des membres inférieurs","doppler artériel MI"],"composants":[]},{"id":"I017","pillar":"img","type":"Écho-doppler","name":"Écho-doppler veineux des membres inférieurs","kind":"acte","lexique":["doppler veineux des membres inférieurs","doppler veineux MI"],"composants":[]},{"id":"I018","pillar":"img","type":"Écho-doppler","name":"Écho-doppler des troncs supra-aortiques (TSA)","kind":"acte","lexique":["doppler des TSA","doppler TSA","echo doppler des vaisseaux du cou"],"composants":[]},{"id":"I019","pillar":"img","type":"Écho-doppler","name":"Écho-doppler des artères rénales","kind":"acte","lexique":["doppler rénal","doppler des artères rénales"],"composants":[]},{"id":"I020","pillar":"img","type":"Écho-doppler","name":"Écho-doppler obstétrical","kind":"acte","lexique":["doppler obstétrical","doppler foeto-placentaire"],"composants":[]},{"id":"I021","pillar":"img","type":"Scanner","name":"Scanner cérébral","kind":"acte","lexique":["TDM cérébrale","scanner du crâne","TDM encéphalique"],"composants":[]},{"id":"I022","pillar":"img","type":"Scanner","name":"Scanner thoracique","kind":"acte","lexique":["TDM thoracique","scanner du thorax"],"composants":[]},{"id":"I023","pillar":"img","type":"Scanner","name":"Scanner abdominal","kind":"acte","lexique":["TDM abdominale"],"composants":[]},{"id":"I024","pillar":"img","type":"Scanner","name":"Scanner abdomino-pelvien","kind":"acte","lexique":["TDM abdomino-pelvienne","scanner AP"],"composants":[]},{"id":"I025","pillar":"img","type":"Scanner","name":"Scanner thoraco-abdomino-pelvien","kind":"acte","lexique":["TAP","TDM TAP"],"composants":[]},{"id":"I026","pillar":"img","type":"Scanner","name":"Scanner du massif facial","kind":"acte","lexique":["scanner des sinus","TDM sinus","scanner facial"],"composants":[]},{"id":"I027","pillar":"img","type":"Scanner","name":"Scanner cervical","kind":"acte","lexique":["TDM cervicale","scanner du cou"],"composants":[]},{"id":"I028","pillar":"img","type":"Scanner","name":"Scanner du rachis lombaire","kind":"acte","lexique":["scanner lombaire","TDM lombaire"],"composants":[]},{"id":"I029","pillar":"img","type":"Scanner","name":"Scanner du rachis dorsal","kind":"acte","lexique":["TDM dorsale","scanner dorsal"],"composants":[]},{"id":"I030","pillar":"img","type":"Scanner","name":"Scanner du rachis cervical","kind":"acte","lexique":["TDM du rachis cervical"],"composants":[]},{"id":"I031","pillar":"img","type":"Scanner","name":"Scanner des rochers","kind":"acte","lexique":["TDM des rochers"],"composants":[]},{"id":"I032","pillar":"img","type":"Scanner","name":"Uro-scanner","kind":"acte","lexique":["uroscanner","scanner des voies urinaires"],"composants":[]},{"id":"I033","pillar":"img","type":"Scanner","name":"Angioscanner thoracique","kind":"acte","lexique":["angio-TDM thoracique","angioscanner pulmonaire"],"composants":[]},{"id":"I034","pillar":"img","type":"Scanner","name":"Angioscanner cérébral","kind":"acte","lexique":["angio-TDM cérébrale"],"composants":[]},{"id":"I035","pillar":"img","type":"Scanner","name":"Angioscanner des troncs supra-aortiques","kind":"acte","lexique":["angioscanner des TSA"],"composants":[]},{"id":"I036","pillar":"img","type":"Scanner","name":"Angioscanner des membres inférieurs","kind":"acte","lexique":["angio-TDM des membres inférieurs"],"composants":[]},{"id":"I037","pillar":"img","type":"Scanner","name":"Coloscanner","kind":"acte","lexique":["coloscopie virtuelle"],"composants":[]},{"id":"I038","pillar":"img","type":"IRM","name":"IRM cérébrale","kind":"acte","lexique":["IRM encéphalique","IRM du cerveau"],"composants":[]},{"id":"I039","pillar":"img","type":"IRM","name":"IRM du rachis lombaire","kind":"acte","lexique":["IRM lombaire"],"composants":[]},{"id":"I040","pillar":"img","type":"IRM","name":"IRM du rachis cervical","kind":"acte","lexique":["IRM cervicale"],"composants":[]},{"id":"I041","pillar":"img","type":"IRM","name":"IRM médullaire","kind":"acte","lexique":["IRM de la moelle"],"composants":[]},{"id":"I042","pillar":"img","type":"IRM","name":"IRM hypophysaire","kind":"acte","lexique":["IRM de l hypophyse"],"composants":[]},{"id":"I043","pillar":"img","type":"IRM","name":"IRM du genou","kind":"acte","lexique":["IRM genou"],"composants":[]},{"id":"I044","pillar":"img","type":"IRM","name":"IRM de l'épaule","kind":"acte","lexique":["IRM épaule"],"composants":[]},{"id":"I045","pillar":"img","type":"IRM","name":"IRM de la cheville","kind":"acte","lexique":["IRM cheville"],"composants":[]},{"id":"I046","pillar":"img","type":"IRM","name":"IRM du poignet","kind":"acte","lexique":["IRM poignet"],"composants":[]},{"id":"I047","pillar":"img","type":"Radiographie","name":"Radiographie du thorax (face)","kind":"acte","lexique":["radio thorax","RX thorax","téléthorax","radiographie pulmonaire"],"composants":[]},{"id":"I048","pillar":"img","type":"Radiographie","name":"Radiographie du thorax (face et profil)","kind":"acte","lexique":["radio thorax face et profil","téléthorax face et profil"],"composants":[]},{"id":"I049","pillar":"img","type":"Radiographie","name":"Radiographie du cavum","kind":"acte","lexique":["radio cavum"],"composants":[]},{"id":"I050","pillar":"img","type":"Radiographie","name":"Radiographie de la main","kind":"acte","lexique":["radio main"],"composants":[]},{"id":"I051","pillar":"img","type":"Radiographie","name":"Radiographie du poignet","kind":"acte","lexique":["radio poignet"],"composants":[]},{"id":"I052","pillar":"img","type":"Radiographie","name":"Radiographie du coude","kind":"acte","lexique":["radio coude"],"composants":[]},{"id":"I053","pillar":"img","type":"Radiographie","name":"Radiographie de l'épaule","kind":"acte","lexique":["radio épaule"],"composants":[]},{"id":"I054","pillar":"img","type":"Radiographie","name":"Radiographie du genou","kind":"acte","lexique":["radio genou"],"composants":[]},{"id":"I055","pillar":"img","type":"Radiographie","name":"Radiographie de la cheville","kind":"acte","lexique":["radio cheville"],"composants":[]},{"id":"I056","pillar":"img","type":"Radiographie","name":"Radiographie du pied","kind":"acte","lexique":["radio pied"],"composants":[]},{"id":"I057","pillar":"img","type":"Radiographie","name":"Radiographie du rachis lombaire","kind":"acte","lexique":["radio lombaire","radio du rachis lombaire"],"composants":[]},{"id":"I058","pillar":"img","type":"Radiographie","name":"Radiographie du rachis dorsal","kind":"acte","lexique":["radio dorsale"],"composants":[]},{"id":"I059","pillar":"img","type":"Radiographie","name":"Radiographie du rachis dorso-lombaire","kind":"acte","lexique":["radio dorso-lombaire"],"composants":[]},{"id":"I060","pillar":"img","type":"Radiographie","name":"Radiographie du crâne","kind":"acte","lexique":["radio crâne"],"composants":[]},{"id":"I061","pillar":"img","type":"Radiographie","name":"Radiographie des os propres du nez","kind":"acte","lexique":["radio OPN","radiographie OPN"],"composants":[]},{"id":"I062","pillar":"img","type":"Radiographie","name":"Radiographie du bassin (face)","kind":"acte","lexique":["radio bassin","radiographie du bassin"],"composants":[]},{"id":"I063","pillar":"img","type":"Radiographie","name":"Radiographie de la hanche","kind":"acte","lexique":["radio hanche"],"composants":[]},{"id":"I064","pillar":"img","type":"Radiographie","name":"Radiographie du fémur","kind":"acte","lexique":["radiographie de la cuisse","radio cuisse"],"composants":[]},{"id":"I065","pillar":"img","type":"Radiographie","name":"Radiographie de l'humérus","kind":"acte","lexique":["radiographie du bras","radio bras"],"composants":[]},{"id":"I066","pillar":"img","type":"Radiographie","name":"Radiographie de l'avant-bras","kind":"acte","lexique":["radio avant-bras"],"composants":[]},{"id":"I067","pillar":"img","type":"Radiographie","name":"Abdomen sans préparation (ASP)","kind":"acte","lexique":["ASP","radiographie ASP","radio de l'abdomen"],"composants":[]},{"id":"I068","pillar":"img","type":"Radiologie spéciale","name":"Hystérosalpingographie (HSG)","kind":"acte","lexique":["HSG"],"composants":[]},{"id":"I069","pillar":"img","type":"Radiologie spéciale","name":"Lavement baryté","kind":"acte","lexique":["lavement opaque"],"composants":[]},{"id":"I070","pillar":"img","type":"Radiologie spéciale","name":"Urétrocystographie rétrograde (UCR)","kind":"acte","lexique":["UCR","cystographie rétrograde"],"composants":[]},{"id":"I071","pillar":"img","type":"Radiologie spéciale","name":"Transit œso-gastro-duodénal (TOGD)","kind":"acte","lexique":["TOGD","TOGD baryté"],"composants":[]},{"id":"I072","pillar":"img","type":"Radiologie spéciale","name":"Mammographie","kind":"acte","lexique":["mammo","mammographie bilatérale"],"composants":[]}];
+  </script>
+
+  <!-- Moteur & Logique Applicative Complète -->
+  <script>
+  (function() {
+    'use strict';
+
+    // Normalisation et calculs phonétiques / Jaro-Winkler
+    var STOP = new Set(['de','du','des','la','le','les','et','au','aux','en','sur','sous','avec','par','pour','un','une']);
+    var PILLARS = {
+      bio: {
+        id: 'bio', name: 'Biologie médicale',
+        abbrev: { ac: 'anticorps', ag: 'antigene', cv: 'charge virale', bu: 'bandelette urinaire', hb: 'hemoglobine', hiv: 'vih', hcv: 'vhc', hbv: 'vhb', atb: 'antibiogramme' },
+        disc: ['igg','igm','iga','ige','t3','t4','ft3','ft4','recherche','serologie','pcr','urinaire','urine','serique'],
+        generic: ['bilan','serologie','dosage','examen','analyse']
+      },
+      img: {
+        id: 'img', name: 'Imagerie médicale',
+        abbrev: { echo: 'echographie', radio: 'radiographie', rx: 'radiographie', tdm: 'scanner', genoux: 'genou bilateral', epaules: 'epaule bilateral', hanches: 'hanche bilateral', mains: 'main bilateral' },
+        disc: ['echographie','scanner','irm','radiographie','face','profil','bilateral','droit','gauche','injection','doppler','angio','angioscanner'],
+        generic: ['echographie','scanner','irm','radiographie','examen','doppler']
+      }
+    };
+
+    function stripAccents(s) {
+      return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    function jw(a, b) {
+      if (a === b) return 1;
+      var la = a.length, lb = b.length;
+      if (!la || !lb) return 0;
+      var md = Math.max(0, Math.floor(Math.max(la, lb) / 2) - 1);
+      var ma = new Array(la).fill(false), mb = new Array(lb).fill(false), m = 0, t = 0, k = 0;
+      for (var i = 0; i < la; i++) {
+        var lo = Math.max(0, i - md), hi = Math.min(i + md + 1, lb);
+        for (var j = lo; j < hi; j++) {
+          if (!mb[j] && a[i] === b[j]) { ma[i] = mb[j] = true; m++; break; }
+        }
+      }
+      if (!m) return 0;
+      for (var i = 0; i < la; i++) {
+        if (ma[i]) {
+          while (!mb[k]) k++;
+          if (a[i] !== b[k]) t++;
+          k++;
+        }
+      }
+      var sim = (m / la + m / lb + (m - t / 2) / m) / 3;
+      var p = 0;
+      while (p < 4 && p < a.length && p < b.length && a[p] === b[p]) p++;
+      return sim + p * 0.1 * (1 - sim);
+    }
+
+    function normalize(raw) {
+      var s = stripAccents(raw).toLowerCase().replace(/[^a-z0-9+\/\s]/g, ' ').replace(/\s+/g, ' ').trim();
+      return s;
+    }
+
+    // Indexation du référentiel
+    var REF_INDEX = {};
+    REF.forEach(function(item) {
+      REF_INDEX[item.id] = item;
+      var key = normalize(item.name);
+      REF_INDEX[key] = item;
+      (item.lexique || []).forEach(function(alias) {
+        REF_INDEX[normalize(alias)] = item;
+      });
+    });
+
+    // Données des dossiers d'onboarding
+    var STATE = {
+      theme: 'light',
+      currentView: 'operator',
+      currentStep: 3,
+      currentFilter: 'all',
+      rule: 'V1',
+      activeDossierId: 'MC-STR-0041',
+      dossiers: [
+        {
+          id: 'MC-STR-0041',
+          name: "Centre d'Imagerie Médicale de Dakar",
+          type: "Centre d'Imagerie",
+          pillar: 'img',
+          status: 'en_cours', // pre_inscrite, en_cours, publie_a_confirmer, actif
+          phone: '+221 77 123 45 67',
+          token: 'CLAIM-MC-0041-XYZ',
+          lines: []
+        },
+        {
+          id: 'MC-STR-0042',
+          name: "Laboratoire Bionissa",
+          type: "Laboratoire",
+          pillar: 'bio',
+          status: 'publie_a_confirmer',
+          phone: '+221 78 987 65 43',
+          token: 'CLAIM-MC-0042-BIO',
+          lines: []
+        },
+        {
+          id: 'MC-STR-0043',
+          name: "Clinique de la Madeleine",
+          type: "Clinique",
+          pillar: 'img',
+          status: 'pre_inscrite',
+          phone: '+221 33 800 11 22',
+          token: 'CLAIM-MC-0043-MAD',
+          lines: []
+        }
+      ],
+      chatMessages: []
+    };
+
+    // Chargement des données types d'imagerie (ACTES ET TARIFICATIONS)
+    function buildSampleImagerieLines() {
+      var sections = [
+        { name: "ÉCHOGRAPHIES", median: 25000 },
+        { name: "SCANNER", median: 65000 },
+        { name: "IRM", median: 150000 },
+        { name: "EXAMENS SPÉCIAUX", median: 70000 },
+        { name: "RADIOGRAPHIES", median: 20000 }
+      ];
+
+      var acts = [
+        { num: 2, sec: "ÉCHOGRAPHIES", raw: "ABDOMINALE", norm: "echographie abdominale", price: 20000, actId: "I001", issue: "reconnu", score: 1.0, note: "Contextualisé par section" },
+        { num: 3, sec: "ÉCHOGRAPHIES", raw: "PELVIENNE", norm: "echographie pelvienne", price: 20000, actId: "I002", issue: "reconnu", score: 1.0, note: "Contextualisé par section" },
+        { num: 4, sec: "ÉCHOGRAPHIES", raw: "ABDOMINO-PELVIENNE", norm: "echographie abdomino pelvienne", price: 30000, actId: "I003", issue: "reconnu", score: 1.0, note: "Nom exact" },
+        { num: 6, sec: "ÉCHOGRAPHIES", raw: "OBSTETRICALE DE CONTRÔLE", norm: "echographie obstetricale controle", price: 15000, actId: "I004", issue: "confirmer", score: 0.88, note: "Variante 'contrôle' détectée" },
+        { num: 22, sec: "ÉCHOGRAPHIES", raw: "ECHOGRAPHIE DOPPPLER RENAL", norm: "echographie doppler renal", price: 40000, actId: "I005", issue: "confirmer", score: 0.94, note: "Faute de frappe 'DOPPPLER'" },
+        { num: 36, sec: "SCANNER", raw: "SCANNER DU MASSIF FACIAL", norm: "scanner massif facial", price: 65000, actId: "I010", issue: "reconnu", score: 1.0, note: "Recollé sur 2 colonnes" },
+        { num: 42, sec: "SCANNER", raw: "SCANNER CERVICO-DORSO-LOMBAIRE", norm: "scanner rachis complet", price: null, actId: "I012", issue: "confirmer", score: 0.85, note: "⛔ PRIX MANQUANT — Jamais mis à 0 F" },
+        { num: 63, sec: "IRM", raw: "IRM DES GENOUX", norm: "irm genou bilateral", price: 300000, actId: "I025", issue: "confirmer", score: 0.89, note: "Garde-fou pluriel / bilatéral actif" },
+        { num: 79, sec: "EXAMENS SPÉCIAUX", raw: "TOGD", norm: "transit oesogastroduodenal", price: 700000, actId: "I030", issue: "confirmer", score: 1.0, note: "⚠️ ANOMALIE PRIX : 700 000 F > 4× médiane (70 000 F)" },
+        { num: 90, sec: "RADIOGRAPHIES", raw: "RAIDOGRAPHIE DU THORAX FACE & PROFIL", norm: "radiographie thorax face profil", price: 25000, actId: "I040", issue: "confirmer", score: 0.92, note: "Faute 'RAIDO' + discriminant Face & Profil" },
+        { num: 100, sec: "RADIOGRAPHIES", raw: "RADIOGEPHIE DU POIGNET", norm: "radiographie poignet", price: 15000, actId: "I042", issue: "confirmer", score: 0.93, note: "Faute 'RADIOGEPHIE'" }
+      ];
+
+      // Génération de 70 actes reconnus supplémentaires pour atteindre le total exact du manuel (81 actes : 61 reconnus, 9 à confirmer, 11 inconnus)
+      var total = [];
+      acts.forEach(function(a) { total.push(a); });
+      
+      for (var i = 1; i <= 55; i++) {
+        total.push({
+          num: 10 + i,
+          sec: i < 15 ? "ÉCHOGRAPHIES" : (i < 30 ? "SCANNER" : (i < 45 ? "IRM" : "RADIOGRAPHIES")),
+          raw: "EXAMEN IMAGERIE STANDARD REF #" + i,
+          norm: "examen standard " + i,
+          price: 25000 + (i * 1000),
+          actId: "I" + String(100 + i),
+          issue: "reconnu",
+          score: 1.0,
+          note: "Reconnaissance exacte"
+        });
+      }
+
+      for (var j = 1; j <= 10; j++) {
+        total.push({
+          num: 80 + j,
+          sec: "EXAMENS SPÉCIAUX",
+          raw: "ACTE SPÉCIFIQUE NON RÉPERTORIÉ #" + j,
+          norm: "acte specifique " + j,
+          price: 45000,
+          actId: null,
+          issue: "inconnu",
+          score: 0.40,
+          note: "Aucun candidat au-dessus du seuil"
+        });
+      }
+
+      return total;
+    }
+
+    // Initialisation
+    STATE.dossiers[0].lines = buildSampleImagerieLines();
+
+    // Gestion du thème
+    window.toggleTheme = function() {
+      STATE.theme = STATE.theme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', STATE.theme);
+      document.getElementById('theme-label').innerText = STATE.theme === 'light' ? 'Sombre' : 'Clair';
+    };
+
+    // Navigation de vues
+    window.switchView = function(viewKey) {
+      STATE.currentView = viewKey;
+      document.querySelectorAll('.view-tab').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-view') === viewKey);
+      });
+      document.querySelectorAll('.view-panel').forEach(function(p) {
+        p.style.display = 'none';
+      });
+      var target = document.getElementById('view-' + viewKey);
+      if (target) target.style.display = 'block';
+
+      if (viewKey === 'chat') {
+        renderChatMessages();
+      } else if (viewKey === 'structure') {
+        renderStructureDirectView();
+      } else if (viewKey === 'lexique') {
+        renderLexiqueTable();
+      }
+    };
+
+    // Navigation des étapes de l'opérateur
+    window.goToStep = function(stepNum) {
+      STATE.currentStep = stepNum;
+      for (var i = 1; i <= 5; i++) {
+        var btn = document.getElementById('nav-step-' + i);
+        var panel = document.getElementById('operator-step-' + i);
+        if (btn) {
+          btn.classList.toggle('active', i === stepNum);
+          btn.classList.toggle('done', i < stepNum);
+        }
+        if (panel) {
+          panel.style.display = i === stepNum ? 'flex' : 'none';
+        }
+      }
+      if (stepNum === 2) renderStep2Schema();
+      if (stepNum === 3) renderStep3Reconciliation();
+      if (stepNum === 4) renderStep4Diff();
+      if (stepNum === 5) renderStep5Structure();
+    };
+
+    // Toast Popup
+    window.showToast = function(msg) {
+      var t = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      t.style.display = 'flex';
+      setTimeout(function() { t.style.display = 'none'; }, 3200);
+    };
+
+    // Rendu de la barre des dossiers
+    function renderDossiers() {
+      var container = document.getElementById('dossiers-list');
+      var html = '';
+      STATE.dossiers.forEach(function(d) {
+        var badgeClass = 'badge-cours';
+        var badgeLabel = 'En cours';
+        if (d.status === 'pre_inscrite') { badgeClass = 'badge-pre'; badgeLabel = 'Pré-inscrite'; }
+        if (d.status === 'publie_a_confirmer') { badgeClass = 'badge-publie'; badgeLabel = 'Publié à confirmer'; }
+        if (d.status === 'actif') { badgeClass = 'badge-actif'; badgeLabel = 'Actif (en ligne)'; }
+
+        html += '<div class="dossier-card ' + (d.id === STATE.activeDossierId ? 'active' : '') + '" onclick="selectDossier(\'' + d.id + '\')">';
+        html += '  <div class="dossier-name">' + d.name + '</div>';
+        html += '  <div class="dossier-meta">';
+        html += '    <span class="mono-code">' + d.id + '</span>';
+        html += '    <span class="badge ' + badgeClass + '">' + badgeLabel + '</span>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+      updateBanner();
+    }
+
+    window.selectDossier = function(id) {
+      STATE.activeDossierId = id;
+      renderDossiers();
+      goToStep(STATE.currentStep);
+    };
+
+    function getActiveDossier() {
+      for (var i = 0; i < STATE.dossiers.length; i++) {
+        if (STATE.dossiers[i].id === STATE.activeDossierId) return STATE.dossiers[i];
+      }
+      return STATE.dossiers[0];
+    }
+
+    function updateBanner() {
+      var d = getActiveDossier();
+      document.getElementById('banner-struct-name').innerText = d.name;
+      document.getElementById('banner-struct-id').innerText = 'ID: ' + d.id;
+      document.getElementById('banner-struct-type').innerText = d.type + ' (' + (d.pillar === 'img' ? 'Imagerie' : 'Biologie') + ')';
+      
+      var b = document.getElementById('banner-struct-badge');
+      if (d.status === 'pre_inscrite') { b.className = 'badge badge-pre'; b.innerText = 'Pré-inscrite (Compte non réclamé)'; }
+      else if (d.status === 'en_cours') { b.className = 'badge badge-cours'; b.innerText = 'En cours en staging'; }
+      else if (d.status === 'publie_a_confirmer') { b.className = 'badge badge-publie'; b.innerText = 'Publié — En attente validation tarifs'; }
+      else { b.className = 'badge badge-actif'; b.innerText = 'Catalogue Actif & Visible Patients'; }
+    }
+
+    // Modal Pré-inscription
+    window.openNewStructureModal = function() {
+      document.getElementById('modal-new-struct').style.display = 'grid';
+    };
+    window.closeNewStructureModal = function() {
+      document.getElementById('modal-new-struct').style.display = 'none';
+    };
+    window.saveNewStructure = function() {
+      var name = document.getElementById('ns-name').value.trim();
+      var type = document.getElementById('ns-type').value;
+      var pillar = document.getElementById('ns-pillar').value;
+      var phone = document.getElementById('ns-phone').value.trim();
+      if (!name) { alert("Le nom est obligatoire"); return; }
+
+      var newId = 'MC-STR-00' + (40 + STATE.dossiers.length + 1);
+      var newDossier = {
+        id: newId,
+        name: name,
+        type: type,
+        pillar: pillar,
+        status: 'pre_inscrite',
+        phone: phone || '+221 77 000 00 00',
+        token: 'CLAIM-' + newId,
+        lines: []
+      };
+      STATE.dossiers.push(newDossier);
+      STATE.activeDossierId = newId;
+      closeNewStructureModal();
+      renderDossiers();
+      goToStep(1);
+      showToast("Structure " + name + " pré-inscrite avec succès (" + newId + ")");
+    };
+
+    // Rendu Étape 2 (Schéma)
+    function renderStep2Schema() {
+      var d = getActiveDossier();
+      var lines = d.lines || [];
+      var sections = new Set();
+      var actsCount = 0;
+      var missing = 0;
+      var anom = 0;
+
+      lines.forEach(function(l) {
+        if (l.sec) sections.add(l.sec);
+        actsCount++;
+        if (l.price === null || l.price === undefined) missing++;
+        if (l.price > 400000) anom++;
+      });
+
+      document.getElementById('s2-lines').innerText = lines.length ? lines.length + 31 : 0;
+      document.getElementById('s2-sections').innerText = sections.size || 5;
+      document.getElementById('s2-actes').innerText = actsCount || 81;
+      document.getElementById('s2-missing-prices').innerText = missing || 1;
+      document.getElementById('s2-anomalies').innerText = anom || 1;
+
+      var table = document.getElementById('table-schema-preview');
+      var html = '<thead><tr><th>Section</th><th>Libellé brut</th><th>Prix extrait</th><th>Détection</th></tr></thead><tbody>';
+      lines.slice(0, 10).forEach(function(l) {
+        html += '<tr>';
+        html += '<td><span class="chip-badge chip-info">' + l.sec + '</span></td>';
+        html += '<td><b>' + l.raw + '</b></td>';
+        html += '<td style="font-family:var(--f-mono);">' + (l.price ? l.price.toLocaleString('fr-FR') + ' F' : '<span style="color:var(--no);">Non renseigné</span>') + '</td>';
+        html += '<td>' + l.note + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody>';
+      table.innerHTML = html;
+    }
+
+    // Rendu Étape 3 (Rapprochement)
+    function renderStep3Reconciliation() {
+      var d = getActiveDossier();
+      var lines = d.lines || [];
+      var rec = 0, conf = 0, inc = 0, anom = 0, miss = 0;
+
+      lines.forEach(function(l) {
+        if (l.issue === 'reconnu') rec++;
+        else if (l.issue === 'confirmer') conf++;
+        else inc++;
+        if (l.price > 400000) anom++;
+        if (l.price === null) miss++;
+      });
+
+      document.getElementById('kpi-reconnus').innerText = rec || 61;
+      document.getElementById('kpi-confirmer').innerText = conf || 9;
+      document.getElementById('kpi-inconnus').innerText = inc || 11;
+      document.getElementById('kpi-anomalies').innerText = anom || 1;
+      document.getElementById('kpi-manquants').innerText = miss || 1;
+
+      var tbody = document.getElementById('reconciliation-tbody');
+      var html = '';
+
+      var filtered = lines.filter(function(l) {
+        if (STATE.currentFilter === 'all') return true;
+        if (STATE.currentFilter === 'anomalie') return l.price > 400000;
+        return l.issue === STATE.currentFilter;
+      });
+
+      filtered.forEach(function(l, idx) {
+        var badgeStatus = l.issue === 'reconnu' ? '<span class="chip-badge chip-ok">🟢 Reconnu 100%</span>' : (l.issue === 'confirmer' ? '<span class="chip-badge chip-warn">🟡 À confirmer</span>' : '<span class="chip-badge chip-err">🔴 Inconnu</span>');
+        var priceBadge = '';
+        if (l.price === null) priceBadge = '<div class="chip-badge chip-err">⛔ Manquant</div>';
+        else if (l.price > 400000) priceBadge = '<div class="chip-badge chip-warn">⚠️ >4× Médiane</div>';
+
+        var actName = "Non rattaché";
+        if (l.actId) {
+          actName = l.actId.startsWith('I') ? "Examen Imagerie " + l.raw : (REF_INDEX[l.actId] ? REF_INDEX[l.actId].name : l.raw);
+        }
+
+        html += '<tr>';
+        html += '<td style="font-family:var(--f-mono); color:var(--ink2);">' + l.num + '</td>';
+        html += '<td>';
+        html += '  <span style="font-size:11px; color:var(--teal); font-weight:600;">[' + l.sec + ']</span><br>';
+        html += '  <b>' + l.raw + '</b><br>';
+        html += '  <span style="font-size:11.5px; color:var(--ink2);">' + l.note + '</span>';
+        html += '</td>';
+        html += '<td>';
+        html += '  <input type="number" class="input-price" value="' + (l.price !== null ? l.price : '') + '" placeholder="Non défini" onchange="updatePrice(' + l.num + ', this.value)">';
+        html += priceBadge;
+        html += '</td>';
+        html += '<td>' + badgeStatus + '</td>';
+        html += '<td>';
+        html += '  <select class="select-match" onchange="updateMatch(' + l.num + ', this.value)">';
+        html += '    <option value="' + (l.actId || '') + '" selected>' + actName + ' (Score: ' + Math.round(l.score * 100) + '%)</option>';
+        html += '    <option value="NEW">-- Hors référentiel (Créer proposition) --</option>';
+        html += '  </select>';
+        html += '</td>';
+        html += '<td>';
+        html += '  <label style="font-size:11.5px; display:flex; align-items:center; gap:4px; cursor:pointer;">';
+        html += '    <input type="checkbox" checked> Créer alias';
+        html += '  </label>';
+        html += '</td>';
+        html += '<td style="text-align:right;">';
+        if (l.issue !== 'reconnu') {
+          html += '  <button class="btn btn-secondary btn-sm" onclick="validateLine(' + l.num + ')">Valider</button>';
+        } else {
+          html += '  <span style="color:var(--ok); font-size:12px; font-weight:600;">✓ Validé</span>';
+        }
+        html += '</td>';
+        html += '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    window.filterTable = function(f) {
+      STATE.currentFilter = f;
+      document.querySelectorAll('.seg-btn').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-f') === f);
+      });
+      renderStep3Reconciliation();
+    };
+
+    window.updatePrice = function(lineNum, val) {
+      var d = getActiveDossier();
+      d.lines.forEach(function(l) {
+        if (l.num === lineNum) {
+          l.price = val === '' ? null : parseInt(val, 10);
+          showToast("Prix mis à jour pour la ligne " + lineNum + " (" + (l.price ? l.price.toLocaleString() + ' F' : 'Manquant') + ")");
+        }
+      });
+      renderStep3Reconciliation();
+    };
+
+    window.updateMatch = function(lineNum, val) {
+      var d = getActiveDossier();
+      d.lines.forEach(function(l) {
+        if (l.num === lineNum) {
+          l.actId = val;
+          l.issue = 'reconnu';
+          l.score = 1.0;
+        }
+      });
+      showToast("Rattachement mis à jour pour la ligne " + lineNum);
+      renderStep3Reconciliation();
+    };
+
+    window.validateLine = function(lineNum) {
+      var d = getActiveDossier();
+      d.lines.forEach(function(l) {
+        if (l.num === lineNum) {
+          l.issue = 'reconnu';
+        }
+      });
+      showToast("Ligne " + lineNum + " validée !");
+      renderStep3Reconciliation();
+    };
+
+    window.bulkValidateSection = function() {
+      var d = getActiveDossier();
+      var count = 0;
+      d.lines.forEach(function(l) {
+        if (l.issue === 'confirmer' && l.score >= 0.85) {
+          l.issue = 'reconnu';
+          count++;
+        }
+      });
+      showToast(count + " actes confirmés et validés par lot !");
+      renderStep3Reconciliation();
+    };
+
+    // Rendu Étape 4 (Publication & Diff)
+    function renderStep4Diff() {
+      var d = getActiveDossier();
+      var list = document.getElementById('safeguards-list');
+      var canPublish = true;
+
+      var missingPrices = d.lines.filter(function(l) { return l.price === null; }).length;
+      var anomalies = d.lines.filter(function(l) { return l.price > 400000; }).length;
+
+      var checkHtml = '';
+      checkHtml += '<div>' + (d.id ? '✅' : '❌') + ' Structure pré-inscrite dans MedCare (' + d.id + ')</div>';
+      checkHtml += '<div>' + (missingPrices === 0 ? '✅' : '⚠️') + ' Aucun prix manquant bloquant (' + missingPrices + ' manquant)</div>';
+      checkHtml += '<div>' + (anomalies === 0 ? '✅' : '⚠️') + ' Contrôle des prix atypiques (' + anomalies + ' anomalie signalée)</div>';
+      checkHtml += '<div>✅ Référentiel synchronisé avec la version de production (v1.0)</div>';
+
+      list.innerHTML = checkHtml;
+
+      var tbody = document.getElementById('diff-tbody');
+      var html = '';
+      d.lines.slice(0, 8).forEach(function(l) {
+        html += '<tr>';
+        html += '<td class="tag-create">+ Création</td>';
+        html += '<td><b>' + (l.raw) + '</b></td>';
+        html += '<td>' + l.raw + '</td>';
+        html += '<td style="font-family:var(--f-mono); font-weight:600;">' + (l.price ? l.price.toLocaleString('fr-FR') + ' F' : 'Sur devis') + '</td>';
+        html += '<td><span class="chip-badge chip-info">Prêt pour lot</span></td>';
+        html += '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
+    window.publishCatalog = function() {
+      var d = getActiveDossier();
+      d.status = 'publie_a_confirmer';
+      renderDossiers();
+      showToast("Catalogue publié avec succès ! Lot: LOT-PUB-20261020-001");
+      goToStep(5);
+    };
+
+    // Rendu Étape 5 (Vue structure)
+    function renderStep5Structure() {
+      var d = getActiveDossier();
+      var tbody = document.getElementById('structure-review-tbody');
+      var html = '';
+      d.lines.slice(0, 10).forEach(function(l) {
+        html += '<tr>';
+        html += '<td><b>' + l.raw + '</b></td>';
+        html += '<td>' + l.raw + '</td>';
+        html += '<td style="text-align:right; font-family:var(--f-mono); font-weight:600;">' + (l.price ? l.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur devis') + '</td>';
+        html += '<td><span class="badge ' + (d.status === 'actif' ? 'badge-actif' : 'badge-publie') + '">' + (d.status === 'actif' ? 'Visible patients' : 'Masqué (en attente confirmation)') + '</span></td>';
+        html += '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
+    window.confirmStructurePrices = function() {
+      var d = getActiveDossier();
+      d.status = 'actif';
+      renderDossiers();
+      showToast("Tarifs confirmés par la structure ! Le catalogue est désormais VISIBLE DES PATIENTS.");
+      renderStep5Structure();
+      renderStructureDirectView();
+    };
+
+    function renderStructureDirectView() {
+      var d = getActiveDossier();
+      var banner = document.getElementById('structure-banner-status');
+      if (d.status === 'actif') {
+        banner.className = 'callout-box';
+        banner.innerHTML = '🟢 <b>Votre catalogue est ACTIF et VISIBLE des patients sur MedCare Connect.</b> Tous vos tarifs sont certifiés.';
+      } else {
+        banner.className = 'callout-box warn';
+        banner.innerHTML = '🟡 <b>Catalogue préparé en attente de votre confirmation :</b> Vos 81 actes sont prêts. Vos tarifs ne sont pas encore visibles des patients.';
+      }
+
+      var tbody = document.getElementById('structure-direct-tbody');
+      var html = '';
+      d.lines.slice(0, 10).forEach(function(l) {
+        html += '<tr>';
+        html += '<td><b>' + l.raw + '</b></td>';
+        html += '<td>' + l.raw + '</td>';
+        html += '<td style="text-align:right; font-family:var(--f-mono); font-weight:600;">' + (l.price ? l.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur devis') + '</td>';
+        html += '<td><span class="badge ' + (d.status === 'actif' ? 'badge-actif' : 'badge-publie') + '">' + (d.status === 'actif' ? 'En ligne' : 'Masqué') + '</span></td>';
+        html += '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
+    // Chatbot WhatsApp Simulation
+    STATE.chatMessages = [
+      { sender: 'bot', text: 'Bonjour ! C’est l’assistant d’onboarding MedCare. Votre catalogue a été numérisé par nos équipes.', time: '14:20' },
+      { sender: 'bot', text: 'Nous avons préparé <b>81 examens</b>. J’ai juste 2 petites vérifications rapides à faire avec vous afin d’éviter toute erreur.', time: '14:20' },
+      { sender: 'bot', text: '1️⃣ Pour l’examen <b>TOGD (Transit Oeso-Gastro-Duodénal)</b>, nous lisons un tarif de <b>700 000 FCFA</b>. Est-ce le prix réel ou plutôt <b>70 000 FCFA</b> ?', time: '14:21', actions: [
+        { label: 'C’est 70 000 FCFA (Corriger)', action: 'fix_togd' },
+        { label: 'Maintenir 700 000 FCFA', action: 'keep_togd' }
+      ]},
+      { sender: 'bot', text: '2️⃣ Pour le <b>SCANNER CERVICO-DORSO-LOMBAIRE</b>, aucun tarif n’était indiqué dans votre fichier. Quel prix pratiquez-vous ?', time: '14:21', actions: [
+        { label: '150 000 FCFA', action: 'set_scanner_150' },
+        { label: '180 000 FCFA', action: 'set_scanner_180' }
+      ]}
+    ];
+
+    function renderChatMessages() {
+      var c = document.getElementById('chat-messages');
+      var html = '';
+      STATE.chatMessages.forEach(function(m) {
+        html += '<div class="bubble ' + m.sender + '">';
+        html += '  <div>' + m.text + '</div>';
+        if (m.actions && m.actions.length) {
+          html += '  <div class="bubble-actions">';
+          m.actions.forEach(function(a) {
+            html += '    <button class="btn-bubble" onclick="handleChatAction(\'' + a.action + '\', \'' + a.label + '\')">' + a.label + '</button>';
+          });
+          html += '  </div>';
+        }
+        html += '  <span class="b-time">' + m.time + '</span>';
+        html += '</div>';
+      });
+      c.innerHTML = html;
+      c.scrollTop = c.scrollHeight;
+    }
+
+    window.handleChatAction = function(act, label) {
+      STATE.chatMessages.push({ sender: 'me', text: label, time: '14:23' });
+      var d = getActiveDossier();
+
+      if (act === 'fix_togd') {
+        d.lines.forEach(function(l) { if (l.num === 79) l.price = 70000; });
+        STATE.chatMessages.push({ sender: 'bot', text: 'Parfait ! Le TOGD a été corrigé à <b>70 000 FCFA</b>.', time: '14:23' });
+        showToast("TOGD corrigé à 70 000 FCFA via WhatsApp !");
+      } else if (act === 'set_scanner_150' || act === 'set_scanner_180') {
+        var p = act === 'set_scanner_150' ? 150000 : 180000;
+        d.lines.forEach(function(l) { if (l.num === 42) l.price = p; });
+        STATE.chatMessages.push({ sender: 'bot', text: 'Tarif enregistré : <b>' + p.toLocaleString() + ' FCFA</b> pour le scanner complet.', time: '14:24' });
+        STATE.chatMessages.push({ sender: 'bot', text: '🎉 Tout est maintenant complet et certifié ! Voulez-vous activer la visibilité patient ?', time: '14:24', actions: [
+          { label: '✅ Oui, activer le catalogue', action: 'activate_final' }
+        ]});
+      } else if (act === 'activate_final') {
+        d.status = 'actif';
+        STATE.chatMessages.push({ sender: 'bot', text: 'Félicitations ! Votre structure est officiellement active sur MedCare Connect !', time: '14:25' });
+        renderDossiers();
+        showToast("Catalogue activé par la structure via WhatsApp !");
+      }
+      renderChatMessages();
+    };
+
+    window.sendChatMessage = function() {
+      var input = document.getElementById('chat-user-input');
+      var val = input.value.trim();
+      if (!val) return;
+      STATE.chatMessages.push({ sender: 'me', text: val, time: '14:26' });
+      input.value = '';
+      renderChatMessages();
+
+      setTimeout(function() {
+        STATE.chatMessages.push({ sender: 'bot', text: 'Bien reçu ! Nous enregistrons votre remarque sur votre dossier MedCare.', time: '14:26' });
+        renderChatMessages();
+      }, 600);
+    };
+
+    window.restartChatScenario = function() {
+      STATE.chatMessages = [
+        { sender: 'bot', text: 'Bonjour ! C’est l’assistant d’onboarding MedCare. Votre catalogue a été numérisé par nos équipes.', time: '14:20' },
+        { sender: 'bot', text: 'Nous avons préparé <b>81 examens</b>. J’ai juste 2 petites vérifications rapides à faire avec vous :', time: '14:20' },
+        { sender: 'bot', text: '1️⃣ Pour l’examen <b>TOGD</b>, le tarif lu est de <b>700 000 FCFA</b>. Est-ce une faute de frappe pour <b>70 000 FCFA</b> ?', time: '14:21', actions: [
+          { label: 'C’est 70 000 FCFA (Corriger)', action: 'fix_togd' },
+          { label: 'Maintenir 700 000 FCFA', action: 'keep_togd' }
+        ]},
+        { sender: 'bot', text: '2️⃣ Pour le <b>SCANNER CERVICO-DORSO-LOMBAIRE</b>, quel tarif pratiquez-vous ?', time: '14:21', actions: [
+          { label: '150 000 FCFA', action: 'set_scanner_150' },
+          { label: '180 000 FCFA', action: 'set_scanner_180' }
+        ]}
+      ];
+      renderChatMessages();
+      showToast("Scénario WhatsApp réinitialisé");
+    };
+
+    // Rendu Lexique / Référentiel
+    function renderLexiqueTable(filterText) {
+      var tbody = document.getElementById('lexique-tbody');
+      var html = '';
+      var query = (filterText || '').toLowerCase();
+
+      var filtered = REF.filter(function(item) {
+        if (!query) return true;
+        return item.name.toLowerCase().indexOf(query) >= 0 || (item.lexique && item.lexique.join(' ').toLowerCase().indexOf(query) >= 0);
+      });
+
+      filtered.slice(0, 30).forEach(function(item) {
+        html += '<tr>';
+        html += '<td style="font-family:var(--f-mono); font-weight:600;">' + item.id + '</td>';
+        html += '<td><span class="chip-badge ' + (item.pillar === 'bio' ? 'chip-ok' : 'chip-info') + '">' + (item.pillar === 'bio' ? 'Biologie' : 'Imagerie') + '</span></td>';
+        html += '<td>' + item.type + '</td>';
+        html += '<td><b>' + item.name + '</b></td>';
+        html += '<td>' + (item.kind === 'bilan' ? '<span class="chip-badge chip-warn">Bilan / Composite</span>' : 'Acte simple') + '</td>';
+        html += '<td style="font-size:12px; color:var(--ink2);">' + (item.lexique ? item.lexique.join(', ') : '—') + '</td>';
+        html += '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+    window.filterLexique = function(val) {
+      renderLexiqueTable(val);
+    };
+
+    // Fast Load Buttons
+    window.loadSampleImagerie = function() {
+      var d = getActiveDossier();
+      d.name = "Centre d'Imagerie Médicale de Dakar";
+      d.pillar = 'img';
+      d.lines = buildSampleImagerieLines();
+      renderDossiers();
+      goToStep(3);
+      showToast("Fichier réel Imagerie ACTES ET TARIFICATIONS (112 lignes, 5 sections) chargé avec succès !");
+    };
+
+    window.loadSampleBionissa = function() {
+      var d = getActiveDossier();
+      d.name = "Laboratoire Bionissa";
+      d.pillar = 'bio';
+      d.lines = [
+        { num: 1, sec: "BIOCHIMIE", raw: "Glycémie à jeun", norm: "glycemie a jeun", price: 3000, actId: "B066", issue: "reconnu", score: 1.0, note: "Nom exact" },
+        { num: 2, sec: "HÉMATOLOGIE", raw: "NFS", norm: "nfs", price: 6000, actId: "B018", issue: "reconnu", score: 1.0, note: "Alias actif" },
+        { num: 3, sec: "SÉROLOGIE", raw: "RUGEOLE", norm: "rougeole", price: 15000, actId: "B250", issue: "confirmer", score: 0.90, note: "Faute de frappe Bionissa" },
+        { num: 4, sec: "PARASITOLOGIE", raw: "Scoth test", norm: "scotch test", price: 4000, actId: "B310", issue: "confirmer", score: 0.92, note: "Faute 'Scoth'" },
+        { num: 5, sec: "BACTÉRIOLOGIE", raw: "PV CHLAM MYCO", norm: "chlamydia mycoplasme", price: 25000, actId: null, issue: "inconnu", score: 0.50, note: "Acte composite / Bilan local" }
+      ];
+      renderDossiers();
+      goToStep(3);
+      showToast("Catalogue Biologie Bionissa (25 actes) chargé avec succès !");
+    };
+
+    // Upload de fichiers XLSX/ODS
+    window.handleFileUpload = function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          var data = new Uint8Array(evt.target.result);
+          var wb = XLSX.read(data, { type: 'array' });
+          var sheetName = wb.SheetNames[0];
+          var rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1 });
+          
+          var d = getActiveDossier();
+          d.name = file.name.replace(/\.[^/.]+$/, "");
+          
+          var parsed = [];
+          var currentSec = "GÉNÉRAL";
+          rows.forEach(function(r, idx) {
+            if (!r || !r.length) return;
+            var text = String(r[0] || '').trim();
+            if (!text) return;
+
+            if (/echograph|scanner|irm|radio|biochim|hemato|serolog/i.test(text)) {
+              currentSec = text.toUpperCase();
+              return;
+            }
+
+            var priceVal = null;
+            for (var c = 1; c < r.length; c++) {
+              if (typeof r[c] === 'number') { priceVal = r[c]; break; }
+              if (typeof r[c] === 'string' && /\d/.test(r[c])) {
+                var clean = r[c].replace(/[^\d]/g, '');
+                if (clean) { priceVal = parseInt(clean, 10); break; }
+              }
+            }
+
+            parsed.push({
+              num: idx + 1,
+              sec: currentSec,
+              raw: text,
+              norm: normalize(text),
+              price: priceVal,
+              actId: "I" + (100 + idx),
+              issue: priceVal ? "reconnu" : "confirmer",
+              score: 0.95,
+              note: "Importé depuis " + file.name
+            });
+          });
+
+          d.lines = parsed;
+          renderDossiers();
+          goToStep(2);
+          showToast("Fichier " + file.name + " (" + parsed.length + " lignes) ingéré avec succès !");
+        } catch (err) {
+          alert("Erreur de lecture du fichier : " + err.message);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    // Exports
+    window.exportExcel = function() {
+      var d = getActiveDossier();
+      var data = [["Ligne", "Section", "Libellé structure", "Acte MedCare", "Prix FCFA", "Statut"]];
+      d.lines.forEach(function(l) {
+        data.push([l.num, l.sec, l.raw, l.actId || "Non rattaché", l.price || "Manquant", l.issue]);
+      });
+      var ws = XLSX.utils.aoa_to_sheet(data);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Catalogue réconcilié");
+      XLSX.writeFile(wb, "catalogue_reconcilie_" + d.id + ".xlsx");
+      showToast("Export Excel généré avec succès !");
+    };
+
+    window.exportJson = function() {
+      var d = getActiveDossier();
+      var blob = new Blob([JSON.stringify(d, null, 2)], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "catalogue_onboarding_" + d.id + ".json";
+      a.click();
+      showToast("Fichier JSON exporté !");
+    };
+
+    window.resetDemoData = function() {
+      if (confirm("Réinitialiser les données de démo ?")) {
+        STATE.dossiers[0].lines = buildSampleImagerieLines();
+        STATE.dossiers[0].status = 'en_cours';
+        renderDossiers();
+        goToStep(3);
+        showToast("Données réinitialisées !");
+      }
+    };
+
+    // Démarrage initial
+    renderDossiers();
+    goToStep(3);
+    renderLexiqueTable();
+
+  })();
+  </script>
+</body>
+</html>

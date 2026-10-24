@@ -30,11 +30,23 @@
 </div>
 {% endif %}
 
+{% if org.is_praticien %}
+<div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-xs text-emerald-950 flex items-start gap-3">
+  <i class="ti ti-info-circle text-base text-emerald-600 mt-0.5 shrink-0"></i>
+  <div>
+    <div class="font-bold text-emerald-900">Exercice en tant que {{ org.get_profession_display|default:"praticien indépendant" }}</div>
+    <div class="text-emerald-800 mt-0.5 leading-relaxed">
+      Les praticiens indépendants ne possèdent pas de profil public d'établissement dans l'annuaire général. Vos patients accèdent à vos soins lorsqu'ils recherchent directement des prestations que vous proposez ou lorsque vous leur transmettez un ticket de prestation (directement relié à « Mes RDV » côté patient).
+    </div>
+  </div>
+</div>
+{% endif %}
+
 <div class="mt-6 grid gap-4 lg:grid-cols-2">
   {# ── A · Visibilité & trafic ── #}
   <div class="rounded-2xl border border-gray-200 bg-white shadow-sm">
     <div class="border-b border-gray-100 px-5 py-4">
-      <h2 class="text-sm font-bold text-gray-900">A · Visibilité &amp; trafic</h2>
+      <h2 class="text-sm font-bold text-gray-900">{% if org.is_praticien %}A · Découverte &amp; Partage d'actes{% else %}A · Visibilité &amp; trafic{% endif %}</h2>
     </div>
     <div class="divide-y divide-gray-50 px-5">
       {% for k in bilan.section_a %}
@@ -46,7 +58,7 @@
   {# ── B · Usage & engagement ── #}
   <div class="rounded-2xl border border-gray-200 bg-white shadow-sm">
     <div class="border-b border-gray-100 px-5 py-4">
-      <h2 class="text-sm font-bold text-gray-900">B · Usage &amp; engagement patients</h2>
+      <h2 class="text-sm font-bold text-gray-900">{% if org.is_praticien %}B · Demandes &amp; Prise de RDV{% else %}B · Usage &amp; engagement patients{% endif %}</h2>
     </div>
     <div class="divide-y divide-gray-50 px-5">
       {% for k in bilan.section_b %}

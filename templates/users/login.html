@@ -24,6 +24,11 @@
           {% include "includes/_password_field.html" with name="password" id="password" label="Mot de passe" required=True placeholder="••••••••" autocomplete="current-password" %}
 
           <button type="submit" class="mc-btn-primary mc-btn-primary--block">Se connecter</button>
+
+          <p style="text-align:center;margin-top:0.75rem;font-size:0.85rem;">
+            <a href="{% url 'password_reset' %}" style="color:var(--mc-accent,#0ea5e9);text-decoration:none;">Mot de passe oublié ?</a>
+          </p>
+
         </form>
 
         <p class="mc-auth-footer">

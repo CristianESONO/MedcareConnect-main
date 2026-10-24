@@ -15,10 +15,17 @@
       <a href="?period=30j" class="rounded-lg px-3 py-1.5 transition {% if period_key == '30j' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">30 jours</a>
       <a href="?period=total" class="rounded-lg px-3 py-1.5 transition {% if period_key == 'total' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Depuis le début</a>
     </div>
+    <a href="{% url 'messaging:inbox' %}" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition" title="Messagerie">
+      <i class="ti ti-mail text-gray-500 text-sm"></i>
+      <span>Messages</span>
+      {% if unread_messages %}<span class="inline-flex items-center justify-center rounded-full bg-primary-600 px-1.5 py-0.5 text-[10px] font-bold text-white">{{ unread_messages }}</span>{% endif %}
+    </a>
+    {% if not org.is_praticien %}
     <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50">
       <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
       Voir profil public
     </a>
+    {% endif %}
   </div>
 </div>
 
@@ -26,8 +33,13 @@
 <div class="mt-4 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
   <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
   <div>
+    {% if org.is_praticien %}
+    <p class="text-sm font-semibold text-amber-800">Votre compte {{ org.get_profession_display|default:"praticien" }} est en attente de validation</p>
+    <p class="mt-0.5 text-xs text-amber-700">Il sera activé par un administrateur après vérification de vos justificatifs. Vous pouvez déjà configurer vos actes et vos disponibilités en attendant.</p>
+    {% else %}
     <p class="text-sm font-semibold text-amber-800">Votre établissement n'est pas encore visible</p>
     <p class="mt-0.5 text-xs text-amber-700">Il sera activé par un administrateur après vérification. Complétez votre profil, vos actes et vos horaires en attendant.</p>
+    {% endif %}
   </div>
 </div>
 {% endif %}
@@ -185,68 +197,7 @@
 
 {{ activity_chart|json_script:"activity-chart-data" }}
 
-<!-- ═════════════ Répartition assurances ═════════════ -->
-<div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
-  <div class="border-b border-gray-100 px-6 py-4">
-    <h2 class="text-sm font-bold text-gray-900">Répartition par assurance</h2>
-    <p class="mt-0.5 text-[11px] text-gray-400">Sur {{ insurance_split_total }} panier{{ insurance_split_total|pluralize }} concerné{{ insurance_split_total|pluralize }}</p>
-  </div>
-  {% if insurance_split %}
-  <div class="grid grid-cols-2 gap-4 p-6 text-center sm:grid-cols-3 lg:grid-cols-5">
-    {% for row in insurance_split %}
-    <div>
-      <p class="text-xl font-extrabold text-primary-600">{{ row.count }}</p>
-      <p class="mt-0.5 text-[10px] text-gray-400">{{ row.name }}</p>
-      <p class="text-[9px] font-semibold text-primary-600">{{ row.pct }}%</p>
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <p class="px-6 py-8 text-center text-sm text-gray-400">Pas encore de panier sur cette période.</p>
-  {% endif %}
-</div>
-
-<!-- ═════════════ MedPlaque NFC résumé ═════════════ -->
-<div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
-  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-6 py-4">
-    <div>
-      <h2 class="text-sm font-bold text-gray-900">MedPlaque NFC</h2>
-      <p class="mt-0.5 text-[11px] text-gray-400">Activité de votre plaque · {{ medplaque.reference }}</p>
-    </div>
-    {% if medplaque.nfc_active %}
-    <span class="inline-flex items-center gap-1.5 rounded-full mc-bg-accent-light px-2.5 py-1 text-[10px] font-bold mc-text-accent-dark">
-      <span class="h-1.5 w-1.5 rounded-full mc-bg-accent"></span>
-      NFC Active · {{ medplaque.month_label }}
-    </span>
-    {% else %}
-    <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-bold text-gray-500">
-      <span class="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
-      NFC inactive
-    </span>
-    {% endif %}
-  </div>
-  <div class="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4">
-    <div class="text-center">
-      <p class="text-2xl"><i class="ti ti-device-mobile"></i></p>
-      <p class="mt-1 text-2xl font-extrabold text-violet-600">{{ medplaque.nfc_scans }}</p>
-      <p class="text-[10px] text-gray-400">Scans NFC</p>
-    </div>
-    <div class="text-center">
-      <p class="text-2xl"><i class="ti ti-camera"></i></p>
-      <p class="mt-1 text-2xl font-extrabold text-blue-600">{{ medplaque.qr_scans }}</p>
-      <p class="text-[10px] text-gray-400">Scans QR Code</p>
-    </div>
-    <div class="text-center">
-      <p class="text-2xl"><i class="ti ti-building-hospital"></i></p>
-      <p class="mt-1 text-2xl font-extrabold mc-text-accent">{{ medplaque.total_access }}</p>
-      <p class="text-[10px] text-gray-400">Total accès plaque</p>
-    </div>
-    <div class="flex flex-col items-center justify-center gap-2 text-center">
-      <p class="text-[10px] leading-relaxed text-gray-600">NFC active jusqu'à M6. QR Code actif en permanence, indépendant de l'abonnement.</p>
-      <a href="{% url 'healthcare:prestataire_medplaque' %}" class="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[10px] font-semibold text-gray-700 hover:bg-gray-50">Voir détails →</a>
-    </div>
-  </div>
-</div>
+{% if not org.is_praticien %}
 <!-- ═════════════ Profil public — aperçu ═════════════ -->
 <div class="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
   <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
@@ -307,6 +258,72 @@
     </div>
   </div>
 </div>
+{% endif %}
+
+<!-- ═════════════ Répartition assurances ═════════════ -->
+<div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+  <div class="border-b border-gray-100 px-6 py-4">
+    <h2 class="text-sm font-bold text-gray-900">Répartition par assurance</h2>
+    <p class="mt-0.5 text-[11px] text-gray-400">Sur {{ insurance_split_total }} panier{{ insurance_split_total|pluralize }} concerné{{ insurance_split_total|pluralize }}</p>
+  </div>
+  {% if insurance_split %}
+  <div class="grid grid-cols-2 gap-4 p-6 text-center sm:grid-cols-3 lg:grid-cols-5">
+    {% for row in insurance_split %}
+    <div>
+      <p class="text-xl font-extrabold text-primary-600">{{ row.count }}</p>
+      <p class="mt-0.5 text-[10px] text-gray-400">{{ row.name }}</p>
+      <p class="text-[9px] font-semibold text-primary-600">{{ row.pct }}%</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="px-6 py-8 text-center text-sm text-gray-400">Pas encore de panier sur cette période.</p>
+  {% endif %}
+</div>
+
+{% if not org.is_praticien %}
+<!-- ═════════════ MedPlaque NFC résumé ═════════════ -->
+<div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-6 py-4">
+    <div>
+      <h2 class="text-sm font-bold text-gray-900">MedPlaque NFC</h2>
+      <p class="mt-0.5 text-[11px] text-gray-400">Activité de votre plaque · {{ medplaque.reference }}</p>
+    </div>
+    {% if medplaque.nfc_active %}
+    <span class="inline-flex items-center gap-1.5 rounded-full mc-bg-accent-light px-2.5 py-1 text-[10px] font-bold mc-text-accent-dark">
+      <span class="h-1.5 w-1.5 rounded-full mc-bg-accent"></span>
+      NFC Active · {{ medplaque.month_label }}
+    </span>
+    {% else %}
+    <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-bold text-gray-500">
+      <span class="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+      NFC inactive
+    </span>
+    {% endif %}
+  </div>
+  <div class="grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="text-center">
+      <p class="text-2xl"><i class="ti ti-device-mobile"></i></p>
+      <p class="mt-1 text-2xl font-extrabold text-violet-600">{{ medplaque.nfc_scans }}</p>
+      <p class="text-[10px] text-gray-400">Scans NFC</p>
+    </div>
+    <div class="text-center">
+      <p class="text-2xl"><i class="ti ti-camera"></i></p>
+      <p class="mt-1 text-2xl font-extrabold text-blue-600">{{ medplaque.qr_scans }}</p>
+      <p class="text-[10px] text-gray-400">Scans QR Code</p>
+    </div>
+    <div class="text-center">
+      <p class="text-2xl"><i class="ti ti-building-hospital"></i></p>
+      <p class="mt-1 text-2xl font-extrabold mc-text-accent">{{ medplaque.total_access }}</p>
+      <p class="text-[10px] text-gray-400">Total accès plaque</p>
+    </div>
+    <div class="flex flex-col items-center justify-center gap-2 text-center">
+      <p class="text-[10px] leading-relaxed text-gray-600">NFC active jusqu'à M6. QR Code actif en permanence, indépendant de l'abonnement.</p>
+      <a href="{% url 'healthcare:prestataire_medplaque' %}" class="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[10px] font-semibold text-gray-700 hover:bg-gray-50">Voir détails →</a>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <!-- ═════════════ Visites profil + Actions rapides ═════════════ -->
 <div class="mt-6 grid gap-6 lg:grid-cols-5">
@@ -345,6 +362,18 @@
       <h2 class="text-sm font-bold text-gray-900">Actions rapides</h2>
     </div>
     <div class="space-y-2 p-4">
+      <a href="{% url 'messaging:inbox' %}" class="flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition hover:border-teal-200 hover:bg-teal-50/50">
+        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
+          <i class="ti ti-mail text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Messages</p>
+          <p class="text-[11px] text-gray-400">Échanges avec les patients</p>
+        </div>
+        {% if unread_messages %}
+        <span class="ml-auto inline-flex items-center justify-center rounded-full bg-primary-600 px-2 py-0.5 text-[11px] font-bold text-white">{{ unread_messages }}</span>
+        {% endif %}
+      </a>
       <a href="{% url 'healthcare:acte_add' %}" class="flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition hover:border-accent-200 hover:bg-accent-50/50">
         <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-50 text-accent-600">
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
@@ -354,6 +383,17 @@
           <p class="text-[11px] text-gray-400">Nouvel examen ou prestation</p>
         </div>
       </a>
+      {% if org.is_praticien %}
+      <a href="{% url 'healthcare:prestataire_tickets' %}" class="flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition hover:border-emerald-200 hover:bg-emerald-50/50">
+        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+          <i class="ti ti-ticket text-lg"></i>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Tickets de prestation</p>
+          <p class="text-[11px] text-gray-400">Générer un lien privé patient</p>
+        </div>
+      </a>
+      {% else %}
       <a href="{% url 'healthcare:insurances_manage' %}" class="flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition hover:border-accent-200 hover:bg-accent-50/50">
         <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
@@ -363,6 +403,7 @@
           <p class="text-[11px] text-gray-400">Déclarer une assurance acceptée</p>
         </div>
       </a>
+      {% endif %}
       <a href="{% url 'appointments:prestataire_rdv_list' %}" class="flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition hover:border-sky-200 hover:bg-sky-50/50">
         <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600">
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
@@ -377,8 +418,8 @@
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
         </div>
         <div>
-          <p class="text-sm font-semibold text-gray-800">Modifier les horaires</p>
-          <p class="text-[11px] text-gray-400">Jours et heures d'ouverture</p>
+          <p class="text-sm font-semibold text-gray-800">{% if org.is_praticien %}Disponibilités{% else %}Modifier les horaires{% endif %}</p>
+          <p class="text-[11px] text-gray-400">{% if org.is_praticien %}Créneaux de consultation{% else %}Jours et heures d'ouverture{% endif %}</p>
         </div>
       </a>
       <a href="{% url 'healthcare:organisme_edit' %}" class="flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition hover:border-accent-200 hover:bg-accent-50/50">
@@ -386,8 +427,8 @@
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>
         </div>
         <div>
-          <p class="text-sm font-semibold text-gray-800">Modifier le profil</p>
-          <p class="text-[11px] text-gray-400">Infos, logo, localisation</p>
+          <p class="text-sm font-semibold text-gray-800">{% if org.is_praticien %}Mes informations{% else %}Modifier le profil{% endif %}</p>
+          <p class="text-[11px] text-gray-400">{% if org.is_praticien %}Identité, photo, cabinet{% else %}Infos, logo, localisation{% endif %}</p>
         </div>
       </a>
     </div>

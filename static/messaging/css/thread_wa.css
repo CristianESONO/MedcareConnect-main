@@ -28,7 +28,8 @@
   display: flex;
   flex-direction: column;
   background: #fff;
-  min-height: 0;
+  height: min(620px, calc(100vh - 180px));
+  min-height: 420px;
 }
 
 .pac-wa-head, .mc-thread-head {
@@ -86,8 +87,7 @@
 .pac-wa-chat, .mc-thread-chat {
   background: #f8fafc;
   padding: 18px 16px;
-  min-height: 280px;
-  max-height: 60vh;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -95,7 +95,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  flex: 1 1 auto;
+  flex: 1 1 0;
   margin-top: 0;
 }
 
@@ -506,7 +506,7 @@
 
 /* Barre saisie */
 .pac-wa-bar, .mc-thread-bar {
-  background: #f3f4f6;
+  background: #ffffff;
   padding: 10px 12px;
   display: flex;
   gap: 10px;
@@ -1451,7 +1451,8 @@ button.mc-wslot.pac-wchip--sel {
     border-left: none;
     border-right: none;
     box-shadow: none;
-    min-height: min(480px, calc(100dvh - 6rem));
+    height: calc(100dvh - 5rem);
+    min-height: 380px;
   }
 
   .pac-page--messages .mc-thread-page .mc-thread {
@@ -1459,7 +1460,7 @@ button.mc-wslot.pac-wchip--sel {
   }
 
   .pac-wa-chat, .mc-thread-chat {
-    max-height: none;
+    flex: 1 1 0;
   }
 
   .pac-page--messages .mc-thread-chat {
@@ -1699,8 +1700,8 @@ body.pac-page-open .pac-main-body,
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    height: calc(100vh - 140px) !important;
-    min-height: 540px !important;
+    height: auto !important;
+    min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
   }
@@ -1711,13 +1712,15 @@ body.pac-page-open .pac-main-body,
     box-shadow: 0 4px 20px rgba(10, 92, 138, 0.08) !important;
     overflow: hidden !important;
     background: #ffffff !important;
-    height: 100% !important;
+    height: 560px !important;
+    max-height: calc(100vh - 180px) !important;
+    min-height: 420px !important;
     width: 100% !important;
     max-width: none !important;
     display: flex !important;
     flex-direction: column !important;
-    flex: 1 1 0% !important;
-    margin: 0 !important;
+    flex: none !important;
+    margin: 0 0 24px 0 !important;
   }
 
   .mc-thread-head {

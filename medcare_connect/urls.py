@@ -3,6 +3,7 @@ from django.views.generic import RedirectView
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 from medcare_connect import views
 from users import views as users_views
 from healthcare import practitioner_views as pr_views
@@ -16,6 +17,40 @@ urlpatterns = [
     path("inscription/", users_views.register, name="register"),
     path("connexion/", users_views.login_view, name="login"),
     path("deconnexion/", users_views.logout_view, name="logout"),
+
+    # Réinitialisation du mot de passe (mot de passe oublié)
+    path(
+        "mot-de-passe-oublie/",
+        auth_views.PasswordResetView.as_view(
+            template_name="registration/password_reset_form.html",
+            email_template_name="registration/password_reset_email.txt",
+            subject_template_name="registration/password_reset_subject.txt",
+            success_url="/mot-de-passe-oublie/envoye/",
+        ),
+        name="password_reset",
+    ),
+    path(
+        "mot-de-passe-oublie/envoye/",
+        auth_views.PasswordResetDoneView.as_view(
+            template_name="registration/password_reset_done.html",
+        ),
+        name="password_reset_done",
+    ),
+    path(
+        "mot-de-passe-oublie/confirmer/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name="registration/password_reset_confirm.html",
+            success_url="/mot-de-passe-oublie/succes/",
+        ),
+        name="password_reset_confirm",
+    ),
+    path(
+        "mot-de-passe-oublie/succes/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name="registration/password_reset_complete.html",
+        ),
+        name="password_reset_complete",
+    ),
 
     # Routes canoniques en français pour les pages d'information
     path("comment-ca-marche/", views.how_it_works, name="how_it_works"),

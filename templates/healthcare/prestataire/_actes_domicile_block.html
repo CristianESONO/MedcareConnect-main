@@ -57,24 +57,6 @@
           {% endfor %}
         </div>
       </div>
-
-      {% if domicile_subgroups %}
-      <div class="domicile-actes-block">
-        <label class="domi-field-label">Actes disponibles à domicile</label>
-        <div class="domicile-actes-tags">
-          {% for sg in domicile_subgroups %}
-          <label class="acte-domi-tag js-domi-acte-tag" data-acte-ids="{{ sg.acte_ids|join:',' }}">
-            <input type="checkbox" class="js-domi-acte-cb"{% if sg.all_active %} checked{% endif %}>
-            {{ sg.label }}
-          </label>
-          {% endfor %}
-          <label class="acte-domi-tag acte-domi-tag--all js-domi-acte-tag" data-acte-ids="all">
-            <input type="checkbox" class="js-domi-acte-cb" id="domi-all-actes"{% if domicile_all_active %} checked{% endif %}>
-            Tous les actes du catalogue
-          </label>
-        </div>
-      </div>
-      {% endif %}
     </div>
   </div>
 </div>

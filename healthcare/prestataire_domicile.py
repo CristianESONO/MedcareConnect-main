@@ -16,13 +16,18 @@ DOMICILE_DELAI_CHOICES = (
 )
 
 
+DOMICILE_ELIGIBLE_SLUGS = {
+    "biologie-medicale",
+    "explorations-fonctionnelles",
+    "soins-specialises",
+}
+
+
 def show_domicile_block(org: OrganismeDeSante, applicable_slugs: set[str] | None) -> bool:
-    """Afficher le bloc domicile si biologie applicable ou service déjà activé."""
-    if org.prises_sang_domicile:
-        return True
-    if applicable_slugs is None:
-        return True
-    return "biologie-medicale" in applicable_slugs
+    """Prestations à domicile disponible UNIQUEMENT pour biologie médicale, explorations fonctionnelles et soins spécialisés."""
+    if applicable_slugs is not None:
+        return bool(applicable_slugs & DOMICILE_ELIGIBLE_SLUGS)
+    return True
 
 
 def domicile_zones_queryset(org: OrganismeDeSante):

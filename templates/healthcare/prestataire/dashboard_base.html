@@ -5,10 +5,19 @@
 
 {% block extra_css %}
 <style>
-  /* Shell : sur desktop, hauteur viewport − navbar ; seul le panneau principal défile */
-  .dash-shell { display: flex; flex-direction: column; min-height: 0; }
+  /* Masquer la barre de navigation mobile patient (non pertinente dans le dashboard prestataire) */
+  body.mc-prestataire-dash #medcare-tab-bar,
+  body.mc-prestataire-dash .medcare-tab-bar {
+    display: none !important;
+  }
+  body.mc-prestataire-dash {
+    padding-bottom: 0 !important;
+  }
+
+  /* ── Layout dashboard desktop ── */
+  .dash-shell { display: flex; flex-direction: column; }
+  /* Mobile : masquer le burger du site global */
   @media (max-width: 767px) {
-    /* Un seul menu mobile : barre dashboard (pas le burger du site nav global) */
     body.mc-prestataire-dash #medcare-site-nav,
     body.mc-prestataire-dash #header_pop {
       display: none !important;
@@ -19,13 +28,6 @@
       z-index: 40;
     }
   }
-  @media (min-width: 768px) {
-    .dash-shell {
-      height: calc(100dvh - 4rem);
-      max-height: calc(100dvh - 4rem);
-      overflow: hidden;
-    }
-  }
   #dash-sidebar { display: none; }
   #dash-mobile-bar { display: flex; }
   @media (min-width: 768px) {
@@ -34,9 +36,11 @@
       flex-direction: column;
       width: 260px;
       flex-shrink: 0;
-      height: 100%;
-      max-height: 100%;
-      overflow: hidden;
+      position: sticky;
+      top: 4rem;
+      height: calc(100vh - 4rem);
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
     }
     #dash-mobile-bar { display: none; }
     #dashAppDrawer,
@@ -44,19 +48,18 @@
     #dash-layout {
       display: flex;
       flex-direction: row;
-      flex: 1 1 0;
-      min-height: 0;
-      overflow: hidden;
+      min-height: calc(100vh - 4rem);
     }
     #dash-sidebar > nav.flex-1 { min-height: 0; }
     #dash-main {
       flex: 1 1 0;
       min-width: 0;
-      min-height: 0;
+      /* Scroll interne : le contenu ne dépasse plus le footer */
+      height: calc(100vh - 4rem);
       overflow-y: auto;
       overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
     }
+
     #dash-sidebar .nav-link { display: flex; align-items: center; gap: .625rem; padding: .42rem .75rem;
     border-radius: .5rem; font-size: .8125rem; font-weight: 500; color: #4b5563; transition: all .15s; }
   #dash-sidebar .nav-link:hover { background: #f3f4f6; color: #111827; }
@@ -135,8 +138,8 @@
         <div class="min-w-0 flex-1">
           <p class="truncate text-xs font-bold text-gray-900 leading-snug">{{ org.name }}</p>
           <div class="mt-0.5 flex items-center gap-1.5">
-            {% if org.account_nature == 'praticien' %}
-              <p class="truncate text-[10px] text-primary-600 font-medium">{% if org.profession %}{{ org.profession|title }}{% else %}Praticien{% endif %}</p>
+            {% if org.is_praticien %}
+              <p class="truncate text-[10px] text-primary-600 font-medium">{% if org.profession %}{{ org.get_profession_display|default:org.profession|title }}{% else %}Praticien{% endif %}</p>
             {% else %}
               <p class="truncate text-[10px] text-gray-400">{% if org.type_organisme %}{{ org.type_organisme.name }}{% else %}Structure de soins{% endif %}</p>
             {% endif %}
@@ -194,16 +197,40 @@
         {% if unread_messages %}<span class="nav-badge">{{ unread_messages }}</span>{% endif %}
       </a>
 
-      <!-- ── SECTION 2 : OFFRE DE SOINS (GROUPE DÉROULANT) ── -->
+      <!-- ── SECTION 2 : ÉTABLISSEMENT / PROFIL (GROUPE DÉROULANT TOUJOURS OUVERT) ── -->
+      <div class="nav-group-wrap">
+        <button type="button" class="nav-group-btn is-open{% if dash_active == 'profile' or dash_active == 'acces' or dash_active == 'typeetab' or dash_active == 'public_profile' or dash_active == 'profil_public' %} is-parent-active{% endif %}" data-group-target="navGroupEtab" onclick="toggleNavGroup('navGroupEtab', this)">
+          <span class="nav-icon"><i class="{% if org.is_praticien %}ti ti-user-circle{% else %}ti ti-building-hospital{% endif %} text-base"></i></span>
+          <span>{% if org.is_praticien %}Mon profil{% else %}Établissement{% endif %}</span>
+          {% if pending_acces_count %}<span class="nav-badge mr-1">{{ pending_acces_count }}</span>{% endif %}
+          <i class="ti ti-chevron-down nav-group-chevron"></i>
+        </button>
+        <div id="navGroupEtab" class="nav-sublist is-open">
+          <a href="{% url 'healthcare:organisme_edit' %}" class="nav-sublink {% if dash_active == 'profile' %}active{% endif %}">
+            {% if org.is_praticien %}Mes informations{% else %}Fiche & Coordonnées{% endif %}
+          </a>
+          <a href="{% url 'healthcare:prestataire_acces' %}" class="nav-sublink {% if dash_active == 'acces' %}active{% endif %}">
+            {% if org.is_praticien %}Accès & Équipe{% else %}Praticiens rattachés{% endif %}
+            {% if pending_acces_count %}<span class="nav-badge ml-auto">{{ pending_acces_count }}</span>{% endif %}
+          </a>
+          {% if not org.is_praticien %}
+          <a href="{% url 'healthcare:prestataire_type_etablissement' %}" class="nav-sublink {% if dash_active == 'typeetab' %}active{% endif %}">
+            Type d'établissement
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- ── SECTION 3 : OFFRE DE SOINS / MON EXERCICE (GROUPE DÉROULANT TOUJOURS OUVERT) ── -->
       {% if org.account_nature != 'praticien' %}
         {# Structure médicale #}
         <div class="nav-group-wrap pt-1">
-          <button type="button" class="nav-group-btn {% if dash_active == 'actes' or dash_active == 'panels' or dash_active == 'insurances' %}is-parent-active is-open{% endif %}" data-group-target="navGroupOffre" onclick="toggleNavGroup('navGroupOffre', this)">
+          <button type="button" class="nav-group-btn is-open{% if dash_active == 'actes' or dash_active == 'panels' or dash_active == 'insurances' %} is-parent-active{% endif %}" data-group-target="navGroupOffre" onclick="toggleNavGroup('navGroupOffre', this)">
             <span class="nav-icon"><i class="ti ti-clipboard-list text-base"></i></span>
             <span>Offre de soins</span>
             <i class="ti ti-chevron-down nav-group-chevron"></i>
           </button>
-          <div id="navGroupOffre" class="nav-sublist {% if dash_active == 'actes' or dash_active == 'panels' or dash_active == 'insurances' %}is-open{% endif %}">
+          <div id="navGroupOffre" class="nav-sublist is-open">
             <a href="{% url 'healthcare:actes_list' %}" class="nav-sublink {% if dash_active == 'actes' %}active{% endif %}">
               Catalogue d'actes
             </a>
@@ -218,12 +245,12 @@
       {% else %}
         {# Praticien indépendant #}
         <div class="nav-group-wrap pt-1">
-          <button type="button" class="nav-group-btn {% if dash_active == 'actes' or dash_active == 'tickets' or dash_active == 'panels' %}is-parent-active is-open{% endif %}" data-group-target="navGroupExercice" onclick="toggleNavGroup('navGroupExercice', this)">
+          <button type="button" class="nav-group-btn is-open{% if dash_active == 'actes' or dash_active == 'tickets' or dash_active == 'panels' %} is-parent-active{% endif %}" data-group-target="navGroupExercice" onclick="toggleNavGroup('navGroupExercice', this)">
             <span class="nav-icon"><i class="ti ti-stethoscope text-base"></i></span>
             <span>Mon exercice</span>
             <i class="ti ti-chevron-down nav-group-chevron"></i>
           </button>
-          <div id="navGroupExercice" class="nav-sublist {% if dash_active == 'actes' or dash_active == 'tickets' or dash_active == 'panels' %}is-open{% endif %}">
+          <div id="navGroupExercice" class="nav-sublist is-open">
             <a href="{% url 'healthcare:actes_list' %}" class="nav-sublink {% if dash_active == 'actes' %}active{% endif %}">
               Mes actes
             </a>
@@ -237,30 +264,7 @@
         </div>
       {% endif %}
 
-      <!-- ── SECTION 3 : ÉTABLISSEMENT / PROFIL (GROUPE DÉROULANT) ── -->
-      <div class="nav-group-wrap">
-        <button type="button" class="nav-group-btn {% if dash_active == 'profile' or dash_active == 'acces' or dash_active == 'typeetab' or dash_active == 'public_profile' or dash_active == 'profil_public' %}is-parent-active is-open{% endif %}" data-group-target="navGroupEtab" onclick="toggleNavGroup('navGroupEtab', this)">
-          <span class="nav-icon"><i class="{% if org.account_nature == 'praticien' %}ti ti-user-circle{% else %}ti ti-building-hospital{% endif %} text-base"></i></span>
-          <span>{% if org.account_nature == 'praticien' %}Mon profil{% else %}Établissement{% endif %}</span>
-          {% if pending_acces_count %}<span class="nav-badge mr-1">{{ pending_acces_count }}</span>{% endif %}
-          <i class="ti ti-chevron-down nav-group-chevron"></i>
-        </button>
-        <div id="navGroupEtab" class="nav-sublist {% if dash_active == 'profile' or dash_active == 'acces' or dash_active == 'typeetab' or dash_active == 'public_profile' or dash_active == 'profil_public' %}is-open{% endif %}">
-          <a href="{% url 'healthcare:organisme_edit' %}" class="nav-sublink {% if dash_active == 'profile' %}active{% endif %}">
-            {% if org.account_nature == 'praticien' %}Profil praticien{% else %}Fiche & Coordonnées{% endif %}
-          </a>
-          <a href="{% url 'healthcare:prestataire_acces' %}" class="nav-sublink {% if dash_active == 'acces' %}active{% endif %}">
-            {% if org.account_nature == 'praticien' %}Accès & Équipe{% else %}Praticiens rattachés{% endif %}
-            {% if pending_acces_count %}<span class="nav-badge ml-auto">{{ pending_acces_count }}</span>{% endif %}
-          </a>
-          {% if org.account_nature != 'praticien' %}
-          <a href="{% url 'healthcare:prestataire_type_etablissement' %}" class="nav-sublink {% if dash_active == 'typeetab' %}active{% endif %}">
-            Type d'établissement
-          </a>
-          {% endif %}
-        </div>
-      </div>
-
+      {% if not org.is_praticien %}
       <!-- ── SECTION 4 : OUTILS & IA (GROUPE DÉROULANT) ── -->
       <div class="nav-group-wrap">
         <button type="button" class="nav-group-btn {% if dash_active == 'chatbot' or dash_active == 'medplaque' %}is-parent-active is-open{% endif %}" data-group-target="navGroupOutils" onclick="toggleNavGroup('navGroupOutils', this)">
@@ -277,6 +281,7 @@
           </a>
         </div>
       </div>
+      {% endif %}
 
       <!-- ── SECTION 5 : GESTION & COMPTE ── -->
       <div class="pt-1">
@@ -301,13 +306,15 @@
 
     {% if org %}
     <!-- Pied de sidebar compact : Profil public & Statut -->
-    <div class="border-t border-gray-100 px-3 py-2 bg-gray-50/50 flex items-center justify-between">
+    <div class="border-t border-gray-100 px-3 py-2 bg-gray-50/50 flex items-center {% if org.is_praticien %}justify-end{% else %}justify-between{% endif %}">
+      {% if not org.is_praticien %}
       <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gray-600 hover:text-primary-700 transition" title="Ouvrir la page publique vue par les patients">
         <i class="ti ti-external-link text-xs"></i>
         <span>Profil public</span>
       </a>
+      {% endif %}
       <span class="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200" title="Membre du programme pionnier MedCare">
-        <i class="ti ti-star text-[10px]"></i> Pionnier
+        <i class="ti ti-star text-[10px]"></i> {% if org.is_praticien %}Praticien Pionnier{% else %}Pionnier{% endif %}
       </span>
     </div>
     {% endif %}
@@ -396,3 +403,6 @@
 </script>
 {% block dash_extra_js %}{% endblock %}
 {% endblock %}
+
+{% block mobile_tab_bar %}{% endblock %}
+{% block site_footer %}{% endblock %}

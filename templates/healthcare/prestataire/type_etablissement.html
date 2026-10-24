@@ -65,29 +65,11 @@
   <form method="POST" action="{% url 'healthcare:prestataire_type_etablissement' %}">
     {% csrf_token %}
 
-    <!-- CARTE 1 : INFORMATIONS DE LA STRUCTURE -->
-    <div class="te-card">
-      <div class="te-card-title">Informations de la structure</div>
-      <div class="te-sub2">Données générales d'identification de l'établissement.</div>
-      <div class="te-grid2" style="margin-top: 12px;">
-        <div class="te-field">
-          <label for="teName">Nom de la structure</label>
-          <input type="text" name="name" id="teName" class="te-input" value="{{ org.name }}" required>
-        </div>
-        <div class="te-field">
-          <label for="teAddress">Zone / adresse</label>
-          <input type="text" name="address" id="teAddress" class="te-input" value="{{ org.address }}" required>
-        </div>
-        <div class="te-field">
-          <label for="teCity">Ville</label>
-          <input type="text" name="city" id="teCity" class="te-input" value="{{ org.city|default:'Dakar' }}" required>
-        </div>
-        <div class="te-field">
-          <label for="teNinea">NINEA</label>
-          <input type="text" name="ninea" id="teNinea" class="te-input" value="{{ org.ninea|default:'' }}" placeholder="Numéro d'identification entreprise">
-        </div>
-      </div>
-    </div>
+    {# Valeurs nom/adresse préservées pour ne pas les effacer à la soumission #}
+    <input type="hidden" name="name"    value="{{ org.name }}">
+    <input type="hidden" name="address" value="{{ org.address }}">
+    <input type="hidden" name="city"    value="{{ org.city|default:'Dakar' }}">
+    <input type="hidden" name="ninea"   value="{{ org.ninea|default:'' }}">
 
     <!-- CARTE 2 : TYPE DE COMPTE (TOPOLOGIE) -->
     <div class="te-card">

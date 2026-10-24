@@ -106,18 +106,7 @@
                     <p class="org-edit-hint">Numéro ONMS pour médecin, ou titre / ADELI selon profession.</p>
                   </div>
                 </div>
-                <div class="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label for="{{ form.ninea.id_for_label }}" class="org-edit-label">NINEA <span class="text-[10.5px] font-normal text-gray-400">(Optionnel)</span></label>
-                    {{ form.ninea }}
-                    {{ form.ninea.errors }}
-                  </div>
-                  <div>
-                    <label for="{{ form.raison_sociale.id_for_label }}" class="org-edit-label">Nom du cabinet / Raison sociale <span class="text-[10.5px] font-normal text-gray-400">(Optionnel)</span></label>
-                    {{ form.raison_sociale }}
-                    {{ form.raison_sociale.errors }}
-                  </div>
-                </div>
+                <input type="hidden" name="ninea" value="{{ form.ninea.value|default:'' }}">
                 <div class="hidden">
                   {{ form.type_organisme }}
                 </div>
@@ -146,12 +135,9 @@
                     {{ form.ninea.errors }}
                   </div>
                 </div>
-                <div>
-                  <label for="{{ form.type_organisme.id_for_label }}" class="org-edit-label">Type d&apos;établissement</label>
-                  {{ form.type_organisme }}
-                  {{ form.type_organisme.errors }}
-                </div>
-                <div id="profession-row" class="{% if org.type_organisme.name != 'Praticien indépendant' %}hidden{% endif %}">
+                {# Type d'établissement masqué — valeur préservée pour la soumission #}
+                <input type="hidden" name="type_organisme" value="{{ form.type_organisme.value|default:'' }}">
+                <div id="profession-row" class="hidden">
                   <label for="{{ form.profession.id_for_label }}" class="org-edit-label">
                     Profession <span class="text-rose-500">*</span>
                     <span class="ml-1 text-[10px] font-normal text-gray-400">(praticiens indépendants uniquement)</span>
@@ -237,6 +223,14 @@
               {% if org.latitude and org.longitude %}src="https://maps.google.com/maps?q={{ org.latitude }},{{ org.longitude }}&amp;z=15&amp;hl=fr&amp;output=embed"{% endif %}></iframe>
           </div>
           <div class="grid gap-4 sm:grid-cols-2">
+            {% if org.account_nature == 'praticien' or org.is_praticien %}
+            <div class="sm:col-span-2">
+              <label for="{{ form.raison_sociale.id_for_label }}" class="org-edit-label">Nom du cabinet / Structure d'exercice <span class="text-[10.5px] font-normal text-gray-400">(Optionnel)</span></label>
+              {{ form.raison_sociale }}
+              {{ form.raison_sociale.errors }}
+              <p class="org-edit-hint">Indiquez le nom de votre cabinet ou de la structure à laquelle vous êtes rattaché.</p>
+            </div>
+            {% endif %}
             <div class="sm:col-span-2">
               <label for="{{ form.address.id_for_label }}" class="org-edit-label">{% if org.account_nature == 'praticien' or org.is_praticien %}Adresse du cabinet / lieu d'exercice{% else %}Adresse{% endif %}</label>
               {{ form.address }}

@@ -2,17 +2,23 @@
 {% load static %}
 {% block title %}Conversation · {{ conversation.dossier_label }}{% endblock %}
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=13">
+<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=15">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=15">
 {% endblock %}
 {% block dash_content %}
-<div class="mc-thread-page max-w-3xl">
-  <div class="flex items-center justify-between mb-4">
-    <a href="{% url 'messaging:inbox' %}" class="mc-thread-back inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600">
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
-      Messages
+<div class="w-full max-w-4xl mx-auto pb-8">
+  <div class="pac-main-head mb-4 rounded-xl">
+    <div class="pac-head-left">
+      <a href="{% url 'messaging:inbox' %}" class="pac-head-back-btn" aria-label="Retour aux messages">
+        <i class="ti ti-arrow-left" aria-hidden="true"></i>
+      </a>
+      <h1 class="pac-main-title">{{ conversation.patient.display_name|default:"Patient" }} · {{ conversation.dossier_label }}</h1>
+    </div>
+    <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex">
+      <i class="ti ti-mail" aria-hidden="true"></i> Messages
     </a>
   </div>
-  <div class="mt-4">
+  <div class="mc-chat-page">
     {% include "messaging/partials/thread_view.html" %}
   </div>
 </div>

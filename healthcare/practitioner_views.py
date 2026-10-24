@@ -122,12 +122,19 @@ def prestataire_tickets(request):
 
     tickets = PrestationTicket.objects.filter(organisme=org).order_by("-created_at")
     my_actes = PrestataireActe.objects.filter(organisme=org, is_available=True).select_related("acte")
+    from messaging.models import Conversation
+    conversations = (
+        Conversation.objects.filter(prestataire=org.user)
+        .select_related("patient")
+        .order_by("-updated_at")[:50]
+    )
 
     context = {
         "org": org,
         "dash_active": "tickets",
         "tickets": tickets,
         "my_actes": my_actes,
+        "conversations": conversations,
         "base_url": request.build_absolute_uri("/").rstrip("/"),
     }
     return render(request, "healthcare/prestataire/tickets_list.html", context)
@@ -204,6 +211,51 @@ def prestataire_ticket_delete(request, pk):
     title = ticket.title
     ticket.delete()
     messages.success(request, f"Le ticket « {title} » a été supprimé.")
+    return redirect("healthcare:prestataire_tickets")
+
+
+@login_required
+def ticket_send(request):
+    """Envoyer le lien d'un ticket de prestation dans la messagerie vers des patients sélectionnés."""
+    if request.method != "POST":
+        return redirect("healthcare:prestataire_tickets")
+
+    org = _get_user_org(request)
+    if not org:
+        return redirect("healthcare:organisme_create")
+
+    ticket_url = request.POST.get("ticket_url", "").strip()
+    ticket_nom = request.POST.get("ticket_nom", "Ticket de prestation").strip()
+    conv_ids = request.POST.getlist("conv_ids")
+
+    if not conv_ids:
+        messages.error(request, "Sélectionnez au moins un patient.")
+        return redirect("healthcare:prestataire_tickets")
+
+    from messaging.models import Conversation, Message
+    sent = 0
+    for conv_id in conv_ids:
+        try:
+            conv = Conversation.objects.get(pk=int(conv_id), prestataire=org.user)
+        except (Conversation.DoesNotExist, ValueError):
+            continue
+        Message.objects.create(
+            conversation=conv,
+            sender=org.user,
+            receiver=conv.patient,
+            content=(
+                f"🎫 **{ticket_nom}**\n"
+                f"Voici votre ticket de prestation direct :\n"
+                f"{ticket_url}\n\n"
+                f"Cliquez sur le lien pour finaliser votre réservation et fixer votre rendez-vous."
+            ),
+            message_type="internal",
+            payload={"type": "ticket_link", "ticket_url": ticket_url, "ticket_nom": ticket_nom},
+        )
+        conv.save(update_fields=["updated_at"])
+        sent += 1
+
+    messages.success(request, f"Ticket envoyé avec succès à {sent} patient(s).")
     return redirect("healthcare:prestataire_tickets")
 
 

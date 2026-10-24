@@ -2372,6 +2372,14 @@ def _dashboard_completion(org, actes_count, insurances_count):
     hours_ok = bool(raw_oh) and any(
         bool(v) for v in (raw_oh or {}).values()
     )
+    if getattr(org, "is_praticien", False):
+        return [
+            {"key": "profile", "label": "Identité", "ok": bool(org.name and org.city)},
+            {"key": "actes", "label": "Catalogue d'actes", "ok": actes_count > 0},
+            {"key": "hours", "label": "Disponibilités", "ok": hours_ok},
+            {"key": "logo", "label": "Photo de profil", "ok": bool(org.logo)},
+            {"key": "description", "label": "Biographie / Présentation", "ok": bool(org.description and len(org.description) > 20)},
+        ]
     return [
         {"key": "profile", "label": "Identité", "ok": bool(org.name and org.city)},
         {"key": "actes", "label": "Catalogue d'actes", "ok": actes_count > 0},
@@ -3709,9 +3717,62 @@ def acte_toggle_available(request, pk):
 def insurances_manage(request):
     """Assurances acceptées — cases par segment (réf. catalogue) + champ libre « Tarifs & délais »."""
     from django.db import transaction
+    from django.utils.text import slugify
 
     ctx = _dash_context(request, "insurances")
     org = OrganismeDeSante.objects.get(pk=ctx["org"].pk)
+
+    if request.method == "POST" and request.POST.get("action") == "add_custom_assurance":
+        custom_name = (request.POST.get("name") or "").strip()
+        custom_segment = (request.POST.get("segment") or "").strip()
+        custom_description = (request.POST.get("description") or "").strip()
+
+        if not custom_name:
+            messages.error(request, "Veuillez renseigner le nom de l'assurance.")
+            return redirect("healthcare:insurances_manage")
+
+        valid_segments = dict(Assurance.Segment.choices)
+        if custom_segment not in valid_segments:
+            custom_segment = Assurance.Segment.PRIVEE_IARD
+
+        # Recherche ou création de l'assurance (insensible à la casse)
+        existing_assurances = Assurance.objects.filter(name__iexact=custom_name)
+        if existing_assurances.exists():
+            assurance_obj = existing_assurances.first()
+            if not assurance_obj.is_active:
+                assurance_obj.is_active = True
+                assurance_obj.save(update_fields=["is_active"])
+        else:
+            base_slug = slugify(custom_name) or "assurance"
+            slug = base_slug
+            counter = 1
+            while Assurance.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            assurance_obj = Assurance.objects.create(
+                name=custom_name,
+                slug=slug,
+                segment=custom_segment,
+                description=custom_description or None,
+                is_active=True,
+            )
+
+        # Lier automatiquement à la structure
+        pec, created = PriseEnChargeAssurance.objects.get_or_create(
+            organisme=org,
+            assurance=assurance_obj,
+            defaults={"is_active": True},
+        )
+        if not pec.is_active:
+            pec.is_active = True
+            pec.save(update_fields=["is_active"])
+
+        messages.success(
+            request,
+            f"L'assurance « {assurance_obj.name} » a été ajoutée et sélectionnée avec succès pour votre établissement."
+        )
+        return redirect("healthcare:insurances_manage")
 
     if request.method == "POST" and request.POST.get("action") == "save_assurances":
         valid = set(Assurance.objects.filter(is_active=True).values_list("pk", flat=True))
@@ -3827,6 +3888,7 @@ def insurances_manage(request):
             "q": q,
             "seg_filter": seg_filter,
             "recap_seg_rows": recap_seg_rows,
+            "segment_choices": Assurance.Segment.choices,
         }
     )
     return render(request, "healthcare/prestataire/insurances.html", ctx)

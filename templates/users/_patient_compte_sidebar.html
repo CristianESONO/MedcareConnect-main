@@ -70,33 +70,7 @@
         Historique
       </a>
 
-      <div class="pac-nav-group-lbl pac-nav-group-lbl--mobile">Informations</div>
-      <a href="{% url 'about' %}" class="sb-link pac-info-link">
-        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
-        <span>À propos · medcare.sn</span>
-      </a>
-      <a href="{% url 'trust' %}" class="sb-link pac-info-link">
-        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M9 15h6m-6 3h6m2.25 3H6.75A2.25 2.25 0 0 1 4.5 18.75V5.25A2.25 2.25 0 0 1 6.75 3h5.379a2.25 2.25 0 0 1 1.591.659l4.621 4.621A2.25 2.25 0 0 1 19 9.871V18.75A2.25 2.25 0 0 1 16.75 21Z"/></svg>
-        CGU &amp; Confidentialité
-      </a>
     </nav>
-
-    <div class="pac-sidebar-footer">
-      {% if user.is_authenticated %}
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="sb-link sb-link--logout">
-          <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-          Déconnexion
-        </button>
-      </form>
-      {% else %}
-      <a href="{% url 'login' %}?next={{ request.path }}" class="sb-link">
-        <svg class="sb-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-        Connexion
-      </a>
-      {% endif %}
-    </div>
   </div>
 
   <div class="pac-sidebar-inner pac-sidebar-inner--mobile">

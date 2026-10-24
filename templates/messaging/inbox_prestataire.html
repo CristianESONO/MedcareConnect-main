@@ -5,10 +5,21 @@
 <link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=1">
 {% endblock %}
 {% block dash_content %}
-<div class="w-full">
+<div class="w-full max-w-5xl mx-auto pb-8">
+  <div class="pac-main-head mb-6 rounded-xl">
+    <div class="pac-head-left">
+      <a href="{% url 'healthcare:prestataire_dashboard' %}" class="pac-head-back-btn" aria-label="Retour au tableau de bord">
+        <i class="ti ti-arrow-left" aria-hidden="true"></i>
+      </a>
+      <h1 class="pac-main-title">Messages</h1>
+    </div>
+    <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex active" title="Messagerie">
+      <i class="ti ti-mail" aria-hidden="true"></i> Messages
+      {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:4px">{{ unread_messages }}</span>{% endif %}
+    </a>
+  </div>
   <div class="mb-4">
-    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Messages</h1>
-    <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Fil de discussion par patient et par dossier (devis / RDV).</p>
+    <p class="text-xs text-gray-500 sm:text-sm">Fil de discussion par patient et par dossier (devis / RDV).</p>
   </div>
   <div class="mt-5 space-y-4">
     {% if grouped_conversations %}

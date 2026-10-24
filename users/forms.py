@@ -251,7 +251,33 @@ class UserProfileForm(forms.ModelForm):
         return cleaned
 
 
+SENEGAL_REGIONS_CHOICES = [
+    ("", "— Sélectionner une région —"),
+    ("Dakar", "Dakar"),
+    ("Diourbel", "Diourbel"),
+    ("Fatick", "Fatick"),
+    ("Kaffrine", "Kaffrine"),
+    ("Kaolack", "Kaolack"),
+    ("Kédougou", "Kédougou"),
+    ("Kolda", "Kolda"),
+    ("Louga", "Louga"),
+    ("Matam", "Matam"),
+    ("Saint-Louis", "Saint-Louis"),
+    ("Sédhiou", "Sédhiou"),
+    ("Tambacounda", "Tambacounda"),
+    ("Thiès", "Thiès"),
+    ("Ziguinchor", "Ziguinchor"),
+]
+
+
 class PatientProfileForm(forms.ModelForm):
+    city = forms.ChoiceField(
+        label="Région",
+        choices=SENEGAL_REGIONS_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={"class": TAILWIND_SELECT}),
+    )
+
     class Meta:
         model = PatientProfile
         fields = (
@@ -263,7 +289,6 @@ class PatientProfileForm(forms.ModelForm):
             "date_of_birth": forms.DateInput(attrs={"class": TAILWIND_INPUT, "type": "date"}),
             "gender": forms.Select(attrs={"class": TAILWIND_SELECT}),
             "address": forms.TextInput(attrs={"class": TAILWIND_INPUT}),
-            "city": forms.TextInput(attrs={"class": TAILWIND_INPUT}),
             "quartier": forms.TextInput(attrs={"class": TAILWIND_INPUT}),
             "insurance": forms.Select(attrs={"class": TAILWIND_SELECT}),
             "insurance_number": forms.TextInput(attrs={"class": TAILWIND_INPUT}),
@@ -271,9 +296,24 @@ class PatientProfileForm(forms.ModelForm):
             "last_known_longitude": forms.NumberInput(attrs={"class": TAILWIND_INPUT, "placeholder": "-17.4677", "step": "any"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.city:
+            current_city = self.instance.city
+            choice_keys = [c[0] for c in self.fields["city"].choices]
+            if current_city not in choice_keys:
+                self.fields["city"].choices = list(self.fields["city"].choices) + [(current_city, current_city)]
+
 
 class PatientProfileCompteForm(forms.ModelForm):
     """Profil patient — onglet « Profil » Mon compte (sans assurance)."""
+
+    city = forms.ChoiceField(
+        label="Région",
+        choices=SENEGAL_REGIONS_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={"class": PAC_INPUT}),
+    )
 
     class Meta:
         model = PatientProfile
@@ -281,9 +321,16 @@ class PatientProfileCompteForm(forms.ModelForm):
         widgets = {
             "date_of_birth": forms.DateInput(attrs={"class": PAC_INPUT, "type": "date"}),
             "address": forms.TextInput(attrs={"class": PAC_INPUT}),
-            "city": forms.TextInput(attrs={"class": PAC_INPUT, "placeholder": "Dakar"}),
             "quartier": forms.TextInput(attrs={"class": PAC_INPUT, "placeholder": "Ex. Mermoz"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.city:
+            current_city = self.instance.city
+            choice_keys = [c[0] for c in self.fields["city"].choices]
+            if current_city not in choice_keys:
+                self.fields["city"].choices = list(self.fields["city"].choices) + [(current_city, current_city)]
 
 
 class PatientInsuranceForm(forms.ModelForm):

@@ -264,3 +264,37 @@ MEDCARE_GOOGLE_REVIEWS_URL = os.environ.get("MEDCARE_GOOGLE_REVIEWS_URL", "").st
 
 # Active les logs ultra détaillés du middleware Select2DebugMiddleware.
 SELECT2_DEBUG_LOGS = os.environ.get("SELECT2_DEBUG_LOGS", "1").lower() in ("true", "1", "yes")
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Configuration e-mail — réinitialisation de mot de passe
+# ──────────────────────────────────────────────────────────────────────────────
+# En production : renseignez dans le fichier .env :
+#   EMAIL_HOST_USER=votre.adresse@gmail.com
+#   EMAIL_HOST_PASSWORD=xxxx xxxx xxxx xxxx   (mot de passe d'application Gmail)
+#   DEFAULT_FROM_EMAIL=MedCare Connect <votre.adresse@gmail.com>
+#   EMAIL_USE_TLS=True
+#
+# En développement (sans .env) : les e-mails s'affichent dans la console.
+# ──────────────────────────────────────────────────────────────────────────────
+_email_host_user = os.environ.get("EMAIL_HOST_USER", "").strip()
+
+if _email_host_user:
+    # ── SMTP Gmail (production / staging) ────────────────────────────────────
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+    EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+    EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True").lower() in ("true", "1", "yes")
+    EMAIL_HOST_USER = _email_host_user
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+    DEFAULT_FROM_EMAIL = os.environ.get(
+        "DEFAULT_FROM_EMAIL",
+        f"MedCare Connect <{_email_host_user}>",
+    )
+else:
+    # ── Console (développement local — pas de .env) ───────────────────────────
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    DEFAULT_FROM_EMAIL = "MedCare Connect <noreply@medcareconnect.sn>"
+
+# Expéditeur affiché dans l'admin Django
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+

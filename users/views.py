@@ -152,10 +152,10 @@ def register(request):
             or request.GET.get("mode")
             or ""
         ).lower()
-        if initial_type in ("prestataire", "structure", "soignant"):
-            form = UserRegistrationForm(initial={"user_type": "prestataire"})
-        else:
+        if initial_type in ("patient", "particulier"):
             form = UserRegistrationForm(initial={"user_type": "patient"})
+        else:
+            form = UserRegistrationForm(initial={"user_type": "prestataire"})
     return render(request, "users/register.html", _register_context(form))
 
 

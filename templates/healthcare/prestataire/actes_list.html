@@ -29,28 +29,8 @@
   </div>
 </div>
 
-{# ── Type de structure ── #}
-<div class="cat-card mt-6">
-  <div class="cat-card-body">
-    <p class="cat-section-label">Type de structure</p>
-    <div class="cat-type-chips">
-      {% for chip in type_chips %}
-      <button type="button"
-        class="cat-type-chip js-type-chip{% if chip.active %} is-active{% endif %}"
-        data-key="{{ chip.key }}"
-        data-piliers="{{ chip.piliers }}"
-        data-label="{{ chip.label }}"
-        data-desc="{{ chip.desc }}">
-        <span>{{ chip.icon }}</span> {{ chip.label }}
-      </button>
-      {% endfor %}
-    </div>
-    <p class="cat-hint" id="type-struct-desc">{{ type_label }} — {{ type_desc }}</p>
-  </div>
-</div>
-
 {# ── Piliers ── #}
-<div class="cat-card">
+<div class="cat-card mt-6">
   <div class="cat-card-body">
     <p class="cat-section-label">Pilier d'activité</p>
     <div class="cat-pilier-tabs" id="pilier-tabs" role="tablist" aria-label="Piliers">
@@ -76,9 +56,9 @@
   </div>
 </div>
 
-{# ── Prestations à domicile (biologie) ── #}
+{# ── Prestations à domicile (biologie, explorations, soins spécialisés) ── #}
 {% if show_domicile_block %}
-<div id="bloc-domicile-wrapper" class="{% if first_applicable_pilier_slug != 'biologie-medicale' %}hidden{% endif %}">
+<div id="bloc-domicile-wrapper" class="{% if first_applicable_pilier_slug != 'biologie-medicale' and first_applicable_pilier_slug != 'explorations-fonctionnelles' and first_applicable_pilier_slug != 'soins-specialises' %}hidden{% endif %}">
   <form method="post" id="domicile-form">
     {% csrf_token %}
     <input type="hidden" name="action" value="save_domicile">
@@ -404,9 +384,10 @@ window.MEDCARE_CATALOGUE_PREP = {
     }, 2200);
   }
 
+  var DOMICILE_SLUGS = ['biologie-medicale', 'explorations-fonctionnelles', 'soins-specialises'];
   function updateDomicileVisibility(slug) {
     if (!domiWrapper) return;
-    domiWrapper.classList.toggle('hidden', slug !== 'biologie-medicale');
+    domiWrapper.classList.toggle('hidden', DOMICILE_SLUGS.indexOf(slug) === -1);
   }
 
   function filterCataloguePanel(panel) {
@@ -511,6 +492,11 @@ window.MEDCARE_CATALOGUE_PREP = {
       updateDomicileVisibility(slug);
     });
   });
+
+  var initActiveTab = document.querySelector('.js-pilier-tab.is-active');
+  if (initActiveTab) {
+    updateDomicileVisibility(initActiveTab.getAttribute('data-pilier-slug') || '');
+  }
 
   panels.forEach(function (panel) {
     var search = panel.querySelector('.js-cat-search');
