@@ -504,9 +504,41 @@ def match_line(raw_text: str, pillar_id: int, repo: ReconciliationRepository) ->
 # 6. BOUCLE D'APPRENTISSAGE ET JOURNAL D'AUDIT (§7 / §4)
 # ==============================================================================
 
+def parse_tariff_cell(val: Any) -> Tuple[Optional[float], str]:
+    """
+    Parse une cellule tarifaire (comptant, ipm ou assurance).
+    Retourne (prix_numerique, statut) où statut in {'covered', 'to_confirm', 'excluded'}.
+    - Valeur vide / None / '-' / 'nc' -> (None, 'to_confirm')
+    - 'exclu', 'non couvert', 'non pris en charge', 'refuse' -> (None, 'excluded')
+    - Nombre / montant -> (prix, 'covered')
+    """
+    if val is None:
+        return None, "to_confirm"
+    if isinstance(val, (int, float)):
+        v = float(val)
+        return (v, "covered") if v > 0 else (None, "to_confirm")
+
+    s = str(val).strip()
+    if not s or s.lower() in {"-", "/", "nc", "n/c", "null", "none", "à confirmer", "a confirmer", ""}:
+        return None, "to_confirm"
+
+    s_lower = s.lower()
+    excluded_keywords = ["exclu", "non pris en charge", "non couvert", "hors convention", "refus", "non", "aucun"]
+    if any(k in s_lower for k in excluded_keywords):
+        return None, "excluded"
+
+    # Nettoyage chaîne numérique (ex: "15 000 F", "15000 XOF", "15.000")
+    clean = re.sub(r"[^\d,\.]", "", s).replace(",", ".")
+    try:
+        prix = float(clean)
+        return (prix, "covered") if prix > 0 else (None, "to_confirm")
+    except ValueError:
+        return None, "to_confirm"
+
+
 class ReconciliationSession:
     """Session de réconciliation d'un lot d'import (structure_id × pillar_id)."""
-    
+
     def __init__(self, batch_id: str, structure_id: int, pillar_id: int, repo: ReconciliationRepository):
         self.batch_id = batch_id
         self.structure_id = structure_id
@@ -516,29 +548,62 @@ class ReconciliationSession:
         self.audit_log: List[Dict[str, Any]] = []
 
     def import_lines(self, raw_lines: List[Dict[str, Any]]) -> Dict[str, int]:
-        """Importe et traite un fichier de libellés pour ce pilier."""
-        seen_norm = set()
+        """
+        Importe et traite un fichier de libellés pour ce pilier avec support tri-tarifs :
+        - Comptant (obligatoire / référence)
+        - IPM (tarif conventionné ou statut exclu / à confirmer)
+        - Assurance (tarif conventionné ou statut exclu / à confirmer)
+        """
+        seen_norm_map: Dict[str, Dict[str, Any]] = {}
         stats = {"reconnu": 0, "ressemblant": 0, "inconnu": 0, "composite": 0, "conflit": 0, "total": 0}
-        
+
         for idx, line in enumerate(raw_lines):
             raw_text = line.get("libelle", "")
-            prix = line.get("prix", None)
             norm = normalize_label(raw_text)
-            
-            # Idempotence (§9) : Un libellé présent deux fois dans un fichier compte une fois
-            if norm in seen_norm:
+
+            # Tarifs tri-tarifs
+            raw_comptant = line.get("comptant", line.get("prix", line.get("prix_comptant", None)))
+            raw_ipm = line.get("ipm", line.get("prix_ipm", None))
+            raw_assurance = line.get("assurance", line.get("prix_assurance", None))
+
+            p_comptant, _ = parse_tariff_cell(raw_comptant)
+            p_ipm, status_ipm = parse_tariff_cell(raw_ipm)
+            p_assurance, status_assurance = parse_tariff_cell(raw_assurance)
+
+            # Surcharges explicites de statut si fournies
+            if "statut_ipm" in line:
+                status_ipm = line["statut_ipm"]
+            if "statut_assurance" in line:
+                status_assurance = line["statut_assurance"]
+
+            # Idempotence & détection conflit de prix sur même libellé
+            if norm in seen_norm_map:
+                prev_line = seen_norm_map[norm]
+                prev_price = prev_line.get("prix_comptant")
+                if prev_price is not None and p_comptant is not None and abs(prev_price - p_comptant) > 0.01:
+                    prev_line["etat"] = "conflit"
+                    prev_line["avertissement"] = (
+                        f"Conflit de prix détecté pour le même libellé '{raw_text}' : "
+                        f"{prev_price} F vs {p_comptant} F. Arbitrage requis."
+                    )
+                    stats["conflit"] = stats.get("conflit", 0) + 1
                 continue
-            seen_norm.add(norm)
-            
+
             res = match_line(raw_text, self.pillar_id, self.repo)
             res["line_id"] = idx + 1
-            res["prix_brut"] = prix
+            res["prix_brut"] = p_comptant or raw_comptant
+            res["prix_comptant"] = p_comptant
+            res["prix_ipm"] = p_ipm
+            res["status_ipm"] = status_ipm
+            res["prix_assurance"] = p_assurance
+            res["status_assurance"] = status_assurance
             res["statut_decision"] = "auto_valide" if res["auto_valide"] else "a_confirmer"
-            
+
+            seen_norm_map[norm] = res
             self.lines.append(res)
             stats[res["etat"]] = stats.get(res["etat"], 0) + 1
             stats["total"] += 1
-            
+
         return stats
 
     def validate_human_decision(self, line_id: int, chosen_act_ids: List[int], operator: str) -> Dict[str, Any]:
@@ -551,10 +616,10 @@ class ReconciliationSession:
         line = next((l for l in self.lines if l["line_id"] == line_id), None)
         if not line:
             return {"ok": False, "message": "Ligne introuvable"}
-            
+
         old_state = line.copy()
         norm = line["libelle_normalise"]
-        
+
         # Contrôle 3 (§7) : Alias composite interdit
         if len(chosen_act_ids) > 1:
             line["actes_choisis"] = chosen_act_ids
@@ -566,7 +631,7 @@ class ReconciliationSession:
         chosen_id = chosen_act_ids[0]
         line["actes_choisis"] = [chosen_id]
         line["statut_decision"] = "valide_humain"
-        
+
         # Contrôle 1 (§7) : Collision d'alias
         existing = self.repo.aliases_by_pillar.get(self.pillar_id, {}).get(norm, [])
         if existing and any(e["act_id"] != chosen_id for e in existing):
@@ -574,7 +639,7 @@ class ReconciliationSession:
             line["avertissement"] = "Collision d'alias détectée. Envoyé en file d'arbitrage."
             self._log_audit(operator, "conflit_alias", old_state, line)
             return {"ok": False, "message": "Collision : cet alias existe déjà sur un autre acte.", "line": line}
-            
+
         # Création et apprentissage du nouvel alias (§7)
         is_short = len(norm) <= 3
         new_alias = {
@@ -588,17 +653,69 @@ class ReconciliationSession:
             "valide_par": operator,
             "ligne_source": line_id
         }
-        
+
         if norm not in self.repo.aliases_by_pillar[self.pillar_id]:
             self.repo.aliases_by_pillar[self.pillar_id][norm] = []
         self.repo.aliases_by_pillar[self.pillar_id][norm].append(new_alias)
-        
+
         line["etat"] = "reconnu"
         line["via"] = "alias_appris"
         line["score"] = 100
-        
+
         self._log_audit(operator, "alias_appris", old_state, line)
         return {"ok": True, "message": f"Validé avec succès. Nouvel alias '{norm}' appris.", "line": line}
+
+    def apply_to_prestataire_actes(self, organisme_id: int) -> Dict[str, int]:
+        """
+        Applique les lignes validées de la session directement sur le modèle PrestataireActe.
+        """
+        from decimal import Decimal
+        from healthcare.models import PrestataireActe, ActeMedical
+
+        created = 0
+        updated = 0
+        ignored = 0
+
+        for line in self.lines:
+            if line.get("etat") not in ("reconnu", "auto_valide") and line.get("statut_decision") != "valide_humain":
+                ignored += 1
+                continue
+
+            actes = line.get("actes_choisis", [])
+            if not actes:
+                cands = line.get("candidats", [])
+                if cands:
+                    actes = [cands[0].get("act_id")]
+            if not actes or len(actes) != 1:
+                ignored += 1
+                continue
+
+            act_id = actes[0]
+            p_comptant = line.get("prix_comptant")
+            if p_comptant is None:
+                ignored += 1
+                continue
+
+            defaults = {
+                "price": Decimal(str(p_comptant)),
+                "price_ipm": Decimal(str(line["prix_ipm"])) if line.get("prix_ipm") is not None else None,
+                "price_assurance": Decimal(str(line["prix_assurance"])) if line.get("prix_assurance") is not None else None,
+                "coverage_status_ipm": line.get("status_ipm", "to_confirm"),
+                "coverage_status_assurance": line.get("status_assurance", "to_confirm"),
+                "is_available": True,
+            }
+
+            obj, was_created = PrestataireActe.objects.update_or_create(
+                organisme_id=organisme_id,
+                acte_id=act_id,
+                defaults=defaults,
+            )
+            if was_created:
+                created += 1
+            else:
+                updated += 1
+
+        return {"created": created, "updated": updated, "ignored": ignored, "total": len(self.lines)}
 
     def _log_audit(self, operator: str, action: str, before: dict, after: dict):
         self.audit_log.append({

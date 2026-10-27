@@ -35,9 +35,10 @@
         <div class="border-t border-gray-200 px-6 py-4 bg-gray-50/60">
             <dl class="space-y-1 text-sm">
                 <div class="flex justify-between"><dt class="text-gray-500">Total brut</dt><dd class="font-medium">{{ devis.total_brut|floatformat:0 }} XOF</dd></div>
-                {% if devis.insurance %}<div class="flex justify-between"><dt class="text-gray-500">Assurance ({{ devis.insurance.name }})</dt><dd class="font-medium mc-text-accent">-{{ devis.total_assurance|floatformat:0 }} XOF</dd></div>{% endif %}
-                <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Reste à charge patient</dt><dd class="text-lg font-bold text-primary-500">{{ devis.total_patient|floatformat:0 }} XOF</dd></div>
+                {% if devis.insurance %}<div class="flex justify-between"><dt class="text-gray-500">Prise en charge estimée ({{ devis.insurance.name }})</dt><dd class="font-medium mc-text-accent">-{{ devis.total_assurance|floatformat:0 }} XOF</dd></div>{% endif %}
+                <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Total estimatif patient (à confirmer)</dt><dd class="text-lg font-bold text-primary-500">{{ devis.total_patient|floatformat:0 }} XOF</dd></div>
             </dl>
+            <p class="mt-2 text-[11px] text-gray-500">Montant indicatif, à confirmer avec votre assureur ou IPM. MedCare ne garantit aucun montant de prise en charge.</p>
         </div>
     </div>
 

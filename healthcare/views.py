@@ -2161,6 +2161,10 @@ def organisme_detail(request, slug):
     hours_list = _opening_hours_list(org)
     fiche_ctx = fiche_context_for_org(org, actes, hours_list, request)
 
+    from .organisme_fiche import resolve_patient_insurance_match
+    patient_insurance_match, patient_match_set = resolve_patient_insurance_match(request, insurances)
+    insurances_profil = build_insurances_profil(insurances, matched_set=patient_match_set)
+
     is_favorite = False
     if request.user.is_authenticated:
         is_favorite = Favoris.objects.filter(patient=request.user, organisme=org).exists()
@@ -2171,7 +2175,8 @@ def organisme_detail(request, slug):
         "org": org,
         "wa_general_url": wa_general_url,
         "insurances": insurances,
-        "insurances_profil": build_insurances_profil(insurances),
+        "insurances_profil": insurances_profil,
+        "patient_insurance_match": patient_insurance_match,
         "is_favorite": is_favorite,
         "hours_list": hours_list,
         **fiche_ctx,
@@ -2201,30 +2206,11 @@ def organisme_profil_drawer(request, org_id):
 
     hours_list = _opening_hours_list(org)
 
-    from .organisme_fiche import build_insurances_profil, fiche_context_for_org
+    from .organisme_fiche import build_insurances_profil, fiche_context_for_org, resolve_patient_insurance_match
     fiche_ctx = fiche_context_for_org(org, actes, hours_list, request)
 
-    assurance_ids_int: list[int] = []
-    for x in request.GET.getlist("assurance"):
-        try:
-            assurance_ids_int.append(int(x))
-        except (TypeError, ValueError):
-            continue
-    patient_insurance_names = list(
-        Assurance.objects.filter(pk__in=assurance_ids_int)
-        .order_by("name")
-        .values_list("name", flat=True),
-    )
-    org_insurance_names = {
-        pec.assurance.name for pec in insurances
-    }
-    patient_match_names = [
-        n for n in patient_insurance_names if n in org_insurance_names
-    ]
-    insurances_profil = build_insurances_profil(insurances)
-    patient_match_set = set(patient_match_names)
-    for row in insurances_profil:
-        row["patient_match"] = row["name"] in patient_match_set
+    patient_insurance_match, patient_match_set = resolve_patient_insurance_match(request, insurances)
+    insurances_profil = build_insurances_profil(insurances, matched_set=patient_match_set)
 
     is_favorite = False
     if request.user.is_authenticated:
@@ -2235,7 +2221,7 @@ def organisme_profil_drawer(request, org_id):
         "actes": actes,
         "insurances": insurances,
         "insurances_profil": insurances_profil,
-        "patient_insurance_match": patient_match_names[0] if patient_match_names else "",
+        "patient_insurance_match": patient_insurance_match,
         "is_favorite": is_favorite,
         "hours_list": hours_list,
         **fiche_ctx,

@@ -20,18 +20,38 @@
   <div class="pac-devis-body">
     <div class="pac-actes-list">
       {% for line in devis.details %}
-      <div class="pac-acte-item">
-        <span>{{ line.acte }}{% if line.organisme %} · {{ line.organisme }}{% endif %}</span>
-        <span>{{ line.subtotal|floatformat:0 }} F</span>
+      <div class="pac-acte-item" style="display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f3f4f6">
+        <div>
+          <div class="font-medium text-gray-900">{{ line.acte }}{% if line.organisme %} <span class="text-xs text-gray-500">· {{ line.organisme }}</span>{% endif %}</div>
+          {% if devis.insurance %}
+            {% if line.coverage_status == 'covered' %}
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full mt-1">✓ Couvert{% if line.conventionne_price %} · Tarif conv. {{ line.conventionne_price }} F{% endif %}</span>
+            {% elif line.coverage_status == 'excluded' %}
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full mt-1">✕ Non couvert · Comptant</span>
+            {% else %}
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full mt-1">⚑ À confirmer avec l'organisme</span>
+            {% endif %}
+          {% endif %}
+        </div>
+        <div class="text-right">
+          <div class="font-semibold text-gray-900">{{ line.subtotal|floatformat:0 }} F</div>
+          {% if line.coverage_rate %}<div class="text-[11px] text-gray-500">Couv. {{ line.coverage_rate }}%</div>{% endif %}
+        </div>
       </div>
       {% endfor %}
     </div>
-    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f3f4f6;font-size:11px">
-      <div class="flex justify-between py-0.5"><span class="text-gray-500">Total brut</span><span>{{ devis.total_brut|floatformat:0 }} FCFA</span></div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid #e5e7eb;font-size:12px">
+      <div class="flex justify-between py-0.5"><span class="text-gray-500">Total tarif catalogue</span><span class="font-medium">{{ devis.total_brut|floatformat:0 }} FCFA</span></div>
       {% if devis.insurance %}
-      <div class="flex justify-between py-0.5"><span class="text-gray-500">Assurance ({{ devis.insurance.name }})</span><span class="mc-text-accent-dark">−{{ devis.total_assurance|floatformat:0 }} FCFA</span></div>
+      <div class="flex justify-between py-0.5"><span class="text-gray-500">Prise en charge estimée ({{ devis.insurance.name }})</span><span class="mc-text-accent-dark font-medium">−{{ devis.total_assurance|floatformat:0 }} FCFA</span></div>
       {% endif %}
-      <div class="flex justify-between pt-1 font-bold text-primary-700"><span>Reste à charge</span><span>{{ devis.total_patient|floatformat:0 }} FCFA</span></div>
+      <div class="flex justify-between pt-2 border-t border-gray-100 font-bold text-primary-700 text-sm">
+        <span>Total estimatif patient (à confirmer)</span>
+        <span>{{ devis.total_patient|floatformat:0 }} FCFA</span>
+      </div>
+      <p class="mt-2 text-[11px] text-gray-500 leading-relaxed bg-gray-50 p-2 rounded-lg border border-gray-100">
+        ℹ️ <strong>Information légale :</strong> Montant estimatif à titre indicatif, à confirmer obligatoirement avec votre organisme assureur ou IPM. MedCare ne garantit aucun montant de prise en charge.
+      </p>
     </div>
   </div>
 </div>

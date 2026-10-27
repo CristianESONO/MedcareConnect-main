@@ -86,7 +86,7 @@
                     <div class="flex justify-between"><dt class="text-gray-500">Total brut</dt><dd class="font-medium text-gray-900">{{ cart.total_price|floatformat:0 }} XOF</dd></div>
                     {% if cart.selected_insurance %}
                     <div class="flex justify-between"><dt class="text-gray-500">Prise en charge</dt><dd class="font-medium mc-text-accent">-{{ cart.insurance_savings|floatformat:0 }} XOF</dd></div>
-                    <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Reste à charge</dt><dd class="font-bold text-primary-500">{{ cart.total_after_insurance|floatformat:0 }} XOF</dd></div>
+                    <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Total estimatif patient</dt><dd class="font-bold text-primary-500">{{ cart.total_after_insurance|floatformat:0 }} XOF</dd></div>
                     {% else %}
                     <div class="flex justify-between border-t border-gray-100 pt-2"><dt class="font-semibold text-gray-900">Total</dt><dd class="font-bold text-primary-500">{{ cart.total_price|floatformat:0 }} XOF</dd></div>
                     {% endif %}

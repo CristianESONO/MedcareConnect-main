@@ -504,6 +504,19 @@ class ActeMedical(models.Model):
             "Inclus dans les rappels automatiques si configurés."
         ),
     )
+    nomenclature_key = models.CharField(
+        max_length=10,
+        blank=True,
+        default="",
+        help_text="Lettre-clé nomenclature conventionnelle (B, Z, KE, K, C, D…)",
+    )
+    nomenclature_coef = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Coefficient de l'acte (ex: 50 pour B 50)",
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -550,6 +563,12 @@ class ActeMedical(models.Model):
 
 
 class PrestataireActe(models.Model):
+    COVERAGE_STATUS_CHOICES = (
+        ("covered", "Couvert"),
+        ("to_confirm", "À confirmer"),
+        ("excluded", "Non couvert"),
+    )
+
     DELAI_CHOICES = (
         ("", "Non précisé"),
         ("immediat", "Immédiat (urgence)"),
@@ -574,7 +593,42 @@ class PrestataireActe(models.Model):
     acte = models.ForeignKey(
         ActeMedical, on_delete=models.CASCADE, related_name="prestataire_actes"
     )
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Tarif Comptant (XOF)",
+        help_text="Tarif public / comptant (obligatoire).",
+    )
+    price_ipm = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Tarif conventionné IPM (XOF)",
+        help_text="Tarif conventionné IPM. Vide = non pris en charge par ce régime.",
+    )
+    price_assurance = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name="Tarif conventionné Assurance (XOF)",
+        help_text="Tarif conventionné assurance privée. Vide = à confirmer avec l'assureur.",
+    )
+    coverage_status_ipm = models.CharField(
+        max_length=16,
+        choices=COVERAGE_STATUS_CHOICES,
+        default="to_confirm",
+        verbose_name="Statut couverture IPM",
+        help_text="Statut explicite pour le régime IPM.",
+    )
+    coverage_status_assurance = models.CharField(
+        max_length=16,
+        choices=COVERAGE_STATUS_CHOICES,
+        default="to_confirm",
+        verbose_name="Statut couverture Assurance",
+        help_text="Statut explicite pour le régime Assurance.",
+    )
     delai = models.CharField(
         max_length=16,
         choices=DELAI_CHOICES,
@@ -612,6 +666,54 @@ class PrestataireActe(models.Model):
     def delai_rank(self) -> int:
         return self.DELAI_RANK.get(self.delai or "", 99)
 
+    def get_price_for_regime(self, regime: str = "comptant"):
+        """
+        regime: 'comptant' | 'ipm' | 'assurance'
+        Retourne un dictionnaire :
+        - regime: str
+        - price: Decimal ou None (le tarif spécifique au régime)
+        - status: 'covered' | 'to_confirm' | 'excluded'
+        - effective_price: Decimal (le prix utilisé pour le calcul/tri)
+        - is_conventionne: bool
+        """
+        reg = (regime or "comptant").lower().strip()
+        if reg == "ipm":
+            status = self.coverage_status_ipm
+            if self.price_ipm is not None:
+                if status == "to_confirm":
+                    status = "covered"
+            elif status == "covered":
+                status = "to_confirm"
+            return {
+                "regime": "ipm",
+                "price": self.price_ipm,
+                "status": status,
+                "effective_price": self.price_ipm if self.price_ipm is not None else self.price,
+                "is_conventionne": self.price_ipm is not None,
+            }
+        elif reg == "assurance":
+            status = self.coverage_status_assurance
+            if self.price_assurance is not None:
+                if status == "to_confirm":
+                    status = "covered"
+            elif status == "covered":
+                status = "to_confirm"
+            return {
+                "regime": "assurance",
+                "price": self.price_assurance,
+                "status": status,
+                "effective_price": self.price_assurance if self.price_assurance is not None else self.price,
+                "is_conventionne": self.price_assurance is not None,
+            }
+        else:
+            return {
+                "regime": "comptant",
+                "price": self.price,
+                "status": "covered",
+                "effective_price": self.price,
+                "is_conventionne": False,
+            }
+
     def get_coverage_rate(self, assurance, patient_profile=None):
         """Taux indicatif si la structure accepte l'assurance."""
         from healthcare.coverage import (
@@ -628,7 +730,7 @@ class PrestataireActe(models.Model):
         )
 
     def get_patient_cost(self, assurance=None, patient_profile=None):
-        """Reste à charge patient après taux indicatif de l'assurance."""
+        """Estimation indicative du coût patient (non contractuelle)."""
         from healthcare.coverage import patient_cost_from_rate
 
         if not assurance:
@@ -636,7 +738,9 @@ class PrestataireActe(models.Model):
         rate = self.get_coverage_rate(assurance, patient_profile=patient_profile)
         if rate is None:
             return self.price
-        return patient_cost_from_rate(self.price, rate)
+        # On applique le taux sur le tarif conventionné assurance si existant, sinon tarif comptant
+        base_price = self.price_assurance if self.price_assurance is not None else self.price
+        return patient_cost_from_rate(base_price, rate)
 
 
 class Assurance(models.Model):

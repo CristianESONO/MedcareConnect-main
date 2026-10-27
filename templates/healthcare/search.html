@@ -754,14 +754,14 @@
     display: flex;
     align-items: center;
     gap: 9px;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
     border-radius: 10px;
     padding: 10px 12px;
     margin-bottom: 10px;
     font-size: 11.5px;
     font-weight: 600;
-    color: #047857;
+    color: #dc2626;
   }
   #profil-struct-modal .profil-drawer-assur-toggle {
     width: 100%;
@@ -795,14 +795,14 @@
     font-size: 12px;
   }
   #profil-struct-modal .profil-drawer-assur-row--match {
-    background: #ecfdf5;
-    color: #047857;
+    background: #fef2f2;
+    color: #dc2626;
     font-weight: 600;
   }
   #profil-struct-modal .profil-drawer-assur-tag {
     font-size: 9px;
     font-weight: 700;
-    color: #047857;
+    color: #dc2626;
     white-space: nowrap;
   }
   #profil-struct-modal .profil-drawer-domicile {
@@ -1199,6 +1199,32 @@
         {% if active_filter_count %}
         <div id="active-chips" class="mb-3 flex flex-wrap items-center gap-1.5"></div>
         {% endif %}
+
+        <!-- Sélecteur Tri-Tarifs (Régime de prise en charge) -->
+        <div class="mb-4 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-xs">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span class="text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+                Régime tarifaire :
+              </span>
+              <div class="inline-flex rounded-xl bg-gray-100 p-1 text-xs font-semibold" id="tritarif-regime-chips" role="radiogroup" aria-label="Régime de couverture">
+                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all bg-white text-gray-900 shadow-xs font-bold" data-regime="comptant">
+                  Comptant
+                </button>
+                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="ipm">
+                  IPM
+                </button>
+                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="assurance">
+                  Assurance privée
+                </button>
+              </div>
+            </div>
+            <div id="tritarif-regime-hint" class="text-[11px] text-gray-500 font-medium">
+              Tarifs publics au comptant
+            </div>
+          </div>
+        </div>
 
         <div class="dem-filters-card mb-4 flex flex-wrap items-end gap-3">
           <div class="min-w-0 flex-1 basis-full sm:basis-auto">
@@ -2551,6 +2577,109 @@
     var cartLoginUrl = '{% url "login" %}?next={{ cart_generate_devis_path|urlencode }}';
     function fnum(v){ return Math.round(Number(v || 0)).toLocaleString('fr-FR'); }
     function escapeHtml(s){ var d = document.createElement('div'); d.textContent = String(s || ''); return d.innerHTML; }
+
+    /* ── Tri-Tarifs Switcher (Comptant / IPM / Assurance) ── */
+    var currentTriTarifRegime = 'comptant';
+
+    function setTriTarifRegime(regime) {
+      currentTriTarifRegime = (regime || 'comptant').toLowerCase().trim();
+      var btns = document.querySelectorAll('.tritarif-chip-btn');
+      btns.forEach(function(btn) {
+        var r = btn.getAttribute('data-regime');
+        if (r === currentTriTarifRegime) {
+          btn.className = 'tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all bg-white text-gray-900 shadow-xs font-bold';
+        } else {
+          btn.className = 'tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium';
+        }
+      });
+
+      var hintEl = document.getElementById('tritarif-regime-hint');
+      if (hintEl) {
+        if (currentTriTarifRegime === 'ipm') {
+          hintEl.textContent = "Tarifs conventionnés IPM & statuts de prise en charge";
+        } else if (currentTriTarifRegime === 'assurance') {
+          hintEl.textContent = "Tarifs conventionnés Assurance & statuts de prise en charge";
+        } else {
+          hintEl.textContent = "Tarifs publics au comptant";
+        }
+      }
+
+      var items = document.querySelectorAll('.acte-item, .scard-m-acte');
+      items.forEach(function(item) {
+        var basePrice = item.getAttribute('data-pa-price');
+        var priceIpm = item.getAttribute('data-pa-price-ipm');
+        var priceAssurance = item.getAttribute('data-pa-price-assurance');
+        var statusIpm = item.getAttribute('data-pa-status-ipm') || 'to_confirm';
+        var statusAssurance = item.getAttribute('data-pa-status-assurance') || 'to_confirm';
+
+        var prixEl = item.querySelector('.ai-prix, .scard-m-acte-prix');
+        var badgeEl = item.querySelector('.ai-regime-badge');
+
+        if (!prixEl) return;
+
+        if (currentTriTarifRegime === 'comptant') {
+          prixEl.textContent = fnum(basePrice) + ' FCFA';
+          if (badgeEl) {
+            badgeEl.style.display = 'none';
+            badgeEl.innerHTML = '';
+          }
+        } else if (currentTriTarifRegime === 'ipm') {
+          if (statusIpm === 'excluded') {
+            prixEl.textContent = fnum(basePrice) + ' FCFA';
+            if (badgeEl) {
+              badgeEl.style.display = 'block';
+              badgeEl.className = 'ai-regime-badge mt-0.5 text-[10px] font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded';
+              badgeEl.textContent = '✕ Non couvert · Comptant';
+            }
+          } else if (priceIpm && Number(priceIpm) > 0) {
+            prixEl.textContent = fnum(priceIpm) + ' FCFA';
+            if (badgeEl) {
+              badgeEl.style.display = 'block';
+              badgeEl.className = 'ai-regime-badge mt-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded';
+              badgeEl.textContent = '✓ Conventionné IPM';
+            }
+          } else {
+            prixEl.textContent = fnum(basePrice) + ' FCFA';
+            if (badgeEl) {
+              badgeEl.style.display = 'block';
+              badgeEl.className = 'ai-regime-badge mt-0.5 text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded';
+              badgeEl.textContent = '⚑ À confirmer IPM';
+            }
+          }
+        } else if (currentTriTarifRegime === 'assurance') {
+          if (statusAssurance === 'excluded') {
+            prixEl.textContent = fnum(basePrice) + ' FCFA';
+            if (badgeEl) {
+              badgeEl.style.display = 'block';
+              badgeEl.className = 'ai-regime-badge mt-0.5 text-[10px] font-semibold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded';
+              badgeEl.textContent = '✕ Non couvert · Comptant';
+            }
+          } else if (priceAssurance && Number(priceAssurance) > 0) {
+            prixEl.textContent = fnum(priceAssurance) + ' FCFA';
+            if (badgeEl) {
+              badgeEl.style.display = 'block';
+              badgeEl.className = 'ai-regime-badge mt-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded';
+              badgeEl.textContent = '✓ Conventionné Assurance';
+            }
+          } else {
+            prixEl.textContent = fnum(basePrice) + ' FCFA';
+            if (badgeEl) {
+              badgeEl.style.display = 'block';
+              badgeEl.className = 'ai-regime-badge mt-0.5 text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded';
+              badgeEl.textContent = '⚑ À confirmer Assurance';
+            }
+          }
+        }
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      var btn = e.target && e.target.closest && e.target.closest('.tritarif-chip-btn');
+      if (btn) {
+        var reg = btn.getAttribute('data-regime');
+        setTriTarifRegime(reg);
+      }
+    });
     function sipnToast(msg, level){
       var text = String(msg || '');
       if (!text) return;
@@ -2779,7 +2908,7 @@
 
       var infoHtml = '';
       if (cartCoverage && cartCoverage.total_assurance > 0) {
-        infoHtml = '<p class="text-[11px] mc-text-accent-dark">Estimation assurance : −' + fnum(cartCoverage.total_assurance) + ' F · reste ' + fnum(cartCoverage.total_patient) + ' F</p>';
+        infoHtml = '<p class="text-[11px] mc-text-accent-dark">Estimation assurance : −' + fnum(cartCoverage.total_assurance) + ' F · estim. patient ' + fnum(cartCoverage.total_patient) + ' F (à confirmer)</p>';
       }
 
       html += '<div class="panier-total-card">' +
@@ -3510,7 +3639,7 @@
             + '</div>'
             + '<div class="cart-coverage-est-row">'
             + '<span class="cart-coverage-covered">Pris en charge : <strong>' + fnum(cartCoverage.total_assurance) + ' F</strong></span>'
-            + '<span class="cart-coverage-rest">Reste : <strong>' + fnum(cartCoverage.total_patient) + ' F</strong></span>'
+            + '<span class="cart-coverage-rest">Estimation patient : <strong>' + fnum(cartCoverage.total_patient) + ' F</strong> <small class="text-[10px] text-gray-400 font-normal">(indicatif)</small></span>'
             + '</div></div>';
         }
         if (demAssuranceCtx && demAssuranceCtx.labels && demAssuranceCtx.labels.length) {

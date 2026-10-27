@@ -8,6 +8,10 @@
   data-pa-org="{{ pa.organisme.name|escape }}"
   data-pa-org-id="{{ pa.organisme.pk }}"
   data-pa-price="{{ pa.price|floatformat:0 }}"
+  data-pa-price-ipm="{% if pa.price_ipm %}{{ pa.price_ipm|floatformat:0 }}{% endif %}"
+  data-pa-price-assurance="{% if pa.price_assurance %}{{ pa.price_assurance|floatformat:0 }}{% endif %}"
+  data-pa-status-ipm="{{ pa.coverage_status_ipm }}"
+  data-pa-status-assurance="{{ pa.coverage_status_assurance }}"
   data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
   data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
   data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
@@ -68,7 +72,14 @@
       <span class="scard-actes-count">{{ pa.dem_org_catalog_count }} acte{{ pa.dem_org_catalog_count|pluralize }} au catalogue</span>
       {% endif %}
     </div>
-    <div class="acte-item" role="button" tabindex="0" aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
+    <div class="acte-item"
+      data-pa-id="{{ pa.pk }}"
+      data-pa-price="{{ pa.price|floatformat:0 }}"
+      data-pa-price-ipm="{% if pa.price_ipm %}{{ pa.price_ipm|floatformat:0 }}{% endif %}"
+      data-pa-price-assurance="{% if pa.price_assurance %}{{ pa.price_assurance|floatformat:0 }}{% endif %}"
+      data-pa-status-ipm="{{ pa.coverage_status_ipm }}"
+      data-pa-status-assurance="{{ pa.coverage_status_assurance }}"
+      role="button" tabindex="0" aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
       <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
       <div class="ai-info min-w-0">
         <div class="ai-nom">{{ pa.acte.name }}</div>
@@ -81,7 +92,10 @@
       {% if pa.delai %}
       <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
       {% endif %}
-      <div class="ai-prix">{{ pa.price|floatformat:0 }} FCFA</div>
+      <div class="ai-pricing-col text-right">
+        <div class="ai-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|floatformat:0 }} FCFA</div>
+        <div class="ai-regime-badge mt-0.5 text-[10px] font-semibold" style="display:none"></div>
+      </div>
     </div>
     {% endif %}
   </div>

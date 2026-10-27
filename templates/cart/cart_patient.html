@@ -93,7 +93,7 @@
                     <dd id="medcare-recap-pec" class="font-medium mc-text-accent">{% if cart.selected_insurance %}-{{ cart.insurance_savings|floatformat:0 }} XOF{% endif %}</dd>
                 </div>
                 <div id="medcare-recap-row-reste" class="flex justify-between border-t border-gray-100 pt-2 {% if not cart.selected_insurance %}hidden{% endif %}">
-                    <dt class="font-semibold text-gray-900">Reste à charge</dt>
+                    <dt class="font-semibold text-gray-900">Total estimatif patient</dt>
                     <dd id="medcare-recap-reste" class="font-bold text-primary-500">{% if cart.selected_insurance %}{{ cart.total_after_insurance|floatformat:0 }} XOF{% endif %}</dd>
                 </div>
                 <div id="medcare-recap-row-total-seul" class="flex justify-between border-t border-gray-100 pt-2 {% if cart.selected_insurance %}hidden{% endif %}">

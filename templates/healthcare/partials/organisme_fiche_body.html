@@ -10,9 +10,9 @@ Optionnel : fiche_embedded (True = drawer AJAX avec panier serveur)
   {% endif %}
 
   {% if patient_insurance_match %}
-  <div class="profil-drawer-ins-match">
-    <span aria-hidden="true"><i class="ti ti-circle-check"></i></span>
-    <span>Votre assurance <strong>{{ patient_insurance_match }}</strong> est acceptée ici.</span>
+  <div class="profil-drawer-ins-match" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626;">
+    <span aria-hidden="true" style="color:#dc2626;font-size:16px;display:flex;align-items:center;"><i class="ti ti-circle-check"></i></span>
+    <span style="color:#dc2626;font-weight:600;">Votre assurance est acceptée ici{% if patient_insurance_match %} (<strong>{{ patient_insurance_match }}</strong>){% endif %}.</span>
   </div>
   {% endif %}
 

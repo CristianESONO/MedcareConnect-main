@@ -31,31 +31,52 @@
   #dash-sidebar { display: none; }
   #dash-mobile-bar { display: flex; }
   @media (min-width: 768px) {
+    html,
+    body.mc-prestataire-dash {
+      height: 100vh !important;
+      max-height: 100vh !important;
+      overflow: hidden !important;
+    }
+    body.mc-prestataire-dash > main {
+      flex: 1 1 0 !important;
+      min-height: 0 !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .dash-shell {
+      flex: 1 1 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #dash-layout {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+    }
     #dash-sidebar {
       display: flex;
       flex-direction: column;
       width: 260px;
       flex-shrink: 0;
-      position: sticky;
-      top: 4rem;
-      height: calc(100vh - 4rem);
-      max-height: calc(100vh - 4rem);
+      height: 100%;
+      max-height: 100%;
       overflow-y: auto;
     }
     #dash-mobile-bar { display: none; }
     #dashAppDrawer,
     #dashAppDrawerBackdrop { display: none !important; }
-    #dash-layout {
-      display: flex;
-      flex-direction: row;
-      min-height: calc(100vh - 4rem);
-    }
     #dash-sidebar > nav.flex-1 { min-height: 0; }
     #dash-main {
       flex: 1 1 0;
       min-width: 0;
-      /* Scroll interne : le contenu ne dépasse plus le footer */
-      height: calc(100vh - 4rem);
+      min-height: 0;
+      height: 100%;
+      max-height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
     }

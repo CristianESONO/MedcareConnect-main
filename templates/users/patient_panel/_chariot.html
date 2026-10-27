@@ -77,7 +77,7 @@
     {% if insurance_use_in_estimates and cart_insurance and cart_total_assurance %}
     <div class="mt-2 space-y-1 text-xs">
       <div class="flex justify-between mc-text-accent-dark"><span>Prise en charge (estim.)</span><span>−{{ cart_total_assurance|floatformat:0 }} F</span></div>
-      <div class="flex justify-between font-semibold text-primary-700"><span>Reste à charge</span><span>{{ cart_total_patient|floatformat:0 }} FCFA</span></div>
+      <div class="flex justify-between font-semibold text-primary-700"><span>Total estimatif patient</span><span>{{ cart_total_patient|floatformat:0 }} FCFA</span></div>
     </div>
     {% elif cart_insurance %}
     <p class="mt-1 text-[11px] text-gray-500">Aucun taux applicable pour ces actes ou structures non compatibles.</p>

@@ -42,6 +42,10 @@
     data-pa-org="{{ pa.organisme.name|escape }}"
     data-pa-org-id="{{ pa.organisme.pk }}"
     data-pa-price="{{ pa.price|floatformat:0 }}"
+    data-pa-price-ipm="{% if pa.price_ipm %}{{ pa.price_ipm|floatformat:0 }}{% endif %}"
+    data-pa-price-assurance="{% if pa.price_assurance %}{{ pa.price_assurance|floatformat:0 }}{% endif %}"
+    data-pa-status-ipm="{{ pa.coverage_status_ipm }}"
+    data-pa-status-assurance="{{ pa.coverage_status_assurance }}"
     data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
     data-pa-delai-rank="{{ pa.delai_rank }}"
     {% if pa.distance_km %}data-pa-distance-km="{{ pa.distance_km }}"{% endif %}
@@ -62,7 +66,10 @@
       </div>
       {% endif %}
     </div>
-    <div class="scard-m-acte-prix">{{ pa.price|floatformat:0 }} F</div>
+    <div class="scard-m-pricing text-right">
+      <div class="scard-m-acte-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|floatformat:0 }} F</div>
+      <div class="ai-regime-badge mt-0.5 text-[9.5px] font-semibold" style="display:none"></div>
+    </div>
   </div>
     {% endif %}
   {% endfor %}

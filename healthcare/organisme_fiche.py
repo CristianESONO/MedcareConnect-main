@@ -112,18 +112,89 @@ def build_profil_pillars(actes, is_ambulance: bool = False) -> tuple[list[dict],
     return pillars, services_with_actes
 
 
-def build_insurances_profil(insurances_qs) -> list[dict]:
+def resolve_patient_insurance_match(request, insurances_qs) -> tuple[str, set[str]]:
+    """
+    Détermine si l'assurance configurée par le patient (profil, session ou URL)
+    est acceptée par la structure (insurances_qs).
+    Retourne (nom_premiere_assurance_match, ensemble_noms_match).
+    """
+    if not request:
+        return "", set()
+
+    org_insurance_map: dict[int, str] = {}
+    for pec in insurances_qs:
+        if pec.assurance_id and pec.assurance:
+            org_insurance_map[pec.assurance_id] = pec.assurance.name
+
+    if not org_insurance_map:
+        return "", set()
+
+    matched_names: list[str] = []
+
+    # 1. Patient connecté avec assurance enregistrée sur son profil
+    user = getattr(request, "user", None)
+    if user and getattr(user, "is_authenticated", False):
+        profile = getattr(user, "patient_profile", None)
+        if not profile and getattr(user, "is_patient", False):
+            try:
+                from users.models import PatientProfile
+                profile = PatientProfile.objects.filter(user=user).select_related("insurance").first()
+            except Exception:
+                profile = None
+
+        if profile and profile.insurance_id:
+            if profile.insurance_id in org_insurance_map:
+                name = org_insurance_map[profile.insurance_id]
+                if name not in matched_names:
+                    matched_names.append(name)
+
+    # 2. Assurance invitée stockée en session
+    session = getattr(request, "session", None)
+    if session:
+        guest_ins_id = session.get("medcare_guest_insurance_id_v1") or session.get("guest_insurance_id")
+        if guest_ins_id:
+            try:
+                gid = int(guest_ins_id)
+                if gid in org_insurance_map:
+                    name = org_insurance_map[gid]
+                    if name not in matched_names:
+                        matched_names.append(name)
+            except (ValueError, TypeError):
+                pass
+
+    # 3. Paramètres GET 'assurance' (ex. filtres de recherche ou annuaire)
+    get_params = getattr(request, "GET", None)
+    if get_params:
+        for x in get_params.getlist("assurance"):
+            try:
+                aid = int(x)
+                if aid in org_insurance_map:
+                    name = org_insurance_map[aid]
+                    if name not in matched_names:
+                        matched_names.append(name)
+            except (ValueError, TypeError):
+                continue
+
+    matched_set = set(matched_names)
+    first_match = matched_names[0] if matched_names else ""
+    return first_match, matched_set
+
+
+def build_insurances_profil(insurances_qs, matched_set: set[str] | None = None) -> list[dict]:
     rows = []
+    matched_set = matched_set or set()
     for pec in insurances_qs:
         seg = pec.assurance.segment
+        name = pec.assurance.name
         rows.append(
             {
-                "name": pec.assurance.name,
+                "name": name,
                 "segment": seg,
                 "filter_key": insurance_profil_filter_key(seg),
                 "chip_label": chip_label_for_assurance_segment(
                     seg, pec.assurance.get_segment_display()
                 ),
+                "patient_match": name in matched_set,
             }
         )
     return rows

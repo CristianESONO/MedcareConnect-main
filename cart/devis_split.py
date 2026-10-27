@@ -53,8 +53,8 @@ def build_detail_lines_for_cart_items(
         unit_price = pa.price
         subtotal = item.subtotal
         total_brut += subtotal
-        coverage_rate = None
-        patient_cost = subtotal
+        coverage_status = "covered"
+        conventionne_price = None
         if selected_insurance:
             coverage_rate = pa.get_coverage_rate(
                 selected_insurance, patient_profile=patient_profile
@@ -62,12 +62,24 @@ def build_detail_lines_for_cart_items(
             patient_cost = item.cost_after_insurance(
                 selected_insurance, patient_profile=patient_profile
             )
+            # Déterminer le statut selon le régime
+            is_ipm = getattr(selected_insurance, "is_ipm", False) or "ipm" in (getattr(selected_insurance, "name", "")).lower()
+            if is_ipm:
+                coverage_status = pa.coverage_status_ipm
+                conventionne_price = pa.price_ipm
+            else:
+                coverage_status = pa.coverage_status_assurance
+                conventionne_price = pa.price_assurance
+            if conventionne_price is not None and coverage_status == "to_confirm":
+                coverage_status = "covered"
         total_patient += patient_cost
         details.append({
             "acte_id": pa.acte_id,
             "acte": pa.acte.name,
             "organisme": pa.organisme.name,
             "unit_price": str(unit_price),
+            "conventionne_price": str(conventionne_price) if conventionne_price else None,
+            "coverage_status": coverage_status,
             "quantity": item.quantity,
             "subtotal": str(subtotal),
             "coverage_rate": str(coverage_rate) if coverage_rate else None,
