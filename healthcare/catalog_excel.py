@@ -402,6 +402,8 @@ class ActeCatalogMatcher:
         # 6. Fuzzy matching (SequenceMatcher) pour tolérer petites fautes de frappe
         candidates: list[tuple[ActeMedical, float]] = []
         for alias_text, acte in self.alias_map.items():
+            if not alias_text or not norm_input:
+                continue
             if abs(len(alias_text) - len(norm_input)) > 5:
                 continue
             if alias_text[0] != norm_input[0]:
