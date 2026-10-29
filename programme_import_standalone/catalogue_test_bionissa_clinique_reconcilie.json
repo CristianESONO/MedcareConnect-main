@@ -1,1120 +1,3189 @@
-[
-  {
-    "libelle_source": "Glycémie à jeun",
-    "libelle_norm": "glycemie a jeun",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 66,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Glycémie à jeun",
-          "nom_norm": "glycemie a jeun",
-          "type": "Biochimie & ionogramme",
-          "code": "BIO"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 66,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Glycémie à jeun",
-      "nom_norm": "glycemie a jeun",
-      "type": "Biochimie & ionogramme",
-      "code": "BIO"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "2500",
-    "source_delai": "2h"
+{
+  "summary": {
+    "total_rows": 25,
+    "actes_count": 25,
+    "reconnus": 14,
+    "a_confirmer": 9,
+    "inconnus": 2
   },
-  {
-    "libelle_source": "NFS",
-    "libelle_norm": "nfs",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 18,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "NFS (hémogramme)",
-          "nom_norm": "nfs hemogramme",
-          "type": "Hématologie",
+  "lines": [
+    {
+      "libelle_source": "Glycémie à jeun",
+      "libelle_norm": "glycemie a jeun",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 335,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Glycémie à jeun",
+            "nom_norm": "glycemie a jeun",
+            "type": "Biochimie & Ionogramme",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 335,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Glycémie à jeun",
+        "nom_norm": "glycemie a jeun",
+        "type": "Biochimie & Ionogramme",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "2500",
+      "source_delai": "2h",
+      "prix_comptant": 2500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Glycémie à jeun",
+      "label": "Glycémie à jeun",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 335,
+          "name": "Glycémie à jeun",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 2500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "NFS",
+      "libelle_norm": "nfs",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 528,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "NFS (hémogramme)",
+            "nom_norm": "nfs hemogramme",
+            "type": "Hématologie",
+            "code": "HEM"
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 528,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "NFS (hémogramme)",
+        "nom_norm": "nfs hemogramme",
+        "type": "Hématologie",
+        "code": "HEM"
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "4000",
+      "source_delai": "3h",
+      "prix_comptant": 4000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "3h",
+      "raw": "NFS",
+      "label": "NFS",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 528,
+          "name": "NFS (hémogramme)",
           "code": "HEM"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 18,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "NFS (hémogramme)",
-      "nom_norm": "nfs hemogramme",
-      "type": "Hématologie",
-      "code": "HEM"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "4000",
-    "source_delai": "3h"
-  },
-  {
-    "libelle_source": "Créatininémie",
-    "libelle_norm": "creatininemie",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 74,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Créatininémie",
-          "nom_norm": "creatininemie",
-          "type": "Biochimie & ionogramme",
-          "code": "BIO"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 74,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Créatininémie",
-      "nom_norm": "creatininemie",
-      "type": "Biochimie & ionogramme",
-      "code": "BIO"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "3000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Cholestérol total",
-    "libelle_norm": "cholesterol total",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 104,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Cholestérol total",
-          "nom_norm": "cholesterol total",
-          "type": "Biochimie & ionogramme",
-          "code": "BIO"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 104,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Cholestérol total",
-      "nom_norm": "cholesterol total",
-      "type": "Biochimie & ionogramme",
-      "code": "BIO"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "2500",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "ECBU",
-    "libelle_norm": "ecbu",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 317,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "ECBU + antibiogramme",
-          "nom_norm": "ecbu antibiogramme",
-          "type": "Bactériologie",
-          "code": "BAC"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 317,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "ECBU + antibiogramme",
-      "nom_norm": "ecbu antibiogramme",
-      "type": "Bactériologie",
-      "code": "BAC"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "6000",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Ionogramme sanguin",
-    "libelle_norm": "ionogramme sanguin",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 5,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Ionogramme sanguin (Na + K + Cl)",
-          "nom_norm": "ionogramme sanguin na k cl",
-          "type": "Panel d'examens",
-          "code": "PAN"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 5,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Ionogramme sanguin (Na + K + Cl)",
-      "nom_norm": "ionogramme sanguin na k cl",
-      "type": "Panel d'examens",
-      "code": "PAN"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "5000",
-    "source_delai": "3h"
-  },
-  {
-    "libelle_source": "RUGEOLE",
-    "libelle_norm": "rugeole",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 295,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rougeole",
-          "nom_norm": "serologie rougeole",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 295,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Sérologie rougeole",
-      "nom_norm": "serologie rougeole",
-      "type": "Sérologie & virologie",
-      "code": "SER"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "12000",
-    "source_delai": "48h"
-  },
-  {
-    "libelle_source": "Scoth test",
-    "libelle_norm": "scoth test",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 347,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Scotch-test anal (test de Graham)",
-          "nom_norm": "scotch test anal test de graham",
-          "type": "Parasitologie & mycologie",
-          "code": "PAR"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 347,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Scotch-test anal (test de Graham)",
-      "nom_norm": "scotch test anal test de graham",
-      "type": "Parasitologie & mycologie",
-      "code": "PAR"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "3500",
-    "source_delai": "1h"
-  },
-  {
-    "libelle_source": "ac anti CP 210",
-    "libelle_norm": "ac anti cp 210",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 239,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-gp210 (CP210)",
-          "nom_norm": "anticorps anti gp210 cp210",
-          "type": "Immunologie, auto-immunité & allergologie",
-          "code": "IMM"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 239,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Anticorps anti-gp210 (CP210)",
-      "nom_norm": "anticorps anti gp210 cp210",
-      "type": "Immunologie, auto-immunité & allergologie",
-      "code": "IMM"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "25000",
-    "source_delai": "72h"
-  },
-  {
-    "libelle_source": "TPTCK",
-    "libelle_norm": "tptck",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 7,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Bilan d'hémostase (TP + TCK + TS)",
-          "nom_norm": "bilan d hemostase tp tck ts",
-          "type": "Panel d'examens",
-          "code": "PAN"
-        },
-        "score": 100
-      }
-    ],
-    "meilleur_acte": {
-      "id": 7,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Bilan d'hémostase (TP + TCK + TS)",
-      "nom_norm": "bilan d hemostase tp tck ts",
-      "type": "Panel d'examens",
-      "code": "PAN"
-    },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "4500",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Sérologie Rubéole IgG",
-    "libelle_norm": "serologie rubeole igg",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Garde-fou)",
-    "score": 91.3,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 288,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rubéole (IgG + IgM)",
-          "nom_norm": "serologie rubeole igg igm",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 91.3
+        }
       },
-      {
-        "act": {
-          "id": 295,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rougeole",
-          "nom_norm": "serologie rougeole",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 82.1
-      },
-      {
-        "act": {
-          "id": 306,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie brucellose (Wright)",
-          "nom_norm": "serologie brucellose wright",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 75.0
+      "price": {
+        "value": 4000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 288,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Sérologie rubéole (IgG + IgM)",
-      "nom_norm": "serologie rubeole igg igm",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igg' vs 'igg/igm'.",
-    "auto_valide": false,
-    "source_prix": "8500",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Sérologie Rubéole IgM",
-    "libelle_norm": "serologie rubeole igm",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Garde-fou)",
-    "score": 91.3,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 288,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rubéole (IgG + IgM)",
-          "nom_norm": "serologie rubeole igg igm",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 91.3
+    {
+      "libelle_source": "Créatininémie",
+      "libelle_norm": "creatininemie",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 326,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Créatininémie",
+            "nom_norm": "creatininemie",
+            "type": "Biochimie & Ionogramme",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 326,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Créatininémie",
+        "nom_norm": "creatininemie",
+        "type": "Biochimie & Ionogramme",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 295,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie rougeole",
-          "nom_norm": "serologie rougeole",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 82.1
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "3000",
+      "source_delai": "2h",
+      "prix_comptant": 3000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Créatininémie",
+      "label": "Créatininémie",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 326,
+          "name": "Créatininémie",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 306,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Sérologie brucellose (Wright)",
-          "nom_norm": "serologie brucellose wright",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 75.0
+      "price": {
+        "value": 3000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 288,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Sérologie rubéole (IgG + IgM)",
-      "nom_norm": "serologie rubeole igg igm",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igm' vs 'igg/igm'.",
-    "auto_valide": false,
-    "source_prix": "8500",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Hépatite B Ag HBs",
-    "libelle_norm": "hepatite b ag hbs",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Garde-fou)",
-    "score": 71.0,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 282,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHA IgM",
-          "nom_norm": "anticorps anti vha igm",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 71.0
+    {
+      "libelle_source": "Cholestérol total",
+      "libelle_norm": "cholesterol total",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 322,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Cholestérol total",
+            "nom_norm": "cholesterol total",
+            "type": "Biochimie & Ionogramme",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 322,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Cholestérol total",
+        "nom_norm": "cholesterol total",
+        "type": "Biochimie & Ionogramme",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 283,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHA IgG",
-          "nom_norm": "anticorps anti vha igg",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 71.0
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "2500",
+      "source_delai": "2h",
+      "prix_comptant": 2500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Cholestérol total",
+      "label": "Cholestérol total",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 322,
+          "name": "Cholestérol total",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 285,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHE",
-          "nom_norm": "anticorps anti vhe",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 66.7
+      "price": {
+        "value": 2500,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 282,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Anticorps anti-VHA IgM",
-      "nom_norm": "anticorps anti vha igm",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": "Garde-fou actif : Spécification discriminante (Immunoglobulines) non concordante : 'igm'.",
-    "auto_valide": false,
-    "source_prix": "7000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Hépatite C sérologie",
-    "libelle_norm": "hepatite c serologie",
-    "statut": "reconnu_alias",
-    "statut_label": "Reconnu (100% alias)",
-    "score": 100,
-    "via": "alias",
-    "candidats": [
-      {
-        "act": {
-          "id": 281,
-          "pid": 1,
-          "slug": "biologie-medicale",
-          "nom": "Anticorps anti-VHC",
-          "nom_norm": "anticorps anti vhc",
-          "type": "Sérologie & virologie",
-          "code": "SER"
-        },
-        "score": 100
+    {
+      "libelle_source": "ECBU",
+      "libelle_norm": "ecbu",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 279,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "ECBU + antibiogramme",
+            "nom_norm": "ecbu antibiogramme",
+            "type": "Bactériologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 279,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "ECBU + antibiogramme",
+        "nom_norm": "ecbu antibiogramme",
+        "type": "Bactériologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "6000",
+      "source_delai": "24h",
+      "prix_comptant": 6000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "ECBU",
+      "label": "ECBU",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 279,
+          "name": "ECBU + antibiogramme",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 6000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 281,
-      "pid": 1,
-      "slug": "biologie-medicale",
-      "nom": "Anticorps anti-VHC",
-      "nom_norm": "anticorps anti vhc",
-      "type": "Sérologie & virologie",
-      "code": "SER"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "9000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "PV CHLAM MYCO",
-    "libelle_norm": "pv chlam myco",
-    "statut": "composite",
-    "statut_label": "Composite (multi-actes)",
-    "score": 70,
-    "via": "aucun",
-    "candidats": [],
-    "meilleur_acte": null,
-    "avertissement": "Libellé composite (§5.3 / §6) : vise plusieurs actes distincts.",
-    "auto_valide": false,
-    "source_prix": "18000",
-    "source_delai": "48h"
-  },
-  {
-    "libelle_source": "Scanner thoracique avec injection",
-    "libelle_norm": "scanner thoracique avec injection",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 70.6,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 515,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "TDM thoracique",
-          "nom_norm": "tdm thoracique",
-          "type": "Scanner (TDM)",
-          "code": "TDM"
-        },
-        "score": 70.6
+    {
+      "libelle_source": "Ionogramme sanguin",
+      "libelle_norm": "ionogramme sanguin",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 686,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Ionogramme sanguin (Na + K + Cl)",
+            "nom_norm": "ionogramme sanguin na k cl",
+            "type": "Panel d'examens",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 686,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Ionogramme sanguin (Na + K + Cl)",
+        "nom_norm": "ionogramme sanguin na k cl",
+        "type": "Panel d'examens",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 516,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Angio-TDM thoracique (embolie pulmonaire)",
-          "nom_norm": "angio tdm thoracique embolie pulmonaire",
-          "type": "Scanner (TDM)",
-          "code": "TDM"
-        },
-        "score": 64.3
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "5000",
+      "source_delai": "3h",
+      "prix_comptant": 5000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "3h",
+      "raw": "Ionogramme sanguin",
+      "label": "Ionogramme sanguin",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 686,
+          "name": "Ionogramme sanguin (Na + K + Cl)",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 416,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Scanner thoraco-abdomino-pelvien (TAP)",
-          "nom_norm": "scanner thoraco abdomino pelvien tap",
-          "type": "Panel d'examens / Protocoles",
-          "code": "PAN"
-        },
-        "score": 58.0
+      "price": {
+        "value": 5000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 515,
-      "pid": 2,
-      "slug": "imagerie-medicale",
-      "nom": "TDM thoracique",
-      "nom_norm": "tdm thoracique",
-      "type": "Scanner (TDM)",
-      "code": "TDM"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "85000",
-    "source_delai": "4h"
-  },
-  {
-    "libelle_source": "IRM cérébrale",
-    "libelle_norm": "irm cerebrale",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 537,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "IRM cérébrale",
-          "nom_norm": "irm cerebrale",
-          "type": "IRM",
-          "code": "IRM"
-        },
-        "score": 100
+    {
+      "libelle_source": "RUGEOLE",
+      "libelle_norm": "rugeole",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 795,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rougeole",
+            "nom_norm": "serologie rougeole",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 795,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Sérologie rougeole",
+        "nom_norm": "serologie rougeole",
+        "type": "Sérologie & Virologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "12000",
+      "source_delai": "48h",
+      "prix_comptant": 12000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "48h",
+      "raw": "RUGEOLE",
+      "label": "RUGEOLE",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 795,
+          "name": "Sérologie rougeole",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 12000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 537,
-      "pid": 2,
-      "slug": "imagerie-medicale",
-      "nom": "IRM cérébrale",
-      "nom_norm": "irm cerebrale",
-      "type": "IRM",
-      "code": "IRM"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "150000",
-    "source_delai": "24h"
-  },
-  {
-    "libelle_source": "Échographie abdomino-pelvienne",
-    "libelle_norm": "echographie abdomino pelvienne",
-    "statut": "reconnu_auto",
-    "statut_label": "Reconnu (100% exact)",
-    "score": 100,
-    "via": "nom",
-    "candidats": [
-      {
-        "act": {
-          "id": 418,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Échographie abdomino-pelvienne",
-          "nom_norm": "echographie abdomino pelvienne",
-          "type": "Panel d'examens / Protocoles",
-          "code": "PAN"
-        },
-        "score": 100
+    {
+      "libelle_source": "Scoth test",
+      "libelle_norm": "scoth test",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 712,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Scotch-test anal (test de Graham)",
+            "nom_norm": "scotch test anal test de graham",
+            "type": "Parasitologie & Mycologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 712,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Scotch-test anal (test de Graham)",
+        "nom_norm": "scotch test anal test de graham",
+        "type": "Parasitologie & Mycologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "3500",
+      "source_delai": "1h",
+      "prix_comptant": 3500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "1h",
+      "raw": "Scoth test",
+      "label": "Scoth test",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 712,
+          "name": "Scotch-test anal (test de Graham)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 3500,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 418,
-      "pid": 2,
-      "slug": "imagerie-medicale",
-      "nom": "Échographie abdomino-pelvienne",
-      "nom_norm": "echographie abdomino pelvienne",
-      "type": "Panel d'examens / Protocoles",
-      "code": "PAN"
     },
-    "avertissement": null,
-    "auto_valide": true,
-    "source_prix": "35000",
-    "source_delai": "1h"
-  },
-  {
-    "libelle_source": "Électrocardiogramme de repos (ECG)",
-    "libelle_norm": "electrocardiogramme de repos ecg",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 74.5,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 644,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "ECG de repos",
-          "nom_norm": "ecg de repos",
-          "type": "Cardiologie & explorations vasculaires",
-          "code": "CARD"
-        },
-        "score": 74.5
+    {
+      "libelle_source": "ac anti CP 210",
+      "libelle_norm": "ac anti cp 210",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 613,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-gp210 (CP210)",
+            "nom_norm": "anticorps anti gp210 cp210",
+            "type": "Immunologie, auto-immunité & allergologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 613,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Anticorps anti-gp210 (CP210)",
+        "nom_norm": "anticorps anti gp210 cp210",
+        "type": "Immunologie, auto-immunité & allergologie",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 727,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Électrorétinogramme (ERG)",
-          "nom_norm": "electroretinogramme erg",
-          "type": "Ophtalmologie",
-          "code": "OPH"
-        },
-        "score": 72.7
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "25000",
+      "source_delai": "72h",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "72h",
+      "raw": "ac anti CP 210",
+      "label": "ac anti CP 210",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 613,
+          "name": "Anticorps anti-gp210 (CP210)",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 728,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Électro-oculogramme (EOG)",
-          "nom_norm": "electro oculogramme eog",
-          "type": "Ophtalmologie",
-          "code": "OPH"
-        },
-        "score": 69.1
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 644,
-      "pid": 3,
-      "slug": "explorations-fonctionnelles",
-      "nom": "ECG de repos",
-      "nom_norm": "ecg de repos",
-      "type": "Cardiologie & explorations vasculaires",
-      "code": "CARD"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "15000",
-    "source_delai": "30m"
-  },
-  {
-    "libelle_source": "Fibroscopie oeso-gastro-duodénale",
-    "libelle_norm": "fibroscopie oeso gastro duodenale",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 93.0,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 681,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
-          "nom_norm": "fibroscopie oeso gastro duodenale fogd",
-          "type": "Gastro-entérologie & endoscopie digestive",
-          "code": "GAST"
-        },
-        "score": 93.0
+    {
+      "libelle_source": "TPTCK",
+      "libelle_norm": "tptck",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 675,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Bilan d'hémostase (TP + TCK + TS)",
+            "nom_norm": "bilan d hemostase tp tck ts",
+            "type": "Panel d'examens",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 675,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Bilan d'hémostase (TP + TCK + TS)",
+        "nom_norm": "bilan d hemostase tp tck ts",
+        "type": "Panel d'examens",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 457,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Transit œso-gastro-duodénal (TOGD)",
-          "nom_norm": "transit oeso gastro duodenal togd",
-          "type": "Radiographie",
-          "code": "RX"
-        },
-        "score": 72.1
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "4500",
+      "source_delai": "2h",
+      "prix_comptant": 4500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "TPTCK",
+      "label": "TPTCK",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 675,
+          "name": "Bilan d'hémostase (TP + TCK + TS)",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 710,
-          "pid": 3,
-          "slug": "explorations-fonctionnelles",
-          "nom": "Fibroscopie naso-pharyngée",
-          "nom_norm": "fibroscopie naso pharyngee",
-          "type": "ORL & explorations audio-vestibulaires",
-          "code": "ORL"
-        },
-        "score": 66.7
+      "price": {
+        "value": 4500,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 681,
-      "pid": 3,
-      "slug": "explorations-fonctionnelles",
-      "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
-      "nom_norm": "fibroscopie oeso gastro duodenale fogd",
-      "type": "Gastro-entérologie & endoscopie digestive",
-      "code": "GAST"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "65000",
-    "source_delai": "2h"
-  },
-  {
-    "libelle_source": "Transport médicalisé d'urgence VSL",
-    "libelle_norm": "transport medicalise d urgence vsl",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 77.4,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 781,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport médicalisé avec médecin",
-          "nom_norm": "transport medicalise avec medecin",
-          "type": "Ambulance médicalisée",
-          "code": "AMBU"
+    {
+      "libelle_source": "Sérologie Rubéole IgG",
+      "libelle_norm": "serologie rubeole igg",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Garde-fou)",
+      "score": 91.3,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 796,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rubéole (IgG + IgM)",
+            "nom_norm": "serologie rubeole igg igm",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 91.3
         },
-        "score": 77.4
+        {
+          "act": {
+            "id": 795,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rougeole",
+            "nom_norm": "serologie rougeole",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 82.1
+        },
+        {
+          "act": {
+            "id": 786,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie brucellose (Wright)",
+            "nom_norm": "serologie brucellose wright",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 75.0
+        }
+      ],
+      "meilleur_acte": {
+        "id": 796,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Sérologie rubéole (IgG + IgM)",
+        "nom_norm": "serologie rubeole igg igm",
+        "type": "Sérologie & Virologie",
+        "code": ""
       },
-      {
-        "act": {
+      "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igg' vs 'igm/igg'.",
+      "auto_valide": false,
+      "source_prix": "8500",
+      "source_delai": "24h",
+      "prix_comptant": 8500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "Sérologie Rubéole IgG",
+      "label": "Sérologie Rubéole IgG",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
           "id": 796,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport médicalisé longue distance",
-          "nom_norm": "transport medicalise longue distance",
-          "type": "Transport sanitaire spécialisé",
-          "code": "AMBU"
-        },
-        "score": 71.4
+          "name": "Sérologie rubéole (IgG + IgM)",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 780,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport médicalisé avec infirmier",
-          "nom_norm": "transport medicalise avec infirmier",
-          "type": "Ambulance médicalisée",
-          "code": "AMBU"
-        },
-        "score": 69.6
+      "price": {
+        "value": 8500,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 781,
-      "pid": 4,
-      "slug": "ambulance-medicalisee",
-      "nom": "Transport médicalisé avec médecin",
-      "nom_norm": "transport medicalise avec medecin",
-      "type": "Ambulance médicalisée",
-      "code": "AMBU"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "25000",
-    "source_delai": "Immédiat"
-  },
-  {
-    "libelle_source": "Séance de dialyse péritonéale",
-    "libelle_norm": "seance de dialyse peritoneale",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 79.2,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 883,
-          "pid": 5,
-          "slug": "soins-specialises",
-          "nom": "Dialyse péritonéale",
-          "nom_norm": "dialyse peritoneale",
-          "type": "Néphrologie & dialyse",
-          "code": "NEPH"
+    {
+      "libelle_source": "Sérologie Rubéole IgM",
+      "libelle_norm": "serologie rubeole igm",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Garde-fou)",
+      "score": 91.3,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 796,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rubéole (IgG + IgM)",
+            "nom_norm": "serologie rubeole igg igm",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 91.3
         },
-        "score": 79.2
+        {
+          "act": {
+            "id": 795,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rougeole",
+            "nom_norm": "serologie rougeole",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 82.1
+        },
+        {
+          "act": {
+            "id": 786,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie brucellose (Wright)",
+            "nom_norm": "serologie brucellose wright",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 75.0
+        }
+      ],
+      "meilleur_acte": {
+        "id": 796,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Sérologie rubéole (IgG + IgM)",
+        "nom_norm": "serologie rubeole igg igm",
+        "type": "Sérologie & Virologie",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 881,
-          "pid": 5,
-          "slug": "soins-specialises",
-          "nom": "Séance d'hémodialyse chronique",
-          "nom_norm": "seance d hemodialyse chronique",
-          "type": "Néphrologie & dialyse",
-          "code": "NEPH"
-        },
-        "score": 73.9
+      "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igm' vs 'igm/igg'.",
+      "auto_valide": false,
+      "source_prix": "8500",
+      "source_delai": "24h",
+      "prix_comptant": 8500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "Sérologie Rubéole IgM",
+      "label": "Sérologie Rubéole IgM",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 796,
+          "name": "Sérologie rubéole (IgG + IgM)",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 599,
-          "pid": 2,
-          "slug": "imagerie-medicale",
-          "nom": "Biopsie péritonéale / de masse abdominale (écho/scanno-guidée)",
-          "nom_norm": "biopsie peritoneale de masse abdominale echo scanno guidee",
-          "type": "Biopsies guidées",
-          "code": "INTB"
-        },
-        "score": 62.5
+      "price": {
+        "value": 8500,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 883,
-      "pid": 5,
-      "slug": "soins-specialises",
-      "nom": "Dialyse péritonéale",
-      "nom_norm": "dialyse peritoneale",
-      "type": "Néphrologie & dialyse",
-      "code": "NEPH"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "75000",
-    "source_delai": "4h"
-  },
-  {
-    "libelle_source": "Détartrage supra et sous-gingival",
-    "libelle_norm": "detartrage supra et sous gingival",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 86.2,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 923,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Détartrage",
-          "nom_norm": "detartrage",
-          "type": "Prévention & prophylaxie",
-          "code": "PREV"
+    {
+      "libelle_source": "Hépatite B Ag HBs",
+      "libelle_norm": "hepatite b ag hbs",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Garde-fou)",
+      "score": 74.1,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "+",
+            "nom_norm": "",
+            "type": "Biologie médicale",
+            "code": "SPE-3AB888DB"
+          },
+          "score": 74.1
         },
-        "score": 86.2
+        {
+          "act": {
+            "id": 55,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-Hépatite D IgM",
+            "nom_norm": "anticorps anti hepatite d igm",
+            "type": "Biologie médicale",
+            "code": "SPE-E989197E"
+          },
+          "score": 71.0
+        },
+        {
+          "act": {
+            "id": 745,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-VHA IgG",
+            "nom_norm": "anticorps anti vha igg",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 71.0
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "+",
+        "nom_norm": "",
+        "type": "Biologie médicale",
+        "code": "SPE-3AB888DB"
       },
-      {
-        "act": {
-          "id": 946,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Surfaçage radiculaire (détartrage sous-gingival)",
-          "nom_norm": "surfacage radiculaire detartrage sous gingival",
-          "type": "Parodontologie",
-          "code": "PARO"
-        },
-        "score": 84.2
+      "avertissement": "Garde-fou actif : Spécification discriminante (Hépatite B) non concordante : 'hbs'.",
+      "auto_valide": false,
+      "source_prix": "7000",
+      "source_delai": "2h",
+      "prix_comptant": 7000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Hépatite B Ag HBs",
+      "label": "Hépatite B Ag HBs",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1,
+          "name": "+",
+          "code": "SPE-3AB888DB"
+        }
       },
-      {
-        "act": {
-          "id": 782,
-          "pid": 4,
-          "slug": "ambulance-medicalisee",
-          "nom": "Transport sous oxygénothérapie",
-          "nom_norm": "transport sous oxygenotherapie",
-          "type": "Ambulance médicalisée",
-          "code": "AMBU"
-        },
-        "score": 54.5
+      "price": {
+        "value": 7000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 923,
-      "pid": 6,
-      "slug": "soins-dentaires",
-      "nom": "Détartrage",
-      "nom_norm": "detartrage",
-      "type": "Prévention & prophylaxie",
-      "code": "PREV"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "25000",
-    "source_delai": "45m"
-  },
-  {
-    "libelle_source": "Extraction dent de sagesse incluse",
-    "libelle_norm": "extraction dent de sagesse incluse",
-    "statut": "a_confirmer",
-    "statut_label": "À confirmer (Flou)",
-    "score": 73.7,
-    "via": "flou",
-    "candidats": [
-      {
-        "act": {
-          "id": 1002,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Extraction de dent temporaire",
-          "nom_norm": "extraction de dent temporaire",
-          "type": "Odontologie pédiatrique (pédodontie)",
-          "code": "PEDO"
-        },
-        "score": 73.7
+    {
+      "libelle_source": "Hépatite C sérologie",
+      "libelle_norm": "hepatite c serologie",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 747,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-VHC",
+            "nom_norm": "anticorps anti vhc",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 747,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Anticorps anti-VHC",
+        "nom_norm": "anticorps anti vhc",
+        "type": "Sérologie & Virologie",
+        "code": ""
       },
-      {
-        "act": {
-          "id": 956,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Avulsion de dent de sagesse (incluse / enclavée)",
-          "nom_norm": "avulsion de dent de sagesse incluse enclavee",
-          "type": "Chirurgie buccale & orale",
-          "code": "CHIR"
-        },
-        "score": 71.8
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "9000",
+      "source_delai": "2h",
+      "prix_comptant": 9000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Hépatite C sérologie",
+      "label": "Hépatite C sérologie",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 747,
+          "name": "Anticorps anti-VHC",
+          "code": ""
+        }
       },
-      {
-        "act": {
-          "id": 999,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Soin de carie sur dent temporaire",
-          "nom_norm": "soin de carie sur dent temporaire",
-          "type": "Odontologie pédiatrique (pédodontie)",
-          "code": "PEDO"
-        },
-        "score": 63.2
+      "price": {
+        "value": 9000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 1002,
-      "pid": 6,
-      "slug": "soins-dentaires",
-      "nom": "Extraction de dent temporaire",
-      "nom_norm": "extraction de dent temporaire",
-      "type": "Odontologie pédiatrique (pédodontie)",
-      "code": "PEDO"
     },
-    "avertissement": null,
-    "auto_valide": false,
-    "source_prix": "45000",
-    "source_delai": "1h"
-  },
-  {
-    "libelle_source": "Prestation spéciale non répertoriée XYZ",
-    "libelle_norm": "prestation speciale non repertoriee xyz",
-    "statut": "inconnu",
-    "statut_label": "Score trop faible (<65%)",
-    "score": 57.1,
-    "via": "aucun",
-    "candidats": [
-      {
-        "act": {
-          "id": 918,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Consultation dentaire spécialisée",
-          "nom_norm": "consultation dentaire specialisee",
-          "type": "Consultations & diagnostic",
-          "code": "CONS"
-        },
-        "score": 57.1
-      },
-      {
-        "act": {
-          "id": 961,
-          "pid": 6,
-          "slug": "soins-dentaires",
-          "nom": "Résection apicale (apicectomie)",
-          "nom_norm": "resection apicale apicectomie",
-          "type": "Chirurgie buccale & orale",
-          "code": "CHIR"
-        },
-        "score": 55.9
-      },
-      {
-        "act": {
-          "id": 905,
-          "pid": 5,
-          "slug": "soins-specialises",
-          "nom": "Réhydratation orale supervisée",
-          "nom_norm": "rehydratation orale supervisee",
-          "type": "Pédiatrie (soins)",
-          "code": "PED"
-        },
-        "score": 55.1
+    {
+      "libelle_source": "PV CHLAM MYCO",
+      "libelle_norm": "pv chlam myco",
+      "statut": "composite",
+      "statut_label": "Composite (multi-actes)",
+      "score": 70,
+      "via": "aucun",
+      "candidats": [],
+      "meilleur_acte": null,
+      "avertissement": "Libellé composite (§5.3 / §6) : vise plusieurs actes distincts.",
+      "auto_valide": false,
+      "source_prix": "18000",
+      "source_delai": "48h",
+      "prix_comptant": 18000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "48h",
+      "raw": "PV CHLAM MYCO",
+      "label": "PV CHLAM MYCO",
+      "issue": "inconnu",
+      "candidat_retenu": null,
+      "price": {
+        "value": 18000,
+        "statut": "renseigne"
       }
-    ],
-    "meilleur_acte": {
-      "id": 918,
-      "pid": 6,
-      "slug": "soins-dentaires",
-      "nom": "Consultation dentaire spécialisée",
-      "nom_norm": "consultation dentaire specialisee",
-      "type": "Consultations & diagnostic",
-      "code": "CONS"
     },
-    "avertissement": "Candidat proposé à titre indicatif.",
-    "auto_valide": false,
-    "source_prix": "10000",
-    "source_delai": "24h"
-  }
-]
+    {
+      "libelle_source": "Scanner thoracique avec injection",
+      "libelle_norm": "scanner thoracique avec injection",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 78.1,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1054,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Scanner cérébral avec injection",
+            "nom_norm": "scanner cerebral avec injection",
+            "type": "Scanner (TDM)",
+            "code": ""
+          },
+          "score": 78.1
+        },
+        {
+          "act": {
+            "id": 1057,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Scanner thoracique",
+            "nom_norm": "scanner thoracique",
+            "type": "Scanner (TDM)",
+            "code": ""
+          },
+          "score": 70.6
+        },
+        {
+          "act": {
+            "id": 893,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "IRM cérébrale avec injection",
+            "nom_norm": "irm cerebrale avec injection",
+            "type": "IRM",
+            "code": ""
+          },
+          "score": 68.9
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1054,
+        "pid": 2,
+        "slug": "imagerie-medicale",
+        "nom": "Scanner cérébral avec injection",
+        "nom_norm": "scanner cerebral avec injection",
+        "type": "Scanner (TDM)",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "85000",
+      "source_delai": "4h",
+      "prix_comptant": 85000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "4h",
+      "raw": "Scanner thoracique avec injection",
+      "label": "Scanner thoracique avec injection",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1054,
+          "name": "Scanner cérébral avec injection",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 85000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "IRM cérébrale",
+      "libelle_norm": "irm cerebrale",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 892,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "IRM cérébrale",
+            "nom_norm": "irm cerebrale",
+            "type": "IRM",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 892,
+        "pid": 2,
+        "slug": "imagerie-medicale",
+        "nom": "IRM cérébrale",
+        "nom_norm": "irm cerebrale",
+        "type": "IRM",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "150000",
+      "source_delai": "24h",
+      "prix_comptant": 150000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "IRM cérébrale",
+      "label": "IRM cérébrale",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 892,
+          "name": "IRM cérébrale",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Échographie abdomino-pelvienne",
+      "libelle_norm": "echographie abdomino pelvienne",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 966,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Échographie abdomino-pelvienne",
+            "nom_norm": "echographie abdomino pelvienne",
+            "type": "Panel d'examens / Protocoles",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 966,
+        "pid": 2,
+        "slug": "imagerie-medicale",
+        "nom": "Échographie abdomino-pelvienne",
+        "nom_norm": "echographie abdomino pelvienne",
+        "type": "Panel d'examens / Protocoles",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "35000",
+      "source_delai": "1h",
+      "prix_comptant": 35000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "1h",
+      "raw": "Échographie abdomino-pelvienne",
+      "label": "Échographie abdomino-pelvienne",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 966,
+          "name": "Échographie abdomino-pelvienne",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 35000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Électrocardiogramme de repos (ECG)",
+      "libelle_norm": "electrocardiogramme de repos ecg",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 93.3,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "+",
+            "nom_norm": "",
+            "type": "Biologie médicale",
+            "code": "SPE-3AB888DB"
+          },
+          "score": 93.3
+        },
+        {
+          "act": {
+            "id": 1318,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "Électrorétinogramme (ERG)",
+            "nom_norm": "electroretinogramme erg",
+            "type": "Ophtalmologie",
+            "code": ""
+          },
+          "score": 72.7
+        },
+        {
+          "act": {
+            "id": 1317,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "Électro-oculogramme (EOG)",
+            "nom_norm": "electro oculogramme eog",
+            "type": "Ophtalmologie",
+            "code": ""
+          },
+          "score": 69.1
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "+",
+        "nom_norm": "",
+        "type": "Biologie médicale",
+        "code": "SPE-3AB888DB"
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "15000",
+      "source_delai": "30m",
+      "prix_comptant": 15000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "30m",
+      "raw": "Électrocardiogramme de repos (ECG)",
+      "label": "Électrocardiogramme de repos (ECG)",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1,
+          "name": "+",
+          "code": "SPE-3AB888DB"
+        }
+      },
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Fibroscopie oeso-gastro-duodénale",
+      "libelle_norm": "fibroscopie oeso gastro duodenale",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 93.0,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1205,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
+            "nom_norm": "fibroscopie oeso gastro duodenale fogd",
+            "type": "Gastro-entérologie & endoscopie digestive",
+            "code": "GAST"
+          },
+          "score": 93.0
+        },
+        {
+          "act": {
+            "id": 1036,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Transit œso-gastro-duodénal (TOGD)",
+            "nom_norm": "transit oeso gastro duodenal togd",
+            "type": "Radiographie",
+            "code": ""
+          },
+          "score": 72.1
+        },
+        {
+          "act": {
+            "id": 1193,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "FOGD (fibroscopie gastrique)",
+            "nom_norm": "fogd fibroscopie gastrique",
+            "type": "Gastro-entérologie",
+            "code": ""
+          },
+          "score": 70.4
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1205,
+        "pid": 3,
+        "slug": "explorations-fonctionnelles",
+        "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
+        "nom_norm": "fibroscopie oeso gastro duodenale fogd",
+        "type": "Gastro-entérologie & endoscopie digestive",
+        "code": "GAST"
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "65000",
+      "source_delai": "2h",
+      "prix_comptant": 65000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Fibroscopie oeso-gastro-duodénale",
+      "label": "Fibroscopie oeso-gastro-duodénale",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1205,
+          "name": "Fibroscopie œso-gastro-duodénale (FOGD)",
+          "code": "GAST"
+        }
+      },
+      "price": {
+        "value": 65000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Transport médicalisé d'urgence VSL",
+      "libelle_norm": "transport medicalise d urgence vsl",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 77.4,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "+",
+            "nom_norm": "",
+            "type": "Biologie médicale",
+            "code": "SPE-3AB888DB"
+          },
+          "score": 77.4
+        },
+        {
+          "act": {
+            "id": 1401,
+            "pid": 4,
+            "slug": "ambulance-medicalisee",
+            "nom": "Transport médicalisé longue distance",
+            "nom_norm": "transport medicalise longue distance",
+            "type": "Transport sanitaire spécialisé",
+            "code": ""
+          },
+          "score": 71.4
+        },
+        {
+          "act": {
+            "id": 1402,
+            "pid": 4,
+            "slug": "ambulance-medicalisee",
+            "nom": "Évacuation inter-hospitalière médicalisée",
+            "nom_norm": "evacuation inter hospitaliere medicalisee",
+            "type": "Transport sanitaire spécialisé",
+            "code": ""
+          },
+          "score": 66.7
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "+",
+        "nom_norm": "",
+        "type": "Biologie médicale",
+        "code": "SPE-3AB888DB"
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "25000",
+      "source_delai": "Immédiat",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "Immédiat",
+      "raw": "Transport médicalisé d'urgence VSL",
+      "label": "Transport médicalisé d'urgence VSL",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1,
+          "name": "+",
+          "code": "SPE-3AB888DB"
+        }
+      },
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Séance de dialyse péritonéale",
+      "libelle_norm": "seance de dialyse peritoneale",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 79.2,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1432,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Dialyse péritonéale",
+            "nom_norm": "dialyse peritoneale",
+            "type": "Dialyse / Néphrologie",
+            "code": ""
+          },
+          "score": 79.2
+        },
+        {
+          "act": {
+            "id": 1521,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Dialyse péritonéale",
+            "nom_norm": "dialyse peritoneale",
+            "type": "Néphrologie / Dialyse",
+            "code": ""
+          },
+          "score": 79.2
+        },
+        {
+          "act": {
+            "id": 1527,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Séance de dialyse",
+            "nom_norm": "seance de dialyse",
+            "type": "Néphrologie / Dialyse",
+            "code": ""
+          },
+          "score": 73.9
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1432,
+        "pid": 5,
+        "slug": "soins-specialises",
+        "nom": "Dialyse péritonéale",
+        "nom_norm": "dialyse peritoneale",
+        "type": "Dialyse / Néphrologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "75000",
+      "source_delai": "4h",
+      "prix_comptant": 75000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "4h",
+      "raw": "Séance de dialyse péritonéale",
+      "label": "Séance de dialyse péritonéale",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1432,
+          "name": "Dialyse péritonéale",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 75000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Détartrage supra et sous-gingival",
+      "libelle_norm": "detartrage supra et sous gingival",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 86.2,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1831,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Détartrage",
+            "nom_norm": "detartrage",
+            "type": "Soins conservateurs & prévention",
+            "code": ""
+          },
+          "score": 86.2
+        },
+        {
+          "act": {
+            "id": 1803,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Surfaçage radiculaire (détartrage sous-gingival)",
+            "nom_norm": "surfacage radiculaire detartrage sous gingival",
+            "type": "Parodontologie",
+            "code": ""
+          },
+          "score": 84.2
+        },
+        {
+          "act": {
+            "id": 1827,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Détartrage + polissage + fluoration",
+            "nom_norm": "detartrage polissage fluoration",
+            "type": "Soins conservateurs",
+            "code": ""
+          },
+          "score": 56.2
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1831,
+        "pid": 6,
+        "slug": "soins-dentaires",
+        "nom": "Détartrage",
+        "nom_norm": "detartrage",
+        "type": "Soins conservateurs & prévention",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "25000",
+      "source_delai": "45m",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "45m",
+      "raw": "Détartrage supra et sous-gingival",
+      "label": "Détartrage supra et sous-gingival",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1831,
+          "name": "Détartrage",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Extraction dent de sagesse incluse",
+      "libelle_norm": "extraction dent de sagesse incluse",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 1702,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Extraction dent de sagesse incluse",
+            "nom_norm": "extraction dent de sagesse incluse",
+            "type": "Chirurgie dentaire",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1702,
+        "pid": 6,
+        "slug": "soins-dentaires",
+        "nom": "Extraction dent de sagesse incluse",
+        "nom_norm": "extraction dent de sagesse incluse",
+        "type": "Chirurgie dentaire",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "45000",
+      "source_delai": "1h",
+      "prix_comptant": 45000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "1h",
+      "raw": "Extraction dent de sagesse incluse",
+      "label": "Extraction dent de sagesse incluse",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1702,
+          "name": "Extraction dent de sagesse incluse",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 45000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Prestation spéciale non répertoriée XYZ",
+      "libelle_norm": "prestation speciale non repertoriee xyz",
+      "statut": "inconnu",
+      "statut_label": "Score trop faible (<65%)",
+      "score": 57.1,
+      "via": "aucun",
+      "candidats": [
+        {
+          "act": {
+            "id": 1716,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Consultation dentaire spécialisée",
+            "nom_norm": "consultation dentaire specialisee",
+            "type": "Consultations dentaires",
+            "code": ""
+          },
+          "score": 57.1
+        },
+        {
+          "act": {
+            "id": 1698,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Résection apicale (apicectomie)",
+            "nom_norm": "resection apicale apicectomie",
+            "type": "Chirurgie buccale & orale",
+            "code": ""
+          },
+          "score": 55.9
+        },
+        {
+          "act": {
+            "id": 1469,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Rééducation périnéale post-partum",
+            "nom_norm": "reeducation perineale post partum",
+            "type": "Kinésithérapie",
+            "code": ""
+          },
+          "score": 55.6
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1716,
+        "pid": 6,
+        "slug": "soins-dentaires",
+        "nom": "Consultation dentaire spécialisée",
+        "nom_norm": "consultation dentaire specialisee",
+        "type": "Consultations dentaires",
+        "code": ""
+      },
+      "avertissement": "Candidat proposé à titre indicatif.",
+      "auto_valide": false,
+      "source_prix": "10000",
+      "source_delai": "24h",
+      "prix_comptant": 10000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "Prestation spéciale non répertoriée XYZ",
+      "label": "Prestation spéciale non répertoriée XYZ",
+      "issue": "inconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1716,
+          "name": "Consultation dentaire spécialisée",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "libelle_source": "Glycémie à jeun",
+      "libelle_norm": "glycemie a jeun",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 335,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Glycémie à jeun",
+            "nom_norm": "glycemie a jeun",
+            "type": "Biochimie & Ionogramme",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 335,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Glycémie à jeun",
+        "nom_norm": "glycemie a jeun",
+        "type": "Biochimie & Ionogramme",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "2500",
+      "source_delai": "2h",
+      "prix_comptant": 2500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Glycémie à jeun",
+      "label": "Glycémie à jeun",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 335,
+          "name": "Glycémie à jeun",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 2500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "NFS",
+      "libelle_norm": "nfs",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 528,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "NFS (hémogramme)",
+            "nom_norm": "nfs hemogramme",
+            "type": "Hématologie",
+            "code": "HEM"
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 528,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "NFS (hémogramme)",
+        "nom_norm": "nfs hemogramme",
+        "type": "Hématologie",
+        "code": "HEM"
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "4000",
+      "source_delai": "3h",
+      "prix_comptant": 4000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "3h",
+      "raw": "NFS",
+      "label": "NFS",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 528,
+          "name": "NFS (hémogramme)",
+          "code": "HEM"
+        }
+      },
+      "price": {
+        "value": 4000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Créatininémie",
+      "libelle_norm": "creatininemie",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 326,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Créatininémie",
+            "nom_norm": "creatininemie",
+            "type": "Biochimie & Ionogramme",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 326,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Créatininémie",
+        "nom_norm": "creatininemie",
+        "type": "Biochimie & Ionogramme",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "3000",
+      "source_delai": "2h",
+      "prix_comptant": 3000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Créatininémie",
+      "label": "Créatininémie",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 326,
+          "name": "Créatininémie",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 3000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Cholestérol total",
+      "libelle_norm": "cholesterol total",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 322,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Cholestérol total",
+            "nom_norm": "cholesterol total",
+            "type": "Biochimie & Ionogramme",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 322,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Cholestérol total",
+        "nom_norm": "cholesterol total",
+        "type": "Biochimie & Ionogramme",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "2500",
+      "source_delai": "2h",
+      "prix_comptant": 2500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Cholestérol total",
+      "label": "Cholestérol total",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 322,
+          "name": "Cholestérol total",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 2500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "ECBU",
+      "libelle_norm": "ecbu",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 279,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "ECBU + antibiogramme",
+            "nom_norm": "ecbu antibiogramme",
+            "type": "Bactériologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 279,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "ECBU + antibiogramme",
+        "nom_norm": "ecbu antibiogramme",
+        "type": "Bactériologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "6000",
+      "source_delai": "24h",
+      "prix_comptant": 6000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "ECBU",
+      "label": "ECBU",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 279,
+          "name": "ECBU + antibiogramme",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 6000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Ionogramme sanguin",
+      "libelle_norm": "ionogramme sanguin",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 686,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Ionogramme sanguin (Na + K + Cl)",
+            "nom_norm": "ionogramme sanguin na k cl",
+            "type": "Panel d'examens",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 686,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Ionogramme sanguin (Na + K + Cl)",
+        "nom_norm": "ionogramme sanguin na k cl",
+        "type": "Panel d'examens",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "5000",
+      "source_delai": "3h",
+      "prix_comptant": 5000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "3h",
+      "raw": "Ionogramme sanguin",
+      "label": "Ionogramme sanguin",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 686,
+          "name": "Ionogramme sanguin (Na + K + Cl)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 5000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "RUGEOLE",
+      "libelle_norm": "rugeole",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 795,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rougeole",
+            "nom_norm": "serologie rougeole",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 795,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Sérologie rougeole",
+        "nom_norm": "serologie rougeole",
+        "type": "Sérologie & Virologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "12000",
+      "source_delai": "48h",
+      "prix_comptant": 12000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "48h",
+      "raw": "RUGEOLE",
+      "label": "RUGEOLE",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 795,
+          "name": "Sérologie rougeole",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 12000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Scoth test",
+      "libelle_norm": "scoth test",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 712,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Scotch-test anal (test de Graham)",
+            "nom_norm": "scotch test anal test de graham",
+            "type": "Parasitologie & Mycologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 712,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Scotch-test anal (test de Graham)",
+        "nom_norm": "scotch test anal test de graham",
+        "type": "Parasitologie & Mycologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "3500",
+      "source_delai": "1h",
+      "prix_comptant": 3500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "1h",
+      "raw": "Scoth test",
+      "label": "Scoth test",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 712,
+          "name": "Scotch-test anal (test de Graham)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 3500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "ac anti CP 210",
+      "libelle_norm": "ac anti cp 210",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 613,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-gp210 (CP210)",
+            "nom_norm": "anticorps anti gp210 cp210",
+            "type": "Immunologie, auto-immunité & allergologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 613,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Anticorps anti-gp210 (CP210)",
+        "nom_norm": "anticorps anti gp210 cp210",
+        "type": "Immunologie, auto-immunité & allergologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "25000",
+      "source_delai": "72h",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "72h",
+      "raw": "ac anti CP 210",
+      "label": "ac anti CP 210",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 613,
+          "name": "Anticorps anti-gp210 (CP210)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "TPTCK",
+      "libelle_norm": "tptck",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 675,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Bilan d'hémostase (TP + TCK + TS)",
+            "nom_norm": "bilan d hemostase tp tck ts",
+            "type": "Panel d'examens",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 675,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Bilan d'hémostase (TP + TCK + TS)",
+        "nom_norm": "bilan d hemostase tp tck ts",
+        "type": "Panel d'examens",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "4500",
+      "source_delai": "2h",
+      "prix_comptant": 4500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "TPTCK",
+      "label": "TPTCK",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 675,
+          "name": "Bilan d'hémostase (TP + TCK + TS)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 4500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Sérologie Rubéole IgG",
+      "libelle_norm": "serologie rubeole igg",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Garde-fou)",
+      "score": 91.3,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 796,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rubéole (IgG + IgM)",
+            "nom_norm": "serologie rubeole igg igm",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 91.3
+        },
+        {
+          "act": {
+            "id": 795,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rougeole",
+            "nom_norm": "serologie rougeole",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 82.1
+        },
+        {
+          "act": {
+            "id": 786,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie brucellose (Wright)",
+            "nom_norm": "serologie brucellose wright",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 75.0
+        }
+      ],
+      "meilleur_acte": {
+        "id": 796,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Sérologie rubéole (IgG + IgM)",
+        "nom_norm": "serologie rubeole igg igm",
+        "type": "Sérologie & Virologie",
+        "code": ""
+      },
+      "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igg' vs 'igm/igg'.",
+      "auto_valide": false,
+      "source_prix": "8500",
+      "source_delai": "24h",
+      "prix_comptant": 8500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "Sérologie Rubéole IgG",
+      "label": "Sérologie Rubéole IgG",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 796,
+          "name": "Sérologie rubéole (IgG + IgM)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 8500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Sérologie Rubéole IgM",
+      "libelle_norm": "serologie rubeole igm",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Garde-fou)",
+      "score": 91.3,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 796,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rubéole (IgG + IgM)",
+            "nom_norm": "serologie rubeole igg igm",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 91.3
+        },
+        {
+          "act": {
+            "id": 795,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie rougeole",
+            "nom_norm": "serologie rougeole",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 82.1
+        },
+        {
+          "act": {
+            "id": 786,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Sérologie brucellose (Wright)",
+            "nom_norm": "serologie brucellose wright",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 75.0
+        }
+      ],
+      "meilleur_acte": {
+        "id": 796,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Sérologie rubéole (IgG + IgM)",
+        "nom_norm": "serologie rubeole igg igm",
+        "type": "Sérologie & Virologie",
+        "code": ""
+      },
+      "avertissement": "Garde-fou actif : Différence critique sur Immunoglobulines : 'igm' vs 'igm/igg'.",
+      "auto_valide": false,
+      "source_prix": "8500",
+      "source_delai": "24h",
+      "prix_comptant": 8500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "Sérologie Rubéole IgM",
+      "label": "Sérologie Rubéole IgM",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 796,
+          "name": "Sérologie rubéole (IgG + IgM)",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 8500,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Hépatite B Ag HBs",
+      "libelle_norm": "hepatite b ag hbs",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Garde-fou)",
+      "score": 74.1,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "+",
+            "nom_norm": "",
+            "type": "Biologie médicale",
+            "code": "SPE-3AB888DB"
+          },
+          "score": 74.1
+        },
+        {
+          "act": {
+            "id": 55,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-Hépatite D IgM",
+            "nom_norm": "anticorps anti hepatite d igm",
+            "type": "Biologie médicale",
+            "code": "SPE-E989197E"
+          },
+          "score": 71.0
+        },
+        {
+          "act": {
+            "id": 745,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-VHA IgG",
+            "nom_norm": "anticorps anti vha igg",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 71.0
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "+",
+        "nom_norm": "",
+        "type": "Biologie médicale",
+        "code": "SPE-3AB888DB"
+      },
+      "avertissement": "Garde-fou actif : Spécification discriminante (Hépatite B) non concordante : 'hbs'.",
+      "auto_valide": false,
+      "source_prix": "7000",
+      "source_delai": "2h",
+      "prix_comptant": 7000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Hépatite B Ag HBs",
+      "label": "Hépatite B Ag HBs",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1,
+          "name": "+",
+          "code": "SPE-3AB888DB"
+        }
+      },
+      "price": {
+        "value": 7000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Hépatite C sérologie",
+      "libelle_norm": "hepatite c serologie",
+      "statut": "reconnu_alias",
+      "statut_label": "Reconnu (100% alias)",
+      "score": 100,
+      "via": "alias",
+      "candidats": [
+        {
+          "act": {
+            "id": 747,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "Anticorps anti-VHC",
+            "nom_norm": "anticorps anti vhc",
+            "type": "Sérologie & Virologie",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 747,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "Anticorps anti-VHC",
+        "nom_norm": "anticorps anti vhc",
+        "type": "Sérologie & Virologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "9000",
+      "source_delai": "2h",
+      "prix_comptant": 9000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Hépatite C sérologie",
+      "label": "Hépatite C sérologie",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 747,
+          "name": "Anticorps anti-VHC",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 9000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "PV CHLAM MYCO",
+      "libelle_norm": "pv chlam myco",
+      "statut": "composite",
+      "statut_label": "Composite (multi-actes)",
+      "score": 70,
+      "via": "aucun",
+      "candidats": [],
+      "meilleur_acte": null,
+      "avertissement": "Libellé composite (§5.3 / §6) : vise plusieurs actes distincts.",
+      "auto_valide": false,
+      "source_prix": "18000",
+      "source_delai": "48h",
+      "prix_comptant": 18000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "48h",
+      "raw": "PV CHLAM MYCO",
+      "label": "PV CHLAM MYCO",
+      "issue": "inconnu",
+      "candidat_retenu": null,
+      "price": {
+        "value": 18000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Scanner thoracique avec injection",
+      "libelle_norm": "scanner thoracique avec injection",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 78.1,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1054,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Scanner cérébral avec injection",
+            "nom_norm": "scanner cerebral avec injection",
+            "type": "Scanner (TDM)",
+            "code": ""
+          },
+          "score": 78.1
+        },
+        {
+          "act": {
+            "id": 1057,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Scanner thoracique",
+            "nom_norm": "scanner thoracique",
+            "type": "Scanner (TDM)",
+            "code": ""
+          },
+          "score": 70.6
+        },
+        {
+          "act": {
+            "id": 893,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "IRM cérébrale avec injection",
+            "nom_norm": "irm cerebrale avec injection",
+            "type": "IRM",
+            "code": ""
+          },
+          "score": 68.9
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1054,
+        "pid": 2,
+        "slug": "imagerie-medicale",
+        "nom": "Scanner cérébral avec injection",
+        "nom_norm": "scanner cerebral avec injection",
+        "type": "Scanner (TDM)",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "85000",
+      "source_delai": "4h",
+      "prix_comptant": 85000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "4h",
+      "raw": "Scanner thoracique avec injection",
+      "label": "Scanner thoracique avec injection",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1054,
+          "name": "Scanner cérébral avec injection",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 85000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "IRM cérébrale",
+      "libelle_norm": "irm cerebrale",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 892,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "IRM cérébrale",
+            "nom_norm": "irm cerebrale",
+            "type": "IRM",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 892,
+        "pid": 2,
+        "slug": "imagerie-medicale",
+        "nom": "IRM cérébrale",
+        "nom_norm": "irm cerebrale",
+        "type": "IRM",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "150000",
+      "source_delai": "24h",
+      "prix_comptant": 150000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "IRM cérébrale",
+      "label": "IRM cérébrale",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 892,
+          "name": "IRM cérébrale",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 150000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Échographie abdomino-pelvienne",
+      "libelle_norm": "echographie abdomino pelvienne",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 966,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Échographie abdomino-pelvienne",
+            "nom_norm": "echographie abdomino pelvienne",
+            "type": "Panel d'examens / Protocoles",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 966,
+        "pid": 2,
+        "slug": "imagerie-medicale",
+        "nom": "Échographie abdomino-pelvienne",
+        "nom_norm": "echographie abdomino pelvienne",
+        "type": "Panel d'examens / Protocoles",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "35000",
+      "source_delai": "1h",
+      "prix_comptant": 35000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "1h",
+      "raw": "Échographie abdomino-pelvienne",
+      "label": "Échographie abdomino-pelvienne",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 966,
+          "name": "Échographie abdomino-pelvienne",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 35000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Électrocardiogramme de repos (ECG)",
+      "libelle_norm": "electrocardiogramme de repos ecg",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 93.3,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "+",
+            "nom_norm": "",
+            "type": "Biologie médicale",
+            "code": "SPE-3AB888DB"
+          },
+          "score": 93.3
+        },
+        {
+          "act": {
+            "id": 1318,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "Électrorétinogramme (ERG)",
+            "nom_norm": "electroretinogramme erg",
+            "type": "Ophtalmologie",
+            "code": ""
+          },
+          "score": 72.7
+        },
+        {
+          "act": {
+            "id": 1317,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "Électro-oculogramme (EOG)",
+            "nom_norm": "electro oculogramme eog",
+            "type": "Ophtalmologie",
+            "code": ""
+          },
+          "score": 69.1
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "+",
+        "nom_norm": "",
+        "type": "Biologie médicale",
+        "code": "SPE-3AB888DB"
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "15000",
+      "source_delai": "30m",
+      "prix_comptant": 15000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "30m",
+      "raw": "Électrocardiogramme de repos (ECG)",
+      "label": "Électrocardiogramme de repos (ECG)",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1,
+          "name": "+",
+          "code": "SPE-3AB888DB"
+        }
+      },
+      "price": {
+        "value": 15000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Fibroscopie oeso-gastro-duodénale",
+      "libelle_norm": "fibroscopie oeso gastro duodenale",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 93.0,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1205,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
+            "nom_norm": "fibroscopie oeso gastro duodenale fogd",
+            "type": "Gastro-entérologie & endoscopie digestive",
+            "code": "GAST"
+          },
+          "score": 93.0
+        },
+        {
+          "act": {
+            "id": 1036,
+            "pid": 2,
+            "slug": "imagerie-medicale",
+            "nom": "Transit œso-gastro-duodénal (TOGD)",
+            "nom_norm": "transit oeso gastro duodenal togd",
+            "type": "Radiographie",
+            "code": ""
+          },
+          "score": 72.1
+        },
+        {
+          "act": {
+            "id": 1193,
+            "pid": 3,
+            "slug": "explorations-fonctionnelles",
+            "nom": "FOGD (fibroscopie gastrique)",
+            "nom_norm": "fogd fibroscopie gastrique",
+            "type": "Gastro-entérologie",
+            "code": ""
+          },
+          "score": 70.4
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1205,
+        "pid": 3,
+        "slug": "explorations-fonctionnelles",
+        "nom": "Fibroscopie œso-gastro-duodénale (FOGD)",
+        "nom_norm": "fibroscopie oeso gastro duodenale fogd",
+        "type": "Gastro-entérologie & endoscopie digestive",
+        "code": "GAST"
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "65000",
+      "source_delai": "2h",
+      "prix_comptant": 65000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "2h",
+      "raw": "Fibroscopie oeso-gastro-duodénale",
+      "label": "Fibroscopie oeso-gastro-duodénale",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1205,
+          "name": "Fibroscopie œso-gastro-duodénale (FOGD)",
+          "code": "GAST"
+        }
+      },
+      "price": {
+        "value": 65000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Transport médicalisé d'urgence VSL",
+      "libelle_norm": "transport medicalise d urgence vsl",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 77.4,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1,
+            "pid": 1,
+            "slug": "biologie-medicale",
+            "nom": "+",
+            "nom_norm": "",
+            "type": "Biologie médicale",
+            "code": "SPE-3AB888DB"
+          },
+          "score": 77.4
+        },
+        {
+          "act": {
+            "id": 1401,
+            "pid": 4,
+            "slug": "ambulance-medicalisee",
+            "nom": "Transport médicalisé longue distance",
+            "nom_norm": "transport medicalise longue distance",
+            "type": "Transport sanitaire spécialisé",
+            "code": ""
+          },
+          "score": 71.4
+        },
+        {
+          "act": {
+            "id": 1402,
+            "pid": 4,
+            "slug": "ambulance-medicalisee",
+            "nom": "Évacuation inter-hospitalière médicalisée",
+            "nom_norm": "evacuation inter hospitaliere medicalisee",
+            "type": "Transport sanitaire spécialisé",
+            "code": ""
+          },
+          "score": 66.7
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1,
+        "pid": 1,
+        "slug": "biologie-medicale",
+        "nom": "+",
+        "nom_norm": "",
+        "type": "Biologie médicale",
+        "code": "SPE-3AB888DB"
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "25000",
+      "source_delai": "Immédiat",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "Immédiat",
+      "raw": "Transport médicalisé d'urgence VSL",
+      "label": "Transport médicalisé d'urgence VSL",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1,
+          "name": "+",
+          "code": "SPE-3AB888DB"
+        }
+      },
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Séance de dialyse péritonéale",
+      "libelle_norm": "seance de dialyse peritoneale",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 79.2,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1432,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Dialyse péritonéale",
+            "nom_norm": "dialyse peritoneale",
+            "type": "Dialyse / Néphrologie",
+            "code": ""
+          },
+          "score": 79.2
+        },
+        {
+          "act": {
+            "id": 1521,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Dialyse péritonéale",
+            "nom_norm": "dialyse peritoneale",
+            "type": "Néphrologie / Dialyse",
+            "code": ""
+          },
+          "score": 79.2
+        },
+        {
+          "act": {
+            "id": 1527,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Séance de dialyse",
+            "nom_norm": "seance de dialyse",
+            "type": "Néphrologie / Dialyse",
+            "code": ""
+          },
+          "score": 73.9
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1432,
+        "pid": 5,
+        "slug": "soins-specialises",
+        "nom": "Dialyse péritonéale",
+        "nom_norm": "dialyse peritoneale",
+        "type": "Dialyse / Néphrologie",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "75000",
+      "source_delai": "4h",
+      "prix_comptant": 75000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "4h",
+      "raw": "Séance de dialyse péritonéale",
+      "label": "Séance de dialyse péritonéale",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1432,
+          "name": "Dialyse péritonéale",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 75000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Détartrage supra et sous-gingival",
+      "libelle_norm": "detartrage supra et sous gingival",
+      "statut": "a_confirmer",
+      "statut_label": "À confirmer (Flou)",
+      "score": 86.2,
+      "via": "flou",
+      "candidats": [
+        {
+          "act": {
+            "id": 1831,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Détartrage",
+            "nom_norm": "detartrage",
+            "type": "Soins conservateurs & prévention",
+            "code": ""
+          },
+          "score": 86.2
+        },
+        {
+          "act": {
+            "id": 1803,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Surfaçage radiculaire (détartrage sous-gingival)",
+            "nom_norm": "surfacage radiculaire detartrage sous gingival",
+            "type": "Parodontologie",
+            "code": ""
+          },
+          "score": 84.2
+        },
+        {
+          "act": {
+            "id": 1827,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Détartrage + polissage + fluoration",
+            "nom_norm": "detartrage polissage fluoration",
+            "type": "Soins conservateurs",
+            "code": ""
+          },
+          "score": 56.2
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1831,
+        "pid": 6,
+        "slug": "soins-dentaires",
+        "nom": "Détartrage",
+        "nom_norm": "detartrage",
+        "type": "Soins conservateurs & prévention",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": false,
+      "source_prix": "25000",
+      "source_delai": "45m",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "45m",
+      "raw": "Détartrage supra et sous-gingival",
+      "label": "Détartrage supra et sous-gingival",
+      "issue": "a_confirmer",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1831,
+          "name": "Détartrage",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 25000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Extraction dent de sagesse incluse",
+      "libelle_norm": "extraction dent de sagesse incluse",
+      "statut": "reconnu_auto",
+      "statut_label": "Reconnu (100% exact)",
+      "score": 100,
+      "via": "nom",
+      "candidats": [
+        {
+          "act": {
+            "id": 1702,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Extraction dent de sagesse incluse",
+            "nom_norm": "extraction dent de sagesse incluse",
+            "type": "Chirurgie dentaire",
+            "code": ""
+          },
+          "score": 100
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1702,
+        "pid": 6,
+        "slug": "soins-dentaires",
+        "nom": "Extraction dent de sagesse incluse",
+        "nom_norm": "extraction dent de sagesse incluse",
+        "type": "Chirurgie dentaire",
+        "code": ""
+      },
+      "avertissement": null,
+      "auto_valide": true,
+      "source_prix": "45000",
+      "source_delai": "1h",
+      "prix_comptant": 45000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "1h",
+      "raw": "Extraction dent de sagesse incluse",
+      "label": "Extraction dent de sagesse incluse",
+      "issue": "reconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1702,
+          "name": "Extraction dent de sagesse incluse",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 45000,
+        "statut": "renseigne"
+      }
+    },
+    {
+      "libelle_source": "Prestation spéciale non répertoriée XYZ",
+      "libelle_norm": "prestation speciale non repertoriee xyz",
+      "statut": "inconnu",
+      "statut_label": "Score trop faible (<65%)",
+      "score": 57.1,
+      "via": "aucun",
+      "candidats": [
+        {
+          "act": {
+            "id": 1716,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Consultation dentaire spécialisée",
+            "nom_norm": "consultation dentaire specialisee",
+            "type": "Consultations dentaires",
+            "code": ""
+          },
+          "score": 57.1
+        },
+        {
+          "act": {
+            "id": 1698,
+            "pid": 6,
+            "slug": "soins-dentaires",
+            "nom": "Résection apicale (apicectomie)",
+            "nom_norm": "resection apicale apicectomie",
+            "type": "Chirurgie buccale & orale",
+            "code": ""
+          },
+          "score": 55.9
+        },
+        {
+          "act": {
+            "id": 1469,
+            "pid": 5,
+            "slug": "soins-specialises",
+            "nom": "Rééducation périnéale post-partum",
+            "nom_norm": "reeducation perineale post partum",
+            "type": "Kinésithérapie",
+            "code": ""
+          },
+          "score": 55.6
+        }
+      ],
+      "meilleur_acte": {
+        "id": 1716,
+        "pid": 6,
+        "slug": "soins-dentaires",
+        "nom": "Consultation dentaire spécialisée",
+        "nom_norm": "consultation dentaire specialisee",
+        "type": "Consultations dentaires",
+        "code": ""
+      },
+      "avertissement": "Candidat proposé à titre indicatif.",
+      "auto_valide": false,
+      "source_prix": "10000",
+      "source_delai": "24h",
+      "prix_comptant": 10000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
+      "delai": "24h",
+      "raw": "Prestation spéciale non répertoriée XYZ",
+      "label": "Prestation spéciale non répertoriée XYZ",
+      "issue": "inconnu",
+      "candidat_retenu": {
+        "acte": {
+          "id": 1716,
+          "name": "Consultation dentaire spécialisée",
+          "code": ""
+        }
+      },
+      "price": {
+        "value": 10000,
+        "statut": "renseigne"
+      }
+    }
+  ]
+}

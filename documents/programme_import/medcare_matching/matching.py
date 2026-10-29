@@ -176,6 +176,8 @@ def score_entry(norm_source: Dict[str, Any], entry_norm: Dict[str, Any], act_kin
 
 def classify(m: Dict[str, Any], rule: str = 'V1', th: Dict[str, float] = None) -> str:
     """Classement en 3 issues (reconnu / a_confirmer / inconnu) selon manuel §8.3."""
+    if m.get('composite'):
+        return 'inconnu'
     if th is None:
         th = DEFAULT_THRESHOLDS
     cands = m.get('cands', [])
@@ -201,6 +203,8 @@ def classify(m: Dict[str, Any], rule: str = 'V1', th: Dict[str, float] = None) -
     return 'inconnu'
 
 def explain(m: Dict[str, Any], issue: str, th: Dict[str, float] = None) -> str:
+    if m.get('composite'):
+        return "Libellé composite (§5.3 / §6) : vise plusieurs actes distincts (ex: PV + Chlamydia + Mycoplasme)"
     cands = m.get('cands', [])
     if not cands:
         return 'aucun candidat'

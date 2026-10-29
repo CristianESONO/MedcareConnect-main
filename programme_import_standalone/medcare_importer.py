@@ -342,8 +342,32 @@ class StandaloneReconciler:
 
 
 # ==============================================================================
-# 4. GESTION FICHIERS (EXCEL / CSV) & EXÉCUTION CLI
+# 4. GESTION MULTI-TARIFS & FICHIERS (EXCEL / CSV)
 # ==============================================================================
+
+def parse_tariff_cell(val: Any) -> Dict[str, Any]:
+    """Parse une cellule tarifaire (comptant, ipm ou assurance) selon les règles médicales MedCare."""
+    if val is None:
+        return {"value": None, "statut": "to_confirm"}
+    if isinstance(val, (int, float)):
+        v = float(val)
+        return {"value": round(v), "statut": "covered"} if v > 0 else {"value": None, "statut": "to_confirm"}
+
+    s = str(val).strip()
+    if not s or s.lower() in {"-", "/", "nc", "n/c", "null", "none", "à confirmer", "a confirmer", ""}:
+        return {"value": None, "statut": "to_confirm"}
+
+    s_lower = s.lower()
+    excluded_keywords = ["exclu", "non pris en charge", "non couvert", "hors convention", "refus", "non", "aucun"]
+    if any(k in s_lower for k in excluded_keywords):
+        return {"value": None, "statut": "excluded"}
+
+    clean = re.sub(r"[^\d,\.]", "", s).replace(",", ".")
+    try:
+        prix = float(clean)
+        return {"value": round(prix), "statut": "covered"} if prix > 0 else {"value": None, "statut": "to_confirm"}
+    except ValueError:
+        return {"value": None, "statut": "to_confirm"}
 
 def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
     rows = []
@@ -357,11 +381,12 @@ def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
             # Détection intelligente des colonnes
             label_col = 0
             price_col = None
+            ipm_col = None
+            assurance_col = None
             delay_col = None
             best_label_weight = -1
 
             for idx, h in enumerate(headers):
-                # Priorité libellé
                 if any(k in h for k in ["designation", "libelle", "acte standard", "nom de l'acte"]):
                     if best_label_weight < 10:
                         label_col = idx
@@ -379,10 +404,14 @@ def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
                         label_col = idx
                         best_label_weight = 3
 
-                # Détection Prix
-                if any(k in h for k in ["prix", "tarif", "cout", "montant", "valeur"]):
-                    price_col = idx
-                # Détection Délai
+                # Détection Multi-Tarifs
+                if "ipm" in h:
+                    ipm_col = idx
+                elif "assurance" in h:
+                    assurance_col = idx
+                elif any(k in h for k in ["prix", "tarif", "cout", "montant", "valeur", "comptant", "cash"]):
+                    if price_col is None or "comptant" in h:
+                        price_col = idx
                 elif any(k in h for k in ["delai", "rendu", "duree", "temps"]):
                     delay_col = idx
 
@@ -392,9 +421,25 @@ def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
                 label = str(r[label_col] or "").strip()
                 if not label:
                     continue
-                price = str(r[price_col] or "") if price_col is not None else ""
-                delay = str(r[delay_col] or "") if delay_col is not None else ""
-                rows.append({"label": label, "prix": price, "delai": delay})
+                pv = r[price_col] if price_col is not None and len(r) > price_col else None
+                pv_ipm = r[ipm_col] if ipm_col is not None and len(r) > ipm_col else None
+                pv_ass = r[assurance_col] if assurance_col is not None and len(r) > assurance_col else None
+                delay = str(r[delay_col] or "") if delay_col is not None and len(r) > delay_col else ""
+
+                t_comptant = parse_tariff_cell(pv)
+                t_ipm = parse_tariff_cell(pv_ipm) if ipm_col is not None else {"value": None, "statut": "to_confirm"}
+                t_ass = parse_tariff_cell(pv_ass) if assurance_col is not None else {"value": None, "statut": "to_confirm"}
+
+                rows.append({
+                    "label": label,
+                    "prix": str(pv or ""),
+                    "prix_comptant": t_comptant["value"],
+                    "prix_ipm": t_ipm["value"],
+                    "status_ipm": t_ipm["statut"],
+                    "prix_assurance": t_ass["value"],
+                    "status_assurance": t_ass["statut"],
+                    "delai": delay
+                })
             return rows
         except ImportError:
             print("(!) Module 'openpyxl' absent. Pour lire les .xlsx, installez-le ou utilisez un fichier .csv.")
@@ -409,6 +454,8 @@ def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
         headers = [h.strip().lower() for h in next(reader, [])]
         label_col = 0
         price_col = None
+        ipm_col = None
+        assurance_col = None
         delay_col = None
         best_label_weight = -1
 
@@ -430,8 +477,13 @@ def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
                     label_col = idx
                     best_label_weight = 3
 
-            if any(k in h for k in ["prix", "tarif", "cout", "montant"]):
-                price_col = idx
+            if "ipm" in h:
+                ipm_col = idx
+            elif "assurance" in h:
+                assurance_col = idx
+            elif any(k in h for k in ["prix", "tarif", "cout", "montant", "comptant"]):
+                if price_col is None or "comptant" in h:
+                    price_col = idx
             elif any(k in h for k in ["delai", "rendu", "duree"]):
                 delay_col = idx
 
@@ -441,9 +493,25 @@ def read_catalogue_file(path: str) -> List[Dict[str, Any]]:
             label = r[label_col].strip()
             if not label:
                 continue
-            price = r[price_col].strip() if price_col is not None and len(r) > price_col else ""
+            pv = r[price_col].strip() if price_col is not None and len(r) > price_col else None
+            pv_ipm = r[ipm_col].strip() if ipm_col is not None and len(r) > ipm_col else None
+            pv_ass = r[assurance_col].strip() if assurance_col is not None and len(r) > assurance_col else None
             delay = r[delay_col].strip() if delay_col is not None and len(r) > delay_col else ""
-            rows.append({"label": label, "prix": price, "delai": delay})
+
+            t_comptant = parse_tariff_cell(pv)
+            t_ipm = parse_tariff_cell(pv_ipm) if ipm_col is not None else {"value": None, "statut": "to_confirm"}
+            t_ass = parse_tariff_cell(pv_ass) if assurance_col is not None else {"value": None, "statut": "to_confirm"}
+
+            rows.append({
+                "label": label,
+                "prix": str(pv or ""),
+                "prix_comptant": t_comptant["value"],
+                "prix_ipm": t_ipm["value"],
+                "status_ipm": t_ipm["statut"],
+                "prix_assurance": t_ass["value"],
+                "status_assurance": t_ass["statut"],
+                "delai": delay
+            })
     return rows
 
 
@@ -473,6 +541,26 @@ def run_cli_reconciliation(file_path: str, master_path: str, out_path: Optional[
         res = reconciler.reconcile_line(r["label"])
         res["source_prix"] = r["prix"]
         res["source_delai"] = r["delai"]
+        res["prix_comptant"] = r.get("prix_comptant")
+        res["prix_ipm"] = r.get("prix_ipm")
+        res["status_ipm"] = r.get("status_ipm")
+        res["prix_assurance"] = r.get("prix_assurance")
+        res["status_assurance"] = r.get("status_assurance")
+        res["delai"] = r.get("delai")
+        res["raw"] = r["label"]
+        res["label"] = r["label"]
+        res["issue"] = "reconnu" if res["auto_valide"] else ("a_confirmer" if res["statut"] == "a_confirmer" else "inconnu")
+        if res.get("meilleur_acte"):
+            res["candidat_retenu"] = {
+                "acte": {
+                    "id": res["meilleur_acte"]["id"],
+                    "name": res["meilleur_acte"]["nom"],
+                    "code": res["meilleur_acte"].get("code", "")
+                }
+            }
+        else:
+            res["candidat_retenu"] = None
+        res["price"] = {"value": r.get("prix_comptant"), "statut": "renseigne" if r.get("prix_comptant") else "manquant"}
         results.append(res)
 
         if res["auto_valide"]:
@@ -487,7 +575,13 @@ def run_cli_reconciliation(file_path: str, master_path: str, out_path: Optional[
 
         cand_nom = res["meilleur_acte"]["nom"] if res["meilleur_acte"] else "(Aucun)"
         score_str = f"{res['score']}%"
-        print(f"[{idx:02d}] {badge} | {score_str:>4} | {r['label'][:30]:<30} -> {cand_nom[:35]}")
+        tarifs_info = f"{r.get('prix_comptant') or '-'} F"
+        if r.get('prix_ipm') or r.get('status_ipm') == 'excluded':
+            tarifs_info += f" | IPM: {r.get('prix_ipm') or r.get('status_ipm')}"
+        if r.get('prix_assurance') or r.get('status_assurance') == 'excluded':
+            tarifs_info += f" | Ass: {r.get('prix_assurance') or r.get('status_assurance')}"
+
+        print(f"[{idx:02d}] {badge} | {score_str:>4} | {r['label'][:28]:<28} -> {cand_nom[:28]:<28} | {tarifs_info}")
         if res.get("avertissement"):
             print(f"     (!)  {res['avertissement']}")
 
@@ -500,13 +594,25 @@ def run_cli_reconciliation(file_path: str, master_path: str, out_path: Optional[
     print(f"  • 🔴 Non reconnus/conflit: {stats['inconnu']}")
     print("=" * 80)
 
-    # Sauvegarde des résultats
+    # Sauvegarde des résultats au format universel (compatible chatbot Django et suite standalone)
     if not out_path:
         base, _ = os.path.splitext(file_path)
         out_path = f"{base}_reconcilie.json"
 
+    output_data = {
+        "summary": {
+            "total_rows": len(rows),
+            "actes_count": len(rows),
+            "reconnus": stats["auto"],
+            "a_confirmer": stats["confirmer"],
+            "inconnus": stats["inconnu"]
+        },
+        "lines": results,
+        "rows": results
+    }
+
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
+        json.dump(output_data, f, ensure_ascii=False, indent=2)
     print(f">> Résultat exporté avec succès dans : {out_path}")
 
 

@@ -4,6 +4,7 @@ Test de non-régression et validation du moteur d'onboarding MedCare
 selon le Manuel d'Architecture (Annexe pages 20-23).
 """
 
+import os
 import sys
 
 if hasattr(sys.stdout, 'reconfigure'):
@@ -12,17 +13,22 @@ if hasattr(sys.stdout, 'reconfigure'):
 from medcare_matching import ReconciliationEngine
 
 def run_tests():
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
     print("=" * 80)
     print(" TEST SUITE — MEDCARE MATCHING & ONBOARDING")
     print("=" * 80)
 
-    engine = ReconciliationEngine("referentiel_onboarding.json")
+    ref_file = os.path.join(cur_dir, "referentiel_onboarding.json")
+    engine = ReconciliationEngine(ref_file)
     print(f"✓ Référentiel chargé : {len(engine.index.actes)} actes, {len(engine.index.entries)} entrées indexées.")
 
     # 1. Test du fichier réel Imagerie ACTES ET TARIFICATIONS (.ods et .xlsx)
     for ext, fname in [("ODS", "ACTES_ET_TARIFICATIONS.ods"), ("XLSX", "ACTES_ET_TARIFICATIONS.xlsx")]:
+        fpath = os.path.join(cur_dir, fname)
+        if not os.path.exists(fpath):
+            continue
         print(f"\n--- Test sur le fichier réel {ext} : {fname} ---")
-        res = engine.reconcile_file(fname, default_pillar="img", rule="V1")
+        res = engine.reconcile_file(fpath, default_pillar="img", rule="V1")
         s = res["summary"]
 
         print(f"Total lignes lues  : {s['total_lines']} (attendu: 112)")

@@ -1,177 +1,32 @@
 {
-  "filepath": "catalogue_test_bionissa_clinique.xlsx",
+  "filepath": "documents/programme_import/catalogue_test_bionissa_clinique.xlsx",
   "summary": {
     "total_rows": 26,
     "total_lines": 26,
-    "actes_count": 26,
-    "reconnus": 12,
-    "a_confirmer": 0,
-    "inconnus": 14,
+    "actes_count": 25,
+    "reconnus": 15,
+    "a_confirmer": 7,
+    "inconnus": 3,
     "prix_manquants": 0,
-    "prix_anomalies": 6,
+    "prix_anomalies": 5,
     "sections": []
   },
   "schema": {
     "ncol": 5,
     "roles": [
       "libelle",
-      "prix",
+      "prix_comptant",
       "delai",
       "attribut",
       "attribut"
     ],
-    "profile": [
-      {
-        "text": 26,
-        "price": 0,
-        "len": 526,
-        "header": 0,
-        "labelHeader": 0,
-        "attrHeader": 0
-      },
-      {
-        "text": 1,
-        "price": 25,
-        "len": 11,
-        "header": 0,
-        "labelHeader": 0,
-        "attrHeader": 0
-      },
-      {
-        "text": 26,
-        "price": 0,
-        "len": 80,
-        "header": 0,
-        "labelHeader": 0,
-        "attrHeader": 0
-      },
-      {
-        "text": 25,
-        "price": 0,
-        "len": 216,
-        "header": 0,
-        "labelHeader": 0,
-        "attrHeader": 1
-      },
-      {
-        "text": 25,
-        "price": 0,
-        "len": 530,
-        "header": 0,
-        "labelHeader": 0,
-        "attrHeader": 1
-      }
-    ],
-    "confidence": 1.0
+    "confidence": 0.9
   },
   "lines": [
     {
       "num": 1,
-      "kind": "acte",
-      "label": "Designation Acte",
-      "section": "",
-      "ctx": "Designation Acte",
-      "price": {
-        "value": null,
-        "statut": "anomalie",
-        "note": "illisible : Prix (FCFA)"
-      },
-      "priceRaw": "Prix (FCFA)",
-      "delai": "Delai de Rendu",
-      "pillar": null,
-      "types": null,
-      "merged": false,
-      "match": {
-        "exact": false,
-        "method": "flou",
-        "cands": [
-          {
-            "acte": {
-              "id": "B178",
-              "pillar": "bio",
-              "type": "Endocrinologie & hormonologie",
-              "name": "Test au Synacthène (dynamique)",
-              "kind": "acte",
-              "lexique": [
-                "test au synacthène",
-                "synacthène",
-                "stimulation ACTH"
-              ],
-              "composants": []
-            },
-            "score": 0.42916666666666664,
-            "disc": [],
-            "comp": false,
-            "via": "stimulation ACTH",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B256",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "Anticorps anti-substance intercellulaire",
-              "kind": "acte",
-              "lexique": [
-                "anti substance intercellulaire",
-                "desmogléine",
-                "pemphigus",
-                "ac anti substance intra cellulaire"
-              ],
-              "composants": []
-            },
-            "score": 0.23511742424242424,
-            "disc": [],
-            "comp": false,
-            "via": "desmogléine",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B349",
-              "pillar": "bio",
-              "type": "Parasitologie & mycologie",
-              "name": "Examen mycologique (peau, ongles, cheveux)",
-              "kind": "acte",
-              "lexique": [
-                "examen mycologique",
-                "mycologie",
-                "dermatophyte",
-                "recherche de champignons"
-              ],
-              "composants": []
-            },
-            "score": 0.22399999999999998,
-            "disc": [],
-            "comp": false,
-            "via": "dermatophyte",
-            "kind": "lexique"
-          }
-        ],
-        "usedText": "Designation Acte"
-      },
-      "issue": "inconnu",
-      "explication": "flou 43 % · marge 19",
-      "candidat_retenu": {
-        "acte": {
-          "id": "B178",
-          "pillar": "bio",
-          "type": "Endocrinologie & hormonologie",
-          "name": "Test au Synacthène (dynamique)",
-          "kind": "acte",
-          "lexique": [
-            "test au synacthène",
-            "synacthène",
-            "stimulation ACTH"
-          ],
-          "composants": []
-        },
-        "score": 0.42916666666666664,
-        "disc": [],
-        "comp": false,
-        "via": "stimulation ACTH",
-        "kind": "lexique"
-      }
+      "kind": "entete",
+      "label": "Designation Acte"
     },
     {
       "num": 2,
@@ -184,6 +39,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "2500",
+      "prix_comptant": 2500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -194,17 +54,23 @@
         "cands": [
           {
             "acte": {
-              "id": "B066",
+              "id": 844,
+              "code": "",
               "pillar": "bio",
-              "type": "Biochimie & ionogramme",
+              "type": "Biochimie & Ionogramme",
               "name": "Glycémie à jeun",
               "kind": "acte",
               "lexique": [
-                "glycémie",
+                "dosage du sucre",
+                "dosage glycemie",
+                "gaj",
                 "glucose",
-                "GAJ"
+                "glycemie a jeun",
+                "glycemie a jeun veineuse",
+                "sucre dans le sang"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -218,17 +84,23 @@
       "explication": "nom exact",
       "candidat_retenu": {
         "acte": {
-          "id": "B066",
+          "id": 844,
+          "code": "",
           "pillar": "bio",
-          "type": "Biochimie & ionogramme",
+          "type": "Biochimie & Ionogramme",
           "name": "Glycémie à jeun",
           "kind": "acte",
           "lexique": [
-            "glycémie",
+            "dosage du sucre",
+            "dosage glycemie",
+            "gaj",
             "glucose",
-            "GAJ"
+            "glycemie a jeun",
+            "glycemie a jeun veineuse",
+            "sucre dans le sang"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -247,6 +119,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "4000",
+      "prix_comptant": 4000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "3h",
       "pillar": null,
       "types": null,
@@ -257,23 +134,34 @@
         "cands": [
           {
             "acte": {
-              "id": "B018",
+              "id": 1559,
+              "code": "HEM",
               "pillar": "bio",
               "type": "Hématologie",
               "name": "NFS (hémogramme)",
               "kind": "acte",
               "lexique": [
-                "NFS",
-                "numération formule sanguine",
-                "hémogramme",
-                "FNS",
-                "CBC"
+                "cbc",
+                "formule sanguine",
+                "frottis sanguin et numeration",
+                "hemogramme",
+                "hemogramme nfs",
+                "nfs",
+                "nfs complet",
+                "nfs complete",
+                "nfs complete numeration",
+                "nfs hemogramme",
+                "nfs numeration",
+                "numeration",
+                "numeration formule sanguine",
+                "numeration sanguine"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
-            "via": "NFS",
+            "via": "nfs",
             "kind": "lexique"
           }
         ],
@@ -283,23 +171,34 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B018",
+          "id": 1559,
+          "code": "HEM",
           "pillar": "bio",
           "type": "Hématologie",
           "name": "NFS (hémogramme)",
           "kind": "acte",
           "lexique": [
-            "NFS",
-            "numération formule sanguine",
-            "hémogramme",
-            "FNS",
-            "CBC"
+            "cbc",
+            "formule sanguine",
+            "frottis sanguin et numeration",
+            "hemogramme",
+            "hemogramme nfs",
+            "nfs",
+            "nfs complet",
+            "nfs complete",
+            "nfs complete numeration",
+            "nfs hemogramme",
+            "nfs numeration",
+            "numeration",
+            "numeration formule sanguine",
+            "numeration sanguine"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
-        "via": "NFS",
+        "via": "nfs",
         "kind": "lexique"
       }
     },
@@ -314,6 +213,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "3000",
+      "prix_comptant": 3000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -324,17 +228,21 @@
         "cands": [
           {
             "acte": {
-              "id": "B074",
+              "id": 847,
+              "code": "",
               "pillar": "bio",
-              "type": "Biochimie & ionogramme",
+              "type": "Biochimie & Ionogramme",
               "name": "Créatininémie",
               "kind": "acte",
               "lexique": [
-                "créatinine",
-                "créatininémie",
-                "créat"
+                "clairance creatinine",
+                "creat",
+                "creatinine sanguine",
+                "creatininemie",
+                "dosage creatinine"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -348,17 +256,21 @@
       "explication": "nom exact",
       "candidat_retenu": {
         "acte": {
-          "id": "B074",
+          "id": 847,
+          "code": "",
           "pillar": "bio",
-          "type": "Biochimie & ionogramme",
+          "type": "Biochimie & Ionogramme",
           "name": "Créatininémie",
           "kind": "acte",
           "lexique": [
-            "créatinine",
-            "créatininémie",
-            "créat"
+            "clairance creatinine",
+            "creat",
+            "creatinine sanguine",
+            "creatininemie",
+            "dosage creatinine"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -377,6 +289,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "2500",
+      "prix_comptant": 2500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -387,16 +304,18 @@
         "cands": [
           {
             "acte": {
-              "id": "B104",
+              "id": 867,
+              "code": "",
               "pillar": "bio",
-              "type": "Biochimie & ionogramme",
+              "type": "Biochimie & Ionogramme",
               "name": "Cholestérol total",
               "kind": "acte",
               "lexique": [
-                "cholestérol total",
-                "cholestérol"
+                "cholesterol total",
+                "dosage cholesterol"
               ],
-              "composants": []
+              "ref_prix": 8500.0,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -410,16 +329,18 @@
       "explication": "nom exact",
       "candidat_retenu": {
         "acte": {
-          "id": "B104",
+          "id": 867,
+          "code": "",
           "pillar": "bio",
-          "type": "Biochimie & ionogramme",
+          "type": "Biochimie & Ionogramme",
           "name": "Cholestérol total",
           "kind": "acte",
           "lexique": [
-            "cholestérol total",
-            "cholestérol"
+            "cholesterol total",
+            "dosage cholesterol"
           ],
-          "composants": []
+          "ref_prix": 8500.0,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -438,6 +359,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "6000",
+      "prix_comptant": 6000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "24h",
       "pillar": null,
       "types": null,
@@ -448,21 +374,23 @@
         "cands": [
           {
             "acte": {
-              "id": "B317",
+              "id": 905,
+              "code": "",
               "pillar": "bio",
               "type": "Bactériologie",
               "name": "ECBU + antibiogramme",
               "kind": "acte",
               "lexique": [
-                "ECBU",
-                "examen cytobactériologique des urines",
-                "uroculture + antibiogramme"
+                "ecbu",
+                "ecbu antibiogramme",
+                "uroculture antibiogramme"
               ],
-              "composants": []
+              "ref_prix": 21000.0,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
-            "via": "ECBU",
+            "via": "ecbu",
             "kind": "lexique"
           }
         ],
@@ -472,21 +400,23 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B317",
+          "id": 905,
+          "code": "",
           "pillar": "bio",
           "type": "Bactériologie",
           "name": "ECBU + antibiogramme",
           "kind": "acte",
           "lexique": [
-            "ECBU",
-            "examen cytobactériologique des urines",
-            "uroculture + antibiogramme"
+            "ecbu",
+            "ecbu antibiogramme",
+            "uroculture antibiogramme"
           ],
-          "composants": []
+          "ref_prix": 21000.0,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
-        "via": "ECBU",
+        "via": "ecbu",
         "kind": "lexique"
       }
     },
@@ -501,6 +431,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "5000",
+      "prix_comptant": 5000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "3h",
       "pillar": null,
       "types": null,
@@ -511,22 +446,21 @@
         "cands": [
           {
             "acte": {
-              "id": "B005",
+              "id": 1546,
+              "code": "",
               "pillar": "bio",
               "type": "Panel d'examens",
               "name": "Ionogramme sanguin (Na + K + Cl)",
-              "kind": "bilan",
+              "kind": "acte",
               "lexique": [
-                "ionogramme sanguin",
                 "iono sang",
-                "Na K Cl",
-                "ionogramme"
+                "ionogramme",
+                "ionogramme sanguin",
+                "ionogramme sanguin na k cl",
+                "na k cl"
               ],
-              "composants": [
-                "Natrémie",
-                "Kaliémie",
-                "Chlorémie"
-              ]
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -540,22 +474,21 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B005",
+          "id": 1546,
+          "code": "",
           "pillar": "bio",
           "type": "Panel d'examens",
           "name": "Ionogramme sanguin (Na + K + Cl)",
-          "kind": "bilan",
+          "kind": "acte",
           "lexique": [
-            "ionogramme sanguin",
             "iono sang",
-            "Na K Cl",
-            "ionogramme"
+            "ionogramme",
+            "ionogramme sanguin",
+            "ionogramme sanguin na k cl",
+            "na k cl"
           ],
-          "composants": [
-            "Natrémie",
-            "Kaliémie",
-            "Chlorémie"
-          ]
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -574,6 +507,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "12000",
+      "prix_comptant": 12000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "48h",
       "pillar": null,
       "types": null,
@@ -584,18 +522,21 @@
         "cands": [
           {
             "acte": {
-              "id": "B295",
+              "id": 1806,
+              "code": "",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
+              "type": "Sérologie & Virologie",
               "name": "Sérologie rougeole",
               "kind": "acte",
               "lexique": [
-                "rougeole",
                 "measles",
                 "morbillivirus",
-                "rugeole"
+                "rougeole",
+                "rugeole",
+                "serologie rougeole"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -609,18 +550,21 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B295",
+          "id": 1806,
+          "code": "",
           "pillar": "bio",
-          "type": "Sérologie & virologie",
+          "type": "Sérologie & Virologie",
           "name": "Sérologie rougeole",
           "kind": "acte",
           "lexique": [
-            "rougeole",
             "measles",
             "morbillivirus",
-            "rugeole"
+            "rougeole",
+            "rugeole",
+            "serologie rougeole"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -639,6 +583,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "3500",
+      "prix_comptant": 3500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "1h",
       "pillar": null,
       "types": null,
@@ -649,18 +598,23 @@
         "cands": [
           {
             "acte": {
-              "id": "B347",
+              "id": 1856,
+              "code": "",
               "pillar": "bio",
-              "type": "Parasitologie & mycologie",
+              "type": "Parasitologie & Mycologie",
               "name": "Scotch-test anal (test de Graham)",
               "kind": "acte",
               "lexique": [
-                "scotch test",
-                "test de Graham",
                 "oxyure",
-                "scoth test"
+                "scotch",
+                "scotch test",
+                "scotch test anal test de graham",
+                "scoth test",
+                "test anal",
+                "test de graham"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -674,18 +628,23 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B347",
+          "id": 1856,
+          "code": "",
           "pillar": "bio",
-          "type": "Parasitologie & mycologie",
+          "type": "Parasitologie & Mycologie",
           "name": "Scotch-test anal (test de Graham)",
           "kind": "acte",
           "lexique": [
-            "scotch test",
-            "test de Graham",
             "oxyure",
-            "scoth test"
+            "scotch",
+            "scotch test",
+            "scotch test anal test de graham",
+            "scoth test",
+            "test anal",
+            "test de graham"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -704,6 +663,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "25000",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "72h",
       "pillar": null,
       "types": null,
@@ -714,17 +678,21 @@
         "cands": [
           {
             "acte": {
-              "id": "B239",
+              "id": 1750,
+              "code": "",
               "pillar": "bio",
               "type": "Immunologie, auto-immunité & allergologie",
               "name": "Anticorps anti-gp210 (CP210)",
               "kind": "acte",
               "lexique": [
+                "ac anti cp 210",
                 "anti gp210",
-                "CP210",
-                "ac anti cp 210"
+                "anticorps anti gp210 cp210",
+                "cp210",
+                "gp210"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
@@ -738,17 +706,21 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B239",
+          "id": 1750,
+          "code": "",
           "pillar": "bio",
           "type": "Immunologie, auto-immunité & allergologie",
           "name": "Anticorps anti-gp210 (CP210)",
           "kind": "acte",
           "lexique": [
+            "ac anti cp 210",
             "anti gp210",
-            "CP210",
-            "ac anti cp 210"
+            "anticorps anti gp210 cp210",
+            "cp210",
+            "gp210"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
@@ -767,6 +739,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "4500",
+      "prix_comptant": 4500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -777,28 +754,27 @@
         "cands": [
           {
             "acte": {
-              "id": "B007",
+              "id": 1548,
+              "code": "",
               "pillar": "bio",
               "type": "Panel d'examens",
               "name": "Bilan d'hémostase (TP + TCK + TS)",
-              "kind": "bilan",
+              "kind": "acte",
               "lexique": [
-                "TPTCK",
-                "TC TS",
-                "bilan d'hémostase",
-                "TP TCK TS",
+                "bilan d hemostase",
+                "bilan d hemostase tp tck ts",
                 "bilan de coagulation",
+                "tc ts",
+                "tp tck ts",
+                "tptck",
                 "tptck tc ts"
               ],
-              "composants": [
-                "TP / INR",
-                "TCA / TCK",
-                "Temps de saignement (TS)"
-              ]
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
-            "via": "TPTCK",
+            "via": "tptck",
             "kind": "lexique"
           }
         ],
@@ -808,28 +784,27 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B007",
+          "id": 1548,
+          "code": "",
           "pillar": "bio",
           "type": "Panel d'examens",
           "name": "Bilan d'hémostase (TP + TCK + TS)",
-          "kind": "bilan",
+          "kind": "acte",
           "lexique": [
-            "TPTCK",
-            "TC TS",
-            "bilan d'hémostase",
-            "TP TCK TS",
+            "bilan d hemostase",
+            "bilan d hemostase tp tck ts",
             "bilan de coagulation",
+            "tc ts",
+            "tp tck ts",
+            "tptck",
             "tptck tc ts"
           ],
-          "composants": [
-            "TP / INR",
-            "TCA / TCK",
-            "Temps de saignement (TS)"
-          ]
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
-        "via": "TPTCK",
+        "via": "tptck",
         "kind": "lexique"
       }
     },
@@ -844,6 +819,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "8500",
+      "prix_comptant": 8500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "24h",
       "pillar": null,
       "types": null,
@@ -854,90 +834,98 @@
         "cands": [
           {
             "acte": {
-              "id": "B283",
+              "id": 902,
+              "code": "",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
+              "type": "Sérologie & Virologie",
+              "name": "Rubéole IgG/IgM",
+              "kind": "acte",
+              "lexique": [
+                "rubeole igg"
+              ],
+              "ref_prix": null,
+              "delai": ""
+            },
+            "score": 0.6599233561920129,
+            "disc": [
+              "serologie"
+            ],
+            "comp": false,
+            "via": "rubeole igg",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": 1799,
+              "code": "",
+              "pillar": "bio",
+              "type": "Sérologie & Virologie",
+              "name": "Sérologie rubéole (IgG + IgM)",
+              "kind": "acte",
+              "lexique": [
+                "rubella",
+                "rubeole igg et igm",
+                "serologie rubeole igg igm"
+              ],
+              "ref_prix": null,
+              "delai": ""
+            },
+            "score": 0.634076845140675,
+            "disc": [
+              "igm"
+            ],
+            "comp": false,
+            "via": "serologie rubeole igg igm",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": 1794,
+              "code": "",
+              "pillar": "bio",
+              "type": "Sérologie & Virologie",
               "name": "Anticorps anti-VHA IgG",
               "kind": "acte",
               "lexique": [
-                "VHA IgG",
-                "hépatite A IgG",
-                "serologie vha igg"
+                "anticorps anti vha igg",
+                "hepatite a igg",
+                "serologie vha igg",
+                "vha igg"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 0.46937885253674727,
             "disc": [],
             "comp": false,
             "via": "serologie vha igg",
             "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B288",
-              "pillar": "bio",
-              "type": "Sérologie & virologie",
-              "name": "Sérologie rubéole (IgG + IgM)",
-              "kind": "acte",
-              "lexique": [
-                "rubéole IgG IgM",
-                "rubella",
-                "rubeole igg et igm"
-              ],
-              "composants": []
-            },
-            "score": 0.43407684514067496,
-            "disc": [
-              "igm"
-            ],
-            "comp": true,
-            "via": "Sérologie rubéole (IgG + IgM)",
-            "kind": "nom"
-          },
-          {
-            "acte": {
-              "id": "B289",
-              "pillar": "bio",
-              "type": "Sérologie & virologie",
-              "name": "Sérologie CMV (IgG/IgM)",
-              "kind": "acte",
-              "lexique": [
-                "CMV",
-                "cytomégalovirus"
-              ],
-              "composants": []
-            },
-            "score": 0.1664605543710021,
-            "disc": [
-              "igm"
-            ],
-            "comp": false,
-            "via": "Sérologie CMV (IgG/IgM)",
-            "kind": "nom"
           }
         ],
         "usedText": "Sérologie Rubéole IgG"
       },
-      "issue": "inconnu",
-      "explication": "flou 47 % · marge 4",
+      "issue": "a_confirmer",
+      "explication": "flou 66 % · marge 3 · conflit : serologie",
       "candidat_retenu": {
         "acte": {
-          "id": "B283",
+          "id": 902,
+          "code": "",
           "pillar": "bio",
-          "type": "Sérologie & virologie",
-          "name": "Anticorps anti-VHA IgG",
+          "type": "Sérologie & Virologie",
+          "name": "Rubéole IgG/IgM",
           "kind": "acte",
           "lexique": [
-            "VHA IgG",
-            "hépatite A IgG",
-            "serologie vha igg"
+            "rubeole igg"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.46937885253674727,
-        "disc": [],
+        "score": 0.6599233561920129,
+        "disc": [
+          "serologie"
+        ],
         "comp": false,
-        "via": "serologie vha igg",
+        "via": "rubeole igg",
         "kind": "lexique"
       }
     },
@@ -952,6 +940,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "8500",
+      "prix_comptant": 8500,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "24h",
       "pillar": null,
       "types": null,
@@ -962,17 +955,44 @@
         "cands": [
           {
             "acte": {
-              "id": "B282",
+              "id": 1799,
+              "code": "",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
+              "type": "Sérologie & Virologie",
+              "name": "Sérologie rubéole (IgG + IgM)",
+              "kind": "acte",
+              "lexique": [
+                "rubella",
+                "rubeole igg et igm",
+                "serologie rubeole igg igm"
+              ],
+              "ref_prix": null,
+              "delai": ""
+            },
+            "score": 0.634076845140675,
+            "disc": [
+              "igg"
+            ],
+            "comp": false,
+            "via": "serologie rubeole igg igm",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": 1793,
+              "code": "",
+              "pillar": "bio",
+              "type": "Sérologie & Virologie",
               "name": "Anticorps anti-VHA IgM",
               "kind": "acte",
               "lexique": [
-                "VHA IgM",
-                "hépatite A IgM",
-                "serologie vha igm"
+                "anticorps anti vha igm",
+                "hepatite a igm",
+                "serologie vha igm",
+                "vha igm"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 0.46937885253674727,
             "disc": [],
@@ -982,70 +1002,54 @@
           },
           {
             "acte": {
-              "id": "B288",
+              "id": 902,
+              "code": "",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
-              "name": "Sérologie rubéole (IgG + IgM)",
+              "type": "Sérologie & Virologie",
+              "name": "Rubéole IgG/IgM",
               "kind": "acte",
               "lexique": [
-                "rubéole IgG IgM",
-                "rubella",
-                "rubeole igg et igm"
+                "rubeole igg"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.43407684514067496,
+            "score": 0.3034238102323208,
             "disc": [
-              "igg"
-            ],
-            "comp": true,
-            "via": "Sérologie rubéole (IgG + IgM)",
-            "kind": "nom"
-          },
-          {
-            "acte": {
-              "id": "B289",
-              "pillar": "bio",
-              "type": "Sérologie & virologie",
-              "name": "Sérologie CMV (IgG/IgM)",
-              "kind": "acte",
-              "lexique": [
-                "CMV",
-                "cytomégalovirus"
-              ],
-              "composants": []
-            },
-            "score": 0.1664605543710021,
-            "disc": [
-              "igg"
+              "igg",
+              "serologie"
             ],
             "comp": false,
-            "via": "Sérologie CMV (IgG/IgM)",
+            "via": "Rubéole IgG/IgM",
             "kind": "nom"
           }
         ],
         "usedText": "Sérologie Rubéole IgM"
       },
-      "issue": "inconnu",
-      "explication": "flou 47 % · marge 4",
+      "issue": "a_confirmer",
+      "explication": "flou 63 % · marge 16 · conflit : igg",
       "candidat_retenu": {
         "acte": {
-          "id": "B282",
+          "id": 1799,
+          "code": "",
           "pillar": "bio",
-          "type": "Sérologie & virologie",
-          "name": "Anticorps anti-VHA IgM",
+          "type": "Sérologie & Virologie",
+          "name": "Sérologie rubéole (IgG + IgM)",
           "kind": "acte",
           "lexique": [
-            "VHA IgM",
-            "hépatite A IgM",
-            "serologie vha igm"
+            "rubella",
+            "rubeole igg et igm",
+            "serologie rubeole igg igm"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.46937885253674727,
-        "disc": [],
+        "score": 0.634076845140675,
+        "disc": [
+          "igg"
+        ],
         "comp": false,
-        "via": "serologie vha igm",
+        "via": "serologie rubeole igg igm",
         "kind": "lexique"
       }
     },
@@ -1060,6 +1064,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "7000",
+      "prix_comptant": 7000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -1070,37 +1079,234 @@
         "cands": [
           {
             "acte": {
-              "id": "B275",
+              "id": 2570,
+              "code": "SPE-3AB888DB",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
-              "name": "Anticorps anti-HBs",
+              "type": "Biologie médicale",
+              "name": "+",
               "kind": "acte",
               "lexique": [
-                "anti HBs",
-                "immunité hépatite B",
-                "ac anti hbs"
+                "",
+                "acr",
+                "ag hbs",
+                "ambulance avec infirmier",
+                "ambulance avec medecin",
+                "ambulance en stand by",
+                "ambulance evenementielle",
+                "ambulance pediatrique",
+                "analyse d urine",
+                "antigene specifique de la prostate",
+                "arret cardiaque",
+                "assistance sur site",
+                "avion sanitaire",
+                "bilan lipidique cholesterol trigly",
+                "bilan lipidique complet",
+                "brancard bariatrique",
+                "brancardage",
+                "cardiologie",
+                "cellule d isolement",
+                "chirurgie dentaire",
+                "cholesterol et triglycerides",
+                "cholesterol triglycerides",
+                "concert",
+                "consultation cardiologique",
+                "consultation chirurgien dentiste",
+                "consultation dermatologique",
+                "consultation des yeux",
+                "consultation generale",
+                "consultation generaliste",
+                "consultation gynecologie obstetrique",
+                "consultation gynecologique",
+                "consultation medecin",
+                "consultation medecin cardiologue",
+                "consultation medecin dermatologue",
+                "consultation medecin generaliste",
+                "consultation medecin pediatre",
+                "consultation ophtalmologique",
+                "consultation orl",
+                "consultation oto rhino laryngologie",
+                "consultation pediatrique",
+                "couverture chantier",
+                "couverture concert",
+                "couverture sportive",
+                "couveuse de transport",
+                "cytobacteriologie des urines",
+                "cytobacteriologie urinaire",
+                "dentiste",
+                "depistage hepatite b",
+                "depistage hepatite c",
+                "depistage vih",
+                "dermatologie",
+                "detresse vitale",
+                "dispositif previsionnel de secours",
+                "domicile vers clinique",
+                "domicile vers structure",
+                "doppler vasculaire",
+                "dosage psa",
+                "dps",
+                "ecbu urines",
+                "ecg 12d",
+                "ecg de repos 12d",
+                "echo doppler",
+                "echo doppler veineux",
+                "echodoppler",
+                "electrocardiogramme de repos",
+                "evacuation aeromedicale",
+                "evacuation neonatale",
+                "evasan aerienne",
+                "evenement sportif",
+                "exploration des anomalies lipidiques",
+                "festival",
+                "ge",
+                "goutte epaisse paludisme",
+                "gynecologie",
+                "helicoptere sanitaire",
+                "heliporte",
+                "helitreuillage medicalise",
+                "hepatite b",
+                "hepatite c",
+                "incubateur de transport",
+                "infirmier a bord",
+                "interurbain non medicalise",
+                "intervention pre hospitaliere",
+                "medecin a bord",
+                "medecine du travail sur site",
+                "medecine generale",
+                "medicalisation sur site",
+                "mise a disposition ambulance",
+                "mobilite reduite",
+                "monitorage en transport",
+                "navette dialyse",
+                "navette rendez vous",
+                "o2 a bord",
+                "ophtalmologie",
+                "orl",
+                "oxygenotherapie en transport",
+                "patient contagieux",
+                "patient instable",
+                "patient intube",
+                "patient obese",
+                "patient ventile",
+                "pediatrie",
+                "perfusion en transport",
+                "pmr",
+                "poste de sante entreprise",
+                "poste de secours",
+                "poste de secours sportif",
+                "poste medical avance",
+                "radio colonne",
+                "radio rachis",
+                "rassemblement",
+                "reanimation cardio pulmonaire sur site",
+                "reanimation mobile",
+                "recherche de paludisme",
+                "retour de bloc medicalise",
+                "samu",
+                "scanner de la tete",
+                "scanner du cerveau",
+                "scanner du ventre",
+                "secourisme evenementiel",
+                "serologie hbs",
+                "serologie hiv",
+                "serologie typhoide",
+                "smur",
+                "smur secondaire",
+                "soins dentaires",
+                "sortie d hopital",
+                "sortie primaire",
+                "structure vers domicile",
+                "surveillance continue",
+                "surveillance scope",
+                "tdm abdomino pelvien",
+                "test de diagnostic rapide paludisme",
+                "test rapide palu",
+                "test vih",
+                "test widal",
+                "tiu",
+                "tomodensitometrie",
+                "trace ecg",
+                "transfert enfant medicalise",
+                "transfert in utero",
+                "transfert maternel",
+                "transfert nouveau ne",
+                "transfert nouveau ne urgent",
+                "transfert secondaire",
+                "transport assis",
+                "transport bariatrique",
+                "transport consultation",
+                "transport dialyse",
+                "transport domicile hopital",
+                "transport examen",
+                "transport fauteuil roulant",
+                "transport femme enceinte a risque",
+                "transport hemodialyse",
+                "transport infectieux",
+                "transport inter hospitalier urgent",
+                "transport isolement",
+                "transport longue distance non medicalise",
+                "transport medicalise medecin",
+                "transport monitore",
+                "transport neonatal",
+                "transport paramedicalise",
+                "transport pediatrique",
+                "transport post operatoire",
+                "transport retour domicile",
+                "transport sous oxygene",
+                "transport sous perfusion",
+                "transport surveille",
+                "urgence neonatale",
+                "urgence vitale",
+                "uroculture",
+                "vehicule sanitaire leger",
+                "vih 1 2",
+                "vol sanitaire",
+                "vsl",
+                "widal et felix"
               ],
-              "composants": []
+              "ref_prix": 22000.0,
+              "delai": ""
             },
-            "score": 0.5610310277957336,
+            "score": 0.7003333333333334,
             "disc": [],
             "comp": false,
-            "via": "immunité hépatite B",
+            "via": "hepatite b",
             "kind": "lexique"
           },
           {
             "acte": {
-              "id": "B274",
+              "id": 1786,
+              "code": "",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
+              "type": "Sérologie & Virologie",
+              "name": "Anticorps anti-HBs",
+              "kind": "acte",
+              "lexique": [
+                "ac anti hbs",
+                "anticorps anti hbs",
+                "immunite hepatite b"
+              ],
+              "ref_prix": null,
+              "delai": ""
+            },
+            "score": 0.5610310277957336,
+            "disc": [],
+            "comp": false,
+            "via": "immunite hepatite b",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": 1785,
+              "code": "",
+              "pillar": "bio",
+              "type": "Sérologie & Virologie",
               "name": "Antigène HBs",
               "kind": "acte",
               "lexique": [
-                "antigène HBs",
-                "AgHBs",
-                "HBsAg"
+                "aghbs"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 0.39742424242424235,
             "disc": [
@@ -1109,52 +1315,205 @@
             "comp": false,
             "via": "Antigène HBs",
             "kind": "nom"
-          },
-          {
-            "acte": {
-              "id": "B284",
-              "pillar": "bio",
-              "type": "Sérologie & virologie",
-              "name": "Anticorps anti-VHD (delta)",
-              "kind": "acte",
-              "lexique": [
-                "anti VHD",
-                "hépatite delta",
-                "ac anticorps anti vhd"
-              ],
-              "composants": []
-            },
-            "score": 0.21498135198135204,
-            "disc": [
-              "b"
-            ],
-            "comp": false,
-            "via": "hépatite delta",
-            "kind": "lexique"
           }
         ],
         "usedText": "Hépatite B Ag HBs"
       },
-      "issue": "inconnu",
-      "explication": "flou 56 % · marge 16",
+      "issue": "a_confirmer",
+      "explication": "flou 70 % · marge 14",
       "candidat_retenu": {
         "acte": {
-          "id": "B275",
+          "id": 2570,
+          "code": "SPE-3AB888DB",
           "pillar": "bio",
-          "type": "Sérologie & virologie",
-          "name": "Anticorps anti-HBs",
+          "type": "Biologie médicale",
+          "name": "+",
           "kind": "acte",
           "lexique": [
-            "anti HBs",
-            "immunité hépatite B",
-            "ac anti hbs"
+            "",
+            "acr",
+            "ag hbs",
+            "ambulance avec infirmier",
+            "ambulance avec medecin",
+            "ambulance en stand by",
+            "ambulance evenementielle",
+            "ambulance pediatrique",
+            "analyse d urine",
+            "antigene specifique de la prostate",
+            "arret cardiaque",
+            "assistance sur site",
+            "avion sanitaire",
+            "bilan lipidique cholesterol trigly",
+            "bilan lipidique complet",
+            "brancard bariatrique",
+            "brancardage",
+            "cardiologie",
+            "cellule d isolement",
+            "chirurgie dentaire",
+            "cholesterol et triglycerides",
+            "cholesterol triglycerides",
+            "concert",
+            "consultation cardiologique",
+            "consultation chirurgien dentiste",
+            "consultation dermatologique",
+            "consultation des yeux",
+            "consultation generale",
+            "consultation generaliste",
+            "consultation gynecologie obstetrique",
+            "consultation gynecologique",
+            "consultation medecin",
+            "consultation medecin cardiologue",
+            "consultation medecin dermatologue",
+            "consultation medecin generaliste",
+            "consultation medecin pediatre",
+            "consultation ophtalmologique",
+            "consultation orl",
+            "consultation oto rhino laryngologie",
+            "consultation pediatrique",
+            "couverture chantier",
+            "couverture concert",
+            "couverture sportive",
+            "couveuse de transport",
+            "cytobacteriologie des urines",
+            "cytobacteriologie urinaire",
+            "dentiste",
+            "depistage hepatite b",
+            "depistage hepatite c",
+            "depistage vih",
+            "dermatologie",
+            "detresse vitale",
+            "dispositif previsionnel de secours",
+            "domicile vers clinique",
+            "domicile vers structure",
+            "doppler vasculaire",
+            "dosage psa",
+            "dps",
+            "ecbu urines",
+            "ecg 12d",
+            "ecg de repos 12d",
+            "echo doppler",
+            "echo doppler veineux",
+            "echodoppler",
+            "electrocardiogramme de repos",
+            "evacuation aeromedicale",
+            "evacuation neonatale",
+            "evasan aerienne",
+            "evenement sportif",
+            "exploration des anomalies lipidiques",
+            "festival",
+            "ge",
+            "goutte epaisse paludisme",
+            "gynecologie",
+            "helicoptere sanitaire",
+            "heliporte",
+            "helitreuillage medicalise",
+            "hepatite b",
+            "hepatite c",
+            "incubateur de transport",
+            "infirmier a bord",
+            "interurbain non medicalise",
+            "intervention pre hospitaliere",
+            "medecin a bord",
+            "medecine du travail sur site",
+            "medecine generale",
+            "medicalisation sur site",
+            "mise a disposition ambulance",
+            "mobilite reduite",
+            "monitorage en transport",
+            "navette dialyse",
+            "navette rendez vous",
+            "o2 a bord",
+            "ophtalmologie",
+            "orl",
+            "oxygenotherapie en transport",
+            "patient contagieux",
+            "patient instable",
+            "patient intube",
+            "patient obese",
+            "patient ventile",
+            "pediatrie",
+            "perfusion en transport",
+            "pmr",
+            "poste de sante entreprise",
+            "poste de secours",
+            "poste de secours sportif",
+            "poste medical avance",
+            "radio colonne",
+            "radio rachis",
+            "rassemblement",
+            "reanimation cardio pulmonaire sur site",
+            "reanimation mobile",
+            "recherche de paludisme",
+            "retour de bloc medicalise",
+            "samu",
+            "scanner de la tete",
+            "scanner du cerveau",
+            "scanner du ventre",
+            "secourisme evenementiel",
+            "serologie hbs",
+            "serologie hiv",
+            "serologie typhoide",
+            "smur",
+            "smur secondaire",
+            "soins dentaires",
+            "sortie d hopital",
+            "sortie primaire",
+            "structure vers domicile",
+            "surveillance continue",
+            "surveillance scope",
+            "tdm abdomino pelvien",
+            "test de diagnostic rapide paludisme",
+            "test rapide palu",
+            "test vih",
+            "test widal",
+            "tiu",
+            "tomodensitometrie",
+            "trace ecg",
+            "transfert enfant medicalise",
+            "transfert in utero",
+            "transfert maternel",
+            "transfert nouveau ne",
+            "transfert nouveau ne urgent",
+            "transfert secondaire",
+            "transport assis",
+            "transport bariatrique",
+            "transport consultation",
+            "transport dialyse",
+            "transport domicile hopital",
+            "transport examen",
+            "transport fauteuil roulant",
+            "transport femme enceinte a risque",
+            "transport hemodialyse",
+            "transport infectieux",
+            "transport inter hospitalier urgent",
+            "transport isolement",
+            "transport longue distance non medicalise",
+            "transport medicalise medecin",
+            "transport monitore",
+            "transport neonatal",
+            "transport paramedicalise",
+            "transport pediatrique",
+            "transport post operatoire",
+            "transport retour domicile",
+            "transport sous oxygene",
+            "transport sous perfusion",
+            "transport surveille",
+            "urgence neonatale",
+            "urgence vitale",
+            "uroculture",
+            "vehicule sanitaire leger",
+            "vih 1 2",
+            "vol sanitaire",
+            "vsl",
+            "widal et felix"
           ],
-          "composants": []
+          "ref_prix": 22000.0,
+          "delai": ""
         },
-        "score": 0.5610310277957336,
+        "score": 0.7003333333333334,
         "disc": [],
         "comp": false,
-        "via": "immunité hépatite B",
+        "via": "hepatite b",
         "kind": "lexique"
       }
     },
@@ -1169,6 +1528,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "9000",
+      "prix_comptant": 9000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -1179,23 +1543,24 @@
         "cands": [
           {
             "acte": {
-              "id": "B281",
+              "id": 1792,
+              "code": "",
               "pillar": "bio",
-              "type": "Sérologie & virologie",
+              "type": "Sérologie & Virologie",
               "name": "Anticorps anti-VHC",
               "kind": "acte",
               "lexique": [
-                "anti VHC",
-                "hépatite C sérologie",
-                "HCV Ab",
-                "ac anti vhc",
-                "ac anticorps anti vhc"
+                "ac anticorps anti vhc",
+                "anticorps anti vhc",
+                "hcv ab",
+                "hepatite c serologie"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
             "score": 1.0,
             "disc": [],
-            "via": "hépatite C sérologie",
+            "via": "hepatite c serologie",
             "kind": "lexique"
           }
         ],
@@ -1205,23 +1570,24 @@
       "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B281",
+          "id": 1792,
+          "code": "",
           "pillar": "bio",
-          "type": "Sérologie & virologie",
+          "type": "Sérologie & Virologie",
           "name": "Anticorps anti-VHC",
           "kind": "acte",
           "lexique": [
-            "anti VHC",
-            "hépatite C sérologie",
-            "HCV Ab",
-            "ac anti vhc",
-            "ac anticorps anti vhc"
+            "ac anticorps anti vhc",
+            "anticorps anti vhc",
+            "hcv ab",
+            "hepatite c serologie"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
         "score": 1.0,
         "disc": [],
-        "via": "hépatite C sérologie",
+        "via": "hepatite c serologie",
         "kind": "lexique"
       }
     },
@@ -1236,59 +1602,25 @@
         "statut": "renseigne"
       },
       "priceRaw": "18000",
+      "prix_comptant": 18000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "48h",
       "pillar": null,
       "types": null,
       "merged": false,
       "match": {
-        "exact": true,
-        "method": "lexique",
-        "cands": [
-          {
-            "acte": {
-              "id": "B326",
-              "pillar": "bio",
-              "type": "Bactériologie",
-              "name": "Prélèvement vaginal (PV) + culture",
-              "kind": "acte",
-              "lexique": [
-                "PV",
-                "prélèvement vaginal",
-                "cervico-vaginal",
-                "pv chlam myco"
-              ],
-              "composants": []
-            },
-            "score": 1.0,
-            "disc": [],
-            "via": "pv chlam myco",
-            "kind": "lexique"
-          }
-        ],
+        "exact": false,
+        "composite": true,
+        "method": "composite",
+        "cands": [],
         "usedText": "PV CHLAM MYCO"
       },
-      "issue": "reconnu",
-      "explication": "lexique",
-      "candidat_retenu": {
-        "acte": {
-          "id": "B326",
-          "pillar": "bio",
-          "type": "Bactériologie",
-          "name": "Prélèvement vaginal (PV) + culture",
-          "kind": "acte",
-          "lexique": [
-            "PV",
-            "prélèvement vaginal",
-            "cervico-vaginal",
-            "pv chlam myco"
-          ],
-          "composants": []
-        },
-        "score": 1.0,
-        "disc": [],
-        "via": "pv chlam myco",
-        "kind": "lexique"
-      }
+      "issue": "inconnu",
+      "explication": "Libellé composite (§5.3 / §6) : vise plusieurs actes distincts (ex: PV + Chlamydia + Mycoplasme)",
+      "candidat_retenu": null
     },
     {
       "num": 17,
@@ -1302,6 +1634,11 @@
         "note": "prix 8 × la médiane de la section"
       },
       "priceRaw": "85000",
+      "prix_comptant": 85000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "4h",
       "pillar": null,
       "types": null,
@@ -1312,84 +1649,271 @@
         "cands": [
           {
             "acte": {
-              "id": "B216",
-              "pillar": "bio",
-              "type": "Marqueurs tumoraux",
-              "name": "SCC (antigène du carcinome épidermoïde)",
+              "id": 997,
+              "code": "",
+              "pillar": "img",
+              "type": "Scanner (TDM)",
+              "name": "Scanner thoracique",
               "kind": "acte",
               "lexique": [
-                "SCC",
-                "carcinome épidermoïde"
+                "scanner des poumons"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.22923076923076924,
-            "disc": [],
+            "score": 0.5893998933143669,
+            "disc": [
+              "injection"
+            ],
             "comp": false,
-            "via": "SCC",
-            "kind": "lexique"
+            "via": "Scanner thoracique",
+            "kind": "nom"
           },
           {
             "acte": {
-              "id": "B043",
-              "pillar": "bio",
-              "type": "Hématologie",
-              "name": "Coefficient de saturation de la transferrine (CST)",
+              "id": 1272,
+              "code": "",
+              "pillar": "img",
+              "type": "Scanner (TDM)",
+              "name": "TDM thoracique",
               "kind": "acte",
               "lexique": [
-                "CST",
-                "saturation de la transferrine"
+                "ct thorax",
+                "scanner poumon",
+                "tdm thorax"
               ],
-              "composants": []
+              "ref_prix": 45000.0,
+              "delai": ""
             },
-            "score": 0.2127141608391608,
-            "disc": [],
+            "score": 0.5893998933143669,
+            "disc": [
+              "injection"
+            ],
             "comp": false,
-            "via": "saturation de la transferrine",
-            "kind": "lexique"
+            "via": "TDM thoracique",
+            "kind": "nom"
           },
           {
             "acte": {
-              "id": "B346",
+              "id": 2570,
+              "code": "SPE-3AB888DB",
               "pillar": "bio",
-              "type": "Parasitologie & mycologie",
-              "name": "Confirmation bilharziose",
+              "type": "Biologie médicale",
+              "name": "+",
               "kind": "acte",
               "lexique": [
-                "confirmation bilharziose",
-                "schistosomiase confirmation"
+                "",
+                "acr",
+                "ag hbs",
+                "ambulance avec infirmier",
+                "ambulance avec medecin",
+                "ambulance en stand by",
+                "ambulance evenementielle",
+                "ambulance pediatrique",
+                "analyse d urine",
+                "antigene specifique de la prostate",
+                "arret cardiaque",
+                "assistance sur site",
+                "avion sanitaire",
+                "bilan lipidique cholesterol trigly",
+                "bilan lipidique complet",
+                "brancard bariatrique",
+                "brancardage",
+                "cardiologie",
+                "cellule d isolement",
+                "chirurgie dentaire",
+                "cholesterol et triglycerides",
+                "cholesterol triglycerides",
+                "concert",
+                "consultation cardiologique",
+                "consultation chirurgien dentiste",
+                "consultation dermatologique",
+                "consultation des yeux",
+                "consultation generale",
+                "consultation generaliste",
+                "consultation gynecologie obstetrique",
+                "consultation gynecologique",
+                "consultation medecin",
+                "consultation medecin cardiologue",
+                "consultation medecin dermatologue",
+                "consultation medecin generaliste",
+                "consultation medecin pediatre",
+                "consultation ophtalmologique",
+                "consultation orl",
+                "consultation oto rhino laryngologie",
+                "consultation pediatrique",
+                "couverture chantier",
+                "couverture concert",
+                "couverture sportive",
+                "couveuse de transport",
+                "cytobacteriologie des urines",
+                "cytobacteriologie urinaire",
+                "dentiste",
+                "depistage hepatite b",
+                "depistage hepatite c",
+                "depistage vih",
+                "dermatologie",
+                "detresse vitale",
+                "dispositif previsionnel de secours",
+                "domicile vers clinique",
+                "domicile vers structure",
+                "doppler vasculaire",
+                "dosage psa",
+                "dps",
+                "ecbu urines",
+                "ecg 12d",
+                "ecg de repos 12d",
+                "echo doppler",
+                "echo doppler veineux",
+                "echodoppler",
+                "electrocardiogramme de repos",
+                "evacuation aeromedicale",
+                "evacuation neonatale",
+                "evasan aerienne",
+                "evenement sportif",
+                "exploration des anomalies lipidiques",
+                "festival",
+                "ge",
+                "goutte epaisse paludisme",
+                "gynecologie",
+                "helicoptere sanitaire",
+                "heliporte",
+                "helitreuillage medicalise",
+                "hepatite b",
+                "hepatite c",
+                "incubateur de transport",
+                "infirmier a bord",
+                "interurbain non medicalise",
+                "intervention pre hospitaliere",
+                "medecin a bord",
+                "medecine du travail sur site",
+                "medecine generale",
+                "medicalisation sur site",
+                "mise a disposition ambulance",
+                "mobilite reduite",
+                "monitorage en transport",
+                "navette dialyse",
+                "navette rendez vous",
+                "o2 a bord",
+                "ophtalmologie",
+                "orl",
+                "oxygenotherapie en transport",
+                "patient contagieux",
+                "patient instable",
+                "patient intube",
+                "patient obese",
+                "patient ventile",
+                "pediatrie",
+                "perfusion en transport",
+                "pmr",
+                "poste de sante entreprise",
+                "poste de secours",
+                "poste de secours sportif",
+                "poste medical avance",
+                "radio colonne",
+                "radio rachis",
+                "rassemblement",
+                "reanimation cardio pulmonaire sur site",
+                "reanimation mobile",
+                "recherche de paludisme",
+                "retour de bloc medicalise",
+                "samu",
+                "scanner de la tete",
+                "scanner du cerveau",
+                "scanner du ventre",
+                "secourisme evenementiel",
+                "serologie hbs",
+                "serologie hiv",
+                "serologie typhoide",
+                "smur",
+                "smur secondaire",
+                "soins dentaires",
+                "sortie d hopital",
+                "sortie primaire",
+                "structure vers domicile",
+                "surveillance continue",
+                "surveillance scope",
+                "tdm abdomino pelvien",
+                "test de diagnostic rapide paludisme",
+                "test rapide palu",
+                "test vih",
+                "test widal",
+                "tiu",
+                "tomodensitometrie",
+                "trace ecg",
+                "transfert enfant medicalise",
+                "transfert in utero",
+                "transfert maternel",
+                "transfert nouveau ne",
+                "transfert nouveau ne urgent",
+                "transfert secondaire",
+                "transport assis",
+                "transport bariatrique",
+                "transport consultation",
+                "transport dialyse",
+                "transport domicile hopital",
+                "transport examen",
+                "transport fauteuil roulant",
+                "transport femme enceinte a risque",
+                "transport hemodialyse",
+                "transport infectieux",
+                "transport inter hospitalier urgent",
+                "transport isolement",
+                "transport longue distance non medicalise",
+                "transport medicalise medecin",
+                "transport monitore",
+                "transport neonatal",
+                "transport paramedicalise",
+                "transport pediatrique",
+                "transport post operatoire",
+                "transport retour domicile",
+                "transport sous oxygene",
+                "transport sous perfusion",
+                "transport surveille",
+                "urgence neonatale",
+                "urgence vitale",
+                "uroculture",
+                "vehicule sanitaire leger",
+                "vih 1 2",
+                "vol sanitaire",
+                "vsl",
+                "widal et felix"
               ],
-              "composants": []
+              "ref_prix": 22000.0,
+              "delai": ""
             },
-            "score": 0.21167420814479634,
+            "score": 0.5076223776223776,
             "disc": [],
             "comp": false,
-            "via": "schistosomiase confirmation",
+            "via": "scanner de la tete",
             "kind": "lexique"
           }
         ],
         "usedText": "Scanner thoracique avec injection"
       },
       "issue": "inconnu",
-      "explication": "flou 23 % · marge 2",
+      "explication": "flou 59 % · marge 0 · conflit : injection",
       "candidat_retenu": {
         "acte": {
-          "id": "B216",
-          "pillar": "bio",
-          "type": "Marqueurs tumoraux",
-          "name": "SCC (antigène du carcinome épidermoïde)",
+          "id": 997,
+          "code": "",
+          "pillar": "img",
+          "type": "Scanner (TDM)",
+          "name": "Scanner thoracique",
           "kind": "acte",
           "lexique": [
-            "SCC",
-            "carcinome épidermoïde"
+            "scanner des poumons"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.22923076923076924,
-        "disc": [],
+        "score": 0.5893998933143669,
+        "disc": [
+          "injection"
+        ],
         "comp": false,
-        "via": "SCC",
-        "kind": "lexique"
+        "via": "Scanner thoracique",
+        "kind": "nom"
       }
     },
     {
@@ -1404,101 +1928,71 @@
         "note": "prix 15 × la médiane de la section"
       },
       "priceRaw": "150000",
+      "prix_comptant": 150000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "24h",
       "pillar": null,
       "types": null,
       "merged": false,
       "match": {
-        "exact": false,
-        "method": "flou",
+        "exact": true,
+        "method": "nom exact",
         "cands": [
           {
             "acte": {
-              "id": "B047",
-              "pillar": "bio",
-              "type": "Hémostase / Coagulation",
-              "name": "TP / INR",
+              "id": 1276,
+              "code": "",
+              "pillar": "img",
+              "type": "IRM",
+              "name": "IRM cérébrale",
               "kind": "acte",
               "lexique": [
-                "TP",
-                "INR",
-                "taux de prothrombine",
-                "temps de prothrombine"
+                "irm cerebrale",
+                "irm cerveau",
+                "irm du cerveau",
+                "irm encephalique",
+                "irm tete",
+                "mri brain"
               ],
-              "composants": []
+              "ref_prix": 97000.0,
+              "delai": ""
             },
-            "score": 0.19636363636363635,
+            "score": 1.0,
             "disc": [],
-            "comp": false,
-            "via": "INR",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B254",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "Anticorps anti-îlots (ICA)",
-              "kind": "acte",
-              "lexique": [
-                "anti îlots",
-                "ICA"
-              ],
-              "composants": []
-            },
-            "score": 0.19636363636363635,
-            "disc": [],
-            "comp": false,
-            "via": "ICA",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B266",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "IDR à la tuberculine (IDRt)",
-              "kind": "acte",
-              "lexique": [
-                "IDR",
-                "intradermoréaction",
-                "tuberculine",
-                "Mantoux",
-                "idrt"
-              ],
-              "composants": []
-            },
-            "score": 0.19636363636363635,
-            "disc": [],
-            "comp": false,
-            "via": "IDR",
-            "kind": "lexique"
+            "via": "IRM cérébrale",
+            "kind": "nom"
           }
         ],
         "usedText": "IRM cérébrale"
       },
-      "issue": "inconnu",
-      "explication": "flou 20 % · marge 0",
+      "issue": "reconnu",
+      "explication": "nom exact",
       "candidat_retenu": {
         "acte": {
-          "id": "B047",
-          "pillar": "bio",
-          "type": "Hémostase / Coagulation",
-          "name": "TP / INR",
+          "id": 1276,
+          "code": "",
+          "pillar": "img",
+          "type": "IRM",
+          "name": "IRM cérébrale",
           "kind": "acte",
           "lexique": [
-            "TP",
-            "INR",
-            "taux de prothrombine",
-            "temps de prothrombine"
+            "irm cerebrale",
+            "irm cerveau",
+            "irm du cerveau",
+            "irm encephalique",
+            "irm tete",
+            "mri brain"
           ],
-          "composants": []
+          "ref_prix": 97000.0,
+          "delai": ""
         },
-        "score": 0.19636363636363635,
+        "score": 1.0,
         "disc": [],
-        "comp": false,
-        "via": "INR",
-        "kind": "lexique"
+        "via": "IRM cérébrale",
+        "kind": "nom"
       }
     },
     {
@@ -1512,96 +2006,77 @@
         "statut": "renseigne"
       },
       "priceRaw": "35000",
+      "prix_comptant": 35000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "1h",
       "pillar": null,
       "types": null,
       "merged": false,
       "match": {
-        "exact": false,
-        "method": "flou",
+        "exact": true,
+        "method": "nom exact",
         "cands": [
           {
             "acte": {
-              "id": "B271",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "ECP (protéine cationique des éosinophiles)",
+              "id": 1923,
+              "code": "",
+              "pillar": "img",
+              "type": "Panel d'examens / Protocoles",
+              "name": "Échographie abdomino-pelvienne",
               "kind": "acte",
               "lexique": [
-                "ECP",
-                "protéine cationique éosinophiles"
+                "abdomino pelvienne",
+                "echo abdo pelvienne",
+                "echo abdominale et pelvienne",
+                "echo abdomino pelvienne",
+                "echographie abdo pelvienne",
+                "echographie abdomen et pelvis",
+                "echographie abdominale et pelvienne",
+                "echographie abdomino",
+                "echographie abdomino pelvienne"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.22923076923076924,
+            "score": 1.0,
             "disc": [],
-            "comp": false,
-            "via": "ECP",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B329",
-              "pillar": "bio",
-              "type": "Bactériologie",
-              "name": "Écouvillonnage + ECB + antibiogramme",
-              "kind": "acte",
-              "lexique": [
-                "écouvillonnage ECB ATB",
-                "écouvillon culture antibiogramme",
-                "econvillonage ecb atb"
-              ],
-              "composants": []
-            },
-            "score": 0.21754925775978406,
-            "disc": [],
-            "comp": false,
-            "via": "écouvillonnage ECB ATB",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B317",
-              "pillar": "bio",
-              "type": "Bactériologie",
-              "name": "ECBU + antibiogramme",
-              "kind": "acte",
-              "lexique": [
-                "ECBU",
-                "examen cytobactériologique des urines",
-                "uroculture + antibiogramme"
-              ],
-              "composants": []
-            },
-            "score": 0.20923076923076922,
-            "disc": [],
-            "comp": false,
-            "via": "ECBU",
-            "kind": "lexique"
+            "via": "Échographie abdomino-pelvienne",
+            "kind": "nom"
           }
         ],
         "usedText": "Échographie abdomino-pelvienne"
       },
-      "issue": "inconnu",
-      "explication": "flou 23 % · marge 1",
+      "issue": "reconnu",
+      "explication": "nom exact",
       "candidat_retenu": {
         "acte": {
-          "id": "B271",
-          "pillar": "bio",
-          "type": "Immunologie, auto-immunité & allergologie",
-          "name": "ECP (protéine cationique des éosinophiles)",
+          "id": 1923,
+          "code": "",
+          "pillar": "img",
+          "type": "Panel d'examens / Protocoles",
+          "name": "Échographie abdomino-pelvienne",
           "kind": "acte",
           "lexique": [
-            "ECP",
-            "protéine cationique éosinophiles"
+            "abdomino pelvienne",
+            "echo abdo pelvienne",
+            "echo abdominale et pelvienne",
+            "echo abdomino pelvienne",
+            "echographie abdo pelvienne",
+            "echographie abdomen et pelvis",
+            "echographie abdominale et pelvienne",
+            "echographie abdomino",
+            "echographie abdomino pelvienne"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.22923076923076924,
+        "score": 1.0,
         "disc": [],
-        "comp": false,
-        "via": "ECP",
-        "kind": "lexique"
+        "via": "Échographie abdomino-pelvienne",
+        "kind": "nom"
       }
     },
     {
@@ -1615,6 +2090,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "15000",
+      "prix_comptant": 15000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "30m",
       "pillar": null,
       "types": null,
@@ -1625,90 +2105,435 @@
         "cands": [
           {
             "acte": {
-              "id": "B097",
+              "id": 2570,
+              "code": "SPE-3AB888DB",
               "pillar": "bio",
-              "type": "Biochimie & ionogramme",
-              "name": "Électrophorèse des protéines sériques (EPP)",
+              "type": "Biologie médicale",
+              "name": "+",
               "kind": "acte",
               "lexique": [
-                "électrophorèse des protéines",
-                "EPP",
-                "protidogramme",
-                "protéinogramme"
+                "",
+                "acr",
+                "ag hbs",
+                "ambulance avec infirmier",
+                "ambulance avec medecin",
+                "ambulance en stand by",
+                "ambulance evenementielle",
+                "ambulance pediatrique",
+                "analyse d urine",
+                "antigene specifique de la prostate",
+                "arret cardiaque",
+                "assistance sur site",
+                "avion sanitaire",
+                "bilan lipidique cholesterol trigly",
+                "bilan lipidique complet",
+                "brancard bariatrique",
+                "brancardage",
+                "cardiologie",
+                "cellule d isolement",
+                "chirurgie dentaire",
+                "cholesterol et triglycerides",
+                "cholesterol triglycerides",
+                "concert",
+                "consultation cardiologique",
+                "consultation chirurgien dentiste",
+                "consultation dermatologique",
+                "consultation des yeux",
+                "consultation generale",
+                "consultation generaliste",
+                "consultation gynecologie obstetrique",
+                "consultation gynecologique",
+                "consultation medecin",
+                "consultation medecin cardiologue",
+                "consultation medecin dermatologue",
+                "consultation medecin generaliste",
+                "consultation medecin pediatre",
+                "consultation ophtalmologique",
+                "consultation orl",
+                "consultation oto rhino laryngologie",
+                "consultation pediatrique",
+                "couverture chantier",
+                "couverture concert",
+                "couverture sportive",
+                "couveuse de transport",
+                "cytobacteriologie des urines",
+                "cytobacteriologie urinaire",
+                "dentiste",
+                "depistage hepatite b",
+                "depistage hepatite c",
+                "depistage vih",
+                "dermatologie",
+                "detresse vitale",
+                "dispositif previsionnel de secours",
+                "domicile vers clinique",
+                "domicile vers structure",
+                "doppler vasculaire",
+                "dosage psa",
+                "dps",
+                "ecbu urines",
+                "ecg 12d",
+                "ecg de repos 12d",
+                "echo doppler",
+                "echo doppler veineux",
+                "echodoppler",
+                "electrocardiogramme de repos",
+                "evacuation aeromedicale",
+                "evacuation neonatale",
+                "evasan aerienne",
+                "evenement sportif",
+                "exploration des anomalies lipidiques",
+                "festival",
+                "ge",
+                "goutte epaisse paludisme",
+                "gynecologie",
+                "helicoptere sanitaire",
+                "heliporte",
+                "helitreuillage medicalise",
+                "hepatite b",
+                "hepatite c",
+                "incubateur de transport",
+                "infirmier a bord",
+                "interurbain non medicalise",
+                "intervention pre hospitaliere",
+                "medecin a bord",
+                "medecine du travail sur site",
+                "medecine generale",
+                "medicalisation sur site",
+                "mise a disposition ambulance",
+                "mobilite reduite",
+                "monitorage en transport",
+                "navette dialyse",
+                "navette rendez vous",
+                "o2 a bord",
+                "ophtalmologie",
+                "orl",
+                "oxygenotherapie en transport",
+                "patient contagieux",
+                "patient instable",
+                "patient intube",
+                "patient obese",
+                "patient ventile",
+                "pediatrie",
+                "perfusion en transport",
+                "pmr",
+                "poste de sante entreprise",
+                "poste de secours",
+                "poste de secours sportif",
+                "poste medical avance",
+                "radio colonne",
+                "radio rachis",
+                "rassemblement",
+                "reanimation cardio pulmonaire sur site",
+                "reanimation mobile",
+                "recherche de paludisme",
+                "retour de bloc medicalise",
+                "samu",
+                "scanner de la tete",
+                "scanner du cerveau",
+                "scanner du ventre",
+                "secourisme evenementiel",
+                "serologie hbs",
+                "serologie hiv",
+                "serologie typhoide",
+                "smur",
+                "smur secondaire",
+                "soins dentaires",
+                "sortie d hopital",
+                "sortie primaire",
+                "structure vers domicile",
+                "surveillance continue",
+                "surveillance scope",
+                "tdm abdomino pelvien",
+                "test de diagnostic rapide paludisme",
+                "test rapide palu",
+                "test vih",
+                "test widal",
+                "tiu",
+                "tomodensitometrie",
+                "trace ecg",
+                "transfert enfant medicalise",
+                "transfert in utero",
+                "transfert maternel",
+                "transfert nouveau ne",
+                "transfert nouveau ne urgent",
+                "transfert secondaire",
+                "transport assis",
+                "transport bariatrique",
+                "transport consultation",
+                "transport dialyse",
+                "transport domicile hopital",
+                "transport examen",
+                "transport fauteuil roulant",
+                "transport femme enceinte a risque",
+                "transport hemodialyse",
+                "transport infectieux",
+                "transport inter hospitalier urgent",
+                "transport isolement",
+                "transport longue distance non medicalise",
+                "transport medicalise medecin",
+                "transport monitore",
+                "transport neonatal",
+                "transport paramedicalise",
+                "transport pediatrique",
+                "transport post operatoire",
+                "transport retour domicile",
+                "transport sous oxygene",
+                "transport sous perfusion",
+                "transport surveille",
+                "urgence neonatale",
+                "urgence vitale",
+                "uroculture",
+                "vehicule sanitaire leger",
+                "vih 1 2",
+                "vol sanitaire",
+                "vsl",
+                "widal et felix"
               ],
-              "composants": []
+              "ref_prix": 22000.0,
+              "delai": ""
             },
-            "score": 0.24368444055944055,
+            "score": 0.8264102564102564,
             "disc": [],
             "comp": false,
-            "via": "électrophorèse des protéines",
+            "via": "electrocardiogramme de repos",
             "kind": "lexique"
           },
           {
             "acte": {
-              "id": "B030",
-              "pillar": "bio",
-              "type": "Hématologie",
-              "name": "Électrophorèse de l'hémoglobine",
+              "id": 2152,
+              "code": "CARD",
+              "pillar": "exp",
+              "type": "Cardiologie & explorations vasculaires",
+              "name": "ECG de repos",
               "kind": "acte",
-              "lexique": [
-                "électrophorèse de l'hémoglobine",
-                "EPH",
-                "Hb électrophorèse",
-                "electrophorese de l hemoglobine protidogramme"
-              ],
-              "composants": []
+              "lexique": [],
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.23844807692307693,
-            "disc": [],
+            "score": 0.6475213675213675,
+            "disc": [
+              "ecg"
+            ],
             "comp": false,
-            "via": "Électrophorèse de l'hémoglobine",
+            "via": "ECG de repos",
             "kind": "nom"
           },
           {
             "acte": {
-              "id": "B415",
-              "pillar": "bio",
-              "type": "Génétique & cytogénétique",
-              "name": "Étude moléculaire de la drépanocytose",
+              "id": 1106,
+              "code": "",
+              "pillar": "soins",
+              "type": "Dermatologie",
+              "name": "Électrocoagulation",
               "kind": "acte",
-              "lexique": [
-                "drépanocytose moléculaire",
-                "mutation bêta-globine",
-                "HBB"
-              ],
-              "composants": []
+              "lexique": [],
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.2152997347480106,
+            "score": 0.24826007326007324,
             "disc": [],
             "comp": false,
-            "via": "Étude moléculaire de la drépanocytose",
+            "via": "Électrocoagulation",
             "kind": "nom"
           }
         ],
         "usedText": "Électrocardiogramme de repos (ECG)"
       },
-      "issue": "inconnu",
-      "explication": "flou 24 % · marge 1",
+      "issue": "a_confirmer",
+      "explication": "flou 83 % · marge 18",
       "candidat_retenu": {
         "acte": {
-          "id": "B097",
+          "id": 2570,
+          "code": "SPE-3AB888DB",
           "pillar": "bio",
-          "type": "Biochimie & ionogramme",
-          "name": "Électrophorèse des protéines sériques (EPP)",
+          "type": "Biologie médicale",
+          "name": "+",
           "kind": "acte",
           "lexique": [
-            "électrophorèse des protéines",
-            "EPP",
-            "protidogramme",
-            "protéinogramme"
+            "",
+            "acr",
+            "ag hbs",
+            "ambulance avec infirmier",
+            "ambulance avec medecin",
+            "ambulance en stand by",
+            "ambulance evenementielle",
+            "ambulance pediatrique",
+            "analyse d urine",
+            "antigene specifique de la prostate",
+            "arret cardiaque",
+            "assistance sur site",
+            "avion sanitaire",
+            "bilan lipidique cholesterol trigly",
+            "bilan lipidique complet",
+            "brancard bariatrique",
+            "brancardage",
+            "cardiologie",
+            "cellule d isolement",
+            "chirurgie dentaire",
+            "cholesterol et triglycerides",
+            "cholesterol triglycerides",
+            "concert",
+            "consultation cardiologique",
+            "consultation chirurgien dentiste",
+            "consultation dermatologique",
+            "consultation des yeux",
+            "consultation generale",
+            "consultation generaliste",
+            "consultation gynecologie obstetrique",
+            "consultation gynecologique",
+            "consultation medecin",
+            "consultation medecin cardiologue",
+            "consultation medecin dermatologue",
+            "consultation medecin generaliste",
+            "consultation medecin pediatre",
+            "consultation ophtalmologique",
+            "consultation orl",
+            "consultation oto rhino laryngologie",
+            "consultation pediatrique",
+            "couverture chantier",
+            "couverture concert",
+            "couverture sportive",
+            "couveuse de transport",
+            "cytobacteriologie des urines",
+            "cytobacteriologie urinaire",
+            "dentiste",
+            "depistage hepatite b",
+            "depistage hepatite c",
+            "depistage vih",
+            "dermatologie",
+            "detresse vitale",
+            "dispositif previsionnel de secours",
+            "domicile vers clinique",
+            "domicile vers structure",
+            "doppler vasculaire",
+            "dosage psa",
+            "dps",
+            "ecbu urines",
+            "ecg 12d",
+            "ecg de repos 12d",
+            "echo doppler",
+            "echo doppler veineux",
+            "echodoppler",
+            "electrocardiogramme de repos",
+            "evacuation aeromedicale",
+            "evacuation neonatale",
+            "evasan aerienne",
+            "evenement sportif",
+            "exploration des anomalies lipidiques",
+            "festival",
+            "ge",
+            "goutte epaisse paludisme",
+            "gynecologie",
+            "helicoptere sanitaire",
+            "heliporte",
+            "helitreuillage medicalise",
+            "hepatite b",
+            "hepatite c",
+            "incubateur de transport",
+            "infirmier a bord",
+            "interurbain non medicalise",
+            "intervention pre hospitaliere",
+            "medecin a bord",
+            "medecine du travail sur site",
+            "medecine generale",
+            "medicalisation sur site",
+            "mise a disposition ambulance",
+            "mobilite reduite",
+            "monitorage en transport",
+            "navette dialyse",
+            "navette rendez vous",
+            "o2 a bord",
+            "ophtalmologie",
+            "orl",
+            "oxygenotherapie en transport",
+            "patient contagieux",
+            "patient instable",
+            "patient intube",
+            "patient obese",
+            "patient ventile",
+            "pediatrie",
+            "perfusion en transport",
+            "pmr",
+            "poste de sante entreprise",
+            "poste de secours",
+            "poste de secours sportif",
+            "poste medical avance",
+            "radio colonne",
+            "radio rachis",
+            "rassemblement",
+            "reanimation cardio pulmonaire sur site",
+            "reanimation mobile",
+            "recherche de paludisme",
+            "retour de bloc medicalise",
+            "samu",
+            "scanner de la tete",
+            "scanner du cerveau",
+            "scanner du ventre",
+            "secourisme evenementiel",
+            "serologie hbs",
+            "serologie hiv",
+            "serologie typhoide",
+            "smur",
+            "smur secondaire",
+            "soins dentaires",
+            "sortie d hopital",
+            "sortie primaire",
+            "structure vers domicile",
+            "surveillance continue",
+            "surveillance scope",
+            "tdm abdomino pelvien",
+            "test de diagnostic rapide paludisme",
+            "test rapide palu",
+            "test vih",
+            "test widal",
+            "tiu",
+            "tomodensitometrie",
+            "trace ecg",
+            "transfert enfant medicalise",
+            "transfert in utero",
+            "transfert maternel",
+            "transfert nouveau ne",
+            "transfert nouveau ne urgent",
+            "transfert secondaire",
+            "transport assis",
+            "transport bariatrique",
+            "transport consultation",
+            "transport dialyse",
+            "transport domicile hopital",
+            "transport examen",
+            "transport fauteuil roulant",
+            "transport femme enceinte a risque",
+            "transport hemodialyse",
+            "transport infectieux",
+            "transport inter hospitalier urgent",
+            "transport isolement",
+            "transport longue distance non medicalise",
+            "transport medicalise medecin",
+            "transport monitore",
+            "transport neonatal",
+            "transport paramedicalise",
+            "transport pediatrique",
+            "transport post operatoire",
+            "transport retour domicile",
+            "transport sous oxygene",
+            "transport sous perfusion",
+            "transport surveille",
+            "urgence neonatale",
+            "urgence vitale",
+            "uroculture",
+            "vehicule sanitaire leger",
+            "vih 1 2",
+            "vol sanitaire",
+            "vsl",
+            "widal et felix"
           ],
-          "composants": []
+          "ref_prix": 22000.0,
+          "delai": ""
         },
-        "score": 0.24368444055944055,
+        "score": 0.8264102564102564,
         "disc": [],
         "comp": false,
-        "via": "électrophorèse des protéines",
+        "via": "electrocardiogramme de repos",
         "kind": "lexique"
       }
     },
@@ -1724,6 +2549,11 @@
         "note": "prix 6 × la médiane de la section"
       },
       "priceRaw": "65000",
+      "prix_comptant": 65000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "2h",
       "pillar": null,
       "types": null,
@@ -1734,85 +2564,106 @@
         "cands": [
           {
             "acte": {
-              "id": "B118",
-              "pillar": "bio",
-              "type": "Biochimie & ionogramme",
-              "name": "FibroTest-ActiTest",
+              "id": 2188,
+              "code": "GAST",
+              "pillar": "exp",
+              "type": "Gastro-entérologie & endoscopie digestive",
+              "name": "Fibroscopie œso-gastro-duodénale (FOGD)",
               "kind": "acte",
               "lexique": [
-                "fibrotest",
-                "actitest",
-                "fibrose hépatique non invasive"
+                "duodenale",
+                "endoscopie haute",
+                "fibroscopie digestive haute",
+                "fibroscopie oeso",
+                "fibroscopie oeso gastro duodenale fogd",
+                "gastroscopie"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.35315047021943574,
+            "score": 0.8615801457194899,
             "disc": [],
             "comp": false,
-            "via": "fibrose hépatique non invasive",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B192",
-              "pillar": "bio",
-              "type": "Endocrinologie & hormonologie",
-              "name": "Gastrine",
-              "kind": "acte",
-              "lexique": [
-                "gastrine"
-              ],
-              "composants": []
-            },
-            "score": 0.31712643678160923,
-            "disc": [],
-            "comp": false,
-            "via": "Gastrine",
+            "via": "Fibroscopie œso-gastro-duodénale (FOGD)",
             "kind": "nom"
           },
           {
             "acte": {
-              "id": "B218",
-              "pillar": "bio",
-              "type": "Marqueurs tumoraux",
-              "name": "ProGRP",
+              "id": 1962,
+              "code": "",
+              "pillar": "img",
+              "type": "Radiographie",
+              "name": "Transit œso-gastro-duodénal (TOGD)",
               "kind": "acte",
               "lexique": [
-                "ProGRP",
-                "pro-gastrin releasing peptide"
+                "duodenal",
+                "togd",
+                "transit baryte",
+                "transit oeso",
+                "transit oeso gastro duodenal",
+                "transit oeso gastro duodenal togd"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.29357813417144046,
+            "score": 0.7133185550082102,
             "disc": [],
             "comp": false,
-            "via": "pro-gastrin releasing peptide",
+            "via": "transit oeso gastro duodenal",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": 2175,
+              "code": "",
+              "pillar": "exp",
+              "type": "Pneumologie & explorations respiratoires",
+              "name": "Biopsie bronchique (sous fibroscopie)",
+              "kind": "acte",
+              "lexique": [
+                "biopsie bronchique",
+                "biopsie bronchique sous fibroscopie",
+                "biopsie sous bronchoscopie",
+                "sous fibroscopie"
+              ],
+              "ref_prix": null,
+              "delai": ""
+            },
+            "score": 0.41633004926108375,
+            "disc": [],
+            "comp": false,
+            "via": "sous fibroscopie",
             "kind": "lexique"
           }
         ],
         "usedText": "Fibroscopie oeso-gastro-duodénale"
       },
-      "issue": "inconnu",
-      "explication": "flou 35 % · marge 4",
+      "issue": "a_confirmer",
+      "explication": "flou 86 % · marge 15",
       "candidat_retenu": {
         "acte": {
-          "id": "B118",
-          "pillar": "bio",
-          "type": "Biochimie & ionogramme",
-          "name": "FibroTest-ActiTest",
+          "id": 2188,
+          "code": "GAST",
+          "pillar": "exp",
+          "type": "Gastro-entérologie & endoscopie digestive",
+          "name": "Fibroscopie œso-gastro-duodénale (FOGD)",
           "kind": "acte",
           "lexique": [
-            "fibrotest",
-            "actitest",
-            "fibrose hépatique non invasive"
+            "duodenale",
+            "endoscopie haute",
+            "fibroscopie digestive haute",
+            "fibroscopie oeso",
+            "fibroscopie oeso gastro duodenale fogd",
+            "gastroscopie"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.35315047021943574,
+        "score": 0.8615801457194899,
         "disc": [],
         "comp": false,
-        "via": "fibrose hépatique non invasive",
-        "kind": "lexique"
+        "via": "Fibroscopie œso-gastro-duodénale (FOGD)",
+        "kind": "nom"
       }
     },
     {
@@ -1826,6 +2677,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "25000",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "Immédiat",
       "pillar": null,
       "types": null,
@@ -1836,82 +2692,443 @@
         "cands": [
           {
             "acte": {
-              "id": "B186",
+              "id": 2570,
+              "code": "SPE-3AB888DB",
               "pillar": "bio",
-              "type": "Endocrinologie & hormonologie",
-              "name": "SHBG",
+              "type": "Biologie médicale",
+              "name": "+",
               "kind": "acte",
               "lexique": [
-                "SHBG",
-                "protéine de transport des hormones sexuelles"
+                "",
+                "acr",
+                "ag hbs",
+                "ambulance avec infirmier",
+                "ambulance avec medecin",
+                "ambulance en stand by",
+                "ambulance evenementielle",
+                "ambulance pediatrique",
+                "analyse d urine",
+                "antigene specifique de la prostate",
+                "arret cardiaque",
+                "assistance sur site",
+                "avion sanitaire",
+                "bilan lipidique cholesterol trigly",
+                "bilan lipidique complet",
+                "brancard bariatrique",
+                "brancardage",
+                "cardiologie",
+                "cellule d isolement",
+                "chirurgie dentaire",
+                "cholesterol et triglycerides",
+                "cholesterol triglycerides",
+                "concert",
+                "consultation cardiologique",
+                "consultation chirurgien dentiste",
+                "consultation dermatologique",
+                "consultation des yeux",
+                "consultation generale",
+                "consultation generaliste",
+                "consultation gynecologie obstetrique",
+                "consultation gynecologique",
+                "consultation medecin",
+                "consultation medecin cardiologue",
+                "consultation medecin dermatologue",
+                "consultation medecin generaliste",
+                "consultation medecin pediatre",
+                "consultation ophtalmologique",
+                "consultation orl",
+                "consultation oto rhino laryngologie",
+                "consultation pediatrique",
+                "couverture chantier",
+                "couverture concert",
+                "couverture sportive",
+                "couveuse de transport",
+                "cytobacteriologie des urines",
+                "cytobacteriologie urinaire",
+                "dentiste",
+                "depistage hepatite b",
+                "depistage hepatite c",
+                "depistage vih",
+                "dermatologie",
+                "detresse vitale",
+                "dispositif previsionnel de secours",
+                "domicile vers clinique",
+                "domicile vers structure",
+                "doppler vasculaire",
+                "dosage psa",
+                "dps",
+                "ecbu urines",
+                "ecg 12d",
+                "ecg de repos 12d",
+                "echo doppler",
+                "echo doppler veineux",
+                "echodoppler",
+                "electrocardiogramme de repos",
+                "evacuation aeromedicale",
+                "evacuation neonatale",
+                "evasan aerienne",
+                "evenement sportif",
+                "exploration des anomalies lipidiques",
+                "festival",
+                "ge",
+                "goutte epaisse paludisme",
+                "gynecologie",
+                "helicoptere sanitaire",
+                "heliporte",
+                "helitreuillage medicalise",
+                "hepatite b",
+                "hepatite c",
+                "incubateur de transport",
+                "infirmier a bord",
+                "interurbain non medicalise",
+                "intervention pre hospitaliere",
+                "medecin a bord",
+                "medecine du travail sur site",
+                "medecine generale",
+                "medicalisation sur site",
+                "mise a disposition ambulance",
+                "mobilite reduite",
+                "monitorage en transport",
+                "navette dialyse",
+                "navette rendez vous",
+                "o2 a bord",
+                "ophtalmologie",
+                "orl",
+                "oxygenotherapie en transport",
+                "patient contagieux",
+                "patient instable",
+                "patient intube",
+                "patient obese",
+                "patient ventile",
+                "pediatrie",
+                "perfusion en transport",
+                "pmr",
+                "poste de sante entreprise",
+                "poste de secours",
+                "poste de secours sportif",
+                "poste medical avance",
+                "radio colonne",
+                "radio rachis",
+                "rassemblement",
+                "reanimation cardio pulmonaire sur site",
+                "reanimation mobile",
+                "recherche de paludisme",
+                "retour de bloc medicalise",
+                "samu",
+                "scanner de la tete",
+                "scanner du cerveau",
+                "scanner du ventre",
+                "secourisme evenementiel",
+                "serologie hbs",
+                "serologie hiv",
+                "serologie typhoide",
+                "smur",
+                "smur secondaire",
+                "soins dentaires",
+                "sortie d hopital",
+                "sortie primaire",
+                "structure vers domicile",
+                "surveillance continue",
+                "surveillance scope",
+                "tdm abdomino pelvien",
+                "test de diagnostic rapide paludisme",
+                "test rapide palu",
+                "test vih",
+                "test widal",
+                "tiu",
+                "tomodensitometrie",
+                "trace ecg",
+                "transfert enfant medicalise",
+                "transfert in utero",
+                "transfert maternel",
+                "transfert nouveau ne",
+                "transfert nouveau ne urgent",
+                "transfert secondaire",
+                "transport assis",
+                "transport bariatrique",
+                "transport consultation",
+                "transport dialyse",
+                "transport domicile hopital",
+                "transport examen",
+                "transport fauteuil roulant",
+                "transport femme enceinte a risque",
+                "transport hemodialyse",
+                "transport infectieux",
+                "transport inter hospitalier urgent",
+                "transport isolement",
+                "transport longue distance non medicalise",
+                "transport medicalise medecin",
+                "transport monitore",
+                "transport neonatal",
+                "transport paramedicalise",
+                "transport pediatrique",
+                "transport post operatoire",
+                "transport retour domicile",
+                "transport sous oxygene",
+                "transport sous perfusion",
+                "transport surveille",
+                "urgence neonatale",
+                "urgence vitale",
+                "uroculture",
+                "vehicule sanitaire leger",
+                "vih 1 2",
+                "vol sanitaire",
+                "vsl",
+                "widal et felix"
               ],
-              "composants": []
+              "ref_prix": 22000.0,
+              "delai": ""
             },
-            "score": 0.35113403119868636,
+            "score": 0.6437687200355866,
             "disc": [],
             "comp": false,
-            "via": "protéine de transport des hormones sexuelles",
+            "via": "transport medicalise medecin",
             "kind": "lexique"
           },
           {
             "acte": {
-              "id": "B042",
-              "pillar": "bio",
-              "type": "Hématologie",
-              "name": "Transferrine",
+              "id": 2086,
+              "code": "",
+              "pillar": "img",
+              "type": "Médecine nucléaire",
+              "name": "Scintigraphie cérébrale (DaTSCAN)",
               "kind": "acte",
               "lexique": [
-                "transferrine"
+                "datscan",
+                "scintigraphie cerebrale",
+                "scintigraphie cerebrale datscan",
+                "transporteur dopaminergique"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.24139498432601877,
+            "score": 0.4159574333712265,
             "disc": [],
             "comp": false,
-            "via": "Transferrine",
-            "kind": "nom"
+            "via": "transporteur dopaminergique",
+            "kind": "lexique"
           },
           {
             "acte": {
-              "id": "B096",
-              "pillar": "bio",
-              "type": "Biochimie & ionogramme",
-              "name": "Préalbumine",
+              "id": 2281,
+              "code": "",
+              "pillar": "soins",
+              "type": "Soins infirmiers",
+              "name": "Nursing / toilette médicalisée",
               "kind": "acte",
               "lexique": [
-                "préalbumine",
-                "transthyrétine"
+                "nursing",
+                "nursing toilette medicalisee",
+                "soins de confort",
+                "toilette medicalisee"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.2389923869234214,
+            "score": 0.41221839080459777,
             "disc": [],
             "comp": false,
-            "via": "transthyrétine",
+            "via": "toilette medicalisee",
             "kind": "lexique"
           }
         ],
         "usedText": "Transport médicalisé d'urgence VSL"
       },
-      "issue": "inconnu",
-      "explication": "flou 35 % · marge 11",
+      "issue": "a_confirmer",
+      "explication": "flou 64 % · marge 23",
       "candidat_retenu": {
         "acte": {
-          "id": "B186",
+          "id": 2570,
+          "code": "SPE-3AB888DB",
           "pillar": "bio",
-          "type": "Endocrinologie & hormonologie",
-          "name": "SHBG",
+          "type": "Biologie médicale",
+          "name": "+",
           "kind": "acte",
           "lexique": [
-            "SHBG",
-            "protéine de transport des hormones sexuelles"
+            "",
+            "acr",
+            "ag hbs",
+            "ambulance avec infirmier",
+            "ambulance avec medecin",
+            "ambulance en stand by",
+            "ambulance evenementielle",
+            "ambulance pediatrique",
+            "analyse d urine",
+            "antigene specifique de la prostate",
+            "arret cardiaque",
+            "assistance sur site",
+            "avion sanitaire",
+            "bilan lipidique cholesterol trigly",
+            "bilan lipidique complet",
+            "brancard bariatrique",
+            "brancardage",
+            "cardiologie",
+            "cellule d isolement",
+            "chirurgie dentaire",
+            "cholesterol et triglycerides",
+            "cholesterol triglycerides",
+            "concert",
+            "consultation cardiologique",
+            "consultation chirurgien dentiste",
+            "consultation dermatologique",
+            "consultation des yeux",
+            "consultation generale",
+            "consultation generaliste",
+            "consultation gynecologie obstetrique",
+            "consultation gynecologique",
+            "consultation medecin",
+            "consultation medecin cardiologue",
+            "consultation medecin dermatologue",
+            "consultation medecin generaliste",
+            "consultation medecin pediatre",
+            "consultation ophtalmologique",
+            "consultation orl",
+            "consultation oto rhino laryngologie",
+            "consultation pediatrique",
+            "couverture chantier",
+            "couverture concert",
+            "couverture sportive",
+            "couveuse de transport",
+            "cytobacteriologie des urines",
+            "cytobacteriologie urinaire",
+            "dentiste",
+            "depistage hepatite b",
+            "depistage hepatite c",
+            "depistage vih",
+            "dermatologie",
+            "detresse vitale",
+            "dispositif previsionnel de secours",
+            "domicile vers clinique",
+            "domicile vers structure",
+            "doppler vasculaire",
+            "dosage psa",
+            "dps",
+            "ecbu urines",
+            "ecg 12d",
+            "ecg de repos 12d",
+            "echo doppler",
+            "echo doppler veineux",
+            "echodoppler",
+            "electrocardiogramme de repos",
+            "evacuation aeromedicale",
+            "evacuation neonatale",
+            "evasan aerienne",
+            "evenement sportif",
+            "exploration des anomalies lipidiques",
+            "festival",
+            "ge",
+            "goutte epaisse paludisme",
+            "gynecologie",
+            "helicoptere sanitaire",
+            "heliporte",
+            "helitreuillage medicalise",
+            "hepatite b",
+            "hepatite c",
+            "incubateur de transport",
+            "infirmier a bord",
+            "interurbain non medicalise",
+            "intervention pre hospitaliere",
+            "medecin a bord",
+            "medecine du travail sur site",
+            "medecine generale",
+            "medicalisation sur site",
+            "mise a disposition ambulance",
+            "mobilite reduite",
+            "monitorage en transport",
+            "navette dialyse",
+            "navette rendez vous",
+            "o2 a bord",
+            "ophtalmologie",
+            "orl",
+            "oxygenotherapie en transport",
+            "patient contagieux",
+            "patient instable",
+            "patient intube",
+            "patient obese",
+            "patient ventile",
+            "pediatrie",
+            "perfusion en transport",
+            "pmr",
+            "poste de sante entreprise",
+            "poste de secours",
+            "poste de secours sportif",
+            "poste medical avance",
+            "radio colonne",
+            "radio rachis",
+            "rassemblement",
+            "reanimation cardio pulmonaire sur site",
+            "reanimation mobile",
+            "recherche de paludisme",
+            "retour de bloc medicalise",
+            "samu",
+            "scanner de la tete",
+            "scanner du cerveau",
+            "scanner du ventre",
+            "secourisme evenementiel",
+            "serologie hbs",
+            "serologie hiv",
+            "serologie typhoide",
+            "smur",
+            "smur secondaire",
+            "soins dentaires",
+            "sortie d hopital",
+            "sortie primaire",
+            "structure vers domicile",
+            "surveillance continue",
+            "surveillance scope",
+            "tdm abdomino pelvien",
+            "test de diagnostic rapide paludisme",
+            "test rapide palu",
+            "test vih",
+            "test widal",
+            "tiu",
+            "tomodensitometrie",
+            "trace ecg",
+            "transfert enfant medicalise",
+            "transfert in utero",
+            "transfert maternel",
+            "transfert nouveau ne",
+            "transfert nouveau ne urgent",
+            "transfert secondaire",
+            "transport assis",
+            "transport bariatrique",
+            "transport consultation",
+            "transport dialyse",
+            "transport domicile hopital",
+            "transport examen",
+            "transport fauteuil roulant",
+            "transport femme enceinte a risque",
+            "transport hemodialyse",
+            "transport infectieux",
+            "transport inter hospitalier urgent",
+            "transport isolement",
+            "transport longue distance non medicalise",
+            "transport medicalise medecin",
+            "transport monitore",
+            "transport neonatal",
+            "transport paramedicalise",
+            "transport pediatrique",
+            "transport post operatoire",
+            "transport retour domicile",
+            "transport sous oxygene",
+            "transport sous perfusion",
+            "transport surveille",
+            "urgence neonatale",
+            "urgence vitale",
+            "uroculture",
+            "vehicule sanitaire leger",
+            "vih 1 2",
+            "vol sanitaire",
+            "vsl",
+            "widal et felix"
           ],
-          "composants": []
+          "ref_prix": 22000.0,
+          "delai": ""
         },
-        "score": 0.35113403119868636,
+        "score": 0.6437687200355866,
         "disc": [],
         "comp": false,
-        "via": "protéine de transport des hormones sexuelles",
+        "via": "transport medicalise medecin",
         "kind": "lexique"
       }
     },
@@ -1927,6 +3144,11 @@
         "note": "prix 8 × la médiane de la section"
       },
       "priceRaw": "75000",
+      "prix_comptant": 75000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "4h",
       "pillar": null,
       "types": null,
@@ -1937,88 +3159,84 @@
         "cands": [
           {
             "acte": {
-              "id": "B021",
-              "pillar": "bio",
-              "type": "Hématologie",
-              "name": "Vitesse de sédimentation (VS)",
+              "id": 1149,
+              "code": "",
+              "pillar": "soins",
+              "type": "Dialyse / Néphrologie",
+              "name": "Dialyse péritonéale",
               "kind": "acte",
               "lexique": [
-                "VS",
-                "vitesse de sédimentation",
-                "sédimentation",
-                "ESR"
+                "dp"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.22413499543934326,
+            "score": 0.9099233561920129,
             "disc": [],
             "comp": false,
-            "via": "sédimentation",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B067",
-              "pillar": "bio",
-              "type": "Biochimie & ionogramme",
-              "name": "Glycémie post-prandiale",
-              "kind": "acte",
-              "lexique": [
-                "glycémie post-prandiale",
-                "glycémie 2h"
-              ],
-              "composants": []
-            },
-            "score": 0.223618925831202,
-            "disc": [],
-            "comp": false,
-            "via": "Glycémie post-prandiale",
+            "via": "Dialyse péritonéale",
             "kind": "nom"
           },
           {
             "acte": {
-              "id": "B147",
-              "pillar": "bio",
-              "type": "Vitamines & oligo-éléments",
-              "name": "Sélénium",
+              "id": 1494,
+              "code": "",
+              "pillar": "soins",
+              "type": "Néphrologie / Dialyse",
+              "name": "Dialyse péritonéale",
               "kind": "acte",
-              "lexique": [
-                "sélénium",
-                "sélénémie"
-              ],
-              "composants": []
+              "lexique": [],
+              "ref_prix": 31000.0,
+              "delai": ""
             },
-            "score": 0.21893719806763284,
+            "score": 0.9099233561920129,
             "disc": [],
             "comp": false,
-            "via": "sélénémie",
-            "kind": "lexique"
+            "via": "Dialyse péritonéale",
+            "kind": "nom"
+          },
+          {
+            "acte": {
+              "id": 1495,
+              "code": "",
+              "pillar": "soins",
+              "type": "Néphrologie / Dialyse",
+              "name": "Séance de dialyse",
+              "kind": "acte",
+              "lexique": [],
+              "ref_prix": 28000.0,
+              "delai": ""
+            },
+            "score": 0.6714125890596478,
+            "disc": [],
+            "comp": false,
+            "via": "Séance de dialyse",
+            "kind": "nom"
           }
         ],
         "usedText": "Séance de dialyse péritonéale"
       },
-      "issue": "inconnu",
-      "explication": "flou 22 % · marge 0",
+      "issue": "a_confirmer",
+      "explication": "flou 91 % · marge 0",
       "candidat_retenu": {
         "acte": {
-          "id": "B021",
-          "pillar": "bio",
-          "type": "Hématologie",
-          "name": "Vitesse de sédimentation (VS)",
+          "id": 1149,
+          "code": "",
+          "pillar": "soins",
+          "type": "Dialyse / Néphrologie",
+          "name": "Dialyse péritonéale",
           "kind": "acte",
           "lexique": [
-            "VS",
-            "vitesse de sédimentation",
-            "sédimentation",
-            "ESR"
+            "dp"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.22413499543934326,
+        "score": 0.9099233561920129,
         "disc": [],
         "comp": false,
-        "via": "sédimentation",
-        "kind": "lexique"
+        "via": "Dialyse péritonéale",
+        "kind": "nom"
       }
     },
     {
@@ -2032,98 +3250,65 @@
         "statut": "renseigne"
       },
       "priceRaw": "25000",
+      "prix_comptant": 25000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "45m",
       "pillar": null,
       "types": null,
       "merged": false,
       "match": {
-        "exact": false,
-        "method": "flou",
+        "exact": true,
+        "method": "lexique",
         "cands": [
           {
             "acte": {
-              "id": "B412",
-              "pillar": "bio",
-              "type": "Génétique & cytogénétique",
-              "name": "Dépistage prénatal non invasif (DPNI)",
+              "id": 1518,
+              "code": "",
+              "pillar": "dent",
+              "type": "Soins conservateurs & prévention",
+              "name": "Détartrage",
               "kind": "acte",
               "lexique": [
-                "DPNI",
-                "trisomie 21 dépistage",
-                "ADN libre circulant"
+                "detartrage",
+                "detartrage supra gingival",
+                "nettoyage dentaire"
               ],
-              "composants": []
+              "ref_prix": 71500.0,
+              "delai": ""
             },
-            "score": 0.22461586411095527,
+            "score": 1.0,
             "disc": [],
-            "comp": false,
-            "via": "Dépistage prénatal non invasif (DPNI)",
-            "kind": "nom"
-          },
-          {
-            "acte": {
-              "id": "B247",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "Anticorps anti-gliadine déamidée",
-              "kind": "acte",
-              "lexique": [
-                "anti gliadine déamidée",
-                "DGP"
-              ],
-              "composants": []
-            },
-            "score": 0.22173913043478258,
-            "disc": [],
-            "comp": false,
-            "via": "DGP",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B359",
-              "pillar": "bio",
-              "type": "Biologie moléculaire / PCR",
-              "name": "Charge virale VHD (ADN)",
-              "kind": "acte",
-              "lexique": [
-                "charge virale VHD",
-                "ADN VHD",
-                "delta",
-                "charge virale adn vhd"
-              ],
-              "composants": []
-            },
-            "score": 0.21791304347826085,
-            "disc": [],
-            "comp": false,
-            "via": "delta",
+            "via": "detartrage supra gingival",
             "kind": "lexique"
           }
         ],
         "usedText": "Détartrage supra et sous-gingival"
       },
-      "issue": "inconnu",
-      "explication": "flou 22 % · marge 0",
+      "issue": "reconnu",
+      "explication": "lexique",
       "candidat_retenu": {
         "acte": {
-          "id": "B412",
-          "pillar": "bio",
-          "type": "Génétique & cytogénétique",
-          "name": "Dépistage prénatal non invasif (DPNI)",
+          "id": 1518,
+          "code": "",
+          "pillar": "dent",
+          "type": "Soins conservateurs & prévention",
+          "name": "Détartrage",
           "kind": "acte",
           "lexique": [
-            "DPNI",
-            "trisomie 21 dépistage",
-            "ADN libre circulant"
+            "detartrage",
+            "detartrage supra gingival",
+            "nettoyage dentaire"
           ],
-          "composants": []
+          "ref_prix": 71500.0,
+          "delai": ""
         },
-        "score": 0.22461586411095527,
+        "score": 1.0,
         "disc": [],
-        "comp": false,
-        "via": "Dépistage prénatal non invasif (DPNI)",
-        "kind": "nom"
+        "via": "detartrage supra gingival",
+        "kind": "lexique"
       }
     },
     {
@@ -2138,95 +3323,61 @@
         "note": "prix 4 × la médiane de la section"
       },
       "priceRaw": "45000",
+      "prix_comptant": 45000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "1h",
       "pillar": null,
       "types": null,
       "merged": false,
       "match": {
-        "exact": false,
-        "method": "flou",
+        "exact": true,
+        "method": "nom exact",
         "cands": [
           {
             "acte": {
-              "id": "B399",
-              "pillar": "bio",
-              "type": "Anatomie & cytopathologie",
-              "name": "Examen extemporané",
+              "id": 1180,
+              "code": "",
+              "pillar": "dent",
+              "type": "Chirurgie dentaire",
+              "name": "Extraction dent de sagesse incluse",
               "kind": "acte",
               "lexique": [
-                "extemporané",
-                "examen per-opératoire"
+                "extraction dent de sagesse incluse"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.22032828282828282,
+            "score": 1.0,
             "disc": [],
-            "comp": false,
-            "via": "extemporané",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B320",
-              "pillar": "bio",
-              "type": "Bactériologie",
-              "name": "ECBC (expectorations)",
-              "kind": "acte",
-              "lexique": [
-                "ECBC",
-                "examen cytobactériologique des crachats",
-                "expectorations"
-              ],
-              "composants": []
-            },
-            "score": 0.2063936063936064,
-            "disc": [],
-            "comp": false,
-            "via": "expectorations",
-            "kind": "lexique"
-          },
-          {
-            "acte": {
-              "id": "B271",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "ECP (protéine cationique des éosinophiles)",
-              "kind": "acte",
-              "lexique": [
-                "ECP",
-                "protéine cationique éosinophiles"
-              ],
-              "composants": []
-            },
-            "score": 0.20228571428571432,
-            "disc": [],
-            "comp": false,
-            "via": "ECP (protéine cationique des éosinophiles)",
+            "via": "Extraction dent de sagesse incluse",
             "kind": "nom"
           }
         ],
         "usedText": "Extraction dent de sagesse incluse"
       },
-      "issue": "inconnu",
-      "explication": "flou 22 % · marge 1",
+      "issue": "reconnu",
+      "explication": "nom exact",
       "candidat_retenu": {
         "acte": {
-          "id": "B399",
-          "pillar": "bio",
-          "type": "Anatomie & cytopathologie",
-          "name": "Examen extemporané",
+          "id": 1180,
+          "code": "",
+          "pillar": "dent",
+          "type": "Chirurgie dentaire",
+          "name": "Extraction dent de sagesse incluse",
           "kind": "acte",
           "lexique": [
-            "extemporané",
-            "examen per-opératoire"
+            "extraction dent de sagesse incluse"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.22032828282828282,
+        "score": 1.0,
         "disc": [],
-        "comp": false,
-        "via": "extemporané",
-        "kind": "lexique"
+        "via": "Extraction dent de sagesse incluse",
+        "kind": "nom"
       }
     },
     {
@@ -2240,6 +3391,11 @@
         "statut": "renseigne"
       },
       "priceRaw": "10000",
+      "prix_comptant": 10000,
+      "prix_ipm": null,
+      "status_ipm": "to_confirm",
+      "prix_assurance": null,
+      "status_assurance": "to_confirm",
       "delai": "24h",
       "pillar": null,
       "types": null,
@@ -2250,87 +3406,111 @@
         "cands": [
           {
             "acte": {
-              "id": "B412",
-              "pillar": "bio",
-              "type": "Génétique & cytogénétique",
-              "name": "Dépistage prénatal non invasif (DPNI)",
+              "id": 2401,
+              "code": "",
+              "pillar": "dent",
+              "type": "Chirurgie buccale & orale",
+              "name": "Préservation / comblement alvéolaire post-extraction",
               "kind": "acte",
               "lexique": [
-                "DPNI",
-                "trisomie 21 dépistage",
-                "ADN libre circulant"
+                "comblement alveolaire post",
+                "comblement d alveole",
+                "extraction",
+                "greffe post extraction",
+                "preservation",
+                "preservation alveolaire",
+                "preservation comblement alveolaire post extraction"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.3131243308662663,
+            "score": 0.3872053872053872,
             "disc": [],
             "comp": false,
-            "via": "Dépistage prénatal non invasif (DPNI)",
-            "kind": "nom"
-          },
-          {
-            "acte": {
-              "id": "B413",
-              "pillar": "bio",
-              "type": "Génétique & cytogénétique",
-              "name": "Recherche de mutations BRCA1/BRCA2",
-              "kind": "acte",
-              "lexique": [
-                "BRCA",
-                "BRCA1 BRCA2",
-                "prédisposition cancer sein"
-              ],
-              "composants": []
-            },
-            "score": 0.23450757575757575,
-            "disc": [],
-            "comp": false,
-            "via": "prédisposition cancer sein",
+            "via": "preservation",
             "kind": "lexique"
           },
           {
             "acte": {
-              "id": "B271",
-              "pillar": "bio",
-              "type": "Immunologie, auto-immunité & allergologie",
-              "name": "ECP (protéine cationique des éosinophiles)",
+              "id": 2171,
+              "code": "",
+              "pillar": "exp",
+              "type": "Pneumologie & explorations respiratoires",
+              "name": "Mesure des pressions respiratoires (PImax/PEmax)",
               "kind": "acte",
               "lexique": [
-                "ECP",
-                "protéine cationique éosinophiles"
+                "force des muscles respiratoires",
+                "mesure des pressions respiratoires",
+                "mesure des pressions respiratoires pimax pemax",
+                "pemax",
+                "pimax",
+                "pressions respiratoires maximales"
               ],
-              "composants": []
+              "ref_prix": null,
+              "delai": ""
             },
-            "score": 0.22616237335877518,
+            "score": 0.3755089346743482,
             "disc": [],
             "comp": false,
-            "via": "protéine cationique éosinophiles",
+            "via": "mesure des pressions respiratoires",
+            "kind": "lexique"
+          },
+          {
+            "acte": {
+              "id": 2222,
+              "code": "",
+              "pillar": "exp",
+              "type": "Ophtalmologie",
+              "name": "Tonométrie (pression intra-oculaire)",
+              "kind": "acte",
+              "lexique": [
+                "oculaire",
+                "pio",
+                "pression intra",
+                "pression intra oculaire",
+                "tension oculaire",
+                "tonometrie",
+                "tonometrie pression intra oculaire"
+              ],
+              "ref_prix": null,
+              "delai": ""
+            },
+            "score": 0.3735814185814186,
+            "disc": [],
+            "comp": false,
+            "via": "pression intra",
             "kind": "lexique"
           }
         ],
         "usedText": "Prestation spéciale non répertoriée XYZ"
       },
       "issue": "inconnu",
-      "explication": "flou 31 % · marge 8",
+      "explication": "flou 39 % · marge 1",
       "candidat_retenu": {
         "acte": {
-          "id": "B412",
-          "pillar": "bio",
-          "type": "Génétique & cytogénétique",
-          "name": "Dépistage prénatal non invasif (DPNI)",
+          "id": 2401,
+          "code": "",
+          "pillar": "dent",
+          "type": "Chirurgie buccale & orale",
+          "name": "Préservation / comblement alvéolaire post-extraction",
           "kind": "acte",
           "lexique": [
-            "DPNI",
-            "trisomie 21 dépistage",
-            "ADN libre circulant"
+            "comblement alveolaire post",
+            "comblement d alveole",
+            "extraction",
+            "greffe post extraction",
+            "preservation",
+            "preservation alveolaire",
+            "preservation comblement alveolaire post extraction"
           ],
-          "composants": []
+          "ref_prix": null,
+          "delai": ""
         },
-        "score": 0.3131243308662663,
+        "score": 0.3872053872053872,
         "disc": [],
         "comp": false,
-        "via": "Dépistage prénatal non invasif (DPNI)",
-        "kind": "nom"
+        "via": "preservation",
+        "kind": "lexique"
       }
     }
   ]

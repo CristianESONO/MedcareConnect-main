@@ -656,6 +656,10 @@
 
         <div style="display: flex; gap: 10px; align-items: center;">
           <input type="text" class="search-input" id="tableSearch" placeholder="Rechercher un acte...">
+          <button class="btn-export" id="btnExportJson" style="background: #14202B; color: #fff;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Exporter JSON (Web MedCare)
+          </button>
           <button class="btn-export" id="btnExportExcel">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Exporter Excel (.xlsx)
@@ -943,10 +947,16 @@
     function processRows(importedRows) {
       rowsData = importedRows.map((r, idx) => {
         const res = reconcileLine(r.label);
+        let p_comptant = r.prix_comptant !== undefined ? r.prix_comptant : (r.prix ? parseInt((r.prix+'').replace(/[^\d]/g, '')) || null : null);
         return {
           id: idx + 1,
           label: r.label,
           prix: r.prix || '',
+          prix_comptant: p_comptant,
+          prix_ipm: r.prix_ipm !== undefined ? r.prix_ipm : null,
+          status_ipm: r.status_ipm || 'to_confirm',
+          prix_assurance: r.prix_assurance !== undefined ? r.prix_assurance : null,
+          status_assurance: r.status_assurance || 'to_confirm',
           delai: r.delai || '',
           status: res.status,
           labelStatus: res.labelStatus,
@@ -1047,8 +1057,10 @@
           <td>${badgeHtml}</td>
           <td>
             <div style="font-weight: 600; color: var(--navy); font-size: 14px;">${escapeHtml(row.label)}</div>
-            <div style="display: flex; gap: 8px; margin-top: 4px; font-size: 11px; color: var(--slate-600);">
-              ${row.prix ? `<span>Tarif : <strong>${escapeHtml(row.prix)} FCFA</strong></span>` : ''}
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; font-size: 11px; color: var(--slate-600);">
+              ${row.prix_comptant ? `<span>Comptant : <strong>${row.prix_comptant} FCFA</strong></span>` : (row.prix ? `<span>Tarif : <strong>${escapeHtml(row.prix)}</strong></span>` : '')}
+              ${row.prix_ipm ? `<span>IPM : <strong>${row.prix_ipm} FCFA</strong></span>` : (row.status_ipm === 'excluded' ? `<span style="color:#b42318; font-weight:600;">IPM : Exclu</span>` : '')}
+              ${row.prix_assurance ? `<span>Assurance : <strong>${row.prix_assurance} FCFA</strong></span>` : (row.status_assurance === 'excluded' ? `<span style="color:#b42318; font-weight:600;">Assurance : Exclu</span>` : '')}
               ${row.delai ? `<span>Délai : <strong>${escapeHtml(row.delai)}</strong></span>` : ''}
             </div>
           </td>
@@ -1210,6 +1222,8 @@
       
       let labelCol = 0;
       let priceCol = -1;
+      let ipmCol = -1;
+      let assuranceCol = -1;
       let delayCol = -1;
       let bestWeight = -1;
 
@@ -1222,9 +1236,27 @@
           if (bestWeight < 5) { labelCol = idx; bestWeight = 5; }
         }
 
-        if (h.includes("prix") || h.includes("tarif") || h.includes("montant")) priceCol = idx;
-        if (h.includes("delai") || h.includes("rendu") || h.includes("duree")) delayCol = idx;
+        if (h.includes("ipm")) {
+          ipmCol = idx;
+        } else if (h.includes("assurance")) {
+          assuranceCol = idx;
+        } else if (h.includes("prix") || h.includes("tarif") || h.includes("montant") || h.includes("comptant") || h.includes("cash")) {
+          if (priceCol === -1 || h.includes("comptant")) priceCol = idx;
+        }
+
+        if (h.includes("delai") || h.includes("rendu") || h.includes("duree") || h.includes("temps")) delayCol = idx;
       });
+
+      function parseTariff(val) {
+        if (!val) return { val: null, stat: 'to_confirm' };
+        const s = (val + '').toLowerCase().trim();
+        if (["exclu", "non couvert", "non pris en charge", "hors convention", "refus"].some(k => s.includes(k))) {
+          return { val: null, stat: 'excluded' };
+        }
+        const clean = s.replace(/[^\d,\.]/g, '').replace(',', '.');
+        const num = parseFloat(clean);
+        return (!isNaN(num) && num > 0) ? { val: Math.round(num), stat: 'covered' } : { val: null, stat: 'to_confirm' };
+      }
 
       const rows = [];
       for (let i = 1; i < matrix.length; i++) {
@@ -1232,15 +1264,31 @@
         if (!line || line.length <= labelCol) continue;
         const label = (line[labelCol] + '').trim();
         if (!label) continue;
-        const prix = (priceCol !== -1 && line[priceCol] !== undefined) ? (line[priceCol] + '').trim() : '';
+        const rawPrix = (priceCol !== -1 && line[priceCol] !== undefined) ? (line[priceCol] + '').trim() : '';
+        const rawIpm = (ipmCol !== -1 && line[ipmCol] !== undefined) ? (line[ipmCol] + '').trim() : '';
+        const rawAss = (assuranceCol !== -1 && line[assuranceCol] !== undefined) ? (line[assuranceCol] + '').trim() : '';
         const delai = (delayCol !== -1 && line[delayCol] !== undefined) ? (line[delayCol] + '').trim() : '';
-        rows.append ? rows.append({ label, prix, delai }) : rows.push({ label, prix, delai });
+
+        const tComptant = parseTariff(rawPrix);
+        const tIpm = parseTariff(rawIpm);
+        const tAss = parseTariff(rawAss);
+
+        rows.push({
+          label,
+          prix: rawPrix,
+          prix_comptant: tComptant.val,
+          prix_ipm: tIpm.val,
+          status_ipm: tIpm.stat,
+          prix_assurance: tAss.val,
+          status_assurance: tAss.stat,
+          delai
+        });
       }
       return rows;
     }
 
     // ==============================================================================
-    // 6. EXPORT DU CATALOGUE RÉCONCILIÉ (EXCEL .XLSX)
+    // 6. EXPORT DU CATALOGUE RÉCONCILIÉ (EXCEL .XLSX & JSON WEB MEDCARE)
     // ==============================================================================
 
     document.getElementById('btnExportExcel').addEventListener('click', () => {
@@ -1249,16 +1297,19 @@
       const exportRows = rowsData.map(r => ({
         "N°": r.id,
         "Libellé Importé": r.label,
-        "Tarif Détecté": r.prix,
-        "Délai Rendu": r.delai,
         "Statut Réconciliation": r.labelStatus,
         "Score (%)": r.score,
-        "Code Acte MedCare": r.act ? r.act.code : '',
+        "ID Acte MedCare": r.act ? r.act.id : '',
+        "Code Acte": r.act ? r.act.code : '',
         "Acte Standardisé MedCare": r.act ? r.act.nom : '(Non rattaché)',
-        "Type de Prestation": r.act ? r.act.type : '',
         "Pilier": r.act ? 'Pilier ' + r.act.pid : '',
-        "Validé par Opérateur": r.validated ? 'OUI' : 'NON',
-        "Apprendre comme Alias": r.saveAlias ? 'OUI' : 'NON'
+        "Prix Comptant (FCFA)": r.prix_comptant || '',
+        "Prix IPM (FCFA)": r.prix_ipm || '',
+        "Statut IPM": r.status_ipm || 'to_confirm',
+        "Prix Assurance (FCFA)": r.prix_assurance || '',
+        "Statut Assurance": r.status_assurance || 'to_confirm',
+        "Délai Rendu": r.delai,
+        "Validé par Opérateur": r.validated ? 'OUI' : 'NON'
       }));
 
       const ws = XLSX.utils.json_to_sheet(exportRows);
@@ -1266,6 +1317,47 @@
       XLSX.utils.book_append_sheet(wb, ws, "Catalogue Réconcilié");
       XLSX.writeFile(wb, "MedCare_Catalogue_Reconcilie.xlsx");
       showToast("Fichier Excel exporté avec succès !");
+    });
+
+    document.getElementById('btnExportJson').addEventListener('click', () => {
+      if (rowsData.length === 0) return;
+
+      const exportLines = rowsData.map(r => ({
+        num: r.id,
+        kind: "acte",
+        label: r.label,
+        raw: r.label,
+        issue: r.status === 'auto' ? 'reconnu' : (r.status === 'confirm' ? 'a_confirmer' : 'inconnu'),
+        score: r.score,
+        price: { value: r.prix_comptant, statut: r.prix_comptant ? 'renseigne' : 'manquant' },
+        prix_comptant: r.prix_comptant,
+        prix_ipm: r.prix_ipm,
+        status_ipm: r.status_ipm,
+        prix_assurance: r.prix_assurance,
+        status_assurance: r.status_assurance,
+        delai: r.delai,
+        candidat_retenu: r.act ? { acte: { id: r.act.id, name: r.act.nom, code: r.act.code } } : null
+      }));
+
+      const payload = {
+        summary: {
+          total: rowsData.length,
+          reconnus: rowsData.filter(r => r.status === 'auto').length,
+          a_confirmer: rowsData.filter(r => r.status === 'confirm').length,
+          inconnus: rowsData.filter(r => r.status === 'none').length
+        },
+        lines: exportLines,
+        rows: exportLines
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "MedCare_Catalogue_Reconcilie.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("JSON universel compatible MedCare Web exporté !");
     });
 
     function showToast(msg) {

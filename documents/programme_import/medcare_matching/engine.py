@@ -1,4 +1,5 @@
 import os
+import re
 import json
 from typing import List, Dict, Any, Optional
 from .config import DEFAULT_THRESHOLDS
@@ -87,8 +88,27 @@ def exact_lookup(idx: ReferentialIndex, n: Dict[str, Any], pillars: List[str], o
 
     return None
 
+def is_composite_label(label: str) -> bool:
+    s = (label or "").lower()
+    for pat in [r"\bpv\b.*\bchlam\b.*\bmyco\b", r"\bchlamydia\b.*\bmycoplasme\b", r"\bglycemie\b.*\bcreatinine\b", r"\bnfs\b.*\bglycemie\b"]:
+        if re.search(pat, s):
+            return True
+    toks = set(re.findall(r"\w+", s))
+    if {"pv", "chlam", "myco"}.issubset(toks) or {"pv", "chlamydia", "mycoplasme"}.issubset(toks):
+        return True
+    return False
+
 def match_line(idx: ReferentialIndex, label: str, ctx_label: str, pillars: List[str], org_id: Optional[str] = None, types: Optional[List[str]] = None) -> Dict[str, Any]:
     """Rapproche une ligne selon la cascade à 6 niveaux du manuel §8.1."""
+    if is_composite_label(label):
+        return {
+            "exact": False,
+            "composite": True,
+            "method": "composite",
+            "cands": [],
+            "usedText": label
+        }
+
     tries = [{"text": label, "ctx": False}]
     if ctx_label and ctx_label != label:
         tries.insert(0, {"text": ctx_label, "ctx": True})
@@ -182,17 +202,21 @@ class ReconciliationEngine:
         elif isinstance(data, dict) and "piliers" in data:
             # Format referentiel_6piliers_medcare.json
             actes = []
+            slug_map = {1: "bio", 2: "img", 3: "exp", 4: "ambu", 5: "soins", 6: "dent"}
             for pslug, pdata in data["piliers"].items():
                 pid = pdata.get("pilier_id", 1)
-                slug = "bio" if pid == 1 else ("img" if pid == 2 else pslug)
+                slug = slug_map.get(pid, pslug)
                 for item in pdata.get("actes", []):
                     actes.append({
-                        "id": f"{slug[0].upper()}{item.get('code', len(actes)+1)}",
+                        "id": item.get('id', len(actes)+1),
+                        "code": item.get('code', ''),
                         "pillar": slug,
                         "type": item.get("type_service", ""),
                         "name": item.get("acte_standardise", ""),
                         "kind": item.get("kind", "acte"),
-                        "lexique": item.get("lexique_intention", [])
+                        "lexique": item.get("lexique_intention", []),
+                        "ref_prix": item.get("tarif_fcfa_indicatif"),
+                        "delai": item.get("delai_indicatif", "")
                     })
         else:
             actes = []
@@ -216,7 +240,8 @@ class ReconciliationEngine:
         parsed = read_rows(rows, schema['roles'], default_pillar)
 
         lines = parsed['lines']
-        pillar = parsed['pillar'] or default_pillar or 'bio'
+        all_pillars = ['bio', 'img', 'exp', 'ambu', 'soins', 'dent']
+        default_p_list = [default_pillar] if default_pillar else all_pillars
 
         actes_lines = [l for l in lines if l['kind'] == 'acte']
         results = []
@@ -238,7 +263,7 @@ class ReconciliationEngine:
                 results.append(l)
                 continue
 
-            target_pillars = [l.get('pillar') or pillar]
+            target_pillars = [l['pillar']] if l.get('pillar') else default_p_list
             m = match_line(self.index, l['label'], l['ctx'], target_pillars, org_id, l.get('types'))
             issue = classify(m, rule, th)
             exp = explain(m, issue, th)

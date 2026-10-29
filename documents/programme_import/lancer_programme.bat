@@ -8,19 +8,27 @@ echo ===========================================================================
 echo.
 echo   Choisissez l'application a lancer :
 echo.
-echo   [1] Lancer la Plateforme Unifiee MedCare Onboarding Suite (Recommande)
-echo   [2] Ouvrir le portail d'accueil (index.html)
-echo   [3] Executer la suite de tests du Manuel d'Architecture (test_onboarding.py)
-echo   [4] Quitter
+echo   [1] Lancer l'Application de Reconciliation Graphique Complete (Recommande)
+echo   [2] Lancer la Plateforme Unifiee MedCare Onboarding Suite
+echo   [3] Ouvrir le portail d'accueil (index.html)
+echo   [4] Executer la suite de tests (test_onboarding.py)
+echo   [5] Quitter
 echo.
 echo ===============================================================================
-set /p choix="Votre choix (1-4, defaut: 1) : "
+set /p choix="Votre choix (1-5, defaut: 1) : "
 
 if "%choix%"=="" set choix=1
-if "%choix%"=="1" goto OPEN_SUITE
-if "%choix%"=="2" goto OPEN_INDEX
-if "%choix%"=="3" goto TEST_CLI
-if "%choix%"=="4" goto QUIT
+if "%choix%"=="1" goto OPEN_RECONCIL
+if "%choix%"=="2" goto OPEN_SUITE
+if "%choix%"=="3" goto OPEN_INDEX
+if "%choix%"=="4" goto TEST_CLI
+if "%choix%"=="5" goto QUIT
+
+:OPEN_RECONCIL
+echo.
+echo Ouverture de l'Application de Reconciliation MedCare dans votre navigateur...
+start "" "%~dp0MedCare_Import_Reconciliation.html"
+goto END
 
 :OPEN_SUITE
 echo.
