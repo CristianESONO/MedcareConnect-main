@@ -101,7 +101,16 @@
             <tr>
               <th>Acte</th>
               <th>Catégorie</th>
-              <th>Tarif (FCFA)</th>
+              <th>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs">Tarif :</span>
+                  <select class="js-catalogue-regime-select text-[11px] font-semibold rounded border border-gray-300 py-0.5 px-1.5 bg-white text-gray-800 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer" title="Sélecteur de régime tarifaire (G23)">
+                    <option value="comptant" selected>Comptant ▾</option>
+                    <option value="ipm">IPM</option>
+                    <option value="assurance">Assurance</option>
+                  </select>
+                </div>
+              </th>
               <th>Délai résultat</th>
               <th style="text-align:center">Préparation</th>
               <th>Actif</th>
@@ -116,8 +125,33 @@
                 {% if row.acte.parent_service %}<div class="cat-acte-sub">{{ row.acte.parent_service.name }}</div>{% endif %}
               </td>
               <td class="text-gray-600">{{ sg.label }}</td>
-              <td>
-                <input type="number" min="0" step="500" name="price_{{ row.acte.pk }}" value="{{ row.price_val|floatformat:0 }}" class="cat-prix-input">
+              <td class="js-tarif-cell">
+                {# Mode Comptant (éditable) #}
+                <div class="js-tarif-view js-tarif-comptant">
+                  <input type="number" min="0" step="500" name="price_{{ row.acte.pk }}" value="{{ row.price_val|floatformat:0 }}" class="cat-prix-input">
+                </div>
+                {# Mode IPM (tarif conventionné ou statut hors nomenclature) #}
+                <div class="js-tarif-view js-tarif-ipm hidden">
+                  {% if row.pa.coverage_status_ipm == 'covered' and row.pa.price_ipm %}
+                    <span class="inline-flex items-center font-bold text-sm text-emerald-700">{{ row.pa.price_ipm|floatformat:0 }} F</span>
+                    <span class="ml-1 inline-block text-[10px] text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded font-semibold">✓ IPM</span>
+                  {% elif row.pa.coverage_status_ipm == 'excluded' %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">✕ Non couvert</span>
+                  {% else %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">⚑ À confirmer</span>
+                  {% endif %}
+                </div>
+                {# Mode Assurance (tarif conventionné ou statut hors nomenclature) #}
+                <div class="js-tarif-view js-tarif-assurance hidden">
+                  {% if row.pa.coverage_status_assurance == 'covered' and row.pa.price_assurance %}
+                    <span class="inline-flex items-center font-bold text-sm text-emerald-700">{{ row.pa.price_assurance|floatformat:0 }} F</span>
+                    <span class="ml-1 inline-block text-[10px] text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded font-semibold">✓ Assur.</span>
+                  {% elif row.pa.coverage_status_assurance == 'excluded' %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">✕ Non couvert</span>
+                  {% else %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">⚑ À confirmer</span>
+                  {% endif %}
+                </div>
               </td>
               <td>
                 <select name="delai_{{ row.acte.pk }}" class="cat-delai-select">
@@ -369,6 +403,24 @@ window.MEDCARE_CATALOGUE_PREP = {
     var prepEl = document.getElementById('cat-prep-data');
     if (prepEl) prepData = JSON.parse(prepEl.textContent || '{}');
   } catch (e) {}
+
+    // ── Sélecteur de tarification sur la colonne Tarif (G23) ──
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.classList.contains('js-catalogue-regime-select')) {
+      var regime = e.target.value;
+      document.querySelectorAll('.js-catalogue-regime-select').forEach(function(sel) {
+        if (sel !== e.target) sel.value = regime;
+      });
+      document.querySelectorAll('.js-tarif-cell').forEach(function(cell) {
+        var comptant = cell.querySelector('.js-tarif-comptant');
+        var ipm = cell.querySelector('.js-tarif-ipm');
+        var assurance = cell.querySelector('.js-tarif-assurance');
+        if (comptant) comptant.classList.toggle('hidden', regime !== 'comptant');
+        if (ipm) ipm.classList.toggle('hidden', regime !== 'ipm');
+        if (assurance) assurance.classList.toggle('hidden', regime !== 'assurance');
+      });
+    }
+  });
 
   var saveInd = document.getElementById('save-ind');
   var domiWrapper = document.getElementById('bloc-domicile-wrapper');
