@@ -43,15 +43,32 @@
   </div>
   <div class="pac-actes-list">
     {% for entry in group.lines %}
-    {% with item=entry.item %}
+    {% with item=entry.item pa=item.prestataire_acte %}
     <div class="pac-acte-item">
       <div class="pac-acte-item-main">
         <span>
-          {{ item.prestataire_acte.acte.name }}{% if item.quantity > 1 %} ×{{ item.quantity }}{% endif %}
-          {% if entry.coverage_rate %}<span class="ml-1 text-[10px] mc-text-accent-dark">({{ entry.coverage_rate|floatformat:0 }} %)</span>{% endif %}
+          {{ pa.acte.name }}{% if item.quantity > 1 %} ×{{ item.quantity }}{% endif %}
+          {# Badge tri-tarifs selon assurance sélectionnée #}
+          {% if cart_insurance and insurance_use_in_estimates %}
+            {% if entry.status_assurance == 'covered' %}
+              <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50">✓ Couvert</span>
+            {% elif entry.status_assurance == 'excluded' %}
+              <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-rose-700 bg-rose-50">✕ Non couvert</span>
+            {% else %}
+              <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 bg-amber-50">⚑ À confirmer</span>
+            {% endif %}
+          {% else %}
+            {% if entry.status_ipm == 'covered' %}
+              <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50">✓ IPM</span>
+            {% elif entry.status_ipm == 'excluded' %}
+              <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-rose-700 bg-rose-50">✕ Non couvert IPM</span>
+            {% endif %}
+          {% endif %}
         </span>
         <span>
-          {% if insurance_use_in_estimates and entry.coverage_rate and entry.patient_cost != item.subtotal %}
+          {% if insurance_use_in_estimates and cart_insurance and entry.status_assurance == 'covered' and entry.price_assurance %}
+          {{ entry.price_assurance|floatformat:0 }} F
+          {% elif insurance_use_in_estimates and entry.coverage_rate and entry.patient_cost != item.subtotal %}
           {{ entry.patient_cost|floatformat:0 }} F
           {% else %}
           {{ item.subtotal|floatformat:0 }} F
