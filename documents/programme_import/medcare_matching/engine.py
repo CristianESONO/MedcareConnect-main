@@ -189,12 +189,14 @@ def match_line(idx: ReferentialIndex, label: str, ctx_label: str, pillars: List[
     }
 
 class ReconciliationEngine:
-    """Moteur de réconciliation conforme au manuel d'architecture."""
-    def __init__(self, referentiel_path: str, aliases_path: Optional[str] = None):
+    """Moteur de réconciliation conforme au manuel d'architecture et aux specs Tri-Tarifs."""
+
+    def __init__(self, referentiel_path: str, aliases_path: Optional[str] = None,
+                 panels_path: Optional[str] = None):
         with open(referentiel_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
-        # Extraction des actes selon la structure
+        # Extraction des actes selon la structure du fichier référentiel
         if isinstance(data, list):
             actes = data
         elif isinstance(data, dict) and "actes" in data:
@@ -208,7 +210,7 @@ class ReconciliationEngine:
                 slug = slug_map.get(pid, pslug)
                 for item in pdata.get("actes", []):
                     actes.append({
-                        "id": item.get('id', len(actes)+1),
+                        "id": item.get('id', len(actes) + 1),
                         "code": item.get('code', ''),
                         "pillar": slug,
                         "type": item.get("type_service", ""),
@@ -216,7 +218,10 @@ class ReconciliationEngine:
                         "kind": item.get("kind", "acte"),
                         "lexique": item.get("lexique_intention", []),
                         "ref_prix": item.get("tarif_fcfa_indicatif"),
-                        "delai": item.get("delai_indicatif", "")
+                        "delai": item.get("delai_indicatif", ""),
+                        # §Lettre-clé NGAP Sénégal (B, Z, KE, K, KC, C, CS, D, aucune)
+                        "lettre_cle": item.get("lettre_cle"),
+                        "coefficient": item.get("coefficient"),
                     })
         else:
             actes = []
@@ -226,11 +231,190 @@ class ReconciliationEngine:
             with open(aliases_path, 'r', encoding='utf-8') as f:
                 aliases = json.load(f)
 
+        # Référentiel panels/combinaisons : {acte_id: [composant_id, ...]}
+        self.panels_ref: Dict[str, List[Any]] = {}
+        if panels_path and os.path.exists(panels_path):
+            with open(panels_path, 'r', encoding='utf-8') as f:
+                panels_data = json.load(f)
+            # Accepte liste [{acte_id, composants:[...]}] ou dict {acte_id: [...]}
+            if isinstance(panels_data, list):
+                for p in panels_data:
+                    self.panels_ref[str(p.get('acte_id', ''))] = p.get('composants', [])
+            elif isinstance(panels_data, dict):
+                self.panels_ref = {str(k): v for k, v in panels_data.items()}
+
         self.index = ReferentialIndex(actes, aliases)
         self.actes = actes
         self.aliases = aliases
 
-    def reconcile_file(self, filepath: str, default_pillar: Optional[str] = None, org_id: Optional[str] = None, rule: str = 'V1', th: Dict[str, float] = None) -> Dict[str, Any]:
+    # ------------------------------------------------------------------
+    # Détection des doublons (deux libellés → même acte → conflit prix)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _detect_collisions(results: List[Dict[str, Any]]) -> Dict[str, List[str]]:
+        """Retourne {acte_id: [libelle1, libelle2, ...]} pour les actes avec >1 ligne."""
+        mapping: Dict[str, List[str]] = {}
+        for l in results:
+            if l.get('kind') != 'acte':
+                continue
+            cand = l.get('candidat_retenu')
+            if not cand:
+                continue
+            aid = str(cand['acte'].get('id', ''))
+            if not aid:
+                continue
+            mapping.setdefault(aid, []).append(l['label'])
+        return {k: v for k, v in mapping.items() if len(v) > 1}
+
+    # ------------------------------------------------------------------
+    # Exports tri-tarifs conformes à la spec Reconciliation 3tarifs
+    # ------------------------------------------------------------------
+    def build_tariff_rows(self, results: List[Dict[str, Any]], structure_id: str,
+                          master_labels: Optional[Dict[str, str]] = None) -> List[Dict[str, Any]]:
+        """
+        Export grille tarifaire : {structure_id, acte_id, acte, regime, montant, pris_en_charge}.
+        Une ligne par régime (comptant / ipm / assurance) par acte, dédupliqué.
+        Les panels sont exclus (export séparé via build_panel_rows).
+        Les doublons : seule la ligne maître est exportée.
+        """
+        collisions = self._detect_collisions(results)
+        seen_ids: set = set()
+        out = []
+
+        for l in results:
+            if l.get('kind') != 'acte':
+                continue
+            cand = l.get('candidat_retenu')
+            if not cand:
+                continue
+            aid = str(cand['acte'].get('id', ''))
+            if not aid:
+                continue
+
+            # Routing panel → export séparé
+            if aid in self.panels_ref or l.get('dest') == 'panel':
+                continue
+
+            # Doublons : vérifier si cette ligne est la maître
+            if aid in collisions and len(collisions[aid]) > 1:
+                master_lbl = (master_labels or {}).get(aid, collisions[aid][0])
+                if l['label'] != master_lbl:
+                    continue  # Ignorer les lignes non-maîtres
+
+            if aid in seen_ids:
+                continue
+            seen_ids.add(aid)
+
+            act_name = cand['acte'].get('name')
+            pc = l.get('prix_comptant')
+            pi = l.get('prix_ipm')
+            pa = l.get('prix_assurance')
+            npc_ipm = l.get('status_ipm') == 'excluded'
+            npc_ass = l.get('status_assurance') == 'excluded'
+
+            for regime, montant, npc in [
+                ('comptant', pc, False),
+                ('ipm',      pi, npc_ipm),
+                ('assurance', pa, npc_ass),
+            ]:
+                out.append({
+                    'structure_id': structure_id,
+                    'acte_id': int(aid) if aid.isdigit() else aid,
+                    'acte': act_name,
+                    'regime': regime,
+                    'montant': None if npc else montant,
+                    'pris_en_charge': not npc,
+                })
+        return out
+
+    def build_panel_rows(self, results: List[Dict[str, Any]], structure_id: str,
+                         master_labels: Optional[Dict[str, str]] = None) -> List[Dict[str, Any]]:
+        """
+        Export panels/combinaisons : {structure_id, acte_id, nom, type, composants, a_composer, tarifs}.
+        """
+        collisions = self._detect_collisions(results)
+        seen_ids: set = set()
+        out = []
+
+        for l in results:
+            if l.get('kind') != 'acte':
+                continue
+            cand = l.get('candidat_retenu')
+            if not cand:
+                continue
+            aid = str(cand['acte'].get('id', ''))
+
+            # Uniquement les panels
+            is_panel = (aid in self.panels_ref) or l.get('composite') or l.get('dest') == 'panel'
+            if not is_panel:
+                continue
+
+            if aid in collisions and len(collisions[aid]) > 1:
+                master_lbl = (master_labels or {}).get(aid, collisions[aid][0])
+                if l['label'] != master_lbl:
+                    continue
+
+            if aid in seen_ids:
+                continue
+            seen_ids.add(aid)
+
+            pc = l.get('prix_comptant')
+            pi = l.get('prix_ipm')
+            pa = l.get('prix_assurance')
+            npc_ipm = l.get('status_ipm') == 'excluded'
+            npc_ass = l.get('status_assurance') == 'excluded'
+
+            out.append({
+                'structure_id': structure_id,
+                'acte_id': int(aid) if aid.isdigit() else aid,
+                'nom': cand['acte'].get('name'),
+                'type': 'panel',
+                'composants': self.panels_ref.get(aid, []),
+                'a_composer': aid not in self.panels_ref,
+                'tarifs': {
+                    'comptant':  {'montant': pc,                     'pris_en_charge': True},
+                    'ipm':       {'montant': None if npc_ipm else pi, 'pris_en_charge': not npc_ipm},
+                    'assurance': {'montant': None if npc_ass else pa, 'pris_en_charge': not npc_ass},
+                },
+            })
+        return out
+
+    def build_alias_rows(self, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Export alias validés (lexique global, sans prix) :
+        {alias, libelle_source, acte_id, acte_standardise, type}.
+        """
+        out = []
+        seen: set = set()
+        for l in results:
+            if l.get('kind') != 'acte':
+                continue
+            if l.get('issue') not in ('reconnu', 'a_confirmer'):
+                continue
+            cand = l.get('candidat_retenu')
+            if not cand:
+                continue
+            aid = str(cand['acte'].get('id', ''))
+            lbl = l['label']
+            key = f"{aid}|{lbl}"
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({
+                'alias': lbl,
+                'libelle_source': lbl,
+                'acte_id': int(aid) if aid.isdigit() else aid,
+                'acte_standardise': cand['acte'].get('name'),
+                'type': cand['acte'].get('type', ''),
+            })
+        return out
+
+    # ------------------------------------------------------------------
+    # Réconciliation principale
+    # ------------------------------------------------------------------
+    def reconcile_file(self, filepath: str, default_pillar: Optional[str] = None,
+                       org_id: Optional[str] = None, rule: str = 'V1',
+                       th: Dict[str, float] = None) -> Dict[str, Any]:
         """Lit un fichier de n'importe quel format et le réconcilie entièrement."""
         if th is None:
             th = DEFAULT_THRESHOLDS
@@ -253,6 +437,10 @@ class ReconciliationEngine:
             'reconnus': 0,
             'a_confirmer': 0,
             'inconnus': 0,
+            'composites': 0,       # Panels/combinaisons détectés
+            'doublons': 0,          # Actes appariés en doublon (conflit prix)
+            'comptant_seul': 0,     # Actes sans IPM ET sans assurance (NPC les deux)
+            'prix_comptant_manquant': 0,  # Actes dont le prix comptant est absent
             'prix_manquants': 0,
             'prix_anomalies': 0,
             'sections': [l['label'] for l in lines if l['kind'] == 'section']
@@ -268,12 +456,31 @@ class ReconciliationEngine:
             issue = classify(m, rule, th)
             exp = explain(m, issue, th)
 
+            # Routing panel/composite → dest = 'panel'
+            if m.get('composite'):
+                summary['composites'] += 1
+                cand = m['cands'][0] if m.get('cands') else None
+                aid = str(cand['acte'].get('id', '')) if cand else ''
+                dest = 'panel' if aid in self.panels_ref else 'panel_non_reconnu'
+            else:
+                dest = None
+
             if issue == 'reconnu':
                 summary['reconnus'] += 1
             elif issue == 'a_confirmer':
                 summary['a_confirmer'] += 1
-            else:
+            elif not m.get('composite'):
                 summary['inconnus'] += 1
+
+            # Comptant-seul : NPC IPM ET NPC assurance
+            npc_ipm = l.get('status_ipm') == 'excluded'
+            npc_ass = l.get('status_assurance') == 'excluded'
+            if npc_ipm and npc_ass:
+                summary['comptant_seul'] += 1
+
+            # Prix comptant manquant
+            if l.get('prix_comptant') is None:
+                summary['prix_comptant_manquant'] += 1
 
             p = l['price']
             if p.get('statut') == 'manquant':
@@ -286,13 +493,32 @@ class ReconciliationEngine:
                 'match': m,
                 'issue': issue,
                 'explication': exp,
-                'candidat_retenu': m['cands'][0] if m.get('cands') else None
+                'candidat_retenu': m['cands'][0] if m.get('cands') else None,
+                'dest': dest,        # 'panel' | 'panel_non_reconnu' | None
             })
             results.append(line_res)
+
+        # Détection des doublons (après réconciliation complète)
+        collisions = self._detect_collisions(results)
+        doublons_ids = {aid for aid, lbls in collisions.items() if len(lbls) > 1}
+        summary['doublons'] = len(doublons_ids)
+
+        # Marquer les lignes en doublon
+        for l in results:
+            if l.get('kind') != 'acte':
+                continue
+            cand = l.get('candidat_retenu')
+            if not cand:
+                continue
+            aid = str(cand['acte'].get('id', ''))
+            if aid in doublons_ids:
+                l['issue_doublon'] = True
+                l['doublon_with'] = [lb for lb in collisions[aid] if lb != l['label']]
 
         return {
             'filepath': filepath,
             'summary': summary,
             'schema': schema,
-            'lines': results
+            'lines': results,
+            'collisions': collisions,   # {acte_id: [libelle1, libelle2]}
         }
