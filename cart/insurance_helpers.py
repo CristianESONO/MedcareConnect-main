@@ -58,16 +58,25 @@ def build_items_with_coverage(items, insurance, patient_profile=None):
                 insurance, patient_profile=patient_profile
             )
         pa = item.prestataire_acte
+        st_ipm = getattr(pa, "coverage_status_ipm", "to_confirm") or "to_confirm"
+        st_assur = getattr(pa, "coverage_status_assurance", "to_confirm") or "to_confirm"
+        pr_ipm = getattr(pa, "price_ipm", None)
+        pr_assur = getattr(pa, "price_assurance", None)
+        # Garde-fou G5 : prix manquant sur régime couvert -> repli sur to_confirm (comptant)
+        if st_ipm == "covered" and (pr_ipm is None or pr_ipm <= 0):
+            st_ipm = "to_confirm"
+        if st_assur == "covered" and (pr_assur is None or pr_assur <= 0):
+            st_assur = "to_confirm"
         rows.append(
             {
                 "item": item,
                 "coverage_rate": coverage_rate,
                 "patient_cost": patient_cost,
                 # Tri-tarifs : statuts et prix par régime (garde-fous spec)
-                "status_ipm": getattr(pa, "coverage_status_ipm", "to_confirm") or "to_confirm",
-                "status_assurance": getattr(pa, "coverage_status_assurance", "to_confirm") or "to_confirm",
-                "price_ipm": getattr(pa, "price_ipm", None),
-                "price_assurance": getattr(pa, "price_assurance", None),
+                "status_ipm": st_ipm,
+                "status_assurance": st_assur,
+                "price_ipm": pr_ipm,
+                "price_assurance": pr_assur,
             }
         )
     return rows
