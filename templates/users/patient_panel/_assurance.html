@@ -68,23 +68,16 @@
           <button type="button" class="pac-taux-btn" data-pac-global-pct="100">100 %</button>
         </div>
 
+        {# Bloc "Affiner par type d'acte" retiré per spec tri-tarifs (Expression de besoin §4.3)
+           Les taux par catégorie sont gérés côté structure à l'import — le patient ne saisit
+           qu'un taux global. Garder le code ci-dessous en commentaire pour rollback éventuel.
         {% if insurance_form.category_rate_fields %}
         <details class="pac-coverage-details" {% if patient_profile.insurance_coverage_by_category %}open{% endif %}>
           <summary>Affiner par type d'acte (optionnel)</summary>
-          <p class="pac-coverage-help">Surcharge le taux global pour une catégorie précise. Les valeurs grisées sont des suggestions MedCare.</p>
-          <div class="pac-coverage-grid">
-            {% for field_name, field in insurance_form.category_rate_fields %}
-            <div class="pac-profil-field">
-              <label for="id_{{ field_name }}">{{ field.label }}</label>
-              {{ field }}
-              {% if field.errors %}<p class="pac-field-error">{{ field.errors.0 }}</p>{% endif %}
-            </div>
-            {% endfor %}
-          </div>
+          ...
         </details>
-        {% elif patient_profile.insurance_id and not insurance_reference_rates %}
-        <p class="pac-coverage-help">Enregistrez d'abord votre organisme pour afficher les catégories d'actes.</p>
         {% endif %}
+        #}
       </div>
 
       <button type="submit" class="pac-btn-save" style="margin-top:14px">Enregistrer ma couverture</button>

@@ -57,11 +57,17 @@ def build_items_with_coverage(items, insurance, patient_profile=None):
             patient_cost = item.cost_after_insurance(
                 insurance, patient_profile=patient_profile
             )
+        pa = item.prestataire_acte
         rows.append(
             {
                 "item": item,
                 "coverage_rate": coverage_rate,
                 "patient_cost": patient_cost,
+                # Tri-tarifs : statuts et prix par régime (garde-fous spec)
+                "status_ipm": getattr(pa, "coverage_status_ipm", "to_confirm") or "to_confirm",
+                "status_assurance": getattr(pa, "coverage_status_assurance", "to_confirm") or "to_confirm",
+                "price_ipm": getattr(pa, "price_ipm", None),
+                "price_assurance": getattr(pa, "price_assurance", None),
             }
         )
     return rows

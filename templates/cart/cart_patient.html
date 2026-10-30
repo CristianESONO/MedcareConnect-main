@@ -13,26 +13,59 @@
             {% for org_group in org_groups %}
             <div class="divide-y divide-gray-100">
             {% for entry in org_group.list %}
-            {% with item=entry.item %}
-            <div class="medcare-cart-line flex items-start gap-4 px-5 py-4" data-medcare-line-subtotal="{{ item.subtotal }}">
+            {% with item=entry.item pa=item.prestataire_acte %}
+            {# ── Tri-Tarifs : badge de couverture calculé côté serveur ── #}
+            {% if entry.status_ipm == 'covered' or entry.status_assurance == 'covered' %}
+              {% with mc_regime_label="Couvert · conventionné" mc_regime_cls="text-emerald-700 bg-emerald-50 border border-emerald-200" %}
+              <div class="medcare-cart-line flex items-start gap-4 px-5 py-4 border-l-4 border-emerald-400" data-medcare-line-subtotal="{{ item.subtotal }}" data-mc-status-ipm="{{ entry.status_ipm }}" data-mc-status-assurance="{{ entry.status_assurance }}">
                 <div class="flex-1 min-w-0">
-                    <p class="font-medium text-gray-900">{{ item.prestataire_acte.acte.name }}</p>
-                    <p class="text-xs text-gray-400">{{ item.prestataire_acte.organisme.name }}</p>
-                    {% if entry.coverage_rate %}<p class="medcare-server-coverage mt-1 text-xs mc-text-accent">Couverture assurance : {{ entry.coverage_rate|floatformat:0 }}%</p>{% endif %}
+                  <p class="font-medium text-gray-900">{{ pa.acte.name }}</p>
+                  <p class="text-xs text-gray-400">{{ pa.organisme.name }}</p>
+                  <span class="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold {{ mc_regime_cls }}">{{ mc_regime_label }}</span>
                 </div>
                 <div class="text-right">
-                    <form method="POST" action="{% url 'cart:cart_update_quantity' item.pk %}" class="flex items-center gap-2">
-                        {% csrf_token %}
-                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-16 rounded-lg border border-gray-200 px-2 py-1 text-center text-sm" onchange="this.form.submit()">
-                    </form>
-                    <p class="mt-1 text-sm font-bold text-primary-500"><span class="medcare-line-brut">{{ item.subtotal|floatformat:0 }} XOF</span></p>
-                    {% if entry.coverage_rate %}<p class="medcare-server-coverage text-xs mc-text-accent">→ {{ entry.patient_cost|floatformat:0 }} XOF</p>{% endif %}
-                    <p class="medcare-line-sim mt-0.5 hidden text-xs font-medium text-amber-800" aria-live="polite"></p>
+                  <form method="POST" action="{% url 'cart:cart_update_quantity' item.pk %}" class="flex items-center gap-2">{% csrf_token %}<input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-16 rounded-lg border border-gray-200 px-2 py-1 text-center text-sm" onchange="this.form.submit()"></form>
+                  <p class="mt-1 text-sm font-bold text-emerald-700"><span class="medcare-line-brut">{% if entry.status_ipm == 'covered' and entry.price_ipm %}{{ entry.price_ipm|floatformat:0 }}{% elif entry.status_assurance == 'covered' and entry.price_assurance %}{{ entry.price_assurance|floatformat:0 }}{% else %}{{ item.subtotal|floatformat:0 }}{% endif %} XOF</span></p>
+                  <p class="medcare-line-sim mt-0.5 hidden text-xs font-medium text-amber-800" aria-live="polite"></p>
                 </div>
-                <a href="{% url 'cart:cart_remove' item.pk %}" class="mt-1 text-gray-300 hover:text-red-400" title="Retirer">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
-                </a>
-            </div>
+                <a href="{% url 'cart:cart_remove' item.pk %}" class="mt-1 text-gray-300 hover:text-red-400" title="Retirer"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></a>
+              </div>
+              {% endwith %}
+            {% elif entry.status_ipm == 'excluded' or entry.status_assurance == 'excluded' %}
+              {# Non couvert — déclaré expressément par la structure, jamais déduit #}
+              {% with mc_regime_label="Non couvert · comptant" mc_regime_cls="text-rose-700 bg-rose-50 border border-rose-200" %}
+              <div class="medcare-cart-line flex items-start gap-4 px-5 py-4 border-l-4 border-rose-300" data-medcare-line-subtotal="{{ item.subtotal }}" data-mc-status-ipm="{{ entry.status_ipm }}" data-mc-status-assurance="{{ entry.status_assurance }}">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-gray-900">{{ pa.acte.name }}</p>
+                  <p class="text-xs text-gray-400">{{ pa.organisme.name }}</p>
+                  <span class="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold {{ mc_regime_cls }}">{{ mc_regime_label }}</span>
+                </div>
+                <div class="text-right">
+                  <form method="POST" action="{% url 'cart:cart_update_quantity' item.pk %}" class="flex items-center gap-2">{% csrf_token %}<input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-16 rounded-lg border border-gray-200 px-2 py-1 text-center text-sm" onchange="this.form.submit()"></form>
+                  <p class="mt-1 text-sm font-bold text-primary-500"><span class="medcare-line-brut">{{ item.subtotal|floatformat:0 }} XOF</span></p>
+                  <p class="medcare-line-sim mt-0.5 hidden text-xs font-medium text-amber-800" aria-live="polite"></p>
+                </div>
+                <a href="{% url 'cart:cart_remove' item.pk %}" class="mt-1 text-gray-300 hover:text-red-400" title="Retirer"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></a>
+              </div>
+              {% endwith %}
+            {% else %}
+              {# À confirmer — sans tarif conventionné défini #}
+              {% with mc_regime_label="À confirmer · soumettez le devis" mc_regime_cls="text-amber-700 bg-amber-50 border border-amber-200" %}
+              <div class="medcare-cart-line flex items-start gap-4 px-5 py-4 border-l-4 border-amber-300" data-medcare-line-subtotal="{{ item.subtotal }}" data-mc-status-ipm="{{ entry.status_ipm }}" data-mc-status-assurance="{{ entry.status_assurance }}">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-gray-900">{{ pa.acte.name }}</p>
+                  <p class="text-xs text-gray-400">{{ pa.organisme.name }}</p>
+                  <span class="mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold {{ mc_regime_cls }}">{{ mc_regime_label }}</span>
+                </div>
+                <div class="text-right">
+                  <form method="POST" action="{% url 'cart:cart_update_quantity' item.pk %}" class="flex items-center gap-2">{% csrf_token %}<input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-16 rounded-lg border border-gray-200 px-2 py-1 text-center text-sm" onchange="this.form.submit()"></form>
+                  <p class="mt-1 text-sm font-bold text-primary-500"><span class="medcare-line-brut">{{ item.subtotal|floatformat:0 }} XOF</span></p>
+                  <p class="medcare-line-sim mt-0.5 hidden text-xs font-medium text-amber-800" aria-live="polite"></p>
+                </div>
+                <a href="{% url 'cart:cart_remove' item.pk %}" class="mt-1 text-gray-300 hover:text-red-400" title="Retirer"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg></a>
+              </div>
+              {% endwith %}
+            {% endif %}
             {% endwith %}
             {% endfor %}
             <div class="bg-gray-50 px-5 py-3 text-right">
@@ -85,23 +118,32 @@
             <h2 class="text-sm font-semibold text-gray-900">Récapitulatif</h2>
             <dl id="medcare-recap-root" class="mt-3 space-y-2 text-sm" data-total-brut="{{ cart.total_price }}"{% if cart.selected_insurance %} data-server-pec="{{ cart.insurance_savings }}" data-server-reste="{{ cart.total_after_insurance }}"{% endif %}>
                 <div class="flex justify-between">
-                    <dt class="text-gray-500">Total brut</dt>
+                    <dt class="text-gray-500">Total comptant</dt>
                     <dd id="medcare-recap-brut" class="font-medium text-gray-900">{{ cart.total_price|floatformat:0 }} XOF</dd>
                 </div>
                 <div id="medcare-recap-row-pec" class="flex justify-between {% if not cart.selected_insurance %}hidden{% endif %}">
-                    <dt class="text-gray-500">Prise en charge</dt>
-                    <dd id="medcare-recap-pec" class="font-medium mc-text-accent">{% if cart.selected_insurance %}-{{ cart.insurance_savings|floatformat:0 }} XOF{% endif %}</dd>
+                    <dt class="text-gray-500 flex items-center gap-1">
+                        <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span> Couvert conventionné
+                    </dt>
+                    <dd id="medcare-recap-pec" class="font-medium text-emerald-700">{% if cart.selected_insurance %}-{{ cart.insurance_savings|floatformat:0 }} XOF{% endif %}</dd>
                 </div>
                 <div id="medcare-recap-row-reste" class="flex justify-between border-t border-gray-100 pt-2 {% if not cart.selected_insurance %}hidden{% endif %}">
-                    <dt class="font-semibold text-gray-900">Total estimatif patient</dt>
-                    <dd id="medcare-recap-reste" class="font-bold text-primary-500">{% if cart.selected_insurance %}{{ cart.total_after_insurance|floatformat:0 }} XOF{% endif %}</dd>
+                    <dt class="font-semibold text-gray-900">Total actes couverts</dt>
+                    <dd id="medcare-recap-reste" class="font-bold text-emerald-700">{% if cart.selected_insurance %}{{ cart.total_after_insurance|floatformat:0 }} XOF{% endif %}</dd>
                 </div>
                 <div id="medcare-recap-row-total-seul" class="flex justify-between border-t border-gray-100 pt-2 {% if cart.selected_insurance %}hidden{% endif %}">
                     <dt class="font-semibold text-gray-900">Total</dt>
                     <dd id="medcare-recap-total-seul-dd" class="font-bold text-primary-500">{{ cart.total_price|floatformat:0 }} XOF</dd>
                 </div>
             </dl>
-            <p class="mt-4 text-xs text-gray-500">Un bouton par structure : les actes d’un même prestataire partent dans une seule discussion.</p>
+            {# Légende 3 rubriques tri-tarifs #}
+            <div class="mt-4 space-y-1.5 rounded-lg bg-gray-50 p-3 text-[11px] text-gray-600">
+                <p class="flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span> <strong>Couvert</strong> — tarif conventionné déclaré par la structure</p>
+                <p class="flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full bg-rose-400"></span> <strong>Non couvert</strong> — exclu expressément, réglé au comptant</p>
+                <p class="flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full bg-amber-400"></span> <strong>À confirmer</strong> — soumettez le devis à votre assureur</p>
+            </div>
+            <p class="mt-2 text-[10px] text-gray-400 italic">Estimation indicative — à confirmer avec votre assureur.</p>
+            <p class="mt-4 text-xs text-gray-500">Un bouton par structure : les actes d'un même prestataire partent dans une seule discussion.</p>
         </div>
     </div>
 </div>

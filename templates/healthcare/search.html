@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 {% block title %}Prestations & tarifs{% endblock %}
 
@@ -2673,13 +2673,32 @@
       });
     }
 
+    // ── Persistance régime en sessionStorage (garde-fou #9) ──
+    (function() {
+      var stored = sessionStorage.getItem('mc_regime');
+      if (stored && ['comptant', 'ipm', 'assurance'].indexOf(stored) !== -1) {
+        setTriTarifRegime(stored);
+      }
+    })();
+
     document.addEventListener('click', function(e) {
       var btn = e.target && e.target.closest && e.target.closest('.tritarif-chip-btn');
       if (btn) {
         var reg = btn.getAttribute('data-regime');
         setTriTarifRegime(reg);
+        try { sessionStorage.setItem('mc_regime', reg); } catch(ignored) {}
       }
     });
+
+    // Reset régime à comptant sur nouvelle recherche (garde-fou #9)
+    (function() {
+      var form = document.getElementById('search-form');
+      if (form) {
+        form.addEventListener('submit', function() {
+          try { sessionStorage.removeItem('mc_regime'); } catch(ignored) {}
+        });
+      }
+    })();
     function sipnToast(msg, level){
       var text = String(msg || '');
       if (!text) return;

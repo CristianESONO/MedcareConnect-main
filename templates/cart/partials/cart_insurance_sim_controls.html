@@ -1,13 +1,15 @@
-{# Champ % simulation — hors formulaire POST assurance ; affiché seulement si une assurance est sélectionnée (JS). #}
+{# Champ % simulation opt-in — désactivé par défaut ; affiché seulement si une assurance est sélectionnée (JS). #}
+{# Per spec tri-tarifs : estimation indicative uniquement — jamais calculée ou affirmée par MedCare. #}
 <style>
   .medcare-pct-active .medcare-server-coverage { display: none !important; }
 </style>
 <div id="medcare-insurance-sim-wrap" class="mt-3 hidden">
-  <label for="medcare-insurance-pct" class="block text-sm font-medium text-amber-950">Pourcentage pris en charge</label>
+  <label for="medcare-insurance-pct" class="block text-sm font-medium text-amber-950">Simulation — taux de prise en charge <span class="text-[10px] font-normal text-gray-500">(estimation indicative)</span></label>
   <div class="mt-2 flex flex-wrap items-center gap-2">
     <input type="number" id="medcare-insurance-pct" min="0" max="100" step="0.5" placeholder="ex. 70" inputmode="decimal" autocomplete="off"
       class="w-24 rounded-lg border border-amber-200/80 bg-white px-2 py-1.5 text-sm text-gray-900 shadow-sm focus:border-accent-400 focus:outline-none focus:ring-1 focus:ring-accent-300">
     <span class="text-xs text-gray-600">%</span>
     <button type="button" id="medcare-insurance-pct-clear" class="text-xs font-medium text-amber-800 underline decoration-amber-600/60 hover:text-amber-950">Effacer</button>
   </div>
+  <p class="mt-1 text-[10px] text-gray-400 italic">Appliqué au total affiché · À confirmer avec votre assureur</p>
 </div>
