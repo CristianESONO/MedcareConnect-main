@@ -46,6 +46,16 @@ if _running_tests():
 # Origines autorisées pour le cookie CSRF (connexion / formulaires via IP ou nom de domaine public)
 _csrf_origins = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(",") if o.strip()]
+for _def_origin in [
+    "https://medcare.sn",
+    "https://www.medcare.sn",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1",
+    "http://localhost",
+]:
+    if _def_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_def_origin)
 
 # Politique d’usage Nominatim (OpenStreetMap) — identifiant obligatoire côté requêtes HTTP
 NOMINATIM_USER_AGENT = os.environ.get(
