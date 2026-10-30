@@ -85,7 +85,6 @@
             {% endif %}
             {% endwith %}
             {% endfor %}
-            {% endfor %}
             <div class="bg-gray-50 px-5 py-3 text-right">
                 <a href="{% url 'cart:generate_devis' %}?org={{ org_group.grouper.pk }}" class="inline-flex rounded-lg bg-accent-400 px-4 py-2 text-xs font-semibold text-white hover:bg-accent-500">Réserver mes actes chez {{ org_group.grouper.name }}</a>
             </div>
