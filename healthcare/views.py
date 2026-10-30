@@ -177,6 +177,11 @@ _SEARCH_SORT_CHOICES = frozenset(
         "delai_asc",
         "delai_desc",
         "delai_rdv_asc",
+        # Tri-tarifs : tri côté serveur par tarif conventionné (spec §7)
+        "price_ipm_asc",
+        "price_ipm_desc",
+        "price_assurance_asc",
+        "price_assurance_desc",
     }
 )
 
@@ -1100,6 +1105,28 @@ def search(request):
             pa_qs = pa_qs.order_by("-_delai_sort", "price", "acte__name", "organisme__name")
         elif sort == "delai_rdv_asc":
             pa_qs = pa_qs.order_by("_delai_sort", "price", "acte__name", "organisme__name")
+        elif sort == "price_ipm_asc":
+            # Tri-tarifs : tarif IPM conventionné croissant (nulls en dernier)
+            from django.db.models import F
+            pa_qs = pa_qs.order_by(
+                F("price_ipm").asc(nulls_last=True), "price", "acte__name", "organisme__name"
+            )
+        elif sort == "price_ipm_desc":
+            from django.db.models import F
+            pa_qs = pa_qs.order_by(
+                F("price_ipm").desc(nulls_last=True), "acte__name", "organisme__name"
+            )
+        elif sort == "price_assurance_asc":
+            # Tri-tarifs : tarif Assurance conventionnée croissant (nulls en dernier)
+            from django.db.models import F
+            pa_qs = pa_qs.order_by(
+                F("price_assurance").asc(nulls_last=True), "price", "acte__name", "organisme__name"
+            )
+        elif sort == "price_assurance_desc":
+            from django.db.models import F
+            pa_qs = pa_qs.order_by(
+                F("price_assurance").desc(nulls_last=True), "acte__name", "organisme__name"
+            )
         else:
             # price_asc par défaut (comportement « e-commerce »)
             pa_qs = pa_qs.order_by("price", "acte__name", "organisme__name")

@@ -643,6 +643,10 @@
           <div class="kpi-val" id="kpiRate">0%</div>
           <div class="kpi-lbl">Taux d'Automatisation</div>
         </div>
+        <div class="kpi-card amber">
+          <div class="kpi-val" id="kpiDoublons">0</div>
+          <div class="kpi-lbl">Doublons Détectés</div>
+        </div>
       </div>
 
       <!-- Action & Filter Bar -->
@@ -988,6 +992,9 @@
       document.getElementById('kpiNone').textContent = countNone;
       document.getElementById('kpiRate').textContent = rate + '%';
 
+      const countDoublons = rowsData.filter(r => r.issue_doublon).length;
+      document.getElementById('kpiDoublons').textContent = countDoublons;
+
       document.getElementById('countAll').textContent = total;
       document.getElementById('countAuto').textContent = countAuto;
       document.getElementById('countConfirm').textContent = countConfirm;
@@ -1027,6 +1034,12 @@
           badgeHtml = `<span class="badge badge-confirm">⚠ ${row.labelStatus}</span>`;
         } else {
           badgeHtml = `<span class="badge badge-none">✕ ${row.labelStatus}</span>`;
+        }
+
+        // Badge doublon (issue_doublon vient du moteur de réconciliation)
+        if (row.issue_doublon) {
+          const dInfo = row.doublon_with ? ' (avec : ' + escapeHtml(String(row.doublon_with)) + ')' : '';
+          badgeHtml += ' <span style="display:inline-flex;align-items:center;gap:4px;background:#fff3cd;color:#92400e;border:1px solid #fbbf24;border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:700;" title="Doublon" + dInfo + ">&#9888; Doublon' + dInfo + '</span>';
         }
 
         let scoreHtml = '';
