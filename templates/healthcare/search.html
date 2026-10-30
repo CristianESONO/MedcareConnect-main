@@ -2129,6 +2129,17 @@
         if (activeDrop === type) { closeDrop(); return; }
         if (!showPanel(type)) return;
         activeDrop = type;
+        // Aligne le panneau sous le bouton cliqué (au lieu d'être collé à gauche)
+        var chip = document.querySelector('[data-dem-filter-drop="' + type + '"]');
+        if (chip && dd) {
+          var chipRect = chip.getBoundingClientRect();
+          var parentRect = dd.parentElement.getBoundingClientRect();
+          var leftOffset = Math.max(0, chipRect.left - parentRect.left);
+          if (leftOffset + 350 > parentRect.width) {
+            leftOffset = Math.max(0, parentRect.width - 360);
+          }
+          dd.style.left = leftOffset + 'px';
+        }
       };
       window.closeDemFilterDropdown = closeDrop;
 

@@ -5,7 +5,13 @@ Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _searc
 {# ── Desktop (démo) ── #}
 <div class="dem-filter-row sipn-desktop-filter-only">
   <span class="dem-filter-lbl">Trier :</span>
-  <select name="sort" id="id-sort-dem" class="dem-sort-select" aria-label="Trier les résultats">
+  <select name="sort" id="id-sort-dem" class="dem-sort-select" aria-label="Trier les résultats" onchange="document.getElementById('search-form').submit()">
+    <option value="price_asc"  {% if current_sort == "price_asc" or not current_sort %}selected{% endif %}>Prix croissant</option>
+    <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
+    <option value="price_ipm_asc"       {% if current_sort == "price_ipm_asc" %}selected{% endif %}>Prix IPM croissant</option>
+    <option value="price_ipm_desc"      {% if current_sort == "price_ipm_desc" %}selected{% endif %}>Prix IPM décroissant</option>
+    <option value="price_assurance_asc" {% if current_sort == "price_assurance_asc" %}selected{% endif %}>Prix Assurance croissant</option>
+    <option value="price_assurance_desc"{% if current_sort == "price_assurance_desc" %}selected{% endif %}>Prix Assurance décroissant</option>
     <option value="price_asc"  {% if current_sort == "price_asc" or not current_sort %}selected{% endif %}>Prix croissant</option>
     <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
     <option value="delai_rdv_asc" {% if current_sort == "delai_rdv_asc" %}selected{% endif %}>RDV disponible le plus vite</option>
@@ -13,6 +19,13 @@ Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _searc
     <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>Par zone / quartier</option>
     <option value="distance" {% if current_sort == "distance" %}selected{% endif %}>Proximité</option>
   </select>
+
+  <span class="dem-filter-lbl dem-filter-lbl--sep">Régime :</span>
+  <div class="inline-flex rounded-lg bg-gray-100 p-0.5 text-xs font-semibold mr-1">
+    <button type="button" class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all bg-white text-gray-900 shadow-xs font-bold" data-regime="comptant">Comptant</button>
+    <button type="button" class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="ipm">IPM</button>
+    <button type="button" class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="assurance">Assurance</button>
+  </div>
 
   <span class="dem-filter-lbl dem-filter-lbl--sep">Filtrer :</span>
 
