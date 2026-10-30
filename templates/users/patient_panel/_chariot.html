@@ -62,6 +62,8 @@
               <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50">✓ IPM</span>
             {% elif entry.status_ipm == 'excluded' %}
               <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-rose-700 bg-rose-50">✕ Non couvert IPM</span>
+            {% else %}
+              <span class="ml-1 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 bg-amber-50">⚑ IPM à confirmer</span>
             {% endif %}
           {% endif %}
         </span>
