@@ -3986,11 +3986,19 @@
           'X-CSRFToken': csrfToken,
           'X-Requested-With': 'XMLHttpRequest'
         }
-      }).then(resetCartUI).catch(function(){
+      }).then(function(r){
+        if (r.ok) { resetCartUI(); return; }
+        // Si /cart/clear/ a échoué (ex: 403 CSRF), tenter le endpoint invité
+        return fetch('/cart/guest/clear/', {
+          method: 'POST',
+          headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(function(r2){ if (r2.ok) resetCartUI(); });
+      }).catch(function(){
+        // Erreur réseau — tenter quand même le endpoint invité
         fetch('/cart/guest/clear/', {
           method: 'POST',
           headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
-        }).then(resetCartUI).catch(resetCartUI);
+        }).then(function(r2){ if (r2.ok) resetCartUI(); }).catch(resetCartUI);
       });
     });
     var cartFloatBtn = document.getElementById('sipn-cart-float-btn');
