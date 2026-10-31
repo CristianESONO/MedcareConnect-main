@@ -3961,6 +3961,23 @@
         if (pHeadCount) pHeadCount.textContent = '0';
         if (typeof renderCompPanel === 'function') renderCompPanel();
         if (typeof sipnToast === 'function') sipnToast('Panier vidé', 'info');
+        // Rafraichir le panneau chariot cote serveur
+        _refreshChariotPanel();
+      }
+
+      function _refreshChariotPanel(){
+        var chariotPanel = document.querySelector('.pac-chariot-desktop');
+        if (!chariotPanel) return;
+        fetch('/users/compte/panel/chariot/?pac_partial=1', {
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-MedCare-PAC': '1' }
+        }).then(function(r){ return r.ok ? r.text() : null; })
+          .then(function(html){
+            if (!html) return;
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            var fresh = tmp.querySelector('.pac-chariot-desktop');
+            if (fresh) chariotPanel.replaceWith(fresh);
+          }).catch(function(){});
       }
 
       fetch(actionUrl, {
