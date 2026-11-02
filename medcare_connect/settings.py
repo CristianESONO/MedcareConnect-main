@@ -124,8 +124,8 @@ if DATABASE_URL.startswith("postgres"):
             "NAME": os.environ.get("POSTGRES_DB", "medcare_db"),
             "USER": os.environ.get("POSTGRES_USER", "medcare_user"),
             "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "medcare_password"),
-            "HOST": "db",
-            "PORT": "5432",
+            "HOST": os.environ.get("POSTGRES_HOST", "db"),
+            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
         }
     }
 else:

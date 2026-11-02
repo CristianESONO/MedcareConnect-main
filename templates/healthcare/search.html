@@ -1566,7 +1566,7 @@
   })();
 
   /* ─── Slider de prix (desktop + mobile) ────────────────────────── */
-  var PMIN={{ global_price_min|default:"0" }}, PMAX={{ global_price_max|default:"500000" }};
+  var PMIN={{ global_price_min|default:"0"|floatformat:"0u" }}, PMAX={{ global_price_max|default:"500000"|floatformat:"0u" }};
   var curMin={{ price_min_val|default:"0" }}||PMIN, curMax={{ price_max_val|default:"0" }}||PMAX;
   function fmt(v){return Math.round(v).toLocaleString('fr-FR');}
   function initSlider(elId, lblMinId, lblMaxId, inpMinId, inpMaxId){
