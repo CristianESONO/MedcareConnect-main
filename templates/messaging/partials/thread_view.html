@@ -23,7 +23,11 @@
   <header class="mc-thread-head">
 
     <div class="mc-thread-av" aria-hidden="true">
-      {% if org %}{{ org.name|make_list|first|upper }}{% else %}M{% endif %}
+      {% if user == conversation.patient %}
+        {% if org %}{{ org.name|make_list|first|upper }}{% else %}M{% endif %}
+      {% else %}
+        {{ conversation.patient.display_name|make_list|first|upper|default:"P" }}
+      {% endif %}
     </div>
     <div class="min-w-0 flex-1">
       <div class="mc-thread-hn truncate">
