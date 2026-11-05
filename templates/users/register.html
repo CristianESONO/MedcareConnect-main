@@ -30,7 +30,7 @@
 
 .wrap { max-width: 720px; margin: 30px auto; padding: 0 18px 70px; }
 .card { background: #fff; border-radius: 22px; box-shadow: 0 10px 34px rgba(15,23,42,.07); padding: 34px 38px; }
-.card h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 27px; color: var(--navy); text-align: center; margin: 0 0 4px; }
+.card h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(20px, 3.2vw, 24px); color: var(--navy); text-align: center; margin: 0 0 4px; white-space: nowrap; letter-spacing: -0.01em; }
 .subt { text-align: center; color: var(--g500); font-size: 13.5px; margin: 0 0 26px; }
 
 label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--navy); font-weight: 700; margin: 0 0 7px; text-align: left; }
@@ -121,7 +121,8 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
 .hide { display: none !important; }
 
 @media(max-width:640px) {
-  .card { padding: 24px 20px; }
+  .card { padding: 24px 18px; }
+  .card h1 { font-size: clamp(17px, 4.8vw, 21px); white-space: normal; }
   .row, .fork, .pick3, .pick2, .chkgrid { grid-template-columns: 1fr; }
 }
 </style>
@@ -136,7 +137,7 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
 <section id="inscription-form" class="sec landing-register-sec">
   <div class="wrap">
     <div class="card">
-      <h1 id="title">Créer un compte prestataire</h1>
+      <h1 id="title">Créer un compte établissement</h1>
       <div class="subt" id="subt">Renseignez vos informations pour créer votre fiche publique.</div>
 
       <form method="POST" action="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}" enctype="multipart/form-data">
