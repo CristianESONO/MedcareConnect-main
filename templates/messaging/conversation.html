@@ -2,23 +2,64 @@
 {% load static %}
 {% block title %}Conversation · {{ conversation.dossier_label }}{% endblock %}
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v16">
-<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v16">
+<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v18">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v18">
+<style>
+  #dash-main.dash-main--chat {
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    background: #f8fafc !important;
+  }
+  .dash-chat-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .dash-chat-container .pac-main-head {
+    border-radius: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .dash-chat-container .mc-chat-page {
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 100%;
+    gap: 0;
+    padding: 0;
+  }
+  .dash-chat-container .mc-thread {
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    flex: 1 1 0%;
+  }
+  .dash-chat-container .mc-thread-chat {
+    max-height: none !important;
+    flex: 1 1 0% !important;
+  }
+</style>
 {% endblock %}
-{% block dash_content %}
-<div class="w-full max-w-5xl mx-auto pb-8">
-  <header class="pac-main-head mb-4 rounded-xl">
+
+{% block dash_main_extra_class %} dash-main--chat{% endblock %}
+
+{% block dash_content_wrapper %}
+<div class="dash-chat-container">
+  <header class="pac-main-head">
     <div class="pac-head-left">
       <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'messaging:inbox' %}'; }" class="pac-head-back-btn" aria-label="Retour">
         <i class="ti ti-arrow-left" aria-hidden="true"></i>
       </button>
       <h1 class="pac-main-title" id="pac-content-title">{{ conversation.patient.display_name|default:"Patient" }}</h1>
-    </div>
-    <div class="flex items-center gap-2">
-      <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex active" title="Messagerie">
-        <i class="ti ti-mail" aria-hidden="true"></i> Messages
-        {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:4px">{{ unread_messages }}</span>{% endif %}
-      </a>
     </div>
   </header>
   <div class="mc-chat-page">

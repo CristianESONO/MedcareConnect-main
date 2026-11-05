@@ -378,10 +378,12 @@
   {% include "includes/_prestataire_app_drawer.html" %}
 
   <!-- ===== MAIN CONTENT ===== -->
-  <div id="dash-main" class="flex-1 bg-gray-50">
+  <div id="dash-main" class="flex-1 bg-gray-50{% block dash_main_extra_class %}{% endblock %}">
+    {% block dash_content_wrapper %}
     <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
       {% block dash_content %}{% endblock %}
     </div>
+    {% endblock %}
   </div>
 
 </div>

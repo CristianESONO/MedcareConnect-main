@@ -17,12 +17,15 @@
   <div class="pac-main">
     <header class="pac-main-head">
       <div class="pac-head-left">
+        {% block pac_head_back %}
         <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'healthcare:search' %}'; }" class="pac-head-back-btn" aria-label="Retour">
           <i class="ti ti-arrow-left" aria-hidden="true"></i>
         </button>
+        {% endblock %}
         <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
       </div>
       <div class="flex items-center gap-2">
+        {% block pac_head_actions %}
         <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
           <i class="ti ti-mail" aria-hidden="true"></i> Messages
           {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
@@ -30,6 +33,7 @@
         <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
           <i class="ti ti-search" aria-hidden="true"></i> Prestations
         </a>
+        {% endblock %}
       </div>
     </header>
     <div class="pac-main-body" id="pac-content">
