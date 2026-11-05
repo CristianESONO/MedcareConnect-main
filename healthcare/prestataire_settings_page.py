@@ -51,7 +51,7 @@ TEAM_ROLE_LABELS = {
 }
 
 DASHBOARD_PERIOD_CHOICES = ("7j", "30j", "total")
-LOCALE_CHOICES = ("fr", "wo", "en")
+LOCALE_CHOICES = ("fr",)
 CURRENCY_CHOICES = ("XOF", "EUR", "USD")
 
 

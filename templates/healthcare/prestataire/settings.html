@@ -162,9 +162,7 @@
       <div>
         <label class="param-field-label" for="settings_locale">Langue du dashboard</label>
         <select class="param-input" name="settings_locale" id="settings_locale">
-          <option value="fr" {% if settings_locale == "fr" %}selected{% endif %}>Français</option>
-          <option value="wo" {% if settings_locale == "wo" %}selected{% endif %}>Wolof (bientôt disponible)</option>
-          <option value="en" {% if settings_locale == "en" %}selected{% endif %}>English (coming soon)</option>
+          <option value="fr" {% if settings_locale == "fr" or not settings_locale %}selected{% endif %}>Français</option>
         </select>
       </div>
       <div>

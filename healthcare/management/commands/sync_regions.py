@@ -45,3 +45,4 @@ class Command(BaseCommand):
                 f"{existing_count} déjà existante(s). Total en base : {total}/14."
             )
         )
+
