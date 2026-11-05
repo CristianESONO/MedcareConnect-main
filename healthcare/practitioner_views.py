@@ -693,23 +693,53 @@ def prestataire_panels(request):
     panels = ExamenPanel.objects.filter(organisme=org).prefetch_related("actes", "actes__acte")
 
     # Actes disponibles pour la recherche JS et le constructeur
-    actes_qs = PrestataireActe.objects.filter(
-        organisme=org
-    ).select_related("acte", "acte__service_medical_category").order_by("acte__name")
-    actes_data = [
-        {
-            "id": pa.pk,
-            "nom": pa.acte.name,
-            "cat": (
-                pa.acte.service_medical_category.name
-                if pa.acte.service_medical_category
-                else "Biologie générale"
-            ),
-            "prix": float(pa.price) if pa.price else 0,
-            "actif": bool(pa.is_available),
-        }
-        for pa in actes_qs
-    ]
+    # Inclut l'ensemble des actes médicaux de référence MedCare (5 piliers, hors ambulance),
+    # enrichis avec le statut et le tarif configuré par l'organisme s'il existe.
+    from healthcare.models import ActeMedical
+    pa_by_acte_id = {
+        pa.acte_id: pa
+        for pa in PrestataireActe.objects.filter(organisme=org).select_related("acte")
+    }
+    all_actes = (
+        ActeMedical.objects.filter(is_active=True)
+        .exclude(service_medical_category__slug="ambulance-medicalisee")
+        .filter(service_medical_category__order__lte=10)
+        .select_related("service_medical_category", "parent_service")
+        .order_by("service_medical_category__order", "name")
+    )
+    actes_data = []
+    for am in all_actes:
+        pa = pa_by_acte_id.get(am.id)
+        if pa:
+            actes_data.append({
+                "id": pa.pk,
+                "acte_id": am.id,
+                "nom": am.name,
+                "cat": (
+                    am.service_medical_category.name
+                    if am.service_medical_category
+                    else "Général"
+                ),
+                "sous_cat": am.parent_service.name if am.parent_service else "",
+                "prix": float(pa.price) if pa.price else (float(am.reference_price) if am.reference_price else 0),
+                "actif": bool(pa.is_available),
+                "configured": True,
+            })
+        else:
+            actes_data.append({
+                "id": f"am_{am.id}",
+                "acte_id": am.id,
+                "nom": am.name,
+                "cat": (
+                    am.service_medical_category.name
+                    if am.service_medical_category
+                    else "Général"
+                ),
+                "sous_cat": am.parent_service.name if am.parent_service else "",
+                "prix": float(am.reference_price) if am.reference_price else 0,
+                "actif": False,
+                "configured": False,
+            })
     actes_json = json.dumps(actes_data, ensure_ascii=False)
 
     # Sérialisation des panels existants pour affichage dynamique conforme V1
@@ -727,6 +757,7 @@ def prestataire_panels(request):
             "source": "Panel structure" if p.kind == "panel" else "Ticket structure",
             "token": p.token,
             "public_path": p.get_public_path(),
+            "search_url": p.get_search_url(),
             "total_price": float(p.total_price),
             "views_count": p.views_count,
             "is_prestation_ticket": False,
@@ -747,6 +778,7 @@ def prestataire_panels(request):
             "source": "Ticket de prestation",
             "token": pt.identifiant,
             "public_path": f"/t/{pt.identifiant}",
+            "search_url": pt.get_search_url(),
             "total_price": float(pt.price) if pt.price else 0,
             "views_count": pt.views_count,
             "is_prestation_ticket": True,
@@ -822,8 +854,25 @@ def panel_create(request):
     # Attacher les actes sélectionnés
     selected_pas = []
     if acte_ids_raw:
-        acte_ids = [int(x) for x in acte_ids_raw.split(",") if x.strip().isdigit()]
-        selected_pas.extend(list(PrestataireActe.objects.filter(pk__in=acte_ids, organisme=org)))
+        for x in acte_ids_raw.split(","):
+            x = x.strip()
+            if not x:
+                continue
+            if x.isdigit():
+                pa = PrestataireActe.objects.filter(pk=int(x), organisme=org).first()
+                if pa and pa not in selected_pas:
+                    selected_pas.append(pa)
+            elif x.startswith("am_") and x[3:].isdigit():
+                am_id = int(x[3:])
+                am = ActeMedical.objects.filter(pk=am_id).first()
+                if am:
+                    pa, _ = PrestataireActe.objects.get_or_create(
+                        organisme=org,
+                        acte=am,
+                        defaults={"price": am.reference_price or 0, "is_available": True}
+                    )
+                    if pa and pa not in selected_pas:
+                        selected_pas.append(pa)
 
     if acte_noms_raw:
         noms = [n.strip() for n in acte_noms_raw.split("|||") if n.strip()]
@@ -837,7 +886,7 @@ def panel_create(request):
                     pa, _ = PrestataireActe.objects.get_or_create(
                         organisme=org,
                         acte=am,
-                        defaults={"price": 0, "is_available": True}
+                        defaults={"price": am.reference_price or 0, "is_available": True}
                     )
             if pa and pa not in selected_pas:
                 selected_pas.append(pa)

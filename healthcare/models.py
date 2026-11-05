@@ -1277,6 +1277,19 @@ class ExamenPanel(models.Model):
     def get_public_path(self):
         return f"/t/{self.token}"
 
+    def get_search_url(self):
+        """
+        Génère l'URL de recherche d'établissements proposant les actes du panel.
+        Permet au patient de retrouver les structures comme dans « Trouver un examen ».
+        """
+        from urllib.parse import urlencode
+        from django.urls import reverse
+        acte_ids = list(self.actes.filter(acte__isnull=False).values_list("acte_id", flat=True).distinct())
+        if not acte_ids:
+            return reverse("healthcare:search")
+        query = urlencode([("acte", aid) for aid in acte_ids])
+        return f"{reverse('healthcare:search')}?{query}"
+
     @property
     def total_price(self):
         total = sum(pa.price or 0 for pa in self.actes.all())
@@ -1380,6 +1393,15 @@ class PrestationTicket(models.Model):
 
     def get_public_path(self):
         return f"/t/{self.identifiant}"
+
+    def get_search_url(self):
+        """URL de recherche d'organismes proposant l'acte du ticket."""
+        from urllib.parse import urlencode
+        from django.urls import reverse
+        if not self.acte_id:
+            return reverse("healthcare:search")
+        query = urlencode([("acte", self.acte_id)])
+        return f"{reverse('healthcare:search')}?{query}"
 
 
 class PractitionerAffiliation(models.Model):

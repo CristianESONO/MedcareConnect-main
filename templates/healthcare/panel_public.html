@@ -110,10 +110,11 @@ body{font-family:'DM Sans',sans-serif;background:#eef3f7;color:var(--ink);min-he
 
   <!-- CTA -->
   <div class="panel-cta-stack">
+    <a href="{{ panel.get_search_url }}" class="panel-btn-primary" style="background:linear-gradient(135deg,#0d9488,#0a5c8a);text-decoration:none"><i class="ti ti-calendar"></i> Réserver mes actes (trouver les structures)</a>
     <form method="post" style="display:contents">
       {% csrf_token %}
       <input type="hidden" name="action" value="add_cart">
-      <button type="submit" class="panel-btn-primary"><i class="ti ti-shopping-cart"></i> Ajouter au panier &amp; demander un devis</button>
+      <button type="submit" class="panel-btn-secondary"><i class="ti ti-shopping-cart"></i> Ajouter au panier &amp; demander un devis à {{ org.name }}</button>
     </form>
     <a href="{{ start_conv_url }}" class="panel-btn-secondary"><i class="ti ti-mail"></i> Contacter {{ org.name }}</a>
     <a href="/sante/{{ org.slug }}/" class="panel-btn-secondary"><i class="ti ti-search"></i> Voir tous les actes de {{ org.name }}</a>

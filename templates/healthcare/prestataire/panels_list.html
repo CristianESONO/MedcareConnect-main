@@ -657,7 +657,17 @@
       <label class="field-label" style="margin:0" id="lbl-actes-count">Actes du panel <span style="color:var(--red)">*</span> <span style="color:var(--g400);font-weight:500">(min. 2)</span></label>
       <span style="font-size:11px;color:var(--g400)" id="pb-count">0 acte</span>
     </div>
-    <input class="search-input" id="pb-search" type="text" placeholder="Filtrer un acte du catalogue..." oninput="renderBuilderActes(this.value)" style="margin-bottom:10px">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input class="search-input" id="pb-search" type="text" placeholder="Filtrer un acte du catalogue (ex: NFS, radio, ECG, détartrage)..." oninput="renderBuilderActes(this.value, document.getElementById('pb-cat-filter').value)" style="flex:1">
+      <select id="pb-cat-filter" class="search-input" style="width:auto;min-width:140px;font-size:12px;padding:6px 10px" onchange="renderBuilderActes(document.getElementById('pb-search').value, this.value)">
+        <option value="">Tous les piliers</option>
+        <option value="Biologie médicale">Biologie médicale</option>
+        <option value="Imagerie médicale">Imagerie médicale</option>
+        <option value="Explorations fonctionnelles">Explorations</option>
+        <option value="Soins spécialisés">Soins spécialisés</option>
+        <option value="Soins dentaires">Dentaire</option>
+      </select>
+    </div>
     <div id="pb-actes-list" style="border:1px solid var(--g200);border-radius:10px;max-height:300px;overflow-y:auto"></div>
     <div id="pb-error" style="display:none;font-size:11.5px;color:var(--red);background:var(--red-l);padding:8px 12px;border-radius:8px;margin-top:10px"></div>
   </div>
@@ -781,6 +791,20 @@ const MEDCARE_PANELS_BASE = [
     freq: 'Tous les 2 ans',
     desc: 'Glycémie à jeun, HbA1c — dépistage à partir de 40 ans ou surpoids (OMS).',
     actes: ['Glycémie à jeun', 'HbA1c']
+  },
+  {
+    id: 'base_cardio',
+    nom: 'Bilan de santé cardio-respiratoire',
+    freq: 'Sur prescription / Annuel',
+    desc: 'ECG standard 12 dérivations, Radio thorax, NFS, Cholestérol total — dépistage cœur/poumons.',
+    actes: ['ECG standard 12 dérivations', 'Radiographie thorax', 'NFS / Hémogramme', 'Cholestérol total']
+  },
+  {
+    id: 'base_dentaire',
+    nom: 'Bilan bucco-dentaire complet & prévention',
+    freq: 'Annuel',
+    desc: 'Consultation dentaire standard, Détartrage complet — santé et prévention dentaire.',
+    actes: ['Consultation dentaire standard', 'Détartrage complet']
   }
 ];
 
@@ -1018,6 +1042,8 @@ function openBuilderWith(data, editingId) {
   document.getElementById('pb-freq').value = data.freq || (pbKind === 'ticket' ? 'Acte unique' : '');
   document.getElementById('pb-error').style.display = 'none';
   document.getElementById('pb-search').value = '';
+  const catFilterEl = document.getElementById('pb-cat-filter');
+  if (catFilterEl) catFilterEl.value = '';
 
   setBuilderKind(pbKind);
 
@@ -1030,13 +1056,15 @@ function closePanelBuilder() {
   document.getElementById('pb-panel').classList.remove('open');
 }
 
-function renderBuilderActes(filter) {
+function renderBuilderActes(filter, catFilter) {
   const f = (filter || '').trim().toLowerCase();
+  const cf = (catFilter || '').trim();
   const groups = {};
   const isTicket = (pbKind === 'ticket');
 
   CATALOGUE_ACTES.forEach(a => {
-    const match = f ? a.nom.toLowerCase().includes(f) : true;
+    if (cf && a.cat !== cf) return;
+    const match = f ? (a.nom.toLowerCase().includes(f) || (a.sous_cat && a.sous_cat.toLowerCase().includes(f))) : true;
     if (!match) return;
     const cat = a.cat || 'Général';
     (groups[cat] = groups[cat] || []).push(a);
@@ -1053,11 +1081,12 @@ function renderBuilderActes(filter) {
     <div class="pb-cat-lbl">${escapeHtml(cat)}</div>
     ${groups[cat].map(a => {
       const checked = pbSelected.has(a.nom) ? 'checked' : '';
-      const off = !a.actif ? `<span class="pb-acte-off">à activer</span>` : '';
+      const off = !a.actif ? `<span class="pb-acte-off">${a.configured ? 'inactif' : 'catalogue général'}</span>` : '';
+      const subInfo = a.sous_cat ? `<span style="font-size:10px;color:var(--g400)">(${escapeHtml(a.sous_cat)})</span>` : '';
       const inputType = isTicket ? 'radio' : 'checkbox';
       return `<label class="pb-acte-row">
         <input type="${inputType}" name="builder_acte_input" ${checked} onchange="toggleBuilderActe(this.checked, '${escapeAttr(a.nom)}')">
-        <span class="pb-acte-name">${escapeHtml(a.nom)} ${off}</span>
+        <span class="pb-acte-name">${escapeHtml(a.nom)} ${subInfo} ${off}</span>
         <span class="pb-acte-prix">${fmtF(a.prix)} F</span>
       </label>`;
     }).join('')}
@@ -1275,9 +1304,9 @@ function previewPanelPatient(id) {
       </div>
     </div>
 
-    <button type="button" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:13px;cursor:pointer;margin-top:14px;font-family:'DM Sans',sans-serif">
-      📅 Réserver mon acte
-    </button>
+    <a href="${p.search_url || '/sante/recherche/'}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:13px;cursor:pointer;margin-top:14px;font-family:'DM Sans',sans-serif;text-decoration:none;box-sizing:border-box">
+      📅 Réserver mes actes (trouver les structures)
+    </a>
 
     <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:12px;padding:12px 14px;margin-top:12px">
       <div style="font-size:11px;font-weight:800;color:var(--blue);margin-bottom:6px;display:flex;align-items:center;gap:6px">
