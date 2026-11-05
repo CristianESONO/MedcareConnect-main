@@ -72,10 +72,20 @@
     }, 300);
   };
 
+  var defaultMode = (function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
+    if (urlType === 'patient' || urlType === 'particulier') return 'patient';
+    var activeBtn = document.querySelector('.toggle__btn[aria-selected="true"]');
+    if (activeBtn && activeBtn.dataset.mode) return activeBtn.dataset.mode;
+    return 'structure';
+  })();
+
+  body.setAttribute('data-mode', defaultMode);
   window.movePill = movePill;
   window.addEventListener('resize', movePill);
-  window.addEventListener('load', function(){ movePill(); moveForm('patient'); observeReveals(stages.patient); });
-  movePill(); moveForm('patient'); observeReveals(stages.patient);
+  window.addEventListener('load', function(){ movePill(); moveForm(defaultMode); observeReveals(stages[defaultMode]); });
+  movePill(); moveForm(defaultMode); observeReveals(stages[defaultMode]);
 
 
   /* Retour haut */

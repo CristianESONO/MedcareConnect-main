@@ -666,8 +666,13 @@ document.querySelectorAll('.toggle__btn').forEach(function(btn) {
   });
 });
 
-// Initialisation au chargement
+// Initialisation immédiate au chargement du DOM (évite le saut visuel / flicker)
 document.addEventListener('DOMContentLoaded', function() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
+  var initMode = (urlType === 'patient' || urlType === 'particulier') ? 'patient' : '{{ initial_mode|default:"structure" }}';
+  applyMode(initMode, false);
+
   // Restaurer les champs sélectionnés si rechargement après erreur de formulaire
   var selectedProf = document.getElementById('id_praticien_profession') ? document.getElementById('id_praticien_profession').value : '';
   if (selectedProf) {
@@ -679,22 +684,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var target = document.getElementById('inscription-form');
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-});
-
-// Initialisation du mode APRÈS le handler window.load du marketing JS
-// (qui remet tout sur "patient" — on doit l'écraser ensuite)
-window.addEventListener('load', function() {
-  var urlParams = new URLSearchParams(window.location.search);
-  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
-
-  setTimeout(function() {
-    if (urlType === 'patient' || urlType === 'particulier') {
-      applyMode('patient', true);
-    } else {
-      // Soignant par défaut : true = switchMode marketing pour afficher la section Partenaire Pionnier
-      applyMode('structure', true);
-    }
-  }, 80);
 });
 
 </script>

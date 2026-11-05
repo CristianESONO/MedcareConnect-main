@@ -3,15 +3,15 @@
   <div class="hdr__in">
     <div class="toggle" role="tablist" aria-label="Choisir votre profil">
       <span class="toggle__pill" id="pill"></span>
-      <button class="toggle__btn" role="tab" aria-selected="true" data-mode="patient" onclick="switchMode('patient')"><span class="dot"><i class="ti ti-search"></i></span> Patient</button>
-      <button class="toggle__btn" role="tab" aria-selected="false" data-mode="structure" onclick="switchMode('structure')"><span class="dot"><i class="ti ti-building-hospital"></i></span> Soignant</button>
+      <button class="toggle__btn" role="tab" aria-selected="{% if initial_mode == 'patient' %}true{% else %}false{% endif %}" data-mode="patient" onclick="switchMode('patient')"><span class="dot"><i class="ti ti-search"></i></span> Patient</button>
+      <button class="toggle__btn" role="tab" aria-selected="{% if initial_mode == 'patient' %}false{% else %}true{% endif %}" data-mode="structure" onclick="switchMode('structure')"><span class="dot"><i class="ti ti-building-hospital"></i></span> Soignant</button>
 
     </div>
   </div>
 </header>
 
 <!-- ================= STAGE PATIENT ================= -->
-<section class="stage stage--patient is-active" id="stage-patient">
+<section class="stage stage--patient{% if initial_mode == "patient" %} is-active{% endif %}" id="stage-patient">
 
   <!-- HERO PATIENT (clair) -->
   <div class="hero">
@@ -142,7 +142,7 @@
 </section>
 
 <!-- ================= STAGE STRUCTURE ================= -->
-<section class="stage stage--structure" id="stage-structure">
+<section class="stage stage--structure{% if initial_mode != "patient" %} is-active{% endif %}" id="stage-structure">
 
   <!-- HERO STRUCTURE (navy premium) -->
   <div class="hero">

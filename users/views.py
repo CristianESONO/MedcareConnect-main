@@ -31,9 +31,10 @@ def _after_patient_login_redirect(request, next_url=None):
 from medcare_connect.views import _home_vitrine_context
 
 
-def _register_context(form):
+def _register_context(form, initial_mode="structure"):
     ctx = _home_vitrine_context()
     ctx["form"] = form
+    ctx["initial_mode"] = initial_mode
     return ctx
 
 
@@ -52,7 +53,8 @@ def register(request):
                     "Inscription temporairement indisponible : aucune formule d'abonnement "
                     "n'est configurée. Contactez l'administrateur.",
                 )
-                return render(request, "users/register.html", _register_context(form))
+                post_mode = "patient" if form.data.get("user_type") == "patient" else "structure"
+                return render(request, "users/register.html", _register_context(form, initial_mode=post_mode))
             with transaction.atomic():
                 user = form.save()
                 if user.is_patient:
@@ -154,9 +156,11 @@ def register(request):
         ).lower()
         if initial_type in ("patient", "particulier"):
             form = UserRegistrationForm(initial={"user_type": "patient"})
+            initial_mode = "patient"
         else:
             form = UserRegistrationForm(initial={"user_type": "prestataire"})
-    return render(request, "users/register.html", _register_context(form))
+            initial_mode = "structure"
+    return render(request, "users/register.html", _register_context(form, initial_mode=initial_mode))
 
 
 def login_view(request):
