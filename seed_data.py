@@ -42,7 +42,23 @@ from healthcare.organisme_types import sync_organisme_types
 def seed_types_regions() -> None:
     print("Types d'organisme & régions...")
     sync_organisme_types()
-    for name in ["Dakar", "Thiès", "Saint-Louis", "Ziguinchor", "Kaolack", "Diourbel"]:
+    senegal_regions = [
+        "Dakar",
+        "Diourbel",
+        "Fatick",
+        "Kaffrine",
+        "Kaolack",
+        "Kédougou",
+        "Kolda",
+        "Louga",
+        "Matam",
+        "Saint-Louis",
+        "Sédhiou",
+        "Tambacounda",
+        "Thiès",
+        "Ziguinchor",
+    ]
+    for name in senegal_regions:
         Region.objects.get_or_create(name=name)
 
 
