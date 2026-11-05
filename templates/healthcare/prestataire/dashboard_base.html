@@ -327,16 +327,16 @@
 
     {% if org %}
     <!-- Pied de sidebar compact : Profil public & Statut -->
-    <div class="border-t border-gray-100 px-3 py-2 bg-gray-50/50 flex items-center {% if org.is_praticien %}justify-end{% else %}justify-between{% endif %}">
+    <div class="border-t border-gray-100 px-3 py-2 bg-gray-50/50 flex items-center {% if org.is_praticien %}hidden{% else %}justify-between{% endif %}">
       {% if not org.is_praticien %}
       <a href="{% url 'healthcare:organisme_detail' org.slug %}" target="_blank" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-gray-600 hover:text-primary-700 transition" title="Ouvrir la page publique vue par les patients">
         <i class="ti ti-external-link text-xs"></i>
         <span>Profil public</span>
       </a>
-      {% endif %}
       <span class="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200" title="Membre du programme pionnier MedCare">
-        <i class="ti ti-star text-[10px]"></i> {% if org.is_praticien %}Praticien Pionnier{% else %}Pionnier{% endif %}
+        <i class="ti ti-star text-[10px]"></i> Pionnier
       </span>
+      {% endif %}
     </div>
     {% endif %}
   </aside>
