@@ -168,8 +168,18 @@
 .stage--patient .lead { color: var(--muted); }
 .stage--patient .btn--primary { background: var(--green); box-shadow: 0 10px 26px rgba(20,184,122,.32); }
 .stage--patient .btn--primary:hover { background: var(--green-dk); box-shadow: 0 14px 32px rgba(20,184,122,.4); }
-.stage--patient .btn--ghost { color: var(--navy); border: 1.6px solid #cfe3e1; }
-.stage--patient .btn--ghost:hover { border-color: var(--teal); }
+.stage--patient .btn--ghost {
+  color: var(--navy);
+  background: #ffffff;
+  border: 1.8px solid var(--navy);
+  box-shadow: 0 4px 14px rgba(10, 92, 138, 0.10);
+}
+.stage--patient .btn--ghost:hover {
+  background: var(--navy);
+  color: #ffffff;
+  border-color: var(--navy);
+  box-shadow: 0 6px 20px rgba(10, 92, 138, 0.20);
+}
 
 /* ---- HERO STRUCTURE (navy premium) ---- */
 .stage--structure .hero {
