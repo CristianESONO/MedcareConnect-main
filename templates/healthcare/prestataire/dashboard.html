@@ -262,6 +262,7 @@
 </div>
 {% endif %}
 
+{% if not org.is_praticien %}
 <!-- ═════════════ Répartition assurances ═════════════ -->
 <div class="mt-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
   <div class="border-b border-gray-100 px-6 py-4">
@@ -282,6 +283,7 @@
   <p class="px-6 py-8 text-center text-sm text-gray-400">Pas encore de panier sur cette période.</p>
   {% endif %}
 </div>
+{% endif %}
 
 {% if not org.is_praticien %}
 <!-- ═════════════ MedPlaque NFC résumé ═════════════ -->
