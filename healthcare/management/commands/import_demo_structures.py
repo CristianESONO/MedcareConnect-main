@@ -13,6 +13,11 @@ class Command(BaseCommand):
     help = 'Importe les structures depuis le fichier DEMO_DESKTOP_PATIENT.html'
 
     def handle(self, *args, **options):
+        import os
+        from django.core.management.base import CommandError
+        from django.db import connection
+        if connection.vendor != 'sqlite' and os.environ.get('ALLOW_DEMO_IMPORT') != '1':
+            raise CommandError('Refus : cette commande crée des structures de démonstration visibles et réinitialise des mots de passe ; elle ne doit pas tourner sur la base de production.')
         # Données extraites du fichier DEMO_DESKTOP_PATIENT.html
         STRUCTURES = [
             {
