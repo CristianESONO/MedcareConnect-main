@@ -68,16 +68,6 @@
           <button type="button" class="pac-taux-btn" data-pac-global-pct="100">100 %</button>
         </div>
 
-        {# Bloc "Affiner par type d'acte" retiré per spec tri-tarifs (Expression de besoin §4.3)
-           Les taux par catégorie sont gérés côté structure à l'import — le patient ne saisit
-           qu'un taux global. Garder le code ci-dessous en commentaire pour rollback éventuel.
-        {% if insurance_form.category_rate_fields %}
-        <details class="pac-coverage-details" {% if patient_profile.insurance_coverage_by_category %}open{% endif %}>
-          <summary>Affiner par type d'acte (optionnel)</summary>
-          ...
-        </details>
-        {% endif %}
-        #}
       </div>
 
       <button type="submit" class="pac-btn-save" style="margin-top:14px">Enregistrer ma couverture</button>
