@@ -2,19 +2,33 @@
 {% load static %}
 {% block title %}Conversation · {{ conversation.dossier_label }}{% endblock %}
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v16">
-<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v16">
+<link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v19">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v19">
+<style>
+  .dash-main-head-bar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+</style>
 {% endblock %}
+
+{% block dash_header %}
+<header class="pac-main-head dash-main-head-bar">
+  <div class="pac-head-left">
+    <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'messaging:inbox' %}'; }" class="pac-head-back-btn" aria-label="Retour">
+      <i class="ti ti-arrow-left" aria-hidden="true"></i>
+    </button>
+    <h1 class="pac-main-title" id="pac-content-title">{{ conversation.patient.display_name|default:"Patient" }}</h1>
+  </div>
+</header>
+{% endblock %}
+
 {% block dash_content %}
 <div class="w-full max-w-5xl mx-auto pb-8">
-  <header class="pac-main-head mb-4 rounded-xl">
-    <div class="pac-head-left">
-      <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'messaging:inbox' %}'; }" class="pac-head-back-btn" aria-label="Retour">
-        <i class="ti ti-arrow-left" aria-hidden="true"></i>
-      </button>
-      <h1 class="pac-main-title" id="pac-content-title">{{ conversation.patient.display_name|default:"Patient" }}</h1>
-    </div>
-  </header>
   <div class="mc-chat-page">
     {% include "messaging/partials/thread_view.html" %}
   </div>
