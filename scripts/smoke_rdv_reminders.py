@@ -18,6 +18,11 @@ import django
 
 django.setup()
 
+from django.db import connection
+
+if connection.vendor != "sqlite":
+    sys.exit("Refus : ce smoke test crée des comptes et des données, il ne doit pas tourner sur PostgreSQL (production).")
+
 from datetime import timedelta
 
 from django.test import Client
