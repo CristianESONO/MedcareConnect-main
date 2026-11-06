@@ -10,6 +10,11 @@ class Command(BaseCommand):
     help = "Crée les comptes testpatient / prestataire pour le serveur E2E Playwright."
 
     def handle(self, *args, **options):
+        import os
+        from django.core.management.base import CommandError
+        from django.db import connection
+        if connection.vendor != 'sqlite' and os.environ.get('ALLOW_DEMO_IMPORT') != '1':
+            raise CommandError('Refus : cette commande crée des comptes de test ; elle ne doit pas tourner sur la base de production.')
         plan, _ = SubscriptionPlan.objects.get_or_create(
             slug="e2e-plan",
             defaults={"name": "Plan E2E"},

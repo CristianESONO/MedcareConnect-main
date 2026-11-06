@@ -21,6 +21,12 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medcare_connect.settings")
 django.setup()
 
+import sys
+from django.db import connection
+
+if connection.vendor != 'sqlite' and os.environ.get('ALLOW_DEMO_IMPORT') != '1':
+    sys.exit('Refus : seed_data.py crée des structures et des comptes de démonstration ; il ne doit pas tourner sur la base de production.')
+
 from users.models import User, PatientProfile
 from healthcare.models import (
     TypeOrganisme,
