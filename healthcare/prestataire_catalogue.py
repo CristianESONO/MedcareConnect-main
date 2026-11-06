@@ -448,6 +448,24 @@ def prestataire_leaf_actes_queryset():
     )
 
 
+def _group_by_parent(pname: str, actes: list) -> list:
+    """Regroupe des actes par sous-famille (parent_service), sans liste de référence."""
+    by_parent: dict[tuple[int, str], list] = defaultdict(list)
+    for a in actes:
+        if a.parent_service_id:
+            key = (a.parent_service_id, a.parent_service.name)
+        else:
+            key = (0, "Sans sous-famille")
+        by_parent[key].append(a)
+
+    subgroups = []
+    for pk_label in sorted(by_parent.keys(), key=lambda t: _type_sort_key(pname, t[1])):
+        _pk, label = pk_label
+        chunk = sorted(by_parent[pk_label], key=lambda x: _acte_sort_key(pname, label, x.name))
+        subgroups.append({"label": label, "actes": chunk, "icon": icon_for_subfamily_label(label)})
+    return subgroups
+
+
 def _actes_to_subgroups(pilier: ServiceMedical, actes: list) -> list:
     """Regroupe des actes feuilles par sous-famille (niveau 2), ordre référentiel démo."""
     pillar_def = _pillar_def_for_service(pilier)
@@ -467,44 +485,26 @@ def _actes_to_subgroups(pilier: ServiceMedical, actes: list) -> list:
                 chunk.append(acte)
             if chunk:
                 by_type[label] = chunk
+
         if by_type:
-            return [
-                {
-                    "label": label,
-                    "actes": chunk,
-                    "icon": icon_for_subfamily_label(label),
-                }
+            subgroups = [
+                {"label": label, "actes": chunk, "icon": icon_for_subfamily_label(label)}
                 for label, chunk in by_type.items()
             ]
+            # Actes du référentiel non couverts par la liste codée en dur :
+            # on les affiche à la suite, regroupés par sous-famille.
+            rest = [a for a in actes if a.pk not in used_ids]
+            if rest:
+                by_label = {sg["label"]: sg for sg in subgroups}
+                for extra in _group_by_parent(pilier.name, rest):
+                    if extra["label"] in by_label:
+                        by_label[extra["label"]]["actes"].extend(extra["actes"])
+                    else:
+                        subgroups.append(extra)
+                        by_label[extra["label"]] = extra
+            return subgroups
 
-    pname = pilier.name
-    by_parent: dict[tuple[int, str], list] = defaultdict(list)
-    for a in actes:
-        if a.parent_service_id:
-            key = (a.parent_service_id, a.parent_service.name)
-        else:
-            key = (0, "Sans sous-famille")
-        by_parent[key].append(a)
-
-    subgroups = []
-    parent_keys = sorted(
-        by_parent.keys(),
-        key=lambda t: _type_sort_key(pname, t[1]),
-    )
-    for pk_label in parent_keys:
-        _pk, label = pk_label
-        chunk = sorted(
-            by_parent[pk_label],
-            key=lambda x: _acte_sort_key(pname, label, x.name),
-        )
-        subgroups.append(
-            {
-                "label": label,
-                "actes": chunk,
-                "icon": icon_for_subfamily_label(label),
-            }
-        )
-    return subgroups
+    return _group_by_parent(pilier.name, actes)
 
 
 def service_actes_catalog_rows(service: ServiceMedical) -> list[dict]:
