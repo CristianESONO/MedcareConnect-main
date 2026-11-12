@@ -614,7 +614,8 @@ def cart_fiche_request_devis(request):
     if not org_slug:
         return JsonResponse({"ok": False, "error": "Structure introuvable."}, status=400)
 
-    org = get_object_or_404(OrganismeDeSante, slug=org_slug, is_active=True)
+    org = get_object_or_404(OrganismeDeSante, slug=org_slug, is_active=True,
+                            user__is_active=True, user__user_type="prestataire")
     pa_ids = _prestataire_acte_ids_from_request(request)
     if not pa_ids:
         return JsonResponse(

@@ -428,7 +428,8 @@ def conversation_detail(request, pk):
 
 @login_required
 def start_conversation(request, slug):
-    org = get_object_or_404(OrganismeDeSante, slug=slug, is_active=True)
+    org = get_object_or_404(OrganismeDeSante, slug=slug, is_active=True,
+                            user__is_active=True, user__user_type="prestataire")
     if request.user == org.user:
         django_messages.warning(request, "Vous ne pouvez pas vous envoyer un message.")
         return redirect("healthcare:organisme_detail", slug=slug)
@@ -449,7 +450,8 @@ def start_conversation(request, slug):
 
 @login_required
 def whatsapp_contact(request, slug):
-    org = get_object_or_404(OrganismeDeSante, slug=slug, is_active=True)
+    org = get_object_or_404(OrganismeDeSante, slug=slug, is_active=True,
+                            user__is_active=True, user__user_type="prestataire")
     phone = org.whatsapp_number or org.contact_phone
     if not phone:
         django_messages.error(request, "Ce prestataire n'a pas de numéro WhatsApp configuré.")
