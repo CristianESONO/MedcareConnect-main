@@ -193,15 +193,15 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
         </div>
 
 
-        <!-- Champs Prénom et Nom -->
-        <div class="row" id="row-names">
+        <!-- Champs Prénom et Nom (affichés uniquement pour Praticien indépendant et Patient, masqués pour Structure) -->
+        <div class="row {% if form.account_nature.value != 'praticien' and initial_account != 'praticien' and initial_mode != 'patient' %}hide{% endif %}" id="row-names">
           <div class="f">
-            <label id="lbl-prenom">Prénom du responsable <span class="opt">(optionnel)</span></label>
-            <input type="text" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}" placeholder="Prénom du contact" oninput="autoUser()">
+            <label id="lbl-prenom">Prénom du praticien <span class="req">*</span></label>
+            <input type="text" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}" placeholder="Ex : Cheikh" oninput="autoUser()">
           </div>
           <div class="f">
-            <label id="lbl-nom">Nom du responsable <span class="opt">(optionnel)</span></label>
-            <input type="text" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}" placeholder="Nom du contact" oninput="autoUser()">
+            <label id="lbl-nom">Nom de famille du praticien <span class="req">*</span></label>
+            <input type="text" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}" placeholder="Ex : Diagne" oninput="autoUser()">
           </div>
         </div>
 
@@ -482,6 +482,11 @@ function setAccount(t) {
   if (blkStruct) blkStruct.classList.toggle('hide', t !== 'structure');
   if (blkPrat) blkPrat.classList.toggle('hide', t !== 'praticien');
 
+  var rowNames = document.getElementById('row-names');
+  if (rowNames) {
+    rowNames.classList.toggle('hide', t === 'structure');
+  }
+
   var modeBadge = document.getElementById('mode-badge');
   if (modeBadge) modeBadge.textContent = (t === 'structure') ? 'Mode soignant' : 'Mode praticien';
 
@@ -502,27 +507,25 @@ function setAccount(t) {
 
   var lblPrenom = document.getElementById('lbl-prenom');
   if (lblPrenom) {
-    lblPrenom.innerHTML = (t === 'structure')
-      ? 'Prénom du responsable <span class="opt">(optionnel)</span>'
-      : 'Prénom du praticien <span class="req">*</span>';
+    lblPrenom.innerHTML = 'Prénom du praticien <span class="req">*</span>';
   }
 
   var lblNom = document.getElementById('lbl-nom');
   if (lblNom) {
-    lblNom.innerHTML = (t === 'structure')
-      ? 'Nom du responsable <span class="opt">(optionnel)</span>'
-      : 'Nom de famille du praticien <span class="req">*</span>';
+    lblNom.innerHTML = 'Nom de famille du praticien <span class="req">*</span>';
   }
 
   var prenomInput = document.getElementById('nom-prenom');
   var nomInput = document.getElementById('nom-resp');
   if (prenomInput) {
-    prenomInput.placeholder = (t === 'structure') ? 'Prénom du contact' : 'Ex : Cheikh';
+    prenomInput.placeholder = 'Ex : Cheikh';
     prenomInput.required = (t === 'praticien');
+    if (t === 'structure') prenomInput.value = '';
   }
   if (nomInput) {
-    nomInput.placeholder = (t === 'structure') ? 'Nom du contact' : 'Ex : Diagne';
+    nomInput.placeholder = 'Ex : Diagne';
     nomInput.required = (t === 'praticien');
+    if (t === 'structure') nomInput.value = '';
   }
 
   var lblPhone = document.getElementById('lbl-phone');
@@ -676,6 +679,9 @@ function applyMode(mode, triggerHeaderSwitch) {
     if (forkContainer) forkContainer.classList.add('hide');
     if (blockStructure) blockStructure.classList.add('hide');
     if (blockPraticien) blockPraticien.classList.add('hide');
+
+    var rowNames = document.getElementById('row-names');
+    if (rowNames) rowNames.classList.remove('hide');
 
     if (title) title.textContent = 'Créer un compte Patient';
     if (subt) subt.textContent = 'Vos informations personnelles pour réserver et suivre vos soins.';
