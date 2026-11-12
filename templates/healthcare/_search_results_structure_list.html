@@ -15,6 +15,11 @@
   <p class="empty-txt-m">Sélectionnez un acte dans le menu<br>pour voir toutes les structures qui le proposent.</p>
   {% if list_variant == 'mobile' %}
   <p class="empty-txt-m sipn-empty-hint-sub">Utilisez l'onglet <strong>Prestations</strong> pour parcourir les familles ou la barre de recherche.</p>
+  <div class="mt-4 flex flex-col items-center gap-2">
+    <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-bold shadow-sm active:scale-95 transition cursor-pointer" onclick="if(window._sipnGoPrestationsTab)window._sipnGoPrestationsTab();">
+      <i class="ti ti-apps"></i> Parcourir les familles d'actes
+    </button>
+  </div>
   {% else %}
   <p class="empty-txt-m sipn-empty-hint-sub">Parcourez une famille à gauche ou utilisez la recherche.</p>
   {% endif %}

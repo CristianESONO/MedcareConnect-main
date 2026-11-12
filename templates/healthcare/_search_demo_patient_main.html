@@ -60,14 +60,12 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
                 placeholder="NFS, Glycémie, IRM, Scanner…"
                 class="sipn-search-input border-0 outline-none focus:outline-none focus:ring-0 focus:border-transparent shadow-none"
                 aria-label="Rechercher un acte médical">
-              {% if query %}
               <button type="button" id="btn-clear-q" class="sipn-search-clear" title="Effacer"
-                aria-label="Effacer la recherche">
+                aria-label="Effacer la recherche" {% if not query %}style="display:none;"{% endif %}>
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
               </button>
-              {% endif %}
               <div id="ac-list"></div>
             </div>
           </div>

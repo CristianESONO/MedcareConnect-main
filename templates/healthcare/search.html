@@ -4693,6 +4693,27 @@
     window._sipnApplySelectionGoResults = applySelectionGoResults;
     window._sipnGetSelectedCount = function(){ return selected.size; };
     window._sipnGetSelectedIds = function(){ return Array.from(selected); };
+    window._sipnGetActeName = function(pk){ return acteNames[String(pk)] || null; };
+    window._sipnGetAllActeMap = function(){ return acteNames; };
+    window._sipnAddSelectedActe = function(pk, name){
+      pk = String(pk);
+      if (name) acteNames[pk] = name;
+      if (!selected.has(pk)) {
+        selected.add(pk);
+        piliers.forEach(function(p){ updatePilierBadge(p.id); });
+        if (curPilier) renderPilierPanel(curPilier, document.getElementById('pap-search-inp') ? document.getElementById('pap-search-inp').value : '');
+        updateSelStrip();
+      }
+    };
+    window._sipnRemoveSelectedActe = function(pk){
+      pk = String(pk);
+      if (selected.has(pk)) {
+        selected.delete(pk);
+        piliers.forEach(function(p){ updatePilierBadge(p.id); });
+        if (curPilier) renderPilierPanel(curPilier, document.getElementById('pap-search-inp') ? document.getElementById('pap-search-inp').value : '');
+        updateSelStrip();
+      }
+    };
     window._sipnUpdateClearFab = updateMobileFabs;
     window._sipnUpdateMobileFabs = updateMobileFabs;
 
@@ -5370,78 +5391,6 @@
     window.addEventListener('popstate', syncLinks);
   })();
 
-  /* ── 3. Saisie tokenisée multi-actes (Tâche 7) ── */
-  (function initTokenizedActSearch() {
-    var searchInp = document.getElementById('search-q');
-    if (!searchInp) return;
-    
-    var acBox = document.getElementById('ac-box');
-    if (!acBox) return;
-
-    var tagsWrap = document.createElement('div');
-    tagsWrap.id = 'search-tags-list';
-    tagsWrap.style.cssText = 'display:flex; flex-wrap:wrap; gap:6px; padding:6px 12px 4px 44px; margin-bottom:4px;';
-    acBox.insertBefore(tagsWrap, searchInp);
-
-    var initialQuery = searchInp.value.trim();
-    var tags = initialQuery ? initialQuery.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : [];
-
-    function renderTags() {
-      tagsWrap.innerHTML = '';
-      if (tags.length > 0) {
-        searchInp.placeholder = '';
-      } else {
-        searchInp.placeholder = 'Ex: NFS, Glycémie, IRM, Scanner…';
-      }
-      tags.forEach(function(tag, idx) {
-        var tagEl = document.createElement('span');
-        tagEl.className = 'token-tag';
-        tagEl.style.cssText = 'display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:#edfbfc;border:1px solid #a8e9f0;border-radius:20px;font-size:12px;font-weight:600;color:#0a5c8a;';
-        tagEl.innerHTML = '<span>' + tag + '</span><button type="button" style="background:none;border:none;color:#0a5c8a;cursor:pointer;font-size:14px;padding:0;line-height:1;margin-left:2px;">&times;</button>';
-        tagEl.querySelector('button').addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          tags.splice(idx, 1);
-          renderTags();
-          updateInputValue();
-        });
-        tagsWrap.appendChild(tagEl);
-      });
-    }
-
-    function updateInputValue() {
-      searchInp.value = tags.join(', ');
-    }
-
-    if (tags.length > 1) {
-      renderTags();
-      searchInp.value = '';
-    }
-
-    searchInp.addEventListener('keydown', function(e) {
-      if (e.key === ',' || e.key === 'Enter') {
-        var val = searchInp.value.trim().replace(/,/g, '');
-        if (val) {
-          e.preventDefault();
-          if (tags.indexOf(val) === -1) {
-            tags.push(val);
-            renderTags();
-          }
-          searchInp.value = '';
-        }
-      }
-    });
-
-    var form = document.getElementById('search-form');
-    if (form) {
-      form.addEventListener('submit', function() {
-        if (tags.length) {
-          searchInp.value = tags.join(', ');
-        }
-      });
-    }
-  })();
-
   /* ── 4. Drawer de profil structure ── */
   (function initProfilDrawer() {
     var drawerUrlTpl = '{% url "healthcare:organisme_profil_drawer" org_id=0 %}';
@@ -5741,16 +5690,22 @@
       // Sync with acte checkboxes
       syncTagsWithCheckboxes();
       
-      // Don't auto-trigger search - wait for button click
+      // Sync with mobile selection system
+      if (window._sipnAddSelectedActe) {
+        window._sipnAddSelectedActe(value, text);
+      }
     }
     
     function removeTag(tag) {
+      var val = tag.dataset.value;
       var index = tags.indexOf(tag);
       if (index > -1) {
         tags.splice(index, 1);
         tag.remove();
         syncTagsWithCheckboxes();
-        // Don't auto-trigger search - wait for button click
+        if (window._sipnRemoveSelectedActe) {
+          window._sipnRemoveSelectedActe(val);
+        }
       }
     }
     
@@ -5795,6 +5750,16 @@
           name: acteRow.getAttribute('data-dem-acte-name')
         };
       }
+
+      if (window._sipnGetAllActeMap) {
+        var allActes = window._sipnGetAllActeMap();
+        for (var pk in allActes) {
+          var aName = normalizeStr(allActes[pk]);
+          if (aName === normSearch || aName.indexOf(normSearch) !== -1 || normSearch.indexOf(aName) !== -1) {
+            return { pk: pk, name: allActes[pk] };
+          }
+        }
+      }
       return null;
     }
 
@@ -5806,8 +5771,6 @@
         var matchingActe = findActeByName(part);
         if (matchingActe) {
           addTag(matchingActe.name, matchingActe.pk);
-        } else {
-          addTag(part, 'custom_' + part);
         }
       });
     }
@@ -5815,50 +5778,145 @@
     function triggerSearchUpdate() {
       var form = document.getElementById('search-form');
       if (!form) return;
+      var searchBtns = document.querySelectorAll('.sipn-search-go');
       
-      if (searchInput && searchInput.value) {
-        processInputText(searchInput.value);
-        searchInput.value = '';
-      }
-      
-      var acteIds = tags.map(function(t) { return t.dataset.value; }).filter(function(v){ return v && !v.startsWith('custom_'); });
-      
-      // Update hidden acte inputs
-      form.querySelectorAll('input[name="acte"]').forEach(function(inp) {
-        inp.remove();
-      });
-      
-      acteIds.forEach(function(id) {
-        var hidden = document.createElement('input');
-        hidden.type = 'hidden';
-        hidden.name = 'acte';
-        hidden.value = id;
-        form.appendChild(hidden);
-      });
-      
-      // Trigger form submission with debounce
-      if (window.__tokenSearchDebounce) {
-        clearTimeout(window.__tokenSearchDebounce);
-      }
-      window.__tokenSearchDebounce = setTimeout(function() {
-        var u = new URL(form.action || window.location.href);
-        var fd = new FormData(form);
-        u.search = '';
-        fd.forEach(function(v, k) {
-          if (v !== '' && v != null) u.searchParams.append(k, v);
-        });
-        if (typeof window.updatePageContent === 'function') {
-          window.updatePageContent(u.toString());
-        } else {
-          window.location.assign(u.toString());
+      var rawVal = searchInput ? searchInput.value.trim() : '';
+
+      function performSearch(resolvedActeId, resolvedActeName) {
+        if (resolvedActeId && resolvedActeName) {
+          addTag(resolvedActeName, String(resolvedActeId));
         }
-      }, 150);
+
+        // Récupérer les tags actifs
+        var acteIds = tags.map(function(t) { return t.dataset.value; }).filter(function(v){ return v && !v.startsWith('custom_'); });
+
+        // Fusionner avec les actes sélectionnés via les piliers mobiles s'il y en a
+        if (window._sipnGetSelectedIds) {
+          var mobileIds = window._sipnGetSelectedIds();
+          mobileIds.forEach(function(mid) {
+            mid = String(mid);
+            if (mid && acteIds.indexOf(mid) === -1) {
+              acteIds.push(mid);
+            }
+          });
+        }
+
+        // Mettre à jour les inputs cachés dans le formulaire
+        form.querySelectorAll('input[name="acte"]').forEach(function(inp) {
+          inp.remove();
+        });
+
+        acteIds.forEach(function(id) {
+          var hidden = document.createElement('input');
+          hidden.type = 'hidden';
+          hidden.name = 'acte';
+          hidden.value = id;
+          form.appendChild(hidden);
+        });
+
+        // Gestion du paramètre q pour recherche libre si aucun acte précis n'a été résolu
+        var qInput = form.querySelector('input[name="q"]');
+        if (acteIds.length === 0 && rawVal) {
+          if (!qInput) {
+            qInput = document.createElement('input');
+            qInput.type = 'hidden';
+            qInput.name = 'q';
+            form.appendChild(qInput);
+          }
+          qInput.value = rawVal;
+        } else if (qInput && acteIds.length > 0) {
+          qInput.value = '';
+        }
+
+        if (searchInput) {
+          searchInput.value = '';
+          var clearBtn = document.getElementById('btn-clear-q');
+          if (clearBtn) clearBtn.style.display = 'none';
+        }
+        autocompleteDropdown.style.display = 'none';
+
+        if (window.__tokenSearchDebounce) {
+          clearTimeout(window.__tokenSearchDebounce);
+        }
+        window.__tokenSearchDebounce = setTimeout(function() {
+          var u = new URL(form.action || window.location.href);
+          var fd = new FormData(form);
+          u.search = '';
+          fd.forEach(function(v, k) {
+            if (v !== '' && v != null) u.searchParams.append(k, v);
+          });
+
+          // Sur mobile, naviguer directement vers les résultats
+          if (window.innerWidth < 1024) {
+            u.hash = 'results-col';
+            if (window._sipnGoResultsTab) {
+              window._sipnGoResultsTab();
+            }
+          }
+
+          if (typeof window.updatePageContent === 'function') {
+            window.updatePageContent(u.toString());
+            setTimeout(function() {
+              searchBtns.forEach(function(btn){ btn.classList.remove('is-loading'); });
+            }, 600);
+          } else {
+            window.location.assign(u.toString());
+          }
+        }, 120);
+      }
+
+      if (rawVal) {
+        // 1. Essayer d'abord la correspondance locale instantanée
+        var localMatch = findActeByName(rawVal);
+        if (localMatch) {
+          performSearch(localMatch.pk, localMatch.name);
+          return;
+        }
+
+        // 2. Si pas trouvé en local, interroger l'API autocomplétion intelligente
+        searchBtns.forEach(function(btn){ btn.classList.add('is-loading'); });
+        fetch('{% url "healthcare:api_search_autocomplete" %}?q=' + encodeURIComponent(rawVal))
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            var sugs = (d.suggestions || []).filter(function(s){ return s.type === 'acte' && s.id; });
+            if (sugs.length > 0) {
+              var exact = sugs.find(function(s){ return normalizeStr(s.label) === normalizeStr(rawVal); });
+              var chosen = exact || sugs[0];
+              performSearch(chosen.id, chosen.label);
+            } else {
+              performSearch(null, null);
+            }
+          })
+          .catch(function(){
+            performSearch(null, null);
+          });
+      } else {
+        performSearch(null, null);
+      }
     }
     
+    // Bouton effacer le champ recherche (croix)
+    var clearBtn = document.getElementById('btn-clear-q');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (searchInput) {
+          searchInput.value = '';
+          searchInput.focus();
+        }
+        clearBtn.style.display = 'none';
+        autocompleteDropdown.style.display = 'none';
+      });
+    }
+
     // Handle input for live autocomplete (accent-insensitive)
     searchInput.addEventListener('input', function(e) {
       var text = searchInput.value.trim();
       var textNorm = normalizeStr(text);
+      if (clearBtn) {
+        clearBtn.style.display = text.length > 0 ? 'inline-flex' : 'none';
+      }
       if (text.length < 2) {
         autocompleteDropdown.style.display = 'none';
         return;
@@ -5873,54 +5931,99 @@
           matches.push({ name: rawName, pk: pk });
         }
       });
+
+      // Si aucun match ou en complément sur mobile, chercher dans la carte globale mobile
+      if (matches.length < 5 && window._sipnGetAllActeMap) {
+        var allActes = window._sipnGetAllActeMap();
+        Object.keys(allActes).forEach(function(pk) {
+          if (matches.length >= 6) return;
+          var rawName = allActes[pk];
+          var acteName = normalizeStr(rawName);
+          if (acteName.indexOf(textNorm) !== -1 && !tags.some(function(t) { return t.dataset.value === pk; }) && !matches.some(function(m) { return m.pk === pk; })) {
+            matches.push({ name: rawName, pk: pk });
+          }
+        });
+      }
+
+      // Si toujours peu de résultats, appeler l'API autocomplétion intelligente
+      if (matches.length === 0 && text.length >= 2) {
+        fetch('{% url "healthcare:api_search_autocomplete" %}?q=' + encodeURIComponent(text))
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            var sugs = (d.suggestions || []).filter(function(s){ return s.type === 'acte' && s.id; });
+            if (sugs.length > 0) {
+              autocompleteDropdown.innerHTML = '';
+              sugs.slice(0, 5).forEach(function(s) {
+                var item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.style.cssText = 'padding:11px 14px;min-height:46px;box-sizing:border-box;cursor:pointer;font-size:13px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;gap:8px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;';
+                item.innerHTML = '<span style="font-weight:600;color:#0d1b2a">' + s.label + '</span>' + (s.detail ? '<span style="font-size:11px;color:#9ca3af">' + s.detail + '</span>' : '');
+                item.addEventListener('click', function() {
+                  addTag(s.label, String(s.id));
+                  searchInput.value = '';
+                  if (clearBtn) clearBtn.style.display = 'none';
+                  autocompleteDropdown.style.display = 'none';
+                  if (window.innerWidth < 1024) {
+                    triggerSearchUpdate();
+                  }
+                });
+                item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
+                item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
+                autocompleteDropdown.appendChild(item);
+              });
+              autocompleteDropdown.style.display = 'block';
+            }
+          }).catch(function(){});
+      }
       
       if (matches.length > 0) {
         autocompleteDropdown.innerHTML = '';
-        matches.slice(0, 5).forEach(function(match) {
+        matches.slice(0, 6).forEach(function(match) {
           var item = document.createElement('div');
           item.className = 'autocomplete-item';
-          item.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f3f4f6;';
-          item.textContent = match.name;
+          item.style.cssText = 'padding:11px 14px;min-height:46px;box-sizing:border-box;cursor:pointer;font-size:13px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;gap:8px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;';
+          item.innerHTML = '<span style="font-weight:600;color:#0d1b2a">' + match.name + '</span><span style="font-size:10.5px;color:#0a5c8a;background:#edfbfc;padding:3px 8px;border-radius:12px;font-weight:600;">+ Ajouter</span>';
           item.addEventListener('click', function() {
             addTag(match.name, match.pk);
             searchInput.value = '';
+            if (clearBtn) clearBtn.style.display = 'none';
             autocompleteDropdown.style.display = 'none';
+            if (window.innerWidth < 1024) {
+              triggerSearchUpdate();
+            }
           });
           item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
           item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
           autocompleteDropdown.appendChild(item);
         });
         autocompleteDropdown.style.display = 'block';
-      } else {
-        autocompleteDropdown.style.display = 'none';
       }
     });
     
-    // Hide autocomplete on blur
+    // Hide autocomplete on blur (delay allows click on suggestions)
     searchInput.addEventListener('blur', function() {
-      setTimeout(function() { autocompleteDropdown.style.display = 'none'; }, 200);
+      setTimeout(function() { autocompleteDropdown.style.display = 'none'; }, 220);
     });
     
-    // Search button click handler
-    var searchButton = document.querySelector('.sipn-search-go');
-    if (searchButton) {
-      searchButton.addEventListener('click', function(e) {
+    // Search button click handler (tous les boutons de recherche)
+    document.querySelectorAll('.sipn-search-go').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
         e.preventDefault();
         triggerSearchUpdate();
       });
-    }
+    });
     
     // Handle input for token creation (Enter and comma)
     searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ',') {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        triggerSearchUpdate();
+      } else if (e.key === ',') {
         e.preventDefault();
         var val = searchInput.value;
         if (val) {
           processInputText(val);
           searchInput.value = '';
-        }
-        if (e.key === 'Enter') {
-          triggerSearchUpdate();
         }
       } else if (e.key === 'Backspace' && searchInput.value === '' && tags.length > 0) {
         removeTag(tags[tags.length - 1]);
@@ -5929,27 +6032,9 @@
 
     var searchFormEl = document.getElementById('search-form');
     if (searchFormEl) {
-      searchFormEl.addEventListener('submit', function() {
-        if (searchInput && searchInput.value) {
-          processInputText(searchInput.value);
-          searchInput.value = '';
-        }
-        var acteIds = tags.map(function(t) { return t.dataset.value; }).filter(function(v){ return v && !v.startsWith('custom_'); });
-        // Si l'utilisateur utilise les tags tokenisés, on synchronise avec tags.
-        // MAIS si tags est vide (ex: navigation directe via URL /?acte=... ou sélection sans tag),
-        // on ne doit SURTOUT PAS effacer les <input name="acte"> déjà présents dans le formulaire !
-        if (acteIds.length > 0) {
-          searchFormEl.querySelectorAll('input[name="acte"]').forEach(function(inp) {
-            inp.remove();
-          });
-          acteIds.forEach(function(id) {
-            var hidden = document.createElement('input');
-            hidden.type = 'hidden';
-            hidden.name = 'acte';
-            hidden.value = id;
-            searchFormEl.appendChild(hidden);
-          });
-        }
+      searchFormEl.addEventListener('submit', function(e) {
+        e.preventDefault();
+        triggerSearchUpdate();
       });
     }
     
@@ -5985,7 +6070,14 @@
       
       acteIds.forEach(function(id) {
         var row = document.querySelector('.dem-acte-row--multi[data-dem-acte-pk="' + id + '"]');
-        var name = row ? (row.getAttribute('data-dem-acte-name') || row.innerText.trim()) : ('Acte #' + id);
+        var name = '';
+        if (row) {
+          name = row.getAttribute('data-dem-acte-name') || row.innerText.trim();
+        } else if (window._sipnGetActeName && window._sipnGetActeName(id)) {
+          name = window._sipnGetActeName(id);
+        } else {
+          name = 'Acte #' + id;
+        }
         addTag(name, id);
       });
     }
@@ -6051,6 +6143,15 @@
         var oldMobileResults = document.querySelector('.sipn-mobile-results-view');
         if (newMobileResults && oldMobileResults) {
           oldMobileResults.innerHTML = newMobileResults.innerHTML;
+        }
+
+        /* Mise à jour du bandeau de sélection mobile (#sel-strip-m) */
+        var newSelStrip = doc.getElementById('sel-strip-m');
+        var oldSelStrip = document.getElementById('sel-strip-m');
+        if (newSelStrip && oldSelStrip) {
+          oldSelStrip.innerHTML = newSelStrip.innerHTML;
+          oldSelStrip.hidden = newSelStrip.hidden;
+          oldSelStrip.className = newSelStrip.className;
         }
         
         if (resultsWrap) {

@@ -1166,22 +1166,78 @@ body.sipn-prestations #search-form.search-page--dem #layout-body.layout.sipn-lay
     pointer-events: none !important;
   }
 
-  /* Bouton Rechercher mobile */
+  /* Bouton Rechercher mobile tactile & ergonomique */
   body.sipn-prestations .sipn-search-go,
   .sipn-search-go {
-    flex: 0 0 36px !important;
-    width: 36px !important;
-    min-width: 36px !important;
-    max-width: 36px !important;
-    height: 36px !important;
-    min-height: 36px !important;
-    max-height: 36px !important;
-    border-radius: 9px !important;
+    flex: 0 0 42px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+    border-radius: 11px !important;
     padding: 0 !important;
     align-self: center !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+    background: linear-gradient(135deg, var(--sipn-blue, #123a63) 0%, #0d2847 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 6px rgba(18, 58, 99, 0.28) !important;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+    transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease !important;
+    cursor: pointer !important;
+  }
+  .sipn-search-go:active {
+    transform: scale(0.93) !important;
+    box-shadow: 0 1px 3px rgba(18, 58, 99, 0.2) !important;
+  }
+  .sipn-search-go.is-loading {
+    pointer-events: none !important;
+    opacity: 0.9 !important;
+    position: relative !important;
+  }
+  .sipn-search-go.is-loading .sipn-search-go-ic,
+  .sipn-search-go.is-loading .sipn-search-go-label {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  .sipn-search-go.is-loading::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2.5px solid rgba(255, 255, 255, 0.35) !important;
+    border-top-color: #fff !important;
+    border-radius: 50% !important;
+    animation: sipnSearchSpin 0.6s linear infinite !important;
+  }
+  @keyframes sipnSearchSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Bouton effacer la recherche tactile */
+  .sipn-search-clear {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.15s ease, color 0.15s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sipn-search-clear:hover,
+  .sipn-search-clear:active {
+    background: #f1f5f9;
+    color: #475569;
   }
 
   .sipn-filter-row {
