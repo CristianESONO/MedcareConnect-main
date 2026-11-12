@@ -645,16 +645,17 @@ def praticien_public_detail(request, slug):
     """
     from django.utils.text import slugify as dj_slugify
 
-    # Recherche directe par slug ou pk
-    praticien = OrganismeDeSante.objects.filter(slug=slug, is_active=True).first()
+    # Recherche directe par slug
+    praticien = OrganismeDeSante.objects.filter(slug=slug, is_active=True, account_nature="praticien").first()
     if not praticien and slug.isdigit():
-        praticien = OrganismeDeSante.objects.filter(pk=int(slug), is_active=True).first()
+        praticien = OrganismeDeSante.objects.filter(pk=int(slug), is_active=True, account_nature="praticien").first()
 
+    # Recherche de secours par slugification du nom (sans charger tous les objets)
     if not praticien:
-        all_praticiens = OrganismeDeSante.objects.filter(is_active=True)
-        for p in all_praticiens:
-            if p.is_praticien and (dj_slugify(p.name) == slug or p.slug == slug):
-                praticien = p
+        # Chercher par slugification sur les praticiens uniquement (filtré en DB)
+        for p in OrganismeDeSante.objects.filter(is_active=True, account_nature="praticien").only("id", "name", "slug", "account_nature"):
+            if dj_slugify(p.name) == slug or p.slug == slug:
+                praticien = OrganismeDeSante.objects.filter(pk=p.pk).first()
                 break
 
     if not praticien or not praticien.is_praticien:

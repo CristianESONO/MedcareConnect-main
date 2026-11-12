@@ -2201,9 +2201,10 @@ def organisme_detail(request, slug):
         slug=slug, is_active=True,
     )
 
-    # Garde-fou praticien : pas de fiche publique (Art. 10, 17, 19 du Décret n°67-147)
+    # Praticien indépendant : rediriger vers sa fiche dédiée /sante/praticien/<slug>/
+    # (évite le Http404 brut qui peut déclencher un 500 si le handler 404 plante en prod)
     if org.is_praticien:
-        raise Http404("Conformément aux règles déontologiques, les praticiens indépendants ne disposent pas d'une fiche publique de structure.")
+        return redirect("healthcare:praticien_public_detail", slug=org.slug)
 
     org.profile_views_count = F("profile_views_count") + 1
     org.save(update_fields=["profile_views_count"])
