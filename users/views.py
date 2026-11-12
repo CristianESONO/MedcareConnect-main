@@ -31,10 +31,11 @@ def _after_patient_login_redirect(request, next_url=None):
 from medcare_connect.views import _home_vitrine_context
 
 
-def _register_context(form, initial_mode="structure"):
+def _register_context(form, initial_mode="structure", initial_account="structure"):
     ctx = _home_vitrine_context()
     ctx["form"] = form
     ctx["initial_mode"] = initial_mode
+    ctx["initial_account"] = initial_account
     return ctx
 
 
@@ -54,7 +55,8 @@ def register(request):
                     "n'est configurée. Contactez l'administrateur.",
                 )
                 post_mode = "patient" if form.data.get("user_type") == "patient" else "structure"
-                return render(request, "users/register.html", _register_context(form, initial_mode=post_mode))
+                post_account = form.data.get("account_nature") or "structure"
+                return render(request, "users/register.html", _register_context(form, initial_mode=post_mode, initial_account=post_account))
             with transaction.atomic():
                 user = form.save()
                 if user.is_patient:
@@ -152,17 +154,25 @@ def register(request):
             request.GET.get("type")
             or request.GET.get("role")
             or request.GET.get("mode")
+            or request.GET.get("account")
             or ""
         ).lower()
         if initial_type in ("patient", "particulier"):
             form = UserRegistrationForm(initial={"user_type": "patient"})
             initial_mode = "patient"
+            initial_account = "structure"
+        elif initial_type in ("praticien", "medecin", "docteur"):
+            form = UserRegistrationForm(initial={"user_type": "prestataire", "account_nature": "praticien"})
+            initial_mode = "structure"
+            initial_account = "praticien"
         else:
             form = UserRegistrationForm(initial={"user_type": "prestataire"})
             initial_mode = "structure"
-    if request.method == "POST":
-        initial_mode = "patient" if request.POST.get("user_type") == "patient" else "structure"
-    return render(request, "users/register.html", _register_context(form, initial_mode=initial_mode))
+            initial_account = "structure"
+        return render(request, "users/register.html", _register_context(form, initial_mode=initial_mode, initial_account=initial_account))
+    post_mode = "patient" if request.POST.get("user_type") == "patient" else "structure"
+    post_account = request.POST.get("account_nature") or "structure"
+    return render(request, "users/register.html", _register_context(form, initial_mode=post_mode, initial_account=post_account))
 
 
 def login_view(request):

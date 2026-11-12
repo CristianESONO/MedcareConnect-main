@@ -193,9 +193,17 @@ label, .lbl { display: block; font-size: 11px; letter-spacing: .05em; text-trans
         </div>
 
 
-        <!-- Les champs first_name / last_name restent dans le DOM (masqués) pour les praticiens -->
-        <input type="hidden" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}">
-        <input type="hidden" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}">
+        <!-- Champs Prénom et Nom -->
+        <div class="row" id="row-names">
+          <div class="f">
+            <label id="lbl-prenom">Prénom du responsable <span class="opt">(optionnel)</span></label>
+            <input type="text" name="first_name" id="nom-prenom" value="{{ form.first_name.value|default:'' }}" placeholder="Prénom du contact" oninput="autoUser()">
+          </div>
+          <div class="f">
+            <label id="lbl-nom">Nom du responsable <span class="opt">(optionnel)</span></label>
+            <input type="text" name="last_name" id="nom-resp" value="{{ form.last_name.value|default:'' }}" placeholder="Nom du contact" oninput="autoUser()">
+          </div>
+        </div>
 
 
         <div class="f">
@@ -464,20 +472,66 @@ function setAccount(t) {
   var actInput = document.getElementById('id_account_nature');
   if (actInput) actInput.value = t;
 
-  document.getElementById('fk-structure').classList.toggle('on', t === 'structure');
-  document.getElementById('fk-praticien').classList.toggle('on', t === 'praticien');
-  document.getElementById('block-structure').classList.toggle('hide', t !== 'structure');
-  document.getElementById('block-praticien').classList.toggle('hide', t !== 'praticien');
-  document.getElementById('mode-badge').textContent = (t === 'structure') ? 'Mode soignant' : 'Mode praticien';
+  var fkStruct = document.getElementById('fk-structure');
+  var fkPrat = document.getElementById('fk-praticien');
+  if (fkStruct) fkStruct.classList.toggle('on', t === 'structure');
+  if (fkPrat) fkPrat.classList.toggle('on', t === 'praticien');
 
-  document.getElementById('title').textContent = (t === 'structure') ? 'Créer un compte établissement' : 'Créer un compte praticien';
-  document.getElementById('subt').textContent = (t === 'structure')
-    ? 'Renseignez les informations de votre établissement pour créer votre fiche.'
-    : 'Renseignez vos informations professionnelles pour créer votre fiche.';
-  document.getElementById('submit-btn').textContent = (t === 'structure') ? 'Créer le compte établissement →' : 'Créer le compte praticien →';
-  document.getElementById('lbl-prenom').innerHTML = (t === 'structure') ? 'Prénom du responsable <span class="opt">(optionnel)</span>' : 'Prénom du praticien <span class="req">*</span>';
-  document.getElementById('lbl-nom').innerHTML = (t === 'structure') ? 'Nom du responsable <span class="opt">(optionnel)</span>' : 'Nom du praticien <span class="req">*</span>';
-  document.getElementById('lbl-phone').textContent = (t === 'structure') ? 'Téléphone du contact / responsable' : 'Téléphone personnel du praticien';
+  var blkStruct = document.getElementById('block-structure');
+  var blkPrat = document.getElementById('block-praticien');
+  if (blkStruct) blkStruct.classList.toggle('hide', t !== 'structure');
+  if (blkPrat) blkPrat.classList.toggle('hide', t !== 'praticien');
+
+  var modeBadge = document.getElementById('mode-badge');
+  if (modeBadge) modeBadge.textContent = (t === 'structure') ? 'Mode soignant' : 'Mode praticien';
+
+  var title = document.getElementById('title');
+  if (title) title.textContent = (t === 'structure') ? 'Créer un compte établissement' : 'Créer un compte praticien';
+
+  var subt = document.getElementById('subt');
+  if (subt) {
+    subt.textContent = (t === 'structure')
+      ? 'Renseignez les informations de votre établissement pour créer votre fiche.'
+      : 'Renseignez vos informations professionnelles pour créer votre fiche.';
+  }
+
+  var submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) {
+    submitBtn.textContent = (t === 'structure') ? 'Créer le compte établissement →' : 'Créer le compte praticien →';
+  }
+
+  var lblPrenom = document.getElementById('lbl-prenom');
+  if (lblPrenom) {
+    lblPrenom.innerHTML = (t === 'structure')
+      ? 'Prénom du responsable <span class="opt">(optionnel)</span>'
+      : 'Prénom du praticien <span class="req">*</span>';
+  }
+
+  var lblNom = document.getElementById('lbl-nom');
+  if (lblNom) {
+    lblNom.innerHTML = (t === 'structure')
+      ? 'Nom du responsable <span class="opt">(optionnel)</span>'
+      : 'Nom de famille du praticien <span class="req">*</span>';
+  }
+
+  var prenomInput = document.getElementById('nom-prenom');
+  var nomInput = document.getElementById('nom-resp');
+  if (prenomInput) {
+    prenomInput.placeholder = (t === 'structure') ? 'Prénom du contact' : 'Ex : Cheikh';
+    prenomInput.required = (t === 'praticien');
+  }
+  if (nomInput) {
+    nomInput.placeholder = (t === 'structure') ? 'Nom du contact' : 'Ex : Diagne';
+    nomInput.required = (t === 'praticien');
+  }
+
+  var lblPhone = document.getElementById('lbl-phone');
+  if (lblPhone) {
+    lblPhone.textContent = (t === 'structure')
+      ? 'Téléphone du contact / responsable'
+      : 'Téléphone personnel du praticien';
+  }
+
   autoUser();
 }
 
@@ -517,6 +571,22 @@ function setProf(el) {
   document.getElementById('spe-wrap').classList.remove('hide');
   document.getElementById('ordre-wrap').classList.remove('hide');
   document.getElementById('ordre-lbl').innerHTML = (ORDRE_LBL[p] || "Numéro / titre professionnel") + ' <span class="req">*</span>';
+
+  // Restaurer les spécialités déjà cochées (rechargement après erreur)
+  var speInput = document.getElementById('id_praticien_specialties');
+  if (speInput && speInput.value) {
+    try {
+      var arr = JSON.parse(speInput.value);
+      if (Array.isArray(arr) && arr.length > 0) {
+        document.querySelectorAll('#spe-cards input[type=checkbox]').forEach(function(cb) {
+          if (arr.indexOf(cb.value) !== -1) {
+            cb.checked = true;
+            if (cb.parentElement) cb.parentElement.classList.add('on');
+          }
+        });
+      }
+    } catch(e) {}
+  }
   updateSpecialtiesInput();
 }
 
@@ -612,6 +682,16 @@ function applyMode(mode, triggerHeaderSwitch) {
     if (submitBtn) submitBtn.textContent = 'Créer mon compte Patient →';
     if (lblPrenom) lblPrenom.innerHTML = 'Prénom <span class="req">*</span>';
     if (lblNom) lblNom.innerHTML = 'Nom de famille <span class="req">*</span>';
+    var prenomInput = document.getElementById('nom-prenom');
+    var nomInput = document.getElementById('nom-resp');
+    if (prenomInput) {
+      prenomInput.placeholder = 'Votre prénom';
+      prenomInput.required = true;
+    }
+    if (nomInput) {
+      nomInput.placeholder = 'Votre nom de famille';
+      nomInput.required = true;
+    }
     if (lblPhone) lblPhone.textContent = 'Téléphone personnel';
 
     var existingBack = document.getElementById('back-to-structure-link');
@@ -670,9 +750,24 @@ document.querySelectorAll('.toggle__btn').forEach(function(btn) {
 // Initialisation immédiate au chargement du DOM (évite le saut visuel / flicker)
 document.addEventListener('DOMContentLoaded', function() {
   var urlParams = new URLSearchParams(window.location.search);
-  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
+  var urlType = (urlParams.get('type') || urlParams.get('role') || urlParams.get('mode') || urlParams.get('account') || '').toLowerCase();
   var initMode = (urlType === 'patient' || urlType === 'particulier') ? 'patient' : '{{ initial_mode|default:"structure" }}';
+  
+  var initialAccount = (urlType === 'praticien' || urlType === 'medecin' || urlType === 'docteur') ? 'praticien' : '{{ initial_account|default:"" }}';
+  if (!initialAccount) {
+    var actEl = document.getElementById('id_account_nature');
+    if (actEl && actEl.value) {
+      initialAccount = actEl.value;
+    }
+  }
+  if (initialAccount === 'praticien') {
+    account = 'praticien';
+  }
+
   applyMode(initMode, false);
+  if (initMode !== 'patient' && account === 'praticien') {
+    setAccount('praticien');
+  }
 
   // Restaurer les champs sélectionnés si rechargement après erreur de formulaire
   var selectedProf = document.getElementById('id_praticien_profession') ? document.getElementById('id_praticien_profession').value : '';
