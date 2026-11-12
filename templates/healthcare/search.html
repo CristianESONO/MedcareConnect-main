@@ -7,10 +7,10 @@
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=39" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=40" rel="stylesheet" />
 <link href="{% static 'healthcare/css/sipn_structure_results.css' %}?v=2" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=43" rel="stylesheet" />
-<link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=5" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=44" rel="stylesheet" />
+<link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=6" rel="stylesheet" />
 <link href="{% static 'messaging/css/thread_wa.css' %}?v=16" rel="stylesheet" />
 <link href="{% static 'healthcare/css/demo_patient_search.css' %}?v=20260530e" rel="stylesheet" />
 {% include "partials/medcare_alerts_shell.html" %}
@@ -6176,6 +6176,33 @@
         /* Mettre à jour l'URL seulement si ce n'est pas déjà fait (navigateActePool fait déjà pushState) */
         if (window.location.href !== url) {
           history.pushState({}, '', url);
+        }
+
+        /* ── Synchroniser les body classes depuis la réponse AJAX ───────────
+           Le serveur encode dans <body class="..."> les classes sipn-* qui
+           reflètent l'état de la recherche (sipn-has-actes, sipn-prestations).
+           Sans cette synchro, applyMobileView() lit des classes obsolètes et
+           masque les résultats mobiles après navigation AJAX. */
+        var newBodyClasses = doc.body.className ? doc.body.className.split(/\s+/) : [];
+        var sipnPrefixes = ['sipn-prestations', 'sipn-has-actes'];
+        sipnPrefixes.forEach(function(cls) {
+          if (newBodyClasses.indexOf(cls) !== -1) {
+            document.body.classList.add(cls);
+          } else {
+            document.body.classList.remove(cls);
+          }
+        });
+
+        /* Recalculer la vue mobile après mise à jour des classes */
+        if (window._sipnShowResults && window._sipnShowPrestations) {
+          var hasActesNow = document.body.classList.contains('sipn-has-actes');
+          var sp = new URLSearchParams(url.split('?')[1] || '');
+          var urlHasActe = sp.has('acte') || (sp.get('q') || '').trim().length >= 2;
+          if (hasActesNow && urlHasActe) {
+            window._sipnShowResults(false);
+          } else if (!hasActesNow) {
+            window._sipnShowPrestations(false);
+          }
         }
         
         /* Réinitialiser les event listeners pour le nouveau contenu */
