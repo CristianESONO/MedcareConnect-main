@@ -308,3 +308,6 @@ else:
 # Expéditeur affiché dans l'admin Django
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
+
+# Limite de champs par requete POST - augmentee pour les grands catalogues d'actes (500+ actes x 2 champs)
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
