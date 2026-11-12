@@ -1176,7 +1176,8 @@
         return `<span class="${off ? 'off' : ''}">${escapeHtml(a)}</span>`;
       }).join('');
       const warn = st.off > 0 ? `<span class="mpanel-lock">${st.off} à activer</span>` : '';
-      const tokenDisplay = p.token ? `medcare.sn/t/${p.token}` : '';
+      const appHost = window.location.host || 'medcare.sn';
+      const tokenDisplay = p.token ? `${appHost}/t/${p.token}/` : '';
 
       const kindBadge = isTicket
         ? `<span class="mpanel-badge-kind ticket"><i class="ti ti-ticket"></i> Ticket acte seul</span>`
@@ -1201,7 +1202,7 @@
       ${p.token ? `
       <div class="mpanel-link-box">
         <span class="mpanel-link-text">${tokenDisplay}</span>
-        <button type="button" class="btn-pan" style="padding:4px 8px;font-size:10px" onclick="copyText('https://${tokenDisplay}', this)">
+        <button type="button" class="btn-pan" style="padding:4px 8px;font-size:10px" onclick="copyText('${window.location.protocol}//${tokenDisplay}', this)">
           <i class="ti ti-copy"></i> Copier
         </button>
       </div>` : ''}
@@ -1648,7 +1649,7 @@
     const p = STRUCT_PANELS.find(x => String(x.id) === String(id));
     if (!p) return;
     const origin = window.location.origin || 'https://medcare.sn';
-    document.getElementById('send-panel-url').value = `${origin}/t/${p.token}`;
+    document.getElementById('send-panel-url').value = `${origin}/t/${p.token}/`;
     const tokenInp = document.getElementById('send-panel-token');
     if (tokenInp) tokenInp.value = p.token || '';
     document.getElementById('send-panel-nom').value = p.nom;

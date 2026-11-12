@@ -75,6 +75,9 @@ urlpatterns = [
     path("notifications/", include("notifications.urls")),
     path("rdv/", include("appointments.urls")),
 
+    # Favicon
+    path("favicon.ico", RedirectView.as_view(url="/static/images/logo-sm.png", permanent=True)),
+
     # Étape 5 — Tickets de prestation (liens directs praticien → patient)
     # Route courte /t/<identifiant> : non indexée (noindex), accessible sans login
     path("t/<str:token>/", pr_views.patient_ticket_view, name="patient_ticket_view"),

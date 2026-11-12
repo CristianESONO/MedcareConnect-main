@@ -1035,8 +1035,8 @@ def _panel_patient_view(request, panel):
     actes_pa = list(panel.actes.select_related("acte").all())
     preview_only = request.GET.get("preview") == "1"
 
-    # Action d'ajout au panier : par défaut lors de l'accès au lien court /t/<token>
-    should_add_to_cart = (not preview_only) or request.POST.get("action") == "add_cart" or request.GET.get("add") == "1"
+    # Action d'ajout au panier : sur action explicite (POST action=add_cart ou paramètre ?add=1)
+    should_add_to_cart = request.POST.get("action") == "add_cart" or request.GET.get("add") == "1"
 
     if should_add_to_cart and actes_pa:
         if request.user.is_authenticated and getattr(request.user, "is_patient", False):
