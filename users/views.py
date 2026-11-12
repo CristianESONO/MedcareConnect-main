@@ -160,6 +160,8 @@ def register(request):
         else:
             form = UserRegistrationForm(initial={"user_type": "prestataire"})
             initial_mode = "structure"
+    if request.method == "POST":
+        initial_mode = "patient" if request.POST.get("user_type") == "patient" else "structure"
     return render(request, "users/register.html", _register_context(form, initial_mode=initial_mode))
 
 
