@@ -14,7 +14,17 @@
     <span class="sipn-filter-arr" aria-hidden="true">▼</span>
   </button>
 
+  <span class="sipn-filter-lbl">Régime :</span>
+  <div class="inline-flex rounded-lg bg-gray-100 p-0.5 text-xs font-semibold mr-1" role="radiogroup" aria-label="Régime de couverture">
+    <button type="button" class="tritarif-chip-btn rounded-md px-2 py-0.5 transition-all bg-white text-gray-900 shadow-xs font-bold ring-1 ring-gray-200" data-regime="comptant" aria-pressed="true">Comptant</button>
+    <button type="button" class="tritarif-chip-btn rounded-md px-2 py-0.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="ipm" aria-pressed="false">IPM</button>
+    <button type="button" class="tritarif-chip-btn rounded-md px-2 py-0.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="assurance" aria-pressed="false">Assurance</button>
+  </div>
+
   <span class="sipn-filter-lbl">Filtrer :</span>
+  <button type="button" id="sipn-mobile-geo-chip" class="sipn-filter-chip{% if has_coordinates %} active{% endif %}" onclick="if (window._sipnOpenGeo) window._sipnOpenGeo(); else { var b = document.getElementById('btn-quick-geo'); if (b) b.click(); }">
+    <span>{% if has_coordinates %}<i class="ti ti-map-pin"></i> Actif{% else %}<i class="ti ti-map-pin"></i> Près de moi{% endif %}</span>
+  </button>
   <button type="button" class="sipn-filter-chip{% if current_assurances %} active{% endif %}" id="sipn-m-ins-chip" data-sipn-m-sheet="assurance">
     <span id="sipn-m-ins-lbl">{% if current_assurances %}{{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}Assurance{% endif %}</span>
     <span class="sipn-filter-arr" aria-hidden="true">▼</span>

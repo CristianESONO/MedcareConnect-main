@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% block title %}Prestations & tarifs{% endblock %}
 
@@ -1200,32 +1200,6 @@
         <div id="active-chips" class="mb-3 flex flex-wrap items-center gap-1.5"></div>
         {% endif %}
 
-        <!-- Sélecteur Tri-Tarifs (Régime de prise en charge) -->
-        <div class="mb-4 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-xs">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-2.5">
-              <span class="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
-                Régime tarifaire :
-              </span>
-              <div class="inline-flex rounded-xl bg-gray-100 p-1 text-xs font-semibold" id="tritarif-regime-chips" role="radiogroup" aria-label="Régime de couverture">
-                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all bg-white text-gray-900 shadow-xs font-bold" data-regime="comptant">
-                  Comptant
-                </button>
-                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="ipm">
-                  IPM
-                </button>
-                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="assurance">
-                  Assurance privée
-                </button>
-              </div>
-            </div>
-            <div id="tritarif-regime-hint" class="text-[11px] text-gray-500 font-medium">
-              Tarifs publics au comptant
-            </div>
-          </div>
-        </div>
-
         <div class="dem-filters-card mb-4 flex flex-wrap items-end gap-3">
           <div class="min-w-0 flex-1 basis-full sm:basis-auto">
             <div class="dem-filters-section-title mb-2">Trier &amp; filtrer</div>
@@ -2094,12 +2068,16 @@
       var budgetTimer = null;
 
       function syncAssuranceToHidden(){
+        // Seule source de vérité : les hidden inputs dem-sync-hidden.
+        // Le select center (sans name) sert uniquement à l'UI Select2 — pas de soumission via lui.
         var center = demAssuranceCenter();
-        if (!center) return;
-        demEnableAssuranceCenter();
         var checked = Array.from(dd.querySelectorAll('.sipn-assurance-cb:checked')).map(function(c){ return c.value; });
-        if (window.jQuery) jQuery(center).val(checked).trigger('change');
-        else Array.from(center.options).forEach(function(o){ o.selected = checked.indexOf(o.value) !== -1; });
+        // Mettre à jour l'UI Select2 si présent (affichage seulement, pas de soumission)
+        if (center) {
+          if (window.jQuery) jQuery(center).val(checked).trigger('change');
+          else Array.from(center.options).forEach(function(o){ o.selected = checked.indexOf(o.value) !== -1; });
+        }
+        // Supprimer les anciens hidden, recréer avec les valeurs cochées
         form.querySelectorAll('input[name="assurance"].dem-sync-hidden').forEach(function(n){ n.remove(); });
         checked.forEach(function(v){
           var h = document.createElement('input');
@@ -2167,6 +2145,21 @@
         if (btnApply) btnApply.addEventListener('click', function(e){
           e.preventDefault();
           syncAssuranceToHidden();
+          // S'assurer que les actes de l'URL courante sont bien présents comme hidden inputs avant submit
+          var urlParams = new URLSearchParams(window.location.search);
+          var urlActes = urlParams.getAll('acte');
+          if (urlActes.length) {
+            var existingActes = Array.from(form.querySelectorAll('input[name="acte"]')).map(function(i){ return i.value; });
+            urlActes.forEach(function(aid){
+              if (existingActes.indexOf(aid) === -1) {
+                var h = document.createElement('input');
+                h.type = 'hidden';
+                h.name = 'acte';
+                h.value = aid;
+                form.appendChild(h);
+              }
+            });
+          }
           closeDrop();
           form.submit();
         });
@@ -2329,14 +2322,26 @@
     }
 
     function syncAssuranceToForm(){
+      // Met à jour l'UI Select2 center (sans name, donc pas de soumission via lui).
+      // Crée les hidden inputs dem-sync-hidden pour soumettre les assurances sélectionnées.
       var center = document.getElementById('id-assurance-dem-center');
-      if (!center) return;
-      center.disabled = false;
       var vals = pending.assurances.slice();
-      if (window.jQuery && jQuery.fn.select2 && jQuery(center).data('select2')) {
-        jQuery(center).val(vals).trigger('change');
-      } else {
-        Array.from(center.options).forEach(function(o){ o.selected = vals.indexOf(o.value) !== -1; });
+      if (center) {
+        if (window.jQuery && jQuery.fn.select2 && jQuery(center).data('select2')) {
+          jQuery(center).val(vals).trigger('change');
+        } else {
+          Array.from(center.options).forEach(function(o){ o.selected = vals.indexOf(o.value) !== -1; });
+        }
+      }
+      // Soumission via hidden inputs uniquement
+      var form2 = document.getElementById('search-form');
+      if (form2) {
+        form2.querySelectorAll('input[name="assurance"].dem-sync-hidden').forEach(function(n){ n.remove(); });
+        vals.forEach(function(v){
+          var h = document.createElement('input');
+          h.type = 'hidden'; h.name = 'assurance'; h.value = v; h.className = 'dem-sync-hidden';
+          form2.appendChild(h);
+        });
       }
     }
 
@@ -5850,9 +5855,10 @@
       }, 150);
     }
     
-    // Handle input for live autocomplete
+    // Handle input for live autocomplete (accent-insensitive)
     searchInput.addEventListener('input', function(e) {
-      var text = searchInput.value.trim().toLowerCase();
+      var text = searchInput.value.trim();
+      var textNorm = normalizeStr(text);
       if (text.length < 2) {
         autocompleteDropdown.style.display = 'none';
         return;
@@ -5860,10 +5866,11 @@
       
       var matches = [];
       document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
-        var acteName = (row.getAttribute('data-dem-acte-name') || '').toLowerCase();
+        var rawName = row.getAttribute('data-dem-acte-name') || '';
+        var acteName = normalizeStr(rawName);
         var pk = row.getAttribute('data-dem-acte-pk');
-        if (acteName.indexOf(text) !== -1 && !tags.some(function(t) { return t.dataset.value === pk; })) {
-          matches.push({ name: row.getAttribute('data-dem-acte-name'), pk: pk });
+        if (acteName.indexOf(textNorm) !== -1 && !tags.some(function(t) { return t.dataset.value === pk; })) {
+          matches.push({ name: rawName, pk: pk });
         }
       });
       
@@ -5928,16 +5935,21 @@
           searchInput.value = '';
         }
         var acteIds = tags.map(function(t) { return t.dataset.value; }).filter(function(v){ return v && !v.startsWith('custom_'); });
-        searchFormEl.querySelectorAll('input[name="acte"]').forEach(function(inp) {
-          inp.remove();
-        });
-        acteIds.forEach(function(id) {
-          var hidden = document.createElement('input');
-          hidden.type = 'hidden';
-          hidden.name = 'acte';
-          hidden.value = id;
-          searchFormEl.appendChild(hidden);
-        });
+        // Si l'utilisateur utilise les tags tokenisés, on synchronise avec tags.
+        // MAIS si tags est vide (ex: navigation directe via URL /?acte=... ou sélection sans tag),
+        // on ne doit SURTOUT PAS effacer les <input name="acte"> déjà présents dans le formulaire !
+        if (acteIds.length > 0) {
+          searchFormEl.querySelectorAll('input[name="acte"]').forEach(function(inp) {
+            inp.remove();
+          });
+          acteIds.forEach(function(id) {
+            var hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'acte';
+            hidden.value = id;
+            searchFormEl.appendChild(hidden);
+          });
+        }
       });
     }
     
@@ -5958,17 +5970,23 @@
       }
     });
     
-    // Initialize from URL parameters
+    // Initialize from URL parameters and existing hidden inputs
     function initFromUrl() {
       var urlParams = new URLSearchParams(window.location.search);
       var acteIds = urlParams.getAll('acte');
+      // Si pas dans l'URL ou en complément, lire les inputs cachés acte du formulaire
+      if (searchFormEl) {
+        searchFormEl.querySelectorAll('input[name="acte"]').forEach(function(inp) {
+          if (inp.value && acteIds.indexOf(inp.value) === -1) {
+            acteIds.push(inp.value);
+          }
+        });
+      }
       
       acteIds.forEach(function(id) {
         var row = document.querySelector('.dem-acte-row--multi[data-dem-acte-pk="' + id + '"]');
-        if (row) {
-          var name = row.getAttribute('data-dem-acte-name');
-          addTag(name, id);
-        }
+        var name = row ? (row.getAttribute('data-dem-acte-name') || row.innerText.trim()) : ('Acte #' + id);
+        addTag(name, id);
       });
     }
     
@@ -6040,6 +6058,20 @@
           resultsWrap.style.pointerEvents = '';
         }
         
+        /* Mise à jour des hidden inputs acte dans search-form */
+        var formEl = document.getElementById('search-form');
+        if (formEl) {
+          formEl.querySelectorAll('input[name="acte"]').forEach(function(inp){ inp.remove(); });
+          var newActeInputs = doc.querySelectorAll('#search-form input[name="acte"]');
+          newActeInputs.forEach(function(inp){
+            var clone = document.createElement('input');
+            clone.type = 'hidden';
+            clone.name = 'acte';
+            clone.value = inp.value;
+            formEl.appendChild(clone);
+          });
+        }
+
         /* Mettre à jour l'URL seulement si ce n'est pas déjà fait (navigateActePool fait déjà pushState) */
         if (window.location.href !== url) {
           history.pushState({}, '', url);

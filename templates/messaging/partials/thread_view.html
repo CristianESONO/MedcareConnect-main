@@ -32,7 +32,7 @@
     <div class="min-w-0 flex-1">
       <div class="mc-thread-hn truncate">
         {% if user == conversation.patient %}
-          {% if conversation.prestataire.display_name %}{{ conversation.prestataire.display_name }}{% elif org %}{{ org.name }}{% else %}Structure{% endif %}
+          {% if org %}Secrétariat de {{ org.name }}{% elif conversation.prestataire.display_name %}{{ conversation.prestataire.display_name }}{% else %}Secrétariat médical{% endif %}
         {% else %}
           {{ conversation.patient.display_name }}
         {% endif %}

@@ -64,7 +64,8 @@ def _thread_sender_label(msg: Message, conv: Conversation) -> str | None:
         return None
     if msg.sender_id == conv.prestataire_id:
         org = conv.organisme
-        return org.name if org else (conv.prestataire.display_name or "Structure")
+        org_name = org.name if org else (conv.prestataire.display_name or "Structure")
+        return f"Secrétariat de {org_name}"
     if msg.sender_id == conv.patient_id:
         return conv.patient.display_name or "Patient"
     return "MedCare"

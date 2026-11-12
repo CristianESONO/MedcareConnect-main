@@ -929,6 +929,21 @@ def search(request):
         delai_filter = ""
     domicile_filter = request.GET.get("domicile") == "1"
 
+    # Synchronisation intelligente avec les données de l'espace compte patient (si connecté)
+    patient_profile = None
+    if request.user.is_authenticated and getattr(request.user, "is_patient", False):
+        patient_profile = getattr(request.user, "patient_profile", None)
+
+    if patient_profile:
+        # 1. Assurance : pré-sélectionnée par défaut si non filtrée explicitement dans la requête
+        if "assurance" not in request.GET and not assurance_ids and patient_profile.insurance_id:
+            assurance_ids = [str(patient_profile.insurance_id)]
+            assurance_ids_int = [patient_profile.insurance_id]
+
+        # 2. Zone géographique (ville / quartier) : pré-remplie si non spécifiée
+        if "city" not in request.GET and not city and (patient_profile.city or patient_profile.quartier):
+            city = (patient_profile.quartier or patient_profile.city or "").strip()
+
     if request.GET.get("clear_geo"):
         request.session.pop("search_lat", None)
         request.session.pop("search_lng", None)
@@ -938,6 +953,13 @@ def search(request):
 
     if latlng is None and not request.GET.get("clear_geo"):
         latlng = parse_lat_lng(request.session.get("search_lat"), request.session.get("search_lng"))
+
+    if latlng is None and not request.GET.get("clear_geo") and patient_profile:
+        if patient_profile.last_known_latitude and patient_profile.last_known_longitude:
+            try:
+                latlng = (float(patient_profile.last_known_latitude), float(patient_profile.last_known_longitude))
+            except (ValueError, TypeError):
+                pass
 
     if geo_from_get and latlng:
         request.session["search_lat"] = str(latlng[0])
@@ -1634,12 +1656,18 @@ def search(request):
 
     mobile_results_by_org: list[dict] = []
     mobile_results_acte_total = len(pool_for_pills) if pool_from_request else 0
-    if pool_from_request and page.object_list:
+    if pool_from_request and (page.object_list or results_count > 0):
+        # Récupérer l'ensemble des offres des actes recherchés pour toutes les structures
+        pool_offers = list(pa_qs.filter(acte_id__in=pool_for_pills))
+        _attach_distance_km_to_offers(pool_offers, latlng)
+        _dem_attach_insurance(pool_offers)
+        _dem_attach_catalog_counts(pool_offers)
+
         acte_objs_pool = {
             x.pk: x for x in ActeMedical.objects.filter(pk__in=pool_for_pills)
         }
         by_org: dict[int, dict] = {}
-        for pa in page.object_list:
+        for pa in pool_offers:
             oid = pa.organisme_id
             if oid not in by_org:
                 by_org[oid] = {
@@ -1857,15 +1885,22 @@ def annuaire(request):
 @require_GET
 def api_search_autocomplete(request):
     """Suggestions pour la barre de recherche : actes, familles de soins, centres."""
+    import unicodedata
     q = (request.GET.get("q") or "").strip()
     if len(q) < 2:
         return JsonResponse({"suggestions": []})
 
+    def strip_accents(s: str) -> str:
+        return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn").lower()
+
+    q_clean = strip_accents(q)
+
     suggestions = []
 
-    services = ServiceMedical.objects.filter(
-        is_active=True, name__icontains=q,
-    ).order_by("order")[:4]
+    services = [
+        s for s in ServiceMedical.objects.filter(is_active=True).order_by("order")
+        if q_clean in strip_accents(s.name)
+    ][:4]
     for s in services:
         suggestions.append({
             "label": s.name,
@@ -1873,26 +1908,58 @@ def api_search_autocomplete(request):
             "url": f"?service={s.pk}&sort=price_asc",
         })
 
-    actes = (
-        ActeMedical.objects.filter(is_active=True)
-        .filter(Q(name__icontains=q) | Q(code__icontains=q))
-        .select_related("service_medical_category")
-        .order_by("name")[:8]
-    )
-    for a in actes:
+    # Dictionnaire d'intentions / équivalences d'actes pour orienter directement vers l'acte canonique
+    INTENTIONS_CANONIQUES = {
+        "cholest": "Cholestérol total",
+        "glycem": "Glycémie à jeun",
+        "nfs": "NFS / Hémogramme",
+        "hemogram": "NFS / Hémogramme",
+        "creatin": "Créatininémie",
+        "uree": "Urée sanguine",
+        "trigly": "Triglycérides",
+        "ecg": "Électrocardiogramme (ECG)",
+        "electrocardio": "Électrocardiogramme (ECG)",
+        "acide uri": "Acide urique (uricémie)",
+        "uricem": "Acide urique (uricémie)",
+        "transam": "ALAT",
+    }
+    
+    canonical_target = None
+    for pattern, target_name in INTENTIONS_CANONIQUES.items():
+        if pattern in q_clean:
+            canonical_target = target_name
+            break
+
+    all_actes = list(ActeMedical.objects.filter(is_active=True).select_related("service_medical_category"))
+    matched_actes = [
+        a for a in all_actes
+        if q_clean in strip_accents(a.name) or (a.code and q_clean in strip_accents(a.code))
+    ]
+
+    if canonical_target:
+        # Si une intention canonique est détectée (ex: "cholestérol"), afficher l'acte canonique en priorité
+        matched_actes.sort(
+            key=lambda a: (
+                0 if strip_accents(a.name) == strip_accents(canonical_target) else 1,
+                a.name.lower(),
+            )
+        )
+    else:
+        matched_actes.sort(key=lambda a: a.name.lower())
+
+    for a in matched_actes[:8]:
         suggestions.append({
             "id": a.pk,
             "label": a.name,
             "type": "acte",
-            "detail": a.service_medical_category.name,
+            "detail": a.service_medical_category.name if a.service_medical_category else "",
             "url": f"?acte={a.pk}&sort=price_asc",
         })
 
-    centres = (
-        OrganismeDeSante.objects.filter(is_active=True, name__icontains=q)
-        .select_related("type_organisme")
-        .order_by("name")[:4]
-    )
+    centres = [
+        c for c in OrganismeDeSante.objects.filter(is_active=True).select_related("type_organisme").order_by("name")
+        if q_clean in strip_accents(c.name)
+    ][:4]
     for c in centres:
         type_label = c.type_organisme.name if c.type_organisme else ""
         suggestions.append({
@@ -3117,6 +3184,10 @@ def actes_list(request):
     ctx = _dash_context(request, "actes")
     org = OrganismeDeSante.objects.get(pk=ctx["org"].pk)
 
+    if not org.is_active:
+        messages.warning(request, "Votre structure est en attente d'activation. L'offre de soins sera disponible dès validation de votre compte.")
+        return redirect("healthcare:prestataire_dashboard")
+
     if request.method == "POST":
         action = request.POST.get("action")
         if action == "save_domicile":
@@ -3734,6 +3805,10 @@ def insurances_manage(request):
 
     ctx = _dash_context(request, "insurances")
     org = OrganismeDeSante.objects.get(pk=ctx["org"].pk)
+
+    if not org.is_active:
+        messages.warning(request, "Votre structure est en attente d'activation. La gestion des assurances sera disponible dès validation de votre compte.")
+        return redirect("healthcare:prestataire_dashboard")
 
     if request.method == "POST" and request.POST.get("action") == "add_custom_assurance":
         custom_name = (request.POST.get("name") or "").strip()

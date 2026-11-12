@@ -1043,10 +1043,19 @@
     color: #fff;
     border: none;
     border-radius: 10px;
-    padding: 13px;
+    padding: 14px;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    box-shadow: 0 2px 10px rgba(18, 58, 99, 0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-family: inherit;
+  }
+  body.sipn-prestations .sipn-m-sheet-apply:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 4px rgba(18, 58, 99, 0.15);
   }
 
   body.sipn-prestations .sipn-m-sheet-opt {
@@ -1060,6 +1069,10 @@
     background: #fff;
     cursor: pointer;
     color: var(--sipn-text, #0d1b2a);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    font-family: inherit;
+    min-height: 44px;
   }
 
   body.sipn-prestations .sipn-m-sheet-opt:active {
@@ -1081,10 +1094,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 16px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--sipn-g100, #f3f4f6);
     cursor: pointer;
     font-size: 13px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px;
   }
 
   body.sipn-prestations .sipn-m-ins-opt:active {
@@ -1093,8 +1109,8 @@
 
   body.sipn-prestations .sipn-m-ins-opt input {
     accent-color: var(--sipn-blue, #123a63);
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
   }
 
@@ -1612,12 +1628,22 @@
     background: var(--sipn-blue-l, var(--mc-accent-light, rgba(79,163,199,0.12)));
     color: var(--sipn-blue, #123a63);
     border-radius: 20px;
-    padding: 5px 12px;
+    padding: 7px 14px;
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     font-family: inherit;
     white-space: nowrap;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background 0.12s;
+  }
+  body.sipn-prestations .panier-back-btn:active {
+    background: var(--sipn-blue-m, #D4DEEE);
   }
 
   body.sipn-prestations .panier-app-title {

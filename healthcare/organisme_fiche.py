@@ -78,7 +78,21 @@ def open_today_from_hours(hours_list) -> str | None:
 
 
 def build_profil_pillars(actes, is_ambulance: bool = False) -> tuple[list[dict], dict]:
-    """Retourne (profil_pillars, services_with_actes)."""
+    """Retourne (profil_pillars, services_with_actes) trié selon l'ordre officiel du catalogue."""
+    from healthcare.prestataire_catalogue import prestataire_leaf_actes_catalog_by_pilier
+
+    # Construire la table d'index de l'ordre officiel du catalogue prestataire
+    catalog_blocks = prestataire_leaf_actes_catalog_by_pilier()
+    pilier_order_map: dict[str, int] = {}
+    acte_order_map: dict[int, int] = {}
+    for p_idx, block in enumerate(catalog_blocks):
+        p_name = block["pilier"].name
+        pilier_order_map[p_name] = p_idx
+        for sg in block.get("subgroups", []):
+            for a in sg.get("actes", []):
+                if a.pk not in acte_order_map:
+                    acte_order_map[a.pk] = len(acte_order_map)
+
     services_with_actes: dict = {}
     if is_ambulance:
         for pa in actes:
@@ -96,8 +110,19 @@ def build_profil_pillars(actes, is_ambulance: bool = False) -> tuple[list[dict],
             svc_name = svc.name if svc else "Autres"
             services_with_actes.setdefault(svc_name, []).append(pa)
 
+    # Trier les actes à l'intérieur de chaque pilier selon l'ordre du catalogue
+    for svc_name, group in services_with_actes.items():
+        group.sort(key=lambda pa: (acte_order_map.get(pa.acte_id, 99999), pa.acte.name.lower()))
+
+    # Trier les piliers eux-mêmes selon l'ordre officiel des 6 piliers
+    sorted_svc_names = sorted(
+        services_with_actes.keys(),
+        key=lambda name: pilier_order_map.get(name, 999)
+    )
+
     pillars = []
-    for idx, (svc_name, group) in enumerate(services_with_actes.items(), start=1):
+    for idx, svc_name in enumerate(sorted_svc_names, start=1):
+        group = services_with_actes[svc_name]
         svc = group[0].acte.service_medical_category if group else None
         icon = "" if is_ambulance else (svc.display_icon if svc else mark_safe('<i class="ti ti-building-hospital"></i>'))
         pillars.append(

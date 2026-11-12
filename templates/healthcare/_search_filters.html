@@ -45,7 +45,8 @@ Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
 
     <div>
       <label class="dem-filter-label">Assurance</label>
-      <select name="assurance" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+      {# En mode sipn, ce select mobile est désactivé : la soumission est gérée par dem-sync-hidden #}
+      <select name="assurance" multiple class="{{ sx_multi }} mt-0 w-full text-sm"{% if show_dem_service_acte_nav %} disabled{% endif %}>
         {% for label, group in assurances_grouped %}
         <optgroup label="{{ label }}">
           {% for a in group %}<option value="{{ a.pk }}" {% if a.pk|stringformat:"d" in current_assurances %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
@@ -121,7 +122,8 @@ Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
     {% if not omit_assurance_desktop %}
     <div>
       <label class="dem-filter-label">Assurance</label>
-      <select name="assurance" multiple class="{{ sx_multi }} mt-0 w-full text-sm">
+      {# En mode sipn, ce select mobile est désactivé : la soumission est gérée par dem-sync-hidden #}
+      <select name="assurance" multiple class="{{ sx_multi }} mt-0 w-full text-sm"{% if show_dem_service_acte_nav %} disabled{% endif %}>
         {% for label, group in assurances_grouped %}
         <optgroup label="{{ label }}">
           {% for a in group %}<option value="{{ a.pk }}" {% if a.pk|stringformat:"d" in current_assurances %}selected{% endif %}>{{ a.name }}</option>{% endfor %}

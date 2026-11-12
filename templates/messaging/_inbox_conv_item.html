@@ -6,7 +6,11 @@
   <span class="min-w-0 flex-1">
     <span class="flex items-center justify-between gap-2">
       <span class="truncate font-medium text-gray-900">
-        {% if conv.organisme %}{{ conv.organisme.name }}{% elif user == conv.patient %}{{ conv.prestataire.display_name }}{% else %}{{ conv.patient.display_name }}{% endif %}
+        {% if user == conv.patient %}
+          {% if conv.organisme %}Secrétariat de {{ conv.organisme.name }}{% elif conv.prestataire.display_name %}{{ conv.prestataire.display_name }}{% else %}Secrétariat médical{% endif %}
+        {% else %}
+          {{ conv.patient.display_name }}
+        {% endif %}
       </span>
       {% include "messaging/_inbox_conv_time.html" with dt=conv.updated_at %}
     </span>

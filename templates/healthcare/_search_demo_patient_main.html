@@ -8,15 +8,31 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
       <div>
         <div class="sipn-hero-lbl">Plateforme paraclinique numérique · Sénégal</div>
         <h1 class="sipn-hero-title">Choisissez vos actes.<br><em>Trouvez où les faire. Devis en 1 clic.</em></h1>
-        <p class="sipn-hero-sub">Sélectionnez un acte — les structures et tarifs s’affichent. Ajoutez au panier, obtenez votre devis. Zéro commission sur les actes.</p>
+        <p class="sipn-hero-sub">Sélectionnez un acte — les structures et tarifs s’affichent. Ajoutez au panier, obtenez
+          votre devis. Zéro commission sur les actes.</p>
       </div>
       {% if search_hero_stats %}
       <div class="sipn-hero-stats" aria-label="Chiffres clés">
-        <div class="sipn-hs"><div class="sipn-hs-n">{{ search_hero_stats.structures }}</div><div class="sipn-hs-l">Structures</div></div>
-        <div class="sipn-hs"><div class="sipn-hs-n">{{ search_hero_stats.piliers }}</div><div class="sipn-hs-l">Piliers</div></div>
-        <div class="sipn-hs"><div class="sipn-hs-n">{{ search_hero_stats.actes }}+</div><div class="sipn-hs-l">Actes</div></div>
-        <div class="sipn-hs"><div class="sipn-hs-n">{{ search_hero_stats.assurances }}</div><div class="sipn-hs-l">Assurances</div></div>
-        <div class="sipn-hs"><div class="sipn-hs-n sipn-hs-n--green">0%</div><div class="sipn-hs-l">Commission</div></div>
+        <div class="sipn-hs">
+          <div class="sipn-hs-n">{{ search_hero_stats.structures }}</div>
+          <div class="sipn-hs-l">Structures</div>
+        </div>
+        <div class="sipn-hs">
+          <div class="sipn-hs-n">{{ search_hero_stats.piliers }}</div>
+          <div class="sipn-hs-l">Piliers</div>
+        </div>
+        <div class="sipn-hs">
+          <div class="sipn-hs-n">{{ search_hero_stats.actes }}+</div>
+          <div class="sipn-hs-l">Actes</div>
+        </div>
+        <div class="sipn-hs">
+          <div class="sipn-hs-n">{{ search_hero_stats.assurances }}</div>
+          <div class="sipn-hs-l">Assurances</div>
+        </div>
+        <div class="sipn-hs">
+          <div class="sipn-hs-n sipn-hs-n--green">0%</div>
+          <div class="sipn-hs-l">Commission</div>
+        </div>
       </div>
       {% endif %}
     </div>
@@ -45,8 +61,11 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
                 class="sipn-search-input border-0 outline-none focus:outline-none focus:ring-0 focus:border-transparent shadow-none"
                 aria-label="Rechercher un acte médical">
               {% if query %}
-              <button type="button" id="btn-clear-q" class="sipn-search-clear" title="Effacer" aria-label="Effacer la recherche">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+              <button type="button" id="btn-clear-q" class="sipn-search-clear" title="Effacer"
+                aria-label="Effacer la recherche">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
               </button>
               {% endif %}
               <div id="ac-list"></div>
@@ -55,27 +74,38 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
         </div>
         <button type="submit" class="sipn-search-go" aria-label="Rechercher">
           <span class="sipn-search-go-label">Rechercher</span>
-          <svg class="sipn-search-go-ic sm:hidden" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+          <svg class="sipn-search-go-ic sm:hidden" width="18" height="18" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
         </button>
       </div>
 
       <div class="quick-results hidden" id="quick-results"></div>
 
       <!-- Advanced Ambulance Configurator -->
-      <div id="dem-ambulance-banner" class="dem-ambulance-card relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-cyan-50/30 p-5 shadow-sm border border-cyan-100 mt-4" style="{% if is_ambulance_service %}display:block;{% else %}display:none;{% endif %}">
+      <div id="dem-ambulance-banner"
+        class="dem-ambulance-card relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-cyan-50/30 p-5 shadow-sm border border-cyan-100 mt-4"
+        style="{% if is_ambulance_service %}display:block;{% else %}display:none;{% endif %}">
         <div class="relative z-10">
           <!-- Header -->
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3 mb-4">
             <div class="flex items-center gap-3">
-              <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 text-2xl border border-cyan-100"><i class="ti ti-ambulance"></i></div>
+              <div
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 text-2xl border border-cyan-100">
+                <i class="ti ti-ambulance"></i>
+              </div>
               <div>
                 <div class="flex flex-wrap items-center gap-2">
                   <h3 class="text-base font-bold text-slate-800">Transport en Ambulance Médicalisée</h3>
-                  <span class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-100">
+                  <span
+                    class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-100">
                     <span class="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse"></span> URGENCES 24/7
                   </span>
                 </div>
-                <p class="text-[11px] text-slate-500">Ambulances équipées · Médecins réanimateurs &amp; Infirmiers diplômés d'État</p>
+                <p class="text-[11px] text-slate-500">Ambulances équipées · Médecins réanimateurs &amp; Infirmiers
+                  diplômés d'État</p>
               </div>
             </div>
           </div>
@@ -83,7 +113,8 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           <!-- Service Type Selector -->
           <div class="mb-4">
             <label class="block text-[11px] font-bold text-slate-600 mb-2">Type de service</label>
-            <select id="amb-service-type" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition cursor-pointer">
+            <select id="amb-service-type"
+              class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition cursor-pointer">
               <option value="trajet">Transport de trajet (point A → point B)</option>
               <option value="rapatriement">Rapatriement (national/international)</option>
               <option value="evenement">Couverture d'événement</option>
@@ -100,7 +131,8 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           </div>
 
           <!-- Action Button -->
-          <button type="button" id="amb-submit-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-700 hover:bg-cyan-800 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition cursor-pointer">
+          <button type="button" id="amb-submit-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-700 hover:bg-cyan-800 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition cursor-pointer">
             <span><i class="ti ti-message"></i> Obtenir mon devis</span>
             <span class="text-sm">→</span>
           </button>
@@ -109,14 +141,14 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
 
       <!-- Advanced Ambulance Configurator Script -->
       <script>
-      (function(){
-        var ambIds = {{ ambulance_service_ids_json|safe }};
+        (function () {
+          var ambIds = {{ ambulance_service_ids_json|safe }};
         var banner = document.getElementById('dem-ambulance-banner');
         var configContainer = document.getElementById('amb-config-container');
         var serviceTypeSelect = document.getElementById('amb-service-type');
         var recapContainer = document.getElementById('amb-recap');
         var recapContent = document.getElementById('amb-recap-content');
-        
+
         if (!banner || !ambIds || !ambIds.length) return;
 
         // State
@@ -145,7 +177,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
             dateE: '',
             duree: 6,
             effectif: 500,
-            equipe: {infirmier: true, medecin: false, ambulance: true, poste: false}
+            equipe: { infirmier: true, medecin: false, ambulance: true, poste: false }
           },
           nuit: false
         };
@@ -160,7 +192,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
         function renderConfig() {
           var type = ambState.serviceType;
           var html = '';
-          
+
           if (type === 'trajet') {
             html = renderTrajetForm();
           } else if (type === 'rapatriement') {
@@ -168,7 +200,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           } else {
             html = renderEvenementForm();
           }
-          
+
           configContainer.innerHTML = html;
           updateRecap();
         }
@@ -177,127 +209,127 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
           var st = ambState.trajet;
           return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-map-pin"></i> Point de départ</label>' +
-              '<input type="text" id="amb-depart" value="' + (st.depart || '') + '" placeholder="Adresse de départ..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.depart=this.value;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-map-pin"></i> Point de départ</label>' +
+            '<input type="text" id="amb-depart" value="' + (st.depart || '') + '" placeholder="Adresse de départ..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.depart=this.value;window.updateAmbRecap()">' +
             '</div>' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-flag"></i> Point d\'arrivée</label>' +
-              '<input type="text" id="amb-arrivee" value="' + (st.arrivee || '') + '" placeholder="Adresse d\'arrivée..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.arrivee=this.value;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-flag"></i> Point d\'arrivée</label>' +
+            '<input type="text" id="amb-arrivee" value="' + (st.arrivee || '') + '" placeholder="Adresse d\'arrivée..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.arrivee=this.value;window.updateAmbRecap()">' +
             '</div>' +
-          '</div>' +
-          '<div class="mt-3">' +
+            '</div>' +
+            '<div class="mt-3">' +
             '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
-              '<input type="checkbox" ' + (st.allerRetour ? 'checked' : '') + ' onchange="window.ambState.trajet.allerRetour=this.checked;window.updateAmbRecap()"> <i class="ti ti-repeat"></i> Aller-retour (retour au point de départ)' +
+            '<input type="checkbox" ' + (st.allerRetour ? 'checked' : '') + ' onchange="window.ambState.trajet.allerRetour=this.checked;window.updateAmbRecap()"> <i class="ti ti-repeat"></i> Aller-retour (retour au point de départ)' +
             '</label>' +
-          '</div>' +
-          '<div class="mt-3">' +
+            '</div>' +
+            '<div class="mt-3">' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-1">Distance estimée (km)</label>' +
             '<input type="number" id="amb-distance" value="' + st.distance + '" min="0" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.trajet.distance=parseFloat(this.value)||0;window.updateAmbRecap()">' +
             '<span class="text-[9px] text-slate-400 ml-2"><i class="ti ti-satellite"></i> Calculée par GPS en production</span>' +
-          '</div>' +
-          renderNuitCheckbox();
+            '</div>' +
+            renderNuitCheckbox();
         }
 
         function renderRapatriementForm() {
           var st = ambState.rapatriement;
           return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Ville de départ</label>' +
-              '<input type="text" value="' + (st.villeDep || '') + '" placeholder="Ex : Dakar" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.rapatriement.villeDep=this.value;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Ville de départ</label>' +
+            '<input type="text" value="' + (st.villeDep || '') + '" placeholder="Ex : Dakar" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.rapatriement.villeDep=this.value;window.updateAmbRecap()">' +
             '</div>' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Ville d\'arrivée</label>' +
-              '<input type="text" value="' + (st.villeArr || '') + '" placeholder="Ex : Saint-Louis" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.rapatriement.villeArr=this.value;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Ville d\'arrivée</label>' +
+            '<input type="text" value="' + (st.villeArr || '') + '" placeholder="Ex : Saint-Louis" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.rapatriement.villeArr=this.value;window.updateAmbRecap()">' +
             '</div>' +
-          '</div>' +
-          '<div class="mt-3">' +
+            '</div>' +
+            '<div class="mt-3">' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-2">Mode de transport</label>' +
             '<div class="flex gap-2">' +
-              '<button type="button" onclick="window.ambState.rapatriement.mode=\'routier\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'routier' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '"><i class="ti ti-ambulance"></i> Routier</button>' +
-              '<button type="button" onclick="window.ambState.rapatriement.mode=\'aérien\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'aérien' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '"><i class="ti ti-plane"></i> Aérien</button>' +
+            '<button type="button" onclick="window.ambState.rapatriement.mode=\'routier\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'routier' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '"><i class="ti ti-ambulance"></i> Routier</button>' +
+            '<button type="button" onclick="window.ambState.rapatriement.mode=\'aérien\';window.renderAmbConfig()" class="flex-1 text-xs font-semibold py-2 rounded-lg border-2 cursor-pointer transition ' + (st.mode === 'aérien' ? 'bg-cyan-700 border-cyan-700 text-white' : 'bg-white border-slate-200 text-cyan-700 hover:border-cyan-500') + '"><i class="ti ti-plane"></i> Aérien</button>' +
             '</div>' +
-          '</div>' +
-          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Date souhaitée</label>' +
-              '<input type="date" value="' + (st.dateR || '') + '" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.rapatriement.dateR=this.value;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Date souhaitée</label>' +
+            '<input type="date" value="' + (st.dateR || '') + '" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.rapatriement.dateR=this.value;window.updateAmbRecap()">' +
             '</div>' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">État du patient</label>' +
-              '<select class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.rapatriement.etatPatient=this.value;window.updateAmbRecap()">' +
-                '<option ' + (st.etatPatient === 'Stable, allongé' ? 'selected' : '') + '>Stable, allongé</option>' +
-                '<option ' + (st.etatPatient === 'Sous oxygène' ? 'selected' : '') + '>Sous oxygène</option>' +
-                '<option ' + (st.etatPatient === 'Soins intensifs / ventilé' ? 'selected' : '') + '>Soins intensifs / ventilé</option>' +
-                '<option ' + (st.etatPatient === 'Isolé (contagieux)' ? 'selected' : '') + '>Isolé (contagieux)</option>' +
-              '</select>' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">État du patient</label>' +
+            '<select class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.rapatriement.etatPatient=this.value;window.updateAmbRecap()">' +
+            '<option ' + (st.etatPatient === 'Stable, allongé' ? 'selected' : '') + '>Stable, allongé</option>' +
+            '<option ' + (st.etatPatient === 'Sous oxygène' ? 'selected' : '') + '>Sous oxygène</option>' +
+            '<option ' + (st.etatPatient === 'Soins intensifs / ventilé' ? 'selected' : '') + '>Soins intensifs / ventilé</option>' +
+            '<option ' + (st.etatPatient === 'Isolé (contagieux)' ? 'selected' : '') + '>Isolé (contagieux)</option>' +
+            '</select>' +
             '</div>' +
-          '</div>' +
-          '<div class="mt-3">' +
+            '</div>' +
+            '<div class="mt-3">' +
             '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
-              '<input type="checkbox" ' + (st.accompagnant ? 'checked' : '') + ' onchange="window.ambState.rapatriement.accompagnant=this.checked;window.updateAmbRecap()"> <i class="ti ti-users"></i> Présence d\'un accompagnant' +
+            '<input type="checkbox" ' + (st.accompagnant ? 'checked' : '') + ' onchange="window.ambState.rapatriement.accompagnant=this.checked;window.updateAmbRecap()"> <i class="ti ti-users"></i> Présence d\'un accompagnant' +
             '</label>' +
-          '</div>' +
-          renderNuitCheckbox();
+            '</div>' +
+            renderNuitCheckbox();
         }
 
         function renderEvenementForm() {
           var st = ambState.evenement;
-          var eq = function(key, label) {
+          var eq = function (key, label) {
             return '<label class="flex items-center gap-2 text-[10px] bg-white border border-slate-200 rounded-lg px-3 py-2 cursor-pointer">' +
               '<input type="checkbox" ' + (st.equipe[key] ? 'checked' : '') + ' onchange="window.ambState.evenement.equipe.' + key + '=this.checked;window.updateAmbRecap()"> ' + label +
-            '</label>';
+              '</label>';
           };
-          
+
           return '<div>' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="ti ti-map-pin"></i> Lieu / site de l\'événement</label>' +
             '<input type="text" value="' + (st.lieu || '') + '" placeholder="Adresse du site..." class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition mb-3" oninput="window.ambState.evenement.lieu=this.value;window.updateAmbRecap()">' +
-          '</div>' +
-          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Date</label>' +
-              '<input type="date" value="' + (st.dateE || '') + '" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.evenement.dateE=this.value;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Date</label>' +
+            '<input type="date" value="' + (st.dateE || '') + '" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" onchange="window.ambState.evenement.dateE=this.value;window.updateAmbRecap()">' +
             '</div>' +
             '<div>' +
-              '<label class="block text-[11px] font-bold text-slate-600 mb-1">Durée (heures)</label>' +
-              '<input type="number" value="' + st.duree + '" min="1" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.evenement.duree=parseFloat(this.value)||0;window.updateAmbRecap()">' +
+            '<label class="block text-[11px] font-bold text-slate-600 mb-1">Durée (heures)</label>' +
+            '<input type="number" value="' + st.duree + '" min="1" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.evenement.duree=parseFloat(this.value)||0;window.updateAmbRecap()">' +
             '</div>' +
-          '</div>' +
-          '<div class="mt-3">' +
+            '</div>' +
+            '<div class="mt-3">' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-1">Effectif attendu (personnes)</label>' +
             '<input type="number" value="' + st.effectif + '" min="0" class="w-full text-xs px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none transition" oninput="window.ambState.evenement.effectif=parseInt(this.value)||0;window.updateAmbRecap()">' +
-          '</div>' +
-          '<div class="mt-3">' +
+            '</div>' +
+            '<div class="mt-3">' +
             '<label class="block text-[11px] font-bold text-slate-600 mb-2">Dispositif médical souhaité</label>' +
             '<div class="flex flex-wrap gap-2">' +
-              eq('infirmier', 'Infirmier') +
-              eq('medecin', 'Médecin') +
-              eq('ambulance', 'Ambulance sur place') +
-              eq('poste', 'Poste de secours') +
+            eq('infirmier', 'Infirmier') +
+            eq('medecin', 'Médecin') +
+            eq('ambulance', 'Ambulance sur place') +
+            eq('poste', 'Poste de secours') +
             '</div>' +
-          '</div>' +
-          renderNuitCheckbox();
+            '</div>' +
+            renderNuitCheckbox();
         }
 
         function renderNuitCheckbox() {
           return '<div class="mt-3">' +
             '<label class="flex items-center gap-2 text-[11px] cursor-pointer">' +
-              '<input type="checkbox" ' + (ambState.nuit ? 'checked' : '') + ' onchange="window.ambState.nuit=this.checked;window.updateAmbRecap()"> <i class="ti ti-moon"></i> Intervention de nuit / week-end (+8 000 F)' +
+            '<input type="checkbox" ' + (ambState.nuit ? 'checked' : '') + ' onchange="window.ambState.nuit=this.checked;window.updateAmbRecap()"> <i class="ti ti-moon"></i> Intervention de nuit / week-end (+8 000 F)' +
             '</label>' +
-          '</div>';
+            '</div>';
         }
 
         function updateRecap() {
           var type = ambState.serviceType;
           var total = 0;
           var lines = '';
-          
+
           if (type === 'trajet') {
             var st = ambState.trajet;
             var km = st.allerRetour ? st.distance * 2 : st.distance;
             var base = PRICING.trajet.base;
             var coutKm = Math.round(km * PRICING.trajet.tarif_km);
             total = base + coutKm;
-            
+
             lines = '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Prix de base</span><span class="font-semibold text-slate-800">' + base.toLocaleString('fr-FR') + ' F</span></div>' +
               '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Distance (' + km + ' km)</span><span class="font-semibold text-slate-800">' + coutKm.toLocaleString('fr-FR') + ' F</span></div>';
           } else if (type === 'rapatriement') {
@@ -306,7 +338,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
             var coutKm = Math.round(st.distance * PRICING.rapatriement.tarif_km_long);
             var aerien = st.mode === 'aérien' ? PRICING.rapatriement.suppl_aerien : 0;
             total = base + coutKm + aerien;
-            
+
             lines = '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Prix de base</span><span class="font-semibold text-slate-800">' + base.toLocaleString('fr-FR') + ' F</span></div>' +
               '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Distance</span><span class="font-semibold text-slate-800">' + coutKm.toLocaleString('fr-FR') + ' F</span></div>' +
               (aerien ? '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Supplément aérien</span><span class="font-semibold text-slate-800">' + aerien.toLocaleString('fr-FR') + ' F</span></div>' : '');
@@ -318,26 +350,26 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
             var coutEquipe = extra * PRICING.evenement.tarif_soignant;
             var majEffectif = st.effectif > 2000 ? 100000 : (st.effectif > 1000 ? 50000 : 0);
             total = base + coutHeures + coutEquipe + majEffectif;
-            
+
             lines = '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Prix de base</span><span class="font-semibold text-slate-800">' + base.toLocaleString('fr-FR') + ' F</span></div>' +
               '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Durée (' + st.duree + 'h)</span><span class="font-semibold text-slate-800">' + coutHeures.toLocaleString('fr-FR') + ' F</span></div>' +
               (coutEquipe ? '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Équipe médicale</span><span class="font-semibold text-slate-800">' + coutEquipe.toLocaleString('fr-FR') + ' F</span></div>' : '') +
               (majEffectif ? '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Majoration effectif</span><span class="font-semibold text-slate-800">' + majEffectif.toLocaleString('fr-FR') + ' F</span></div>' : '');
           }
-          
+
           if (ambState.nuit) {
             total += 8000;
             lines += '<div class="flex justify-between text-[11px] py-1"><span class="text-slate-600">Nuit / week-end</span><span class="font-semibold text-slate-800">8 000 F</span></div>';
           }
-          
+
           lines += '<div class="flex justify-between text-[11px] py-2 border-t border-slate-200 mt-2"><span class="font-bold text-slate-700">Total estimé</span><span class="font-extrabold text-emerald-600">' + total.toLocaleString('fr-FR') + ' F</span></div>';
-          
+
           recapContainer.classList.remove('hidden');
           recapContent.innerHTML = lines;
         }
 
         // Event listeners
-        serviceTypeSelect.addEventListener('change', function() {
+        serviceTypeSelect.addEventListener('change', function () {
           ambState.serviceType = this.value;
           renderConfig();
         });
@@ -349,7 +381,7 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
 
         // Initialize
         renderConfig();
-      })();
+      }) ();
       </script>
 
 
@@ -361,7 +393,8 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
 
     <div class="hidden" aria-hidden="true" id="sipn-hidden-modes">
       <div class="search-modes">
-        <button type="button" class="search-mode-btn active" data-dem-search-mode="acte" aria-current="page">Acte</button>
+        <button type="button" class="search-mode-btn active" data-dem-search-mode="acte"
+          aria-current="page">Acte</button>
         <button type="button" class="search-mode-btn" data-dem-search-mode="structure">Structure</button>
         <button type="button" class="search-mode-btn" data-dem-search-mode="budget">Budget</button>
         <button type="button" class="search-mode-btn" data-dem-search-mode="assurance">Mutuelle</button>
@@ -378,7 +411,8 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
   {% include "healthcare/_search_mobile_filter_sheets.html" %}
 
   <div hidden aria-hidden="true">
-    <select name="assurance" id="id-assurance-dem-center" multiple class="text-xs">
+    {# name absent pour eviter la double soumission avec dem-sync-hidden #}
+    <select id="id-assurance-dem-center" multiple class="text-xs" data-dem-assurance-center="1">
       {% for label, group in assurances_grouped %}
       <optgroup label="{{ label }}">
         {% for a in group %}<option value="{{ a.pk }}" {% if a.pk|stringformat:'d' in current_assurances %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
@@ -393,12 +427,21 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
     <section class="sipn-presets sipn-presets--hidden mb-4" aria-label="Lots prédéfinis" hidden>
       <h2 class="sipn-presets-title">Lots prédéfinis</h2>
       <div class="mt-2 flex items-stretch gap-1.5 sm:gap-2">
-        <button type="button" id="preset-scroll-prev" class="preset-lot-scroll-btn is-hidden-overflow" aria-label="Lots précédents">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        <button type="button" id="preset-scroll-prev" class="preset-lot-scroll-btn is-hidden-overflow"
+          aria-label="Lots précédents">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
-        <div id="preset-scroll-search" class="preset-lots-scroll-wrap flex min-w-0 flex-1 gap-3 overflow-x-auto pb-2"></div>
-        <button type="button" id="preset-scroll-next" class="preset-lot-scroll-btn is-hidden-overflow" aria-label="Lots suivants">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        <div id="preset-scroll-search" class="preset-lots-scroll-wrap flex min-w-0 flex-1 gap-3 overflow-x-auto pb-2">
+        </div>
+        <button type="button" id="preset-scroll-next" class="preset-lot-scroll-btn is-hidden-overflow"
+          aria-label="Lots suivants">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
     </section>
@@ -422,67 +465,45 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
         {% include "healthcare/_search_mobile_results_view.html" %}
 
         <div class="sipn-results-desktop-wrap">
-        <div class="ctx-bar fade-in sipn-ctx-bar-desktop" role="status">
-          <div class="ctx-acte">{{ search_dem_ctx_title }}</div>
-          <div class="ctx-sub">{{ search_dem_ctx_sub }}</div>
-        </div>
+          <div class="ctx-bar fade-in sipn-ctx-bar-desktop" role="status">
+            <div class="ctx-acte">{{ search_dem_ctx_title }}</div>
+            <div class="ctx-sub">{{ search_dem_ctx_sub }}</div>
+          </div>
 
-        {% if active_filter_count %}
-        <div id="active-chips" class="flex flex-wrap items-center gap-1.5"></div>
-        {% endif %}
+          {% if active_filter_count %}
+          <div id="active-chips" class="flex flex-wrap items-center gap-1.5"></div>
+          {% endif %}
 
-                <!-- Sélecteur Tri-Tarifs (Régime de couverture : Comptant / IPM / Assurance) — Spec Tri-Tarifs États A, B, C, D -->
-        <div class="tritarif-bar-card mb-3 rounded-2xl border border-gray-200 bg-white p-3.5 shadow-xs">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-2.5">
-              <span class="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
-                Régime de couverture :
-              </span>
-              <div class="inline-flex rounded-xl bg-gray-100 p-1 text-xs font-semibold" id="tritarif-regime-chips" role="radiogroup" aria-label="Régime de couverture">
-                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all bg-white text-gray-900 shadow-xs font-bold ring-1 ring-gray-200" data-regime="comptant" aria-pressed="true">
-                  Comptant
-                </button>
-                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="ipm" aria-pressed="false">
-                  IPM
-                </button>
-                <button type="button" class="tritarif-chip-btn rounded-lg px-3 py-1.5 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="assurance" aria-pressed="false">
-                  Assurance privée
-                </button>
+          <div class="struct-panel fade-in">
+            <div class="sp-head">
+              <div class="sp-title">Structures disponibles</div>
+              <div class="sp-meta">
+                {% if mobile_results_by_org %}
+                <strong>{{ mobile_results_by_org|length }}</strong> structure{{ mobile_results_by_org|length|pluralize }}
+                {% else %}
+                <strong>{{ results_count }}</strong> offre{{ results_count|pluralize }}
+                {% endif %}
               </div>
             </div>
-            <div id="tritarif-regime-hint" class="text-[11px] text-gray-500 font-medium">
-              Tarifs publics au comptant
+            <div class="dem-struct-inner">
+              <div id="struct-list-d" class="struct-list-d">
+                {% include "healthcare/_search_results_structure_list.html" with list_variant="desktop" %}
+              </div>
+              <div id="comp-panel-container-d" class="comp-panel-container-d" aria-live="polite"></div>
             </div>
           </div>
-        </div>
 
-        <div class="struct-panel fade-in">
-          <div class="sp-head">
-            <div class="sp-title">Structures disponibles</div>
-            <div class="sp-meta">
-              {% if mobile_results_by_org %}
-              <strong>{{ mobile_results_by_org|length }}</strong> structure{{ mobile_results_by_org|length|pluralize }}
-              {% else %}
-              <strong>{{ results_count }}</strong> offre{{ results_count|pluralize }}
-              {% endif %}
-            </div>
-          </div>
-          <div class="dem-struct-inner">
-            <div id="struct-list-d" class="struct-list-d">
-              {% include "healthcare/_search_results_structure_list.html" with list_variant="desktop" %}
-            </div>
-            <div id="comp-panel-container-d" class="comp-panel-container-d" aria-live="polite"></div>
-          </div>
-        </div>
-
-        {% if page.has_other_pages %}
-        <nav class="sipn-pagination flex justify-center gap-2" aria-label="Pagination">
-          {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="sipn-page-btn">← Précédent</a>{% endif %}
-          <span class="sipn-page-num">{{ page.number }} / {{ page.paginator.num_pages }}</span>
-          {% if page.has_next %}<a href="?page={{ page.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="sipn-page-btn">Suivant →</a>{% endif %}
-        </nav>
-        {% endif %}
+          {% if page.has_other_pages %}
+          <nav class="sipn-pagination flex justify-center gap-2" aria-label="Pagination">
+            {% if page.has_previous %}<a
+              href="?page={{ page.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}"
+              class="sipn-page-btn">← Précédent</a>{% endif %}
+            <span class="sipn-page-num">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+            {% if page.has_next %}<a
+              href="?page={{ page.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}"
+              class="sipn-page-btn">Suivant →</a>{% endif %}
+          </nav>
+          {% endif %}
         </div>{# /.sipn-results-desktop-wrap #}
       </div>
 
@@ -500,10 +521,12 @@ Hero (dem-page-fill) puis flux recherche / contenu mobile.
   {% include "healthcare/_search_mobile_menu_view.html" %}
 
   <div class="sipn-prestations-tail" id="sipn-prestations-tail">
-    <div class="sipn-mobile-no-acte-hint sipn-pilier-mobile-ui" id="sipn-mobile-no-acte-hint" role="status" aria-live="polite"{% if pool_from_request or query %} hidden{% endif %}>
+    <div class="sipn-mobile-no-acte-hint sipn-pilier-mobile-ui" id="sipn-mobile-no-acte-hint" role="status"
+      aria-live="polite" {% if pool_from_request or query %} hidden{% endif %}>
       <div class="empty-state-m">
         <div class="empty-icon-m" aria-hidden="true"><i class="ti ti-arrow-left"></i></div>
-        <p class="empty-txt-m">Sélectionnez un acte dans le menu<br>pour voir toutes les structures qui le proposent.</p>
+        <p class="empty-txt-m">Sélectionnez un acte dans le menu<br>pour voir toutes les structures qui le proposent.
+        </p>
         <p class="empty-txt-m sipn-empty-hint-sub">Parcourez une famille ci-dessus ou utilisez la recherche.</p>
       </div>
     </div>

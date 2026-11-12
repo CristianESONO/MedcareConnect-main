@@ -596,15 +596,24 @@
 .mc-thread-act {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  border-radius: 8px;
-  padding: 7px 12px;
-  font-size: 11px;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 9px;
+  padding: 8px 14px;
+  font-size: 12px;
   font-weight: 700;
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
   font-family: inherit;
+  min-height: 38px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.1s ease, background 0.12s ease;
+}
+
+.mc-thread-act:active {
+  transform: scale(0.97);
 }
 
 .mc-thread-act--primary { background: var(--mc-blue); color: #fff; }
@@ -890,9 +899,11 @@ button.mc-wslot.pac-wchip--sel {
   background: var(--mc-green);
   color: #fff;
   box-shadow: 0 2px 8px rgba(79, 163, 199, 0.35);
+  transition: transform 0.1s ease, background 0.12s ease;
 }
 
 .mc-book-recap-btn--ok:hover { background: #0ea870; }
+.mc-book-recap-btn--ok:active { transform: scale(0.98); }
 .mc-book-recap-btn--ok:disabled {
   background: #9ca3af;
   box-shadow: none;
@@ -905,7 +916,12 @@ button.mc-wslot.pac-wchip--sel {
   border: 1px solid #e5e7eb;
   font-weight: 600;
   font-size: 11px;
-  min-height: 36px;
+  min-height: 38px;
+  transition: transform 0.1s ease, background 0.12s ease;
+}
+.mc-book-recap-btn--muted:active {
+  background: #f3f4f6;
+  transform: scale(0.98);
 }
 
 .mc-wmsg.mc-book-recap-step {

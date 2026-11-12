@@ -104,10 +104,30 @@ class PhotoAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceMedical)
 class ServiceMedicalAdmin(admin.ModelAdmin):
-    list_display = ("name", "icon", "order", "is_active")
+    list_display = (
+        "name",
+        "icon",
+        "order",
+        "actes_selectionnables_count",
+        "sous_categories_count",
+        "total_elements_count",
+        "is_active",
+    )
     list_filter = ("is_active",)
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
+
+    @admin.display(description="Actes sélectionnables (Niveau 3)")
+    def actes_selectionnables_count(self, obj):
+        return obj.acts.filter(level=3, is_active=True).count()
+
+    @admin.display(description="Sous-familles (Niveau 2)")
+    def sous_categories_count(self, obj):
+        return obj.acts.filter(level=2, is_active=True).count()
+
+    @admin.display(description="Total en base (N2 + N3)")
+    def total_elements_count(self, obj):
+        return obj.acts.filter(is_active=True).count()
 
 
 @admin.register(ActeMedical)

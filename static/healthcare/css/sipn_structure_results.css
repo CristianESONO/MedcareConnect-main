@@ -78,6 +78,13 @@ body.sipn-prestations .scard-m-acte {
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transition: background 0.12s;
+}
+body.sipn-prestations .scard-m-acte:active:not(.acte-blocked) {
+  background: var(--sipn-blue-l, rgba(79,163,199,0.1));
 }
 body.sipn-prestations .scard-m-acte.in-cart-acte {
   background: var(--sipn-green-l, var(--mc-accent-light, rgba(79, 163, 199, 0.12)));
@@ -139,11 +146,22 @@ body.sipn-prestations .scard-m-profile-btn {
   color: var(--sipn-g600, #4b5563);
   border: 1px solid var(--sipn-g200, #e5e7eb);
   border-radius: 7px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   font-size: 10px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.12s, color 0.12s;
+}
+body.sipn-prestations .scard-m-profile-btn:active {
+  background: var(--sipn-g200, #e5e7eb);
+  color: var(--sipn-blue, #123a63);
 }
 body.sipn-prestations .scard-m-cart-badge {
   font-size: 9.5px;
@@ -365,4 +383,42 @@ body.sipn-prestations .empty-txt-m {
   body.sipn-prestations .sipn-results-desktop-wrap .scard-m-acte-nom {
     font-size: 13px;
   }
+}
+
+/* ── Bouton "Tout" multiselect carte mobile ──────────────────────────── */
+body.sipn-prestations .btn-select-all-m {
+  background: #14b87a !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 7px 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 8px rgba(20,184,122,0.25) !important;
+  -webkit-tap-highlight-color: transparent !important;
+  touch-action: manipulation !important;
+  min-height: 34px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: transform 0.1s, box-shadow 0.1s !important;
+}
+body.sipn-prestations .btn-select-all-m:active {
+  transform: scale(0.95) !important;
+  box-shadow: 0 1px 4px rgba(20,184,122,0.2) !important;
+}
+
+/* ── Checkbox scard-m — zone de tap agrandie ─────────────────────────── */
+body.sipn-prestations .scard-m-checkbox {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  accent-color: var(--sipn-green, var(--mc-accent, #4fa3c7));
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }

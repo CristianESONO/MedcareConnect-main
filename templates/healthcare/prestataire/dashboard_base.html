@@ -242,7 +242,8 @@
         </div>
       </div>
 
-      <!-- ── SECTION 3 : OFFRE DE SOINS / MON EXERCICE (GROUPE DÉROULANT TOUJOURS OUVERT) ── -->
+      <!-- ── SECTION 3 : OFFRE DE SOINS / MON EXERCICE (RÉSERVÉ AUX STRUCTURES ACTIVÉES) ── -->
+      {% if org.is_active %}
       {% if org.account_nature != 'praticien' %}
         {# Structure médicale #}
         <div class="nav-group-wrap pt-1">
@@ -283,6 +284,7 @@
             </a>
           </div>
         </div>
+      {% endif %}
       {% endif %}
 
       {% if not org.is_praticien %}

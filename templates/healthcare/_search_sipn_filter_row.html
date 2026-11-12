@@ -1,69 +1,77 @@
 {% comment %}
-Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _search_sipn_filter_row_mobile.html (onglet Résultats).
+Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _search_sipn_filter_row_mobile.html (onglet
+Résultats).
 {% endcomment %}
 
 {# ── Desktop (démo) ── #}
 <div class="dem-filter-row sipn-desktop-filter-only">
   <span class="dem-filter-lbl">Trier :</span>
-  <select name="sort" id="id-sort-dem" class="dem-sort-select" aria-label="Trier les résultats" onchange="document.getElementById('search-form').submit()">
-    <option value="price_asc"  {% if current_sort == "price_asc" or not current_sort %}selected{% endif %}>Prix croissant</option>
+  <select name="sort" id="id-sort-dem" class="dem-sort-select" aria-label="Trier les résultats"
+    onchange="document.getElementById('search-form').submit()">
+    <option value="price_asc" {% if current_sort == "price_asc" or not current_sort %}selected{% endif %}>Prix croissant
+    </option>
     <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
-    <option value="price_ipm_asc"       {% if current_sort == "price_ipm_asc" %}selected{% endif %}>Prix IPM croissant</option>
-    <option value="price_ipm_desc"      {% if current_sort == "price_ipm_desc" %}selected{% endif %}>Prix IPM décroissant</option>
-    <option value="price_assurance_asc" {% if current_sort == "price_assurance_asc" %}selected{% endif %}>Prix Assurance croissant</option>
-    <option value="price_assurance_desc"{% if current_sort == "price_assurance_desc" %}selected{% endif %}>Prix Assurance décroissant</option>
-    <option value="price_asc"  {% if current_sort == "price_asc" or not current_sort %}selected{% endif %}>Prix croissant</option>
-    <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
-    <option value="delai_rdv_asc" {% if current_sort == "delai_rdv_asc" %}selected{% endif %}>RDV disponible le plus vite</option>
-    <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>Délai de réponse le plus court</option>
-    <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>Par zone / quartier</option>
+    <option value="price_ipm_asc" {% if current_sort == "price_ipm_asc" %}selected{% endif %}>Prix IPM croissant</option>
+    <option value="price_ipm_desc" {% if current_sort == "price_ipm_desc" %}selected{% endif %}>Prix IPM décroissant
+    </option>
+    <option value="price_assurance_asc" {% if current_sort == "price_assurance_asc" %}selected{% endif %}>Prix Assurance
+      croissant</option>
+    <option value="price_assurance_desc" {% if current_sort == "price_assurance_desc" %}selected{% endif %}>Prix Assurance
+      décroissant</option>
+    <option value="delai_rdv_asc" {% if current_sort == "delai_rdv_asc" %}selected{% endif %}>RDV disponible le plus vite
+    </option>
+    <option value="delai_asc" {% if current_sort == "delai_asc" %}selected{% endif %}>Délai de réponse le plus court
+    </option>
+    <option value="name_org" {% if current_sort == "name_org" %}selected{% endif %}>Par zone / quartier</option>
     <option value="distance" {% if current_sort == "distance" %}selected{% endif %}>Proximité</option>
   </select>
 
   <span class="dem-filter-lbl dem-filter-lbl--sep">Régime :</span>
-  <div class="inline-flex rounded-lg bg-gray-100 p-0.5 text-xs font-semibold mr-1">
-    <button type="button" class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all bg-white text-gray-900 shadow-xs font-bold" data-regime="comptant">Comptant</button>
-    <button type="button" class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="ipm">IPM</button>
-    <button type="button" class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all text-gray-600 hover:text-gray-900 font-medium" data-regime="assurance">Assurance</button>
+  <div class="inline-flex rounded-lg bg-gray-100 p-0.5 text-xs font-semibold mr-1" id="tritarif-regime-chips"
+    role="radiogroup" aria-label="Régime de couverture">
+    <button type="button"
+      class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all bg-white text-gray-900 shadow-xs font-bold ring-1 ring-gray-200"
+      data-regime="comptant" aria-pressed="true">Comptant</button>
+    <button type="button"
+      class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all text-gray-600 hover:text-gray-900 font-medium"
+      data-regime="ipm" aria-pressed="false">IPM</button>
+    <button type="button"
+      class="tritarif-chip-btn rounded-md px-2.5 py-1 transition-all text-gray-600 hover:text-gray-900 font-medium"
+      data-regime="assurance" aria-pressed="false">Assurance privée</button>
   </div>
 
   <span class="dem-filter-lbl dem-filter-lbl--sep">Filtrer :</span>
 
-  <button type="button" id="sipn-desktop-geo-chip" class="filter-chip{% if has_coordinates %} active{% endif %}" title="Définir votre position pour trier à proximité">
-    <span>{% if has_coordinates %}<i class="ti ti-map-pin"></i> Position active{% else %}<i class="ti ti-map-pin"></i> Près de moi{% endif %}</span>
+  <button type="button" id="sipn-desktop-geo-chip" class="filter-chip{% if has_coordinates %} active{% endif %}"
+    title="Définir votre position pour trier à proximité">
+    <span>{% if has_coordinates %}<i class="ti ti-map-pin"></i> Position active{% else %}<i class="ti ti-map-pin"></i>
+      Près de moi{% endif %}</span>
   </button>
 
-  <div class="filter-chip{% if current_assurances %} active{% endif %}" id="fc-assurance" data-dem-filter-drop="assurance" role="button" tabindex="0">
+  <div class="filter-chip{% if current_assurances %} active{% endif %}" id="fc-assurance"
+    data-dem-filter-drop="assurance" role="button" tabindex="0">
     <span id="fc-assurance-lbl">{% if current_assurances %}<i class="ti ti-shield-check"></i> {{ current_assurances|length }} assurance{{ current_assurances|length|pluralize }}{% else %}<i class="ti ti-shield-check"></i> Assurance{% endif %}</span>
     <span class="dem-filter-arr" aria-hidden="true">▼</span>
   </div>
-  <div class="filter-chip{% if current_city %} active{% endif %}" id="fc-zone" data-dem-filter-drop="zone" role="button" tabindex="0">
-    <span id="fc-zone-lbl">{% if current_city %}<i class="ti ti-map-pin"></i> {{ current_city }}{% else %}<i class="ti ti-map-pin"></i> Zone{% endif %}</span>
+  <div class="filter-chip{% if current_city %} active{% endif %}" id="fc-zone" data-dem-filter-drop="zone" role="button"
+    tabindex="0">
+    <span id="fc-zone-lbl">{% if current_city %}<i class="ti ti-map-pin"></i> {{ current_city }}{% else %}<i
+        class="ti ti-map-pin"></i> Zone{% endif %}</span>
     <span class="dem-filter-arr" aria-hidden="true">▼</span>
   </div>
-  <div class="filter-chip{% if price_max_val %} active{% endif %}" id="fc-budget" data-dem-filter-drop="budget" role="button" tabindex="0">
+  <div class="filter-chip{% if price_max_val %} active{% endif %}" id="fc-budget" data-dem-filter-drop="budget"
+    role="button" tabindex="0">
     <span id="fc-budget-lbl">{% if price_max_val %}<i class="ti ti-coin"></i> {{ price_max_val|floatformat:0 }} F{% else %}<i class="ti ti-coin"></i> Budget{% endif %}</span>
     <span class="dem-filter-arr" aria-hidden="true">▼</span>
   </div>
-  <div class="filter-chip{% if current_delai %} active{% endif %}" id="fc-delai" role="button" tabindex="0" onclick="document.getElementById('fc-delai-pills').classList.toggle('hidden')">
+  <div class="filter-chip{% if current_delai %} active{% endif %}" id="fc-delai" data-dem-filter-drop="delai" role="button" tabindex="0">
     <span id="fc-delai-lbl">{% if current_delai %}<i class="ti ti-clock"></i> {% for val, label in delai_choices %}{% if current_delai == val %}{{ label }}{% endif %}{% endfor %}{% else %}<i class="ti ti-clock"></i> Délai{% endif %}</span>
+    <span class="dem-filter-arr" aria-hidden="true">▼</span>
   </div>
 
-  <button type="button" id="fc-reset" class="filter-chip filter-chip--reset dem-filter-reset{% if active_filter_count or query %} visible{% endif %}" title="Réinitialiser les filtres">&times; Réinitialiser</button>
-
-  <div id="fc-delai-pills" class="dem-filter-pills-inline hidden">
-    {% for val, label in delai_choices %}
-    <button type="button" class="dem-filter-pill-inline{% if current_delai == val %} on{% endif %}" data-dem-delai-pill="{{ val }}" onclick="
-      document.getElementById('sipn-filter-delai').value = '{{ val }}';
-      document.querySelectorAll('.dem-filter-pill-inline').forEach(function(p){p.classList.remove('on')});
-      this.classList.add('on');
-      document.getElementById('fc-delai-lbl').textContent = '<i class="ti ti-clock"></i> {{ label }}';
-      document.getElementById('fc-delai').classList.add('active');
-      document.getElementById('fc-delai-pills').classList.add('hidden');
-      document.getElementById('search-form').submit();
-    ">{{ label }}</button>
-    {% endfor %}
-  </div>
+  <button type="button" id="fc-reset"
+    class="filter-chip filter-chip--reset dem-filter-reset{% if active_filter_count or query %} visible{% endif %}"
+    title="Réinitialiser les filtres">&times; Réinitialiser</button>
 
   <div id="sipn-filter-dropdown" class="sipn-filter-dropdown hidden sipn-desktop-filter-only" hidden aria-live="polite">
     <div class="sipn-filter-panel" data-sipn-panel="assurance" hidden>
@@ -84,7 +92,8 @@ Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _searc
         {% endfor %}
       </div>
       <div class="sipn-filter-panel-actions">
-        <button type="button" class="sipn-filter-panel-clear" data-sipn-clear="assurance"><i class="ti ti-x"></i> Effacer</button>
+        <button type="button" class="sipn-filter-panel-clear" data-sipn-clear="assurance"><i class="ti ti-x"></i>
+          Effacer</button>
         <button type="button" class="sipn-filter-panel-apply" data-sipn-apply="assurance">Appliquer</button>
       </div>
     </div>
@@ -93,31 +102,38 @@ Tri + filtres prestations — desktop : chips + dropdown · mobile : voir _searc
       <p class="sipn-filter-panel-title">Filtrer par zone / quartier</p>
       <div class="dem-filter-pills" id="dem-zone-pills">
         {% for c in top_cities %}
-        <button type="button" class="dem-filter-pill{% if current_city == c %} on{% endif %}" data-dem-zone-pill="{{ c }}">{{ c }}</button>
+        <button type="button" class="dem-filter-pill{% if current_city == c %} on{% endif %}"
+          data-dem-zone-pill="{{ c }}">{{ c }}</button>
         {% endfor %}
       </div>
-      <button type="button" class="dem-filter-clear-link" data-sipn-clear="zone"><i class="ti ti-x"></i> Effacer</button>
+      <button type="button" class="dem-filter-clear-link" data-sipn-clear="zone"><i class="ti ti-x"></i>
+        Effacer</button>
     </div>
 
     <div class="sipn-filter-panel" data-sipn-panel="budget" hidden>
       <p class="sipn-filter-panel-title">Budget maximum</p>
       <p class="dem-budget-dd-lbl" id="dem-dd-budget-lbl">{% if price_max_val %}{{ price_max_val|floatformat:0 }} FCFA{% else %}Illimité{% endif %}</p>
-      <input type="range" id="dem-dd-budget-range" class="dem-dd-budget-range" min="{{ global_price_min|default:2000 }}" max="{{ global_price_max|default:500000 }}" step="1000" value="{% if price_max_val %}{{ price_max_val }}{% else %}{{ global_price_max|default:500000 }}{% endif %}">
+      <input type="range" id="dem-dd-budget-range" class="dem-dd-budget-range" min="{{ global_price_min|default:2000 }}"
+        max="{{ global_price_max|default:500000 }}" step="1000"
+        value="{% if price_max_val %}{{ price_max_val }}{% else %}{{ global_price_max|default:500000 }}{% endif %}">
       <div class="dem-dd-budget-hints">
         <span>{{ global_price_min|default:2000|floatformat:0 }} F</span>
         <span>{{ global_price_max|default:500000|floatformat:0 }} F</span>
       </div>
-      <button type="button" class="dem-filter-clear-link" data-sipn-clear="budget"><i class="ti ti-x"></i> Effacer</button>
+      <button type="button" class="dem-filter-clear-link" data-sipn-clear="budget"><i class="ti ti-x"></i>
+        Effacer</button>
     </div>
 
     <div class="sipn-filter-panel" data-sipn-panel="delai" hidden>
       <p class="sipn-filter-panel-title">Délai souhaité</p>
       <div class="dem-filter-pills" id="dem-delai-pills">
         {% for val, label in delai_choices %}
-        <button type="button" class="dem-filter-pill{% if current_delai == val %} on{% endif %}" data-dem-delai-pill="{{ val }}">{{ label }}</button>
+        <button type="button" class="dem-filter-pill{% if current_delai == val %} on{% endif %}"
+          data-dem-delai-pill="{{ val }}">{{ label }}</button>
         {% endfor %}
       </div>
-      <button type="button" class="dem-filter-clear-link" data-sipn-clear="delai"><i class="ti ti-x"></i> Effacer</button>
+      <button type="button" class="dem-filter-clear-link" data-sipn-clear="delai"><i class="ti ti-x"></i>
+        Effacer</button>
     </div>
   </div>
 </div>

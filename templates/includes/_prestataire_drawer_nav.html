@@ -47,7 +47,8 @@
       </ul>
     </li>
 
-    {# ══ Offre de soins (structure) / Mon exercice (praticien) ══ #}
+    {# ══ Offre de soins (structure) / Mon exercice (praticien) — RÉSERVÉ AUX STRUCTURES ACTIVÉES ══ #}
+    {% if org.is_active %}
     <li class="mc-landing-drawer-group">
       <span class="mc-landing-drawer-group-label"><i class="{% if org.account_nature == 'praticien' %}ti ti-stethoscope{% else %}ti ti-clipboard-list{% endif %} mc-landing-drawer-icon" aria-hidden="true"></i> {% if org.account_nature == 'praticien' %}Mon exercice{% else %}Offre de soins{% endif %}</span>
       <ul class="mc-landing-drawer-sublist">
@@ -61,6 +62,7 @@
         {% endif %}
       </ul>
     </li>
+    {% endif %}
 
     {% if not org.is_praticien %}
     {# ══ Outils & IA ══ #}

@@ -25,7 +25,7 @@
   {% if user != conversation.patient and msg.thread_sender %}
   <div class="mc-wmsg-sender mc-wmsg-sender--patient">{{ msg.thread_sender }}</div>
   {% endif %}
-  {% if msg.content %}{{ msg.content|linebreaksbr }}{% endif %}
+  {% if msg.content %}{{ msg.content|urlize|linebreaksbr }}{% endif %}
   {% if msg.payload.type == 'predevis' %}
   <div style="margin-top:6px;display:inline-block;font-size:9.5px;font-weight:700;background:rgba(255,255,255,0.25);color:inherit;border-radius:4px;padding:2px 6px">
     <i class="ti ti-receipt"></i> Demande de pré-devis
@@ -37,7 +37,7 @@
       {% if msg.payload.kind == 'ticket' %}<i class="ti ti-ticket"></i> Ticket de prestation{% else %}<i class="ti ti-components"></i> Panel d'examens{% endif %}
     </div>
     <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:6px">{{ msg.payload.panel_nom|default:"Panel d'examens" }}</div>
-    <a href="/t/{{ msg.payload.panel_token }}" style="display:inline-flex;align-items:center;gap:6px;background:#0a5c8a;color:#ffffff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:7px;text-decoration:none">
+    <a href="{% if msg.payload.panel_token %}/t/{{ msg.payload.panel_token }}/{% elif msg.payload.panel_url %}{{ msg.payload.panel_url }}{% else %}#{% endif %}" style="display:inline-flex;align-items:center;gap:6px;background:#0a5c8a;color:#ffffff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:7px;text-decoration:none">
       <i class="ti ti-shopping-cart"></i> Ouvrir &amp; pré-sélectionner au panier →
     </a>
   </div>
@@ -57,7 +57,7 @@
   {% if msg.thread_sender %}
   <div class="mc-wmsg-sender{% if msg.thread_sender == 'MedCare' %} mc-wmsg-sender--medcare{% else %} mc-wmsg-sender--org{% endif %}">{{ msg.thread_sender }}</div>
   {% endif %}
-  {% if msg.content %}{{ msg.content|linebreaksbr }}{% endif %}
+  {% if msg.content %}{{ msg.content|urlize|linebreaksbr }}{% endif %}
   {% if msg.payload.type == 'predevis' %}
   <div style="margin-top:6px;display:inline-block;font-size:9.5px;font-weight:700;background:#e0f2fe;color:#0369a1;border-radius:4px;padding:2px 6px">
     <i class="ti ti-receipt"></i> Demande de pré-devis
@@ -69,7 +69,7 @@
       {% if msg.payload.kind == 'ticket' %}<i class="ti ti-ticket"></i> Ticket de prestation{% else %}<i class="ti ti-components"></i> Panel d'examens{% endif %}
     </div>
     <div style="font-weight:700;font-size:13px;color:#0369a1;margin-bottom:6px">{{ msg.payload.panel_nom|default:"Panel d'examens" }}</div>
-    <a href="/t/{{ msg.payload.panel_token }}" style="display:inline-flex;align-items:center;gap:6px;background:#0a5c8a;color:#ffffff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:7px;text-decoration:none">
+    <a href="{% if msg.payload.panel_token %}/t/{{ msg.payload.panel_token }}/{% elif msg.payload.panel_url %}{{ msg.payload.panel_url }}{% else %}#{% endif %}" style="display:inline-flex;align-items:center;gap:6px;background:#0a5c8a;color:#ffffff;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:7px;text-decoration:none">
       <i class="ti ti-shopping-cart"></i> Ouvrir &amp; pré-sélectionner au panier →
     </a>
   </div>

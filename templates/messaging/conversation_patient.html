@@ -1,7 +1,7 @@
 {% extends "users/patient_account_base.html" %}
 {% load static %}
 {% block title %}Conversation · {{ conversation.dossier_label }}{% endblock %}
-{% block account_page_title %}{% if conversation.organisme %}{{ conversation.organisme.name }}{% else %}Conversation{% endif %}{% endblock %}
+{% block account_page_title %}{% if conversation.organisme %}Secrétariat de {{ conversation.organisme.name }}{% else %}{{ conversation.dossier_label }}{% endif %}{% endblock %}
 
 {% block pac_head_back %}
 <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'messaging:inbox' %}'; }" class="pac-head-back-btn" aria-label="Retour">

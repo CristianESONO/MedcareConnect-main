@@ -41,6 +41,10 @@ def prestataire_type_etablissement(request):
         messages.error(request, "Veuillez d'abord créer votre établissement.")
         return redirect("healthcare:organisme_create")
 
+    if not org.is_active:
+        messages.warning(request, "Votre structure est en attente d'activation. L'accès aux panels d'examens sera disponible dès validation de votre compte.")
+        return redirect("healthcare:prestataire_dashboard")
+
     from healthcare.prestataire_catalogue import official_pilier_services
     from healthcare.data.structure_types_demo import DEMO_STRUCTURE_TYPES, PILIER_KEY_TO_SLUG
 
@@ -413,11 +417,11 @@ def prestataire_affiliation_delete(request, pk):
 
 def patient_ticket_view(request, token):
     # Essayer d'abord un ExamenPanel (structure multi-actes)
-    panel = ExamenPanel.objects.filter(token=token, is_active=True).first()
+    panel = ExamenPanel.objects.filter(token=token).first()
     if panel:
         return _panel_patient_view(request, panel)
 
-    ticket = get_object_or_404(PrestationTicket, identifiant=token, is_active=True)
+    ticket = get_object_or_404(PrestationTicket, identifiant=token)
     PrestationTicket.objects.filter(pk=ticket.pk).update(views_count=F("views_count") + 1)
     ticket.refresh_from_db()
 
@@ -689,6 +693,10 @@ def prestataire_panels(request):
     if not org:
         messages.error(request, "Veuillez d'abord créer votre établissement.")
         return redirect("healthcare:organisme_create")
+
+    if not org.is_active:
+        messages.warning(request, "Votre structure est en attente d'activation. L'accès aux panels d'examens sera disponible dès validation de votre compte.")
+        return redirect("healthcare:prestataire_dashboard")
 
     panels = ExamenPanel.objects.filter(organisme=org).prefetch_related("actes", "actes__acte")
 
@@ -971,6 +979,11 @@ def panel_send(request):
 
     panel_url = request.POST.get("panel_url", "").strip()
     panel_nom = request.POST.get("panel_nom", "Panel d'examens").strip()
+    panel_token = request.POST.get("panel_token", "").strip()
+    if not panel_token and "/t/" in panel_url:
+        panel_token = panel_url.split("/t/")[-1].strip("/")
+    if panel_token:
+        ExamenPanel.objects.filter(token=panel_token, organisme=org).update(is_active=True)
     conv_ids = request.POST.getlist("conv_ids")
 
     if not conv_ids:
@@ -995,7 +1008,7 @@ def panel_send(request):
                 f"Cliquez sur le lien pour ajouter les examens à votre panier et obtenir votre devis personnalisé."
             ),
             message_type="internal",
-            payload={"type": "panel_link", "panel_url": panel_url, "panel_nom": panel_nom},
+            payload={"type": "panel_link", "panel_url": panel_url, "panel_token": panel_token, "panel_nom": panel_nom},
         )
         # Marquer la conversation comme mise à jour
         conv.save(update_fields=["updated_at"])

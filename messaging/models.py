@@ -91,6 +91,11 @@ class Conversation(models.Model):
                 return self.rendez_vous.organisme
             except Exception:
                 pass
+        if self.prestataire_id and hasattr(self.prestataire, "healthcare_provider_profile"):
+            try:
+                return self.prestataire.healthcare_provider_profile
+            except Exception:
+                pass
         return None
 
     @property
