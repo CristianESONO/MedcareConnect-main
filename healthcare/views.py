@@ -2449,10 +2449,25 @@ def _dashboard_completion(org, actes_count, insurances_count):
     raw_oh = org.opening_hours
     if isinstance(raw_oh, str):
         raw_oh = None
+    # Vérifie qu'au moins un jour est configuré et non fermé
     hours_ok = bool(raw_oh) and any(
-        bool(v) for v in (raw_oh or {}).values()
+        isinstance(v, dict) and not v.get("closed", True) and (v.get("open") or v.get("close"))
+        for v in (raw_oh or {}).values()
     )
     if getattr(org, "is_praticien", False):
+        # Pour un praticien, les disponibilités sont valides si :
+        #   1. opening_hours contient au moins un jour ouvert, OU
+        #   2. il existe au moins un créneau de RDV à venir (agenda praticien)
+        if not hours_ok:
+            try:
+                from appointments.models import RendezVous
+                from django.utils import timezone
+                hours_ok = RendezVous.objects.filter(
+                    organisme=org,
+                    start__gte=timezone.now(),
+                ).exists()
+            except Exception:
+                pass
         return [
             {"key": "profile", "label": "Identité", "ok": bool(org.name and org.city)},
             {"key": "actes", "label": "Catalogue d'actes", "ok": actes_count > 0},
