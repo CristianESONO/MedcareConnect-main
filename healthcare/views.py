@@ -929,25 +929,15 @@ def search(request):
         delai_filter = ""
     domicile_filter = request.GET.get("domicile") == "1"
 
-    # Synchronisation intelligente avec les données de l'espace compte patient (si connecté)
+    # Profil patient connecté (utilisé pour les badges d'assurance compatible et la géolocalisation)
+    # NOTE: On n'injecte PAS silencieusement l'assurance ou la ville du profil dans les filtres
+    # de requête actifs sans action explicite de l'utilisateur, car cela réduirait à 0 résultat
+    # le catalogue complet (0 structure pour les actes non couverts par son assurance ou hors quartier).
     patient_profile = None
     if request.user.is_authenticated and getattr(request.user, "is_patient", False):
         patient_profile = getattr(request.user, "patient_profile", None)
 
-    # Indique si le filtre assurance vient implicitement du profil (pas de l'URL)
-    # Utilisé pour ne pas bloquer les résultats mobiles quand l'assurance ne couvre pas l'acte.
     assurance_implicit = False
-
-    if patient_profile:
-        # 1. Assurance : pré-sélectionnée par défaut si non filtrée explicitement dans la requête
-        if "assurance" not in request.GET and not assurance_ids and patient_profile.insurance_id:
-            assurance_ids = [str(patient_profile.insurance_id)]
-            assurance_ids_int = [patient_profile.insurance_id]
-            assurance_implicit = True  # filtre implicite profil, pas URL
-
-        # 2. Zone géographique (ville / quartier) : pré-remplie si non spécifiée
-        if "city" not in request.GET and not city and (patient_profile.city or patient_profile.quartier):
-            city = (patient_profile.quartier or patient_profile.city or "").strip()
 
     if request.GET.get("clear_geo"):
         request.session.pop("search_lat", None)
@@ -1044,64 +1034,6 @@ def search(request):
 
     pa_qs = _apply_level_price_location_filters(pa_qs)
     pa_qs_before_acte = _apply_level_price_location_filters(pa_qs_before_acte)
-
-    # Queryset mobile : identique à pa_qs mais SANS filtre assurance implicite du profil.
-    # Quand l'assurance vient du profil (pas de l'URL), les résultats mobiles montrent
-    # toutes les structures disponibles pour l'acte — l'assurance est affichée comme info,
-    # non comme filtre dur. Évite le cas 0 résultat quand l'assurance ne couvre pas l'acte.
-    if assurance_implicit and assurance_ids_int:
-        # Reconstruire pa_qs_mobile sans le filtre assurance
-        pa_qs_mobile = PrestataireActe.objects.filter(
-            is_available=True,
-            organisme__is_active=True,
-        ).select_related(
-            "organisme",
-            "organisme__type_organisme",
-            "organisme__region",
-            "organisme__subscription_plan",
-            "acte",
-            "acte__service_medical_category",
-        )
-        if q:
-            pa_qs_mobile = pa_qs_mobile.filter(q_filter)
-        if service_id and not acte_ids_clean and not lot_ids_clean:
-            pa_qs_mobile = pa_qs_mobile.filter(acte__service_medical_category_id=service_id)
-        if acte_ids_clean:
-            if len(acte_ids_clean) == 1:
-                pa_qs_mobile = pa_qs_mobile.filter(acte_id=acte_ids_clean[0])
-            else:
-                pa_qs_mobile = pa_qs_mobile.filter(acte_id__in=acte_ids_clean)
-        # Appliquer tous les filtres SAUF assurance (implicite profil)
-        def _apply_filters_no_assurance(qs):
-            if level in ("1", "2", "3"):
-                qs = qs.filter(acte__level=int(level))
-            if price_min is not None:
-                qs = qs.filter(price__gte=price_min)
-            if price_max is not None:
-                qs = qs.filter(price__lte=price_max)
-            if city:
-                qs = qs.filter(
-                    Q(organisme__city__icontains=city)
-                    | Q(organisme__quartier__icontains=city)
-                )
-            if type_ids:
-                qs = qs.filter(organisme__type_organisme_id__in=type_ids)
-            if region_ids:
-                qs = qs.filter(organisme__region_id__in=region_ids)
-            if delai_filter:
-                better_or_equal = [
-                    k for k in valid_delais
-                    if PrestataireActe.DELAI_RANK.get(k, 99)
-                    <= PrestataireActe.DELAI_RANK.get(delai_filter, 99)
-                ]
-                qs = qs.filter(delai__in=better_or_equal)
-            if domicile_filter:
-                qs = qs.filter(organisme__prises_sang_domicile=True)
-            return qs
-        pa_qs_mobile = _apply_filters_no_assurance(pa_qs_mobile)
-        pa_qs_mobile = _annotate_delai_sort(pa_qs_mobile)
-    else:
-        pa_qs_mobile = pa_qs
 
     pa_qs = _annotate_delai_sort(pa_qs)
     pa_qs_before_acte = _annotate_delai_sort(pa_qs_before_acte)
@@ -1719,11 +1651,9 @@ def search(request):
 
     mobile_results_by_org: list[dict] = []
     mobile_results_acte_total = len(pool_for_pills) if pool_from_request else 0
-    if pool_from_request and (page.object_list or results_count > 0 or assurance_implicit):
+    if pool_from_request and (page.object_list or results_count > 0):
         # Récupérer l'ensemble des offres des actes recherchés pour toutes les structures.
-        # On utilise pa_qs_mobile (sans filtre assurance implicite) pour ne jamais
-        # afficher 0 résultats sur mobile quand l'assurance du profil ne couvre pas l'acte.
-        pool_offers = list(pa_qs_mobile.filter(acte_id__in=pool_for_pills))
+        pool_offers = list(pa_qs.filter(acte_id__in=pool_for_pills))
         _attach_distance_km_to_offers(pool_offers, latlng)
         _dem_attach_insurance(pool_offers)
         _dem_attach_catalog_counts(pool_offers)

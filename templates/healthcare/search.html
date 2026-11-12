@@ -7,9 +7,9 @@
 {% block extra_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=40" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=41" rel="stylesheet" />
 <link href="{% static 'healthcare/css/sipn_structure_results.css' %}?v=2" rel="stylesheet" />
-<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=44" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=45" rel="stylesheet" />
 <link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=6" rel="stylesheet" />
 <link href="{% static 'messaging/css/thread_wa.css' %}?v=16" rel="stylesheet" />
 <link href="{% static 'healthcare/css/demo_patient_search.css' %}?v=20260530e" rel="stylesheet" />
@@ -4467,6 +4467,10 @@
       }
       strip.classList.add('show');
       strip.hidden = false;
+      var stripGoBtn = document.getElementById('sel-strip-go-results');
+      if (stripGoBtn) {
+        stripGoBtn.textContent = 'Voir les structures (' + selected.size + ') →';
+      }
       pills.innerHTML = Array.from(selected).map(function(pk){
         var name = acteNames[pk] || ('Acte #' + pk);
         return '<div class="sel-pill-m">' + escapeHtml(name) +
@@ -4539,6 +4543,10 @@
       if (fabGo) {
         fabGo.hidden = !showGo;
         fabGo.classList.toggle('show', showGo);
+        var fabLabel = fabGo.querySelector('.sipn-fab-label');
+        if (fabLabel) {
+          fabLabel.textContent = 'Voir les structures (' + selected.size + ')';
+        }
       }
       if (fabCount) {
         if (showGo && hasSel) {

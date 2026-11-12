@@ -5,12 +5,11 @@
   {% empty %}
   <div class="empty-state-m">
     <div class="empty-icon-m" aria-hidden="true">{% include "healthcare/_icon_svg.html" with icon="search" class="sipn-ico sipn-ico--xl" %}</div>
-    {% if assurance_implicit %}
-    <p class="empty-txt-m">Aucune structure trouvée avec votre assurance pour cet acte.</p>
-    <p class="empty-txt-m sipn-empty-hint-sub">Essayez sans filtre assurance pour voir toutes les structures disponibles.</p>
-    <a href="?{% if request.GET.acte %}acte={{ request.GET.acte }}&{% endif %}assurance=&sort={{ sort|default:'price_asc' }}" class="sipn-reset-link">Voir sans filtre assurance</a>
-    {% else %}
     <p class="empty-txt-m">Aucune structure ne correspond à ces critères</p>
+    {% if request.GET.assurance or request.GET.city or request.GET.price_max or request.GET.delai %}
+    <p class="empty-txt-m sipn-empty-hint-sub">Certains filtres restreignent vos résultats.</p>
+    <a href="?{% for aid in current_actes %}acte={{ aid }}&{% endfor %}sort={{ sort|default:'price_asc' }}" class="sipn-reset-link">Effacer les filtres et voir tous les résultats</a>
+    {% else %}
     <a href="{% url 'healthcare:search' %}" class="sipn-reset-link">Réinitialiser la recherche</a>
     {% endif %}
   </div>
