@@ -330,6 +330,9 @@
 }
 
 @media (max-width: 767px) {
+  .pac-main-head .pac-back-btn,
+  .pac-main-head .pac-head-actions,
+  .pac-head-actions,
   .pac-btn--mobile-hidden {
     display: none !important;
   }
@@ -379,10 +382,9 @@
     line-height: 32px !important;
     height: 32px !important;
   }
-  .pac-back-btn {
-    height: 32px !important;
-    padding: 0 10px !important;
-    font-size: 11px !important;
+  .pac-main-head .pac-back-btn,
+  .pac-head-actions {
+    display: none !important;
   }
 }
 
@@ -716,12 +718,9 @@
   .pac-page--messages .pac-inner {
     padding: 6px 4px 16px !important;
   }
-  .pac-back-btn {
-    width: auto;
-    justify-content: center;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 10px;
+  .pac-main-head .pac-back-btn,
+  .pac-head-actions {
+    display: none !important;
   }
   .pac-back-desktop { display: none; }
   .pac-back-mobile { display: inline; }

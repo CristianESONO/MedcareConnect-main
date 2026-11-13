@@ -3,9 +3,9 @@
 {% block title %}{% block account_title %}Mon compte{% endblock %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=20260825_v12">
-<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v12">
-<link rel="stylesheet" href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=20260825_v12">
+<link rel="stylesheet" href="{% static 'css/visitor_chrome.css' %}?v=20260825_v20">
+<link rel="stylesheet" href="{% static 'users/css/patient_compte.css' %}?v=20260825_v20">
+<link rel="stylesheet" href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=20260825_v20">
 {% block account_extra_css %}{% endblock %}
 {% endblock %}
 
@@ -24,13 +24,13 @@
         {% endblock %}
         <h1 class="pac-main-title" id="pac-content-title">{% block account_page_title %}Mon compte{% endblock %}</h1>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="hidden md:flex items-center gap-2 pac-head-actions">
         {% block pac_head_actions %}
-        <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if user.is_authenticated and user.is_patient and account_active == 'devis' or account_active == 'rappels' %}pac-btn--mobile-hidden{% endif %} {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
+        <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
           <i class="ti ti-mail" aria-hidden="true"></i> Messages
           {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
         </a>
-        <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex {% if user.is_authenticated and user.is_patient and account_active == 'devis' or account_active == 'rappels' %}pac-btn--mobile-hidden{% endif %}">
+        <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
           <i class="ti ti-search" aria-hidden="true"></i> Prestations
         </a>
         {% endblock %}
