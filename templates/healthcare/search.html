@@ -1795,6 +1795,17 @@
       }
       setTimeout(function(){ window.__suppressAutoFilterSubmit = false; }, 180);
     }
+    if (!form.getAttribute('data-dem-delai-sync')) {
+      form.setAttribute('data-dem-delai-sync', '1');
+      form.addEventListener('submit', function(){
+        var bDel = document.getElementById('dem-bar-delai');
+        var m = demDelaiMaster();
+        if (bDel && m) {
+          m.value = bDel.value;
+          m.disabled = false;
+        }
+      }, true);
+    }
     if (!form.getAttribute('data-dem-assurance-hidden-sync')) {
       form.setAttribute('data-dem-assurance-hidden-sync', '1');
       form.addEventListener('submit', function(){
