@@ -1073,23 +1073,44 @@ def search(request):
 
     per_page = 24
 
+    def _is_all_zones_ambulance(organisme) -> bool:
+        """Détecte si une structure est une ambulance / SMUR couvrant toutes zones."""
+        t_slug = (organisme.type_organisme.slug or "").lower() if organisme.type_organisme else ""
+        t_name = (organisme.type_organisme.name or "").lower() if organisme.type_organisme else ""
+        o_name = (organisme.name or "").lower()
+        return "ambulance" in t_slug or "ambulance" in t_name or "ambulance" in o_name
+
     if proximity_on and latlng:
         lat0, lng0 = latlng
-        scored = []
+        scored_geo = []
+        unscored_geo = []
         for pa in pa_qs:
             org = pa.organisme
-            if org.latitude is None or org.longitude is None:
-                continue
-            d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
-            if d <= radius_km:
-                pa.distance_km = round(d, 1)
-                scored.append(pa)
+            is_global_ambulance = _is_all_zones_ambulance(org)
+
+            if org.latitude is not None and org.longitude is not None:
+                d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
+                if d <= radius_km or is_global_ambulance:
+                    pa.distance_km = round(d, 1)
+                    scored_geo.append(pa)
+                else:
+                    # Hors rayon kilométrique mais structure sans coordonnées ou ambulance
+                    pa.distance_km = None
+                    unscored_geo.append(pa)
+            else:
+                # Structure sans latitude/longitude : jamais écartée, placée en dernier
+                pa.distance_km = None
+                unscored_geo.append(pa)
+
+        # Tri des résultats géocodés dans le rayon
         if sort == "price_asc":
-            scored.sort(key=lambda x: (x.distance_km, x.price, x.acte.name))
+            scored_geo.sort(key=lambda x: (x.distance_km, x.price, x.acte.name))
+            unscored_geo.sort(key=lambda x: (x.price, x.acte.name))
         elif sort == "price_desc":
-            scored.sort(key=lambda x: (x.distance_km, -x.price, x.acte.name))
+            scored_geo.sort(key=lambda x: (x.distance_km, -x.price, x.acte.name))
+            unscored_geo.sort(key=lambda x: (-x.price, x.acte.name))
         elif sort == "delai_asc":
-            scored.sort(
+            scored_geo.sort(
                 key=lambda x: (
                     x.distance_km,
                     getattr(x, "_delai_sort", 99),
@@ -1097,8 +1118,15 @@ def search(request):
                     x.acte.name,
                 )
             )
+            unscored_geo.sort(
+                key=lambda x: (
+                    getattr(x, "_delai_sort", 99),
+                    x.price,
+                    x.acte.name,
+                )
+            )
         elif sort == "delai_desc":
-            scored.sort(
+            scored_geo.sort(
                 key=lambda x: (
                     x.distance_km,
                     -getattr(x, "_delai_sort", 99),
@@ -1106,22 +1134,37 @@ def search(request):
                     x.acte.name,
                 )
             )
+            unscored_geo.sort(
+                key=lambda x: (
+                    -getattr(x, "_delai_sort", 99),
+                    x.price,
+                    x.acte.name,
+                )
+            )
         else:
-            scored.sort(key=lambda x: (x.distance_km, x.price))
+            scored_geo.sort(key=lambda x: (x.distance_km, x.price))
+            unscored_geo.sort(key=lambda x: x.price)
+
+        scored = scored_geo + unscored_geo
         results_count = len(scored)
         paginator = Paginator(scored, per_page)
         page = paginator.get_page(request.GET.get("page"))
     elif latlng and sort == "distance":
         lat0, lng0 = latlng
-        scored = []
+        scored_geo = []
+        unscored_geo = []
         for pa in pa_qs:
             org = pa.organisme
-            if org.latitude is None or org.longitude is None:
-                continue
-            d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
-            pa.distance_km = round(d, 1)
-            scored.append(pa)
-        scored.sort(key=lambda x: (x.distance_km, x.price))
+            if org.latitude is not None and org.longitude is not None:
+                d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
+                pa.distance_km = round(d, 1)
+                scored_geo.append(pa)
+            else:
+                pa.distance_km = None
+                unscored_geo.append(pa)
+        scored_geo.sort(key=lambda x: (x.distance_km, x.price))
+        unscored_geo.sort(key=lambda x: x.price)
+        scored = scored_geo + unscored_geo
         results_count = len(scored)
         paginator = Paginator(scored, per_page)
         page = paginator.get_page(request.GET.get("page"))

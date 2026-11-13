@@ -2027,8 +2027,9 @@
         '<button type="submit" class="w-full rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-800">Rechercher</button>' +
         '</div>';
       document.getElementById('dem-zone-geo').addEventListener('click', function(){
-        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-          alert('La géolocalisation nécessite une connexion sécurisée (HTTPS).');
+        var isHttpInsecure = (window.isSecureContext === false) || (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1');
+        if (isHttpInsecure) {
+          alert("La géolocalisation nécessite une connexion sécurisée (HTTPS). Utilisez la recherche d'adresse.");
           return;
         }
         if (!navigator.geolocation) { alert('Géolocalisation indisponible sur ce navigateur.'); return; }
@@ -2040,8 +2041,14 @@
           setCoords(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6), true);
           btn.disabled = false;
           btn.textContent = prev;
-        }, function(){
-          alert('Position refusée ou indisponible.');
+        }, function(err){
+          var msg = 'Position refusée ou indisponible.';
+          if (err) {
+            if (err.code === 1) msg = 'Autorisation GPS refusée. Activez la localisation dans votre navigateur.';
+            else if (err.code === 2) msg = 'Position GPS momentanément indisponible.';
+            else if (err.code === 3) msg = 'Délai GPS dépassé. Veuillez réessayer.';
+          }
+          alert(msg);
           btn.disabled = false;
           btn.textContent = prev;
         }, { enableHighAccuracy: true, timeout: 15000 });
@@ -5210,16 +5217,23 @@
 
   var bg = $('#btn-geolocate');
   if (bg) bg.addEventListener('click', function(){
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    var isHttpInsecure = (window.isSecureContext === false) || (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1');
+    if (isHttpInsecure) {
       var w = $('#geo-http-warn'); if (w) w.classList.remove('hidden'); return;
     }
-    if (!navigator.geolocation){ alert('Géolocalisation indisponible.'); return; }
+    if (!navigator.geolocation){ alert('Géolocalisation indisponible sur cet appareil.'); return; }
     bg.disabled = true; bg.textContent = 'Localisation…';
     navigator.geolocation.getCurrentPosition(function(p){
       setCoords(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6), true);
       bg.disabled = false; bg.innerHTML = '<span><i class="ti ti-antenna"></i></span> Utiliser ma position GPS';
-    }, function(){
-      alert('Position refusée ou indisponible.');
+    }, function(err){
+      var msg = 'Position refusée ou indisponible.';
+      if (err) {
+        if (err.code === 1) msg = 'Autorisation GPS refusée. Activez la localisation dans les réglages de votre navigateur.';
+        else if (err.code === 2) msg = 'Position GPS momentanément indisponible.';
+        else if (err.code === 3) msg = 'Délai GPS dépassé. Veuillez réessayer ou entrer une adresse.';
+      }
+      alert(msg);
       bg.disabled = false; bg.innerHTML = '<span><i class="ti ti-antenna"></i></span> Utiliser ma position GPS';
     }, {enableHighAccuracy:true, timeout:15000});
   });
