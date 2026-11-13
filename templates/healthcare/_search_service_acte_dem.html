@@ -18,14 +18,19 @@ Variables : service_dem_pills, acte_dem_families, current_acte, dem_clear_acte_u
   {% if mode == "mobile" %}
     {% with tree_mx="min(42vh, 320px)" %}
 <div class="dem-actes-nav">
-  <div class="dem-actes-head">
-    <div class="dem-actes-title">Parcourir les actes</div>
-    <div class="dem-actes-sub">Famille → Sous-famille → Acte</div>
-    {% if current_acte %}
-    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
-    {% elif pool_from_request %}
-    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
-    {% endif %}
+  <div class="dem-actes-head flex items-center justify-between">
+    <div>
+      <div class="dem-actes-title">Parcourir les actes</div>
+      <div class="dem-actes-sub">Famille → Sous-famille → Acte</div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="submit" form="search-form" class="btn-primary sipn-search-go text-[11px] font-bold px-3 py-1 rounded-lg shadow-sm">Rechercher</button>
+      {% if current_acte %}
+      <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+      {% elif pool_from_request %}
+      <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+      {% endif %}
+    </div>
   </div>
   <div class="dem-actes-search-wrap">
     <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
@@ -40,14 +45,19 @@ Variables : service_dem_pills, acte_dem_families, current_acte, dem_clear_acte_u
   {% else %}
     {% with tree_mx="min(calc(100vh - 12rem), 520px)" %}
 <div class="dem-actes-nav">
-  <div class="dem-actes-head">
-    <div class="dem-actes-title">Parcourir les actes</div>
-    <div class="dem-actes-sub">Famille → Sous-famille → Acte</div>
-    {% if current_acte %}
-    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
-    {% elif pool_from_request %}
-    <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
-    {% endif %}
+  <div class="dem-actes-head flex items-center justify-between">
+    <div>
+      <div class="dem-actes-title">Parcourir les actes</div>
+      <div class="dem-actes-sub">Famille → Sous-famille → Acte</div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="submit" form="search-form" class="btn-primary sipn-search-go text-[11px] font-bold px-3 py-1 rounded-lg shadow-sm">Rechercher</button>
+      {% if current_acte %}
+      <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+      {% elif pool_from_request %}
+      <a href="{{ dem_clear_acte_url }}" class="dem-actes-clear">Tous les actes</a>
+      {% endif %}
+    </div>
   </div>
   <div class="dem-actes-search-wrap">
     <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
@@ -75,10 +85,15 @@ Variables : service_dem_pills, acte_dem_families, current_acte, dem_clear_acte_u
   {% elif mode == "mobile" %}
     {% with tree_mx="min(36vh, 260px)" %}
 <div class="dem-actes-embed actes-nav dem-actes-nav-parity">
-  <div class="nav-head">
-    <div class="nav-title">Parcourir les actes</div>
-    <div class="nav-sub-label">Famille → Sous-famille → Acte</div>
-    {% if current_acte or pool_from_request %}<a href="{{ dem_clear_acte_url }}" class="dem-nav-clear-link">Tous les actes</a>{% endif %}
+  <div class="nav-head flex items-center justify-between">
+    <div>
+      <div class="nav-title">Parcourir les actes</div>
+      <div class="nav-sub-label">Famille → Sous-famille → Acte</div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="submit" form="search-form" class="btn-primary sipn-search-go text-[11px] font-bold px-3 py-1 rounded-lg shadow-sm">Rechercher</button>
+      {% if current_acte or pool_from_request %}<a href="{{ dem_clear_acte_url }}" class="dem-nav-clear-link text-xs">Tous les actes</a>{% endif %}
+    </div>
   </div>
   <div class="nav-search">
     <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">
@@ -93,10 +108,15 @@ Variables : service_dem_pills, acte_dem_families, current_acte, dem_clear_acte_u
   {% else %}
     {% with tree_mx="min(300px, 42vh)" %}
 <div class="dem-actes-embed actes-nav dem-actes-nav-parity">
-  <div class="nav-head">
-    <div class="nav-title">Parcourir les actes</div>
-    <div class="nav-sub-label">Famille → Sous-famille → Acte</div>
-    {% if current_acte or pool_from_request %}<a href="{{ dem_clear_acte_url }}" class="dem-nav-clear-link">Tous les actes</a>{% endif %}
+  <div class="nav-head flex items-center justify-between">
+    <div>
+      <div class="nav-title">Parcourir les actes</div>
+      <div class="nav-sub-label">Famille → Sous-famille → Acte</div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="submit" form="search-form" class="btn-primary sipn-search-go text-[11px] font-bold px-3 py-1 rounded-lg shadow-sm">Rechercher</button>
+      {% if current_acte or pool_from_request %}<a href="{{ dem_clear_acte_url }}" class="dem-nav-clear-link text-xs">Tous les actes</a>{% endif %}
+    </div>
   </div>
   <div class="nav-search">
     <input type="search" class="dem-field dem-acte-filter-input py-2 text-sm" placeholder="Rechercher un acte…" autocomplete="off" aria-label="Filtrer la liste des actes">

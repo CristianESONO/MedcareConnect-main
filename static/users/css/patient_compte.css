@@ -329,6 +329,12 @@
   text-overflow: ellipsis !important;
 }
 
+@media (max-width: 767px) {
+  .pac-btn--mobile-hidden {
+    display: none !important;
+  }
+}
+
 .pac-back-btn {
   background: rgba(255, 255, 255, 0.14) !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;

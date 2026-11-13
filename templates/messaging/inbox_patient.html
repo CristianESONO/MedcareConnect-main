@@ -4,9 +4,15 @@
 {% block account_page_title %}Messagerie{% endblock %}
 {% block pac_head_back %}{% endblock %}
 {% block pac_head_actions %}
+{% if user.is_authenticated and user.is_patient %}
+<a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex pac-btn--mobile-hidden">
+  <i class="ti ti-search" aria-hidden="true"></i> Prestations
+</a>
+{% else %}
 <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
   <i class="ti ti-search" aria-hidden="true"></i> Prestations
 </a>
+{% endif %}
 {% endblock %}
 {% block account_extra_css %}
 <link rel="stylesheet" href="{% static 'messaging/css/thread_wa.css' %}?v=20260825_v13">

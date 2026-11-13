@@ -17,6 +17,19 @@
 <style>
   :root { --hc-accent:#4fa3c7; --hc-accent-dark:#3d8fb3; --hc-primary:var(--mc-navy, #123a63); --dem-shadow:0 2px 16px rgba(18,58,99,.09); }
 
+  /* Empêcher le zoom automatique d'iOS Safari au focus sur les champs de recherche mobile (font-size >= 16px) */
+  @media screen and (max-width: 1023px) {
+    #search-q,
+    .tokenized-input-container input,
+    #pap-search-inp,
+    .dem-acte-filter-input,
+    #search-form input[type="search"],
+    #search-form input[type="text"],
+    .pap-search input {
+      font-size: 16px !important;
+    }
+  }
+
   /* Filtres Résultats mobile — priorité sur anciennes règles sipn_patient.css en cache */
   @media (max-width: 1023px) {
     body.sipn-prestations.sipn-mobile-view-results #search-form.search-page--dem .sipn-mobile-results-filters {
@@ -1518,7 +1531,18 @@
         row.classList.remove('active');
         if (chk) chk.checked = false;
       }
-      navigateActePool(ids);
+      // Ne pas lancer la recherche automatiquement pour permettre la multi-sélection
+      var sf = document.getElementById('search-form');
+      if (sf) {
+        sf.querySelectorAll('input[name="acte"]').forEach(function(inp){ inp.remove(); });
+        ids.forEach(function(id){
+          var h = document.createElement('input');
+          h.type = 'hidden';
+          h.name = 'acte';
+          h.value = id;
+          sf.appendChild(h);
+        });
+      }
     });
   })();
 
@@ -5662,7 +5686,7 @@
       inputWrapper.insertBefore(tokenContainer, searchInput);
       tokenContainer.appendChild(searchInput);
       if (searchIcon) tokenContainer.appendChild(searchIcon);
-      var fontSz = isMobile ? '12px' : '14px';
+      var fontSz = isMobile ? '16px' : '14px';
       searchInput.style.cssText = 'flex:1 1 100px;min-width:100px;border:none;outline:none;padding:2px 4px;margin:0;font-size:' + fontSz + ';background:transparent;';
     }
     
@@ -5808,6 +5832,14 @@
             }
           });
         }
+
+        // Fusionner avec les actes cochés dans la barre latérale (.dem-acte-row--multi)
+        document.querySelectorAll('.dem-acte-row--multi.active').forEach(function(r) {
+          var rpk = r.getAttribute('data-dem-acte-pk');
+          if (rpk && acteIds.indexOf(rpk) === -1) {
+            acteIds.push(rpk);
+          }
+        });
 
         // Mettre à jour les inputs cachés dans le formulaire
         form.querySelectorAll('input[name="acte"]').forEach(function(inp) {
@@ -5971,9 +6003,6 @@
                   searchInput.value = '';
                   if (clearBtn) clearBtn.style.display = 'none';
                   autocompleteDropdown.style.display = 'none';
-                  if (window.innerWidth < 1024) {
-                    triggerSearchUpdate();
-                  }
                 });
                 item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
                 item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
@@ -5996,9 +6025,6 @@
             searchInput.value = '';
             if (clearBtn) clearBtn.style.display = 'none';
             autocompleteDropdown.style.display = 'none';
-            if (window.innerWidth < 1024) {
-              triggerSearchUpdate();
-            }
           });
           item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
           item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
@@ -6276,8 +6302,18 @@
         hideResultsArea();
       }
       
-      // Use AJAX to update without page refresh
-      updatePageContent(u.toString());
+      // Synchroniser les champs cachés sans lancer la recherche automatiquement
+      var sf = document.getElementById('search-form');
+      if (sf) {
+        sf.querySelectorAll('input[name="acte"]').forEach(function(inp){ inp.remove(); });
+        ids.forEach(function(id){
+          var h = document.createElement('input');
+          h.type = 'hidden';
+          h.name = 'acte';
+          h.value = id;
+          sf.appendChild(h);
+        });
+      }
     }
     
     function handleFilterChange(e) {

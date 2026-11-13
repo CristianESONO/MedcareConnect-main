@@ -1,5 +1,24 @@
 {% extends "users/patient_account_base.html" %}
 {% block title %}Mon compte — Devis {{ devis.reference }}{% endblock %}
+{% block pac_head_actions %}
+{% if user.is_authenticated and user.is_patient %}
+<a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex pac-btn--mobile-hidden {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
+  <i class="ti ti-mail" aria-hidden="true"></i> Messages
+  {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
+</a>
+<a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex pac-btn--mobile-hidden">
+  <i class="ti ti-search" aria-hidden="true"></i> Prestations
+</a>
+{% else %}
+<a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
+  <i class="ti ti-mail" aria-hidden="true"></i> Messages
+  {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
+</a>
+<a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
+  <i class="ti ti-search" aria-hidden="true"></i> Prestations
+</a>
+{% endif %}
+{% endblock %}
 {% block account_content %}
 <p class="mb-4">
   <a href="{% url 'cart:devis_list' %}" class="pac-btn-link">← Mes devis</a>

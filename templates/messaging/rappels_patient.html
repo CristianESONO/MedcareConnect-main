@@ -3,6 +3,26 @@
 {% block title %}Rappels & Bilans recommandés{% endblock %}
 {% block account_page_title %}Rappels & Bilans recommandés{% endblock %}
 
+{% block pac_head_actions %}
+{% if user.is_authenticated and user.is_patient %}
+<a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex pac-btn--mobile-hidden" title="Messagerie interne">
+  <i class="ti ti-mail" aria-hidden="true"></i> Messages
+  {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
+</a>
+<a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex pac-btn--mobile-hidden">
+  <i class="ti ti-search" aria-hidden="true"></i> Prestations
+</a>
+{% else %}
+<a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex" title="Messagerie interne">
+  <i class="ti ti-mail" aria-hidden="true"></i> Messages
+  {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
+</a>
+<a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
+  <i class="ti ti-search" aria-hidden="true"></i> Prestations
+</a>
+{% endif %}
+{% endblock %}
+
 {% block account_content %}
 {# Bandeau principal Rappels - Style exact démo DEMO_DESKTOP_PATIENT.html #}
 <div style="background:linear-gradient(135deg, #0a5c8a, #0891b2);border-radius:12px;padding:18px 20px;margin-bottom:20px;color:#ffffff">

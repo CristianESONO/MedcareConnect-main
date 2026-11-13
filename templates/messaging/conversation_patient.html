@@ -10,9 +10,15 @@
 {% endblock %}
 
 {% block pac_head_actions %}
+{% if user.is_authenticated and user.is_patient %}
+<a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex pac-btn--mobile-hidden">
+  <i class="ti ti-search" aria-hidden="true"></i> Prestations
+</a>
+{% else %}
 <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
   <i class="ti ti-search" aria-hidden="true"></i> Prestations
 </a>
+{% endif %}
 {% endblock %}
 
 {% block account_extra_css %}

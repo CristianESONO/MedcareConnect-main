@@ -26,11 +26,11 @@
       </div>
       <div class="flex items-center gap-2">
         {% block pac_head_actions %}
-        <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
+        <a href="{% url 'messaging:inbox' %}" class="pac-back-btn inline-flex {% if user.is_authenticated and user.is_patient and account_active == 'devis' or account_active == 'rappels' %}pac-btn--mobile-hidden{% endif %} {% if account_active == 'messages' %}active{% endif %}" title="Messagerie interne">
           <i class="ti ti-mail" aria-hidden="true"></i> Messages
           {% if unread_messages %}<span class="sb-badge sb-badge-green" style="margin-left:2px">{{ unread_messages }}</span>{% endif %}
         </a>
-        <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex">
+        <a href="{% url 'healthcare:search' %}" class="pac-back-btn inline-flex {% if user.is_authenticated and user.is_patient and account_active == 'devis' or account_active == 'rappels' %}pac-btn--mobile-hidden{% endif %}">
           <i class="ti ti-search" aria-hidden="true"></i> Prestations
         </a>
         {% endblock %}
