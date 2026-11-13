@@ -491,7 +491,7 @@ def _parse_price(val: Any) -> tuple[Decimal | None, str | None]:
     s = s.replace(" ", "").replace("\xa0", "").strip()
 
     if s in ("GRATUIT", "OFFERT", "INCLUS", "0"):
-        return Decimal("0.00"), None
+        return None, "zero_or_free"
 
     if not s:
         return None, "empty"
@@ -519,11 +519,50 @@ def _parse_price(val: Any) -> tuple[Decimal | None, str | None]:
 
     try:
         p = Decimal(s).quantize(Decimal("0.01"))
-        if p < Decimal("0"):
-            return None, "negative"
+        if p <= Decimal("0"):
+            return None, "zero_or_free"
         return min(p, Decimal("99999999.99")), None
     except (InvalidOperation, TypeError):
         return None, "invalid_format"
+
+
+def _parse_coverage_value(val: Any) -> tuple[Decimal | None, str, str | None]:
+    """
+    Parse une cellule de tarif conventionné (IPM ou Assurance) selon la spec v1 §5.4 & §8.
+    Retourne:
+      (price_decimal_or_none, coverage_status, error_code)
+      - coverage_status: 'covered' | 'excluded' | 'to_confirm'
+      - error_code: None | 'negative' | 'invalid_format'
+    Distinction capitale :
+      - Cellule vide / absente -> (None, 'to_confirm', None) (à confirmer ultérieurement)
+      - Symbole explicite d'exclusion (∅, NC, non couvert, exclu, -) -> (None, 'excluded', None)
+      - Montant numérique valide -> (Decimal, 'covered', None)
+    """
+    if val is None:
+        return None, "to_confirm", None
+    raw_s = str(val).strip()
+    if not raw_s:
+        return None, "to_confirm", None
+
+    norm = _normalize_str(raw_s).upper()
+    explicit_excluded = {
+        "NC", "NON COUVERT", "NON PRIS EN CHARGE", "NON COUVERTE",
+        "EXCLU", "EXCLUE", "NON ACCEPTE", "REFUSE", "NON", "0%", "PAS DE PRISE EN CHARGE",
+        "NEANT", "AUCUN", "AUCUNE"
+    }
+    # Caractères symboliques d'exclusion
+    if raw_s in ("∅", "-", "/", "--", "—", "N/A", "NA", "N.A", "n/a") or norm in explicit_excluded:
+        return None, "excluded", None
+
+    price, err = _parse_price(val)
+    if err is not None:
+        if err == "empty":
+            return None, "to_confirm", None
+        return None, "to_confirm", err
+    if price is not None:
+        return price, "covered", None
+    return None, "to_confirm", None
+
 
 
 
@@ -557,7 +596,9 @@ def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
         "Pilier",
         "Sous-catégorie",
         "Nom de l'acte",
-        "Prix (FCFA)",
+        "Prix Comptant (FCFA)",
+        "Prix IPM (FCFA)",
+        "Prix Assurance (FCFA)",
         "Délai indicatif",
         "Disponible (Oui/Non)",
         "Consignes RDV (Optionnel)",
@@ -599,11 +640,15 @@ def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
 
         if pa is not None:
             price = float(pa.price)
+            price_ipm = float(pa.price_ipm) if pa.price_ipm is not None else ""
+            price_assur = float(pa.price_assurance) if pa.price_assurance is not None else ""
             delai_str = delai_labels.get(pa.delai, pa.delai) or ""
             dispo = "Oui" if pa.is_available else "Non"
             rdv_notes = pa.rdv_prerequisites or ""
         else:
             price = float(acte.reference_price) if acte.reference_price is not None else 0
+            price_ipm = ""
+            price_assur = ""
             delai_str = ""
             dispo = "Non"
             rdv_notes = acte.rdv_prerequisites or ""
@@ -615,6 +660,8 @@ def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
             parent_name,
             acte.name,
             price,
+            price_ipm,
+            price_assur,
             delai_str,
             dispo,
             rdv_notes,
@@ -629,11 +676,12 @@ def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
             cell.border = thin_border
             if is_even:
                 cell.fill = zebra_fill
-            if col_num in (1, 2, 8):
+            if col_num in (1, 2, 10):
                 cell.alignment = center_align
-            elif col_num == 6:
+            elif col_num in (6, 7, 8):
                 cell.alignment = right_align
-                cell.number_format = "#,##0"
+                if isinstance(cell.value, (int, float)):
+                    cell.number_format = "#,##0"
             else:
                 cell.alignment = left_align
 
@@ -661,7 +709,9 @@ def generate_catalog_template_excel(org: OrganismeDeSante) -> io.BytesIO:
     guide_rows = [
         ("ID Acte", "Identifiant unique interne MedCare Connect. Ne pas modifier pour garantir une correspondance à 100%."),
         ("Nom de l'acte", "Intitulé officiel de l'acte médical."),
-        ("Prix (FCFA)", "Prix de l'acte proposé par votre établissement en FCFA (ex: 15000)."),
+        ("Prix Comptant (FCFA)", "Prix public / comptant de l'acte en FCFA (obligatoire)."),
+        ("Prix IPM (FCFA)", "Tarif conventionné IPM (optionnel). Laissez vide si à confirmer, ou indiquez 'NC' / '-' si non couvert."),
+        ("Prix Assurance (FCFA)", "Tarif conventionné assurance privée (optionnel). Laissez vide si à confirmer, ou indiquez 'NC' / '-' si non couvert."),
         ("Disponible", "'Oui' pour afficher l'acte dans votre offre publique, 'Non' pour le désactiver."),
         ("Délai indicatif", "Délai de rendu des résultats ou de réalisation. Valeurs recommandées ci-dessous :"),
     ]
@@ -804,10 +854,15 @@ def import_catalog_from_file(
             elif ("code" in c_val and "acte" in c_val) or c_val in ("code", "reference", "ref", "ref_acte", "code_acte"):
                 temp_map["code"] = c_i
             elif any(w in c_val for w in ("nom", "acte", "actes", "designation", "libelle", "prestation", "prestations", "examen", "examens", "analyse", "analyses", "intitule", "rubrique", "description")):
-                if "id" not in c_val:
+                if "id" not in c_val and "prix" not in c_val and "tarif" not in c_val:
                     temp_map["name"] = c_i
+            elif any(w in c_val for w in ("ipm", "ipres", "maladie", "secu")):
+                temp_map["price_ipm"] = c_i
+            elif any(w in c_val for w in ("assurance", "assur", "privee", "compagnie", "mutuelle")):
+                temp_map["price_assurance"] = c_i
             elif any(w in c_val for w in ("prix", "tarif", "tarifs", "montant", "cout", "couts", "valeur", "pu", "frais", "cotation")):
-                temp_map["price"] = c_i
+                if "ipm" not in c_val and "assur" not in c_val:
+                    temp_map["price"] = c_i
             elif any(w in c_val for w in ("delai", "delais", "duree", "temps")):
                 temp_map["delai"] = c_i
             elif any(w in c_val for w in ("dispo", "disponible", "disponibilite", "actif", "active", "statut", "propose")):
@@ -837,11 +892,11 @@ def import_catalog_from_file(
             "errors": [f"Colonnes détectées : {preview_text}"],
         }
 
-    # Initialiser le moteur d'appariement robuste avec tous les actes du référentiel
+    # Initialiser le moteur d'appariement robuste STRICTEMENT avec les actes de niveau 3 sans sous-actes actifs (spec v1 §7.1)
     all_leaf_actes = list(
-        ActeMedical.objects.filter(is_active=True).select_related(
-            "service_medical_category", "parent_service"
-        )
+        ActeMedical.objects.filter(is_active=True, level=3)
+        .exclude(sub_acts__is_active=True)
+        .select_related("service_medical_category", "parent_service")
     )
     matcher = ActeCatalogMatcher(all_leaf_actes)
 
@@ -851,13 +906,14 @@ def import_catalog_from_file(
         for pa in PrestataireActe.objects.filter(organisme=org)
     }
 
-    # Suivi des actes rencontrés dans CE fichier pour détecter et harmoniser les doublons
+    # Suivi des actes rencontrés dans CE fichier pour détecter les doublons et conflits de prix (spec v1 §5.2)
     seen_in_file: dict[int, dict[str, Any]] = {}
 
     created_count = 0
     updated_count = 0
     skipped_count = 0
     errors: list[str] = []
+    line_details: list[dict[str, Any]] = []
     data_rows = rows[header_idx + 1 :]
 
     try:
@@ -873,14 +929,22 @@ def import_catalog_from_file(
                 raw_code = get_val("code")
                 raw_name = get_val("name")
                 raw_price = get_val("price")
+                raw_price_ipm = get_val("price_ipm")
+                raw_price_assurance = get_val("price_assurance")
                 raw_delai = get_val("delai")
                 raw_available = get_val("available")
                 raw_prereq = get_val("prerequisites")
 
-                # Vérifier si la désignation est vide
+                # Vérifier si la ligne est entièrement vide ou désignation vide
                 if not str(raw_name or "").strip() and not str(raw_code or "").strip() and not str(raw_id or "").strip():
                     errors.append(f"Ligne {line_num} : Désignation d'acte vide. Ligne ignorée.")
                     skipped_count += 1
+                    line_details.append({
+                        "line": line_num,
+                        "label": "",
+                        "status": "vide",
+                        "reason": "Désignation vide",
+                    })
                     continue
 
                 display_label = str(raw_name or raw_code or (f"ID {raw_id}" if raw_id else f"Ligne {line_num}")).strip()
@@ -893,31 +957,56 @@ def import_catalog_from_file(
                 )
 
                 if target_acte is None:
-                    errors.append(f"Ligne {line_num} : Acte '{display_label}' introuvable dans le référentiel médical. Ligne rejetée sans association arbitraire.")
+                    errors.append(f"Ligne {line_num} : Acte '{display_label}' introuvable parmi les actes éligibles (niveau 3 sans sous-actes). Ligne rejetée sans association arbitraire.")
                     skipped_count += 1
+                    line_details.append({
+                        "line": line_num,
+                        "label": display_label,
+                        "status": "non_apparie",
+                        "reason": "Non trouvé dans le référentiel niveau 3",
+                    })
                     continue
 
-                # Parser le prix avec tolérance monétaire et diagnostic d'erreur
+                # Parser le tarif comptant obligatoire (spec v1 §5.2 : pas de valeur par défaut)
                 parsed_price, price_err = _parse_price(raw_price)
-                if price_err == "negative":
-                    errors.append(f"Ligne {line_num} : Tarif négatif invalide '{raw_price}' pour '{display_label}'. Ligne rejetée (aucun tarif négatif autorisé).")
+                if price_err in ("negative", "zero_or_free"):
+                    errors.append(f"Ligne {line_num} : Tarif invalide '{raw_price}' pour '{display_label}'. Ligne rejetée (tarif <= 0 interdit).")
                     skipped_count += 1
+                    line_details.append({
+                        "line": line_num,
+                        "label": display_label,
+                        "status": "tarif_nul_ou_negatif",
+                        "reason": f"Tarif nul ou négatif '{raw_price}'",
+                    })
                     continue
                 elif price_err == "invalid_format":
                     errors.append(f"Ligne {line_num} : Tarif non numérique invalide '{raw_price}' pour '{display_label}'. Ligne rejetée.")
                     skipped_count += 1
+                    line_details.append({
+                        "line": line_num,
+                        "label": display_label,
+                        "status": "tarif_invalide",
+                        "reason": f"Format invalide '{raw_price}'",
+                    })
                     continue
-                elif price_err == "empty":
-                    # Tarif absent : conservation tarif existant ou référence
-                    if target_acte.pk in existing_offers:
-                        parsed_price = existing_offers[target_acte.pk].price
-                        errors.append(f"Ligne {line_num} : Tarif absent pour '{display_label}'. Tarif existant conservé ({parsed_price:,.0f} FCFA).")
-                    elif target_acte.reference_price is not None:
-                        parsed_price = target_acte.reference_price
-                        errors.append(f"Ligne {line_num} : Tarif absent pour '{display_label}'. Tarif de référence appliqué ({parsed_price:,.0f} FCFA).")
-                    else:
-                        parsed_price = Decimal("0.00")
-                        errors.append(f"Ligne {line_num} : Tarif absent pour '{display_label}'. Fixé à 0 FCFA.")
+                elif price_err == "empty" or parsed_price is None:
+                    errors.append(f"Ligne {line_num} : Tarif comptant absent pour '{display_label}'. Ligne rejetée (aucun prix par défaut inventé).")
+                    skipped_count += 1
+                    line_details.append({
+                        "line": line_num,
+                        "label": display_label,
+                        "status": "prix_absent",
+                        "reason": "Prix comptant absent",
+                    })
+                    continue
+
+                # Parser les tarifs conventionnés IPM et Assurance (spec v1 §5.4 & §8)
+                parsed_ipm, status_ipm, ipm_err = _parse_coverage_value(raw_price_ipm)
+                if ipm_err:
+                    errors.append(f"Ligne {line_num} : Valeur IPM '{raw_price_ipm}' invalide pour '{display_label}' (statut laissé à confirmer).")
+                parsed_assurance, status_assurance, ass_err = _parse_coverage_value(raw_price_assurance)
+                if ass_err:
+                    errors.append(f"Ligne {line_num} : Valeur Assurance '{raw_price_assurance}' invalide pour '{display_label}' (statut laissé à confirmer).")
 
                 # Parser le délai indicatif
                 parsed_delai, delai_err = _parse_delai(raw_delai)
@@ -935,9 +1024,26 @@ def import_catalog_from_file(
                 # Consignes / prérequis RDV
                 prereq_text = str(raw_prereq).strip() if raw_prereq is not None else None
 
-                # Détection des doublons au sein du même fichier
+                # Détection des doublons au sein du même fichier (spec v1 §2 & §5.2)
                 is_duplicate_in_file = target_acte.pk in seen_in_file
                 first_info = seen_in_file.get(target_acte.pk)
+
+                if is_duplicate_in_file and first_info:
+                    # Conflit de prix : deux lignes différentes pointent vers le même acte avec des prix différents
+                    if first_info["price"] != parsed_price:
+                        errors.append(
+                            f"Ligne {line_num} : Conflit de tarif pour '{display_label}' (acte #{target_acte.pk} '{target_acte.name}'). "
+                            f"Ligne {first_info['line']} = {first_info['price']:,.0f} FCFA vs Ligne {line_num} = {parsed_price:,.0f} FCFA. "
+                            f"La ligne {line_num} est mise en attente sans écraser arbitrairement le tarif précédent."
+                        )
+                        skipped_count += 1
+                        line_details.append({
+                            "line": line_num,
+                            "label": display_label,
+                            "status": "conflit_doublon",
+                            "reason": f"Conflit de prix avec ligne {first_info['line']}",
+                        })
+                        continue
 
                 pa = existing_offers.get(target_acte.pk)
                 if pa is not None:
@@ -945,9 +1051,23 @@ def import_catalog_from_file(
                     pa.delai = parsed_delai
                     pa.is_available = is_available
                     update_fields = ["price", "delai", "is_available", "updated_at"]
+
+                    # Mettre à jour IPM si colonne présente
+                    if "price_ipm" in col_map:
+                        pa.price_ipm = parsed_ipm
+                        pa.coverage_status_ipm = status_ipm
+                        update_fields.extend(["price_ipm", "coverage_status_ipm"])
+
+                    # Mettre à jour Assurance si colonne présente
+                    if "price_assurance" in col_map:
+                        pa.price_assurance = parsed_assurance
+                        pa.coverage_status_assurance = status_assurance
+                        update_fields.extend(["price_assurance", "coverage_status_assurance"])
+
                     if prereq_text is not None:
                         pa.rdv_prerequisites = prereq_text
                         update_fields.append("rdv_prerequisites")
+
                     pa.save(update_fields=update_fields)
                     if not is_duplicate_in_file:
                         updated_count += 1
@@ -956,6 +1076,10 @@ def import_catalog_from_file(
                         organisme=org,
                         acte=target_acte,
                         price=parsed_price,
+                        price_ipm=parsed_ipm if "price_ipm" in col_map else None,
+                        price_assurance=parsed_assurance if "price_assurance" in col_map else None,
+                        coverage_status_ipm=status_ipm if "price_ipm" in col_map else "to_confirm",
+                        coverage_status_assurance=status_assurance if "price_assurance" in col_map else "to_confirm",
                         delai=parsed_delai,
                         is_available=is_available,
                         rdv_prerequisites=prereq_text or "",
@@ -963,12 +1087,18 @@ def import_catalog_from_file(
                     existing_offers[target_acte.pk] = new_pa
                     created_count += 1
 
-                if is_duplicate_in_file and first_info:
-                    errors.append(
-                        f"Ligne {line_num} : L'acte '{display_label}' correspond au même acte référentiel que la ligne {first_info['line']} "
-                        f"('{first_info['name']}'). Le tarif ({parsed_price:,.0f} FCFA) a été harmonisé sans doublon."
-                    )
-                else:
+                line_details.append({
+                    "line": line_num,
+                    "label": display_label,
+                    "acte_id": target_acte.pk,
+                    "acte_name": target_acte.name,
+                    "status": "cree" if pa is None else "mis_a_jour",
+                    "price": parsed_price,
+                    "price_ipm": parsed_ipm,
+                    "price_assurance": parsed_assurance,
+                })
+
+                if not is_duplicate_in_file:
                     seen_in_file[target_acte.pk] = {
                         "line": line_num,
                         "name": display_label,
@@ -993,5 +1123,6 @@ def import_catalog_from_file(
         "updated_count": updated_count,
         "skipped_count": skipped_count,
         "imported_count": created_count + updated_count,
+        "line_details": line_details,
         "errors": errors[:50],  # Keep up to 50 for readability
     }

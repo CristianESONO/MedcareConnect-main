@@ -224,6 +224,10 @@ class PrestataireActeForm(forms.ModelForm):
         acte_field.widget.is_required = acte_field.required
         acte_field.widget.choices = acte_field.choices
 
+        if "price" in self.fields:
+            self.fields["price"].min_value = Decimal("1.00")
+            self.fields["price"].help_text = "Tarif public / comptant en FCFA (strictement supérieur à 0)."
+
         for name, f in self.fields.items():
             if name == "acte":
                 continue

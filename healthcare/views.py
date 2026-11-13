@@ -138,6 +138,7 @@ def api_actes_budget(request):
     qs = PrestataireActe.objects.filter(
         is_available=True,
         organisme__is_active=True,
+        price__gt=0,
         price__lte=max_p,
     )
     if service_id:
@@ -929,6 +930,10 @@ def search(request):
         delai_filter = ""
     domicile_filter = request.GET.get("domicile") == "1"
 
+    regime_filter = (request.GET.get("regime") or "comptant").lower().strip()
+    if regime_filter not in ("comptant", "ipm", "assurance"):
+        regime_filter = "comptant"
+
     # Profil patient connecté (utilisé pour les badges d'assurance compatible et la géolocalisation)
     # NOTE: On n'injecte PAS silencieusement l'assurance ou la ville du profil dans les filtres
     # de requête actifs sans action explicite de l'utilisateur, car cela réduirait à 0 résultat
@@ -965,6 +970,7 @@ def search(request):
     pa_qs = PrestataireActe.objects.filter(
         is_available=True,
         organisme__is_active=True,
+        price__gt=0,
     ).select_related(
         "organisme",
         "organisme__type_organisme",
@@ -1003,10 +1009,22 @@ def search(request):
     def _apply_level_price_location_filters(qs):
         if level in ("1", "2", "3"):
             qs = qs.filter(acte__level=int(level))
+        
+        # Le filtre de prix compare le prix du régime choisi (comptant par défaut)
+        price_field = "price"
+        if regime_filter == "ipm":
+            price_field = "price_ipm"
+            qs = qs.filter(price_ipm__isnull=False, price_ipm__gt=0)
+        elif regime_filter == "assurance":
+            price_field = "price_assurance"
+            qs = qs.filter(price_assurance__isnull=False, price_assurance__gt=0)
+        else:
+            qs = qs.filter(price__gt=0)
+
         if price_min is not None:
-            qs = qs.filter(price__gte=price_min)
+            qs = qs.filter(**{f"{price_field}__gte": price_min})
         if price_max is not None:
-            qs = qs.filter(price__lte=price_max)
+            qs = qs.filter(**{f"{price_field}__lte": price_max})
         if assurance_ids_int:
             qs = qs.filter(
                 organisme__prises_en_charge__assurance_id__in=assurance_ids_int,
@@ -1145,8 +1163,14 @@ def search(request):
                 F("price_assurance").desc(nulls_last=True), "acte__name", "organisme__name"
             )
         else:
-            # price_asc par défaut (comportement « e-commerce »)
-            pa_qs = pa_qs.order_by("price", "acte__name", "organisme__name")
+            # price_asc par défaut (comportement « e-commerce ») adapté au régime
+            from django.db.models import F
+            if regime_filter == "ipm":
+                pa_qs = pa_qs.order_by(F("price_ipm").asc(nulls_last=True), "price", "acte__name", "organisme__name")
+            elif regime_filter == "assurance":
+                pa_qs = pa_qs.order_by(F("price_assurance").asc(nulls_last=True), "price", "acte__name", "organisme__name")
+            else:
+                pa_qs = pa_qs.order_by("price", "acte__name", "organisme__name")
         results_count = pa_qs.count()
         paginator = Paginator(pa_qs, per_page)
         page = paginator.get_page(request.GET.get("page"))
@@ -1803,6 +1827,7 @@ def search(request):
         "current_actes": [str(i) for i in pool_for_pills],
         "presets_json": json.dumps(preset_payload),
         "current_level": level or "",
+        "current_regime": regime_filter,
         "current_assurances": assurance_ids,
         "current_city": city,
         "current_types": type_ids,

@@ -659,8 +659,28 @@ class PrestataireActe(models.Model):
         verbose_name = "Prestataire-Acte"
         verbose_name_plural = "Prestataires-Actes"
 
-    def __str__(self):
-        return f"{self.organisme.name} - {self.acte.name} ({self.price} XOF)"
+    def clean(self):
+        super().clean()
+        from django.core.exceptions import ValidationError
+
+        if self.price is not None and self.price <= 0:
+            raise ValidationError(
+                {"price": "Le tarif public / comptant doit être strictement supérieur à 0 FCFA."}
+            )
+
+        if self.acte_id:
+            if self.acte.level != 3:
+                raise ValidationError(
+                    {"acte": "Seuls les actes médicaux de niveau 3 (actes élémentaires) peuvent porter une tarification."}
+                )
+            if self.acte.sub_acts.filter(is_active=True).exists():
+                raise ValidationError(
+                    {"acte": "Cet acte comporte des sous-actes actifs. Seuls les actes terminaux sans sous-actes peuvent être tarifés."}
+                )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     @property
     def delai_rank(self) -> int:
