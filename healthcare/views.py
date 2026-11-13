@@ -981,6 +981,17 @@ def search(request):
     )
 
     if q:
+        # Résolution des synonymes médicaux / actes doublons pour regrouper sous l'acte canonique
+        from .management.commands.fusionner_actes_doublons import _canonical_key_for_acte
+        q_norm_key = _canonical_key_for_acte(q)
+        
+        # Trouver tous les actes équivalents
+        equiv_acte_ids = []
+        if q_norm_key:
+            for a in ActeMedical.objects.filter(is_active=True, level=3):
+                if _canonical_key_for_acte(a.name) == q_norm_key:
+                    equiv_acte_ids.append(a.pk)
+
         q_filter = (
             Q(acte__name__icontains=q)
             | Q(acte__description__icontains=q)
@@ -988,6 +999,8 @@ def search(request):
             | Q(organisme__name__icontains=q)
             | Q(organisme__city__icontains=q)
         )
+        if equiv_acte_ids:
+            q_filter |= Q(acte_id__in=equiv_acte_ids)
         if len(q) >= 2:
             q_filter |= Q(acte__code__icontains=q)
         pa_qs = pa_qs.filter(q_filter)
@@ -1978,6 +1991,8 @@ def api_search_autocomplete(request):
 
     # Dictionnaire d'intentions / équivalences d'actes pour orienter directement vers l'acte canonique
     INTENTIONS_CANONIQUES = {
+        "vs": "VS",
+        "vitesse de sed": "VS",
         "cholest": "Cholestérol total",
         "glycem": "Glycémie à jeun",
         "nfs": "NFS / Hémogramme",
@@ -2005,17 +2020,30 @@ def api_search_autocomplete(request):
     ]
 
     if canonical_target:
-        # Si une intention canonique est détectée (ex: "cholestérol"), afficher l'acte canonique en priorité
+        # Si une intention canonique est détectée (ex: "VS", "cholestérol"), afficher l'acte canonique en priorité
         matched_actes.sort(
             key=lambda a: (
                 0 if strip_accents(a.name) == strip_accents(canonical_target) else 1,
+                -a.prestataire_actes.count(),
                 a.name.lower(),
             )
         )
     else:
-        matched_actes.sort(key=lambda a: a.name.lower())
+        matched_actes.sort(key=lambda a: (-a.prestataire_actes.count(), a.name.lower()))
 
-    for a in matched_actes[:8]:
+    # Déduplication visuelle : ne pas renvoyer plusieurs variantes de la même intention canonique
+    seen_canon_names = set()
+    deduped_actes = []
+    from .management.commands.fusionner_actes_doublons import _canonical_key_for_acte
+
+    for a in matched_actes:
+        c_key = _canonical_key_for_acte(a.name)
+        if c_key in seen_canon_names:
+            continue
+        seen_canon_names.add(c_key)
+        deduped_actes.append(a)
+
+    for a in deduped_actes[:8]:
         suggestions.append({
             "id": a.pk,
             "label": a.name,

@@ -6028,6 +6028,7 @@
                   searchInput.value = '';
                   if (clearBtn) clearBtn.style.display = 'none';
                   autocompleteDropdown.style.display = 'none';
+                  triggerSearchUpdate();
                 });
                 item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
                 item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
@@ -6050,6 +6051,7 @@
             searchInput.value = '';
             if (clearBtn) clearBtn.style.display = 'none';
             autocompleteDropdown.style.display = 'none';
+            triggerSearchUpdate();
           });
           item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
           item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
