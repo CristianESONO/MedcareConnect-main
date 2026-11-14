@@ -242,11 +242,11 @@
         </div>
       </div>
 
-      <!-- ── SECTION 3 : OFFRE DE SOINS / MON EXERCICE (RÉSERVÉ AUX STRUCTURES ACTIVÉES) ── -->
-      {% if org.is_active %}
+      <!-- ── SECTION 3 : OFFRE DE SOINS / MON EXERCICE ── -->
       {% if org.account_nature != 'praticien' %}
         {# Structure médicale #}
-        <div class="nav-group-wrap pt-1">
+        <div class="nav-group-wrap pt-1{% if not org.is_active or not org.is_verified %} opacity-60 cursor-not-allowed{% endif %}">
+          {% if org.is_active and org.is_verified %}
           <button type="button" class="nav-group-btn is-open{% if dash_active == 'actes' or dash_active == 'panels' or dash_active == 'insurances' %} is-parent-active{% endif %}" data-group-target="navGroupOffre" onclick="toggleNavGroup('navGroupOffre', this)">
             <span class="nav-icon"><i class="ti ti-clipboard-list text-base"></i></span>
             <span>Offre de soins</span>
@@ -263,10 +263,33 @@
               Assurances
             </a>
           </div>
+          {% else %}
+          <div class="nav-group-btn is-open text-gray-400 select-none cursor-not-allowed flex items-center justify-between" title="Offre de soins disponible après validation de votre structure par MedCare Connect">
+            <div class="flex items-center gap-2">
+              <span class="nav-icon text-gray-400"><i class="ti ti-clipboard-list text-base"></i></span>
+              <span class="text-gray-400 font-semibold">Offre de soins</span>
+            </div>
+            <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700 border border-amber-200">
+              <i class="ti ti-lock text-[9px]"></i> En attente
+            </span>
+          </div>
+          <div class="nav-sublist is-open opacity-60">
+            <span class="nav-sublink text-gray-400 cursor-not-allowed flex items-center justify-between" title="Disponible après validation">
+              <span>Catalogue d'actes</span> <i class="ti ti-lock text-[10px]"></i>
+            </span>
+            <span class="nav-sublink text-gray-400 cursor-not-allowed flex items-center justify-between" title="Disponible après validation">
+              <span>Panels d'examens</span> <i class="ti ti-lock text-[10px]"></i>
+            </span>
+            <span class="nav-sublink text-gray-400 cursor-not-allowed flex items-center justify-between" title="Disponible après validation">
+              <span>Assurances</span> <i class="ti ti-lock text-[10px]"></i>
+            </span>
+          </div>
+          {% endif %}
         </div>
       {% else %}
         {# Praticien indépendant #}
-        <div class="nav-group-wrap pt-1">
+        <div class="nav-group-wrap pt-1{% if not org.is_active or not org.is_verified %} opacity-60 cursor-not-allowed{% endif %}">
+          {% if org.is_active and org.is_verified %}
           <button type="button" class="nav-group-btn is-open{% if dash_active == 'actes' or dash_active == 'tickets' or dash_active == 'panels' %} is-parent-active{% endif %}" data-group-target="navGroupExercice" onclick="toggleNavGroup('navGroupExercice', this)">
             <span class="nav-icon"><i class="ti ti-stethoscope text-base"></i></span>
             <span>Mon exercice</span>
@@ -283,8 +306,29 @@
               Panels d'examens
             </a>
           </div>
+          {% else %}
+          <div class="nav-group-btn is-open text-gray-400 select-none cursor-not-allowed flex items-center justify-between" title="Mon exercice disponible après validation de votre profil par MedCare Connect">
+            <div class="flex items-center gap-2">
+              <span class="nav-icon text-gray-400"><i class="ti ti-stethoscope text-base"></i></span>
+              <span class="text-gray-400 font-semibold">Mon exercice</span>
+            </div>
+            <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700 border border-amber-200">
+              <i class="ti ti-lock text-[9px]"></i> En attente
+            </span>
+          </div>
+          <div class="nav-sublist is-open opacity-60">
+            <span class="nav-sublink text-gray-400 cursor-not-allowed flex items-center justify-between" title="Disponible après validation">
+              <span>Mes actes</span> <i class="ti ti-lock text-[10px]"></i>
+            </span>
+            <span class="nav-sublink text-gray-400 cursor-not-allowed flex items-center justify-between" title="Disponible après validation">
+              <span>Tickets de prestation</span> <i class="ti ti-lock text-[10px]"></i>
+            </span>
+            <span class="nav-sublink text-gray-400 cursor-not-allowed flex items-center justify-between" title="Disponible après validation">
+              <span>Panels d'examens</span> <i class="ti ti-lock text-[10px]"></i>
+            </span>
+          </div>
+          {% endif %}
         </div>
-      {% endif %}
       {% endif %}
 
       {% if not org.is_praticien %}

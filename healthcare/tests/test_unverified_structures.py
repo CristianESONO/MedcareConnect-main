@@ -19,7 +19,7 @@ class UnverifiedStructuresTestCase(TestCase):
         )
 
         # Unverified structure
-        self.u_unverified = User.objects.create_user("unverified_doc", "unverified@test.sn", "pass123")
+        self.u_unverified = User.objects.create_user("unverified_doc", "unverified@test.sn", "pass123", user_type="prestataire")
         self.org_unverified = OrganismeDeSante.objects.create(
             user=self.u_unverified,
             name="Cabinet En Attente",
@@ -37,7 +37,7 @@ class UnverifiedStructuresTestCase(TestCase):
         )
 
         # Verified structure
-        self.u_verified = User.objects.create_user("verified_doc", "verified@test.sn", "pass123")
+        self.u_verified = User.objects.create_user("verified_doc", "verified@test.sn", "pass123", user_type="prestataire")
         self.org_verified = OrganismeDeSante.objects.create(
             user=self.u_verified,
             name="Clinique Approuvee",
@@ -146,3 +146,15 @@ class UnverifiedStructuresTestCase(TestCase):
         # Should redirect with error, not book
         self.assertEqual(resp.status_code, 302)
         self.assertFalse(part.rendez_vous.exists())
+
+    def test_prestataire_sidebar_offre_de_soin_grisee_when_unverified_or_inactive(self):
+        """Pour une structure non approuvée / non activée, 'Offre de soins' n'est plus masquée, elle est affichée grisée."""
+        self.client.login(username="unverified_doc", password="pass123")
+        resp = self.client.get(reverse("healthcare:prestataire_dashboard"), HTTP_HOST="localhost")
+        self.assertEqual(resp.status_code, 200)
+        content = resp.content.decode("utf-8")
+        # 'Offre de soins' doit être présent (non masqué !)
+        self.assertIn("Offre de soins", content)
+        # Mais sous forme grisée et verrouillée
+        self.assertIn("cursor-not-allowed", content)
+        self.assertIn("Offre de soins disponible après validation", content)

@@ -125,3 +125,4 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.NOTICE("\n(Info : pour rattacher automatiquement les structures de Dakar sans région, exécutez avec --apply)")
             )
+

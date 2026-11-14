@@ -47,10 +47,20 @@
       </ul>
     </li>
 
-    {# ══ Offre de soins (structure) / Mon exercice (praticien) — RÉSERVÉ AUX STRUCTURES ACTIVÉES ══ #}
-    {% if org.is_active %}
-    <li class="mc-landing-drawer-group">
-      <span class="mc-landing-drawer-group-label"><i class="{% if org.account_nature == 'praticien' %}ti ti-stethoscope{% else %}ti ti-clipboard-list{% endif %} mc-landing-drawer-icon" aria-hidden="true"></i> {% if org.account_nature == 'praticien' %}Mon exercice{% else %}Offre de soins{% endif %}</span>
+    {# ══ Offre de soins (structure) / Mon exercice (praticien) ══ #}
+    <li class="mc-landing-drawer-group{% if not org.is_active or not org.is_verified %} opacity-60 cursor-not-allowed{% endif %}">
+      <span class="mc-landing-drawer-group-label flex items-center justify-between">
+        <span>
+          <i class="{% if org.account_nature == 'praticien' %}ti ti-stethoscope{% else %}ti ti-clipboard-list{% endif %} mc-landing-drawer-icon" aria-hidden="true"></i>
+          {% if org.account_nature == 'praticien' %}Mon exercice{% else %}Offre de soins{% endif %}
+        </span>
+        {% if not org.is_active or not org.is_verified %}
+        <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-bold text-amber-700 border border-amber-200">
+          <i class="ti ti-lock text-[9px]"></i> En attente
+        </span>
+        {% endif %}
+      </span>
+      {% if org.is_active and org.is_verified %}
       <ul class="mc-landing-drawer-sublist">
         <li><a href="{% url 'healthcare:actes_list' %}" class="mc-landing-drawer-link{% if dash_active == 'actes' %} is-active{% endif %}">{% if org.account_nature == 'praticien' %}Mes actes{% else %}Catalogue d'actes{% endif %}</a></li>
         {% if org.account_nature == 'praticien' %}
@@ -61,8 +71,31 @@
         <li><a href="{% url 'healthcare:insurances_manage' %}" class="mc-landing-drawer-link{% if dash_active == 'insurances' %} is-active{% endif %}">Assurances & Tiers payant</a></li>
         {% endif %}
       </ul>
+      {% else %}
+      <ul class="mc-landing-drawer-sublist opacity-60">
+        <li class="px-3 py-1 text-xs text-gray-400 flex items-center justify-between">
+          <span>{% if org.account_nature == 'praticien' %}Mes actes{% else %}Catalogue d'actes{% endif %}</span>
+          <i class="ti ti-lock text-[10px]"></i>
+        </li>
+        {% if org.account_nature == 'praticien' %}
+        <li class="px-3 py-1 text-xs text-gray-400 flex items-center justify-between">
+          <span>Tickets de prestation</span>
+          <i class="ti ti-lock text-[10px]"></i>
+        </li>
+        {% endif %}
+        <li class="px-3 py-1 text-xs text-gray-400 flex items-center justify-between">
+          <span>Panels d'examens</span>
+          <i class="ti ti-lock text-[10px]"></i>
+        </li>
+        {% if org.account_nature != 'praticien' %}
+        <li class="px-3 py-1 text-xs text-gray-400 flex items-center justify-between">
+          <span>Assurances & Tiers payant</span>
+          <i class="ti ti-lock text-[10px]"></i>
+        </li>
+        {% endif %}
+      </ul>
+      {% endif %}
     </li>
-    {% endif %}
 
     {% if not org.is_praticien %}
     {# ══ Outils & IA ══ #}
