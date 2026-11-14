@@ -95,6 +95,17 @@ class OrganismeDeSanteAdmin(admin.ModelAdmin):
             "fields": ("is_active", "is_verified", "profile_views_count", "created_at", "updated_at"),
         }),
     )
+    actions = ["approuver_organismes", "desapprouver_organismes"]
+
+    @admin.action(description="Approuver les structures sélectionnées (is_verified = True)")
+    def approuver_organismes(self, request, queryset):
+        count = queryset.update(is_verified=True)
+        self.message_user(request, f"{count} structure(s) approuvée(s) avec succès.")
+
+    @admin.action(description="Mettre en attente / Désapprouver les structures sélectionnées (is_verified = False)")
+    def desapprouver_organismes(self, request, queryset):
+        count = queryset.update(is_verified=False)
+        self.message_user(request, f"{count} structure(s) mise(s) en attente d'approbation.")
 
 
 @admin.register(Photo)

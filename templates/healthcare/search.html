@@ -44,6 +44,27 @@
     }
   }
 
+  /* Structures non approuvées (grisées, non sélectionnables) */
+  .scard--unverified, .scard-m--unverified {
+    opacity: 0.62 !important;
+    background: #fbfbfc !important;
+    border-color: #cbd5e1 !important;
+  }
+  .scard--unverified .acte-item,
+  .scard-m--unverified .scard-m-acte,
+  .acte-item--unverified {
+    cursor: not-allowed !important;
+    background: #f8fafc !important;
+  }
+  .scard--unverified .scard-total,
+  .scard--unverified .btn-select-all-m {
+    display: none !important;
+  }
+  .scard--unverified .ai-check,
+  .scard-m--unverified .scard-m-checkbox {
+    pointer-events: none !important;
+  }
+
   /* ── Filtres style Déméthior (DEMO PATIENT : filters-bar + libellés) ──── */
   .dem-filters-card {
     background: #fff;
@@ -3939,6 +3960,17 @@
         if (t.closest('.profil-drawer-trigger, .scard-m-profile-btn, .scard-btn-trajet, .scard-btn-secondary, .org-preview-trigger, .scm-cta, [data-sipn-open-comp-panel], .scard-btn-trajet--inline')) return;
         var card = t.closest('.scard-m-acte[data-pa-id], .scard[data-pa-id], .acte-item[data-pa-id]');
         if (!card || card.getAttribute('data-ambulance-acte') === '1') return;
+        if (card.closest('.scard--unverified, .scard-m--unverified') || card.getAttribute('data-pa-unverified') === '1' || card.getAttribute('data-org-unverified') === '1') {
+          t.checked = false;
+          e.preventDefault();
+          sipnToast("Cette structure est en attente d'approbation et ne peut pas encore être sélectionnée.", 'warning');
+          return;
+        }
+        if (card.closest('.scard--unverified, .scard-m--unverified') || card.getAttribute('data-pa-unverified') === '1' || card.getAttribute('data-org-unverified') === '1') {
+          e.preventDefault();
+          sipnToast("Cette structure est en attente d'approbation et ne peut pas encore être sélectionnée.", 'warning');
+          return;
+        }
         if (t.closest('.scard-m-checkbox, .ai-check')) return;
         var paId = card.getAttribute('data-pa-id');
         if (isPaBlockedByOtherStructure(paId, card.getAttribute('data-pa-acte-pk')) && !cart.has(String(paId))) {
@@ -3954,6 +3986,12 @@
         if (!t || (!t.classList.contains('scard-m-checkbox') && !t.classList.contains('ai-check'))) return;
         var card = t.closest('.scard-m-acte[data-pa-id], .scard[data-pa-id], .acte-item[data-pa-id]');
         if (!card || card.getAttribute('data-ambulance-acte') === '1') return;
+        if (card.closest('.scard--unverified, .scard-m--unverified') || card.getAttribute('data-pa-unverified') === '1' || card.getAttribute('data-org-unverified') === '1') {
+          t.checked = false;
+          e.preventDefault();
+          sipnToast("Cette structure est en attente d'approbation et ne peut pas encore être sélectionnée.", 'warning');
+          return;
+        }
         var paId = card.getAttribute('data-pa-id');
         if (isPaBlockedByOtherStructure(paId, card.getAttribute('data-pa-acte-pk')) && !cart.has(String(paId))) {
           t.checked = false;

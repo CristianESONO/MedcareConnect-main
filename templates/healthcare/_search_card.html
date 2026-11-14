@@ -1,12 +1,13 @@
 {% comment %}Carte offre prestation — structure alignée démo desktop (grille actes).{% endcomment %}
 {% load healthcare_display %}
-<article class="scard fade-in"
+<article class="scard fade-in{% if not pa.organisme.is_verified %} scard--unverified{% endif %}"
   {% if not pa.organisme.is_ambulance_service %}
   data-pa-id="{{ pa.pk }}"
   data-pa-acte-pk="{{ pa.acte.pk }}"
   data-pa-acte="{{ pa.acte.name|escape }}"
   data-pa-org="{{ pa.organisme.name|escape }}"
   data-pa-org-id="{{ pa.organisme.pk }}"
+  data-pa-unverified="{% if not pa.organisme.is_verified %}1{% else %}0{% endif %}"
   data-pa-price="{{ pa.price|floatformat:0 }}"
   data-pa-price-ipm="{% if pa.price_ipm %}{{ pa.price_ipm|floatformat:0 }}{% endif %}"
   data-pa-price-assurance="{% if pa.price_assurance %}{{ pa.price_assurance|floatformat:0 }}{% endif %}"
@@ -24,9 +25,11 @@
     <div class="scard-left min-w-0">
       <div class="scard-name">
         <button type="button" class="org-preview-trigger scard-org-name" data-org-slug="{{ pa.organisme.slug }}" aria-haspopup="dialog">{{ pa.organisme.name }}</button>
-        {% if pa.organisme.subscription_plan and pa.organisme.subscription_plan.is_pioneer_offer %}
+        {% if not pa.organisme.is_verified %}
+          <span class="unverified-badge sipn-ico-inline" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700" title="Cette structure est en attente d'approbation par MedCare Connect"><i class="ti ti-clock"></i> En attente d'approbation</span>
+        {% elif pa.organisme.subscription_plan and pa.organisme.subscription_plan.is_pioneer_offer %}
           <span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>
-        {% elif pa.organisme.is_verified %}
+        {% else %}
           <span class="verified-badge sipn-ico-inline" style="background:#e8faf3;color:#065f46;border:1px solid #a7f3d0;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700"><i class="ti ti-check"></i> Vérifié</span>
         {% endif %}
       </div>
@@ -72,15 +75,16 @@
       <span class="scard-actes-count">{{ pa.dem_org_catalog_count }} acte{{ pa.dem_org_catalog_count|pluralize }} au catalogue</span>
       {% endif %}
     </div>
-    <div class="acte-item"
+    <div class="acte-item{% if not pa.organisme.is_verified %} acte-item--unverified cursor-not-allowed opacity-60{% endif %}"
       data-pa-id="{{ pa.pk }}"
+      {% if not pa.organisme.is_verified %}data-pa-unverified="1" aria-disabled="true"{% endif %}
       data-pa-price="{{ pa.price|floatformat:0 }}"
       data-pa-price-ipm="{% if pa.price_ipm %}{{ pa.price_ipm|floatformat:0 }}{% endif %}"
       data-pa-price-assurance="{% if pa.price_assurance %}{{ pa.price_assurance|floatformat:0 }}{% endif %}"
       data-pa-status-ipm="{{ pa.coverage_status_ipm }}"
       data-pa-status-assurance="{{ pa.coverage_status_assurance }}"
-      role="button" tabindex="0" aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
-      <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
+      role="button" tabindex="{% if not pa.organisme.is_verified %}-1{% else %}0{% endif %}" aria-label="{% if not pa.organisme.is_verified %}Structure en attente d'approbation{% else %}Sélectionner {{ pa.acte.name }} pour le panier{% endif %}">
+      <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1"{% if not pa.organisme.is_verified %} disabled{% endif %}>
       <div class="ai-info min-w-0">
         <div class="ai-nom">{{ pa.acte.name }}</div>
         {% if pa.acte.parent_service or pa.acte.service_medical_category %}

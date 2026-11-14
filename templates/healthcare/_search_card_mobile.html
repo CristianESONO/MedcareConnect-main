@@ -1,14 +1,17 @@
 {% comment %}Carte structure mobile — démo MOBILE PATIENT (scard-m).{% endcomment %}
-<article class="scard-m fade-in-m" id="sm-{{ block.org.pk }}" data-org-id="{{ block.org.pk }}"
+<article class="scard-m fade-in-m{% if not block.org.is_verified %} scard-m--unverified scard--unverified opacity-60{% endif %}" id="sm-{{ block.org.pk }}" data-org-id="{{ block.org.pk }}"
+  {% if not block.org.is_verified %}data-org-unverified="1"{% endif %}
   {% if block.org.latitude %}data-org-lat="{{ block.org.latitude }}"{% endif %}
   {% if block.org.longitude %}data-org-lng="{{ block.org.longitude }}"{% endif %}>
   <div class="scard-m-head">
     <div class="scard-m-head-row flex items-center justify-between gap-2">
       <div class="scard-m-name">
         {{ block.org.name }}
-        {% if block.is_pioneer %}
+        {% if not block.org.is_verified %}
+          <span class="pioneer-badge-m unverified-badge" style="background:#fef3c7;color:#92400e;border-color:#fcd34d"><i class="ti ti-clock"></i> En attente d'approbation</span>
+        {% elif block.is_pioneer %}
           <span class="pioneer-badge-m">Pionnier</span>
-        {% elif block.org.is_verified %}
+        {% else %}
           <span class="pioneer-badge-m" style="background:#e8faf3;color:#065f46;border-color:#a7f3d0">Vérifié</span>
         {% endif %}
       </div>
@@ -35,8 +38,9 @@
     {% if block.org.is_ambulance_service %}
       {% include "healthcare/_ambulance_acte_mobile.html" with org=block.org %}
     {% else %}
-  <div class="scard-m-acte"
+  <div class="scard-m-acte{% if not block.org.is_verified %} scard-m-acte--unverified cursor-not-allowed opacity-60{% endif %}"
     data-pa-id="{{ pa.pk }}"
+    {% if not block.org.is_verified %}data-pa-unverified="1" aria-disabled="true"{% endif %}
     data-pa-acte-pk="{{ pa.acte.pk }}"
     data-pa-acte="{{ pa.acte.name|escape }}"
     data-pa-org="{{ pa.organisme.name|escape }}"
@@ -52,7 +56,7 @@
     data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
     data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
     data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}">
-    <input type="checkbox" class="scard-m-checkbox" aria-label="Sélectionner {{ pa.acte.name }} pour prendre rendez-vous">
+    <input type="checkbox" class="scard-m-checkbox" aria-label="Sélectionner {{ pa.acte.name }} pour prendre rendez-vous"{% if not block.org.is_verified %} disabled{% endif %}>
     <div class="scard-m-acte-info">
       <div class="scard-m-acte-nom">{{ pa.acte.name }}</div>
       {% if pa.delai or block.org.prises_sang_domicile %}

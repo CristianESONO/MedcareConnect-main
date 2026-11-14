@@ -107,6 +107,14 @@ def patient_book(request, part_ref):
     )
     org = part.organisme
 
+    if not org.is_verified:
+        messages.error(
+            request,
+            f"La structure « {org.name} » est en attente d'approbation par MedCare Connect. "
+            "La prise de rendez-vous est temporairement indisponible.",
+        )
+        return redirect("healthcare:search")
+
     if request.method == "POST":
         value = (request.POST.get("slot") or "").strip()
         note = (request.POST.get("note") or "").strip()

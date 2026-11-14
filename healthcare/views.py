@@ -1730,17 +1730,23 @@ def search(request):
         _dem_attach_catalog_counts(_blk["items"])
 
     mobile_results_by_org: list[dict] = []
-    mobile_results_acte_total = len(pool_for_pills) if pool_from_request else 0
+    mobile_results_acte_total = len(pool_for_pills) if pool_for_pills else (1 if pool_from_request else 0)
     if pool_from_request and (page.object_list or results_count > 0):
         # Récupérer l'ensemble des offres des actes recherchés pour toutes les structures.
-        pool_offers = list(pa_qs.filter(acte_id__in=pool_for_pills))
+        if pool_for_pills:
+            pool_offers = list(pa_qs.filter(acte_id__in=pool_for_pills))
+            acte_objs_pool = {
+                x.pk: x for x in ActeMedical.objects.filter(pk__in=pool_for_pills)
+            }
+        else:
+            pool_offers = list(page.object_list)
+            pool_actes = {pa.acte_id for pa in pool_offers}
+            acte_objs_pool = {
+                x.pk: x for x in ActeMedical.objects.filter(pk__in=pool_actes)
+            }
         _attach_distance_km_to_offers(pool_offers, latlng)
         _dem_attach_insurance(pool_offers)
         _dem_attach_catalog_counts(pool_offers)
-
-        acte_objs_pool = {
-            x.pk: x for x in ActeMedical.objects.filter(pk__in=pool_for_pills)
-        }
         by_org: dict[int, dict] = {}
         for pa in pool_offers:
             oid = pa.organisme_id
@@ -1840,6 +1846,7 @@ def search(request):
     partner_orgs_qs = (
         OrganismeDeSante.objects.filter(
             is_active=True,
+            is_verified=True,
             subscription_plan__is_pioneer_offer=True,
         )
         .select_related("type_organisme", "subscription_plan")

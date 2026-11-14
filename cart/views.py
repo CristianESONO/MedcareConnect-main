@@ -659,6 +659,25 @@ def cart_add(request, pk):
         organisme__is_active=True,
     )
 
+    if not pa.organisme.is_verified:
+        if _wants_json_response(request):
+            return JsonResponse(
+                {
+                    "ok": False,
+                    "error": "Cette structure de santé est en cours de validation et ne peut pas encore recevoir de commandes.",
+                },
+                status=400,
+            )
+        messages.error(
+            request,
+            f"La structure « {pa.organisme.name} » est en attente d'approbation par MedCare Connect. "
+            "Les réservations et ajouts au panier y sont temporairement bloqués.",
+        )
+        next_url = request.GET.get("next")
+        if next_url:
+            return redirect(next_url)
+        return redirect("healthcare:search")
+
     if not request.user.is_authenticated:
         if _guest_cart_has_acte_elsewhere(request, pa.acte_id, pa.pk):
             return _acte_cart_conflict_response(request, pa)
@@ -884,6 +903,15 @@ def generate_devis(request):
             selected_items = list(
                 items_qs.filter(prestataire_acte__organisme_id=org_id).order_by("pk")
             )
+            if selected_items and not selected_items[0].prestataire_acte.organisme.is_verified:
+                messages.error(
+                    request,
+                    f"La structure « {selected_items[0].prestataire_acte.organisme.name} » est en attente d'approbation. "
+                    "Impossible de générer un devis.",
+                )
+                if request.user.is_patient:
+                    return redirect(panel_redirect("chariot"))
+                return redirect("cart:cart_view")
     else:
         try:
             item_id = int(raw_item_id)

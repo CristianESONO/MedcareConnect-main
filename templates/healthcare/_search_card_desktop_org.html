@@ -2,8 +2,9 @@
 Carte structure desktop — vue groupée par organisme (scard).
 Variables : block (org, items, matching_count, total_actes, missing_actes, insurance_names, is_pioneer, hours_summary)
 {% endcomment %}
-<article class="scard fade-in" id="sd-{{ block.org.pk }}"
+<article class="scard fade-in{% if not block.org.is_verified %} scard--unverified{% endif %}" id="sd-{{ block.org.pk }}"
   data-org-id="{{ block.org.pk }}"
+  {% if not block.org.is_verified %}data-org-unverified="1"{% endif %}
   {% if block.org.latitude %}data-org-lat="{{ block.org.latitude }}"{% endif %}
   {% if block.org.longitude %}data-org-lng="{{ block.org.longitude }}"{% endif %}>
 
@@ -14,9 +15,11 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
         <button type="button" class="org-preview-trigger scard-org-name"
           data-org-slug="{{ block.org.slug }}"
           aria-haspopup="dialog">{{ block.org.name }}</button>
-        {% if block.is_pioneer %}
+        {% if not block.org.is_verified %}
+          <span class="unverified-badge sipn-ico-inline" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700" title="Cette structure est en attente d'approbation par MedCare Connect"><i class="ti ti-clock"></i> En attente d'approbation</span>
+        {% elif block.is_pioneer %}
           <span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>
-        {% elif block.org.is_verified %}
+        {% else %}
           <span class="verified-badge sipn-ico-inline" style="background:#e8faf3;color:#065f46;border:1px solid #a7f3d0;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700"><i class="ti ti-check"></i> Vérifié</span>
         {% endif %}
       </div>
@@ -62,8 +65,9 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
       {% if block.org.is_ambulance_service %}
         {% include "healthcare/_ambulance_acte_desktop.html" with org=block.org %}
       {% else %}
-      <div class="acte-item"
+      <div class="acte-item{% if not block.org.is_verified %} acte-item--unverified cursor-not-allowed opacity-60{% endif %}"
         data-pa-id="{{ pa.pk }}"
+        {% if not block.org.is_verified %}data-pa-unverified="1" aria-disabled="true"{% endif %}
         data-pa-acte-pk="{{ pa.acte.pk }}"
         data-pa-acte="{{ pa.acte.name|escape }}"
         data-pa-org="{{ pa.organisme.name|escape }}"
@@ -77,9 +81,9 @@ Variables : block (org, items, matching_count, total_actes, missing_actes, insur
         data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
         data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
         data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}"
-        role="button" tabindex="0"
-        aria-label="Sélectionner {{ pa.acte.name }} pour le panier">
-        <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1">
+        role="button" tabindex="{% if not block.org.is_verified %}-1{% else %}0{% endif %}"
+        aria-label="{% if not block.org.is_verified %}Structure en attente d'approbation{% else %}Sélectionner {{ pa.acte.name }} pour le panier{% endif %}">
+        <input type="checkbox" class="ai-check" aria-hidden="true" tabindex="-1"{% if not block.org.is_verified %} disabled{% endif %}>
         <div class="ai-info min-w-0">
           <div class="ai-nom">{{ pa.acte.name }}</div>
           {% if pa.acte.parent_service or pa.acte.service_medical_category %}
