@@ -1552,7 +1552,6 @@
         row.classList.remove('active');
         if (chk) chk.checked = false;
       }
-      // Ne pas lancer la recherche automatiquement pour permettre la multi-sélection
       var sf = document.getElementById('search-form');
       if (sf) {
         sf.querySelectorAll('input[name="acte"]').forEach(function(inp){ inp.remove(); });
@@ -1563,6 +1562,22 @@
           h.value = id;
           sf.appendChild(h);
         });
+      }
+
+      // Desktop : lancer la recherche automatiquement.
+      // Debounce 350 ms pour autoriser la multi-sélection rapide (plusieurs clics consécutifs
+      // ne déclenchent qu'une seule navigation).
+      if (window.matchMedia('(min-width: 1024px)').matches) {
+        clearTimeout(window.__desktopActeNavT);
+        window.__desktopActeNavT = setTimeout(function() {
+          // Re-lire les inputs cachés au moment du déclenchement pour prendre en compte
+          // tous les clics intervenus pendant le délai.
+          var sfCur = document.getElementById('search-form');
+          var curIds = sfCur
+            ? Array.from(sfCur.querySelectorAll('input[name="acte"]')).map(function(i){ return i.value; })
+            : ids.slice();
+          navigateActePool(curIds);
+        }, 350);
       }
     });
   })();
@@ -1673,6 +1688,16 @@
 
   /* ─── Autocomplete recherche libre (#search-q) — réinitialisable ─ */
   function initHealthcareSearchAutocomplete(){
+    // En mode « Parcourir les actes » (sipn-prestations, slot acte), le système tokenisé
+    // gère déjà l'autocomplétion avec son propre dropdown. On évite le double-dropdown
+    // #ac-list qui oblige à sélectionner une 2ème fois.
+    if (document.body.classList.contains('sipn-prestations')) {
+      var zone = document.getElementById('search-input-zone');
+      var mode = zone ? zone.getAttribute('data-dem-mode') : null;
+      // On laisse passer uniquement le mode « structure » (recherche par nom de structure)
+      // car le système tokenisé ne sait pas gérer les centres de santé.
+      if (!mode || mode === 'acte') return;
+    }
     var input = document.getElementById('search-q'), list = document.getElementById('ac-list'),
         formEl = document.getElementById('search-form');
     if (!input || !list || !formEl) return;
@@ -5831,6 +5856,14 @@
       return (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
     }
 
+    // Clé canonique : déduplique les variantes du même acte (VS, VS (vitesse de sédimentation), etc.)
+    function canonicalKey(str) {
+      return (str || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\(.*?\)/g, '')      // retire le contenu entre parenthèses
+        .replace(/[^a-z0-9]+/g, ''); // ne garde que lettres et chiffres
+    }
+
     function findActeByName(name) {
       var normSearch = normalizeStr(name);
       if (!normSearch) return null;
@@ -6026,11 +6059,16 @@
       }
       
       var matches = [];
+      var seenCanon = {};
       document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
         var rawName = row.getAttribute('data-dem-acte-name') || '';
         var acteName = normalizeStr(rawName);
         var pk = row.getAttribute('data-dem-acte-pk');
-        if (acteName.indexOf(textNorm) !== -1 && !tags.some(function(t) { return t.dataset.value === pk; })) {
+        var cKey = canonicalKey(rawName);
+        if (acteName.indexOf(textNorm) !== -1
+            && !tags.some(function(t) { return t.dataset.value === pk; })
+            && !seenCanon[cKey]) {
+          seenCanon[cKey] = true;
           matches.push({ name: rawName, pk: pk });
         }
       });
@@ -6042,7 +6080,12 @@
           if (matches.length >= 6) return;
           var rawName = allActes[pk];
           var acteName = normalizeStr(rawName);
-          if (acteName.indexOf(textNorm) !== -1 && !tags.some(function(t) { return t.dataset.value === pk; }) && !matches.some(function(m) { return m.pk === pk; })) {
+          var cKey = canonicalKey(rawName);
+          if (acteName.indexOf(textNorm) !== -1
+              && !tags.some(function(t) { return t.dataset.value === pk; })
+              && !matches.some(function(m) { return m.pk === pk; })
+              && !seenCanon[cKey]) {
+            seenCanon[cKey] = true;
             matches.push({ name: rawName, pk: pk });
           }
         });
