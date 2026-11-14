@@ -113,6 +113,25 @@ class ZoneAndNominatimTestCase(TestCase):
         self.assertIn("bounded=1", called_url)
         self.assertIn("accept-language=fr", called_url)
 
+    @patch("healthcare.nominatim._get_json")
+    def test_api_geocode_returns_matching_addresses(self, mock_get_json):
+        mock_get_json.return_value = [
+            {
+                "lat": "14.7100",
+                "lon": "-17.4700",
+                "display_name": "Mermoz, Dakar, Sénégal",
+                "type": "residential",
+            }
+        ]
+        url = reverse("healthcare:api_geocode")
+        resp = self.client.get(f"{url}?q=Mermoz")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn("results", data)
+        self.assertEqual(len(data["results"]), 1)
+        self.assertEqual(data["results"][0]["display_name"], "Mermoz, Dakar, Sénégal")
+        self.assertEqual(data["results"][0]["lat"], 14.7100)
+
     def test_zone_filter_matches_only_selected_zone_and_all_zones_ambulance(self):
         """Filtering by 'Plateau' should return Plateau + all-zone ambulance, but not Mermoz."""
         url = reverse("healthcare:search")
