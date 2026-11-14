@@ -1493,7 +1493,7 @@
     filterActeTree(inp, tree);
   });
 
-  /* Desktop : multi-sélection dans « Parcourir les actes » (URL ?acte=…&acte=…) */
+  /* Multi-sélection dans « Parcourir les actes » (URL ?acte=…&acte=…) */
   (function initDesktopActeMultiSelect(){
     if (!document.body.classList.contains('sipn-prestations')) return;
     function navigateActePool(ids){
@@ -1539,20 +1539,29 @@
 
       var pk = row.getAttribute('data-dem-acte-pk');
       if (!pk) return;
-      var chk = row.querySelector('.dem-acte-chk');
-      var u = new URL(window.location.href);
-      var ids = u.searchParams.getAll('acte');
-      var idx = ids.indexOf(pk);
-      if (idx === -1) {
-        ids.push(pk);
-        row.classList.add('active');
-        if (chk) chk.checked = true;
+      var name = row.getAttribute('data-dem-acte-name') || row.innerText.trim();
+
+      var sf = document.getElementById('search-form');
+      var ids = sf
+        ? Array.from(sf.querySelectorAll('input[name="acte"]')).map(function(inp){ return String(inp.value); })
+        : (new URL(window.location.href)).searchParams.getAll('acte');
+
+      var idx = ids.indexOf(String(pk));
+      var isNowActive = (idx === -1);
+      if (isNowActive) {
+        ids.push(String(pk));
       } else {
         ids.splice(idx, 1);
-        row.classList.remove('active');
-        if (chk) chk.checked = false;
       }
-      var sf = document.getElementById('search-form');
+
+      // Synchroniser visuellement toutes les lignes de cet acte
+      document.querySelectorAll('.dem-acte-row--multi[data-dem-acte-pk="' + pk + '"]').forEach(function(r){
+        r.classList.toggle('active', isNowActive);
+        var c = r.querySelector('.dem-acte-chk');
+        if (c) c.checked = isNowActive;
+      });
+
+      // Synchroniser les champs cachés du formulaire search-form
       if (sf) {
         sf.querySelectorAll('input[name="acte"]').forEach(function(inp){ inp.remove(); });
         ids.forEach(function(id){
@@ -1564,20 +1573,26 @@
         });
       }
 
-      // Desktop : lancer la recherche automatiquement.
-      // Debounce 350 ms pour autoriser la multi-sélection rapide (plusieurs clics consécutifs
-      // ne déclenchent qu'une seule navigation).
+      // Synchroniser avec le système mobile de sélection (badges, pilules, strips)
+      if (isNowActive) {
+        if (window._sipnAddSelectedActe) window._sipnAddSelectedActe(pk, name);
+      } else {
+        if (window._sipnRemoveSelectedActe) window._sipnRemoveSelectedActe(pk);
+      }
+
+      // Desktop (>= 1024px) : lancer la recherche automatiquement avec debounce 350ms.
+      // Mobile (< 1024px) : NE PAS lancer la recherche automatiquement (clic explicite sur Rechercher ou Voir les structures requis).
       if (window.matchMedia('(min-width: 1024px)').matches) {
         clearTimeout(window.__desktopActeNavT);
         window.__desktopActeNavT = setTimeout(function() {
-          // Re-lire les inputs cachés au moment du déclenchement pour prendre en compte
-          // tous les clics intervenus pendant le délai.
           var sfCur = document.getElementById('search-form');
           var curIds = sfCur
             ? Array.from(sfCur.querySelectorAll('input[name="acte"]')).map(function(i){ return i.value; })
             : ids.slice();
           navigateActePool(curIds);
         }, 350);
+      } else {
+        if (window._sipnUpdateMobileFabs) window._sipnUpdateMobileFabs();
       }
     });
   })();
@@ -6206,7 +6221,9 @@
                   searchInput.value = '';
                   if (clearBtn) clearBtn.style.display = 'none';
                   autocompleteDropdown.style.display = 'none';
-                  triggerSearchUpdate();
+                  if (window.innerWidth >= 1024) {
+                    triggerSearchUpdate();
+                  }
                 });
                 item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
                 item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
@@ -6229,7 +6246,9 @@
             searchInput.value = '';
             if (clearBtn) clearBtn.style.display = 'none';
             autocompleteDropdown.style.display = 'none';
-            triggerSearchUpdate();
+            if (window.innerWidth >= 1024) {
+              triggerSearchUpdate();
+            }
           });
           item.addEventListener('mouseenter', function() { item.style.background = '#f9fafb'; });
           item.addEventListener('mouseleave', function() { item.style.background = '#fff'; });
@@ -6490,56 +6509,22 @@
     window.updatePageContent = updatePageContent;
     
     function reinitActeMultiSelect() {
-      // Re-attach click handlers for acte rows
-      var _clickLock = false;
+      // Synchronise l'état visuel actif des lignes d'actes d'après les inputs cachés de search-form ou l'URL
+      var sf = document.getElementById('search-form');
+      var ids = sf
+        ? Array.from(sf.querySelectorAll('input[name="acte"]')).map(function(i){ return String(i.value); })
+        : (new URLSearchParams(window.location.search)).getAll('acte');
       document.querySelectorAll('.dem-acte-row--multi').forEach(function(row) {
-        row.removeEventListener('click', handleActeRowClick);
-        row.addEventListener('click', handleActeRowClick);
+        var pk = row.getAttribute('data-dem-acte-pk');
+        var isActive = ids.indexOf(String(pk)) !== -1;
+        row.classList.toggle('active', isActive);
+        var chk = row.querySelector('.dem-acte-chk');
+        if (chk) chk.checked = isActive;
       });
-    }
-    
-    function handleActeRowClick(e) {
-      var row = e.currentTarget;
-      if (_clickLock) return;
-      _clickLock = true;
-      setTimeout(function(){ _clickLock = false; }, 150);
-      
-      var pk = row.getAttribute('data-dem-acte-pk');
-      if (!pk) return;
-      
-      var u = new URL(window.location.href);
-      var ids = u.searchParams.getAll('acte');
-      var idx = ids.indexOf(pk);
-      if (idx === -1) {
-        ids.push(pk);
-        row.classList.add('active');
-      } else {
-        ids.splice(idx, 1);
-        row.classList.remove('active');
-      }
-      
-      u.searchParams.delete('acte');
-      ids.forEach(function(id){ u.searchParams.append('acte', String(id)); });
-      u.searchParams.delete('page');
-      
-      // Show results if actes are selected
       if (ids.length > 0) {
         showResultsArea();
       } else {
         hideResultsArea();
-      }
-      
-      // Synchroniser les champs cachés sans lancer la recherche automatiquement
-      var sf = document.getElementById('search-form');
-      if (sf) {
-        sf.querySelectorAll('input[name="acte"]').forEach(function(inp){ inp.remove(); });
-        ids.forEach(function(id){
-          var h = document.createElement('input');
-          h.type = 'hidden';
-          h.name = 'acte';
-          h.value = id;
-          sf.appendChild(h);
-        });
       }
     }
     
