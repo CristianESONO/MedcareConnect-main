@@ -2142,28 +2142,23 @@
         applyDemSearchMode(mode);
       });
     });
-    document.querySelectorAll('[data-dem-filter-drop]').forEach(function(chip){
-      chip.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        var type = chip.getAttribute('data-dem-filter-drop');
-        if (!type) return;
-        if (window.toggleDemFilterDropdown) window.toggleDemFilterDropdown(type);
-      });
-      chip.addEventListener('keydown', function(e){
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chip.click(); }
-      });
-    });
     (function initDemDesktopFilterDropdown(){
-      var dd = document.getElementById('sipn-filter-dropdown');
-      var form = document.getElementById('search-form');
-      if (!dd || !form) return;
       var activeDrop = null;
       var budgetTimer = null;
+
+      function getDd() {
+        return document.getElementById('sipn-filter-dropdown');
+      }
+      function getForm() {
+        return document.getElementById('search-form');
+      }
 
       function syncAssuranceToHidden(){
         // Seule source de vérité : les hidden inputs dem-sync-hidden.
         // Le select center (sans name) sert uniquement à l'UI Select2 — pas de soumission via lui.
+        var dd = getDd();
+        var form = getForm();
+        if (!dd || !form) return;
         var center = demAssuranceCenter();
         var checked = Array.from(dd.querySelectorAll('.sipn-assurance-cb:checked')).map(function(c){ return c.value; });
         // Mettre à jour l'UI Select2 si présent (affichage seulement, pas de soumission)
@@ -2182,12 +2177,16 @@
 
       function closeDrop(){
         activeDrop = null;
+        var dd = getDd();
+        if (!dd) return;
         dd.classList.add('hidden');
         dd.hidden = true;
         dd.querySelectorAll('[data-sipn-panel]').forEach(function(p){ p.hidden = true; });
       }
 
       function showPanel(type){
+        var dd = getDd();
+        if (!dd) return false;
         dd.querySelectorAll('[data-sipn-panel]').forEach(function(p){ p.hidden = true; });
         var panel = dd.querySelector('[data-sipn-panel="' + type + '"]');
         if (!panel) return false;
@@ -2203,7 +2202,8 @@
         activeDrop = type;
         // Aligne le panneau sous le bouton cliqué (au lieu d'être collé à gauche)
         var chip = document.querySelector('[data-dem-filter-drop="' + type + '"]');
-        if (chip && dd) {
+        var dd = getDd();
+        if (chip && dd && dd.parentElement) {
           var chipRect = chip.getBoundingClientRect();
           var parentRect = dd.parentElement.getBoundingClientRect();
           var leftOffset = Math.max(0, chipRect.left - parentRect.left);
@@ -2215,51 +2215,9 @@
       };
       window.closeDemFilterDropdown = closeDrop;
 
-      var assPanel = dd.querySelector('[data-sipn-panel="assurance"]');
-      if (assPanel) {
-        assPanel.querySelectorAll('.dem-filter-pill').forEach(function(pill){
-          pill.addEventListener('click', function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            var cb = pill.querySelector('.sipn-assurance-cb');
-            if (!cb) return;
-            cb.checked = !cb.checked;
-            pill.classList.toggle('on', cb.checked);
-          });
-        });
-        var btnClear = assPanel.querySelector('[data-sipn-clear="assurance"]');
-        if (btnClear) btnClear.addEventListener('click', function(e){
-          e.preventDefault();
-          assPanel.querySelectorAll('.sipn-assurance-cb').forEach(function(c){ c.checked = false; });
-          assPanel.querySelectorAll('.dem-filter-pill').forEach(function(p){ p.classList.remove('on'); });
-          syncAssuranceToHidden();
-          form.submit();
-        });
-        var btnApply = assPanel.querySelector('[data-sipn-apply="assurance"]');
-        if (btnApply) btnApply.addEventListener('click', function(e){
-          e.preventDefault();
-          syncAssuranceToHidden();
-          // S'assurer que les actes de l'URL courante sont bien présents comme hidden inputs avant submit
-          var urlParams = new URLSearchParams(window.location.search);
-          var urlActes = urlParams.getAll('acte');
-          if (urlActes.length) {
-            var existingActes = Array.from(form.querySelectorAll('input[name="acte"]')).map(function(i){ return i.value; });
-            urlActes.forEach(function(aid){
-              if (existingActes.indexOf(aid) === -1) {
-                var h = document.createElement('input');
-                h.type = 'hidden';
-                h.name = 'acte';
-                h.value = aid;
-                form.appendChild(h);
-              }
-            });
-          }
-          closeDrop();
-          form.submit();
-        });
-      }
-
       function submitDemFilterForm(){
+        var form = getForm();
+        if (!form) return;
         var urlParams = new URLSearchParams(window.location.search);
         var urlActes = urlParams.getAll('acte');
         if (urlActes.length) {
@@ -2277,78 +2235,19 @@
         form.submit();
       }
 
-      dd.querySelectorAll('[data-dem-zone-pill]').forEach(function(pill){
-        pill.addEventListener('click', function(e){
-          e.preventDefault();
-          var val = pill.getAttribute('data-dem-zone-pill') || '';
-          var cityInp = document.getElementById('sipn-filter-city');
-          var currentVal = cityInp ? cityInp.value : '';
-          var newVal = (currentVal === val) ? '' : val;
-          document.querySelectorAll('input[name="city"]').forEach(function(i){ i.value = newVal; });
-          closeDrop();
-          submitDemFilterForm();
-        });
-      });
-      var zoneClear = dd.querySelector('[data-sipn-clear="zone"]');
-      if (zoneClear) zoneClear.addEventListener('click', function(e){
-        e.preventDefault();
-        document.querySelectorAll('input[name="city"]').forEach(function(i){ i.value = ''; });
-        closeDrop();
-        submitDemFilterForm();
-      });
-
-      dd.querySelectorAll('[data-dem-delai-pill]').forEach(function(pill){
-        pill.addEventListener('click', function(e){
-          e.preventDefault();
-          var val = pill.getAttribute('data-dem-delai-pill') || '';
-          var delSel = document.getElementById('sipn-filter-delai');
-          var currentVal = delSel ? delSel.value : '';
-          var newVal = (currentVal === val) ? '' : val;
-          document.querySelectorAll('select[name="delai"]').forEach(function(s){ s.value = newVal; });
-          closeDrop();
-          submitDemFilterForm();
-        });
-      });
-      var delClear = dd.querySelector('[data-sipn-clear="delai"]');
-      if (delClear) delClear.addEventListener('click', function(e){
-        e.preventDefault();
-        document.querySelectorAll('select[name="delai"]').forEach(function(s){ s.value = ''; });
-        closeDrop();
-        submitDemFilterForm();
-      });
-
-      var budRng = document.getElementById('dem-dd-budget-range');
-      var budLbl = document.getElementById('dem-dd-budget-lbl');
-      if (budRng) {
-        function applyBudget(hi){
-          var priceH = demPriceHidden();
-          var inpMax = priceH.max;
-          var inpMin = priceH.min;
-          var maxStr = hi >= PMAX ? '' : String(Math.round(hi));
-          if (inpMax) inpMax.value = maxStr;
-          if (inpMin) inpMin.value = '';
-          if (budLbl) budLbl.textContent = maxStr ? demFmtF(hi) + ' FCFA' : 'Illimité';
-          closeDrop();
-          form.submit();
-        }
-        budRng.addEventListener('input', function(){
-          var hi = parseFloat(budRng.value);
-          if (budLbl) budLbl.textContent = hi >= PMAX ? 'Illimité' : demFmtF(hi) + ' FCFA';
-          clearTimeout(budgetTimer);
-          budgetTimer = setTimeout(function(){ applyBudget(hi); }, 450);
-        });
-      }
-      var budClear = dd.querySelector('[data-sipn-clear="budget"]');
-      if (budClear) budClear.addEventListener('click', function(e){
-        e.preventDefault();
+      function applyBudget(hi){
+        var form = getForm();
         var priceH = demPriceHidden();
-        if (priceH.max) priceH.max.value = '';
-        if (priceH.min) priceH.min.value = '';
-        if (budRng) budRng.value = PMAX;
-        if (budLbl) budLbl.textContent = 'Illimité';
+        var inpMax = priceH.max;
+        var inpMin = priceH.min;
+        var maxStr = hi >= PMAX ? '' : String(Math.round(hi));
+        if (inpMax) inpMax.value = maxStr;
+        if (inpMin) inpMin.value = '';
+        var budLbl = document.getElementById('dem-dd-budget-lbl');
+        if (budLbl) budLbl.textContent = maxStr ? demFmtF(hi) + ' FCFA' : 'Illimité';
         closeDrop();
-        form.submit();
-      });
+        if (form) form.submit();
+      }
 
       function executeReset(e){
         if (e) e.preventDefault();
@@ -2360,20 +2259,166 @@
       }
       window._sipnExecuteReset = executeReset;
 
+      /* Écouteurs globaux délégués sur document (résistent aux rechargements DOM AJAX) */
       document.addEventListener('click', function(e){
         var t = e.target;
         if (!t || !t.closest) return;
-        var btn = t.closest('#fc-reset, .btn-reset-filters, .dem-filter-reset');
-        if (btn) executeReset(e);
+
+        /* Puces déroulantes filtres (Assurance, Zone, Budget, Délai) */
+        var chip = t.closest('[data-dem-filter-drop]');
+        if (chip) {
+          e.preventDefault();
+          e.stopPropagation();
+          var type = chip.getAttribute('data-dem-filter-drop');
+          if (type && window.toggleDemFilterDropdown) window.toggleDemFilterDropdown(type);
+          return;
+        }
+
+        /* Pilules de zone */
+        var zonePill = t.closest('[data-dem-zone-pill]');
+        if (zonePill) {
+          e.preventDefault();
+          var val = zonePill.getAttribute('data-dem-zone-pill') || '';
+          var cityInp = document.getElementById('sipn-filter-city');
+          var currentVal = cityInp ? cityInp.value : '';
+          var newVal = (currentVal === val) ? '' : val;
+          document.querySelectorAll('input[name="city"]').forEach(function(i){ i.value = newVal; });
+          closeDrop();
+          submitDemFilterForm();
+          return;
+        }
+
+        /* Effacer zone */
+        var zoneClear = t.closest('[data-sipn-clear="zone"]');
+        if (zoneClear) {
+          e.preventDefault();
+          document.querySelectorAll('input[name="city"]').forEach(function(i){ i.value = ''; });
+          closeDrop();
+          submitDemFilterForm();
+          return;
+        }
+
+        /* Pilules de délai */
+        var delaiPill = t.closest('[data-dem-delai-pill]');
+        if (delaiPill) {
+          e.preventDefault();
+          var delVal = delaiPill.getAttribute('data-dem-delai-pill') || '';
+          var delSel = document.getElementById('sipn-filter-delai');
+          var curDelVal = delSel ? delSel.value : '';
+          var newDelVal = (curDelVal === delVal) ? '' : delVal;
+          document.querySelectorAll('select[name="delai"]').forEach(function(s){ s.value = newDelVal; });
+          closeDrop();
+          submitDemFilterForm();
+          return;
+        }
+
+        /* Effacer délai */
+        var delaiClear = t.closest('[data-sipn-clear="delai"]');
+        if (delaiClear) {
+          e.preventDefault();
+          document.querySelectorAll('select[name="delai"]').forEach(function(s){ s.value = ''; });
+          closeDrop();
+          submitDemFilterForm();
+          return;
+        }
+
+        /* Pilules d'assurance dans le dropdown */
+        var assPill = t.closest('#sipn-filter-dropdown [data-sipn-panel="assurance"] .dem-filter-pill');
+        if (assPill) {
+          e.preventDefault();
+          e.stopPropagation();
+          var cb = assPill.querySelector('.sipn-assurance-cb');
+          if (cb) {
+            cb.checked = !cb.checked;
+            assPill.classList.toggle('on', cb.checked);
+          }
+          return;
+        }
+
+        /* Effacer assurance */
+        var assClear = t.closest('[data-sipn-clear="assurance"]');
+        if (assClear) {
+          e.preventDefault();
+          var dd = getDd();
+          var assPanel = dd ? dd.querySelector('[data-sipn-panel="assurance"]') : null;
+          if (assPanel) {
+            assPanel.querySelectorAll('.sipn-assurance-cb').forEach(function(c){ c.checked = false; });
+            assPanel.querySelectorAll('.dem-filter-pill').forEach(function(p){ p.classList.remove('on'); });
+          }
+          syncAssuranceToHidden();
+          var form = getForm();
+          if (form) form.submit();
+          return;
+        }
+
+        /* Appliquer assurance */
+        var assApply = t.closest('[data-sipn-apply="assurance"]');
+        if (assApply) {
+          e.preventDefault();
+          syncAssuranceToHidden();
+          closeDrop();
+          submitDemFilterForm();
+          return;
+        }
+
+        /* Effacer budget */
+        var budClear = t.closest('[data-sipn-clear="budget"]');
+        if (budClear) {
+          e.preventDefault();
+          var priceH = demPriceHidden();
+          if (priceH.max) priceH.max.value = '';
+          if (priceH.min) priceH.min.value = '';
+          var budRng = document.getElementById('dem-dd-budget-range');
+          var budLbl = document.getElementById('dem-dd-budget-lbl');
+          if (budRng) budRng.value = PMAX;
+          if (budLbl) budLbl.textContent = 'Illimité';
+          closeDrop();
+          var form = getForm();
+          if (form) form.submit();
+          return;
+        }
+
+        /* Réinitialiser les filtres */
+        var resetBtn = t.closest('#fc-reset, .btn-reset-filters, .dem-filter-reset');
+        if (resetBtn) {
+          executeReset(e);
+          return;
+        }
+
+        /* Fermer le dropdown au clic en dehors */
+        if (activeDrop) {
+          if (!t.closest('[data-dem-filter-drop]') && !t.closest('#sipn-filter-dropdown')) {
+            closeDrop();
+          }
+        }
       });
 
-      var sortSel = document.getElementById('id-sort-dem');
-      if (sortSel) sortSel.addEventListener('change', function(){ form.submit(); });
+      /* Navigation au clavier sur les puces filtres */
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') {
+          var chip = e.target && e.target.closest && e.target.closest('[data-dem-filter-drop]');
+          if (chip) { e.preventDefault(); chip.click(); }
+        }
+      });
 
-      document.addEventListener('click', function(ev){
-        if (!activeDrop) return;
-        if (ev.target.closest('[data-dem-filter-drop]') || ev.target.closest('#sipn-filter-dropdown')) return;
-        closeDrop();
+      /* Slider de budget délégué */
+      document.addEventListener('input', function(e){
+        if (e.target && e.target.id === 'dem-dd-budget-range') {
+          var budRng = e.target;
+          var budLbl = document.getElementById('dem-dd-budget-lbl');
+          var hi = parseFloat(budRng.value);
+          if (budLbl) budLbl.textContent = hi >= PMAX ? 'Illimité' : demFmtF(hi) + ' FCFA';
+          clearTimeout(budgetTimer);
+          budgetTimer = setTimeout(function(){ applyBudget(hi); }, 450);
+        }
+      });
+
+      /* Sélecteur de tri délégué */
+      document.addEventListener('change', function(e){
+        if (e.target && e.target.id === 'id-sort-dem') {
+          var form = getForm();
+          if (form) form.submit();
+        }
       });
     })();
   })();
@@ -2508,7 +2553,12 @@
     function renderZoneSheet(){
       if (titleEl) titleEl.textContent = 'Zone / Quartier';
       if (footerEl) footerEl.style.display = '';
-      var zones = [''].concat(meta.zones || []);
+      var liveMeta = meta;
+      try {
+        var mEl = document.getElementById('sipn-m-filter-meta');
+        if (mEl) liveMeta = JSON.parse(mEl.textContent || '{}');
+      } catch (err) {}
+      var zones = [''].concat(liveMeta.zones || meta.zones || []);
       bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + zones.map(function(z){
         var lbl = z ? z : 'Toutes les zones';
         var checked = (pending.city || '') === z ? ' checked' : '';
@@ -5183,8 +5233,10 @@
   }
   var btnQuickGeo = $('#btn-quick-geo');
   if (btnQuickGeo) btnQuickGeo.addEventListener('click', function(e){ e.preventDefault(); openGeo(); });
-  var desktopGeoChip = document.getElementById('sipn-desktop-geo-chip');
-  if (desktopGeoChip) desktopGeoChip.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); openGeo(); });
+  document.addEventListener('click', function(e){
+    var geoChip = e.target && e.target.closest && e.target.closest('#sipn-desktop-geo-chip');
+    if (geoChip) { e.preventDefault(); e.stopPropagation(); openGeo(); }
+  });
   if ($('#btn-edit-geo')) $('#btn-edit-geo').addEventListener('click', function(e){ e.preventDefault(); openGeo(); });
   if ($('#geo-modal-close')) $('#geo-modal-close').addEventListener('click', closeGeo);
   if (geoBackdrop) geoBackdrop.addEventListener('click', function(){ if (geoModal && geoModal.classList.contains('open')) closeGeo(); });
@@ -6415,6 +6467,7 @@
         
         /* Réinitialiser les event listeners pour le nouveau contenu */
         reinitActeMultiSelect();
+        if (window.closeDemFilterDropdown) window.closeDemFilterDropdown();
         if (window._sipnHydrateCart) {
           window._sipnHydrateCart(function(){
             if (window._sipnSyncCartCardStates) window._sipnSyncCartCardStates();
