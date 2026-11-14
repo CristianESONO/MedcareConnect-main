@@ -2,7 +2,7 @@
  * search-mobile-filters.js — Bottom sheets filtres mobile (Tri, Assurance, Zone, Budget, Délai)
  * Extrait de search.html — Phase 2 refacto MedCare
  */
-(function initSipnMobileFilterSheets(){
+(function initSipnMobileFilterSheets() {
   'use strict';
 
   var sheet = document.getElementById('sipn-m-sheet');
@@ -37,42 +37,42 @@
     { val: 'name_org', lbl: 'Zone / Quartier' }
   ];
 
-  function isMobileFilter(){ return window.matchMedia('(max-width: 1023px)').matches; }
-  function esc(s){ return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
-  function fmtF(n){ return Math.round(Number(n || 0)).toLocaleString('fr-FR'); }
+  function isMobileFilter() { return window.matchMedia('(max-width: 1023px)').matches; }
+  function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function fmtF(n) { return Math.round(Number(n || 0)).toLocaleString('fr-FR'); }
 
-  function openSheet(){
+  function openSheet() {
     overlay.hidden = false;
     sheet.hidden = false;
-    requestAnimationFrame(function(){
+    requestAnimationFrame(function () {
       overlay.classList.add('open');
       sheet.classList.add('open');
     });
   }
-  function closeSheet(){
+  function closeSheet() {
     overlay.classList.remove('open');
     sheet.classList.remove('open');
     curType = null;
-    setTimeout(function(){
+    setTimeout(function () {
       overlay.hidden = true;
       sheet.hidden = true;
     }, 280);
   }
 
-  function syncAssuranceToForm(){
+  function syncAssuranceToForm() {
     var center = document.getElementById('id-assurance-dem-center');
     var vals = pending.assurances.slice();
     if (center) {
       if (window.jQuery && jQuery.fn.select2 && jQuery(center).data('select2')) {
         jQuery(center).val(vals).trigger('change');
       } else {
-        Array.from(center.options).forEach(function(o){ o.selected = vals.indexOf(o.value) !== -1; });
+        Array.from(center.options).forEach(function (o) { o.selected = vals.indexOf(o.value) !== -1; });
       }
     }
     var form2 = document.getElementById('search-form');
     if (form2) {
-      form2.querySelectorAll('input[name="assurance"].dem-sync-hidden').forEach(function(n){ n.remove(); });
-      vals.forEach(function(v){
+      form2.querySelectorAll('input[name="assurance"].dem-sync-hidden').forEach(function (n) { n.remove(); });
+      vals.forEach(function (v) {
         var h = document.createElement('input');
         h.type = 'hidden'; h.name = 'assurance'; h.value = v; h.className = 'dem-sync-hidden';
         form2.appendChild(h);
@@ -80,15 +80,15 @@
     }
   }
 
-  function getLiveMeta(){
+  function getLiveMeta() {
     var metaEl = document.getElementById('sipn-m-filter-meta');
     try {
       if (metaEl && metaEl.textContent) return JSON.parse(metaEl.textContent);
-    } catch (e) {}
+    } catch (e) { }
     return meta;
   }
 
-  function syncPendingFromCurrentInputs(){
+  function syncPendingFromCurrentInputs() {
     var lm = getLiveMeta();
     var cityInp = document.getElementById('sipn-filter-city') || document.querySelector('input[name="city"]');
     var delaiSel = document.getElementById('sipn-filter-delai') || document.querySelector('select[name="delai"]');
@@ -110,43 +110,43 @@
     if (Array.isArray(lm.assurances)) pending.assurances = lm.assurances.slice();
   }
 
-  function submitFilters(){
+  function submitFilters() {
     var form = document.getElementById('search-form');
     if (!form) return;
 
     var sortSel = document.getElementById('id-sort-dem');
     if (sortSel) sortSel.value = pending.sort;
     var sortAll = form.querySelectorAll('select[name="sort"]');
-    sortAll.forEach(function(s){ s.value = pending.sort; });
+    sortAll.forEach(function (s) { s.value = pending.sort; });
 
     var cityInp = document.getElementById('sipn-filter-city');
     if (cityInp) cityInp.value = pending.city;
     var cityAll = form.querySelectorAll('input[name="city"]');
-    cityAll.forEach(function(i){ i.value = pending.city; });
+    cityAll.forEach(function (i) { i.value = pending.city; });
 
     var delaiSel = document.getElementById('sipn-filter-delai');
     if (delaiSel) delaiSel.value = pending.delai;
     var delaiAll = form.querySelectorAll('select[name="delai"]');
-    delaiAll.forEach(function(s){ s.value = pending.delai; });
+    delaiAll.forEach(function (s) { s.value = pending.delai; });
 
     var priceMaxInp = document.getElementById('sipn-inp-price-max');
     if (priceMaxInp) priceMaxInp.value = pending.priceMax;
     var priceMaxAll = form.querySelectorAll('input[name="price_max"]');
-    priceMaxAll.forEach(function(i){ i.value = pending.priceMax; });
+    priceMaxAll.forEach(function (i) { i.value = pending.priceMax; });
 
     syncAssuranceToForm();
     closeSheet();
     form.submit();
   }
 
-  function renderSortSheet(){
+  function renderSortSheet() {
     if (titleEl) titleEl.textContent = 'Trier les résultats';
     if (footerEl) footerEl.style.display = 'none';
-    bodyEl.innerHTML = SORT_OPTS.map(function(o){
+    bodyEl.innerHTML = SORT_OPTS.map(function (o) {
       return '<button type="button" class="sipn-m-sheet-opt" data-sipn-sort-val="' + esc(o.val) + '">' + esc(o.lbl) + '</button>';
     }).join('');
-    bodyEl.querySelectorAll('[data-sipn-sort-val]').forEach(function(btn){
-      btn.addEventListener('click', function(){
+    bodyEl.querySelectorAll('[data-sipn-sort-val]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         pending.sort = btn.getAttribute('data-sipn-sort-val');
         var lbl = document.getElementById('sipn-m-sort-lbl');
         if (lbl) lbl.textContent = btn.textContent.trim();
@@ -157,17 +157,17 @@
     });
   }
 
-  function renderAssuranceSheet(){
+  function renderAssuranceSheet() {
     if (titleEl) titleEl.textContent = 'Filtrer par assurance';
     if (footerEl) footerEl.style.display = '';
     var tpl = document.getElementById('sipn-m-tpl-assurance');
     bodyEl.innerHTML = tpl ? tpl.innerHTML : '<p class="sipn-m-sheet-empty">Aucune assurance disponible.</p>';
-    bodyEl.querySelectorAll('.sipn-m-ins-cb').forEach(function(cb){
+    bodyEl.querySelectorAll('.sipn-m-ins-cb').forEach(function (cb) {
       cb.checked = pending.assurances.indexOf(cb.value) !== -1;
     });
   }
 
-  function renderZoneSheet(){
+  function renderZoneSheet() {
     if (titleEl) titleEl.textContent = 'Zone / Quartier';
     if (footerEl) footerEl.style.display = '';
     var liveMeta = getLiveMeta();
@@ -175,24 +175,24 @@
     if (!rawZones.length) {
       var datalist = document.getElementById('city-options');
       if (datalist) {
-        Array.from(datalist.options).forEach(function(opt){
+        Array.from(datalist.options).forEach(function (opt) {
           var val = (opt.value || '').trim();
           if (val && rawZones.indexOf(val) === -1) rawZones.push(val);
         });
       }
     }
     var zones = [''].concat(rawZones);
-    bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + zones.map(function(z){
+    bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + zones.map(function (z) {
       var lbl = z ? z : 'Toutes les zones';
       var checked = (pending.city || '') === z ? ' checked' : '';
       return '<label class="sipn-m-ins-opt"><input type="radio" name="sipn-m-zone" value="' + esc(z) + '"' + checked + '><span>' + esc(lbl) + '</span></label>';
     }).join('') + '</div>';
-    bodyEl.querySelectorAll('input[name="sipn-m-zone"]').forEach(function(r){
-      r.addEventListener('change', function(){ pending.city = r.value; });
+    bodyEl.querySelectorAll('input[name="sipn-m-zone"]').forEach(function (r) {
+      r.addEventListener('change', function () { pending.city = r.value; });
     });
   }
 
-  function renderBudgetSheet(){
+  function renderBudgetSheet() {
     if (titleEl) titleEl.textContent = 'Budget maximum';
     if (footerEl) footerEl.style.display = '';
     var cur = pending.priceMax ? parseFloat(pending.priceMax) : PMAX;
@@ -208,14 +208,14 @@
       '</div>';
     var rng = document.getElementById('sipn-m-budget-range');
     var disp = document.getElementById('sipn-m-budget-display');
-    rng.addEventListener('input', function(){
+    rng.addEventListener('input', function () {
       var hi = parseFloat(rng.value);
       pending.priceMax = hi >= PMAX ? '' : String(Math.round(hi));
       if (disp) disp.textContent = hi >= PMAX ? 'Sans limite' : fmtF(hi) + ' FCFA max';
     });
   }
 
-  function renderDelaiSheet(){
+  function renderDelaiSheet() {
     if (titleEl) titleEl.textContent = 'Délai de résultats';
     if (footerEl) footerEl.style.display = '';
     var liveMeta = getLiveMeta();
@@ -223,26 +223,26 @@
     if (!rawChoices.length) {
       var sel = document.getElementById('sipn-filter-delai') || document.querySelector('select[name="delai"]');
       if (sel) {
-        Array.from(sel.options).forEach(function(opt){
+        Array.from(sel.options).forEach(function (opt) {
           var val = (opt.value || '').trim();
           var lbl = (opt.textContent || '').trim();
-          if (val && !rawChoices.some(function(c){ return c.val === val; })) {
+          if (val && !rawChoices.some(function (c) { return c.val === val; })) {
             rawChoices.push({ val: val, lbl: lbl });
           }
         });
       }
     }
     var choices = [{ val: '', lbl: 'Tous les délais' }].concat(rawChoices);
-    bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + choices.map(function(o){
+    bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + choices.map(function (o) {
       var checked = pending.delai === o.val ? ' checked' : '';
       return '<label class="sipn-m-ins-opt"><input type="radio" name="sipn-m-delai" value="' + esc(o.val) + '"' + checked + '><span>' + esc(o.lbl) + '</span></label>';
     }).join('') + '</div>';
-    bodyEl.querySelectorAll('input[name="sipn-m-delai"]').forEach(function(r){
-      r.addEventListener('change', function(){ pending.delai = r.value; });
+    bodyEl.querySelectorAll('input[name="sipn-m-delai"]').forEach(function (r) {
+      r.addEventListener('change', function () { pending.delai = r.value; });
     });
   }
 
-  function openFilterSheet(type){
+  function openFilterSheet(type) {
     syncPendingFromCurrentInputs();
     curType = type;
     if (type === 'sort') renderSortSheet();
@@ -255,7 +255,7 @@
   }
 
   /* Délégation globale sur document pour que les chips mobile restent toujours cliquables après mise à jour AJAX */
-  document.addEventListener('click', function(e){
+  document.addEventListener('click', function (e) {
     var chip = e.target && e.target.closest && e.target.closest('[data-sipn-m-sheet]');
     if (!chip) return;
     e.preventDefault();
@@ -266,10 +266,10 @@
   });
 
   if (btnApply) {
-    btnApply.addEventListener('click', function(){
+    btnApply.addEventListener('click', function () {
       if (curType === 'sort') return;
       if (curType === 'assurance') {
-        pending.assurances = Array.from(bodyEl.querySelectorAll('.sipn-m-ins-cb:checked')).map(function(c){ return c.value; });
+        pending.assurances = Array.from(bodyEl.querySelectorAll('.sipn-m-ins-cb:checked')).map(function (c) { return c.value; });
         var n = pending.assurances.length;
         var lbl = document.getElementById('sipn-m-ins-lbl');
         var chip = document.getElementById('sipn-m-ins-chip');
