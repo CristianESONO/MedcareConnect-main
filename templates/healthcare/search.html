@@ -2519,18 +2519,59 @@
       }
     }
 
+    function getLiveMeta(){
+      var metaEl = document.getElementById('sipn-m-filter-meta');
+      try {
+        if (metaEl && metaEl.textContent) return JSON.parse(metaEl.textContent);
+      } catch (e) {}
+      return meta;
+    }
+
+    function syncPendingFromCurrentInputs(){
+      var lm = getLiveMeta();
+      var cityInp = document.getElementById('sipn-filter-city') || document.querySelector('input[name="city"]');
+      var delaiSel = document.getElementById('sipn-filter-delai') || document.querySelector('select[name="delai"]');
+      var sortSel = document.getElementById('id-sort-dem') || document.querySelector('select[name="sort"]');
+      var priceMaxInp = document.getElementById('sipn-inp-price-max') || document.querySelector('input[name="price_max"]');
+
+      if (cityInp && cityInp.value !== undefined) pending.city = cityInp.value;
+      else if (lm.city !== undefined) pending.city = lm.city;
+
+      if (delaiSel && delaiSel.value !== undefined) pending.delai = delaiSel.value;
+      else if (lm.delai !== undefined) pending.delai = lm.delai;
+
+      if (sortSel && sortSel.value !== undefined) pending.sort = sortSel.value;
+      else if (lm.sort !== undefined) pending.sort = lm.sort;
+
+      if (priceMaxInp && priceMaxInp.value !== undefined) pending.priceMax = priceMaxInp.value;
+      else if (lm.priceMax !== undefined) pending.priceMax = lm.priceMax;
+
+      if (Array.isArray(lm.assurances)) pending.assurances = lm.assurances.slice();
+    }
+
     function submitFilters(){
+      var form = document.getElementById('search-form');
+      if (!form) return;
+
       var sortSel = document.getElementById('id-sort-dem');
       if (sortSel) sortSel.value = pending.sort;
+      var sortAll = form.querySelectorAll('select[name="sort"]');
+      sortAll.forEach(function(s){ s.value = pending.sort; });
 
       var cityInp = document.getElementById('sipn-filter-city');
       if (cityInp) cityInp.value = pending.city;
+      var cityAll = form.querySelectorAll('input[name="city"]');
+      cityAll.forEach(function(i){ i.value = pending.city; });
 
       var delaiSel = document.getElementById('sipn-filter-delai');
       if (delaiSel) delaiSel.value = pending.delai;
+      var delaiAll = form.querySelectorAll('select[name="delai"]');
+      delaiAll.forEach(function(s){ s.value = pending.delai; });
 
       var priceMaxInp = document.getElementById('sipn-inp-price-max');
       if (priceMaxInp) priceMaxInp.value = pending.priceMax;
+      var priceMaxAll = form.querySelectorAll('input[name="price_max"]');
+      priceMaxAll.forEach(function(i){ i.value = pending.priceMax; });
 
       syncAssuranceToForm();
       closeSheet();
@@ -2568,11 +2609,7 @@
     function renderZoneSheet(){
       if (titleEl) titleEl.textContent = 'Zone / Quartier';
       if (footerEl) footerEl.style.display = '';
-      var liveMeta = meta;
-      try {
-        var mEl = document.getElementById('sipn-m-filter-meta');
-        if (mEl) liveMeta = JSON.parse(mEl.textContent || '{}');
-      } catch (err) {}
+      var liveMeta = getLiveMeta();
       var zones = [''].concat(liveMeta.zones || meta.zones || []);
       bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + zones.map(function(z){
         var lbl = z ? z : 'Toutes les zones';
@@ -2610,7 +2647,8 @@
     function renderDelaiSheet(){
       if (titleEl) titleEl.textContent = 'Délai de résultats';
       if (footerEl) footerEl.style.display = '';
-      var choices = [{ val: '', lbl: 'Tous les délais' }].concat(meta.delaiChoices || []);
+      var liveMeta = getLiveMeta();
+      var choices = [{ val: '', lbl: 'Tous les délais' }].concat(liveMeta.delaiChoices || meta.delaiChoices || []);
       bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + choices.map(function(o){
         var checked = pending.delai === o.val ? ' checked' : '';
         return '<label class="sipn-m-ins-opt"><input type="radio" name="sipn-m-delai" value="' + esc(o.val) + '"' + checked + '><span>' + esc(o.lbl) + '</span></label>';
@@ -2621,6 +2659,7 @@
     }
 
     function openFilterSheet(type){
+      syncPendingFromCurrentInputs();
       curType = type;
       if (type === 'sort') renderSortSheet();
       else if (type === 'assurance') renderAssuranceSheet();
@@ -2631,13 +2670,15 @@
       openSheet();
     }
 
-    document.querySelectorAll('[data-sipn-m-sheet]').forEach(function(chip){
-      chip.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        if (!isMobileFilter()) return;
-        openFilterSheet(chip.getAttribute('data-sipn-m-sheet'));
-      });
+    /* Délégation globale sur document pour que les chips mobile restent toujours cliquables après mise à jour AJAX */
+    document.addEventListener('click', function(e){
+      var chip = e.target && e.target.closest && e.target.closest('[data-sipn-m-sheet]');
+      if (!chip) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (!isMobileFilter()) return;
+      var type = chip.getAttribute('data-sipn-m-sheet');
+      if (type) openFilterSheet(type);
     });
 
     if (btnApply) {
@@ -2659,7 +2700,7 @@
           pending.city = zr ? zr.value : '';
           var zlbl = document.getElementById('sipn-m-zone-lbl');
           var zchip = document.getElementById('sipn-m-zone-chip');
-          if (zlbl) zlbl.textContent = pending.city ? pending.city : 'Zone';
+          if (zlbl) zlbl.innerHTML = '<i class="ti ti-map-pin"></i> ' + (pending.city ? esc(pending.city) : 'Zone');
           if (zchip) {
             zchip.classList.toggle('active', !!pending.city);
             zchip.setAttribute('aria-pressed', pending.city ? 'true' : 'false');
@@ -2672,7 +2713,8 @@
           var dchip = document.getElementById('sipn-m-delai-chip');
           if (dlbl && dr) {
             var dl = dr.closest('label');
-            dlbl.textContent = pending.delai ? (dl ? dl.querySelector('span').textContent : 'Délai') : 'Délai';
+            var txt = pending.delai ? (dl ? dl.querySelector('span').textContent : 'Délai') : 'Délai';
+            dlbl.innerHTML = '<i class="ti ti-clock"></i> ' + esc(txt);
           }
           if (dchip) {
             dchip.classList.toggle('active', !!pending.delai);

@@ -25,7 +25,7 @@
     <div class="scard-m-type">{{ block.org.type_organisme.name }}</div>
     {% endif %}
     <div class="scard-m-meta flex items-center gap-3 mt-1">
-      <span class="smeta-m"><i class="ti ti-map-pin"></i> {{ block.org.city }}{% if block.org.quartier %}, {{ block.org.quartier }}{% endif %}</span>
+      <span class="smeta-m"><i class="ti ti-map-pin"></i> {% if block.org.city and block.org.quartier %}{{ block.org.city }}, {{ block.org.quartier }}{% elif block.org.city %}{{ block.org.city }}{% elif block.org.quartier %}{{ block.org.quartier }}{% else %}Dakar{% endif %}</span>
       {% if block.org.horaires_ouverture %}
       <span class="smeta-m"><i class="ti ti-clock"></i> {{ block.org.horaires_ouverture }}</span>
       {% else %}
