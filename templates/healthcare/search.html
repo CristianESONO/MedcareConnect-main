@@ -6340,6 +6340,27 @@
           oldSelStrip.hidden = newSelStrip.hidden;
           oldSelStrip.className = newSelStrip.className;
         }
+
+        /* ── Mise à jour de la barre et des dropdowns de filtres desktop (#sipn-desktop-filter-row) ── */
+        var newFilterRow = doc.getElementById('sipn-desktop-filter-row');
+        var oldFilterRow = document.getElementById('sipn-desktop-filter-row');
+        if (newFilterRow && oldFilterRow) {
+          oldFilterRow.innerHTML = newFilterRow.innerHTML;
+        }
+
+        /* ── Mise à jour de la datalist des zones (#city-options) ── */
+        var newCityOpts = doc.getElementById('city-options');
+        var oldCityOpts = document.getElementById('city-options');
+        if (newCityOpts && oldCityOpts) {
+          oldCityOpts.innerHTML = newCityOpts.innerHTML;
+        }
+
+        /* ── Mise à jour des métadonnées filtres mobile (#sipn-m-filter-meta) ── */
+        var newMetaEl = doc.getElementById('sipn-m-filter-meta');
+        var oldMetaEl = document.getElementById('sipn-m-filter-meta');
+        if (newMetaEl && oldMetaEl) {
+          oldMetaEl.textContent = newMetaEl.textContent;
+        }
         
         if (resultsWrap) {
           resultsWrap.style.opacity = '';
