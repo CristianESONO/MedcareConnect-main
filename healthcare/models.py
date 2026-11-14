@@ -688,6 +688,7 @@ class PrestataireActe(models.Model):
 
     def get_price_for_regime(self, regime: str = "comptant"):
         """
+        Délègue au PricingService centralisé.
         regime: 'comptant' | 'ipm' | 'assurance'
         Retourne un dictionnaire :
         - regime: str
@@ -696,43 +697,8 @@ class PrestataireActe(models.Model):
         - effective_price: Decimal (le prix utilisé pour le calcul/tri)
         - is_conventionne: bool
         """
-        reg = (regime or "comptant").lower().strip()
-        if reg == "ipm":
-            status = self.coverage_status_ipm
-            if self.price_ipm is not None:
-                if status == "to_confirm":
-                    status = "covered"
-            elif status == "covered":
-                status = "to_confirm"
-            return {
-                "regime": "ipm",
-                "price": self.price_ipm,
-                "status": status,
-                "effective_price": self.price_ipm if self.price_ipm is not None else self.price,
-                "is_conventionne": self.price_ipm is not None,
-            }
-        elif reg == "assurance":
-            status = self.coverage_status_assurance
-            if self.price_assurance is not None:
-                if status == "to_confirm":
-                    status = "covered"
-            elif status == "covered":
-                status = "to_confirm"
-            return {
-                "regime": "assurance",
-                "price": self.price_assurance,
-                "status": status,
-                "effective_price": self.price_assurance if self.price_assurance is not None else self.price,
-                "is_conventionne": self.price_assurance is not None,
-            }
-        else:
-            return {
-                "regime": "comptant",
-                "price": self.price,
-                "status": "covered",
-                "effective_price": self.price,
-                "is_conventionne": False,
-            }
+        from healthcare.services.pricing_service import PricingService
+        return PricingService.get_regime_info(self, regime=regime)
 
     def get_coverage_rate(self, assurance, patient_profile=None):
         """Taux indicatif si la structure accepte l'assurance."""

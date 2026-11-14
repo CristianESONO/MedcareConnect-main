@@ -1733,36 +1733,8 @@ def search(request):
             pa.dem_horaires_short = opening_hours_summary_for_org(pa.organisme, max_len=40)
 
     def _dem_attach_insurance(rows):
-        if not rows:
-            return
-        org_ids = list({pa.organisme_id for pa in rows})
-        ins_names_by_org: dict[int, list[str]] = defaultdict(list)
-        if org_ids:
-            for oid, aname in (
-                PriseEnChargeAssurance.objects.filter(
-                    organisme_id__in=org_ids,
-                    is_active=True,
-                )
-                .order_by("assurance__name")
-                .values_list("organisme_id", "assurance__name")
-            ):
-                ins_names_by_org[int(oid)].append(aname)
-        if not assurance_ids_int:
-            for pa in rows:
-                pa.dem_insurance_match = True
-                pa.dem_insurance_names = ins_names_by_org.get(pa.organisme_id, [])
-            return
-        mapping = defaultdict(set)
-        for oid, aid in PriseEnChargeAssurance.objects.filter(
-            organisme_id__in=org_ids,
-            assurance_id__in=assurance_ids_int,
-            is_active=True,
-        ).values_list("organisme_id", "assurance_id"):
-            mapping[oid].add(aid)
-        want = frozenset(assurance_ids_int)
-        for pa in rows:
-            pa.dem_insurance_match = bool(mapping.get(pa.organisme_id, set()) & want)
-            pa.dem_insurance_names = ins_names_by_org.get(pa.organisme_id, [])
+        from healthcare.services import PricingService
+        PricingService.attach_insurance_context(rows, selected_insurance_ids=assurance_ids_int)
 
     _attach_distance_km_to_offers(page.object_list, latlng)
     _dem_attach_insurance(list(page.object_list))

@@ -7,6 +7,8 @@ from collections import OrderedDict
 from decimal import Decimal
 from typing import Any, Iterable
 
+from healthcare.services import PricingService
+
 def group_cart_items_by_organisme(items: Iterable) -> "OrderedDict[int, list]":
     """
     Retourne OrderedDict[organisme_id, list[CartItem]] (ordre d'insertion stable).
@@ -53,8 +55,10 @@ def build_detail_lines_for_cart_items(
         unit_price = pa.price
         subtotal = item.subtotal
         total_brut += subtotal
-        coverage_status = "covered"
         conventionne_price = None
+        coverage_status = "covered"
+        coverage_rate = None
+        patient_cost = subtotal
         if selected_insurance:
             coverage_rate = pa.get_coverage_rate(
                 selected_insurance, patient_profile=patient_profile
@@ -62,16 +66,13 @@ def build_detail_lines_for_cart_items(
             patient_cost = item.cost_after_insurance(
                 selected_insurance, patient_profile=patient_profile
             )
-            # Déterminer le statut selon le régime
-            is_ipm = getattr(selected_insurance, "is_ipm", False) or "ipm" in (getattr(selected_insurance, "name", "")).lower()
-            if is_ipm:
-                coverage_status = pa.coverage_status_ipm
-                conventionne_price = pa.price_ipm
-            else:
-                coverage_status = pa.coverage_status_assurance
-                conventionne_price = pa.price_assurance
-            if conventionne_price is not None and coverage_status == "to_confirm":
-                coverage_status = "covered"
+            # Déléguer la logique de tarification/statut à PricingService
+            is_ipm = getattr(selected_insurance, "is_ipm", False) or "ipm" in (
+                getattr(selected_insurance, "name", "")).lower()
+            regime = "ipm" if is_ipm else "assurance"
+            regime_info = PricingService.get_regime_info(pa, regime=regime)
+            coverage_status = regime_info["status"]
+            conventionne_price = regime_info["price"]
         total_patient += patient_cost
         details.append({
             "acte_id": pa.acte_id,

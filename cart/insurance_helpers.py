@@ -47,6 +47,8 @@ def resolve_cart_insurance(cart, user):
 
 def build_items_with_coverage(items, insurance, patient_profile=None):
     rows = []
+    from healthcare.services import PricingService
+
     for item in items:
         coverage_rate = None
         patient_cost = item.subtotal
@@ -58,25 +60,18 @@ def build_items_with_coverage(items, insurance, patient_profile=None):
                 insurance, patient_profile=patient_profile
             )
         pa = item.prestataire_acte
-        st_ipm = getattr(pa, "coverage_status_ipm", "to_confirm") or "to_confirm"
-        st_assur = getattr(pa, "coverage_status_assurance", "to_confirm") or "to_confirm"
-        pr_ipm = getattr(pa, "price_ipm", None)
-        pr_assur = getattr(pa, "price_assurance", None)
-        # Garde-fou G5 : prix manquant sur régime couvert -> repli sur to_confirm (comptant)
-        if st_ipm == "covered" and (pr_ipm is None or pr_ipm <= 0):
-            st_ipm = "to_confirm"
-        if st_assur == "covered" and (pr_assur is None or pr_assur <= 0):
-            st_assur = "to_confirm"
+        info_ipm = PricingService.get_regime_info(pa, regime="ipm")
+        info_assur = PricingService.get_regime_info(pa, regime="assurance")
         rows.append(
             {
                 "item": item,
                 "coverage_rate": coverage_rate,
                 "patient_cost": patient_cost,
                 # Tri-tarifs : statuts et prix par régime (garde-fous spec)
-                "status_ipm": st_ipm,
-                "status_assurance": st_assur,
-                "price_ipm": pr_ipm,
-                "price_assurance": pr_assur,
+                "status_ipm": info_ipm["status"],
+                "status_assurance": info_assur["status"],
+                "price_ipm": info_ipm["price"],
+                "price_assurance": info_assur["price"],
             }
         )
     return rows
