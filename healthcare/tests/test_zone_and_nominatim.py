@@ -172,3 +172,37 @@ class ZoneAndNominatimTestCase(TestCase):
         self.assertIn("Ambulance Dakar Express", output)
         self.assertIn("Centre Mermoz", output)
 
+    def test_dynamic_top_cities_zones_matching_search_results(self):
+        """Les zones proposées dans top_cities s'adaptent dynamiquement aux structures retournées sans doublons."""
+        url = reverse("healthcare:search")
+
+        # 1. Landing sans recherche : contient toutes les zones des structures actives
+        resp_landing = self.client.get(url, HTTP_HOST="localhost")
+        self.assertEqual(resp_landing.status_code, 200)
+        zones_landing = resp_landing.context.get("top_cities") or []
+        self.assertIn("Plateau", zones_landing)
+        self.assertIn("Mermoz", zones_landing)
+        self.assertEqual(len(zones_landing), len(set(zones_landing)))  # Aucun doublon
+
+        # Créons un acte secondaire uniquement disponible au Plateau
+        acte_plateau_only = ActeMedical.objects.create(
+            name="Examen Plateau Seul",
+            service_medical_category=self.service,
+            level=3,
+            is_active=True,
+        )
+        PrestataireActe.objects.create(
+            organisme=self.org_plateau,
+            acte=acte_plateau_only,
+            price=Decimal("15000.00"),
+            is_available=True,
+        )
+
+        # 2. Recherche spécifique de cet acte : uniquement Plateau (et pas Mermoz)
+        resp_acte = self.client.get(f"{url}?acte={acte_plateau_only.pk}", HTTP_HOST="localhost")
+        self.assertEqual(resp_acte.status_code, 200)
+        zones_acte = resp_acte.context.get("top_cities") or []
+        self.assertIn("Plateau", zones_acte)
+        self.assertNotIn("Mermoz", zones_acte)
+        self.assertEqual(len(zones_acte), len(set(zones_acte)))
+

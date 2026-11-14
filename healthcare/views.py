@@ -1019,7 +1019,7 @@ def search(request):
             # Recherche groupée : filtrer les structures proposant AU MOINS UN des actes sélectionnés (union)
             pa_qs = pa_qs.filter(acte_id__in=acte_ids_clean)
 
-    def _apply_level_price_location_filters(qs):
+    def _apply_level_price_location_filters(qs, apply_city=True):
         if level in ("1", "2", "3"):
             qs = qs.filter(acte__level=int(level))
         
@@ -1043,7 +1043,7 @@ def search(request):
                 organisme__prises_en_charge__assurance_id__in=assurance_ids_int,
                 organisme__prises_en_charge__is_active=True,
             ).distinct()
-        if city:
+        if apply_city and city:
             clean_city = city.strip()
             if clean_city.lower() in ("dakar (tous)", "dakar"):
                 qs = qs.filter(
@@ -1084,8 +1084,9 @@ def search(request):
             qs = qs.filter(organisme__prises_sang_domicile=True)
         return qs
 
-    pa_qs = _apply_level_price_location_filters(pa_qs)
-    pa_qs_before_acte = _apply_level_price_location_filters(pa_qs_before_acte)
+    pa_qs_before_zone = _apply_level_price_location_filters(pa_qs, apply_city=False)
+    pa_qs = _apply_level_price_location_filters(pa_qs, apply_city=True)
+    pa_qs_before_acte = _apply_level_price_location_filters(pa_qs_before_acte, apply_city=True)
 
     pa_qs = _annotate_delai_sort(pa_qs)
     pa_qs_before_acte = _annotate_delai_sort(pa_qs_before_acte)
@@ -1305,28 +1306,38 @@ def search(request):
         is_available=True, organisme__is_active=True,
     ).aggregate(pmin=Min("price"), pmax=Max("price"))
 
-    dakar_controlled_zones = [
-        "Almadies",
-        "Fann",
-        "Liberté VI",
-        "Mermoz",
-        "Médina",
-        "Ouakam",
-        "Plateau",
-        "Point E",
-        "Sacré-Cœur",
-    ]
-    other_cities = list(
-        OrganismeDeSante.objects.filter(is_active=True)
-        .exclude(city__isnull=True)
-        .exclude(city__exact="")
-        .exclude(city__iexact="Dakar")
-        .values("city")
-        .annotate(n=Count("id"))
-        .order_by("-n", "city")
-        .values_list("city", flat=True)
-    )
-    top_cities = dakar_controlled_zones + [c for c in other_cities if c not in dakar_controlled_zones]
+    def _extract_zone_from_org(org):
+        q = (getattr(org, "quartier", None) or "").strip()
+        if q and q.lower() not in ("none", ""):
+            return q
+        addr = (getattr(org, "address", None) or "").strip()
+        if addr and addr.lower() not in ("none", "", "dakar"):
+            return addr
+        return (getattr(org, "city", None) or "").strip() or "Dakar"
+
+    # Extraction dynamique des zones : adaptées aux structures retournées par la recherche
+    # Si une recherche est en cours (actes, requête texte, ou service sélectionné)
+    if pool_from_request or q or service_id:
+        # Récupérer les structures issues du périmètre de recherche (avant restriction par city)
+        scope_qs = pa_qs_before_zone if "pa_qs_before_zone" in locals() else pa_qs
+        target_org_ids = list(scope_qs.values_list("organisme_id", flat=True).distinct())
+        if target_org_ids:
+            found_orgs = OrganismeDeSante.objects.filter(id__in=target_org_ids)
+            top_cities = sorted({_extract_zone_from_org(o) for o in found_orgs if _extract_zone_from_org(o)})
+        else:
+            top_cities = []
+    else:
+        # Par défaut sans recherche : toutes les zones uniques de toutes les structures proposant des actes actifs
+        all_active_org_ids = list(
+            PrestataireActe.objects.filter(is_available=True, organisme__is_active=True)
+            .values_list("organisme_id", flat=True)
+            .distinct()
+        )
+        if all_active_org_ids:
+            all_found_orgs = OrganismeDeSante.objects.filter(id__in=all_active_org_ids)
+            top_cities = sorted({_extract_zone_from_org(o) for o in all_found_orgs if _extract_zone_from_org(o)})
+        else:
+            top_cities = []
 
     active_filter_count = sum(
         bool(x)
