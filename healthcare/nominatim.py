@@ -25,19 +25,38 @@ def _get_json(url: str, timeout: int = 10):
 def search_places(query: str, limit: int = 5):
     if not query or len(query.strip()) < 2:
         return []
-    params = urllib.parse.urlencode(
-        {
+    base_params = {
+        "q": query.strip(),
+        "format": "json",
+        "limit": str(min(max(limit, 1), 10)),
+        "addressdetails": "1",
+        "countrycodes": "sn",
+        "viewbox": "-17.55,14.60,-17.10,14.85",
+        "bounded": "1",
+        "accept-language": "fr",
+    }
+    url = f"{NOMINATIM_BASE}/search?{urllib.parse.urlencode(base_params)}"
+    try:
+        data = _get_json(url)
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError):
+        data = []
+
+    # Si aucun résultat borné à Dakar, élargir au Sénégal sans contraindre le viewbox
+    if not data:
+        fallback_params = {
             "q": query.strip(),
             "format": "json",
             "limit": str(min(max(limit, 1), 10)),
             "addressdetails": "1",
+            "countrycodes": "sn",
+            "accept-language": "fr",
         }
-    )
-    url = f"{NOMINATIM_BASE}/search?{params}"
-    try:
-        data = _get_json(url)
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError):
-        return []
+        url_fallback = f"{NOMINATIM_BASE}/search?{urllib.parse.urlencode(fallback_params)}"
+        try:
+            data = _get_json(url_fallback)
+        except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError):
+            data = []
+
     out = []
     for item in data:
         try:

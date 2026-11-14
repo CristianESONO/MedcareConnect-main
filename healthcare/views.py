@@ -1044,14 +1044,35 @@ def search(request):
                 organisme__prises_en_charge__is_active=True,
             ).distinct()
         if city:
-            qs = qs.filter(
-                Q(organisme__city__icontains=city)
-                | Q(organisme__quartier__icontains=city)
-            )
+            clean_city = city.strip()
+            if clean_city.lower() in ("dakar (tous)", "dakar"):
+                qs = qs.filter(
+                    Q(organisme__city__iexact="Dakar")
+                    | Q(organisme__region__slug="dakar")
+                    | Q(organisme__region__isnull=True)
+                )
+            else:
+                qs = qs.filter(
+                    Q(organisme__city__icontains=clean_city)
+                    | Q(organisme__quartier__icontains=clean_city)
+                    | Q(organisme__address__icontains=clean_city)
+                    | Q(organisme__quartier__icontains="toutes zones")
+                    | Q(organisme__address__icontains="toutes zones")
+                )
         if type_ids:
             qs = qs.filter(organisme__type_organisme_id__in=type_ids)
         if region_ids:
-            qs = qs.filter(organisme__region_id__in=region_ids)
+            reg_q = Q(organisme__region_id__in=region_ids)
+            dakar_pks = list(Region.objects.filter(slug__iexact="dakar").values_list("pk", flat=True))
+            if any(str(rpk) in [str(x) for x in region_ids] for rpk in dakar_pks):
+                reg_q |= Q(
+                    organisme__region__isnull=True,
+                    organisme__city__iexact="Dakar",
+                ) | Q(
+                    organisme__region__isnull=True,
+                    organisme__address__icontains="Dakar",
+                )
+            qs = qs.filter(reg_q)
         if delai_filter:
             better_or_equal = [
                 k for k in valid_delais
@@ -1287,15 +1308,28 @@ def search(request):
         is_available=True, organisme__is_active=True,
     ).aggregate(pmin=Min("price"), pmax=Max("price"))
 
-    top_cities = list(
+    dakar_controlled_zones = [
+        "Almadies",
+        "Fann",
+        "Liberté VI",
+        "Mermoz",
+        "Médina",
+        "Ouakam",
+        "Plateau",
+        "Point E",
+        "Sacré-Cœur",
+    ]
+    other_cities = list(
         OrganismeDeSante.objects.filter(is_active=True)
         .exclude(city__isnull=True)
         .exclude(city__exact="")
+        .exclude(city__iexact="Dakar")
         .values("city")
         .annotate(n=Count("id"))
         .order_by("-n", "city")
-        .values_list("city", flat=True)[:30]
+        .values_list("city", flat=True)
     )
+    top_cities = dakar_controlled_zones + [c for c in other_cities if c not in dakar_controlled_zones]
 
     active_filter_count = sum(
         bool(x)
