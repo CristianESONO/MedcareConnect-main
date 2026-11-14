@@ -2610,7 +2610,18 @@
       if (titleEl) titleEl.textContent = 'Zone / Quartier';
       if (footerEl) footerEl.style.display = '';
       var liveMeta = getLiveMeta();
-      var zones = [''].concat(liveMeta.zones || meta.zones || []);
+      var rawZones = (liveMeta && Array.isArray(liveMeta.zones) && liveMeta.zones.length) ? liveMeta.zones : (meta.zones || []);
+      if (!rawZones.length) {
+        // Fallback datalist city-options
+        var datalist = document.getElementById('city-options');
+        if (datalist) {
+          Array.from(datalist.options).forEach(function(opt){
+            var val = (opt.value || '').trim();
+            if (val && rawZones.indexOf(val) === -1) rawZones.push(val);
+          });
+        }
+      }
+      var zones = [''].concat(rawZones);
       bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + zones.map(function(z){
         var lbl = z ? z : 'Toutes les zones';
         var checked = (pending.city || '') === z ? ' checked' : '';
@@ -2648,7 +2659,21 @@
       if (titleEl) titleEl.textContent = 'Délai de résultats';
       if (footerEl) footerEl.style.display = '';
       var liveMeta = getLiveMeta();
-      var choices = [{ val: '', lbl: 'Tous les délais' }].concat(liveMeta.delaiChoices || meta.delaiChoices || []);
+      var rawChoices = (liveMeta && Array.isArray(liveMeta.delaiChoices) && liveMeta.delaiChoices.length) ? liveMeta.delaiChoices : (meta.delaiChoices || []);
+      if (!rawChoices.length) {
+        // Fallback options from select#sipn-filter-delai or select[name="delai"]
+        var sel = document.getElementById('sipn-filter-delai') || document.querySelector('select[name="delai"]');
+        if (sel) {
+          Array.from(sel.options).forEach(function(opt){
+            var val = (opt.value || '').trim();
+            var lbl = (opt.textContent || '').trim();
+            if (val && !rawChoices.some(function(c){ return c.val === val; })) {
+              rawChoices.push({ val: val, lbl: lbl });
+            }
+          });
+        }
+      }
+      var choices = [{ val: '', lbl: 'Tous les délais' }].concat(rawChoices);
       bodyEl.innerHTML = '<div class="sipn-m-sheet-radios">' + choices.map(function(o){
         var checked = pending.delai === o.val ? ' checked' : '';
         return '<label class="sipn-m-ins-opt"><input type="radio" name="sipn-m-delai" value="' + esc(o.val) + '"' + checked + '><span>' + esc(o.lbl) + '</span></label>';

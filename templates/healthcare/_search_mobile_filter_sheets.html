@@ -16,8 +16,8 @@
   "city": "{{ current_city|escapejs }}",
   "delai": "{{ current_delai|escapejs }}",
   "priceMax": "{{ price_max_val|default:''|escapejs }}",
-  "priceMinGlobal": {{ global_price_min|default:0 }},
-  "priceMaxGlobal": {{ global_price_max|default:500000 }},
+  "priceMinGlobal": {{ global_price_min|default:0|floatformat:"0u" }},
+  "priceMaxGlobal": {{ global_price_max|default:500000|floatformat:"0u" }},
   "assurances": [{% for aid in current_assurances %}"{{ aid }}"{% if not forloop.last %},{% endif %}{% endfor %}],
   "zones": [{% for c in top_cities %}"{{ c|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
   "delaiChoices": [
