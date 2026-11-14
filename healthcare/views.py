@@ -915,7 +915,8 @@ def search(request):
             assurance_ids_int.append(int(x))
         except (TypeError, ValueError):
             continue
-    city = request.GET.get("city", "").strip()
+    cities = [c.strip() for c in request.GET.getlist("city") if c.strip()]
+    city = cities[0] if cities else ""
     type_ids = [v for v in request.GET.getlist("type") if v]
     region_ids = [v for v in request.GET.getlist("region") if v]
     sort = request.GET.get("sort", "price_asc")
@@ -924,10 +925,9 @@ def search(request):
     radius_km = parse_radius_km(request.GET.get("radius_km"), default=30.0)
     price_min = _parse_decimal_param(request.GET.get("price_min"))
     price_max = _parse_decimal_param(request.GET.get("price_max"))
-    delai_filter = (request.GET.get("delai") or "").strip()
     valid_delais = {k for k, _ in PrestataireActe.DELAI_CHOICES if k}
-    if delai_filter not in valid_delais:
-        delai_filter = ""
+    delai_candidates = [d.strip() for d in request.GET.getlist("delai") if d.strip() in valid_delais]
+    delai_filter = delai_candidates[0] if delai_candidates else ""
     domicile_filter = request.GET.get("domicile") == "1"
 
     regime_filter = (request.GET.get("regime") or "comptant").lower().strip()
@@ -1127,10 +1127,7 @@ def search(request):
                 if d <= radius_km or is_global_ambulance:
                     pa.distance_km = round(d, 1)
                     scored_geo.append(pa)
-                else:
-                    # Hors rayon kilométrique mais structure sans coordonnées ou ambulance
-                    pa.distance_km = None
-                    unscored_geo.append(pa)
+                # Structure avec coordonnées mais hors rayon : exclue de la recherche de proximité
             else:
                 # Structure sans latitude/longitude : jamais écartée, placée en dernier
                 pa.distance_km = None
@@ -1779,6 +1776,21 @@ def search(request):
                 x.pk: x for x in ActeMedical.objects.filter(pk__in=pool_actes)
             }
         _attach_distance_km_to_offers(pool_offers, latlng)
+        if proximity_on and latlng:
+            lat0, lng0 = latlng
+            filtered_pool = []
+            for pa in pool_offers:
+                org = pa.organisme
+                is_global_ambulance = _is_all_zones_ambulance(org)
+                if org.latitude is not None and org.longitude is not None:
+                    d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
+                    if d <= radius_km or is_global_ambulance:
+                        pa.distance_km = round(d, 1)
+                        filtered_pool.append(pa)
+                else:
+                    pa.distance_km = None
+                    filtered_pool.append(pa)
+            pool_offers = filtered_pool
         _dem_attach_insurance(pool_offers)
         _dem_attach_catalog_counts(pool_offers)
         by_org: dict[int, dict] = {}
@@ -1830,9 +1842,43 @@ def search(request):
                     ),
                 }
             )
-        mobile_results_by_org.sort(
-            key=lambda b: (-b["matching_count"], b["org"].name.lower()),
-        )
+        def _block_sort_key(b):
+            # Priorité aux structures qui couvrent le plus d'actes recherchés
+            match_score = -b["matching_count"]
+            if proximity_on or sort == "distance":
+                min_dist = min(
+                    (
+                        getattr(pa, "distance_km", None)
+                        for pa in b["items"]
+                        if getattr(pa, "distance_km", None) is not None
+                    ),
+                    default=None,
+                )
+                return (
+                    match_score,
+                    0 if min_dist is not None else 1,
+                    min_dist if min_dist is not None else 999999,
+                    b["items_total"],
+                    b["org"].name.lower(),
+                )
+            elif sort == "delai_asc":
+                min_delai = min(
+                    (getattr(pa, "_delai_sort", 99) for pa in b["items"]),
+                    default=99,
+                )
+                return (match_score, min_delai, b["items_total"], b["org"].name.lower())
+            elif sort == "delai_desc":
+                min_delai = min(
+                    (getattr(pa, "_delai_sort", 99) for pa in b["items"]),
+                    default=99,
+                )
+                return (match_score, -min_delai, b["items_total"], b["org"].name.lower())
+            elif sort == "price_desc":
+                return (match_score, -b["items_total"], b["org"].name.lower())
+            else:
+                return (match_score, b["items_total"], b["org"].name.lower())
+
+        mobile_results_by_org.sort(key=_block_sort_key)
         from .opening_hours_display import opening_hours_summary_for_org
 
         for block in mobile_results_by_org:

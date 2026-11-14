@@ -124,6 +124,17 @@ class ZoneAndNominatimTestCase(TestCase):
         self.assertIn(self.pa_ambu, items)
         self.assertNotIn(self.pa_mermoz, items)
 
+    def test_zone_filter_ignores_trailing_empty_city_param_and_filters_mobile_blocks(self):
+        """Si le formulaire envoie city=Plateau&city= (champs multiples dans le DOM), la valeur non-vide est retenue."""
+        url = reverse("healthcare:search")
+        # Envoie deux valeurs pour 'city' simulant les inputs multiples du formulaire HTML
+        resp = self.client.get(f"{url}?acte={self.acte.pk}&city=Plateau&city=", HTTP_HOST="localhost")
+        self.assertEqual(resp.status_code, 200)
+        blocks = resp.context.get("mobile_results_by_org") or []
+        orgs = [b["org"] for b in blocks]
+        self.assertIn(self.org_plateau, orgs)
+        self.assertNotIn(self.org_mermoz, orgs)
+
     def test_region_filter_includes_structures_without_explicit_region_in_dakar(self):
         """Filtering by Region Dakar must keep structures in Dakar even if region_id is NULL."""
         url = reverse("healthcare:search")

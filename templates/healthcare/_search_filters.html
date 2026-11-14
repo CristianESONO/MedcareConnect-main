@@ -40,7 +40,7 @@ Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
 
     <div>
       <label class="dem-filter-label">Ville</label>
-      <input type="text" name="city" id="city-input-mob" list="city-options" value="{{ current_city }}" placeholder="Dakar, Thiès…" class="dem-field mt-0 py-2.5 text-sm">
+      <input type="text" name="city" id="city-input-mob" list="city-options" value="{{ current_city }}" placeholder="Dakar, Thiès…" class="dem-field mt-0 py-2.5 text-sm"{% if show_dem_service_acte_nav %} disabled{% endif %}>
     </div>
 
     <div>
@@ -71,7 +71,7 @@ Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
 
     <div>
       <label class="dem-filter-label">Délai max</label>
-      <select name="delai" class="dem-field mt-0 py-2.5 text-sm">
+      <select name="delai" class="dem-field mt-0 py-2.5 text-sm"{% if show_dem_service_acte_nav %} disabled{% endif %}>
         <option value="">Tous</option>
         {% for k, label in delai_choices %}<option value="{{ k }}" {% if current_delai == k %}selected{% endif %}>{{ label }}</option>{% endfor %}
       </select>
@@ -142,7 +142,7 @@ Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
 
     <div>
       <label class="dem-filter-label">Ville</label>
-      <input type="text" name="city" id="city-input-desk" list="city-options" value="{{ current_city }}" placeholder="Dakar, Thiès…" class="dem-field mt-0 py-2.5 text-sm">
+      <input type="text" name="city" id="city-input-desk" list="city-options" value="{{ current_city }}" placeholder="Dakar, Thiès…" class="dem-field mt-0 py-2.5 text-sm"{% if show_dem_service_acte_nav %} disabled{% endif %}>
     </div>
 
     <div>
@@ -154,7 +154,7 @@ Les noms de champs (`name="…"`) restent identiques pour cohérence côté GET.
 
     <div>
       <label class="dem-filter-label">Délai max</label>
-      <select name="delai" class="dem-field mt-0 py-2.5 text-sm">
+      <select name="delai" class="dem-field mt-0 py-2.5 text-sm"{% if show_dem_service_acte_nav %} disabled{% endif %}>
         <option value="">Tous</option>
         {% for k, label in delai_choices %}<option value="{{ k }}" {% if current_delai == k %}selected{% endif %}>{{ label }}</option>{% endfor %}
       </select>

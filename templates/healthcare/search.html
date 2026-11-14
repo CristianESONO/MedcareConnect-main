@@ -1166,7 +1166,7 @@
           <div class="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2 py-1 text-xs">
             <span class="pl-1 text-gray-500" aria-hidden="true"></span>
             <input type="text" name="city" id="city-quick" list="city-options" value="{{ current_city }}" placeholder="Ville…"
-              class="w-32 min-w-0 border-0 bg-transparent p-0 text-xs font-semibold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0">
+              class="w-32 min-w-0 border-0 bg-transparent p-0 text-xs font-semibold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0"{% if show_dem_service_acte_nav %} disabled{% endif %}>
             {% if current_city %}
             <button type="button" id="btn-clear-city" class="rounded-full p-0.5 text-gray-400 hover:bg-gray-100" title="Effacer la ville">×</button>
             {% endif %}
@@ -2253,23 +2253,42 @@
         });
       }
 
+      function submitDemFilterForm(){
+        var urlParams = new URLSearchParams(window.location.search);
+        var urlActes = urlParams.getAll('acte');
+        if (urlActes.length) {
+          var existingActes = Array.from(form.querySelectorAll('input[name="acte"]')).map(function(i){ return i.value; });
+          urlActes.forEach(function(aid){
+            if (existingActes.indexOf(aid) === -1) {
+              var h = document.createElement('input');
+              h.type = 'hidden';
+              h.name = 'acte';
+              h.value = aid;
+              form.appendChild(h);
+            }
+          });
+        }
+        form.submit();
+      }
+
       dd.querySelectorAll('[data-dem-zone-pill]').forEach(function(pill){
         pill.addEventListener('click', function(e){
           e.preventDefault();
           var val = pill.getAttribute('data-dem-zone-pill') || '';
           var cityInp = document.getElementById('sipn-filter-city');
-          if (cityInp) cityInp.value = (cityInp.value === val) ? '' : val;
+          var currentVal = cityInp ? cityInp.value : '';
+          var newVal = (currentVal === val) ? '' : val;
+          document.querySelectorAll('input[name="city"]').forEach(function(i){ i.value = newVal; });
           closeDrop();
-          form.submit();
+          submitDemFilterForm();
         });
       });
       var zoneClear = dd.querySelector('[data-sipn-clear="zone"]');
       if (zoneClear) zoneClear.addEventListener('click', function(e){
         e.preventDefault();
-        var cityInp = document.getElementById('sipn-filter-city');
-        if (cityInp) cityInp.value = '';
+        document.querySelectorAll('input[name="city"]').forEach(function(i){ i.value = ''; });
         closeDrop();
-        form.submit();
+        submitDemFilterForm();
       });
 
       dd.querySelectorAll('[data-dem-delai-pill]').forEach(function(pill){
@@ -2277,18 +2296,19 @@
           e.preventDefault();
           var val = pill.getAttribute('data-dem-delai-pill') || '';
           var delSel = document.getElementById('sipn-filter-delai');
-          if (delSel) delSel.value = (delSel.value === val) ? '' : val;
+          var currentVal = delSel ? delSel.value : '';
+          var newVal = (currentVal === val) ? '' : val;
+          document.querySelectorAll('select[name="delai"]').forEach(function(s){ s.value = newVal; });
           closeDrop();
-          form.submit();
+          submitDemFilterForm();
         });
       });
       var delClear = dd.querySelector('[data-sipn-clear="delai"]');
       if (delClear) delClear.addEventListener('click', function(e){
         e.preventDefault();
-        var delSel = document.getElementById('sipn-filter-delai');
-        if (delSel) delSel.value = '';
+        document.querySelectorAll('select[name="delai"]').forEach(function(s){ s.value = ''; });
         closeDrop();
-        form.submit();
+        submitDemFilterForm();
       });
 
       var budRng = document.getElementById('dem-dd-budget-range');

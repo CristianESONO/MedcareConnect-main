@@ -78,3 +78,24 @@ class DelaiSearchTestCase(TestCase):
         idx_horizon = items.index(self.pa_horizon_48h)
         self.assertLess(idx_clemar, idx_horizon)
 
+    def test_delai_filter_with_multiple_params_and_grouped_blocks(self):
+        """Si delai=24h&delai= est envoyé, 24h est appliqué et mobile_results_by_org ne contient que Clemar."""
+        url = reverse("healthcare:search")
+        resp = self.client.get(f"{url}?acte={self.acte.pk}&delai=24h&delai=")
+        self.assertEqual(resp.status_code, 200)
+        blocks = resp.context.get("mobile_results_by_org") or []
+        orgs = [b["org"] for b in blocks]
+        self.assertIn(self.org_clemar, orgs)
+        self.assertNotIn(self.org_horizon, orgs)
+
+    def test_mobile_results_by_org_sorted_by_delai_asc(self):
+        """Avec sort=delai_asc, Clemar (24h) apparaît avant Horizon (48h) dans mobile_results_by_org."""
+        url = reverse("healthcare:search")
+        resp = self.client.get(f"{url}?acte={self.acte.pk}&sort=delai_asc")
+        self.assertEqual(resp.status_code, 200)
+        blocks = resp.context.get("mobile_results_by_org") or []
+        orgs = [b["org"] for b in blocks]
+        self.assertIn(self.org_clemar, orgs)
+        self.assertIn(self.org_horizon, orgs)
+        self.assertLess(orgs.index(self.org_clemar), orgs.index(self.org_horizon))
+

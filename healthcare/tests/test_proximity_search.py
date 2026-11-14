@@ -106,6 +106,8 @@ class ProximitySearchTestCase(TestCase):
         # Les structures doivent inclure la proche et celle sans GPS
         self.assertIn(self.pa_proche, items)
         self.assertIn(self.pa_sans_gps, items)
+        # La structure éloignée (Thiès) doit être STRICTEMENT EXCLUE du rayon de 5 km
+        self.assertNotIn(self.pa_eloignee, items)
         # La proche doit arriver AVANT celle sans GPS
         idx_proche = items.index(self.pa_proche)
         idx_sans_gps = items.index(self.pa_sans_gps)
@@ -115,4 +117,27 @@ class ProximitySearchTestCase(TestCase):
         item_sans_gps = items[idx_sans_gps]
         self.assertIsNotNone(getattr(item_proche, "distance_km", None))
         self.assertIsNone(getattr(item_sans_gps, "distance_km", None))
+
+    def test_proximity_filters_and_sorts_grouped_structures_blocks(self):
+        """Dans mobile_results_by_org, les structures hors rayon sont exclues et triées par distance."""
+        url = reverse("healthcare:search")
+        resp = self.client.get(
+            url,
+            {
+                "acte": str(self.acte.pk),
+                "lat": "14.671",
+                "lng": "-17.431",
+                "proximity": "1",
+                "radius_km": "5",
+                "sort": "distance",
+            },
+        )
+        self.assertEqual(resp.status_code, 200)
+        blocks = resp.context.get("mobile_results_by_org") or []
+        orgs = [b["org"] for b in blocks]
+        self.assertIn(self.org_proche, orgs)
+        self.assertNotIn(self.org_eloignee, orgs)
+        # L'ambulance sans coordonnées est en dernier
+        self.assertIn(self.org_sans_gps, orgs)
+        self.assertEqual(orgs[0], self.org_proche)
 
