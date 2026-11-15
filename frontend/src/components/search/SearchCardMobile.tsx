@@ -1,9 +1,6 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Star, Plus, ShieldCheck } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { Badge } from '../ui/Badge';
 import { SearchResult } from '../../lib/api';
-import { cn } from '../../lib/cn';
 
 interface SearchCardMobileProps {
   result: SearchResult;
@@ -13,85 +10,114 @@ interface SearchCardMobileProps {
 }
 
 export function SearchCardMobile({ result, index = 0, onSelect, onAddCart }: SearchCardMobileProps) {
-  const { t } = useTranslation();
+  const [selectedActs, setSelectedActs] = useState<string[]>(
+    result.actes && result.actes.length > 0 ? [result.actes[0]] : []
+  );
+
+  const toggleAct = (acte: string) => {
+    if (selectedActs.includes(acte)) {
+      setSelectedActs(selectedActs.filter((a) => a !== acte));
+    } else {
+      setSelectedActs([...selectedActs, acte]);
+    }
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
+    <motion.article
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, duration: 0.3 }}
-      className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-700/60 flex flex-col gap-2.5 active:scale-[0.99] transition-transform"
-      onClick={() => onSelect?.(result)}
+      transition={{ delay: index * 0.04, duration: 0.25 }}
+      className="scard-m bg-white dark:bg-gray-800 dark:border-gray-700/80 mb-3 shadow-sm rounded-xl overflow-hidden"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-lg bg-navy/5 dark:bg-navy/20 flex items-center justify-center font-bold text-navy dark:text-accent font-syne text-base">
-            {result.nom.charAt(0)}
-          </div>
-          <div>
-            <h4 className="font-semibold text-sm text-gray-900 dark:text-gray-100 leading-tight font-syne">
+      {/* ── Head ────────────────────────────────────────────── */}
+      <div className="scard-m-head p-3.5 pb-2">
+        <div className="scard-m-head-row flex items-center justify-between gap-2">
+          <div className="scard-m-name flex items-center gap-1.5 flex-wrap">
+            <button
+              type="button"
+              className="scard-org-name font-bold font-syne dark:text-white text-left"
+              onClick={() => onSelect?.(result)}
+            >
               {result.nom}
-            </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{result.ville || result.type}</p>
+            </button>
+            <span className="pioneer-badge-m text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-accent text-white">
+              Vérifié
+            </span>
           </div>
+
+          {result.distance_km !== undefined && (
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200/60 shrink-0">
+              <i className="ti ti-map-pin text-[10px]"></i> {result.distance_km.toFixed(1)} km
+            </span>
+          )}
         </div>
 
-        {result.distance_km !== undefined && (
-          <Badge
-            variant={result.distance_km < 3 ? 'green' : 'gray'}
-            className="text-[11px] px-1.5 py-0.5 font-semibold"
-          >
-            <MapPin size={10} />
-            {result.distance_km.toFixed(1)} {t('search.km_away')}
-          </Badge>
-        )}
+        <div className="scard-m-type text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
+          {result.type}
+        </div>
+
+        <div className="scard-m-meta flex items-center gap-3 text-xs text-gray-400 mt-1">
+          <span className="smeta-m flex items-center gap-1">
+            <i className="ti ti-map-pin"></i> {result.ville || 'Dakar'}
+          </span>
+          <span className="smeta-m flex items-center gap-1">
+            <i className="ti ti-clock"></i> 24h/24
+          </span>
+        </div>
       </div>
 
-      {result.actes?.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 no-scrollbar">
-          {result.actes.slice(0, 2).map((a) => (
-            <span
-              key={a}
-              className="text-[11px] px-2 py-0.5 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200/60 dark:border-gray-600 whitespace-nowrap"
+      {/* ── Actes List ───────────────────────────────────────── */}
+      <div className="border-t border-gray-100 dark:border-gray-700/60 divide-y divide-gray-100 dark:divide-gray-700/40">
+        {result.actes?.map((acte) => {
+          const isChecked = selectedActs.includes(acte);
+          return (
+            <div
+              key={acte}
+              onClick={() => toggleAct(acte)}
+              className={`scard-m-acte flex items-center gap-2.5 p-3 cursor-pointer transition-colors ${
+                isChecked
+                  ? 'bg-accent/5 dark:bg-accent/15'
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-750'
+              }`}
             >
-              {a}
-            </span>
-          ))}
-          {result.actes.length > 2 && (
-            <span className="text-[10px] text-gray-400">+{result.actes.length - 2}</span>
-          )}
-        </div>
-      )}
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={() => toggleAct(acte)}
+                className="scard-m-checkbox accent-accent w-4 h-4 cursor-pointer"
+              />
+              <div className="scard-m-acte-info min-w-0 flex-1">
+                <div className="scard-m-acte-nom font-semibold text-xs text-gray-800 dark:text-gray-100 truncate">
+                  {acte}
+                </div>
+                <div className="text-[10px] text-gray-400">Tiers-payant disponible</div>
+              </div>
+              <div className="scard-m-pricing text-right shrink-0">
+                <div className="scard-m-acte-prix font-bold text-xs text-navy dark:text-accent">
+                  {(result.price_min || 15000).toLocaleString()} F
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
-      <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-700/50 mt-1">
-        <div className="flex items-center gap-2 text-xs">
-          {result.price_min !== undefined && (
-            <span className="font-bold text-navy dark:text-accent text-sm">
-              {result.price_min.toLocaleString()} <span className="text-[10px] font-normal text-gray-500">FCFA</span>
-            </span>
-          )}
-          {result.note_moyenne !== undefined && (
-            <span className="flex items-center gap-0.5 text-amber-500 text-xs">
-              <Star size={11} fill="currentColor" />
-              {result.note_moyenne.toFixed(1)}
-            </span>
-          )}
-        </div>
+      {/* ── Footer ──────────────────────────────────────────── */}
+      <div className="p-2.5 bg-gray-50/80 dark:bg-gray-850 border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
+        <span className="text-[11px] text-gray-500 dark:text-gray-400 flex items-center gap-1">
+          <i className="ti ti-shield text-emerald-600"></i> IPM & Assurances
+        </span>
 
         {onAddCart && (
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddCart(result);
-            }}
-            className="p-1.5 rounded-lg bg-accent/10 hover:bg-accent text-accent hover:text-white transition-colors"
-            title={t('search.add_cart')}
+            onClick={() => onAddCart(result)}
+            className="px-3 py-1.5 rounded-lg bg-accent hover:bg-accent-dark text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1"
           >
-            <Plus size={16} />
+            <i className="ti ti-plus"></i> Panier
           </button>
         )}
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

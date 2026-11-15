@@ -7,7 +7,7 @@ import { SearchPage } from './pages/SearchPage';
 import { PatientMobilePage } from './pages/PatientMobilePage';
 import { DashboardPage } from './pages/DashboardPage';
 import { PanelsPage } from './pages/PanelsPage';
-import { CartItem, SearchResult } from './lib/api';
+import { type CartItem, type SearchResult } from './lib/api';
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -49,7 +49,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200">
+      <div className="sipn-prestations min-h-screen flex flex-col bg-[#f8fafc] dark:bg-[#0f172a] text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200">
         <Navbar cartCount={cartItems.length} />
 
         <main className="flex-1">
