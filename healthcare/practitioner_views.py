@@ -710,7 +710,7 @@ def prestataire_panels(request):
         for pa in PrestataireActe.objects.filter(organisme=org).select_related("acte")
     }
     all_actes = (
-        ActeMedical.objects.filter(is_active=True)
+        ActeMedical.objects.filter(is_active=True, level=3)
         .exclude(service_medical_category__slug="ambulance-medicalisee")
         .filter(service_medical_category__order__lte=10)
         .select_related("service_medical_category", "parent_service")
@@ -873,7 +873,7 @@ def panel_create(request):
                     selected_pas.append(pa)
             elif x.startswith("am_") and x[3:].isdigit():
                 am_id = int(x[3:])
-                am = ActeMedical.objects.filter(pk=am_id).first()
+                am = ActeMedical.objects.filter(pk=am_id, level=3).first()
                 if am:
                     pa, _ = PrestataireActe.objects.get_or_create(
                         organisme=org,
@@ -888,9 +888,9 @@ def panel_create(request):
         for nom_acte in noms:
             pa = PrestataireActe.objects.filter(organisme=org, acte__name__iexact=nom_acte).first()
             if not pa:
-                am = ActeMedical.objects.filter(name__iexact=nom_acte).first()
+                am = ActeMedical.objects.filter(name__iexact=nom_acte, level=3).first()
                 if not am:
-                    am = ActeMedical.objects.filter(name__icontains=nom_acte).first()
+                    am = ActeMedical.objects.filter(name__icontains=nom_acte, level=3).first()
                 if am:
                     pa, _ = PrestataireActe.objects.get_or_create(
                         organisme=org,
