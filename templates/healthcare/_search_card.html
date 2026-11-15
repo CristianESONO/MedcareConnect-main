@@ -46,9 +46,7 @@
           {{ pa.organisme.horaires_complement|truncatechars:32 }}
         </span>
         {% endif %}
-        {% if pa.distance_km %}
-        <span class="smeta smeta--distance">≈ {{ pa.distance_km }} km</span>
-        {% endif %}
+        {% distance_badge pa.distance_km %}
       </div>
     </div>
   </div>

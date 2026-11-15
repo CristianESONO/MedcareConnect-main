@@ -44,7 +44,12 @@ from .utils import assurances_grouped_for_select
 from collections import OrderedDict, defaultdict
 from itertools import groupby
 
-from healthcare.services import PricingService, SearchService
+from healthcare.services import (
+    PricingService,
+    SearchService,
+    DashboardService,
+    InsuranceManageService,
+)
 
 from .forms import (
     OrganismeForm,
@@ -2395,152 +2400,16 @@ def prestataire_dashboard(request):
         return redirect("healthcare:organisme_create")
 
     period_key, period_label, since = _dashboard_period(request, org)
-
-    from cart.models import Cart, CartItem, DevisPart
-    from messaging.models import Message
-
-    actes_count = PrestataireActe.objects.filter(organisme=org).count()
-    insurances_count = PriseEnChargeAssurance.objects.filter(organisme=org).count()
-    from healthcare.prestataire_analytics import (
-        build_activity_chart,
-        medplaque_stats,
-        recent_visits,
-    )
-
     visit_source_filter = (request.GET.get("visit_src") or "all").strip()
-    recent_views = recent_visits(org, limit=8, source=visit_source_filter)
-    accepted_insurances = list(
-        PriseEnChargeAssurance.objects.filter(organisme=org, is_active=True)
-        .select_related("assurance")
-        .order_by("assurance__name")[:6]
+
+    context = DashboardService.build_context(
+        org,
+        period_key=period_key,
+        period_label=period_label,
+        since=since,
+        visit_source_filter=visit_source_filter,
     )
-
-    views_qs = ProfileView.objects.filter(organisme=org)
-    if since:
-        views_qs = views_qs.filter(viewed_at__gte=since)
-    views_period = views_qs.count()
-
-    # Items du panier qui touchent cet organisme (proxy de "demandes" en attendant
-    # un vrai modèle Reservation — Sprint 5).
-    items_qs = CartItem.objects.filter(prestataire_acte__organisme=org)
-    if since:
-        items_qs = items_qs.filter(added_at__gte=since)
-    items_period = items_qs.count()
-
-    # Sous-devis (parts) pour cette structure — statut envoyé / consulté.
-    devis_part_qs = DevisPart.objects.filter(
-        organisme=org,
-        status__in=["sent", "viewed", "relanced"],
-    ).exclude(devis__status="draft")
-    if since:
-        devis_part_qs = devis_part_qs.filter(created_at__gte=since)
-    devis_period = devis_part_qs.count()
-    devis_value = (
-        devis_part_qs.aggregate(v=Sum("total_brut"))["v"] or 0
-    )
-
-    # Top 5 actes (par nombre d'apparitions dans les paniers sur la période).
-    top_actes_rows = (
-        items_qs.values("prestataire_acte__acte__name", "prestataire_acte__price")
-        .annotate(n=Count("id"))
-        .order_by("-n", "prestataire_acte__acte__name")[:5]
-    )
-    top_actes_max = max((r["n"] for r in top_actes_rows), default=0)
-
-    # Répartition assurance (sur les paniers récents touchant cet organisme).
-    insurance_split_rows = (
-        Cart.objects.filter(
-            items__prestataire_acte__organisme=org,
-            **({"updated_at__gte": since} if since else {}),
-        )
-        .values("selected_insurance__name")
-        .annotate(n=Count("id", distinct=True))
-        .order_by("-n")[:5]
-    )
-    insurance_split = []
-    insurance_total = sum(r["n"] for r in insurance_split_rows) or 0
-    for row in insurance_split_rows:
-        insurance_split.append(
-            {
-                "name": row["selected_insurance__name"] or "Sans assurance",
-                "count": row["n"],
-                "pct": round((row["n"] * 100.0 / insurance_total)) if insurance_total else 0,
-            }
-        )
-
-    # Complétion profil
-    completion = _dashboard_completion(org, actes_count, insurances_count)
-    completion_done = sum(1 for c in completion if c["ok"])
-    completion_pct = int(round(completion_done * 100.0 / max(len(completion), 1)))
-
-    # Alerte : sous-devis « envoyés » non consultés par la structure (>24h).
-    pending_devis = DevisPart.objects.filter(
-        organisme=org,
-        status="sent",
-        created_at__lte=timezone.now() - timezone.timedelta(hours=24),
-    ).exclude(devis__status="draft").count()
-    # Badge sidebar : parts en attente de consultation par la structure
-    new_devis_count = DevisPart.objects.filter(
-        organisme=org,
-        status="sent",
-    ).exclude(devis__status="draft").count()
-
-    # RDV : demandes à confirmer + RDV confirmés à venir
-    from appointments.models import RendezVous
-
-    rdv_requested_count = RendezVous.objects.filter(
-        organisme=org, status=RendezVous.STATUS_REQUESTED
-    ).count()
-    rdv_upcoming_count = RendezVous.objects.filter(
-        organisme=org,
-        status=RendezVous.STATUS_CONFIRMED,
-        start__gte=timezone.now(),
-    ).count()
-
-    unread = Message.objects.filter(receiver=request.user, is_read=False).count()
-    pending_subscription_request = SubscriptionChangeRequest.objects.filter(
-        organisme=org, status="pending"
-    ).first()
-
-    activity_chart = build_activity_chart(org, period_key)
-    medplaque = medplaque_stats(org, since=since)
-
-    context = {
-        "org": org,
-        "actes_count": actes_count,
-        "insurances_count": insurances_count,
-        "profile_views_total": org.profile_views_count,
-        "recent_views": recent_views,
-        "unread_messages": unread,
-        "dash_active": "home",
-        # Sprint 3
-        "period_key": period_key,
-        "period_label": period_label,
-        "views_period": views_period,
-        "devis_period": devis_period,
-        "devis_value": devis_value,
-        "items_period": items_period,
-        "top_actes_rows": list(top_actes_rows),
-        "top_actes_max": top_actes_max,
-        "insurance_split": insurance_split,
-        "insurance_split_total": insurance_total,
-        "completion": completion,
-        "completion_done": completion_done,
-        "completion_total": len(completion),
-        "completion_pct": completion_pct,
-        "pending_devis": pending_devis,
-        "new_devis_count": new_devis_count,
-        "new_rdv_count": rdv_requested_count,
-        "rdv_requested_count": rdv_requested_count,
-        "rdv_upcoming_count": rdv_upcoming_count,
-        "accepted_insurances_preview": accepted_insurances,
-        "pending_subscription_request": pending_subscription_request,
-        "activity_chart": activity_chart,
-        "medplaque": medplaque,
-        "visit_source_filter": visit_source_filter,
-    }
     return render(request, "healthcare/prestataire/dashboard.html", context)
-
 
 def _prestataire_resolve_devis_part_or_legacy_parent(org, reference: str):
     """Référence DP-* = sous-devis ; sinon référence parent DEV-* (legacy sans parts)."""
@@ -3717,14 +3586,14 @@ def acte_toggle_available(request, pk):
 @_require_prestataire
 def insurances_manage(request):
     """Assurances acceptées — cases par segment (réf. catalogue) + champ libre « Tarifs & délais »."""
-    from django.db import transaction
-    from django.utils.text import slugify
-
     ctx = _dash_context(request, "insurances")
     org = OrganismeDeSante.objects.get(pk=ctx["org"].pk)
 
     if not org.is_active:
-        messages.warning(request, "Votre structure est en attente d'activation. La gestion des assurances sera disponible dès validation de votre compte.")
+        messages.warning(
+            request,
+            "Votre structure est en attente d'activation. La gestion des assurances sera disponible dès validation de votre compte."
+        )
         return redirect("healthcare:prestataire_dashboard")
 
     if request.method == "POST" and request.POST.get("action") == "add_custom_assurance":
@@ -3732,172 +3601,29 @@ def insurances_manage(request):
         custom_segment = (request.POST.get("segment") or "").strip()
         custom_description = (request.POST.get("description") or "").strip()
 
-        if not custom_name:
-            messages.error(request, "Veuillez renseigner le nom de l'assurance.")
-            return redirect("healthcare:insurances_manage")
-
-        valid_segments = dict(Assurance.Segment.choices)
-        if custom_segment not in valid_segments:
-            custom_segment = Assurance.Segment.PRIVEE_IARD
-
-        # Recherche ou création de l'assurance (insensible à la casse)
-        existing_assurances = Assurance.objects.filter(name__iexact=custom_name)
-        if existing_assurances.exists():
-            assurance_obj = existing_assurances.first()
-            if not assurance_obj.is_active:
-                assurance_obj.is_active = True
-                assurance_obj.save(update_fields=["is_active"])
-        else:
-            base_slug = slugify(custom_name) or "assurance"
-            slug = base_slug
-            counter = 1
-            while Assurance.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-
-            assurance_obj = Assurance.objects.create(
-                name=custom_name,
-                slug=slug,
-                segment=custom_segment,
-                description=custom_description or None,
-                is_active=True,
+        try:
+            name = InsuranceManageService.add_custom_assurance(
+                org, name=custom_name, segment=custom_segment, description=custom_description
             )
-
-        # Lier automatiquement à la structure
-        pec, created = PriseEnChargeAssurance.objects.get_or_create(
-            organisme=org,
-            assurance=assurance_obj,
-            defaults={"is_active": True},
-        )
-        if not pec.is_active:
-            pec.is_active = True
-            pec.save(update_fields=["is_active"])
-
-        messages.success(
-            request,
-            f"L'assurance « {assurance_obj.name} » a été ajoutée et sélectionnée avec succès pour votre établissement."
-        )
+            messages.success(
+                request,
+                f"L'assurance « {name} » a été ajoutée et sélectionnée avec succès pour votre établissement."
+            )
+        except ValueError as e:
+            messages.error(request, str(e))
         return redirect("healthcare:insurances_manage")
 
     if request.method == "POST" and request.POST.get("action") == "save_assurances":
-        valid = set(Assurance.objects.filter(is_active=True).values_list("pk", flat=True))
-        selected: set[int] = set()
-        for x in request.POST.getlist("assurance_ids"):
-            try:
-                selected.add(int(x))
-            except (TypeError, ValueError):
-                continue
-        selected &= valid
-        org.assurances_tarifs_delais = (request.POST.get("assurances_tarifs_delais") or "").strip()
-        org.save(update_fields=["assurances_tarifs_delais", "updated_at"])
-        with transaction.atomic():
-            current_ids = set(
-                PriseEnChargeAssurance.objects.filter(organisme=org).values_list(
-                    "assurance_id", flat=True
-                )
-            )
-            for aid in current_ids - selected:
-                PriseEnChargeAssurance.objects.filter(
-                    organisme=org, assurance_id=aid
-                ).delete()
-            for aid in selected - current_ids:
-                PriseEnChargeAssurance.objects.get_or_create(
-                    organisme=org,
-                    assurance_id=aid,
-                    defaults={"is_active": True},
-                )
+        raw_ids = request.POST.getlist("assurance_ids")
+        tarifs_delais = request.POST.get("assurances_tarifs_delais") or ""
+        InsuranceManageService.save_assurances(org, raw_ids, tarifs_delais)
         messages.success(request, "Assurances acceptées et texte Tarifs & délais enregistrés.")
         return redirect("healthcare:insurances_manage")
 
-    prises_qs = PriseEnChargeAssurance.objects.filter(organisme=org).select_related(
-        "assurance"
-    )
-    selected_assurance_ids = set(
-        PriseEnChargeAssurance.objects.filter(organisme=org).values_list(
-            "assurance_id", flat=True
-        )
-    )
-
     q = (request.GET.get("q") or "").strip()
     seg_filter = (request.GET.get("segment") or "").strip()
-    if q:
-        prises_qs = prises_qs.filter(
-            Q(assurance__name__icontains=q) | Q(assurance__description__icontains=q)
-        )
-    if seg_filter in dict(Assurance.Segment.choices):
-        prises_qs = prises_qs.filter(assurance__segment=seg_filter)
-    prises = list(prises_qs.order_by("assurance__segment", "assurance__name"))
-
-    from .insurance_icons import (
-        block_hint_for_assurance_segment,
-        chip_label_for_assurance_segment,
-        filter_icon_for_assurance_segment,
-        filter_label_for_assurance_segment,
-        icon_for_assurance_segment,
-    )
-
-    recap_seg_rows = []
-    for seg, lbl in Assurance.Segment.choices:
-        n = PriseEnChargeAssurance.objects.filter(
-            organisme=org, assurance__segment=seg
-        ).count()
-        if n:
-            recap_seg_rows.append(
-                {
-                    "segment": seg,
-                    "label": lbl,
-                    "chip_label": chip_label_for_assurance_segment(seg, lbl),
-                    "icon": icon_for_assurance_segment(seg),
-                    "n": n,
-                }
-            )
-
-    by_seg = defaultdict(list)
-    all_active = list(Assurance.objects.filter(is_active=True).order_by("segment", "name"))
-    for a in all_active:
-        by_seg[a.segment].append(a)
-    seg_labels = dict(Assurance.Segment.choices)
-
-    segment_blocks = []
-    for seg, long_lbl in Assurance.Segment.choices:
-        if seg not in by_seg:
-            continue
-        icon = icon_for_assurance_segment(seg)
-        chip_lbl = chip_label_for_assurance_segment(seg, seg_labels.get(seg, seg))
-        block_hint = block_hint_for_assurance_segment(seg)
-        lst = by_seg[seg]
-        n_sel = sum(1 for x in lst if x.pk in selected_assurance_ids)
-        segment_blocks.append(
-            {
-                "segment": seg,
-                "chip_icon": icon,
-                "filter_icon": filter_icon_for_assurance_segment(seg),
-                "chip_label": chip_lbl,
-                "filter_label": filter_label_for_assurance_segment(seg, chip_lbl),
-                "block_title": long_lbl,
-                "block_hint": block_hint,
-                "assurances": lst,
-                "n_selected": n_sel,
-                "n_total": len(lst),
-            }
-        )
-
-    ctx.update(
-        {
-            "org": org,
-            "prises": prises,
-            "segment_blocks": segment_blocks,
-            "insurance_catalog_total": len(all_active),
-            "insurance_selected_count": len(selected_assurance_ids),
-            "selected_assurance_ids": selected_assurance_ids,
-            "q": q,
-            "seg_filter": seg_filter,
-            "recap_seg_rows": recap_seg_rows,
-            "segment_choices": Assurance.Segment.choices,
-        }
-    )
+    ctx.update(InsuranceManageService.build_context(org, q=q, seg_filter=seg_filter))
     return render(request, "healthcare/prestataire/insurances.html", ctx)
-
 
 @_require_prestataire
 def insurance_delete(request, pk):

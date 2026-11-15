@@ -24,6 +24,7 @@
       {% else %}
       <span class="smeta-m"><i class="ti ti-clock"></i> 24h/24</span>
       {% endif %}
+      {% distance_badge block.org.distance_km|default:block.distance_km %}
     </div>
   </div>
 

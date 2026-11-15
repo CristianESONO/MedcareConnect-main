@@ -6,9 +6,11 @@ from django.test import SimpleTestCase
 from healthcare.templatetags.healthcare_display import (
     coverage_badge,
     delai_badge,
+    distance_badge,
     fcfa,
     insurance_summary,
     org_status_badge,
+    price_regime_display,
 )
 
 
@@ -78,3 +80,24 @@ class HealthcareDisplayTagsTests(SimpleTestCase):
         badge = delai_badge(pa)
         self.assertIn("24 heures", badge)
         self.assertIn("ti ti-clock", badge)
+
+    def test_distance_badge(self):
+        self.assertEqual(distance_badge(None), "")
+        self.assertEqual(distance_badge(""), "")
+        self.assertEqual(distance_badge(0), "")
+        badge_m = distance_badge(0.85)
+        self.assertIn("850 m", badge_m)
+        self.assertIn("ti ti-map-pin", badge_m)
+        badge_km = distance_badge(2.5)
+        self.assertIn("≈ 2.5 km", badge_km)
+        badge_int_km = distance_badge(3.0)
+        self.assertIn("≈ 3 km", badge_int_km)
+
+    def test_price_regime_display(self):
+        self.assertEqual(price_regime_display(None), "")
+        self.assertEqual(price_regime_display(""), "")
+        base = price_regime_display(15000)
+        self.assertIn("15 000 FCFA", base)
+        with_regime = price_regime_display(15000, regime_label="IPM", coverage_pct=80)
+        self.assertIn("15 000 FCFA", with_regime)
+        self.assertIn("IPM (80%)", with_regime)

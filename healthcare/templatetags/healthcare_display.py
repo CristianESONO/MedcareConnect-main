@@ -173,3 +173,48 @@ def delai_badge(delai_or_pa: Any) -> str:
     return mark_safe(
         f'<span class="scard-delai sipn-ico-inline"><i class="ti ti-clock"></i> {escape(txt)}</span>'
     )
+
+
+@register.simple_tag
+def distance_badge(distance_km: Any) -> str:
+    """Génère le badge de distance géographique (ex: ≈ 1.2 km ou 800 m)."""
+    if distance_km is None or distance_km == "":
+        return ""
+    try:
+        val = float(distance_km)
+    except (ValueError, TypeError):
+        return ""
+    if val <= 0:
+        return ""
+    if val < 1.0:
+        dist_str = f"{int(round(val * 1000))} m"
+    else:
+        dist_str = f"≈ {val:.1f} km" if (val % 1) != 0 else f"≈ {int(val)} km"
+    return mark_safe(
+        f'<span class="smeta smeta--distance sipn-ico-inline"><i class="ti ti-map-pin"></i> {dist_str}</span>'
+    )
+
+
+@register.simple_tag
+def price_regime_display(
+    price: Any, regime_label: str = "", coverage_pct: Optional[Any] = None
+) -> str:
+    """Affiche le prix formaté en FCFA avec pastille indicatrice de prise en charge éventuelle."""
+    formatted_price = fcfa(price)
+    if not formatted_price:
+        return ""
+    extra = ""
+    pct_text = ""
+    if coverage_pct is not None:
+        try:
+            pct_val = int(coverage_pct)
+            if pct_val > 0:
+                pct_text = f" ({pct_val}%)"
+        except (ValueError, TypeError):
+            pass
+
+    if regime_label or pct_text:
+        label = escape(f"{regime_label}{pct_text}".strip())
+        extra = f' <span class="text-xs text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">{label}</span>'
+
+    return mark_safe(f'<span class="price-val font-extrabold">{formatted_price}</span>{extra}')
