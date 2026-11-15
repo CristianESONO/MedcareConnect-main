@@ -25,13 +25,7 @@
     <div class="scard-left min-w-0">
       <div class="scard-name">
         <button type="button" class="org-preview-trigger scard-org-name" data-org-slug="{{ pa.organisme.slug }}" aria-haspopup="dialog">{{ pa.organisme.name }}</button>
-        {% if not pa.organisme.is_verified %}
-          <span class="unverified-badge sipn-ico-inline" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700" title="Cette structure est en attente d'approbation par MedCare Connect"><i class="ti ti-clock"></i> En attente d'approbation</span>
-        {% elif pa.organisme.subscription_plan and pa.organisme.subscription_plan.is_pioneer_offer %}
-          <span class="pioneer-badge sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="star" class="sipn-ico sipn-ico--xs" %} Pionnier</span>
-        {% else %}
-          <span class="verified-badge sipn-ico-inline" style="background:#e8faf3;color:#065f46;border:1px solid #a7f3d0;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700"><i class="ti ti-check"></i> Vérifié</span>
-        {% endif %}
+        {% org_status_badge pa.organisme %}
       </div>
       {% if pa.organisme.type_organisme %}
       <div class="scard-type">{{ pa.organisme.type_organisme.name }}</div>
@@ -93,11 +87,9 @@
         </div>
         {% endif %}
       </div>
-      {% if pa.delai %}
-      <div class="ai-delai sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ pa.get_delai_display }}</div>
-      {% endif %}
+      {% delai_badge pa %}
       <div class="ai-pricing-col text-right">
-        <div class="ai-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|floatformat:0 }} FCFA</div>
+        <div class="ai-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|fcfa }}</div>
         <div class="ai-regime-badge mt-0.5 text-[10px] font-semibold" style="display:none"></div>
       </div>
     </div>
@@ -108,7 +100,7 @@
     <div class="scard-footer-left min-w-0">
       <div class="scard-ins sipn-ico-inline">
         {% include "healthcare/_icon_svg.html" with icon="shield" class="sipn-ico sipn-ico--xs" %}
-        {% if pa.dem_insurance_names %}{{ pa.dem_insurance_names|slice:":3"|join:" · " }}{% if pa.dem_insurance_names|length > 3 %} +{{ pa.dem_insurance_names|length|add:"-3" }}{% endif %}{% else %}Assurances non renseignées{% endif %}
+        {{ pa.dem_insurance_names|insurance_summary:3 }}
       </div>
       {% if pa.organisme.prises_sang_domicile %}
       <div class="scard-domicile sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="home" class="sipn-ico sipn-ico--xs" %} Prestations à domicile disponibles</div>

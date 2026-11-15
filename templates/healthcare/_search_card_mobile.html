@@ -1,26 +1,19 @@
-{% comment %}Carte structure mobile — démo MOBILE PATIENT (scard-m).{% endcomment %}
+{% comment %}Carte structure unifiée responsive (mobile + desktop).{% endcomment %}
+{% load healthcare_display %}
 <article class="scard-m fade-in-m{% if not block.org.is_verified %} scard-m--unverified scard--unverified opacity-60{% endif %}" id="sm-{{ block.org.pk }}" data-org-id="{{ block.org.pk }}"
   {% if not block.org.is_verified %}data-org-unverified="1"{% endif %}
   {% if block.org.latitude %}data-org-lat="{{ block.org.latitude }}"{% endif %}
   {% if block.org.longitude %}data-org-lng="{{ block.org.longitude }}"{% endif %}>
   <div class="scard-m-head">
     <div class="scard-m-head-row flex items-center justify-between gap-2">
-      <div class="scard-m-name">
-        {{ block.org.name }}
-        {% if not block.org.is_verified %}
-          <span class="pioneer-badge-m unverified-badge" style="background:#fef3c7;color:#92400e;border-color:#fcd34d"><i class="ti ti-clock"></i> En attente d'approbation</span>
-        {% elif block.is_pioneer %}
-          <span class="pioneer-badge-m">Pionnier</span>
-        {% else %}
-          <span class="pioneer-badge-m" style="background:#e8faf3;color:#065f46;border-color:#a7f3d0">Vérifié</span>
-        {% endif %}
+      <div class="scard-m-name flex items-center gap-2 flex-wrap">
+        <button type="button" class="org-preview-trigger scard-org-name font-bold hover:underline" data-org-slug="{{ block.org.slug }}" aria-haspopup="dialog">{{ block.org.name }}</button>
+        {% org_status_badge block.org is_pioneer=block.is_pioneer %}
       </div>
-      {% if block.total_actes > 1 %}
-      <span class="scard-m-coverage{% if block.matching_count == block.total_actes %} scard-m-coverage--full{% else %} scard-m-coverage--partial{% endif %}">{{ block.matching_count }}/{{ block.total_actes }} actes</span>
-      {% endif %}
+      {% coverage_badge block.matching_count block.total_actes %}
     </div>
     {% if block.org.is_praticien %}
-    <div class="scard-m-type" style="color:#0a5c8a;font-weight:700"><i class="ti ti-stethoscope"></i> {{ block.org.get_profession_display|default:"Praticien indépendant" }}</div>
+    <div class="scard-m-type text-primary-700 font-bold"><i class="ti ti-stethoscope"></i> {{ block.org.get_profession_display|default:"Praticien indépendant" }}</div>
     {% elif block.org.type_organisme %}
     <div class="scard-m-type">{{ block.org.type_organisme.name }}</div>
     {% endif %}
@@ -57,21 +50,21 @@
     data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
     data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}">
     <input type="checkbox" class="scard-m-checkbox" aria-label="Sélectionner {{ pa.acte.name }} pour prendre rendez-vous"{% if not block.org.is_verified %} disabled{% endif %}>
-    <div class="scard-m-acte-info">
-      <div class="scard-m-acte-nom">{{ pa.acte.name }}</div>
+    <div class="scard-m-acte-info min-w-0 flex-1">
+      <div class="scard-m-acte-nom font-semibold">{{ pa.acte.name }}</div>
       {% if pa.delai or block.org.prises_sang_domicile %}
-      <div class="scard-m-acte-meta mt-0.5">
+      <div class="scard-m-acte-meta flex items-center gap-2 mt-0.5 flex-wrap">
         {% if pa.delai %}
-        <span class="scard-m-acte-delai"><i class="ti ti-clock"></i> {{ pa.get_delai_display }}</span>
+        {% delai_badge pa %}
         {% endif %}
         {% if block.org.prises_sang_domicile %}
-        <span class="scard-m-acte-domicile"><i class="ti ti-home"></i> Prestations à domicile</span>
+        <span class="scard-m-acte-domicile sipn-ico-inline"><i class="ti ti-home"></i> Prestations à domicile</span>
         {% endif %}
       </div>
       {% endif %}
     </div>
     <div class="scard-m-pricing text-right">
-      <div class="scard-m-acte-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|floatformat:0 }} F</div>
+      <div class="scard-m-acte-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|fcfa:"F" }}</div>
       <div class="ai-regime-badge mt-0.5 text-[9.5px] font-semibold" style="display:none"></div>
     </div>
   </div>
@@ -90,14 +83,10 @@
   </div>
   {% endif %}
 
-  <div class="scard-m-footer">
-    <div class="scard-m-ins">
+  <div class="scard-m-footer flex items-center justify-between gap-2 p-3">
+    <div class="scard-m-ins text-xs text-gray-500 flex items-center gap-1.5 flex-1 min-w-0">
       <i class="ti ti-shield-check"></i>
-      {% if block.insurance_names %}
-      {{ block.insurance_names|slice:":3"|join:" · " }}{% if block.insurance_names|length > 3 %} +{{ block.insurance_names|length|add:"-3" }}{% endif %}
-      {% else %}
-      Assurances non renseignées
-      {% endif %}
+      <span class="truncate">{{ block.insurance_names|insurance_summary:3 }}</span>
     </div>
     {% if not block.org.is_praticien %}
       {% if list_variant == "desktop" %}
@@ -112,10 +101,10 @@
   </div>
 
   {% if block.items|length > 1 %}
-  <div class="scard-m-multiselect-footer" style="padding:8px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:8px">
-    <span style="font-size:11px;font-weight:600;color:#64748b">{{ block.items|length }} actes</span>
-    <span style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#0a5c8a" data-scard-total="{{ block.items_total|floatformat:0 }}">{{ block.items_total|floatformat:0 }} FCFA</span>
-    <button type="button" class="btn-select-all-m" style="background:#14b87a;color:#ffffff;border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;box-shadow:0 2px 8px rgba(20,184,122,0.25)" data-scard-add-all="{{ block.org.pk }}"><i class="ti ti-plus"></i> Tout</button>
+  <div class="scard-m-multiselect-footer flex items-center justify-between gap-2 px-3.5 py-2 bg-slate-50 border-t border-slate-200">
+    <span class="text-xs font-semibold text-slate-500">{{ block.items|length }} actes</span>
+    <span class="font-black text-primary-700 text-sm" data-scard-total="{{ block.items_total|floatformat:0 }}">{{ block.items_total|fcfa }}</span>
+    <button type="button" class="btn-select-all-m bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 cursor-pointer shrink-0" data-scard-add-all="{{ block.org.pk }}"><i class="ti ti-plus"></i> Tout</button>
   </div>
   {% endif %}
 </article>
