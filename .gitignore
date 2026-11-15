@@ -24,3 +24,8 @@ Thumbs.db
 *.bak_*
 *.dump
 full_export*.json
+
+# Frontend SPA
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
