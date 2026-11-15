@@ -9,7 +9,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ open, onClose }: SidebarProps) {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const location = useLocation();
   const { theme, toggleTheme, lang, setLang } = useAppStore();
 
@@ -19,29 +19,12 @@ export function Sidebar({ open, onClose }: SidebarProps) {
     i18n.changeLanguage(next);
   };
 
-  const menuSections = [
-    {
-      title: 'Navigation Principale',
-      links: [
-        { to: '/', label: 'Accueil Vitrine', icon: 'ti-home', desc: 'Présentation & services' },
-        { to: '/search', label: 'Recherche SIPN', icon: 'ti-search', desc: 'Comparer soins & tarifs' },
-        { to: '/mobile', label: 'Vue Mobile Patient', icon: 'ti-device-mobile', desc: 'Interface tactile rapide' },
-      ],
-    },
-    {
-      title: 'Espace Professionnel',
-      links: [
-        { to: '/dashboard', label: 'Tableau de Bord', icon: 'ti-layout-dashboard', desc: 'Statistiques & activité' },
-        { to: '/panels', label: 'Panels & Forfaits', icon: 'ti-packages', desc: 'Forfaits d\'actes niveau 3' },
-      ],
-    },
-    {
-      title: 'Compte & Accès',
-      links: [
-        { to: '/login', label: 'Connexion', icon: 'ti-login', desc: 'Accéder à votre espace' },
-        { to: '/register', label: 'Créer un compte', icon: 'ti-user-plus', desc: 'Patient ou Professionnel' },
-      ],
-    },
+  const navLinks = [
+    { to: '/', label: 'Accueil', icon: 'ti-home' },
+    { to: '/search', label: 'Annuaire & Soins', icon: 'ti-search' },
+    { to: '/mobile', label: 'Vue Mobile Patient', icon: 'ti-device-mobile' },
+    { to: '/dashboard', label: 'Espace Professionnel', icon: 'ti-stethoscope' },
+    { to: '/panels', label: 'Panels & Forfaits', icon: 'ti-packages' },
   ];
 
   return (
@@ -57,7 +40,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
           />
 
-          {/* Sidebar drawer */}
+          {/* Sidebar Drawer */}
           <motion.aside
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
@@ -65,19 +48,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             transition={{ type: 'spring', damping: 26, stiffness: 260 }}
             className="fixed top-0 left-0 bottom-0 w-80 sm:w-96 bg-white dark:bg-[#0f172a] shadow-2xl z-50 flex flex-col border-r border-gray-200 dark:border-gray-800"
           >
-            {/* Header */}
-            <div className="p-5 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-900/50">
-              <div className="flex items-center gap-3">
-                <img src="/logo.png" alt="MedCare" className="h-8 w-auto object-contain" />
-                <div>
-                  <h3 className="font-syne font-extrabold text-base text-[#123a63] dark:text-white leading-tight">
-                    MedCare Connect
-                  </h3>
-                  <p className="text-[10px] text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider">
-                    Menu & Navigation
-                  </p>
-                </div>
-              </div>
+            {/* Header with real brand logo */}
+            <div className="p-5 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-gray-50/60 dark:bg-gray-900/60">
+              <img
+                src="/logo_MEDCARE.png"
+                alt="MedCare"
+                className="h-8 w-auto object-contain"
+              />
 
               <button
                 type="button"
@@ -89,68 +66,72 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               </button>
             </div>
 
-            {/* Quick Account Banner */}
-            <div className="p-4 mx-4 mt-4 rounded-2xl bg-gradient-to-r from-[#123a63] to-[#1a4f87] text-white shadow-md flex items-center justify-between">
+            {/* Rejoindre MedCare Promo Card */}
+            <div className="p-4 mx-4 mt-4 rounded-2xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white shadow-md flex items-center justify-between">
               <div>
-                <div className="text-xs font-bold text-[#0ea5e9]">Nouveau sur MedCare ?</div>
-                <div className="text-sm font-extrabold mt-0.5">Rejoignez le réseau</div>
+                <div className="text-[11px] font-extrabold uppercase tracking-wider text-sky-200">
+                  Rejoindre le réseau
+                </div>
+                <div className="text-sm font-black mt-0.5">Inscription MedCare</div>
               </div>
               <Link
                 to="/register"
                 onClick={onClose}
-                className="px-3 py-1.5 rounded-xl bg-white text-[#123a63] text-xs font-bold shadow hover:bg-gray-100 transition-colors"
+                className="px-3 py-1.5 rounded-xl bg-white text-[#0a5c8a] text-xs font-bold shadow hover:bg-gray-100 transition-colors"
               >
-                S'inscrire
+                Commencer
               </Link>
             </div>
 
-            {/* Menu Sections */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
-              {menuSections.map((section) => (
-                <div key={section.title}>
-                  <h4 className="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider px-2 mb-2">
-                    {section.title}
-                  </h4>
-                  <div className="space-y-1">
-                    {section.links.map((link) => {
-                      const isActive = location.pathname === link.to;
-                      return (
-                        <Link
-                          key={link.to}
-                          to={link.to}
-                          onClick={onClose}
-                          className={`flex items-center gap-3 p-2.5 rounded-xl transition-all ${
-                            isActive
-                              ? 'bg-[#123a63]/10 dark:bg-white/10 text-[#123a63] dark:text-[#0ea5e9] font-bold'
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium'
-                          }`}
-                        >
-                          <div
-                            className={`p-2 rounded-lg ${
-                              isActive
-                                ? 'bg-[#123a63] text-white dark:bg-[#0ea5e9] dark:text-[#0f172a]'
-                                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
-                            }`}
-                          >
-                            <i className={`ti ${link.icon} text-base`}></i>
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="text-xs font-bold text-gray-900 dark:text-white">
-                              {link.label}
-                            </div>
-                            <div className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
-                              {link.desc}
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
+            {/* Menu Links */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
+                Navigation
+              </div>
+
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.to;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    onClick={onClose}
+                    className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all ${
+                      isActive
+                        ? 'bg-[#0a5c8a]/10 dark:bg-white/10 text-[#0a5c8a] dark:text-[#0ea5e9] font-bold'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold'
+                    }`}
+                  >
+                    <i className={`ti ${link.icon} text-lg text-[#0a5c8a] dark:text-[#0ea5e9]`}></i>
+                    <span className="text-xs sm:text-sm">{link.label}</span>
+                  </Link>
+                );
+              })}
+
+              <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
+                <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-2">
+                  Mon Compte
                 </div>
-              ))}
+                <Link
+                  to="/login"
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs"
+                >
+                  <i className="ti ti-login text-base text-gray-500"></i>
+                  <span>Se connecter</span>
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-bold text-xs"
+                >
+                  <i className="ti ti-user-plus text-base"></i>
+                  <span>Créer un compte (Patient ou Soignant)</span>
+                </Link>
+              </div>
             </div>
 
-            {/* Footer with Controls (Theme + Lang + WhatsApp) */}
+            {/* Footer with Controls */}
             <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <button

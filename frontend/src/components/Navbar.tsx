@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/appStore';
@@ -8,9 +9,22 @@ interface NavbarProps {
 }
 
 export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
-  const { t, i18n } = useTranslation();
+  const { lang, setLang, theme, toggleTheme, toggleCart } = useAppStore();
+  const { i18n } = useTranslation();
   const location = useLocation();
-  const { theme, toggleTheme, lang, setLang, toggleCart } = useAppStore();
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const aboutRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (aboutRef.current && !aboutRef.current.contains(event.target as Node)) {
+        setAboutOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLangToggle = () => {
     const next = lang === 'fr' ? 'en' : 'fr';
@@ -18,95 +32,134 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
     i18n.changeLanguage(next);
   };
 
-  const navLinks = [
-    { to: '/', label: 'Accueil', icon: 'ti-home' },
-    { to: '/search', label: 'Rechercher', icon: 'ti-search' },
-    { to: '/mobile', label: 'Vue Mobile', icon: 'ti-device-mobile' },
-    { to: '/dashboard', label: 'Soignants', icon: 'ti-stethoscope' },
-    { to: '/panels', label: 'Panels & Forfaits', icon: 'ti-packages' },
-  ];
-
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-[0_2px_16px_rgba(18,58,99,.06)]">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-gray-200/90 dark:border-gray-800 shadow-[0_2px_16px_rgba(18,58,99,.06)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-3">
-        {/* Left: Burger Menu + Brand Logo */}
+        {/* ── Left: Burger Button + Brand Logo ────────────────── */}
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onOpenSidebar}
             className="p-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             title="Ouvrir le menu"
+            aria-label="Ouvrir le menu"
           >
             <i className="ti ti-menu-2 text-xl font-bold"></i>
           </button>
 
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+          <Link to="/" className="flex items-center shrink-0">
+            {/* Real MedCare logo without duplicate text */}
             <img
-              src="/logo.png"
-              alt="MedCare Connect"
-              className="h-9 sm:h-11 w-auto object-contain"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
-              }}
+              src="/logo_MEDCARE.png"
+              alt="MedCare"
+              className="h-8 sm:h-10 w-auto object-contain"
             />
-            <div className="hidden sm:flex flex-col">
-              <span className="font-syne font-extrabold text-xl leading-none text-[#123a63] dark:text-white tracking-tight">
-                MedCare<span className="text-[#0ea5e9]">Connect</span>
-              </span>
-              <span className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-0.5">
-                Plateforme Médicale • Sénégal
-              </span>
-            </div>
           </Link>
         </div>
 
-        {/* Center: Desktop Navigation Pills */}
-        <nav className="hidden lg:flex items-center gap-1 p-1 rounded-2xl bg-gray-100/90 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.to;
-            return (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  isActive
-                    ? 'bg-white dark:bg-gray-700 text-[#123a63] dark:text-[#0ea5e9] shadow-sm'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-[#123a63] dark:hover:text-white'
+        {/* ── Center: Main Navigation (Accueil, Annuaire, À propos) ── */}
+        <nav className="hidden lg:flex items-center gap-6">
+          <Link
+            to="/"
+            className={`text-sm font-bold transition-colors ${
+              location.pathname === '/'
+                ? 'text-[#0a5c8a] dark:text-[#0ea5e9]'
+                : 'text-gray-700 dark:text-gray-300 hover:text-[#0a5c8a] dark:hover:text-white'
+            }`}
+          >
+            Accueil
+          </Link>
+
+          <Link
+            to="/search"
+            className={`text-sm font-bold transition-colors ${
+              location.pathname === '/search'
+                ? 'text-[#0a5c8a] dark:text-[#0ea5e9]'
+                : 'text-gray-700 dark:text-gray-300 hover:text-[#0a5c8a] dark:hover:text-white'
+            }`}
+          >
+            Annuaire
+          </Link>
+
+          {/* À propos Dropdown */}
+          <div className="relative" ref={aboutRef}>
+            <button
+              type="button"
+              onClick={() => setAboutOpen(!aboutOpen)}
+              className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+              aria-expanded={aboutOpen}
+            >
+              <span>À propos</span>
+              <i
+                className={`ti ti-chevron-down text-xs transition-transform duration-200 ${
+                  aboutOpen ? 'rotate-180' : ''
                 }`}
-              >
-                <i className={`ti ${link.icon} text-sm font-semibold`}></i>
-                {link.label}
-              </Link>
-            );
-          })}
+              ></i>
+            </button>
+
+            {aboutOpen && (
+              <div className="absolute top-full left-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <Link
+                  to="/"
+                  onClick={() => setAboutOpen(false)}
+                  className="block px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+                >
+                  Qui sommes-nous ?
+                </Link>
+                <Link
+                  to="/"
+                  onClick={() => setAboutOpen(false)}
+                  className="block px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+                >
+                  Comment ça marche
+                </Link>
+                <a
+                  href="https://wa.me/221770000000"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setAboutOpen(false)}
+                  className="block px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+                >
+                  Contact
+                </a>
+              </div>
+            )}
+          </div>
         </nav>
 
-        {/* Right Tools: Auth Links + Lang + Theme + Cart */}
+        {/* ── Right CTAs (Connexion, Trouver un service, Rejoindre MedCare) ── */}
         <div className="flex items-center gap-2">
-          {/* Connexion / Inscription Links for Desktop */}
-          <div className="hidden md:flex items-center gap-2 mr-1">
+          {/* Action buttons (identical to landing_header.html) */}
+          <div className="hidden sm:flex items-center gap-2">
             <Link
               to="/login"
-              className="px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-[#123a63] dark:hover:text-white transition-colors"
+              className="px-3.5 py-2 text-xs font-extrabold text-[#123a63] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
             >
               Connexion
             </Link>
+
+            <Link
+              to="/search"
+              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border-1.5 border-[#123a63] dark:border-sky-500 text-[#123a63] dark:text-sky-400 hover:bg-[#123a63] hover:text-white dark:hover:bg-sky-500 dark:hover:text-white transition-all shadow-sm"
+            >
+              Trouver un service
+            </Link>
+
             <Link
               to="/register"
-              className="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-[#123a63] text-white hover:bg-[#1a4f87] transition-all shadow-sm"
+              className="px-4 py-2 text-xs font-extrabold rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white hover:brightness-105 transition-all shadow-md active:scale-95"
             >
-              Créer un compte
+              Rejoindre MedCare
             </Link>
           </div>
 
-          {/* Lang toggle */}
+          {/* Language toggle */}
           <button
             type="button"
             onClick={handleLangToggle}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-gray-300 dark:border-gray-700 text-xs font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors uppercase"
+            className="p-2 rounded-xl border border-gray-300 dark:border-gray-700 text-xs font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 uppercase"
             title="Changer de langue"
           >
-            <i className="ti ti-world text-sm"></i>
             {lang}
           </button>
 
@@ -114,7 +167,7 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
             title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
           >
             <i className={`ti ${theme === 'dark' ? 'ti-sun' : 'ti-moon'} text-base`}></i>
@@ -124,12 +177,12 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           <button
             type="button"
             onClick={toggleCart}
-            className="relative flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-[#123a63] to-[#1a4f87] text-white text-xs font-bold shadow-sm hover:shadow transition-all active:scale-95"
-            title="Ouvrir le panier de soins"
+            className="relative p-2.5 rounded-xl bg-[#123a63] text-white hover:bg-[#1a4f87] transition-all shadow-sm"
+            title="Panier de soins"
           >
             <i className="ti ti-shopping-cart text-base"></i>
             {cartCount > 0 && (
-              <span className="w-5 h-5 bg-[#0ea5e9] text-white rounded-full text-[11px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#0ea5e9] text-white rounded-full text-[10px] font-bold flex items-center justify-center border-2 border-white dark:border-gray-900">
                 {cartCount}
               </span>
             )}
