@@ -32,6 +32,11 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
     i18n.changeLanguage(next);
   };
 
+  const isAboutActive =
+    location.pathname === '/about' ||
+    location.pathname === '/how-it-works' ||
+    location.pathname === '/contact';
+
   return (
     <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-gray-200/90 dark:border-gray-800 shadow-[0_2px_16px_rgba(18,58,99,.06)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-3">
@@ -40,7 +45,7 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           <button
             type="button"
             onClick={onOpenSidebar}
-            className="p-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
             title="Ouvrir le menu"
             aria-label="Ouvrir le menu"
           >
@@ -86,7 +91,11 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
             <button
               type="button"
               onClick={() => setAboutOpen(!aboutOpen)}
-              className="flex items-center gap-1.5 text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+              className={`flex items-center gap-1.5 text-sm font-bold transition-colors cursor-pointer ${
+                isAboutActive
+                  ? 'text-[#0a5c8a] dark:text-[#0ea5e9]'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-[#0a5c8a] dark:hover:text-white'
+              }`}
               aria-expanded={aboutOpen}
             >
               <span>À propos</span>
@@ -98,30 +107,31 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
             </button>
 
             {aboutOpen && (
-              <div className="absolute top-full left-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
                 <Link
-                  to="/"
+                  to="/about"
                   onClick={() => setAboutOpen(false)}
-                  className="block px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
                 >
-                  Qui sommes-nous ?
+                  <i className="ti ti-info-circle text-base text-[#0ea5e9]"></i>
+                  <span>Qui sommes-nous ?</span>
                 </Link>
                 <Link
-                  to="/"
+                  to="/how-it-works"
                   onClick={() => setAboutOpen(false)}
-                  className="block px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
                 >
-                  Comment ça marche
+                  <i className="ti ti-route text-base text-[#0ea5e9]"></i>
+                  <span>Comment ça marche</span>
                 </Link>
-                <a
-                  href="https://wa.me/221770000000"
-                  target="_blank"
-                  rel="noreferrer"
+                <Link
+                  to="/contact"
                   onClick={() => setAboutOpen(false)}
-                  className="block px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-sky-50 dark:hover:bg-gray-750 hover:text-[#0a5c8a] dark:hover:text-white transition-colors"
                 >
-                  Contact
-                </a>
+                  <i className="ti ti-mail text-base text-[#0ea5e9]"></i>
+                  <span>Contact</span>
+                </Link>
               </div>
             )}
           </div>
@@ -177,7 +187,7 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           <button
             type="button"
             onClick={toggleCart}
-            className="relative p-2.5 rounded-xl bg-[#123a63] text-white hover:bg-[#1a4f87] transition-all shadow-sm"
+            className="relative p-2.5 rounded-xl bg-[#123a63] text-white hover:bg-[#1a4f87] transition-all shadow-sm cursor-pointer"
             title="Panier de soins"
           >
             <i className="ti ti-shopping-cart text-base"></i>

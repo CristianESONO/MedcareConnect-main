@@ -20,11 +20,17 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   };
 
   const navLinks = [
-    { to: '/', label: 'Accueil', icon: 'ti-home' },
+    { to: '/', label: 'Accueil Vitrine', icon: 'ti-home' },
     { to: '/search', label: 'Annuaire & Soins', icon: 'ti-search' },
     { to: '/mobile', label: 'Vue Mobile Patient', icon: 'ti-device-mobile' },
     { to: '/dashboard', label: 'Espace Professionnel', icon: 'ti-stethoscope' },
     { to: '/panels', label: 'Panels & Forfaits', icon: 'ti-packages' },
+  ];
+
+  const aboutLinks = [
+    { to: '/about', label: 'Qui sommes-nous ?', icon: 'ti-info-circle' },
+    { to: '/how-it-works', label: 'Comment ça marche', icon: 'ti-route' },
+    { to: '/contact', label: 'Contact & Support', icon: 'ti-mail' },
   ];
 
   return (
@@ -84,38 +90,67 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             </div>
 
             {/* Menu Links */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
-                Navigation
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div>
+                <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
+                  Navigation
+                </div>
+                <div className="space-y-1">
+                  {navLinks.map((link) => {
+                    const isActive = location.pathname === link.to;
+                    return (
+                      <Link
+                        key={link.to}
+                        to={link.to}
+                        onClick={onClose}
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                          isActive
+                            ? 'bg-[#0a5c8a]/10 dark:bg-white/10 text-[#0a5c8a] dark:text-[#0ea5e9] font-bold'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold'
+                        }`}
+                      >
+                        <i className={`ti ${link.icon} text-lg text-[#0a5c8a] dark:text-[#0ea5e9]`}></i>
+                        <span className="text-xs sm:text-sm">{link.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
 
-              {navLinks.map((link) => {
-                const isActive = location.pathname === link.to;
-                return (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    onClick={onClose}
-                    className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition-all ${
-                      isActive
-                        ? 'bg-[#0a5c8a]/10 dark:bg-white/10 text-[#0a5c8a] dark:text-[#0ea5e9] font-bold'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold'
-                    }`}
-                  >
-                    <i className={`ti ${link.icon} text-lg text-[#0a5c8a] dark:text-[#0ea5e9]`}></i>
-                    <span className="text-xs sm:text-sm">{link.label}</span>
-                  </Link>
-                );
-              })}
+              <div>
+                <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
+                  À propos
+                </div>
+                <div className="space-y-1">
+                  {aboutLinks.map((link) => {
+                    const isActive = location.pathname === link.to;
+                    return (
+                      <Link
+                        key={link.to}
+                        to={link.to}
+                        onClick={onClose}
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
+                          isActive
+                            ? 'bg-[#0a5c8a]/10 dark:bg-white/10 text-[#0a5c8a] dark:text-[#0ea5e9] font-bold'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold'
+                        }`}
+                      >
+                        <i className={`ti ${link.icon} text-base text-[#0ea5e9]`}></i>
+                        <span className="text-xs sm:text-sm">{link.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
 
-              <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
-                <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-2">
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
+                <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
                   Mon Compte
                 </div>
                 <Link
                   to="/login"
                   onClick={onClose}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs"
+                  className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs"
                 >
                   <i className="ti ti-login text-base text-gray-500"></i>
                   <span>Se connecter</span>
@@ -123,10 +158,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <Link
                   to="/register"
                   onClick={onClose}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-bold text-xs"
+                  className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-bold text-xs"
                 >
                   <i className="ti ti-user-plus text-base"></i>
-                  <span>Créer un compte (Patient ou Soignant)</span>
+                  <span>Créer un compte (Patient / Soignant)</span>
                 </Link>
               </div>
             </div>
@@ -155,7 +190,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
               {/* WhatsApp direct contact */}
               <a
-                href="https://wa.me/221770000000"
+                href="https://wa.me/221781673189"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors"

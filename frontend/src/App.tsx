@@ -11,6 +11,9 @@ import { DashboardPage } from './pages/DashboardPage';
 import { PanelsPage } from './pages/PanelsPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
+import { AboutPage } from './pages/AboutPage';
+import { HowItWorksPage } from './pages/HowItWorksPage';
+import { ContactPage } from './pages/ContactPage';
 import { type CartItem, type SearchResult } from './lib/api';
 
 export default function App() {
@@ -81,6 +84,9 @@ export default function App() {
             <Route path="/panels" element={<PanelsPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </main>
 
