@@ -3,32 +3,49 @@
 
 @theme {
   --color-navy: #123a63;
+  --color-navy-dark: #0a2540;
   --color-navy-light: #1a4f87;
-  --color-accent: #4fa3c7;
-  --color-accent-dark: #3d8fb3;
-  --color-sipn-green: #14b87a;
+  --color-accent: #0ea5e9;
+  --color-accent-dark: #0284c7;
+  --color-sipn-green: #10b981;
   --font-syne: 'Syne', sans-serif;
   --font-body: 'DM Sans', 'Plus Jakarta Sans', sans-serif;
-  --shadow-sipn: 0 4px 16px rgba(10, 92, 138, 0.07);
+  --shadow-sipn: 0 4px 16px rgba(10, 92, 138, 0.08);
 }
 
 :root {
   --mc-navy: #123a63;
-  --mc-accent: #4fa3c7;
-  --mc-accent-dark: #3d8fb3;
-  --sipn-green: #14b87a;
+  --mc-accent: #0ea5e9;
+  --mc-accent-dark: #0284c7;
+  --sipn-green: #10b981;
 }
 
 body {
   margin: 0;
   font-family: 'DM Sans', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background-color: #f8fafc;
-  color: #1e293b;
+  color: #0f172a; /* High contrast slate-900 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure ultra crisp typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Syne', sans-serif;
+  color: #0f172a;
+}
+
+p, span, label, input, button {
+  color: inherit;
 }
 
 .dark body {
-  background-color: #0f172a;
-  color: #f8fafc;
+  background-color: #0b1120;
+  color: #f1f5f9;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4 {
+  color: #ffffff;
 }
 
 /* Custom scrollbar hiding utility */
