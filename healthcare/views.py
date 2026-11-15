@@ -44,6 +44,8 @@ from .utils import assurances_grouped_for_select
 from collections import OrderedDict, defaultdict
 from itertools import groupby
 
+from healthcare.services import PricingService, SearchService
+
 from .forms import (
     OrganismeForm,
     OpeningHoursForm,
@@ -189,54 +191,25 @@ _SEARCH_SORT_CHOICES = frozenset(
 
 def _annotate_delai_sort(qs):
     """Annotation pour trier les offres par délai indicatif (`PrestataireActe.DELAI_RANK`)."""
-    whens = [When(delai=k, then=Value(v)) for k, v in PrestataireActe.DELAI_RANK.items()]
-    return qs.annotate(
-        _delai_sort=Case(
-            *whens,
-            default=Value(99),
-            output_field=IntegerField(),
-        )
-    )
+    return SearchService.annotate_delai_sort(qs)
 
 
 def _attach_distance_km_to_offers(offers, latlng):
     """Distance GPS → structure (km) pour affichage / tri panneau « Complétez »."""
-    if not latlng:
-        return
-    lat0, lng0 = latlng
-    for pa in offers:
-        if getattr(pa, "distance_km", None) is not None:
-            continue
-        org = pa.organisme
-        if org.latitude is None or org.longitude is None:
-            pa.distance_km = None
-            continue
-        pa.distance_km = round(
-            haversine_km(lat0, lng0, float(org.latitude), float(org.longitude)),
-            1,
-        )
+    SearchService.attach_distance_km_to_offers(offers, latlng)
 
 
 def _parse_int_list(values):
-    out = []
-    for x in values:
-        try:
-            out.append(int(x))
-        except (TypeError, ValueError):
-            continue
-    return list(dict.fromkeys(out))
+    return SearchService.parse_int_list(values)
 
 
 def _acte_ids_from_lot_params(lot_ids: list[int]) -> list[int]:
-    if not lot_ids:
-        return []
-    return list(
-        ActeMedical.objects.filter(
-            lot_memberships__lot_id__in=lot_ids,
-        )
-        .values_list("pk", flat=True)
-        .distinct()
-    )
+    return SearchService.acte_ids_from_lot_params(lot_ids)
+
+
+def _is_all_zones_ambulance(organisme) -> bool:
+    """Détecte si une structure est une ambulance / SMUR couvrant toutes zones."""
+    return SearchService.is_all_zones_ambulance(organisme)
 
 
 def _session_parcours_acte_ids(request):
@@ -967,43 +940,13 @@ def search(request):
 
     proximity_on = request.GET.get("proximity") == "1" and latlng is not None
 
-    pa_qs = PrestataireActe.objects.filter(
-        is_available=True,
-        organisme__is_active=True,
-        price__gt=0,
-    ).select_related(
-        "organisme",
-        "organisme__type_organisme",
-        "organisme__region",
-        "organisme__subscription_plan",
-        "acte",
-        "acte__service_medical_category",
-    )
+    pa_qs = SearchService.build_base_queryset()
 
+    q_filter = None
     if q:
-        # Résolution des synonymes médicaux / actes doublons pour regrouper sous l'acte canonique
-        from .management.commands.fusionner_actes_doublons import _canonical_key_for_acte
-        q_norm_key = _canonical_key_for_acte(q)
-        
-        # Trouver tous les actes équivalents
-        equiv_acte_ids = []
-        if q_norm_key:
-            for a in ActeMedical.objects.filter(is_active=True, level=3):
-                if _canonical_key_for_acte(a.name) == q_norm_key:
-                    equiv_acte_ids.append(a.pk)
-
-        q_filter = (
-            Q(acte__name__icontains=q)
-            | Q(acte__description__icontains=q)
-            | Q(acte__service_medical_category__name__icontains=q)
-            | Q(organisme__name__icontains=q)
-            | Q(organisme__city__icontains=q)
-        )
-        if equiv_acte_ids:
-            q_filter |= Q(acte_id__in=equiv_acte_ids)
-        if len(q) >= 2:
-            q_filter |= Q(acte__code__icontains=q)
-        pa_qs = pa_qs.filter(q_filter)
+        q_filter, equiv_acte_ids = SearchService.build_search_text_filter(q)
+        if q_filter:
+            pa_qs = pa_qs.filter(q_filter)
 
     # Pilier actif : filtre les résultats seulement en navigation (sans acte/lot explicite).
     if service_id and not acte_ids_clean and not lot_ids_clean:
@@ -1020,76 +963,27 @@ def search(request):
             pa_qs = pa_qs.filter(acte_id__in=acte_ids_clean)
 
     def _apply_level_price_location_filters(qs, apply_city=True):
-        if level in ("1", "2", "3"):
-            qs = qs.filter(acte__level=int(level))
-        
-        # Le filtre de prix compare le prix du régime choisi (comptant par défaut)
-        price_field = "price"
-        if regime_filter == "ipm":
-            price_field = "price_ipm"
-            qs = qs.filter(price_ipm__isnull=False, price_ipm__gt=0)
-        elif regime_filter == "assurance":
-            price_field = "price_assurance"
-            qs = qs.filter(price_assurance__isnull=False, price_assurance__gt=0)
-        else:
-            qs = qs.filter(price__gt=0)
-
-        if price_min is not None:
-            qs = qs.filter(**{f"{price_field}__gte": price_min})
-        if price_max is not None:
-            qs = qs.filter(**{f"{price_field}__lte": price_max})
-        if assurance_ids_int:
-            qs = qs.filter(
-                organisme__prises_en_charge__assurance_id__in=assurance_ids_int,
-                organisme__prises_en_charge__is_active=True,
-            ).distinct()
-        if apply_city and city:
-            clean_city = city.strip()
-            if clean_city.lower() in ("dakar (tous)", "dakar"):
-                qs = qs.filter(
-                    Q(organisme__city__iexact="Dakar")
-                    | Q(organisme__region__slug="dakar")
-                    | Q(organisme__region__isnull=True)
-                )
-            else:
-                qs = qs.filter(
-                    Q(organisme__city__icontains=clean_city)
-                    | Q(organisme__quartier__icontains=clean_city)
-                    | Q(organisme__address__icontains=clean_city)
-                    | Q(organisme__quartier__icontains="toutes zones")
-                    | Q(organisme__address__icontains="toutes zones")
-                )
-        if type_ids:
-            qs = qs.filter(organisme__type_organisme_id__in=type_ids)
-        if region_ids:
-            reg_q = Q(organisme__region_id__in=region_ids)
-            dakar_pks = list(Region.objects.filter(slug__iexact="dakar").values_list("pk", flat=True))
-            if any(str(rpk) in [str(x) for x in region_ids] for rpk in dakar_pks):
-                reg_q |= Q(
-                    organisme__region__isnull=True,
-                    organisme__city__iexact="Dakar",
-                ) | Q(
-                    organisme__region__isnull=True,
-                    organisme__address__icontains="Dakar",
-                )
-            qs = qs.filter(reg_q)
-        if delai_filter:
-            better_or_equal = [
-                k for k in valid_delais
-                if PrestataireActe.DELAI_RANK.get(k, 99)
-                <= PrestataireActe.DELAI_RANK.get(delai_filter, 99)
-            ]
-            qs = qs.filter(delai__in=better_or_equal)
-        if domicile_filter:
-            qs = qs.filter(organisme__prises_sang_domicile=True)
-        return qs
+        return SearchService.apply_level_price_location_filters(
+            qs,
+            level=level,
+            regime_filter=regime_filter,
+            price_min=price_min,
+            price_max=price_max,
+            assurance_ids=assurance_ids_int,
+            city=city,
+            apply_city=apply_city,
+            type_ids=type_ids,
+            region_ids=region_ids,
+            delai_filter=delai_filter,
+            domicile_filter=domicile_filter,
+        )
 
     pa_qs_before_zone = _apply_level_price_location_filters(pa_qs, apply_city=False)
     pa_qs = _apply_level_price_location_filters(pa_qs, apply_city=True)
     pa_qs_before_acte = _apply_level_price_location_filters(pa_qs_before_acte, apply_city=True)
 
-    pa_qs = _annotate_delai_sort(pa_qs)
-    pa_qs_before_acte = _annotate_delai_sort(pa_qs_before_acte)
+    pa_qs = SearchService.annotate_delai_sort(pa_qs)
+    pa_qs_before_acte = SearchService.annotate_delai_sort(pa_qs_before_acte)
 
     # Layout démo : sans acte/lot/service coché ni recherche texte → aucune offre (état vide par défaut).
     if not acte_ids_clean and not lot_ids_clean and not q and not service_id:
@@ -1100,7 +994,7 @@ def search(request):
         is_available=True,
         organisme__is_active=True,
     )
-    if q:
+    if q and q_filter:
         pa_qs_nav = pa_qs_nav.filter(q_filter)
     pa_qs_nav = _apply_level_price_location_filters(pa_qs_nav)
 
@@ -1108,147 +1002,16 @@ def search(request):
 
     per_page = 24
 
-    def _is_all_zones_ambulance(organisme) -> bool:
-        """Détecte si une structure est une ambulance / SMUR couvrant toutes zones."""
-        t_slug = (organisme.type_organisme.slug or "").lower() if organisme.type_organisme else ""
-        t_name = (organisme.type_organisme.name or "").lower() if organisme.type_organisme else ""
-        o_name = (organisme.name or "").lower()
-        return "ambulance" in t_slug or "ambulance" in t_name or "ambulance" in o_name
-
-    if proximity_on and latlng:
-        lat0, lng0 = latlng
-        scored_geo = []
-        unscored_geo = []
-        for pa in pa_qs:
-            org = pa.organisme
-            is_global_ambulance = _is_all_zones_ambulance(org)
-
-            if org.latitude is not None and org.longitude is not None:
-                d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
-                if d <= radius_km or is_global_ambulance:
-                    pa.distance_km = round(d, 1)
-                    scored_geo.append(pa)
-                # Structure avec coordonnées mais hors rayon : exclue de la recherche de proximité
-            else:
-                # Structure sans latitude/longitude : jamais écartée, placée en dernier
-                pa.distance_km = None
-                unscored_geo.append(pa)
-
-        # Tri des résultats géocodés dans le rayon
-        if sort == "price_asc":
-            scored_geo.sort(key=lambda x: (x.distance_km, x.price, x.acte.name))
-            unscored_geo.sort(key=lambda x: (x.price, x.acte.name))
-        elif sort == "price_desc":
-            scored_geo.sort(key=lambda x: (x.distance_km, -x.price, x.acte.name))
-            unscored_geo.sort(key=lambda x: (-x.price, x.acte.name))
-        elif sort == "delai_asc":
-            scored_geo.sort(
-                key=lambda x: (
-                    x.distance_km,
-                    getattr(x, "_delai_sort", 99),
-                    x.price,
-                    x.acte.name,
-                )
-            )
-            unscored_geo.sort(
-                key=lambda x: (
-                    getattr(x, "_delai_sort", 99),
-                    x.price,
-                    x.acte.name,
-                )
-            )
-        elif sort == "delai_desc":
-            scored_geo.sort(
-                key=lambda x: (
-                    x.distance_km,
-                    -getattr(x, "_delai_sort", 99),
-                    x.price,
-                    x.acte.name,
-                )
-            )
-            unscored_geo.sort(
-                key=lambda x: (
-                    -getattr(x, "_delai_sort", 99),
-                    x.price,
-                    x.acte.name,
-                )
-            )
-        else:
-            scored_geo.sort(key=lambda x: (x.distance_km, x.price))
-            unscored_geo.sort(key=lambda x: x.price)
-
-        scored = scored_geo + unscored_geo
-        results_count = len(scored)
-        paginator = Paginator(scored, per_page)
-        page = paginator.get_page(request.GET.get("page"))
-    elif latlng and sort == "distance":
-        lat0, lng0 = latlng
-        scored_geo = []
-        unscored_geo = []
-        for pa in pa_qs:
-            org = pa.organisme
-            if org.latitude is not None and org.longitude is not None:
-                d = haversine_km(lat0, lng0, float(org.latitude), float(org.longitude))
-                pa.distance_km = round(d, 1)
-                scored_geo.append(pa)
-            else:
-                pa.distance_km = None
-                unscored_geo.append(pa)
-        scored_geo.sort(key=lambda x: (x.distance_km, x.price))
-        unscored_geo.sort(key=lambda x: x.price)
-        scored = scored_geo + unscored_geo
-        results_count = len(scored)
-        paginator = Paginator(scored, per_page)
-        page = paginator.get_page(request.GET.get("page"))
-    else:
-        if sort == "price_desc":
-            pa_qs = pa_qs.order_by("-price", "acte__name", "organisme__name")
-        elif sort == "popular":
-            pa_qs = pa_qs.order_by("-organisme__profile_views_count", "price", "acte__name")
-        elif sort == "recent_pa":
-            pa_qs = pa_qs.order_by("-updated_at", "acte__name")
-        elif sort == "name_org":
-            pa_qs = pa_qs.order_by("organisme__name", "acte__name", "price")
-        elif sort == "delai_asc":
-            pa_qs = pa_qs.order_by("_delai_sort", "price", "acte__name", "organisme__name")
-        elif sort == "delai_desc":
-            pa_qs = pa_qs.order_by("-_delai_sort", "price", "acte__name", "organisme__name")
-        elif sort == "delai_rdv_asc":
-            pa_qs = pa_qs.order_by("_delai_sort", "price", "acte__name", "organisme__name")
-        elif sort == "price_ipm_asc":
-            # Tri-tarifs : tarif IPM conventionné croissant (nulls en dernier)
-            from django.db.models import F
-            pa_qs = pa_qs.order_by(
-                F("price_ipm").asc(nulls_last=True), "price", "acte__name", "organisme__name"
-            )
-        elif sort == "price_ipm_desc":
-            from django.db.models import F
-            pa_qs = pa_qs.order_by(
-                F("price_ipm").desc(nulls_last=True), "acte__name", "organisme__name"
-            )
-        elif sort == "price_assurance_asc":
-            # Tri-tarifs : tarif Assurance conventionnée croissant (nulls en dernier)
-            from django.db.models import F
-            pa_qs = pa_qs.order_by(
-                F("price_assurance").asc(nulls_last=True), "price", "acte__name", "organisme__name"
-            )
-        elif sort == "price_assurance_desc":
-            from django.db.models import F
-            pa_qs = pa_qs.order_by(
-                F("price_assurance").desc(nulls_last=True), "acte__name", "organisme__name"
-            )
-        else:
-            # price_asc par défaut (comportement « e-commerce ») adapté au régime
-            from django.db.models import F
-            if regime_filter == "ipm":
-                pa_qs = pa_qs.order_by(F("price_ipm").asc(nulls_last=True), "price", "acte__name", "organisme__name")
-            elif regime_filter == "assurance":
-                pa_qs = pa_qs.order_by(F("price_assurance").asc(nulls_last=True), "price", "acte__name", "organisme__name")
-            else:
-                pa_qs = pa_qs.order_by("price", "acte__name", "organisme__name")
-        results_count = pa_qs.count()
-        paginator = Paginator(pa_qs, per_page)
-        page = paginator.get_page(request.GET.get("page"))
+    scored_or_qs, results_count = SearchService.filter_and_sort_offers(
+        pa_qs,
+        sort=sort,
+        regime_filter=regime_filter,
+        latlng=latlng,
+        proximity_on=proximity_on,
+        radius_km=radius_km,
+    )
+    paginator = Paginator(scored_or_qs, per_page)
+    page = paginator.get_page(request.GET.get("page"))
 
     if request.user.is_authenticated and (
         q
@@ -1302,42 +1065,14 @@ def search(request):
         except Exception:
             pass
 
-    price_stats = PrestataireActe.objects.filter(
-        is_available=True, organisme__is_active=True,
-    ).aggregate(pmin=Min("price"), pmax=Max("price"))
+    price_stats = SearchService.get_global_price_stats()
 
-    def _extract_zone_from_org(org):
-        q = (getattr(org, "quartier", None) or "").strip()
-        if q and q.lower() not in ("none", ""):
-            return q
-        addr = (getattr(org, "address", None) or "").strip()
-        if addr and addr.lower() not in ("none", "", "dakar"):
-            return addr
-        return (getattr(org, "city", None) or "").strip() or "Dakar"
-
-    # Extraction dynamique des zones : adaptées aux structures retournées par la recherche
-    # Si une recherche est en cours (actes, requête texte, ou service sélectionné)
-    if pool_from_request or q or service_id:
-        # Récupérer les structures issues du périmètre de recherche (avant restriction par city)
-        scope_qs = pa_qs_before_zone if "pa_qs_before_zone" in locals() else pa_qs
-        target_org_ids = list(scope_qs.values_list("organisme_id", flat=True).distinct())
-        if target_org_ids:
-            found_orgs = OrganismeDeSante.objects.filter(id__in=target_org_ids)
-            top_cities = sorted({_extract_zone_from_org(o) for o in found_orgs if _extract_zone_from_org(o)})
-        else:
-            top_cities = []
-    else:
-        # Par défaut sans recherche : toutes les zones uniques de toutes les structures proposant des actes actifs
-        all_active_org_ids = list(
-            PrestataireActe.objects.filter(is_available=True, organisme__is_active=True)
-            .values_list("organisme_id", flat=True)
-            .distinct()
-        )
-        if all_active_org_ids:
-            all_found_orgs = OrganismeDeSante.objects.filter(id__in=all_active_org_ids)
-            top_cities = sorted({_extract_zone_from_org(o) for o in all_found_orgs if _extract_zone_from_org(o)})
-        else:
-            top_cities = []
+    top_cities = SearchService.extract_top_zones(
+        scope_qs=pa_qs_before_zone,
+        pool_from_request=pool_from_request,
+        q=q,
+        service_id=service_id,
+    )
 
     active_filter_count = sum(
         bool(x)
