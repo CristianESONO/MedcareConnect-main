@@ -1,29 +1,29 @@
 # MedCare Connect
 
-MedCare Connect is a healthcare-services platform for finding medical services and providers, managing patient requests, and supporting healthcare organizations and practitioners.
+MedCare Connect est une plateforme de services de santé qui permet de trouver des services et des professionnels de santé, de gérer les demandes des patients et d’accompagner les établissements et les praticiens.
 
 ## Architecture
 
-- **Django backend** (`backend/`): authentication and sessions, permissions, business rules, API endpoints, Django admin, and pages that have not yet moved to React.
-- **React frontend** (`frontend/`): the responsive single-page application, built with React, TypeScript, Vite, Tailwind CSS, and React Router.
-- **Frontend delivery**: Vite builds the app into `backend/static/react/`. Django serves the React entry point for migrated routes; Django and WhiteNoise/Nginx serve static assets.
-- **Shared assets and data**: Django static assets live in `backend/static/`; uploaded media lives in `media/`; project and catalogue reference material lives in `documents/`.
-- **Deployment**: production can run Django/Gunicorn behind a system Nginx, or use the provided Dockerfile and Docker Compose configuration.
+- **Backend Django** (`backend/`) : authentification et sessions, autorisations, règles métier, points de terminaison d’API, interface d’administration Django et pages qui n’ont pas encore été migrées vers React.
+- **Frontend React** (`frontend/`) : application monopage adaptative, développée avec React, TypeScript, Vite, Tailwind CSS et React Router.
+- **Déploiement du frontend** : Vite génère l’application dans `backend/static/react/`. Django sert le point d’entrée React pour les routes migrées ; Django et WhiteNoise/Nginx servent les ressources statiques.
+- **Ressources et données partagées** : les ressources statiques de Django se trouvent dans `backend/static/`, les fichiers téléversés dans `media/` et la documentation de référence du projet et du catalogue dans `documents/`.
+- **Déploiement** : en production, Django/Gunicorn peut être exécuté derrière Nginx installé sur le système, ou via le Dockerfile et la configuration Docker Compose fournis.
 
-React does not replace Django's authentication or business logic. The browser uses Django's APIs and session cookies; some unmigrated routes still use Django templates.
+React ne remplace ni l’authentification ni la logique métier de Django. Le navigateur utilise les API de Django et les cookies de session ; certaines routes qui n’ont pas encore été migrées utilisent toujours les modèles Django.
 
-## Requirements
+## Prérequis
 
-- Python 3.12 (the Docker image uses Python 3.12)
-- Node.js 22.12 or newer and npm (the Docker build uses Node.js 22)
+- Python 3.12 (l’image Docker utilise Python 3.12)
+- Node.js 22.12 ou version ultérieure et npm (la compilation Docker utilise Node.js 22)
 - Git
-- SQLite for local development, or PostgreSQL for production
+- SQLite pour le développement local ou PostgreSQL pour la production
 
-## Local development
+## Développement local
 
-Run these commands from the repository root.
+Exécutez ces commandes depuis la racine du dépôt.
 
-### 1. Set up Django
+### 1. Configurer Django
 
 **Windows PowerShell**
 
@@ -45,20 +45,20 @@ python backend/manage.py migrate
 python backend/manage.py runserver
 ```
 
-Django listens at `http://127.0.0.1:8000`.
+Django est accessible à l’adresse `http://127.0.0.1:8000`.
 
-### 2. Run React in development mode
+### 2. Lancer React en mode développement
 
-In a second terminal:
+Dans un deuxième terminal :
 
 ```bash
 npm ci --prefix frontend
 npm run dev --prefix frontend
 ```
 
-Open `http://localhost:5173`. Vite proxies backend routes and APIs to Django on port 8000.
+Ouvrez `http://localhost:5173`. Vite redirige les routes du backend et les API vers Django sur le port 8000.
 
-### 3. Build React for Django
+### 3. Compiler React pour Django
 
 ```bash
 npm ci --prefix frontend
@@ -66,13 +66,13 @@ npm run build --prefix frontend
 python backend/manage.py collectstatic --noinput
 ```
 
-The compiled entry point should exist at `backend/static/react/index.html`; Vite assets are placed alongside it. Django collects production assets into `staticfiles/`.
+Le point d’entrée compilé doit se trouver dans `backend/static/react/index.html` ; les ressources de Vite sont générées à côté. Django rassemble les ressources de production dans `staticfiles/`.
 
 ## Configuration
 
-Django reads environment variables from the repository-root `.env` file when they are not already set by the process manager. Do not commit `.env` or put production credentials in source control.
+Django lit les variables d’environnement dans le fichier `.env` à la racine du dépôt si elles n’ont pas déjà été définies par le gestionnaire de processus. Ne validez pas le fichier `.env` et ne stockez pas d’identifiants de production dans le dépôt.
 
-For production, configure at least:
+En production, configurez au minimum :
 
 ```dotenv
 DEBUG=False
@@ -83,15 +83,15 @@ HTTPS_ENABLED=True
 TRUST_PROXY_HEADERS=True
 ```
 
-Generate a secret locally on the server:
+Générez localement un secret sur le serveur :
 
 ```bash
 python -c 'import secrets; print(secrets.token_urlsafe(64))'
 ```
 
-By default, Django uses SQLite at the repository root. To use PostgreSQL, set `DATABASE_URL` to a value beginning with `postgres` and configure `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, and `POSTGRES_PORT`. Keep production environment files readable only by the service account.
+Par défaut, Django utilise SQLite à la racine du dépôt. Pour utiliser PostgreSQL, définissez `DATABASE_URL` avec une valeur commençant par `postgres`, puis configurez `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST` et `POSTGRES_PORT`. Assurez-vous que seuls les comptes nécessaires au service peuvent lire les fichiers d’environnement de production.
 
-## Tests and checks
+## Tests et vérifications
 
 ```bash
 python backend/manage.py check
@@ -100,11 +100,11 @@ npm run build --prefix frontend
 npm run lint --prefix frontend
 ```
 
-Optional browser/QA dependencies are listed in `backend/requirements-dev.txt`.
+Les dépendances facultatives pour les tests de navigateur et l’assurance qualité sont répertoriées dans `backend/requirements-dev.txt`.
 
-## Production deployment
+## Déploiement en production
 
-For a systemd/Gunicorn server, update the code, build React, and then run the deployment script:
+Sur un serveur utilisant systemd/Gunicorn, mettez le code à jour, compilez React, puis exécutez le script de déploiement :
 
 ```bash
 cd /usr/local/etc/MedcareConnect
@@ -114,9 +114,9 @@ npm run build --prefix frontend
 bash backend/scripts/deploy_server_update.sh
 ```
 
-The script installs Python requirements, applies migrations, collects static files, synchronizes the reference service catalogue, and restarts the `medcareconnect` systemd service. Build React before running it so the deployed Django app has the matching frontend bundle.
+Le script installe les dépendances Python, applique les migrations, collecte les fichiers statiques, synchronise le catalogue de services de référence et redémarre le service systemd `medcareconnect`. Compilez React avant de l’exécuter afin que l’application Django déployée utilise la version correspondante du frontend.
 
-Because the Django project package is under `backend/`, a systemd unit should use that directory as its working directory. For example, a drop-in for `/usr/local/etc/MedcareConnect` can contain:
+Comme le paquet du projet Django se trouve dans `backend/`, l’unité systemd doit utiliser ce répertoire comme répertoire de travail. Par exemple, un fichier de surcharge pour `/usr/local/etc/MedcareConnect` peut contenir :
 
 ```ini
 [Service]
@@ -124,22 +124,22 @@ WorkingDirectory=/usr/local/etc/MedcareConnect/backend
 Environment="PYTHONPATH=/usr/local/etc/MedcareConnect/backend"
 ```
 
-After changing a unit or drop-in, run `systemctl daemon-reload` and restart the service. Configure Nginx to proxy application routes to Gunicorn and serve `/static/` from the directory in `STATIC_ROOT` (`staticfiles/`). Keep the HTTPS and forwarded-proxy headers configured for the production domain.
+Après avoir modifié une unité ou un fichier de surcharge, exécutez `systemctl daemon-reload`, puis redémarrez le service. Configurez Nginx pour qu’il redirige les routes de l’application vers Gunicorn et serve `/static/` depuis le répertoire indiqué par `STATIC_ROOT` (`staticfiles/`). Veillez à configurer HTTPS et les en-têtes de proxy transférés pour le domaine de production.
 
-For Docker:
+Avec Docker :
 
 ```bash
 docker compose up -d --build
 ```
 
-Docker builds the React bundle as part of the `Dockerfile` and collects static assets when the web container starts. Configure the environment file expected by `docker-compose.yml` before starting the stack.
+Docker compile React dans le cadre du Dockerfile et collecte les ressources statiques au démarrage du conteneur web. Configurez le fichier d’environnement attendu par `docker-compose.yml` avant de démarrer l’ensemble des services.
 
-## Repository layout
+## Organisation du dépôt
 
 ```text
-backend/       Django project, apps, migrations, tests, scripts, and Django static assets
-frontend/      React + TypeScript SPA and Vite configuration
-nginx/         Nginx configuration for the Docker deployment
-documents/     Reference documents and project material
-media/         User-uploaded files
+backend/       Projet Django, applications, migrations, tests, scripts et ressources statiques Django
+frontend/      Application monopage React + TypeScript et configuration Vite
+nginx/         Configuration Nginx pour le déploiement Docker
+documents/     Documents de référence et documentation du projet
+media/         Fichiers téléversés par les utilisateurs
 ```
