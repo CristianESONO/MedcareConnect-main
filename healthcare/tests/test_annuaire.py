@@ -2,7 +2,11 @@
 
 from django.test import Client, RequestFactory, TestCase
 
-from healthcare.annuaire import build_annuaire_context, organisme_category_key
+from healthcare.annuaire import (
+    _delai_label_from_rank,
+    build_annuaire_context,
+    organisme_category_key,
+)
 from healthcare.models import OrganismeDeSante, SubscriptionPlan, TypeOrganisme
 from users.models import User
 
@@ -44,7 +48,7 @@ class AnnuaireTests(TestCase):
         )
 
     def test_annuaire_page_renders(self):
-        client = Client(HTTP_HOST="app.medcare.sn")
+        client = Client()
         response = client.get("/sante/annuaire/", follow=True)
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
@@ -52,7 +56,7 @@ class AnnuaireTests(TestCase):
         self.assertIn("ann-filter-chip", html)
 
     def test_centres_redirects_to_annuaire(self):
-        client = Client(HTTP_HOST="app.medcare.sn")
+        client = Client()
         response = client.get("/sante/centres/?q=test", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn("/sante/annuaire", response.request["PATH_INFO"])
@@ -61,10 +65,16 @@ class AnnuaireTests(TestCase):
     def test_annuaire_filter_by_type_category(self):
         rf = RequestFactory()
         req = rf.get("/sante/annuaire/", {"type_cat": "labo"})
+        req.session = {}
         ctx = build_annuaire_context(req)
         names = [row["org"].name for row in ctx["rows"]]
         self.assertIn("Labo Test", names)
         self.assertNotIn("Imagerie Test", names)
+
+    def test_unspecified_appointment_delay_is_not_labeled_as_rdv(self):
+        self.assertEqual(_delai_label_from_rank(None), "Non précisé")
+        self.assertEqual(_delai_label_from_rank(99), "Non précisé")
+        self.assertEqual(_delai_label_from_rank(9), "Sur rendez-vous")
 
 
 def test_organisme_category_key_labo():

@@ -78,6 +78,25 @@ class ThreadBookingWhenRdvLiveTest(TestCase):
         self.assertEqual(r.status_code, 302)
         self.assertEqual(r.url, reverse("messaging:conversation_detail", args=[self.conv.pk]))
 
+    def test_patient_thread_back_link_returns_to_inbox(self):
+        url = reverse("messaging:conversation_detail", args=[self.conv.pk])
+        response = self.client.get(url)
+
+        self.assertContains(
+            response,
+            f'<a href="{reverse("messaging:inbox")}" class="pac-head-back-btn" aria-label="Retour">',
+            html=False,
+        )
+
+    def test_patient_thread_does_not_repeat_conversation_header(self):
+        url = reverse("messaging:conversation_detail", args=[self.conv.pk])
+        response = self.client.get(url)
+
+        self.assertEqual(
+            response.content.decode().count("Secrétariat de Clinique Msg QA"),
+            1,
+        )
+
     def test_prestataire_can_send_attachment_in_conversation(self):
         self.client.force_login(self.prest)
         url = reverse("messaging:conversation_detail", args=[self.conv.pk])
@@ -102,3 +121,15 @@ class ThreadBookingWhenRdvLiveTest(TestCase):
         attachment_msg = self.conv.messages.filter(sender=self.prest).latest("timestamp")
         self.assertTrue(attachment_msg.attachment)
         self.assertTrue(attachment_msg.attachment.name.endswith("report.pdf") or "report" in attachment_msg.attachment.name)
+
+    def test_patient_can_send_message_in_live_rdv_conversation(self):
+        url = reverse("messaging:conversation_detail", args=[self.conv.pk])
+        response = self.client.post(url, {"content": "Pouvez-vous confirmer l'heure ?"})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            self.conv.messages.filter(
+                sender=self.patient,
+                content="Pouvez-vous confirmer l'heure ?",
+            ).exists()
+        )

@@ -663,6 +663,10 @@
     scrollbar-width: none;
   }
 
+  body.sipn-prestations .tokenized-input-container > .token-tag {
+    display: none !important;
+  }
+
   body.sipn-prestations .sel-pills-m::-webkit-scrollbar {
     display: none;
   }

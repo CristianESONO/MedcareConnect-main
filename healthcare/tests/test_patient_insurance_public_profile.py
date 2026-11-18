@@ -29,7 +29,7 @@ class PatientInsurancePublicProfileTests(TestCase):
         self.acte = ActeMedical.objects.create(
             name="Consultation générale",
             service_medical_category=self.svc,
-            level=1,
+            level=3,
         )
 
         self.assurance_axa = Assurance.objects.create(

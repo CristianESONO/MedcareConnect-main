@@ -343,10 +343,10 @@ def conversation_detail(request, pk):
         return redirect("messaging:inbox")
 
     conv_url = reverse("messaging:conversation_detail", args=[conv.pk])
+    live_rdv = _live_rdv_for_conv(conv)
     if request.user == conv.patient:
         from appointments.models import RendezVous
 
-        live_rdv = _live_rdv_for_conv(conv)
         if request.GET.get("book") and live_rdv:
             return redirect(conv_url)
         if request.GET.get("reschedule") and (
@@ -374,7 +374,11 @@ def conversation_detail(request, pk):
                 )
         elif content:
             if request.user == conv.patient:
-                if conv.kind == Conversation.KIND_GENERAL or not conv.devis_part_id:
+                if (
+                    conv.kind == Conversation.KIND_GENERAL
+                    or not conv.devis_part_id
+                    or live_rdv
+                ):
                     thread_svc.append_patient(conv, content)
                 else:
                     django_messages.warning(

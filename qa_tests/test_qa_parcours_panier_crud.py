@@ -57,7 +57,8 @@ def test_liste_devis_patient(client, patient_user, cart_avec_ligne):
     devis = Devis.objects.get(patient=patient_user)
     r2 = client.get(reverse("users:patient_panel_tab", kwargs={"tab": "devis"}))
     assert r2.status_code == 200
-    assert devis.reference.encode() in r2.content
+    displayed_reference = devis.parts.first().reference
+    assert displayed_reference.encode() in r2.content
 
 
 @pytest.mark.django_db

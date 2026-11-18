@@ -15,6 +15,73 @@
     if (!modal) return;
 
     const endpointUrl = '/sante/api/ai-agent/';
+    let dragState = null;
+    let suppressFabClick = false;
+
+    function clampFabPosition(left, top) {
+      if (!fabBtn) return { left, top };
+      return {
+        left: Math.max(0, Math.min(left, window.innerWidth - fabBtn.offsetWidth)),
+        top: Math.max(0, Math.min(top, window.innerHeight - fabBtn.offsetHeight)),
+      };
+    }
+
+    function placeFab(left, top) {
+      if (!fabBtn) return;
+      const position = clampFabPosition(left, top);
+      fabBtn.style.left = `${position.left}px`;
+      fabBtn.style.top = `${position.top}px`;
+      fabBtn.style.right = 'auto';
+      fabBtn.style.bottom = 'auto';
+    }
+
+    if (fabBtn) {
+      fabBtn.addEventListener('pointerdown', function (event) {
+        if (event.button !== 0) return;
+        const rect = fabBtn.getBoundingClientRect();
+        dragState = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          left: rect.left,
+          top: rect.top,
+          moved: false,
+        };
+        fabBtn.setPointerCapture(event.pointerId);
+      });
+
+      fabBtn.addEventListener('pointermove', function (event) {
+        if (!dragState || dragState.pointerId !== event.pointerId) return;
+        const deltaX = event.clientX - dragState.startX;
+        const deltaY = event.clientY - dragState.startY;
+        if (!dragState.moved && Math.hypot(deltaX, deltaY) < 6) return;
+
+        dragState.moved = true;
+        fabBtn.classList.add('is-dragging');
+        placeFab(dragState.left + deltaX, dragState.top + deltaY);
+        event.preventDefault();
+      });
+
+      function finishFabDrag(event) {
+        if (!dragState || dragState.pointerId !== event.pointerId) return;
+        if (dragState.moved) {
+          suppressFabClick = true;
+          fabBtn.classList.remove('is-dragging');
+          setTimeout(() => { suppressFabClick = false; }, 0);
+        }
+        dragState = null;
+      }
+
+      fabBtn.addEventListener('pointerup', finishFabDrag);
+      fabBtn.addEventListener('pointercancel', finishFabDrag);
+
+      window.addEventListener('resize', function () {
+        if (fabBtn.style.left && fabBtn.style.top) {
+          const rect = fabBtn.getBoundingClientRect();
+          placeFab(rect.left, rect.top);
+        }
+      });
+    }
 
     function openModal() {
       modal.removeAttribute('hidden');
@@ -148,6 +215,7 @@
       const fab = target.closest('#mcAiFab, .mc-fab-ai');
       if (fab) {
         e.preventDefault();
+        if (suppressFabClick) return;
         toggleModal();
         return;
       }

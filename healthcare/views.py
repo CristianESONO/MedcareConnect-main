@@ -1560,6 +1560,14 @@ def search(request):
                     "total_actes": mobile_results_acte_total,
                     "missing_actes": missing_actes,
                     "insurance_names": ins_names_by_org.get(oid, []),
+                    "distance_km": min(
+                        (
+                            getattr(pa, "distance_km", None)
+                            for pa in block["items"]
+                            if getattr(pa, "distance_km", None) is not None
+                        ),
+                        default=None,
+                    ),
                     "is_pioneer": bool(
                         plan and getattr(plan, "is_pioneer_offer", False)
                     ),

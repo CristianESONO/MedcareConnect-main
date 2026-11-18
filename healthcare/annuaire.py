@@ -100,7 +100,7 @@ def _delai_rank_case():
 
 def _delai_label_from_rank(rank: int | None) -> str:
     if rank is None or rank >= 99:
-        return "Sur rendez-vous"
+        return "Non précisé"
     if rank <= 0:
         return "Immédiat"
     if rank <= 1:

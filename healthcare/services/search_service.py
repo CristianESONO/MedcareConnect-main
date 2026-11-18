@@ -195,7 +195,6 @@ class SearchService:
                 qs = qs.filter(
                     Q(organisme__city__iexact="Dakar")
                     | Q(organisme__region__slug="dakar")
-                    | Q(organisme__region__isnull=True)
                 )
             else:
                 qs = qs.filter(

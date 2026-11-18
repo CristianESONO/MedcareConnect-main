@@ -45,6 +45,7 @@ class DevisPerActeTest(TestCase):
             address="Dakar",
             subscription_plan=self.plan,
             is_active=True,
+            is_verified=True,
         )
         self.org_b = OrganismeDeSante.objects.create(
             user=self.prest_b,
@@ -52,17 +53,18 @@ class DevisPerActeTest(TestCase):
             address="Thiès",
             subscription_plan=self.plan,
             is_active=True,
+            is_verified=True,
         )
         svc = ServiceMedical.objects.create(name="Svc multipart")
         self.acte1 = ActeMedical.objects.create(
             name="Acte 1 multipart",
             service_medical_category=svc,
-            level=2,
+            level=3,
         )
         self.acte2 = ActeMedical.objects.create(
             name="Acte 2 multipart",
             service_medical_category=svc,
-            level=2,
+            level=3,
         )
         self.pa_a = PrestataireActe.objects.create(
             organisme=self.org_a,
@@ -138,7 +140,7 @@ class DevisPerActeTest(TestCase):
         acte3 = ActeMedical.objects.create(
             name="Acte 3 même structure",
             service_medical_category=self.acte1.service_medical_category,
-            level=2,
+            level=3,
         )
         pa_a2 = PrestataireActe.objects.create(
             organisme=self.org_a,

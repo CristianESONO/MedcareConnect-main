@@ -1,6 +1,7 @@
 """Types de structure et piliers — alignement DEMO_STRUCTURES.html."""
 
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from django.test import TestCase
 
@@ -13,8 +14,15 @@ from healthcare.models import TypeOrganisme
 from healthcare.prestataire_catalogue import applicable_pilier_slugs, merge_catalog_blocks
 
 
-def _org_with_type(type_row: TypeOrganisme):
-    return SimpleNamespace(type_organisme_id=type_row.pk, type_organisme=type_row)
+def _org_with_type(type_row: TypeOrganisme, selected_pilier_slugs=()):
+    piliers_actifs = Mock()
+    piliers_actifs.exists.return_value = bool(selected_pilier_slugs)
+    piliers_actifs.values_list.return_value = list(selected_pilier_slugs)
+    return SimpleNamespace(
+        type_organisme_id=type_row.pk,
+        type_organisme=type_row,
+        piliers_actifs=piliers_actifs,
+    )
 
 
 class StructureTypesDemoTests(TestCase):
@@ -43,11 +51,11 @@ class StructureTypesDemoTests(TestCase):
         self.assertNotIn("soins-dentaires", slugs)
 
     def test_applicable_pilier_slugs_for_org_labo(self):
-        org = _org_with_type(self.type_labo)
+        org = _org_with_type(self.type_labo, {"biologie-medicale"})
         self.assertEqual(applicable_pilier_slugs(org), {"biologie-medicale"})
 
     def test_merge_catalog_marks_non_applicable_piliers(self):
-        org = _org_with_type(self.type_labo)
+        org = _org_with_type(self.type_labo, {"biologie-medicale"})
         blocks = merge_catalog_blocks([], org)
         self.assertEqual(len(blocks), 6)
         bio = next(b for b in blocks if b["pilier"].slug == "biologie-medicale")
@@ -56,7 +64,17 @@ class StructureTypesDemoTests(TestCase):
         self.assertFalse(img["applicable"])
 
     def test_merge_catalog_official_pilier_order(self):
-        org = _org_with_type(self.type_hopital)
+        org = _org_with_type(
+            self.type_hopital,
+            {
+                "biologie-medicale",
+                "imagerie-medicale",
+                "explorations-fonctionnelles",
+                "ambulance-medicalisee",
+                "soins-specialises",
+                "soins-dentaires",
+            },
+        )
         blocks = merge_catalog_blocks([], org)
         slugs = [b["pilier"].slug for b in blocks]
         self.assertEqual(

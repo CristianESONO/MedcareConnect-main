@@ -43,7 +43,11 @@
       <div class="pac-rdv-struct">{{ rdv.organisme.name }}</div>
       <div class="pac-rdv-slot">{{ rdv.start|date:"l j F · H\hi" }}</div>
     </div>
+    {% if rdv.status == 'confirmed' %}
     <span class="pac-badge pac-badge--ok">Confirmé</span>
+    {% else %}
+    <span class="pac-badge pac-badge--wait">En attente</span>
+    {% endif %}
   </div>
   {% if rdv.thread_url %}
   <div class="pac-rdv-actions">

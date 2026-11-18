@@ -44,7 +44,7 @@ class EnsureDevisPartsBackfillTest(TestCase):
         self.acte = ActeMedical.objects.create(
             name="Acte BF",
             service_medical_category=svc,
-            level=2,
+            level=3,
         )
         self.pa = PrestataireActe.objects.create(
             organisme=self.org,

@@ -1,5 +1,7 @@
 """RDV patient — réservation, annulation, report de créneau."""
 
+from datetime import timedelta
+
 import pytest
 from django.urls import reverse
 from django.utils import timezone
@@ -86,3 +88,27 @@ def test_patient_reporte_rdv_demande(client, patient_user, devis_part_patient):
     assert r.status_code in (200, 302)
     rdv.refresh_from_db()
     assert rdv.start.isoformat()[:16] == timezone.datetime.fromisoformat(slot2).isoformat()[:16]
+
+
+@pytest.mark.django_db
+def test_tableau_de_bord_indique_un_rdv_en_attente(client, patient_user, devis_part_patient):
+    part = devis_part_patient
+    RendezVous.objects.create(
+        patient=patient_user,
+        organisme=part.organisme,
+        devis=part.devis,
+        devis_part=part,
+        start=timezone.now() + timedelta(days=1),
+        status=RendezVous.STATUS_REQUESTED,
+        total_brut=part.total_brut,
+        total_patient=part.total_patient,
+    )
+
+    client.force_login(patient_user)
+    response = client.get(
+        reverse("users:patient_panel_tab", kwargs={"tab": "accueil"})
+    )
+
+    assert response.status_code == 200
+    assert b"En attente" in response.content
+    assert b"Confirm\xc3\xa9" not in response.content

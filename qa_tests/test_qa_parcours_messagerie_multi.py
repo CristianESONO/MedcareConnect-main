@@ -42,8 +42,8 @@ def cart_deux_structures(db, patient_user, subscription_plan):
         is_verified=True,
     )
     svc = ServiceMedical.objects.create(name="Svc QA multi")
-    acte_a = ActeMedical.objects.create(name="Acte QA A", service_medical_category=svc, level=2)
-    acte_b = ActeMedical.objects.create(name="Acte QA B", service_medical_category=svc, level=2)
+    acte_a = ActeMedical.objects.create(name="Acte QA A", service_medical_category=svc, level=3)
+    acte_b = ActeMedical.objects.create(name="Acte QA B", service_medical_category=svc, level=3)
     pa_a = PrestataireActe.objects.create(organisme=org_a, acte=acte_a, price=5000)
     pa_b = PrestataireActe.objects.create(organisme=org_b, acte=acte_b, price=8000)
     cart = Cart.objects.create(patient=patient_user, status="active")

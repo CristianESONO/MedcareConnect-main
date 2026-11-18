@@ -11,11 +11,11 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #16a34a 0%, #064e3b 100%);
+  background: linear-gradient(135deg, var(--mc-accent, #4fa3c7) 0%, var(--mc-navy, #123a63) 100%);
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+  box-shadow: 0 8px 24px rgba(18, 58, 99, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,14 +24,25 @@
 }
 .mc-fab-ai:hover {
   transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 12px 32px rgba(22, 163, 74, 0.55);
+  box-shadow: 0 12px 32px rgba(18, 58, 99, 0.45);
+}
+.mc-fab-ai.is-dragging {
+  cursor: grabbing;
+  transition: none;
+  transform: none;
+  touch-action: none;
+  user-select: none;
+}
+.mc-fab-ai {
+  touch-action: none;
+  user-select: none;
 }
 .mc-fab-ai-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #4ade80;
-  color: #052e16;
+  background: var(--mc-navy, #123a63);
+  color: #ffffff;
   font-size: 10px;
   font-weight: 800;
   padding: 1px 6px;
@@ -336,21 +347,21 @@
 
 @media (max-width: 768px) {
   .mc-fab-ai {
-    /* Mobile : côté droit, au-dessus de la tab bar, couleur verte */
+    /* Mobile : côté droit, au-dessus de la tab bar */
     left: auto;
     right: 16px;
     bottom: 82px;
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #16a34a 0%, #064e3b 100%);
-    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
+    background: linear-gradient(135deg, var(--mc-accent, #4fa3c7) 0%, var(--mc-navy, #123a63) 100%);
+    box-shadow: 0 6px 20px rgba(18, 58, 99, 0.4);
   }
   .mc-fab-ai:hover {
-    box-shadow: 0 10px 28px rgba(22, 163, 74, 0.6);
+    box-shadow: 0 10px 28px rgba(18, 58, 99, 0.5);
   }
   .mc-fab-ai-badge {
-    background: #4ade80;
-    color: #052e16;
+    background: var(--mc-navy, #123a63);
+    color: #ffffff;
   }
   .mc-fab-ai-tooltip {
     /* Sur mobile : tooltip au-dessus à gauche */

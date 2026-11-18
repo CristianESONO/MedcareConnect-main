@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django import forms
 from django.db.models import Count, Q
 from django_select2.forms import Select2MultipleWidget, Select2Widget

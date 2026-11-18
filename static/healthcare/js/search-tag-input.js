@@ -95,8 +95,8 @@
 
   function syncTagsWithCheckboxes() {
     var acteIds = tags.map(function(t) { return t.dataset.value; });
-    
-    if (tags.length > 0) {
+
+    if (tags.length > 0 && window.innerWidth >= 1024) {
       searchInput.placeholder = '';
     } else {
       searchInput.placeholder = defaultPlaceholder;

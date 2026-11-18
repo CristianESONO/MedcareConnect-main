@@ -20,27 +20,6 @@
   data-intro="Je souhaite modifier mon créneau."
   data-embed="1"
   {% endif %}>
-  <header class="mc-thread-head">
-
-    <div class="mc-thread-av" aria-hidden="true">
-      {% if user == conversation.patient %}
-        {% if org %}{{ org.name|make_list|first|upper }}{% else %}M{% endif %}
-      {% else %}
-        {{ conversation.patient.display_name|make_list|first|upper|default:"P" }}
-      {% endif %}
-    </div>
-    <div class="min-w-0 flex-1">
-      <div class="mc-thread-hn truncate">
-        {% if user == conversation.patient %}
-          {% if org %}Secrétariat de {{ org.name }}{% elif conversation.prestataire.display_name %}{{ conversation.prestataire.display_name }}{% else %}Secrétariat médical{% endif %}
-        {% else %}
-          {{ conversation.patient.display_name }}
-        {% endif %}
-      </div>
-      <div class="mc-thread-hs truncate">{{ conversation.dossier_label }}{% if org and org.city %} · {{ org.city }}{% endif %}</div>
-    </div>
-  </header>
-
   {% if status_banner %}
   <p class="mc-thread-status mc-thread-status--{{ status_banner.class }}">{{ status_banner.text }}</p>
   {% elif org and not thread_timeline and not conversation.devis_part %}

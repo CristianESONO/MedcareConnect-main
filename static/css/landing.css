@@ -1200,68 +1200,6 @@
   transform: translateY(0);
 }
 
-/* FAB Agent IA MedCare */
-.mc-fab-ai {
-  position: fixed;
-  left: 24px;
-  bottom: 24px;
-  z-index: 450;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #16a34a 0%, #064e3b 100%);
-  color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  outline: none;
-}
-
-.mc-fab-ai:hover {
-  transform: scale(1.08) translateY(-2px);
-  box-shadow: 0 12px 32px rgba(22, 163, 74, 0.55);
-}
-
-.mc-fab-ai-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #4ade80;
-  color: #052e16;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 1px 6px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-  letter-spacing: 0.04em;
-}
-
-.mc-fab-ai-tooltip {
-  position: absolute;
-  left: 68px;
-  white-space: nowrap;
-  background: #0f172a;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
-  transform: translateX(-6px);
-}
-
-.mc-fab-ai:hover .mc-fab-ai-tooltip {
-  opacity: 1;
-  transform: translateX(0);
-}
-
 /* Modal / Drawer Chatbot IA */
 .mc-ai-modal {
   position: fixed;
@@ -2072,37 +2010,6 @@
     margin-right: auto;
   }
 
-  /* FAB Agent IA : repositionnement mobile pour ne pas masquer la barre de nav/menu */
-  .mc-fab-ai {
-    left: auto !important;
-    right: 16px !important;
-    bottom: 82px !important;
-    width: 50px !important;
-    height: 50px !important;
-    background: linear-gradient(135deg, #16a34a 0%, #064e3b 100%) !important;
-    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45) !important;
-  }
-
-  .mc-fab-ai:hover {
-    box-shadow: 0 10px 28px rgba(22, 163, 74, 0.6) !important;
-  }
-
-  .mc-fab-ai-badge {
-    background: #4ade80 !important;
-    color: #052e16 !important;
-  }
-
-  .mc-fab-ai-tooltip {
-    left: auto !important;
-    right: 58px !important;
-    top: 50% !important;
-    transform: translateY(-50%) translateX(6px) !important;
-    white-space: nowrap !important;
-  }
-
-  .mc-fab-ai:hover .mc-fab-ai-tooltip {
-    transform: translateY(-50%) translateX(0) !important;
-  }
 }
 
 @media (max-width: 480px) {
