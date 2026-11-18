@@ -39,7 +39,7 @@ echo "==> Fichiers statiques"
 $PY backend/manage.py collectstatic --noinput
 
 echo "==> Référentiel catalogue (piliers / actes)"
-$PY backend/manage.py shell -c "from healthcare.data.catalog_loader import load_pillars_from_docs; load_pillars_from_docs()" || true
+$PY backend/manage.py shell -c "from healthcare.data.catalog_loader import load_pillars_from_docs; load_pillars_from_docs()"
 
 if [[ -n "${MEDCARE_STRUCTURE_RESET_PASSWORD:-}" ]]; then
   echo "==> Mise à jour des mots de passe structures"

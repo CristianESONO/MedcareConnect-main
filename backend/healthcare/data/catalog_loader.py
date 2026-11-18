@@ -7,6 +7,9 @@ from __future__ import annotations
 import hashlib
 from decimal import Decimal
 
+from django.db import transaction
+from django.utils.text import slugify
+
 from healthcare.data.catalog_assurances import ASSURANCES_FROM_DOCS
 from healthcare.data.catalog_pillars import PILLARS_FROM_DOCS
 from healthcare.models import ActeMedical, Assurance, ServiceMedical
@@ -68,21 +71,35 @@ def load_assurances_from_docs() -> dict[str, Assurance]:
     return out
 
 
+@transaction.atomic
 def load_pillars_from_docs() -> None:
     """Crée les 6 piliers, types (niveau 2) et actes (niveau 3)."""
     from healthcare.prestataire_catalogue import reset_catalog_order_cache
 
     reset_catalog_order_cache()
     for pillar in PILLARS_FROM_DOCS:
-        svc, _ = ServiceMedical.objects.update_or_create(
-            name=pillar["name"],
-            defaults={
-                "order": pillar.get("order", 0),
-                "icon": pillar.get("icon") or "",
-                "is_active": True,
-                "description": f"Pilier Medcare — {pillar['name']}",
-            },
-        )
+        pillar_name = pillar["name"]
+        pillar_slug = slugify(pillar_name)
+        service_by_slug = ServiceMedical.objects.filter(slug=pillar_slug).first()
+        service_by_name = ServiceMedical.objects.filter(name=pillar_name).first()
+        if (
+            service_by_slug
+            and service_by_name
+            and service_by_slug.pk != service_by_name.pk
+        ):
+            raise ValueError(
+                f"Conflit de catalogue pour « {pillar_name} » : "
+                f"le nom et le slug « {pillar_slug} » désignent des services différents."
+            )
+
+        svc = service_by_slug or service_by_name or ServiceMedical()
+        svc.name = pillar_name
+        svc.slug = pillar_slug
+        svc.order = pillar.get("order", 0)
+        svc.icon = pillar.get("icon") or ""
+        svc.is_active = True
+        svc.description = f"Pilier Medcare — {pillar_name}"
+        svc.save()
         for type_def in pillar["types"]:
             parent, _ = ActeMedical.objects.update_or_create(
                 name=type_def["name"],

@@ -108,3 +108,21 @@ class CatalogueOrderTests(TestCase):
         if "Drainage kystique / abcès" in names:
             self.assertEqual(names[-1], "Drainage kystique / abcès")
             self.assertEqual(categories[-1], "Imagerie interventionnelle")
+
+
+class CatalogueLoaderIdempotencyTests(TestCase):
+    def test_existing_pillar_slug_with_legacy_name_is_reused(self):
+        service = ServiceMedical.objects.create(
+            name="Biologie Medicale",
+            slug="biologie-medicale",
+            order=6,
+        )
+
+        load_pillars_from_docs()
+
+        service.refresh_from_db()
+        self.assertEqual(service.name, "Biologie médicale")
+        self.assertEqual(
+            ServiceMedical.objects.filter(slug="biologie-medicale").count(),
+            1,
+        )
