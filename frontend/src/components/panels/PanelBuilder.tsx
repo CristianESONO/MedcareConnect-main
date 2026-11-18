@@ -3,56 +3,64 @@ import { Plus, X, Search, Check } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Modal } from '../ui/Modal';
-import { Panel } from '../../lib/api';
-
-interface ActeItem {
-  id: number;
-  nom: string;
-  price: number;
-}
+import { Panel, ProviderPanelAct } from '../../lib/api';
 
 interface PanelBuilderProps {
   open: boolean;
   onClose: () => void;
-  onSave: (data: Omit<Panel, 'id'>) => void;
-  availableActs?: ActeItem[];
+  onSave: (data: Omit<Panel, 'id'>) => Promise<void>;
+  availableActs?: ProviderPanelAct[];
+  initialPanel?: Panel | null;
 }
 
-export function PanelBuilder({ open, onClose, onSave, availableActs = [] }: PanelBuilderProps) {
-  const [nom, setNom] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedActs, setSelectedActs] = useState<ActeItem[]>([]);
+export function PanelBuilder({ open, onClose, onSave, availableActs = [], initialPanel }: PanelBuilderProps) {
+  const [nom, setNom] = useState(() => initialPanel?.nom ?? '');
+  const [description, setDescription] = useState(() => initialPanel?.description ?? '');
+  const [kind, setKind] = useState<'panel' | 'ticket'>(() => initialPanel?.kind ?? 'panel');
+  const [selectedActs, setSelectedActs] = useState<ProviderPanelAct[]>(() => initialPanel?.actes ?? []);
   const [searchQuery, setSearchQuery] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const filteredAvailable = availableActs.filter((a) =>
     a.nom.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const toggleSelectAct = (acte: ActeItem) => {
-    if (selectedActs.some((a) => a.id === acte.id)) {
-      setSelectedActs(selectedActs.filter((a) => a.id !== acte.id));
-    } else {
-      setSelectedActs([...selectedActs, acte]);
-    }
+  const toggleSelectAct = (acte: ProviderPanelAct) => {
+    setSelectedActs((current) => current.some((a) => a.id === acte.id)
+      ? current.filter((a) => a.id !== acte.id)
+      : [...current, acte]);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!nom.trim()) return;
-    onSave({
-      nom: nom.trim(),
-      description: description.trim(),
-      actes: selectedActs,
-    });
-    // Reset
-    setNom('');
-    setDescription('');
-    setSelectedActs([]);
-    onClose();
+    setSaving(true);
+    setError('');
+    try {
+      await onSave({
+        nom: nom.trim(),
+        description: description.trim(),
+        kind,
+        actes: selectedActs,
+      });
+      onClose();
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Impossible d’enregistrer le panel.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <Modal open={open} onClose={onClose} title="Créer un Panel d'Actes" className="max-w-2xl">
       <div className="flex flex-col gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Type</label>
+          <select value={kind} onChange={(event) => setKind(event.target.value as 'panel' | 'ticket')} className="w-full rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm p-3">
+            <option value="panel">Panel d’examens</option>
+            <option value="ticket">Ticket d’acte unique</option>
+          </select>
+        </div>
         <div>
           <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
             Nom du panel *
@@ -132,7 +140,7 @@ export function PanelBuilder({ open, onClose, onSave, availableActs = [] }: Pane
                       : 'hover:bg-gray-50 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-300'
                   }`}
                 >
-                  <span>{acte.nom}</span>
+                  <span>{acte.cat && <span className="mr-1 text-gray-400">{acte.cat} ›</span>}{acte.nom}</span>
                   <div className="flex items-center gap-2">
                     {acte.price > 0 && (
                       <span className="text-gray-400">{acte.price.toLocaleString()} FCFA</span>
@@ -150,12 +158,13 @@ export function PanelBuilder({ open, onClose, onSave, availableActs = [] }: Pane
         </div>
 
         {/* Action Buttons */}
+        {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
         <div className="flex justify-end gap-2 pt-3 border-t border-gray-100 dark:border-gray-700">
           <Button variant="secondary" size="md" onClick={onClose}>
             Annuler
           </Button>
-          <Button size="md" onClick={handleSave} disabled={!nom.trim()}>
-            Créer le panel
+          <Button size="md" onClick={() => void handleSave()} disabled={!nom.trim() || saving}>
+            {saving ? 'Enregistrement…' : initialPanel ? 'Enregistrer' : 'Créer le panel'}
           </Button>
         </div>
       </div>

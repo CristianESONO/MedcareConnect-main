@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:css": "npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css --minify",
-    "watch:css": "npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css --watch"
+    "build:css": "npx @tailwindcss/cli -i ./backend/static/css/input.css -o ./backend/static/css/output.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./backend/static/css/input.css -o ./backend/static/css/output.css --watch"
   },
   "keywords": [],
   "author": "",

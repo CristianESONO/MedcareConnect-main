@@ -17,7 +17,8 @@ export function CartDrawer({ items, onRemoveItem, onClear, onRequestDevis }: Car
   const { t } = useTranslation();
   const { cartOpen, toggleCart } = useAppStore();
 
-  const total = items.reduce((acc, curr) => acc + curr.price, 0);
+  const total = items.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+  const itemCount = items.reduce((count, item) => count + item.quantity, 0);
 
   return (
     <AnimatePresence>
@@ -46,7 +47,7 @@ export function CartDrawer({ items, onRemoveItem, onClear, onRequestDevis }: Car
                   {t('cart.title')}
                 </h3>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-semibold">
-                  {items.length}
+                  {itemCount}
                 </span>
               </div>
               <button

@@ -1,0 +1,219 @@
+.mc-react-register {
+  --blue: #0a5c8a;
+  --green: #14b87a;
+  --teal: #0d9488;
+  --navy: #1a3a6e;
+  --ink: #0f172a;
+  --g600: #475569;
+  --g500: #64748b;
+  --g400: #94a3b8;
+  --g300: #cbd5e1;
+  --g200: #e2e8f0;
+  --g100: #f1f5f9;
+  --g50: #f8fafc;
+  --red: #dc2626;
+}
+
+.mc-react-register .landing-register-sec {
+  max-width: none;
+  padding: 0 18px 70px;
+  margin: 0;
+  scroll-margin-top: 90px;
+}
+
+.mc-react-register .mc-react-form-wrap {
+  max-width: 720px;
+  margin: 30px auto 0;
+  padding: 0;
+}
+
+.mc-react-register .mc-react-form-card {
+  background: #fff;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: 0 10px 34px rgba(15, 23, 42, .07);
+  padding: 34px 38px;
+}
+
+.mc-react-register .mc-react-form-card > h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(20px, 3.2vw, 24px);
+  color: var(--navy);
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.mc-react-register .finalcta__in h3 {
+  color: #fff;
+}
+
+.mc-react-register .mc-react-form-subtitle {
+  text-align: center;
+  color: var(--g500);
+  font-size: 13.5px;
+  margin: 0 0 26px;
+}
+
+.mc-react-register .mc-react-form-card label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--navy);
+  font-weight: 700;
+  margin: 0 0 7px;
+  text-align: left;
+}
+
+.mc-react-register .mc-react-form-card input:not([type="checkbox"]):not([type="file"]) {
+  width: 100%;
+  background: #eaeef6;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+
+.mc-react-register .mc-react-form-card input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(10, 92, 138, .1);
+}
+
+.mc-react-register .mc-react-form-card input::placeholder {
+  color: #9aa6bd;
+}
+
+.mc-react-register .mc-react-form-card .form-input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mc-react-register .mc-react-form-card .form-field {
+  min-width: 0;
+}
+
+.mc-react-register .mc-react-form-card .form-field > label {
+  margin-top: 0;
+}
+
+.mc-react-register .mc-react-form-card .text-red-500 {
+  color: var(--red);
+}
+
+.mc-react-register .mc-react-form-card .mc-form-error {
+  text-align: left;
+}
+
+.mc-react-register .mc-react-submit {
+  width: 100%;
+  margin-top: 22px;
+  background: linear-gradient(90deg, #0a5c8a, #0d9488);
+  color: #fff;
+  border: 0;
+  border-radius: 13px;
+  padding: 15px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.mc-react-register .mc-react-submit:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+.mc-react-register .mc-register-switch {
+  font-size: 12px;
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 8px;
+  margin-bottom: 14px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.mc-react-register .mc-register-panel {
+  border: 1px solid #dce6f2;
+  background: #f4f8fd;
+  border-radius: 16px;
+  padding: 20px 20px 6px;
+  margin: 16px 0 8px;
+  text-align: left;
+}
+
+.mc-react-register .mc-register-marketing-toggle {
+  display: flex;
+  justify-content: center;
+  padding: 22px 16px;
+  background: #fff;
+}
+
+.mc-react-register .mc-register-marketing-toggle .toggle__btn {
+  cursor: pointer;
+}
+
+.mc-react-register .mc-register-marketing-toggle .toggle {
+  width: min(100%, 330px);
+}
+
+.mc-react-register .mc-register-marketing-toggle .toggle__pill {
+  width: calc(50% - 6px);
+}
+
+.mc-react-register .mc-register-marketing-toggle .toggle__btn {
+  flex: 1;
+  justify-content: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mc-react-register .mc-marketing-mock {
+  border-radius: 24px;
+  padding: 26px;
+  background: rgba(255, 255, 255, .86);
+  border: 1px solid rgba(15, 23, 42, .1);
+  box-shadow: 0 24px 60px rgba(10, 92, 138, .16);
+}
+
+.mc-react-register .mc-marketing-mock .appcard__search {
+  font-size: 13px;
+}
+
+.mc-password-field {
+  position: relative;
+}
+
+.mc-password-field .mc-form-input {
+  padding-right: 48px;
+}
+
+.mc-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 6px;
+  color: var(--mc-text-muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .mc-react-register .mc-react-form-card {
+    padding: 24px 18px;
+  }
+
+  .mc-react-register .mc-react-form-card .form-input-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -7,12 +7,14 @@ import { Panel } from '../../lib/api';
 interface PanelCardProps {
   panel: Panel;
   onEdit?: (p: Panel) => void;
-  onDelete?: (id: number) => void;
+  onDelete?: (id: number | string) => void;
+  onToggle?: (id: number | string) => void;
+  onSend?: (p: Panel) => void;
   index?: number;
 }
 
-export function PanelCard({ panel, onEdit, onDelete, index = 0 }: PanelCardProps) {
-  const totalTarif = panel.actes?.reduce((sum, a) => sum + (a.price || 0), 0) || 0;
+export function PanelCard({ panel, onEdit, onDelete, onToggle, onSend, index = 0 }: PanelCardProps) {
+  const totalTarif = panel.total_price ?? panel.actes?.reduce((sum, a) => sum + (a.price || 0), 0) ?? 0;
 
   return (
     <motion.div
@@ -32,7 +34,7 @@ export function PanelCard({ panel, onEdit, onDelete, index = 0 }: PanelCardProps
                   {panel.nom}
                 </h3>
                 <span className="text-xs text-gray-400">
-                  {panel.actes?.length || 0} actes inclus
+                  {panel.actes?.length || 0} actes inclus · {panel.is_active === false ? 'Inactif' : 'Actif'}
                 </span>
               </div>
             </div>
@@ -54,6 +56,28 @@ export function PanelCard({ panel, onEdit, onDelete, index = 0 }: PanelCardProps
                   title="Supprimer"
                 >
                   <Trash2 size={15} />
+                </button>
+              )}
+              {onToggle && (
+                <button
+                  type="button"
+                  onClick={() => onToggle(panel.id)}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-accent transition-colors"
+                  title={panel.is_active === false ? 'Activer' : 'Désactiver'}
+                  aria-label={panel.is_active === false ? `Activer ${panel.nom}` : `Désactiver ${panel.nom}`}
+                >
+                  <i className={`ti ${panel.is_active === false ? 'ti-player-play' : 'ti-player-pause'}`} aria-hidden="true" />
+                </button>
+              )}
+              {onSend && (
+                <button
+                  type="button"
+                  onClick={() => onSend(panel)}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-sky-600 transition-colors"
+                  title="Envoyer à un patient"
+                  aria-label={`Envoyer ${panel.nom} à un patient`}
+                >
+                  <i className="ti ti-send" aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -80,6 +104,12 @@ export function PanelCard({ panel, onEdit, onDelete, index = 0 }: PanelCardProps
             {totalTarif > 0 ? `${totalTarif.toLocaleString()} FCFA` : 'Sur devis'}
           </span>
         </div>
+        {(panel.public_path || panel.views_count !== undefined) && (
+          <div className="mt-2 flex items-center justify-between text-xs text-gray-400">
+            {panel.public_path && <a className="font-semibold text-sky-700 hover:underline dark:text-sky-300" href={panel.public_path} target="_blank" rel="noreferrer">Ouvrir le lien patient</a>}
+            {panel.views_count !== undefined && <span>{panel.views_count} vue(s)</span>}
+          </div>
+        )}
       </Card>
     </motion.div>
   );

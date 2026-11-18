@@ -17,7 +17,8 @@ export function CartItem({ item, onRemove }: CartItemProps) {
           {item.structure_nom}
         </p>
         <span className="inline-block mt-1 font-bold text-xs text-navy dark:text-accent">
-          {item.price.toLocaleString()} FCFA
+          {item.quantity > 1 ? `${item.quantity} × ` : ''}
+          {(item.price * item.quantity).toLocaleString()} FCFA
         </span>
       </div>
 

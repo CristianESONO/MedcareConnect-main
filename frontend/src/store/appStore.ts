@@ -1,14 +1,11 @@
 import { create } from 'zustand';
 
 type Theme = 'light' | 'dark';
-type Lang  = 'fr' | 'en';
 
 interface AppState {
   theme: Theme;
-  lang:  Lang;
   cartOpen: boolean;
   toggleTheme: () => void;
-  setLang:     (l: Lang) => void;
   toggleCart:  () => void;
 }
 
@@ -19,7 +16,6 @@ function applyTheme(t: Theme) {
 
 export const useAppStore = create<AppState>((set, get) => ({
   theme: (localStorage.getItem('mc_theme') as Theme) || 'light',
-  lang:  (localStorage.getItem('mc_lang')  as Lang)  || 'fr',
   cartOpen: false,
 
   toggleTheme: () => {
@@ -28,13 +24,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ theme: next });
   },
 
-  setLang: (lang) => {
-    localStorage.setItem('mc_lang', lang);
-    set({ lang });
-  },
-
   toggleCart: () => set((s) => ({ cartOpen: !s.cartOpen })),
 }));
+
+localStorage.removeItem('mc_lang');
 
 // Apply saved theme on load
 applyTheme((localStorage.getItem('mc_theme') as Theme) || 'light');

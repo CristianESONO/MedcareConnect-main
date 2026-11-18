@@ -1,16 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/appStore';
+import type { AuthSession } from '../lib/api';
 
 interface NavbarProps {
   cartCount?: number;
+  authSession: AuthSession | null;
+  authSessionError: string;
   onOpenSidebar: () => void;
+  onOpenCart: () => void;
 }
 
-export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
-  const { lang, setLang, theme, toggleTheme, toggleCart } = useAppStore();
-  const { i18n } = useTranslation();
+export function Navbar({
+  cartCount = 0,
+  authSession,
+  authSessionError,
+  onOpenSidebar,
+  onOpenCart,
+}: NavbarProps) {
+  const { theme, toggleTheme } = useAppStore();
   const location = useLocation();
   const [aboutOpen, setAboutOpen] = useState(false);
   const aboutRef = useRef<HTMLDivElement>(null);
@@ -25,12 +33,6 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const handleLangToggle = () => {
-    const next = lang === 'fr' ? 'en' : 'fr';
-    setLang(next);
-    i18n.changeLanguage(next);
-  };
 
   const isAboutActive =
     location.pathname === '/about' ||
@@ -55,7 +57,7 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           <Link to="/" className="flex items-center shrink-0">
             {/* Real MedCare logo without duplicate text */}
             <img
-              src="/logo_MEDCARE.png"
+              src="/static/images/logo_MEDCARE.png"
               alt="MedCare"
               className="h-8 sm:h-10 w-auto object-contain"
             />
@@ -76,9 +78,9 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           </Link>
 
           <Link
-            to="/search"
+            to="/sante/recherche/"
             className={`text-sm font-bold transition-colors ${
-              location.pathname === '/search'
+              location.pathname === '/sante/recherche/'
                 ? 'text-[#0a5c8a] dark:text-[#0ea5e9]'
                 : 'text-gray-700 dark:text-gray-300 hover:text-[#0a5c8a] dark:hover:text-white'
             }`}
@@ -139,39 +141,68 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
 
         {/* ── Right CTAs (Connexion, Trouver un service, Rejoindre MedCare) ── */}
         <div className="flex items-center gap-2">
-          {/* Action buttons (identical to landing_header.html) */}
+          {/* Account actions reflect the Django session rather than the current URL. */}
           <div className="hidden sm:flex items-center gap-2">
-            <Link
-              to="/login"
-              className="px-3.5 py-2 text-xs font-extrabold text-[#123a63] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
-            >
-              Connexion
-            </Link>
+            {authSessionError ? (
+              <span className="px-2 text-xs font-semibold text-amber-700 dark:text-amber-300" role="status">
+                Session indisponible
+              </span>
+            ) : authSession?.authenticated ? (
+              <>
+                <Link
+                  to={authSession.is_patient
+                    ? '/users/compte/panel/'
+                    : authSession.is_admin
+                      ? '/dashboard/'
+                      : authSession.is_prestataire
+                        ? '/sante/prestataire/tableau-de-bord/'
+                        : '/users/profil/'}
+                  className="px-3.5 py-2 text-xs font-extrabold text-[#123a63] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
+                >
+                  {authSession.is_patient
+                    ? 'Mon compte'
+                    : authSession.is_admin
+                      ? 'Administration'
+                      : authSession.is_praticien
+                        ? 'Espace praticien'
+                        : authSession.is_prestataire
+                          ? 'Espace structure'
+                          : 'Mon profil'}
+                </Link>
+                <a
+                  href="/users/deconnexion/"
+                  className="px-3.5 py-2 text-xs font-extrabold text-[#123a63] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
+                >
+                  Déconnexion
+                </a>
+              </>
+            ) : authSession ? (
+              <Link
+                to="/connexion/"
+                className="px-3.5 py-2 text-xs font-extrabold text-[#123a63] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all"
+              >
+                Connexion
+              </Link>
+            ) : null}
 
-            <Link
-              to="/search"
-              className="px-3.5 py-2 text-xs font-extrabold rounded-xl border-1.5 border-[#123a63] dark:border-sky-500 text-[#123a63] dark:text-sky-400 hover:bg-[#123a63] hover:text-white dark:hover:bg-sky-500 dark:hover:text-white transition-all shadow-sm"
-            >
-              Trouver un service
-            </Link>
+            {(authSession !== null || authSessionError !== '') && !authSession?.is_prestataire && (
+              <Link
+                to="/sante/recherche/"
+                className="px-3.5 py-2 text-xs font-extrabold rounded-xl border-1.5 border-[#123a63] dark:border-sky-500 text-[#123a63] dark:text-sky-400 hover:bg-[#123a63] hover:text-white dark:hover:bg-sky-500 dark:hover:text-white transition-all shadow-sm"
+              >
+                Trouver un service
+              </Link>
+            )}
 
-            <Link
-              to="/register"
-              className="px-4 py-2 text-xs font-extrabold rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white hover:brightness-105 transition-all shadow-md active:scale-95"
-            >
-              Rejoindre MedCare
-            </Link>
+            {!authSession?.authenticated && (
+              <Link
+                to="/inscription/"
+                className="px-4 py-2 text-xs font-extrabold rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white hover:brightness-105 transition-all shadow-md active:scale-95"
+              >
+                Rejoindre MedCare
+              </Link>
+            )}
           </div>
-
-          {/* Language toggle */}
-          <button
-            type="button"
-            onClick={handleLangToggle}
-            className="p-2 rounded-xl border border-gray-300 dark:border-gray-700 text-xs font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 uppercase"
-            title="Changer de langue"
-          >
-            {lang}
-          </button>
 
           {/* Theme toggle */}
           <button
@@ -186,9 +217,10 @@ export function Navbar({ cartCount = 0, onOpenSidebar }: NavbarProps) {
           {/* Cart toggle */}
           <button
             type="button"
-            onClick={toggleCart}
+            onClick={onOpenCart}
             className="relative p-2.5 rounded-xl bg-[#123a63] text-white hover:bg-[#1a4f87] transition-all shadow-sm cursor-pointer"
             title="Panier de soins"
+            aria-label="Ouvrir le panier"
           >
             <i className="ti ti-shopping-cart text-base"></i>
             {cartCount > 0 && (

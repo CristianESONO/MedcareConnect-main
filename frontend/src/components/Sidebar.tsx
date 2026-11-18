@@ -1,31 +1,52 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../store/appStore';
+import type { AuthSession } from '../lib/api';
 
 interface SidebarProps {
   open: boolean;
+  authSession: AuthSession | null;
   onClose: () => void;
 }
 
-export function Sidebar({ open, onClose }: SidebarProps) {
-  const { i18n } = useTranslation();
+export function Sidebar({ open, authSession, onClose }: SidebarProps) {
   const location = useLocation();
-  const { theme, toggleTheme, lang, setLang } = useAppStore();
+  const { theme, toggleTheme } = useAppStore();
 
-  const handleLangToggle = () => {
-    const next = lang === 'fr' ? 'en' : 'fr';
-    setLang(next);
-    i18n.changeLanguage(next);
-  };
-
-  const navLinks = [
-    { to: '/', label: 'Accueil Vitrine', icon: 'ti-home' },
-    { to: '/search', label: 'Annuaire & Soins', icon: 'ti-search' },
-    { to: '/mobile', label: 'Vue Mobile Patient', icon: 'ti-device-mobile' },
-    { to: '/dashboard', label: 'Espace Professionnel', icon: 'ti-stethoscope' },
-    { to: '/panels', label: 'Panels & Forfaits', icon: 'ti-packages' },
+  const providerLinks = [
+    { to: '/sante/prestataire/tableau-de-bord/', label: 'Tableau de bord', icon: 'ti-layout-dashboard' },
+    { to: '/sante/prestataire/devis/', label: 'Devis', icon: 'ti-file-invoice' },
+    { to: '/rdv/pro/agenda/', label: 'Rendez-vous', icon: 'ti-calendar' },
+    { to: '/sante/prestataire/actes/', label: 'Catalogue d’actes', icon: 'ti-stethoscope' },
+    { to: '/sante/prestataire/profil-public/', label: 'Profil public', icon: 'ti-id' },
+    { to: '/sante/prestataire/organisme/modifier/', label: authSession?.is_praticien ? 'Profil professionnel' : 'Fiche structure', icon: 'ti-building-hospital' },
+    ...(!authSession?.is_praticien ? [
+      { to: '/sante/prestataire/organisme/horaires/', label: 'Horaires', icon: 'ti-clock' },
+      { to: '/sante/prestataire/assurances/', label: 'Assurances', icon: 'ti-shield-check' },
+      { to: '/sante/prestataire/acces/', label: 'Accès praticiens', icon: 'ti-users' },
+    ] : [
+      { to: '/sante/prestataire/acces/', label: 'Affiliations', icon: 'ti-users' },
+      { to: '/rdv/pro/agenda/grille/', label: 'Agenda', icon: 'ti-calendar-event' },
+    ]),
+    { to: '/messaging/', label: 'Messages', icon: 'ti-message' },
+    { to: '/sante/prestataire/parametres/', label: 'Paramètres', icon: 'ti-settings' },
   ];
+
+  const navLinks = authSession?.is_prestataire
+    ? providerLinks
+    : authSession?.is_patient
+      ? [
+        { to: '/sante/recherche/', label: 'Annuaire & Soins', icon: 'ti-search' },
+        { to: '/users/compte/panel/', label: 'Mon compte patient', icon: 'ti-user' },
+        { to: '/users/compte/panel/chariot/', label: 'Mon panier', icon: 'ti-shopping-cart' },
+        { to: '/users/compte/panel/devis/', label: 'Mes devis', icon: 'ti-file-invoice' },
+        { to: '/users/compte/panel/rdv/', label: 'Mes rendez-vous', icon: 'ti-calendar' },
+      ]
+      : [
+        { to: '/', label: 'Accueil Vitrine', icon: 'ti-home' },
+        { to: '/sante/recherche/', label: 'Annuaire & Soins', icon: 'ti-search' },
+        { to: '/mobile', label: 'Vue Mobile Patient', icon: 'ti-device-mobile' },
+      ];
 
   const aboutLinks = [
     { to: '/about', label: 'Qui sommes-nous ?', icon: 'ti-info-circle' },
@@ -57,7 +78,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             {/* Header with real brand logo */}
             <div className="p-5 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-gray-50/60 dark:bg-gray-900/60">
               <img
-                src="/logo_MEDCARE.png"
+                src="/static/images/logo_MEDCARE.png"
                 alt="MedCare"
                 className="h-8 w-auto object-contain"
               />
@@ -81,7 +102,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <div className="text-sm font-black mt-0.5">Inscription MedCare</div>
               </div>
               <Link
-                to="/register"
+                to="/inscription/"
                 onClick={onClose}
                 className="px-3 py-1.5 rounded-xl bg-white text-[#0a5c8a] text-xs font-bold shadow hover:bg-gray-100 transition-colors"
               >
@@ -93,7 +114,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               <div>
                 <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
-                  Navigation
+                  {authSession?.is_praticien ? 'Espace praticien' : authSession?.is_prestataire ? 'Espace structure' : authSession?.is_patient ? 'Espace patient' : 'Navigation'}
                 </div>
                 <div className="space-y-1">
                   {navLinks.map((link) => {
@@ -147,37 +168,40 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 <div className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider px-3 mb-1">
                   Mon Compte
                 </div>
-                <Link
-                  to="/login"
-                  onClick={onClose}
-                  className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs"
-                >
-                  <i className="ti ti-login text-base text-gray-500"></i>
-                  <span>Se connecter</span>
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={onClose}
-                  className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-bold text-xs"
-                >
-                  <i className="ti ti-user-plus text-base"></i>
-                  <span>Créer un compte (Patient / Soignant)</span>
-                </Link>
+                {authSession?.authenticated ? (
+                  <a
+                    href="/users/deconnexion/"
+                    className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs"
+                  >
+                    <i className="ti ti-logout text-base text-gray-500"></i>
+                    <span>Déconnexion</span>
+                  </a>
+                ) : (
+                  <>
+                    <Link
+                      to="/connexion/"
+                      onClick={onClose}
+                      className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-semibold text-xs"
+                    >
+                      <i className="ti ti-login text-base text-gray-500"></i>
+                      <span>Se connecter</span>
+                    </Link>
+                    <Link
+                      to="/inscription/"
+                      onClick={onClose}
+                      className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 font-bold text-xs"
+                    >
+                      <i className="ti ti-user-plus text-base"></i>
+                      <span>Créer un compte (Patient / Soignant)</span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
 
             {/* Footer with Controls */}
             <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={handleLangToggle}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-300 dark:border-gray-700 text-xs font-bold text-gray-700 dark:text-gray-200 uppercase hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  <i className="ti ti-world"></i>
-                  <span>{lang === 'fr' ? 'Français' : 'English'}</span>
-                </button>
-
+              <div className="flex items-center justify-end">
                 <button
                   type="button"
                   onClick={toggleTheme}

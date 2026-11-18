@@ -1,221 +1,340 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const PATIENT_STEPS = [
+type Profile = 'patient' | 'soignant';
+
+type Step = {
+  label: string;
+  title: string;
+  image: string;
+  alt: string;
+  points: string[];
+  description: string;
+};
+
+const PATIENT_STEPS: Step[] = [
   {
-    num: '01',
-    label: 'Recherche Intelligente',
-    title: 'Cherchez votre acte ou spécialité',
-    desc: "Depuis la barre de recherche, tapez directement le nom d'un examen médical (ex : NFS, Échographie, Consultation Cardiologie) ou explorez les 6 piliers paracliniques.",
-    points: ['Recherche par acte ou spécialité', 'Géolocalisation automatique à Dakar', '450+ actes disponibles sans inscription'],
-    icon: 'ti-search',
+    label: 'Recherche',
+    title: "Cherchez votre acte sur l'accueil",
+    image: "Cherchez votre acte sur l'accueil.png",
+    alt: "Recherche d'un acte sur l'accueil MedCare",
+    points: ['Recherche par nom ou par pilier', 'Tri par prix, couverture ou distance', '450+ actes · 16 structures · 0% commission'],
+    description:
+      "Depuis l'écran d'accueil, recherchez un examen par son nom ou explorez les 6 piliers paracliniques. Tout est gratuit et sans compte : 450+ actes, 16 structures partenaires, zéro commission.",
   },
   {
-    num: '02',
-    label: 'Sélection & Piliers',
-    title: 'Constituez votre sélection d’actes',
-    desc: 'Cochez plusieurs actes simultanément. Le panier dynamique calcule les combinaisons et affiche en direct les structures en mesure de réaliser l’intégralité de vos examens.',
-    points: ['Sélection multiple en 1 clic', 'Compteur d’établissements capables de vous recevoir', 'Filtre par type (hôpital, clinique, labo)'],
-    icon: 'ti-checklist',
+    label: 'Sélection',
+    title: 'Sélectionnez vos actes',
+    image: 'Sélectionnez vos actes.png',
+    alt: "Sélection d'actes dans un pilier",
+    points: ["Sélection multiple d'actes", 'Nombre de structures par acte affiché', 'Recherche et filtre dans la liste'],
+    description:
+      'Dans un pilier (ici Biologie médicale), cochez tous les actes dont vous avez besoin. Le compteur « sélectionnés » se met à jour, et chaque acte indique le nombre de structures qui le proposent.',
   },
   {
-    num: '03',
-    label: 'Comparaison Objective',
-    title: 'Comparez les prix réels & conventionnements',
-    desc: 'Visualisez les tarifs officiels sans marge cachée, les mutuelles et IPM partenaires (tiers-payant), la distance kilométrique et les délais d’obtention des résultats.',
-    points: ['Tarif clair en FCFA', 'Prise en charge IPM / Mutuelle indiquée', 'Badge « Établissement Vérifié »'],
-    icon: 'ti-scale',
+    label: 'Comparaison',
+    title: 'Comparez les structures par couverture',
+    image: 'Comparez les structures par couverture.png',
+    alt: 'Comparaison des structures par couverture d’actes',
+    points: ['Tri par couverture (4/4 actes)', 'Détail prix, assurances & badge Pionnier', 'Ajout groupé au panier en un geste'],
+    description:
+      'MedCare trie les structures selon leur couverture de votre sélection. Le Laboratoire BioSanté Mermoz couvre 4/4 actes : vous voyez le détail des prix, les assurances et le total — puis vous ajoutez tout au panier.',
   },
   {
-    num: '04',
-    label: 'Devis & Panier',
-    title: 'Validez votre devis estimatif gratuit',
-    desc: 'Votre panier récapitule les examens retenus, le coût global estimé et l’adresse exacte de la structure choisie.',
-    points: ['Devis instantané sans engagement', 'Zéro commission prélevée sur le patient', 'Traçabilité et gain de temps précieux'],
-    icon: 'ti-shopping-cart-check',
+    label: 'Panier',
+    title: 'Validez votre panier',
+    image: 'Validez votre panier.png',
+    alt: 'Validation du panier patient',
+    points: ['Panier groupé par structure', 'Pris en charge / reste à payer calculés', 'Réservation en un clic'],
+    description:
+      'Le panier regroupe vos actes par structure, avec le total et la part prise en charge par vos assurances. Un bouton « Réserver mes actes » lance la demande de devis.',
   },
   {
-    num: '05',
-    label: 'Mise en Relation',
-    title: 'Échangez directement avec la structure',
-    desc: 'Finalisez votre rendez-vous via le canal officiel WhatsApp ou le contact téléphonique direct de l’établissement médical.',
-    points: ['Liaison WhatsApp directe sécurisée', 'Aucun intermédiaire entre vous et le soignant', 'Consignes pré-analytiques fournies (à jeun, etc.)'],
-    icon: 'ti-brand-whatsapp',
+    label: 'Devis',
+    title: 'Recevez un devis détaillé',
+    image: 'recevez un devis détaillé.png',
+    alt: 'Devis détaillé dans la conversation',
+    points: ['Devis automatique avec référence unique', 'Structure, horaires, assurances & détail des actes', 'Bouton « Prendre RDV » directement dans le chat'],
+    description:
+      "La conversation s'ouvre avec le secrétariat de la structure. MedCare y génère automatiquement un devis chiffré et référencé, reprenant structure, horaires, assurances et le détail des actes — tarifs indicatifs, zéro commission.",
+  },
+  {
+    label: 'Créneau',
+    title: 'Choisissez votre créneau',
+    image: 'Choisissez votre créneau.png',
+    alt: "Choix d'un créneau de rendez-vous",
+    points: ['Disponibilités réelles de la structure', 'Sélection directe dans le chat', 'Créneaux occupés grisés automatiquement'],
+    description:
+      'Toujours dans la conversation, la structure propose ses disponibilités réelles. Vous touchez le créneau qui vous convient — les horaires déjà pris sont grisés.',
+  },
+  {
+    label: 'Confirmation',
+    title: 'Votre RDV est confirmé',
+    image: 'Votre RDV est confirmé.png',
+    alt: 'Confirmation du rendez-vous',
+    points: ['Transmission instantanée + WhatsApp', 'Accusé puis confirmation dans le chat', 'Référence de dossier à présenter à l’accueil'],
+    description:
+      "Votre demande est transmise à la structure et par WhatsApp. Vous recevez d'abord un accusé « en attente », puis la confirmation avec une référence de dossier à présenter à l'accueil.",
+  },
+  {
+    label: 'Suivi',
+    title: 'Suivez tout depuis votre tableau de bord',
+    image: 'Suivez tout depuis votre tableau de bord.png',
+    alt: 'Tableau de bord patient MedCare',
+    points: ['KPIs : RDV, devis, assurances, panier', 'Prochain RDV confirmé avec détail complet', 'Historique et rappels centralisés'],
+    description:
+      "Votre espace personnel récapitule l'essentiel : RDV à venir, devis en attente, assurances et actes au panier. Le prochain rendez-vous confirmé s'affiche avec son détail complet et sa référence de paiement.",
   },
 ];
 
-const SOIGNANT_STEPS = [
+const PROVIDER_STEPS: Step[] = [
   {
-    num: '01',
-    label: 'Inscription Rapide',
-    title: 'Créez votre fiche établissement ou praticien',
-    desc: 'Renseignez la nature de votre structure (laboratoire, clinique, cabinet médical) et vos coordonnées professionnelles.',
-    points: ['Inscription en moins de 3 minutes', 'Validation par l’équipe MedCare', 'Fiche publique indexée'],
-    icon: 'ti-building-hospital',
+    label: 'Inscription',
+    title: 'Créez votre compte structure',
+    image: 'Créez votre compte structure.png',
+    alt: 'Création du compte structure prestataire',
+    points: ['Formulaire unique pour tous les profils', 'Type de compte Prestataire / Patient', 'Compte protégé par chiffrement'],
+    description:
+      "Inscrivez-vous en quelques minutes : informations de l'établissement, contact et identifiants. Sélectionnez le type de compte « Prestataire » pour accéder à l'espace structure.",
   },
   {
-    num: '02',
-    label: 'Catalogue Tarifaire',
-    title: 'Publiez vos forfaits et actes niveau 3',
-    desc: 'Définissez votre grille tarifaire, vos conventionnements assurances et composez des panels de santé attractifs.',
-    points: ['Gestion simplifiée des forfaits', 'Visibilité auprès de milliers de patients', 'Respect de la déontologie médicale'],
-    icon: 'ti-packages',
+    label: 'Catalogue',
+    title: 'Déclarez votre type, pilier et catalogue',
+    image: 'Déclarez votre type, pilier et catalogue.png',
+    alt: "Déclaration du catalogue d'actes",
+    points: ['8 types de structure · pilier auto-activé', 'Tarif, délai & activation par acte', 'Option prélèvement à domicile'],
+    description:
+      "Choisissez votre type de structure (laboratoire, imagerie, clinique…) : le pilier d'activité s'active automatiquement. Renseignez ensuite chaque acte avec son tarif, son délai de résultat et son statut actif. Activez le prélèvement à domicile si besoin.",
   },
   {
-    num: '03',
-    label: 'Patients Qualifiés',
-    title: 'Accueillez des patients informés',
-    desc: 'Recevez des demandes de devis et des rendez-vous clairs, avec des patients qui connaissent déjà vos tarifs et vos conditions de prise en charge.',
-    points: ['Réduction des abandons au guichet', 'Optimisation du planning de consultations', 'Tableau de bord de suivi d’activité'],
-    icon: 'ti-user-check',
+    label: 'Profil public',
+    title: 'Obtenez votre fiche publique',
+    image: 'Obtenez votre fiche publique.png',
+    alt: 'Fiche publique de la structure',
+    points: ['Fiche complète : identité, horaires, assurances', 'Actes avec tarifs selon couverture (Comptant, IPM, Assurance) & délais', 'Bouton Devis WhatsApp & itinéraire'],
+    description:
+      'Votre établissement dispose d’une fiche publique complète, visible par les patients : identité, horaires, assurances acceptées, prélèvement à domicile et catalogue d’actes avec tarifs selon la couverture (Comptant, IPM, Assurance) et délais. Le badge Partenaire Pionnier est affiché.',
+  },
+  {
+    label: 'Devis',
+    title: 'Recevez et traitez les devis',
+    image: 'Recevez et traitez les devis.png',
+    alt: 'Traitement des devis WhatsApp reçus',
+    points: ['Devis automatiques avec actes & montant', 'Confirmer le RDV, refuser ou relancer', 'Suivi par statut + valeur totale active'],
+    description:
+      'Les demandes de devis générées par les patients arrivent automatiquement, avec actes, créneau souhaité, assurance et montant. Vous confirmez le RDV, refusez ou relancez — le tout suivi par statut (nouveaux, acceptés, expirés).',
+  },
+  {
+    label: 'Réservations',
+    title: 'Validez vos réservations',
+    image: 'Validez vos réservations.png',
+    alt: 'Validation des réservations prestataire',
+    points: ['Tableau complet : patient, actes, assurance, créneau', 'Statuts : en attente, confirmé, honoré, no-show', 'Vue liste ou calendrier'],
+    description:
+      'Toutes les réservations entrantes sont centralisées dans un tableau clair : référence, patient, actes, assurance, créneau, montant et statut. Confirmez, marquez honoré ou no-show, en vue liste ou calendrier.',
+  },
+  {
+    label: 'Paramètres',
+    title: 'Pilotez votre compte et votre équipe',
+    image: 'Pilotez votre compte et votre équipe.png',
+    alt: "Paramètres du compte et gestion de l'équipe",
+    points: ["Rôles & invitations d'utilisateurs", 'Notifications fines (devis, RDV, no-show)', 'Préférences : langue, devise, affichage tarifs'],
+    description:
+      "Gérez votre compte administrateur, invitez des utilisateurs avec des rôles (administrateur, secrétaire, lecture seule), réglez vos notifications et vos préférences — langue, devise, période du dashboard et affichage des tarifs sur le profil public.",
   },
 ];
 
-export function HowItWorksPage() {
-  const [profile, setProfile] = useState<'patient' | 'soignant'>('patient');
+const FAQ_ITEMS = [
+  {
+    question: 'Faut-il un compte pour chercher un acte ?',
+    answer: "Non. La recherche, le tri et la comparaison sont libres et gratuits. Un compte n'est requis qu'au moment de générer un devis et de réserver un créneau.",
+  },
+  {
+    question: 'MedCare prend-il une commission sur les actes ?',
+    answer: 'Jamais. Le tarif affiché est le tarif net déclaré par la structure. MedCare se rémunère uniquement via l’abonnement SaaS des structures.',
+  },
+  {
+    question: 'Où se passe la prise de rendez-vous ?',
+    answer: 'Directement dans la conversation avec le secrétariat de la structure : devis, choix du créneau et confirmation se font dans le même fil, avec une référence de dossier unique.',
+  },
+  {
+    question: 'Les prix affichés sont-ils garantis ?',
+    answer: "Ce sont des tarifs indicatifs déclarés et datés par les établissements. Le devis reprend le montant au moment de la demande ; confirmez toujours à l'accueil.",
+  },
+  {
+    question: 'Comment retrouver mes rendez-vous ?',
+    answer: 'Votre tableau de bord récapitule RDV à venir, devis en attente, assurances et actes au panier, avec le détail complet de chaque réservation.',
+  },
+  {
+    question: 'Mes assurances sont-elles prises en compte ?',
+    answer: 'Oui. Les assurances acceptées par chaque structure sont affichées, et le panier estime la part prise en charge ainsi que le reste à payer.',
+  },
+];
+
+function StepFlow({ profile, steps }: { profile: Profile; steps: Step[] }) {
+  const isPatient = profile === 'patient';
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] text-gray-900 dark:text-gray-100">
-      {/* ── 1. HERO ──────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-16 pb-20 bg-gradient-to-br from-[#0a2540] via-[#123a63] to-[#1a5276] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0ea5e9]/20 border border-[#0ea5e9]/40 text-[#0ea5e9] text-xs font-black uppercase tracking-wider mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#0ea5e9] animate-ping"></span>
-            Guide Pratique
-          </div>
-
-          <h1 className="font-syne font-black text-3xl sm:text-5xl text-white leading-tight mb-4 max-w-3xl mx-auto">
-            Trouvez, comparez,{' '}
-            <span className="text-[#0ea5e9]">réservez vos examens.</span>
-          </h1>
-
-          <p className="text-base sm:text-lg text-sky-100/90 leading-relaxed max-w-2xl mx-auto mb-10 font-medium">
-            De la recherche d'un acte à la confirmation du rendez-vous — un parcours clair, sans intermédiaire et sans commission.
-          </p>
-
-          {/* Stats Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
-            <div>
-              <div className="font-syne font-black text-2xl text-white">450+</div>
-              <div className="text-[11px] font-bold text-sky-200 uppercase">Actes</div>
-            </div>
-            <div>
-              <div className="font-syne font-black text-2xl text-white">16</div>
-              <div className="text-[11px] font-bold text-sky-200 uppercase">Structures</div>
-            </div>
-            <div>
-              <div className="font-syne font-black text-2xl text-white">6</div>
-              <div className="text-[11px] font-bold text-sky-200 uppercase">Piliers</div>
-            </div>
-            <div>
-              <div className="font-syne font-black text-2xl text-[#0ea5e9]">0 %</div>
-              <div className="text-[11px] font-bold text-sky-200 uppercase">Commission</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 2. PROFILE SWITCHER ──────────────────────────────────────── */}
-      <section className="py-8 bg-white dark:bg-[#0f172a] border-b border-gray-200 dark:border-gray-800 sticky top-18 z-30 shadow-sm">
-        <div className="max-w-md mx-auto px-4 flex justify-center">
-          <div className="grid grid-cols-2 p-1.5 rounded-2xl bg-gray-100 dark:bg-gray-800 w-full">
-            <button
-              type="button"
-              onClick={() => setProfile('patient')}
-              className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
-                profile === 'patient'
-                  ? 'bg-white dark:bg-gray-700 text-[#123a63] dark:text-[#0ea5e9] shadow-md'
-                  : 'text-gray-600 dark:text-gray-400'
-              }`}
-            >
-              <i className="ti ti-search text-base"></i>
-              <span>Je suis patient</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setProfile('soignant')}
-              className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${
-                profile === 'soignant'
-                  ? 'bg-white dark:bg-gray-700 text-[#123a63] dark:text-emerald-400 shadow-md'
-                  : 'text-gray-600 dark:text-gray-400'
-              }`}
-            >
-              <i className="ti ti-building-hospital text-base"></i>
-              <span>Je suis soignant / structure</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. STEPS CONTAINER ───────────────────────────────────────── */}
-      <section className="py-16 max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12">
-          <span className="text-xs font-black uppercase tracking-wider text-[#0ea5e9]">
-            {profile === 'patient' ? 'Parcours Patient Simplifié' : 'Parcours Professionnel'}
+    <div className={`mc-how-flow mc-how-flow--${isPatient ? 'patient' : 'struct'} active`}>
+      <div className="mc-how-flow-intro">
+        <div className="mc-container">
+          <span className={`mc-how-flow-tag mc-how-flow-tag--${isPatient ? 'patient' : 'struct'}`}>
+            {isPatient ? 'Côté patient · sur mobile' : 'Côté structure · sur ordinateur'}
           </span>
-          <h2 className="font-syne font-extrabold text-2xl sm:text-3xl text-[#0f172a] dark:text-white mt-1">
-            {profile === 'patient'
-              ? 'Du symptôme au rendez-vous en 5 étapes'
-              : 'Développez votre visibilité médicale'}
+          <h2>
+            {isPatient ? 'Du symptôme au rendez-vous, en ' : "De l'inscription aux réservations, en "}
+            <em>{isPatient ? '8 étapes' : '6 étapes'}</em>
           </h2>
         </div>
+      </div>
 
-        <div className="space-y-6">
-          {(profile === 'patient' ? PATIENT_STEPS : SOIGNANT_STEPS).map((step, idx) => (
-            <motion.div
-              key={step.num}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.08 }}
-              className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col md:flex-row md:items-start gap-6"
-            >
-              <div className="flex md:flex-col items-center gap-3 shrink-0">
-                <span className="font-syne font-black text-2xl sm:text-3xl text-[#0ea5e9]">
-                  {step.num}
-                </span>
-                <div className="w-12 h-12 rounded-2xl bg-[#0a5c8a]/10 dark:bg-sky-500/10 text-[#0a5c8a] dark:text-[#0ea5e9] flex items-center justify-center text-xl">
-                  <i className={`ti ${step.icon}`}></i>
+      <div className="mc-how-steps">
+        {steps.map((step, index) => {
+          const imageLeft = index % 2 === 0;
+          const image = (
+            <div className="mc-how-step-visual">
+              <div className="mc-how-shot">
+                <img src={`/static/images/${step.image}`} alt={step.alt} loading="lazy" />
+              </div>
+            </div>
+          );
+          const text = (
+            <div className="mc-how-step-text">
+              <ul className="mc-how-feats">
+                {step.points.map((point) => (
+                  <li key={point}>
+                    <span className="mc-how-feat-check" aria-hidden="true"><i className="ti ti-check" /></span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <p>{step.description}</p>
+            </div>
+          );
+
+          return (
+            <article className="mc-how-step mc-step-visible" key={step.title}>
+              <div className="mc-container">
+                <header className="mc-how-step-banner">
+                  <span className="mc-how-step-num">{String(index + 1).padStart(2, '0')}</span>
+                  <div className="mc-how-step-heading">
+                    <span className="mc-how-step-label">{step.label}</span>
+                    <h3>{step.title}</h3>
+                  </div>
+                </header>
+                <div className={`mc-how-step-grid mc-how-step-grid--img-${imageLeft ? 'left' : 'right'}`}>
+                  {imageLeft ? <>{image}{text}</> : <>{text}{image}</>}
                 </div>
               </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
-              <div className="flex-1">
-                <span className="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">
-                  {step.label}
-                </span>
-                <h3 className="font-syne font-bold text-lg sm:text-xl text-[#0f172a] dark:text-white mt-0.5 mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium mb-4">
-                  {step.desc}
-                </p>
+export function HowItWorksPage() {
+  const [profile, setProfile] = useState<Profile>('patient');
+  const [openFaqs, setOpenFaqs] = useState<number[]>([]);
 
-                <div className="flex flex-wrap gap-2">
-                  {step.points.map((pt) => (
-                    <span
-                      key={pt}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
-                    >
-                      <i className="ti ti-check text-xs"></i>
-                      {pt}
-                    </span>
-                  ))}
-                </div>
+  const toggleFaq = (index: number) => {
+    setOpenFaqs((current) =>
+      current.includes(index) ? current.filter((item) => item !== index) : [...current, index]
+    );
+  };
+
+  return (
+    <div className="mc-page-wrap mc-how-page">
+      <header className="mc-page-hero mc-how-hero">
+        <div className="mc-container">
+          <div className="mc-how-kicker"><span className="mc-how-kicker-dot" aria-hidden="true" />Comment ça marche</div>
+          <h1>Trouvez, comparez,<br /><em>réservez</em> vos examens</h1>
+          <p>De la recherche d'un acte à la confirmation du rendez-vous — un parcours complet, sans intermédiaire et sans commission sur les actes médicaux.</p>
+          <div className="mc-how-hero-stats" aria-label="Chiffres clés">
+            {[
+              ['450+', 'Actes'],
+              ['16', 'Structures'],
+              ['6', 'Piliers'],
+              ['0%', 'Commission'],
+            ].map(([value, label], index) => (
+              <div className="mc-how-hero-stat" key={label}>
+                <div className={`mc-how-hero-stat-val${index === 3 ? ' mc-how-hero-stat-val--accent' : ''}`}>{value}</div>
+                <div className="mc-how-hero-stat-label">{label}</div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
+      </header>
 
-        {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <Link
-            to={profile === 'patient' ? '/search' : '/register'}
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white font-syne font-extrabold text-sm shadow-lg hover:brightness-105 transition-all"
-          >
-            <span>{profile === 'patient' ? 'Commencer ma recherche' : 'Inscrire mon établissement'}</span>
-            <i className="ti ti-arrow-right"></i>
-          </Link>
+      <section className="mc-how-switch" aria-label="Choisir votre profil">
+        <div className="mc-container">
+          <div className="mc-toggle-wrap" role="group" aria-label="Profil">
+            <button
+              type="button"
+              className={`mc-toggle-btn${profile === 'patient' ? ' active' : ''}`}
+              aria-pressed={profile === 'patient'}
+              onClick={() => setProfile('patient')}
+            >
+              <span className="mc-toggle-emoji" aria-hidden="true"><i className="ti ti-search" /></span> Je suis patient
+            </button>
+            <button
+              type="button"
+              className={`mc-toggle-btn mc-toggle-btn--struct${profile === 'soignant' ? ' active' : ''}`}
+              aria-pressed={profile === 'soignant'}
+              onClick={() => setProfile('soignant')}
+            >
+              <span className="mc-toggle-emoji" aria-hidden="true"><i className="ti ti-building-hospital" /></span> Je suis une structure
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {profile === 'patient'
+        ? <StepFlow profile="patient" steps={PATIENT_STEPS} />
+        : <StepFlow profile="soignant" steps={PROVIDER_STEPS} />}
+
+      <section className="mc-how-band" aria-labelledby="mc-how-band-title">
+        <div className="mc-container mc-how-band-inner">
+          <h2 id="mc-how-band-title">Zéro commission. Par principe.</h2>
+          <p>MedCare est un annuaire paraclinique digital : un modèle d'abonnement SaaS, jamais de prélèvement sur les actes médicaux. Le prix que vous voyez est le tarif net déclaré par la structure.</p>
+          <p className="mc-how-band-badge"><span aria-hidden="true"><i className="ti ti-check" /></span> Conforme Art. 11 · Décret N°67-147</p>
+        </div>
+      </section>
+
+      <section className="mc-section mc-faq">
+        <div className="mc-container">
+          <div className="mc-section-tag">FAQ</div>
+          <h2>Questions <em>fréquentes</em></h2>
+          <div className="mc-faq-grid">
+            {FAQ_ITEMS.map((item, index) => {
+              const isOpen = openFaqs.includes(index);
+              return (
+                <div className={`mc-faq-item${isOpen ? ' active' : ''}`} key={item.question}>
+                  <button
+                    type="button"
+                    className="mc-faq-question"
+                    aria-expanded={isOpen}
+                    onClick={() => toggleFaq(index)}
+                  >
+                    {item.question}<i className="ti ti-chevron-down" aria-hidden="true" />
+                  </button>
+                  {isOpen && <div className="mc-faq-answer">{item.answer}</div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="mc-how-cta" aria-labelledby="mc-how-cta-title">
+        <div className="mc-container mc-how-cta-inner">
+          <h2 id="mc-how-cta-title">Prêt à commencer ?</h2>
+          <p>Patients : trouvez et réservez vos examens en quelques minutes. Structures : rejoignez le premier annuaire paraclinique digital du Sénégal.</p>
+          <div className="mc-how-cta-actions">
+            <Link to="/sante/recherche/" className="mc-btn-primary">Trouver un service →</Link>
+            <Link to="/inscription/" className="mc-how-btn-ghost">Rejoindre MedCare</Link>
+          </div>
         </div>
       </section>
     </div>

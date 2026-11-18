@@ -1,128 +1,118 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { getCsrfToken } from '../lib/auth';
 
-export function LoginPage() {
-  const navigate = useNavigate();
+interface LoginPageProps {
+  adminLogin?: (username: string, password: string) => Promise<void>;
+}
+
+export function LoginPage({ adminLogin }: LoginPageProps = {}) {
+  const location = useLocation();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      navigate('/dashboard');
-    }, 600);
-  };
+    try {
+      if (adminLogin) {
+        await adminLogin(identifier, password);
+        return;
+      }
 
-  const handleDemoLogin = (role: 'patient' | 'pro') => {
-    if (role === 'patient') {
-      setIdentifier('patient@medcare.sn');
-      setPassword('medcare2026');
-      setTimeout(() => navigate('/search'), 300);
-    } else {
-      setIdentifier('dr.diop@cliniquemadeleine.sn');
-      setPassword('medcare2026');
-      setTimeout(() => navigate('/dashboard'), 300);
+      const csrfToken = await getCsrfToken();
+      const formData = new URLSearchParams({ username: identifier, password });
+      const next = new URLSearchParams(location.search).get('next');
+      if (next) formData.set('next', next);
+
+      const response = await fetch('/api/auth/login/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          'X-CSRFToken': csrfToken,
+        },
+        body: formData,
+      });
+      const data = (await response.json()) as {
+        redirect_url?: string;
+        errors?: Record<string, string[]>;
+      };
+      if (!response.ok) {
+        setError(Object.values(data.errors || {}).flat().join(' '));
+      } else if (data.redirect_url) {
+        window.location.assign(data.redirect_url);
+      } else {
+        throw new Error('Le serveur n’a pas indiqué la page de destination.');
+      }
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Une erreur inattendue a empêché la connexion.',
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen py-10 px-4 flex items-center justify-center bg-gray-50 dark:bg-[#0b1120]">
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 sm:p-9"
-      >
-        {/* Brand */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-3">
-            <img src="/logo.png" alt="MedCare" className="h-9 w-auto" />
-            <span className="font-syne font-extrabold text-xl text-[#123a63] dark:text-white">
-              MedCare<span className="text-[#0ea5e9]">Connect</span>
-            </span>
-          </Link>
-          <h1 className="font-syne font-extrabold text-2xl text-gray-900 dark:text-white">
-            Connexion
-          </h1>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Accédez à vos soins, devis ou espace praticien
-          </p>
-        </div>
-
-        {/* Demo Fast Login Buttons */}
-        <div className="mb-6 p-3 rounded-2xl bg-sky-50/70 dark:bg-sky-950/20 border border-sky-200/60 dark:border-sky-800/60">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#0284c7] block mb-2">
-            🚀 Accès Démo Rapide
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('patient')}
-              className="py-1.5 px-2 rounded-xl bg-white dark:bg-gray-800 border border-sky-200 dark:border-gray-700 text-xs font-bold text-[#123a63] dark:text-sky-300 hover:bg-sky-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              Mode Patient
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('pro')}
-              className="py-1.5 px-2 rounded-xl bg-white dark:bg-gray-800 border border-sky-200 dark:border-gray-700 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              Mode Soignant
-            </button>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
-              Email ou Téléphone (+221) *
+    <div className="mc-page-wrap">
+      <section className="mc-auth-section">
+        <div className="mc-container">
+          <div className="mc-auth-card">
+            <div className="mc-auth-header">
+              <h1>Connexion</h1>
+              <p>{adminLogin ? 'Accédez à l’administration MedCare Connect' : 'Accédez à votre espace MedCare Connect'}</p>
+            </div>
+            <form onSubmit={handleSubmit}>
+          {error && (
+            <div role="alert" className="mc-form-error">
+              {error}
+            </div>
+          )}
+          <div className="mc-form-group">
+            <label className="mc-form-label" htmlFor="username">
+              Nom d'utilisateur
             </label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                <i className="ti ti-user text-base"></i>
-              </span>
-              <input
-                type="text"
-                required
-                placeholder="nom@exemple.sn ou 77..."
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-750 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]/40"
-              />
-            </div>
+            <input
+              id="username"
+              type="text"
+              required
+              placeholder="Votre nom d'utilisateur"
+              autoComplete="username"
+              autoFocus
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              className="mc-form-input"
+            />
           </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                Mot de passe *
-              </label>
-              <a href="#forgot" className="text-[11px] font-semibold text-[#0ea5e9] hover:underline">
-                Oublié ?
-              </a>
-            </div>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                <i className="ti ti-lock text-base"></i>
-              </span>
+          <div className="mc-form-group">
+            <label className="mc-form-label" htmlFor="password">Mot de passe</label>
+            <div className="mc-password-field">
               <input
+                id="password"
                 type={showPassword ? 'text' : 'password'}
                 required
-                placeholder="Votre mot de passe"
+                placeholder="••••••••"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-750 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]/40"
+                className="mc-form-input"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                onClick={() => setShowPassword((visible) => !visible)}
+                className="mc-password-toggle"
+                aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
               >
-                <i className={`ti ${showPassword ? 'ti-eye-off' : 'ti-eye'} text-base`}></i>
+                <i className={`ti ${showPassword ? 'ti-eye-off' : 'ti-eye'}`} />
               </button>
             </div>
           </div>
@@ -130,26 +120,28 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#123a63] to-[#0ea5e9] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+            className="mc-btn-primary mc-btn-primary--block"
           >
-            {loading ? (
-              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-            ) : (
-              <>
-                <i className="ti ti-login text-base"></i>
-                <span>Se connecter</span>
-              </>
-            )}
+            {loading ? 'Connexion…' : 'Se connecter'}
           </button>
 
-          <div className="text-center text-xs text-gray-500 pt-3 border-t border-gray-200 dark:border-gray-700">
-            Pas encore de compte ?{' '}
-            <Link to="/register" className="font-bold text-[#123a63] dark:text-[#0ea5e9] hover:underline">
-              Inscrivez-vous ici
-            </Link>
+          <p style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.85rem' }}>
+            <a href="/mot-de-passe-oublie/" style={{ color: 'var(--mc-accent)', textDecoration: 'none' }}>
+              Mot de passe oublié ?
+            </a>
+          </p>
+          {!adminLogin && (
+            <p className="mc-auth-footer">
+              Pas encore de compte ?{' '}
+              <Link to={`/inscription/${location.search}`}>
+                S'inscrire
+              </Link>
+            </p>
+          )}
+            </form>
           </div>
-        </form>
-      </motion.div>
+        </div>
+      </section>
     </div>
   );
 }

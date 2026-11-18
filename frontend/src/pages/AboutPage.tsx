@@ -1,184 +1,189 @@
-import { motion } from 'framer-motion';
+import './aboutPage.css';
 import { Link } from 'react-router-dom';
-
-const STATS = [
-  { val: '450+', label: 'Actes Médicaux', icon: 'ti-receipt' },
-  { val: '16', label: 'Structures Partenaires', icon: 'ti-building-hospital' },
-  { val: '6', label: 'Piliers Paracliniques', icon: 'ti-packages' },
-  { val: '0 %', label: 'Commission Patient', icon: 'ti-percentage', accent: true },
-];
-
-const VALUES = [
-  {
-    icon: 'ti-eye-check',
-    title: 'Transparence Radicale',
-    desc: 'Prix réels affichés avant le rendez-vous, conventionnements IPM explicites, délais d’attente constatés. Aucune mauvaise surprise au guichet.',
-  },
-  {
-    icon: 'ti-shield-lock',
-    title: 'Rigueur & Déontologie',
-    desc: 'Pas de classement publicitaire, pas de promotion commerciale. La présentation des structures et des soignants respecte scrupuleusement le code de déontologie.',
-  },
-  {
-    icon: 'ti-map-pin',
-    title: 'Proximité & Accessibilité',
-    desc: 'Le bon soin, au bon endroit, au bon coût. Nous rapprochons les patients des laboratoires, cliniques et centres d’imagerie partout à Dakar et dans les régions.',
-  },
-];
 
 export function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0b1120] text-gray-900 dark:text-gray-100">
-      {/* ── 1. HERO BANNER ────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-16 pb-20 bg-gradient-to-br from-[#0a2540] via-[#123a63] to-[#1a5276] text-white">
+    <div className="mc-about-page min-h-screen bg-white dark:bg-[#0b1120] text-[#123a63] dark:text-gray-100 font-sans">
+      {/* ── 1. Hero ── */}
+      <section className="relative overflow-hidden pt-20 pb-16 bg-gradient-to-br from-[#0a2540] via-[#123a63] to-[#1a5276] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0ea5e9]/20 border border-[#0ea5e9]/40 text-[#0ea5e9] text-xs font-black uppercase tracking-wider mb-6"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#0ea5e9] animate-ping"></span>
-              À propos de MedCare
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="font-syne font-black text-3xl sm:text-5xl text-white leading-tight mb-4"
-            >
-              L’accès aux soins,{' '}
-              <span className="text-[#0ea5e9]">sans opacité ni frontière.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-base sm:text-lg text-sky-100/90 leading-relaxed font-medium"
-            >
-              MedCare Connect est la première plateforme paraclinique digitale du Sénégal, conçue pour unifier l’information médicale, éclairer le choix des patients et moderniser l’offre des praticiens.
-            </motion.p>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#4fa3c7]/15 border border-[#4fa3c7]/35 text-[#4fa3c7] text-xs font-bold uppercase tracking-wider mb-5">
+              <span className="w-2 h-2 rounded-full bg-[#4fa3c7] animate-pulse"></span>
+              Sénégal · Santé digitale
+            </div>
+            <h1 className="font-syne font-black text-3xl sm:text-5xl text-white leading-tight mb-4" style={{ color: '#fff' }}>
+              Organiser l'offre de soins,<br />
+              <em className="italic not-italic text-[#4fa3c7]">pour tous.</em>
+            </h1>
+            <p className="text-base sm:text-lg text-white/80 leading-relaxed font-medium">
+              Medcare est la première plateforme digitale dédiée à la transparence et à l'accessibilité des services médicaux au Sénégal.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── 2. STATS BAR ──────────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-[#0f172a] border-b border-gray-200 dark:border-gray-800 shadow-sm">
+      {/* ── 2. Stats ── */}
+      <section className="bg-white dark:bg-[#0f172a] border-b border-gray-200 dark:border-gray-800 shadow-sm" aria-label="Chiffres clés">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-gray-800">
-            {STATS.map((s) => (
-              <div key={s.label} className="p-6 text-center">
-                <div
-                  className={`font-syne font-black text-3xl sm:text-4xl ${
-                    s.accent ? 'text-[#0ea5e9]' : 'text-[#123a63] dark:text-white'
-                  }`}
-                >
-                  {s.val}
-                </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mt-1">
-                  {s.label}
-                </div>
+            <div className="p-8 text-center">
+              <div className="font-syne font-black text-3xl sm:text-4xl text-[#4fa3c7] mb-1">
+                100+
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 3. VISION & MANIFESTE ─────────────────────────────────────── */}
-      <section className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 space-y-4">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#0ea5e9]">
-              Notre Vision
-            </span>
-            <h2 className="font-syne font-extrabold text-2xl sm:text-4xl text-[#0f172a] dark:text-white leading-tight">
-              Redéfinir le parcours de soins au Sénégal
-            </h2>
-            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
-              Chaque jour, des milliers de personnes parcourent les rues de Dakar à la recherche d’un examen médical disponible, comparent à l’aveugle des tarifs souvent introuvables et découvrent au comptoir que leur mutuelle n’est pas acceptée.
-            </p>
-            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
-              MedCare est né d’une conviction fondamentale : <strong>l’information médicale n’est pas un luxe, c’est le premier acte du soin.</strong> En répertoriant rigoureusement les actes, les prix réels et les disponibilités des structures de santé agréées, nous redonnons le pouvoir au patient.
-            </p>
-          </div>
-
-          <div className="lg:col-span-5">
-            <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#123a63] to-[#0a2540] text-white shadow-xl relative overflow-hidden">
-              <span className="text-6xl font-serif text-[#0ea5e9]/30 absolute top-2 left-4 select-none pointer-events-none">
-                “
-              </span>
-              <div className="text-xs font-bold uppercase tracking-widest text-[#0ea5e9] mb-3">
-                Le Manifeste MedCare
+              <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Structures référencées
               </div>
-              <p className="text-sm sm:text-base italic text-sky-100 leading-relaxed relative z-10 font-medium">
-                « Un patient averti est un patient soigné plus vite. Notre mission est d’éliminer l’incertitude financière et logistique pour que chacun puisse se concentrer sur l'essentiel : sa guérison. »
-              </p>
-              <div className="mt-6 pt-4 border-t border-white/15 text-xs text-sky-200 font-bold">
-                L’équipe de direction MedCare Connect Sénégal
+            </div>
+            <div className="p-8 text-center">
+              <div className="font-syne font-black text-3xl sm:text-4xl text-[#123a63] dark:text-white mb-1">
+                5 000+
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Actes médicaux
+              </div>
+            </div>
+            <div className="p-8 text-center">
+              <div className="font-syne font-black text-3xl sm:text-4xl text-[#4fa3c7] mb-1">
+                0%
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Commission sur les actes
+              </div>
+            </div>
+            <div className="p-8 text-center">
+              <div className="font-syne font-black text-3xl sm:text-4xl text-[#123a63] dark:text-white mb-1">
+                24/7
+              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                Accessibilité
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 4. NOS VALEURS ────────────────────────────────────────────── */}
-      <section className="py-16 bg-white dark:bg-[#0f172a] border-y border-gray-200 dark:border-gray-800">
+      {/* ── 3. Vision ── */}
+      <section className="py-16 sm:py-20 bg-white dark:bg-[#0f172a]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#0ea5e9]">
-              Nos Principes Fondateurs
-            </span>
-            <h2 className="font-syne font-extrabold text-2xl sm:text-3xl text-[#0f172a] dark:text-white mt-1">
-              Des valeurs ancrées dans la confiance
-            </h2>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 space-y-4">
+              <h2 className="font-syne font-black text-2xl sm:text-4xl text-[#123a63] dark:text-white leading-tight">
+                L'infrastructure digitale de la <em className="not-italic text-[#4fa3c7]">santé de demain.</em>
+              </h2>
+              <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+                Né d'un besoin de simplification, Medcare centralise l'offre de soins paracliniques (biologie, imagerie, explorations) pour permettre à chaque patient de trouver le bon examen, au bon prix et à proximité.
+              </p>
+              <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+                Nous croyons que la donnée médicale doit être structurée et accessible pour améliorer l'efficacité du système de santé sénégalais.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {VALUES.map((val) => (
-              <div
-                key={val.title}
-                className="p-7 rounded-3xl bg-[#f8fafc] dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-12 h-12 rounded-2xl bg-[#0a5c8a]/10 dark:bg-sky-500/10 text-[#0a5c8a] dark:text-[#0ea5e9] flex items-center justify-center text-2xl mb-4">
-                    <i className={`ti ${val.icon}`}></i>
-                  </div>
-                  <h3 className="font-syne font-bold text-lg text-[#0f172a] dark:text-white mb-2">
-                    {val.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
-                    {val.desc}
-                  </p>
-                </div>
+            <div className="lg:col-span-5">
+              <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#123a63] to-[#0a2540] text-white shadow-xl relative overflow-hidden">
+                <span className="text-7xl font-serif text-[#4fa3c7]/20 absolute top-2 left-4 select-none pointer-events-none">
+                  “
+                </span>
+                <h3 className="mc-about-vision-title text-xs font-bold uppercase tracking-wider mb-3">
+                  Notre Vision
+                </h3>
+                <p className="text-base sm:text-lg italic text-white/90 leading-relaxed relative z-10">
+                  Devenir la couche digitale de référence qui organise et structure l'offre de services médicaux à travers le continent africain.
+                </p>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 5. CALL TO ACTION ─────────────────────────────────────────── */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-        <h2 className="font-syne font-extrabold text-2xl sm:text-3xl text-[#0f172a] dark:text-white mb-3">
-          Prêt à simplifier vos démarches de santé ?
-        </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 max-w-lg mx-auto mb-8 font-medium">
-          Rejoignez des milliers de patients et de soignants qui font confiance à MedCare au Sénégal.
-        </p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link
-            to="/search"
-            className="px-6 py-3 rounded-xl bg-[#123a63] hover:bg-[#1a4f87] text-white font-bold text-xs shadow-md transition-all"
-          >
-            Rechercher un examen médical
-          </Link>
-          <Link
-            to="/register"
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white font-bold text-xs shadow-md transition-all"
-          >
-            Rejoindre MedCare en tant que soignant
-          </Link>
+      {/* ── 4. Valeurs ── */}
+      <section className="py-16 sm:py-20 bg-gray-50 dark:bg-[#0b1120] border-y border-gray-200 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4fa3c7]/10 text-[#4fa3c7] text-xs font-bold uppercase tracking-wider mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4fa3c7]"></span>
+              Nos engagements
+            </div>
+            <h2 className="font-syne font-black text-2xl sm:text-3xl text-[#123a63] dark:text-white">
+              Nos Valeurs Fondamentales
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 font-medium">
+              Ce qui nous guide chaque jour dans le développement de la plateforme.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-8 rounded-3xl bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-800 shadow-sm text-center flex flex-col items-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#4fa3c7]/10 text-[#123a63] dark:text-[#4fa3c7] flex items-center justify-center text-2xl mb-5">
+                <i className="ti ti-eye"></i>
+              </div>
+              <h3 className="font-syne font-bold text-lg text-[#123a63] dark:text-white mb-2">
+                Transparence
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                Nous luttons contre l'asymétrie d'information en affichant les tarifs réels et les conventions d'assurance en toute clarté.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-800 shadow-sm text-center flex flex-col items-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#4fa3c7]/10 text-[#123a63] dark:text-[#4fa3c7] flex items-center justify-center text-2xl mb-5">
+                <i className="ti ti-users"></i>
+              </div>
+              <h3 className="font-syne font-bold text-lg text-[#123a63] dark:text-white mb-2">
+                Équité
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                Chaque patient, quel que soit son profil, doit pouvoir accéder aux meilleurs soins au meilleur prix disponible sur le marché.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-800 shadow-sm text-center flex flex-col items-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#4fa3c7]/10 text-[#123a63] dark:text-[#4fa3c7] flex items-center justify-center text-2xl mb-5">
+                <i className="ti ti-shield-check"></i>
+              </div>
+              <h3 className="font-syne font-bold text-lg text-[#123a63] dark:text-white mb-2">
+                Fiabilité
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                Nous certifions les structures de santé présentes sur notre plateforme pour garantir la qualité et l'exactitude des données.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. Mission / CTA ── */}
+      <section className="py-16 sm:py-20 bg-white dark:bg-[#0f172a]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4fa3c7]/10 text-[#4fa3c7] text-xs font-bold uppercase tracking-wider mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#4fa3c7]"></span>
+            Notre mission
+          </div>
+          <h2 className="font-syne font-black text-2xl sm:text-4xl text-[#123a63] dark:text-white mb-4">
+            Simplifier l'accès aux soins au Sénégal
+          </h2>
+          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium mb-3">
+            Medcare permet à chaque patient de rechercher, comparer et réserver des examens médicaux en quelques clics — sans intermédiaire, sans commission, avec une totale transparence sur les tarifs et la couverture assurance.
+          </p>
+          <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium mb-8">
+            Nous accompagnons les structures de santé dans leur transformation numérique en leur fournissant des outils de gestion modernes et une visibilité nationale.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              to="/sante/recherche/"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#123a63] to-[#0a2540] text-white font-bold text-sm shadow-md hover:brightness-110 transition-all"
+            >
+              <i className="ti ti-search"></i>
+              <span>Trouver un service</span>
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-300 dark:border-gray-700 text-[#123a63] dark:text-white font-bold text-sm hover:border-[#4fa3c7] transition-all"
+            >
+              <i className="ti ti-mail"></i>
+              <span>Nous contacter</span>
+            </Link>
+          </div>
         </div>
       </section>
     </div>

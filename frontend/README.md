@@ -1,17 +1,16 @@
 # MedCare Connect — Frontend SPA (React + Vite + Framer Motion)
 
-Bienvenue dans l'espace de développement frontend moderne de **MedCare Connect**.
-Ce projet React SPA est développé en parallèle du frontend Django SSR existant, sans altérer ni supprimer les templates ou fichiers statiques actuels.
+Bienvenue dans l'espace de développement frontend de **MedCare Connect**. React est la cible de migration des pages Django, tandis que Django conserve l'authentification, les sessions, les permissions et la logique métier. Les templates des parcours qui n'ont pas encore été migrés restent servis par Django.
 
 ---
 
 ## 🚀 Fonctionnalités Implémentées
 
 1. **Recherche de soins & structures (SIPN)** :
-   - Barre de recherche avec géolocalisation directe (HTML5 Geolocation API).
-   - Cartes de résultats enrichies (`SearchCard`) avec animations d'entrée Framer Motion décalées.
-   - Panel de filtres rétractable : type d'établissement, distance maximale, tri par tarif / proximité / note.
-   - Design tokens et couleurs alignés sur `sipn_cards.css` (`--mc-navy`, `--mc-accent`, `--sipn-green`).
+   - URL canonique française `/sante/recherche/` ; `/search` reste une redirection de compatibilité.
+   - Résultats, familles d'actes, assurances, régions, délais et pagination chargés depuis la recherche métier Django.
+   - Filtres synchronisés avec les paramètres d'URL : actes multiples, tarifs, régime, ville, type, région, domicile, délai et géolocalisation.
+   - Cartes de prestations alignées sur les templates SIPN et alimentées par les vraies offres et leurs tarifs.
 
 2. **Expérience Mobile Dédiée (`/mobile`)** :
    - Interface inspirée de `templates/healthcare/patient_mobile.html`.
@@ -30,9 +29,9 @@ Ce projet React SPA est développé en parallèle du frontend Django SSR existan
 
 5. **Panier de Soins & Devis (`CartDrawer`)** :
    - Tiroir latéral animé (Framer Motion spring physics).
-   - Ajout d'actes depuis les résultats de recherche.
-   - Calcul en temps réel du total estimé en FCFA.
-   - Bouton de demande de devis.
+   - Ajout, retrait et vidage reliés aux vues panier Django ; contenu et quantités restaurés depuis la session.
+   - Total calculé à partir des prix et quantités du panier.
+   - Le bouton de devis ouvre le parcours Django existant.
 
 6. **Internationalisation (i18n)** :
    - Prise en charge Français (FR) et Anglais (EN) via `i18next` & `react-i18next`.
@@ -41,6 +40,11 @@ Ce projet React SPA est développé en parallèle du frontend Django SSR existan
 7. **Thème Sombre / Clair** :
    - Mode clair et mode sombre complets avec transition douce.
    - Bouton de bascule rapide dans la barre de navigation.
+
+8. **Pages publiques migrées** :
+   - Accueil, inscription et connexion.
+   - À propos, comment ça marche, contact et charte de confiance.
+   - Les URL canoniques Django de ces pages chargent maintenant l'application React.
 
 ---
 
@@ -62,21 +66,27 @@ Ce projet React SPA est développé en parallèle du frontend Django SSR existan
 ### 1. Démarrer le serveur de développement React
 ```bash
 cd frontend
+npm ci  # première installation seulement
 npm run dev
 ```
 L'application sera accessible sur `http://localhost:5173`.
 
 ### 2. Connecter au backend Django
-Le serveur Vite est préconfiguré pour relayer les requêtes `/api`, `/healthcare`, `/cart` vers le backend Django (`http://127.0.0.1:8000`).
+Le serveur Vite relaie les appels API et les requêtes nécessaires vers le backend Django (`http://127.0.0.1:8000`). Les pages d'accueil, d'inscription, de connexion et `/sante/recherche/` sont servies par React ; Django conserve l'authentification, les sessions et la logique métier.
 
-Lancez votre serveur Django habituel dans un autre terminal :
+Dans un second terminal ouvert à la racine du dépôt, lancez Django :
 ```bash
-py manage.py runserver
+py -m venv .venv  # première installation seulement
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r backend/requirements.txt  # première installation seulement
+python backend/manage.py migrate
+python backend/manage.py runserver
 ```
+En développement, ouvrez `http://localhost:5173`. La connexion et l'inscription patient utilisent les vues et la base de données Django. Les pages métier non encore migrées continuent d'utiliser leurs templates Django jusqu'à ce que leur équivalent React soit prêt.
 
 ### 3. Compiler pour la production
 ```bash
 cd frontend
 npm run build
 ```
-Les fichiers statiques optimisés seront générés dans le dossier `frontend/dist/`.
+Les fichiers sont générés dans `backend/static/react/` et servis par Django sous `/static/react/`. La construction Docker produit automatiquement ce bundle avant `collectstatic`.

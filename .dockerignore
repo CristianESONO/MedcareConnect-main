@@ -1,0 +1,9 @@
+**/node_modules
+**/__pycache__
+**/*.py[cod]
+.git
+.pytest_cache
+venv
+frontend/dist
+backend/static/react
+staticfiles

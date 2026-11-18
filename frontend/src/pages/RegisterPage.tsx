@@ -1,6 +1,7 @@
-import { useState, useId } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getCsrfToken } from '../lib/auth';
+import './visitorRegister.css';
 
 type Mode = 'patient' | 'structure' | 'praticien';
 type Topologie = 'simple' | 'multiservice' | 'multisite';
@@ -39,8 +40,120 @@ function slugify(str: string): string {
     .replace(/^_+|_+$/g, '');
 }
 
+function RegisterMarketing({ mode, onModeChange }: { mode: Mode; onModeChange: (mode: Mode) => void }) {
+  const patientMode = mode === 'patient';
+  return (
+    <>
+      <header className="hdr hdr--toggle-only mc-register-marketing-toggle">
+        <div className="hdr__in">
+          <div className="toggle" role="tablist" aria-label="Choisir votre profil">
+            <span className="toggle__pill" style={{ transform: patientMode ? 'translateX(0)' : 'translateX(calc(100% + 6px))' }} />
+            <button type="button" className="toggle__btn" role="tab" aria-selected={patientMode} onClick={() => onModeChange('patient')}>
+              <span className="dot"><i className="ti ti-search" /></span> Patient
+            </button>
+            <button type="button" className="toggle__btn" role="tab" aria-selected={!patientMode} onClick={() => onModeChange('structure')}>
+              <span className="dot"><i className="ti ti-building-hospital" /></span> Soignant
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <section className={`stage stage--patient${patientMode ? ' is-active' : ''}`}>
+        <div className="hero">
+          <div className="hero__in">
+            <div>
+              <span className="eyebrow">Sénégal · Pour les patients</span>
+              <h1 className="h1">Votre santé,<br /><em>au bout des doigts.</em></h1>
+              <p className="lead">Trouvez, comparez et réservez vos examens paracliniques au Sénégal. Prix réels, assurances acceptées et localisation exacte, avant même de vous déplacer.</p>
+              <div className="cta-row">
+                <a className="btn btn--primary" href="#inscription-form">Créer mon compte →</a>
+                <a className="btn btn--ghost" href="#patient-flow"><i className="ti ti-help-circle" /> Voir comment ça marche</a>
+              </div>
+            </div>
+            <div className="mock">
+              <div className="mc-marketing-mock">
+                <div className="appcard__search"><i className="ti ti-search" /> NFS, Scanner cérébral, Échographie…</div>
+                <div className="appcard__chips"><span className="chip"><i className="ti ti-flask" /> Biologie</span><span className="chip"><i className="ti ti-scan" /> Imagerie</span><span className="chip chip--on"><i className="ti ti-map-pin" /> Proche</span></div>
+                <div className="res">
+                  <div className="res__head"><div className="res__nm">Labo Analyses Liberté VI</div><div className="res__ty">Laboratoire d'analyses médicales</div><div className="res__loc"><i className="ti ti-map-pin" /> Dakar, Liberté VI</div></div>
+                  <div className="acte"><span className="acte__check"><i className="ti ti-check" /></span><div className="acte__body"><div className="acte__name">Réticulocytes</div><div className="acte__delai"><i className="ti ti-clock" /> Délai résultats : dans la journée (≤ 4h)</div></div><div className="acte__price">5 500 F</div></div>
+                  <div className="res__foot"><span className="res__ins"><i className="ti ti-check" /> CMU · CNAM · FNR +3</span><a href="/sante/recherche/" className="res__btn">Obtenir mon devis</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="sec" id="patient-flow">
+          <div className="sec__eyebrow">Du symptôme au rendez-vous</div>
+          <h2 className="sec__title">En <em>4 gestes simples</em></h2>
+          <p className="sec__sub">Sur mobile, en quelques minutes, sans intermédiaire.</p>
+          <div className="flow">
+            <div className="flow__item"><div className="flow__ico"><i className="ti ti-search" /></div><h4>Cherchez</h4><p>Un acte par son nom ou par pilier.</p></div>
+            <div className="flow__item"><div className="flow__ico"><i className="ti ti-scale" /></div><h4>Comparez</h4><p>Prix, assurances et distance.</p></div>
+            <div className="flow__item"><div className="flow__ico"><i className="ti ti-message" /></div><h4>Recevez un devis</h4><p>Chiffré, référencé, dans le chat.</p></div>
+            <div className="flow__item"><div className="flow__ico"><i className="ti ti-calendar" /></div><h4>Réservez</h4><p>Créneau confirmé, référence à l'accueil.</p></div>
+          </div>
+        </div>
+        <div className="sec">
+          <div className="sec__eyebrow">Pourquoi passer par MedCare</div>
+          <h2 className="sec__title">Tout savoir <em>avant</em> de vous déplacer</h2>
+          <p className="sec__sub">Toutes les structures paracliniques du Sénégal réunies. Gratuit, sans compte pour chercher, sans commission sur les actes.</p>
+          <div className="grid-3">
+            <article className="card"><div className="card__ico"><i className="ti ti-coin" /></div><h3>Les prix, avant de venir</h3><p>Chaque acte affiche son tarif déclaré et daté par la structure. Fini les mauvaises surprises à l'accueil.</p></article>
+            <article className="card"><div className="card__ico"><i className="ti ti-shield-check" /></div><h3>Vos assurances vérifiées</h3><p>CMU, IPM, CNAM, assureurs privés. Vous voyez ce qui est accepté et la part prise en charge estimée.</p></article>
+            <article className="card"><div className="card__ico"><i className="ti ti-map-pin" /></div><h3>La structure la plus proche</h3><p>Localisation exacte, horaires et itinéraire. Comparez par prix, couverture ou distance.</p></article>
+            <article className="card"><div className="card__ico"><i className="ti ti-clipboard-list" /></div><h3>Plusieurs actes, un panier</h3><p>Regroupez vos examens et voyez d'un coup quelle structure couvre votre ordonnance complète.</p></article>
+            <article className="card"><div className="card__ico"><i className="ti ti-message" /></div><h3>Devis et RDV en un fil</h3><p>Un devis chiffré et référencé, puis le choix du créneau, directement dans la conversation.</p></article>
+            <article className="card"><div className="card__ico"><i className="ti ti-device-mobile" /></div><h3>Tout suivi au même endroit</h3><p>RDV à venir, devis en attente, assurances et références de dossier dans votre tableau de bord.</p></article>
+          </div>
+        </div>
+        <div className="finalcta"><div className="finalcta__in"><h3>100% gratuit pour les patients</h3><p>La recherche, la comparaison et le devis ne vous coûtent rien. MedCare ne prend aucune commission sur les actes médicaux.</p><div className="cta-row"><a className="btn btn--primary" href="#inscription-form">Créer mon compte gratuit →</a></div></div></div>
+      </section>
+
+      <section className={`stage stage--structure${patientMode ? '' : ' is-active'}`}>
+        <div className="hero">
+          <div className="hero__in">
+            <div>
+              <span className="eyebrow">Offre de lancement · CPP-2026</span>
+              <h1 className="h1">Devenez<br /><em>Partenaire Pionnier</em></h1>
+              <p className="lead">Rejoignez les premières structures qui construisent l'annuaire paraclinique de référence du Sénégal. Un canal d'acquisition actif de patients, sans commission sur vos actes, jamais.</p>
+              <div className="cta-row"><a className="btn btn--primary" href="#inscription-form">Devenir Partenaire Pionnier →</a><a className="btn btn--ghost" href="https://wa.me/221781673189" target="_blank" rel="noreferrer"><i className="ti ti-message" /> Parler à l'équipe</a></div>
+              <div className="pill-badge"><i className="ti ti-star" /> <b>50 places</b> · Dakar</div>
+            </div>
+            <div className="mock"><div className="dash"><div className="dash__bar"><span className="dash__badge"><i className="ti ti-star" /> Partenaire Pionnier</span><span className="dash__dots"><i /><i /><i /></span></div><div className="dash__title">Tableau de bord · période Pionnière</div><div className="kpis"><div className="kpi"><div className="lbl">Vues profil</div><div className="val">347</div><div className="up">↑ +42 / semaine</div></div><div className="kpi"><div className="lbl">Devis WhatsApp</div><div className="val">62</div><div className="up">↑ +8 / semaine</div></div><div className="kpi"><div className="lbl">Réservations</div><div className="val">28</div><div className="up">↑ +4 / semaine</div></div><div className="kpi kpi--accent"><div className="lbl">Valeur générée</div><div className="val">1,24M</div><div className="up">FCFA · actes</div></div></div><div className="spark"><i /><i /><i /><i /><i /><i /><i /><i className="g" /></div></div></div>
+          </div>
+        </div>
+        <div className="sec">
+          <div className="sec__eyebrow">Ce que vous obtenez</div>
+          <h2 className="sec__title">Quatre avantages <em>réservés aux pionniers</em></h2>
+          <p className="sec__sub">Votre vitrine digitale prête en 15 jours, et une présence conservée à vie.</p>
+          <div className="grid-2">
+            <article className="card num-card"><span className="num">01</span><div className="card__ico"><i className="ti ti-gift" /></div><h3>6 mois d'accès Pro</h3><p><b>Gratuit.</b> Annuaire, devis WhatsApp, réservations, tableau de bord et support prioritaire.</p></article>
+            <article className="card num-card"><span className="num">02</span><div className="card__ico"><i className="ti ti-device-mobile" /></div><h3>MedPlaque NFC offerte</h3><p><b>Posée à votre accueil.</b> Un scan renvoie le patient vers votre profil public MedCare.</p></article>
+            <article className="card num-card"><span className="num">03</span><div className="card__ico"><i className="ti ti-circle-check" /></div><h3>Badge Pionnier à vie</h3><p><b>Permanent</b> sur votre profil. Le symbole de la confiance accordée dès le lancement.</p></article>
+            <article className="card num-card"><span className="num">04</span><div className="card__ico"><i className="ti ti-chart-bar" /></div><h3>Bilan d'activité au M5</h3><p><b>Avant toute décision.</b> Vues, devis, réservations et scans NFC en données réelles.</p></article>
+          </div>
+          <div className="band band--blue"><div className="band__left"><div className="band__ico"><i className="ti ti-infinity" /></div><div><h4>Votre présence digitale à vie, sans frais</h4><p>Profil public actif à vie et badge Pionnier conservés, quel que soit votre plan ou une pause d'abonnement.</p></div></div></div>
+        </div>
+        <div className="sec">
+          <div className="grid-2">
+            <div className="guar"><div className="guar__ico"><i className="ti ti-scale" /></div><div><h4>Modèle 100% sans commission</h4><p>MedCare ne prélève aucune commission sur vos actes médicaux. Conforme Art. 11 · Décret N°67-147.</p></div></div>
+            <div className="guar"><div className="guar__ico"><i className="ti ti-shield-check" /></div><div><h4>Sécurité de vos données</h4><p>Données de santé hébergées au Sénégal, pour la souveraineté numérique.</p></div></div>
+          </div>
+        </div>
+        <div className="sec"><div className="steps"><div className="step"><div className="n">1</div><h4>OUI de principe</h4><p>Entretien avec le responsable de la structure.</p></div><div className="step"><div className="n">2</div><h4>Signature CPP</h4><p>Convention de Partenariat Pionnier, formelle et numérotée.</p></div><div className="step"><div className="n">3</div><h4>Onboarding J+15</h4><p>Profil public complet et MedPlaque livrée.</p></div></div></div>
+        <div className="finalcta"><div className="finalcta__in"><h3>Prêt à rejoindre les pionniers ?</h3><p>Créez votre compte établissement en quelques minutes, ou découvrez d'abord comment rejoindre le programme.</p><div className="cta-row"><a className="btn btn--primary" href="#inscription-form">Créer mon compte →</a></div></div></div>
+      </section>
+    </>
+  );
+}
+
 export function RegisterPage() {
-  const [mode, setMode] = useState<Mode>('structure');
+  const [mode, setMode] = useState<Mode>(() => (
+    new URLSearchParams(window.location.search).get('type') === 'patient'
+      ? 'patient'
+      : 'structure'
+  ));
   const [topologie, setTopologie] = useState<Topologie>('simple');
   const [profession, setProfession] = useState<Profession>('medecin');
   const [specialties, setSpecialties] = useState<string[]>([]);
@@ -62,14 +175,14 @@ export function RegisterPage() {
   const [adresse, setAdresse] = useState('');
   const [quartier, setQuartier] = useState('');
   const [ville, setVille] = useState('Dakar');
-  const [region, setRegion] = useState('');
   const [telPro, setTelPro] = useState('');
 
   // Praticien specific
   const [numOrdre, setNumOrdre] = useState('');
   const [zoneIntervention, setZoneIntervention] = useState('');
 
-  const [submitted, setSubmitted] = useState(false);
+  const [submitErrors, setSubmitErrors] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // Auto-generate username if not manually edited
   const handleNameChange = (first: string, last: string) => {
@@ -103,13 +216,55 @@ export function RegisterPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== passwordConfirm) {
-      alert('Les deux mots de passe ne correspondent pas.');
+      setSubmitErrors(['Les deux mots de passe ne correspondent pas.']);
       return;
     }
-    setSubmitted(true);
+
+    setSubmitErrors([]);
+    setLoading(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const next = new URLSearchParams(window.location.search).get('next');
+      if (next) formData.set('next', next);
+      formData.set('organisme_topology', topologie);
+      formData.set('praticien_profession', profession);
+      formData.set('praticien_specialties', JSON.stringify(specialties));
+      formData.set('praticien_modes', exerciseModes.join(','));
+      const csrfToken = await getCsrfToken();
+
+      const response = await fetch('/api/auth/register/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: formData,
+      });
+      const data = (await response.json()) as {
+        redirect_url?: string;
+        errors?: Record<string, string[]>;
+      };
+      if (!response.ok) {
+        setSubmitErrors(Object.values(data.errors || {}).flat());
+        return;
+      }
+      if (!data.redirect_url) {
+        throw new Error('Le serveur n’a pas indiqué la page de destination.');
+      }
+      window.location.assign(data.redirect_url);
+    } catch (error) {
+      setSubmitErrors([
+        error instanceof Error
+          ? error.message
+          : 'Une erreur inattendue a empêché l’inscription.',
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const titleText =
@@ -134,45 +289,27 @@ export function RegisterPage() {
       : 'Créer mon compte Patient →';
 
   return (
-    <div className="min-h-screen py-10 px-4 flex items-center justify-center bg-[#f8fafc] dark:bg-[#0b1120]">
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-2xl bg-white dark:bg-[#0f172a] rounded-3xl shadow-xl border border-gray-200 dark:border-gray-800 p-6 sm:p-10"
-      >
-        {/* Brand Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-block mb-3">
-            <img src="/logo_MEDCARE.png" alt="MedCare" className="h-10 w-auto mx-auto object-contain" />
-          </Link>
-          <h1 className="font-syne font-extrabold text-2xl sm:text-3xl text-[#123a63] dark:text-white">
-            {titleText}
-          </h1>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
-            {subtitleText}
-          </p>
-        </div>
-
-        {submitted ? (
-          <div className="text-center py-10">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
-              <i className="ti ti-circle-check"></i>
-            </div>
-            <h3 className="font-syne font-bold text-xl text-gray-900 dark:text-white">
-              Votre inscription est validée !
-            </h3>
-            <p className="text-xs text-gray-500 mt-2 max-w-sm mx-auto">
-              Bienvenue sur MedCare Connect. Vous pouvez maintenant vous connecter à votre compte.
-            </p>
-            <Link
-              to="/login"
-              className="mt-6 inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white font-bold text-xs shadow-md"
-            >
-              Se connecter à MedCare
-            </Link>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
+    <div className="mc-page-wrap mc-landing-page mc-react-register">
+      <RegisterMarketing mode={mode} onModeChange={setMode} />
+      <section id="inscription-form" className="sec landing-register-sec">
+        <div className="mc-react-form-wrap">
+          <div className="card mc-react-form-card">
+            <h1>{titleText}</h1>
+            <p className="mc-react-form-subtitle">{subtitleText}</p>
+        <form onSubmit={handleSubmit} className="space-y-5">
+            <input type="hidden" name="user_type" value={mode === 'patient' ? 'patient' : 'prestataire'} />
+            <input type="hidden" name="account_nature" value={mode === 'praticien' ? 'praticien' : 'structure'} />
+            <input type="hidden" name="organisme_topology" value={topologie} />
+            <input type="hidden" name="praticien_profession" value={profession} />
+            <input type="hidden" name="praticien_specialties" value={JSON.stringify(specialties)} />
+            <input type="hidden" name="praticien_modes" value={exerciseModes.join(',')} />
+            {submitErrors.length > 0 && (
+              <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                <ul className="list-disc space-y-1 pl-5">
+                  {submitErrors.map((error, index) => <li key={`${error}-${index}`}>{error}</li>)}
+                </ul>
+              </div>
+            )}
             {/* ── Fork Soignant / Structure ── */}
             {mode !== 'patient' ? (
               <div id="fork-container">
@@ -260,6 +397,7 @@ export function RegisterPage() {
                   </label>
                   <input
                     type="text"
+                    name="first_name"
                     required
                     placeholder="Ex : Cheikh"
                     value={prenom}
@@ -273,6 +411,7 @@ export function RegisterPage() {
                   </label>
                   <input
                     type="text"
+                    name="last_name"
                     required
                     placeholder="Ex : Diagne"
                     value={nom}
@@ -290,6 +429,7 @@ export function RegisterPage() {
               </label>
               <input
                 type="text"
+                name="username"
                 required
                 placeholder="ex : polyclinique_de_libe, dr_diagne"
                 value={username}
@@ -311,6 +451,7 @@ export function RegisterPage() {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   required
                   placeholder="votre@email.com"
                   value={email}
@@ -325,6 +466,7 @@ export function RegisterPage() {
                 </label>
                 <input
                   type="tel"
+                  name="phone_number"
                   placeholder="+221 77 000 00 00"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
@@ -351,6 +493,7 @@ export function RegisterPage() {
                   </label>
                   <input
                     type="text"
+                    name="organisme_name"
                     required
                     placeholder="Ex : Clinique Les Almadies, Laboratoire Bio-Santé"
                     value={enseigne}
@@ -421,6 +564,7 @@ export function RegisterPage() {
                   </label>
                   <input
                     type="text"
+                    name="organisme_address"
                     required
                     placeholder="Rue, numéro"
                     value={adresse}
@@ -436,6 +580,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       type="text"
+                      name="organisme_quartier"
                       placeholder="Ex : Plateau, Mermoz"
                       value={quartier}
                       onChange={(e) => setQuartier(e.target.value)}
@@ -448,6 +593,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       type="text"
+                      name="organisme_city"
                       value={ville}
                       onChange={(e) => setVille(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
@@ -461,11 +607,25 @@ export function RegisterPage() {
                   </label>
                   <input
                     type="tel"
+                    name="organisme_contact_phone"
                     required
                     placeholder="+221 33 000 00 00"
                     value={telPro}
                     onChange={(e) => setTelPro(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
+                    Logo ou photo de l'établissement <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    name="organisme_logo"
+                    accept="image/*"
+                    required
+                    className="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm text-gray-700 dark:text-gray-200"
                   />
                 </div>
               </div>
@@ -516,6 +676,7 @@ export function RegisterPage() {
                   </label>
                   <input
                     type="text"
+                    name="praticien_ordre"
                     required
                     placeholder="Ex : N° Ordre National des Médecins"
                     value={numOrdre}
@@ -597,6 +758,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       type="text"
+                      name="praticien_zone"
                       placeholder="Ex : Dakar, Almadies"
                       value={zoneIntervention}
                       onChange={(e) => setZoneIntervention(e.target.value)}
@@ -609,6 +771,7 @@ export function RegisterPage() {
                     </label>
                     <input
                       type="tel"
+                      name="praticien_phone"
                       required
                       placeholder="+221 77 000 00 00"
                       value={telPro}
@@ -629,18 +792,21 @@ export function RegisterPage() {
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
+                    name="password1"
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-750 text-gray-900 dark:text-white text-sm pr-9"
                   />
-                  <span
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    className="mc-password-toggle"
+                    aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                   >
-                    <i className={`ti ${showPassword ? 'ti-eye-off' : 'ti-eye'}`}></i>
-                  </span>
+                    <i className={`ti ${showPassword ? 'ti-eye-off' : 'ti-eye'}`} />
+                  </button>
                 </div>
               </div>
 
@@ -651,18 +817,21 @@ export function RegisterPage() {
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
+                    name="password2"
                     required
                     placeholder="••••••••"
                     value={passwordConfirm}
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-750 text-gray-900 dark:text-white text-sm pr-9"
                   />
-                  <span
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    className="mc-password-toggle"
+                    aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                   >
-                    <i className={`ti ${showPassword ? 'ti-eye-off' : 'ti-eye'}`}></i>
-                  </span>
+                    <i className={`ti ${showPassword ? 'ti-eye-off' : 'ti-eye'}`} />
+                  </button>
                 </div>
               </div>
             </div>
@@ -670,21 +839,23 @@ export function RegisterPage() {
             {/* ── Submit Button ── */}
             <button
               type="submit"
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white font-syne font-extrabold text-sm sm:text-base shadow-lg hover:brightness-105 active:scale-[0.99] transition-all cursor-pointer"
+              disabled={loading}
+              className="mc-react-submit"
             >
-              {submitBtnText}
+              {loading ? 'Création du compte…' : submitBtnText}
             </button>
 
             {/* ── Sign in link ── */}
             <div className="text-center text-xs text-gray-500 pt-3 border-t border-gray-200 dark:border-gray-700">
               Déjà un compte ?{' '}
-              <Link to="/login" className="font-bold text-[#0a5c8a] dark:text-[#0ea5e9] hover:underline">
+              <Link to="/connexion/" className="font-bold text-[#0a5c8a] dark:text-[#0ea5e9] hover:underline">
                 Se connecter
               </Link>
             </div>
-          </form>
-        )}
-      </motion.div>
+        </form>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
