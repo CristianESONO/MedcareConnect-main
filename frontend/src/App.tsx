@@ -262,7 +262,7 @@ function AppLayout() {
           Aller au contenu
         </a>
         {visitorPage ? (
-          <VisitorHeader />
+          <VisitorHeader authSession={authSession} authSessionError={authSessionError} />
         ) : !mobileDemoPage && !isAdminPage ? (
           <>
             <Navbar
@@ -275,6 +275,7 @@ function AppLayout() {
             <Sidebar
               open={sidebarOpen}
               authSession={authSession}
+              authSessionError={authSessionError}
               onClose={() => setSidebarOpen(false)}
             />
           </>

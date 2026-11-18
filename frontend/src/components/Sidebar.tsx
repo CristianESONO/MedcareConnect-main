@@ -6,10 +6,11 @@ import type { AuthSession } from '../lib/api';
 interface SidebarProps {
   open: boolean;
   authSession: AuthSession | null;
+  authSessionError: string;
   onClose: () => void;
 }
 
-export function Sidebar({ open, authSession, onClose }: SidebarProps) {
+export function Sidebar({ open, authSession, authSessionError, onClose }: SidebarProps) {
   const location = useLocation();
   const { theme, toggleTheme } = useAppStore();
 
@@ -38,9 +39,13 @@ export function Sidebar({ open, authSession, onClose }: SidebarProps) {
       ? [
         { to: '/sante/recherche/', label: 'Annuaire & Soins', icon: 'ti-search' },
         { to: '/users/compte/panel/', label: 'Mon compte patient', icon: 'ti-user' },
+        { to: '/users/compte/panel/profil/', label: 'Mes informations', icon: 'ti-id' },
+        { to: '/users/compte/panel/assurance/', label: 'Mon assurance', icon: 'ti-shield-check' },
         { to: '/users/compte/panel/chariot/', label: 'Mon panier', icon: 'ti-shopping-cart' },
         { to: '/users/compte/panel/devis/', label: 'Mes devis', icon: 'ti-file-invoice' },
         { to: '/users/compte/panel/rdv/', label: 'Mes rendez-vous', icon: 'ti-calendar' },
+        { to: '/messaging/notifications/', label: 'Notifications', icon: 'ti-bell' },
+        { to: '/messaging/rappels/', label: 'Rappels', icon: 'ti-alarm' },
       ]
       : [
         { to: '/', label: 'Accueil Vitrine', icon: 'ti-home' },
@@ -93,22 +98,35 @@ export function Sidebar({ open, authSession, onClose }: SidebarProps) {
               </button>
             </div>
 
-            {/* Rejoindre MedCare Promo Card */}
-            <div className="p-4 mx-4 mt-4 rounded-2xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white shadow-md flex items-center justify-between">
-              <div>
-                <div className="text-[11px] font-extrabold uppercase tracking-wider text-sky-200">
-                  Rejoindre le réseau
-                </div>
-                <div className="text-sm font-black mt-0.5">Inscription MedCare</div>
-              </div>
+            {authSession && !authSession.authenticated && !authSessionError && (
               <Link
-                to="/inscription/"
+                to="/sante/recherche/"
                 onClick={onClose}
-                className="px-3 py-1.5 rounded-xl bg-white text-[#0a5c8a] text-xs font-bold shadow hover:bg-gray-100 transition-colors"
+                className="mx-4 mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#0a5c8a] px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#084b70]"
               >
-                Commencer
+                <i className="ti ti-search text-base" aria-hidden="true" />
+                Trouver un service
               </Link>
-            </div>
+            )}
+
+            {/* Rejoindre MedCare Promo Card */}
+            {authSession && !authSession.authenticated && !authSessionError && (
+              <div className="p-4 mx-4 mt-4 rounded-2xl bg-gradient-to-r from-[#0a5c8a] to-[#0d9488] text-white shadow-md flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-extrabold uppercase tracking-wider text-sky-200">
+                    Rejoindre le réseau
+                  </div>
+                  <div className="text-sm font-black mt-0.5">Inscription MedCare</div>
+                </div>
+                <Link
+                  to="/inscription/"
+                  onClick={onClose}
+                  className="px-3 py-1.5 rounded-xl bg-white text-[#0a5c8a] text-xs font-bold shadow hover:bg-gray-100 transition-colors"
+                >
+                  Commencer
+                </Link>
+              </div>
+            )}
 
             {/* Menu Links */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -176,7 +194,7 @@ export function Sidebar({ open, authSession, onClose }: SidebarProps) {
                     <i className="ti ti-logout text-base text-gray-500"></i>
                     <span>Déconnexion</span>
                   </a>
-                ) : (
+                ) : authSession && !authSessionError ? (
                   <>
                     <Link
                       to="/connexion/"
@@ -195,6 +213,10 @@ export function Sidebar({ open, authSession, onClose }: SidebarProps) {
                       <span>Créer un compte (Patient / Soignant)</span>
                     </Link>
                   </>
+                ) : (
+                  <p className="px-3.5 py-2 text-xs text-gray-500 dark:text-gray-400" role="status" aria-live="polite">
+                    {authSessionError ? 'Session indisponible' : 'Vérification de la session…'}
+                  </p>
                 )}
               </div>
             </div>

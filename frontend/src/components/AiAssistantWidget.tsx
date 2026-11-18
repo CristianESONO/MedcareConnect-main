@@ -101,6 +101,9 @@ function renderAnswer(text: string) {
 
 export function AiAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => window.matchMedia('(max-width: 768px)').matches,
+  );
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [position, setPosition] = useState<WidgetPosition>(readStoredPosition);
@@ -121,6 +124,14 @@ export function AiAssistantWidget() {
   const suppressClickRef = useRef(false);
 
   const widgetPosition = positionFromRatios(position);
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)');
+    const updateViewport = () => setIsMobileViewport(media.matches);
+    updateViewport();
+    media.addEventListener('change', updateViewport);
+    return () => media.removeEventListener('change', updateViewport);
+  }, []);
 
   const savePosition = (nextPosition: WidgetPosition) => {
     const size = getWidgetSize();
@@ -218,13 +229,22 @@ export function AiAssistantWidget() {
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    inputRef.current?.focus();
+    if (!isMobileViewport) inputRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsOpen(false);
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, isMobileViewport]);
+
+  useEffect(() => {
+    if (!isOpen || !isMobileViewport) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen, isMobileViewport]);
 
   useEffect(() => {
     if (chatBodyRef.current) {
@@ -233,7 +253,7 @@ export function AiAssistantWidget() {
   }, [messages, isLoading]);
 
   useLayoutEffect(() => {
-    if (!isOpen || !fabRef.current || !panelRef.current) return;
+    if (!isOpen || isMobileViewport || !fabRef.current || !panelRef.current) return;
     const updatePanelPosition = () => {
       const button = fabRef.current?.getBoundingClientRect();
       const panel = panelRef.current;
@@ -251,7 +271,7 @@ export function AiAssistantWidget() {
     updatePanelPosition();
     window.addEventListener('resize', updatePanelPosition);
     return () => window.removeEventListener('resize', updatePanelPosition);
-  }, [isOpen, position]);
+  }, [isOpen, isMobileViewport, position]);
 
   const sendQuery = async (value: string) => {
     const prompt = value.trim();
@@ -335,7 +355,21 @@ export function AiAssistantWidget() {
           ref={panelRef}
           id="mcAiModal"
           className="mc-ai-modal"
-          style={{
+          style={isMobileViewport ? {
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: 'auto',
+            height: 'auto',
+            maxWidth: 'none',
+            maxHeight: 'none',
+            zIndex: 1000,
+            borderRadius: 0,
+            paddingTop: 'env(safe-area-inset-top)',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            boxSizing: 'border-box',
+          } : {
             left: panelPosition.x,
             top: panelPosition.y,
             right: 'auto',

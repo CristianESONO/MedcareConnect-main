@@ -162,7 +162,7 @@ export function PatientConversationPage() {
     }))) || [];
 
   return (
-    <section className="mx-auto flex h-[calc(100dvh-7rem)] min-h-[480px] w-full max-w-4xl flex-col px-3 py-4 sm:px-4 sm:py-6">
+    <section className="mx-auto flex h-[calc(100dvh-4.5rem)] min-h-0 w-full max-w-4xl flex-col px-3 py-3 sm:px-4 sm:py-5">
       {loading && (
         <p className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600" role="status">
           Chargement de la conversation…

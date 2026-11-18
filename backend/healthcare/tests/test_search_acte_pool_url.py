@@ -3,6 +3,7 @@
 from unittest.mock import patch
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.test import Client, RequestFactory
 from django.urls import reverse
 
@@ -59,3 +60,19 @@ def test_search_api_returns_real_search_contract():
     assert payload["results_count"] == 0
     assert payload["offers"] == []
     assert {"stats", "filters", "services", "families", "filter_options", "pagination"} <= payload.keys()
+
+
+@pytest.mark.django_db
+def test_search_api_returns_real_search_contract_for_authenticated_patient():
+    patient = get_user_model().objects.create_user(
+        username="patient_search_api",
+        password="StrongPass!2026",
+        user_type="patient",
+    )
+    client = Client()
+    client.force_login(patient)
+
+    response = client.get(reverse("healthcare:search_api"))
+
+    assert response.status_code == 200
+    assert {"stats", "filters", "services", "families", "filter_options", "pagination"} <= response.json().keys()

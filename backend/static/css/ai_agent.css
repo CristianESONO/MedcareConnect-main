@@ -412,6 +412,10 @@
     transform: translateY(-50%) translateX(0);
   }
   .mc-ai-modal {
-    max-width: calc(100vw - 24px);
+    z-index: 1000;
+    max-width: none;
+    border-radius: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

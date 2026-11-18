@@ -1801,10 +1801,6 @@ def search(request, *, as_json=False):
             or any(k in (q or "").lower() for k in ["ambulance", "ambu", "smur", "rapatriement", "transport"])
         ),
     }
-    if show_dem_service_acte_nav:
-        from .search_mobile_context import build_search_mobile_app_context
-
-        context.update(build_search_mobile_app_context(request))
     return JsonResponse(_search_api_payload(context))
 
 

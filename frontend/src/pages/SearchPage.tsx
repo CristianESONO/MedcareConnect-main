@@ -263,6 +263,11 @@ export function SearchPage({
   };
 
   const selectSuggestion = (suggestion: SearchSuggestion) => {
+    if (suggestion.type === 'acte' && suggestion.id) {
+      selectAct(suggestion.id);
+      return;
+    }
+
     setSuggestionsOpen(false);
     setActiveSuggestionIndex(-1);
     setPendingSuggestion(suggestion);
@@ -968,26 +973,6 @@ export function SearchPage({
             </button>
           </form>
           {autocompleteError && <p className="mt-2 text-xs text-amber-700" role="status">{autocompleteError}</p>}
-
-          {!!currentData?.services.length && (
-            <div className="sipn-mobile-pilier-zone sipn-pilier-mobile-ui" aria-label="Familles de soins">
-              <div className="sipn-pgrid" role="group" aria-label="Choisir une famille de soins">
-                {currentData.services.map((service) => (
-                  <button
-                    type="button"
-                    key={`mobile-${service.id}-${service.label}`}
-                    onClick={() => selectService(service.id)}
-                    aria-pressed={service.active}
-                    className={`pgrid-btn${service.active ? ' active' : ''}`}
-                  >
-                    <i className={`pgrid-icon ti ${service.ambulance ? 'ti-ambulance' : 'ti-category'}`} />
-                    <span className="pgrid-lbl">{service.label}</span>
-                    <span className="pgrid-sub">{service.count} actes</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="dem-filter-row sipn-filter-row" id="sipn-desktop-filter-row" aria-label="Trier et filtrer les résultats">
             <span className="dem-filter-lbl">Trier :</span>

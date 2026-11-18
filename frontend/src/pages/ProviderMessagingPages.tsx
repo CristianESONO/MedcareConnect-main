@@ -240,12 +240,12 @@ function ProviderConversationPage({ conversationId }: { conversationId: number }
 
   const conversation = data.conversation;
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-8">
-      <Link to="/messaging/" className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-[#0a5c8a] hover:underline">
+    <section className="mx-auto flex h-[calc(100dvh-4.5rem)] min-h-0 w-full max-w-5xl flex-col px-3 py-3 sm:px-4 sm:py-5">
+      <Link to="/messaging/" className="mb-3 inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#0a5c8a] hover:underline">
         <ArrowLeft size={16} aria-hidden="true" /> Retour aux messages
       </Link>
-      <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <header className="flex items-center gap-3 border-b border-gray-100 p-4 sm:px-6">
+      <article className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <header className="flex shrink-0 items-center gap-3 border-b border-gray-100 p-4 sm:px-6">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sky-50 font-bold text-[#0a5c8a]">{conversation.patient_initial}</span>
           <div className="min-w-0">
             <h1 className="truncate font-syne text-lg font-bold text-[#123a63]">{conversation.patient}</h1>
@@ -254,7 +254,7 @@ function ProviderConversationPage({ conversationId }: { conversationId: number }
           <span className="ml-auto rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">{conversation.status}</span>
         </header>
 
-        <div className="max-h-[65vh] min-h-64 space-y-3 overflow-y-auto bg-gray-50/70 p-4 sm:p-6">
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-gray-50/70 p-4 sm:p-6">
           {conversation.status_banner && (
             <p className="mx-auto max-w-lg rounded-full bg-sky-50 px-4 py-2 text-center text-xs font-semibold text-sky-800">
               {conversation.status_banner.text}

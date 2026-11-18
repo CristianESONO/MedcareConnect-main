@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import type { AuthSession } from '../lib/api';
 
 type VisitorStylesProps = {
   registerPage: boolean;
   landingPage: boolean;
+};
+
+type VisitorHeaderProps = {
+  authSession: AuthSession | null;
+  authSessionError: string;
 };
 
 const BASE_STYLES: [string, string][] = [
@@ -36,11 +42,27 @@ export function VisitorStyles({ registerPage, landingPage }: VisitorStylesProps)
   return null;
 }
 
-export function VisitorHeader() {
+export function VisitorHeader({ authSession, authSessionError }: VisitorHeaderProps) {
   const location = useLocation();
   const [aboutOpen, setAboutOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const isLoginPage = location.pathname === '/connexion/';
+  const accountUrl = authSession?.is_patient
+    ? '/users/compte/panel/'
+    : authSession?.is_admin
+      ? '/dashboard/'
+      : authSession?.is_praticien || authSession?.is_prestataire
+        ? '/sante/prestataire/tableau-de-bord/'
+        : '/users/profil/';
+  const accountLabel = authSession?.is_patient
+    ? 'Mon compte'
+    : authSession?.is_admin
+      ? 'Administration'
+      : authSession?.is_praticien
+        ? 'Espace praticien'
+        : authSession?.is_prestataire
+          ? 'Espace structure'
+          : 'Mon profil';
 
   useEffect(() => {
     document.body.classList.toggle('mc-visitor-drawer-open', drawerOpen);
@@ -89,9 +111,20 @@ export function VisitorHeader() {
               </ul>
             </nav>
             <div className="mc-landing-header-ctas">
-              <a href="/connexion/" className="mc-landing-btn mc-landing-btn-login">Connexion</a>
               <a href="/sante/recherche/" className="mc-landing-btn mc-landing-btn-search">Trouver un service</a>
-              <a href="/inscription/" className="mc-landing-btn mc-landing-btn-join">Rejoindre MedCare</a>
+              {authSession?.authenticated ? (
+                <>
+                  <Link to={accountUrl} className="mc-landing-btn mc-landing-btn-login">{accountLabel}</Link>
+                  <a href="/users/deconnexion/" className="mc-landing-btn mc-landing-btn-join">Déconnexion</a>
+                </>
+              ) : authSession && !authSessionError ? (
+                <>
+                  <Link to="/connexion/" className="mc-landing-btn mc-landing-btn-login">Connexion</Link>
+                  <Link to="/inscription/" className="mc-landing-btn mc-landing-btn-join">Rejoindre MedCare</Link>
+                </>
+              ) : authSessionError ? (
+                <span className="mc-landing-btn mc-landing-btn-login" role="status">Session indisponible</span>
+              ) : null}
             </div>
           </div>
           <button
@@ -151,8 +184,41 @@ export function VisitorHeader() {
           </ul>
         </nav>
         <div className="mc-landing-drawer-cta">
-          <a href="/connexion/" className="mc-landing-drawer-btn mc-landing-drawer-btn-login"><i className="ti ti-login" />Connexion</a>
-          <a href="/inscription/" className="mc-landing-drawer-btn mc-landing-drawer-btn-join"><i className="ti ti-user-plus" />Rejoindre MedCare</a>
+          <Link
+            to="/sante/recherche/"
+            className="mc-landing-drawer-btn mc-landing-drawer-btn-patient"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <i className="ti ti-search" aria-hidden="true" />
+            Trouver un service
+          </Link>
+          {authSession?.authenticated ? (
+            <>
+              <Link to={accountUrl} className="mc-landing-drawer-btn mc-landing-drawer-btn-login" onClick={() => setDrawerOpen(false)}>
+                <i className="ti ti-user" />{accountLabel}
+              </Link>
+              <a href="/users/deconnexion/" className="mc-landing-drawer-btn mc-landing-drawer-btn-join">
+                <i className="ti ti-logout" />Déconnexion
+              </a>
+            </>
+          ) : authSession && !authSessionError ? (
+            <>
+              <Link to="/connexion/" className="mc-landing-drawer-btn mc-landing-drawer-btn-login" onClick={() => setDrawerOpen(false)}>
+                <i className="ti ti-login" />Connexion
+              </Link>
+              <Link to="/inscription/" className="mc-landing-drawer-btn mc-landing-drawer-btn-join" onClick={() => setDrawerOpen(false)}>
+                <i className="ti ti-user-plus" />Rejoindre MedCare
+              </Link>
+            </>
+          ) : authSessionError ? (
+            <p className="mc-landing-drawer-btn mc-landing-drawer-btn-login" role="status">
+              Session indisponible
+            </p>
+          ) : (
+            <p className="mc-landing-drawer-btn mc-landing-drawer-btn-login" role="status" aria-live="polite">
+              Vérification de la session…
+            </p>
+          )}
         </div>
       </aside>
     </>
