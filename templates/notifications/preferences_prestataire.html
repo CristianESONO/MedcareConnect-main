@@ -1,0 +1,16 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% block title %}Préférences de notifications{% endblock %}
+{% block dash_content %}
+<div class="mx-auto w-full max-w-5xl">
+  <h1 class="text-xl font-bold text-gray-900">Notifications</h1>
+  <p class="mt-1 text-sm text-gray-500">Choisissez ce que vous voulez recevoir et sur quels canaux. Les rôles destinataires sont gérés par MedCare ; ces préférences vous permettent de vous désabonner d'événements précis.</p>
+
+  <form method="post" class="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    {% csrf_token %}
+    {% include "notifications/_pref_table.html" %}
+    <div class="flex justify-end gap-2 border-t border-gray-100 bg-gray-50/60 px-5 py-3">
+      <button type="submit" class="rounded-xl bg-primary-500 px-5 py-2 text-sm font-bold text-white hover:bg-primary-600">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

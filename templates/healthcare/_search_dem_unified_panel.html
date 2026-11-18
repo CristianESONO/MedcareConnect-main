@@ -1,0 +1,30 @@
+{% comment %}
+Panneau latéral / feuille mobile : actes + affiner (repliables).
+Les familles de soins sont affichées comme dans la démo Déméthior : barre « piliers » à part, pas ici.
+Variable : mode = "desktop" | "mobile"
+{% endcomment %}
+<div class="dem-side-unified">
+  <details class="dem-side-fold" open>
+    <summary class="dem-side-fold-sum">
+      <span class="dem-side-fold-sum-left">
+        <span class="dem-acte-chevron dem-side-chevron" aria-hidden="true"></span>
+        <span class="dem-side-fold-title">Parcourir les actes</span>
+      </span>
+    </summary>
+    <div class="dem-side-fold-body">
+      {% include "healthcare/_search_service_acte_dem.html" with section="actes_embed" mode=mode %}
+    </div>
+  </details>
+  <details class="dem-side-fold" open>
+    <summary class="dem-side-fold-sum">
+      <span class="dem-side-fold-sum-left">
+        <span class="dem-acte-chevron dem-side-chevron" aria-hidden="true"></span>
+        <span class="dem-side-fold-title">Affiner la recherche</span>
+      </span>
+      {% if active_filter_count %}<span class="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-accent-500 px-1.5 text-[10px] font-bold text-white">{{ active_filter_count }}</span>{% endif %}
+    </summary>
+    <div class="dem-side-fold-body dem-side-fold-body-filters">
+      {% include "healthcare/_search_filters.html" with mode=mode omit_assurance_desktop=1 %}
+    </div>
+  </details>
+</div>

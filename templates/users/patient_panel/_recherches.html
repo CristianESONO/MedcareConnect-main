@@ -1,0 +1,27 @@
+<p class="pac-lead">Retrouvez vos dernières recherches et relancez-les en un clic.</p>
+
+{% if history %}
+<div class="pac-panel">
+  {% for h in history %}
+  <a href="{% url 'healthcare:search' %}?q={{ h.query|urlencode }}" class="pac-panel-row">
+    <span class="pac-list-ic" aria-hidden="true">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+    </span>
+    <span class="min-w-0 flex-1">
+      <span class="block text-sm font-semibold text-gray-900">{{ h.query }}</span>
+      <span class="block text-xs text-gray-500 mt-0.5">{{ h.results_count }} résultat{{ h.results_count|pluralize }} · {{ h.searched_at|date:"d/m/Y H:i" }}</span>
+    </span>
+    <span class="pac-panel-chevron" aria-hidden="true">›</span>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="pac-empty-state">
+  <div class="pac-empty-state-icon">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+  </div>
+  <p>Aucune recherche enregistrée</p>
+  <p class="pac-empty-hint">Vos recherches sur la page prestations apparaîtront ici.</p>
+  <a href="{% url 'healthcare:search' %}" class="pac-btn-primary mt-4" style="display:inline-flex">Rechercher des soins</a>
+</div>
+{% endif %}

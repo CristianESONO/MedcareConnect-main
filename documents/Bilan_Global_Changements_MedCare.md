@@ -99,7 +99,7 @@ Le document de spécifications techniques a été intégralement mis à jour pou
 Afin de pouvoir faire tester la réconciliation à des partenaires ou testeurs externes sans dépendance à Django :
 
 - **Archive ZIP prête à envoyer :** [MedCare_Import_Programme_Test.zip](file:///e:/projets/MedcareConnect-main/MedcareConnect-main/MedCare_Import_Programme_Test.zip) *(119 Ko)*
-- **Dossier source :** [backend/tools/programme_import_standalone/](../backend/tools/programme_import_standalone/)
+- **Dossier source :** [programme_import_standalone/](file:///e:/projets/MedcareConnect-main/MedcareConnect-main/programme_import_standalone/)
 
 ### Contenu du pack :
 1. **`MedCare_Import_Reconciliation.html`** : Application web 100% autonome (double-clic pour ouvrir dans n'importe quel navigateur, lecture drag-and-drop Excel/CSV, bouton de démonstration en 1 clic, export du catalogue réconcilié en `.xlsx`).

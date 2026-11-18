@@ -1,0 +1,134 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% block title %}Créer votre établissement{% endblock %}
+
+{% block dash_content %}
+<div class="border-b border-gray-100 pb-5">
+  <p class="text-[10px] font-bold uppercase tracking-widest text-accent-600">Étape 1</p>
+  <h1 class="mt-1 text-xl font-bold text-gray-900 sm:text-2xl">Créer votre établissement</h1>
+  <p class="mt-1 max-w-2xl text-sm text-gray-600">
+    Renseignez les informations de base. Vous pourrez ensuite compléter actes, assurances et horaires depuis le tableau de bord.
+  </p>
+</div>
+
+<form method="post" enctype="multipart/form-data" id="organisme-form" class="mt-8 max-w-3xl space-y-6">
+  {% csrf_token %}
+
+  {% if form.errors %}
+  <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+    <p class="font-semibold">Corrigez les champs suivants :</p>
+    <ul class="mt-2 list-inside list-disc">
+      {% for field, errors in form.errors.items %}{% for error in errors %}
+      <li><span class="font-medium">{{ field }}</span> — {{ error }}</li>
+      {% endfor %}{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <section class="rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <header class="border-b border-gray-100 px-5 py-4 sm:px-6">
+      <h2 class="text-base font-bold text-gray-900">Identité</h2>
+    </header>
+    <div class="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
+      <div class="sm:col-span-2">
+        <label for="{{ form.name.id_for_label }}" class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Nom affiché *</label>
+        <div class="mt-1.5">{{ form.name }}</div>
+      </div>
+      <div class="sm:col-span-2"><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Raison sociale</label><div class="mt-1.5">{{ form.raison_sociale }}</div></div>
+      <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">NINEA</label><div class="mt-1.5">{{ form.ninea }}</div></div>
+      <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Type</label><div class="mt-1.5">{{ form.type_organisme }}</div></div>
+      <div class="sm:col-span-2"><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Logo</label><div class="mt-1.5">{{ form.logo }}</div></div>
+      <div class="sm:col-span-2"><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Description</label><div class="mt-1.5">{{ form.description }}</div></div>
+    </div>
+  </section>
+
+  <section class="rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <header class="border-b border-gray-100 px-5 py-4 sm:px-6">
+      <h2 class="text-base font-bold text-gray-900">Localisation</h2>
+      <p class="mt-0.5 text-xs text-gray-500">Les patients filtrent par distance.</p>
+    </header>
+    <div class="space-y-5 p-5 sm:p-6">
+      <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <button type="button" id="org-btn-gps" class="rounded-xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm font-semibold text-sky-900 hover:bg-sky-100">Ma position GPS</button>
+        <div class="flex min-w-0 flex-1 gap-2">
+          <input type="search" id="org-geo-q" placeholder="Rechercher une adresse…" class="min-w-0 flex-1 rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400/20">
+          <button type="button" id="org-btn-geocode" class="rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white">Rechercher</button>
+        </div>
+      </div>
+      <ul id="org-geo-sug" class="hidden max-h-44 overflow-auto rounded-xl border border-gray-200 bg-white text-sm shadow-lg"></ul>
+      <div id="org-map-preview" class="hidden overflow-hidden rounded-xl border border-gray-200"><iframe id="org-map-iframe" title="Carte" class="h-44 w-full" loading="lazy"></iframe></div>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div class="sm:col-span-2"><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Adresse</label><div class="mt-1.5">{{ form.address }}</div></div>
+        <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Quartier</label><div class="mt-1.5">{{ form.quartier }}</div></div>
+        <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Ville</label><div class="mt-1.5">{{ form.city }}</div></div>
+        <div class="sm:col-span-2"><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Région</label><div class="mt-1.5">{{ form.region }}</div></div>
+        <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Latitude</label><div class="mt-1.5" id="wrap-lat">{{ form.latitude }}</div></div>
+        <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Longitude</label><div class="mt-1.5" id="wrap-lng">{{ form.longitude }}</div></div>
+      </div>
+      <p class="text-xs text-gray-500"><a id="org-osm-link" href="#" target="_blank" rel="noopener" class="font-semibold text-primary-600">OpenStreetMap ↗</a></p>
+    </div>
+  </section>
+
+  <section class="rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <header class="border-b border-gray-100 px-5 py-4 sm:px-6"><h2 class="text-base font-bold text-gray-900">Contact</h2></header>
+    <div class="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
+      <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Site web</label><div class="mt-1.5">{{ form.website }}</div></div>
+      <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">E-mail</label><div class="mt-1.5">{{ form.contact_email }}</div></div>
+      <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">Téléphone</label><div class="mt-1.5">{{ form.contact_phone }}</div></div>
+      <div><label class="block text-xs font-semibold uppercase tracking-wide text-gray-500">WhatsApp</label><div class="mt-1.5">{{ form.whatsapp_number }}</div></div>
+    </div>
+  </section>
+
+  <button type="submit" class="w-full rounded-xl bg-primary-600 py-3 text-sm font-bold text-white shadow-sm hover:bg-primary-700 sm:w-auto sm:px-10">
+    Créer l&apos;établissement
+  </button>
+</form>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+(function() {
+  function latInput() { return document.querySelector('input[name="latitude"]'); }
+  function lngInput() { return document.querySelector('input[name="longitude"]'); }
+  function setLL(lat, lng) {
+    var la = latInput(), lo = lngInput();
+    if (la) la.value = lat;
+    if (lo) lo.value = lng;
+    var link = document.getElementById('org-osm-link');
+    if (link && lat && lng) link.href = 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=16/' + lat + '/' + lng;
+    var prev = document.getElementById('org-map-preview'), iframe = document.getElementById('org-map-iframe');
+    if (prev && iframe && lat && lng) {
+      iframe.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(lat) + ',' + encodeURIComponent(lng) + '&z=15&hl=fr&output=embed';
+      prev.classList.remove('hidden');
+    }
+  }
+  var gps = document.getElementById('org-btn-gps');
+  if (gps) gps.addEventListener('click', function() {
+    if (!navigator.geolocation) { alert('Géolocalisation non disponible.'); return; }
+    navigator.geolocation.getCurrentPosition(function(p) {
+      setLL(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6));
+    }, function() { alert('Impossible d\'obtenir la position.'); }, { enableHighAccuracy: true, timeout: 15000 });
+  });
+  var sug = document.getElementById('org-geo-sug'), geoBtn = document.getElementById('org-btn-geocode');
+  if (geoBtn && sug) geoBtn.addEventListener('click', function() {
+    var q = document.getElementById('org-geo-q').value.trim();
+    if (q.length < 2) return;
+    fetch('{% url "healthcare:api_geocode" %}?q=' + encodeURIComponent(q))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        sug.innerHTML = '';
+        if (!data.results || !data.results.length) { sug.classList.add('hidden'); return; }
+        data.results.forEach(function(item) {
+          var li = document.createElement('li');
+          li.className = 'cursor-pointer border-b border-gray-100 px-4 py-2.5 hover:bg-primary-50';
+          li.textContent = item.display_name;
+          li.addEventListener('click', function() { setLL(String(item.lat), String(item.lon)); sug.classList.add('hidden'); });
+          sug.appendChild(li);
+        });
+        sug.classList.remove('hidden');
+      });
+  });
+  var la = latInput(), lo = lngInput();
+  if (la && lo && la.value && lo.value) setLL(la.value, lo.value);
+})();
+</script>
+{% endblock %}

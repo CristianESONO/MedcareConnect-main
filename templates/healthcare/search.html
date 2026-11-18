@@ -1,0 +1,1473 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Prestations & tarifs{% endblock %}
+
+{% block body_extra_class %}{% if show_dem_service_acte_nav %} sipn-prestations{% if pool_from_request or query %} sipn-has-actes{% if request.GET.acte or query %} sipn-mobile-view-results{% else %} sipn-mobile-view-prestations{% endif %}{% else %} sipn-mobile-view-prestations{% endif %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_cards.css' %}?v=1" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_patient.css' %}?v=41" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_structure_results.css' %}?v=2" rel="stylesheet" />
+<link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=45" rel="stylesheet" />
+<link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=6" rel="stylesheet" />
+<link href="{% static 'messaging/css/thread_wa.css' %}?v=16" rel="stylesheet" />
+<link href="{% static 'healthcare/css/demo_patient_search.css' %}?v=20260530e" rel="stylesheet" />
+{% include "partials/medcare_alerts_shell.html" %}
+<style>
+  :root { --hc-accent:#4fa3c7; --hc-accent-dark:#3d8fb3; --hc-primary:var(--mc-navy, #123a63); --dem-shadow:0 2px 16px rgba(18,58,99,.09); }
+
+  /* Empêcher le zoom automatique d'iOS Safari au focus sur les champs de recherche mobile (font-size >= 16px) */
+  @media screen and (max-width: 1023px) {
+    #search-q,
+    .tokenized-input-container input,
+    #pap-search-inp,
+    .dem-acte-filter-input,
+    #search-form input[type="search"],
+    #search-form input[type="text"],
+    .pap-search input {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Filtres Résultats mobile — priorité sur anciennes règles sipn_patient.css en cache */
+  @media (max-width: 1023px) {
+    body.sipn-prestations.sipn-mobile-view-results #search-form.search-page--dem .sipn-mobile-results-filters {
+      display: flex !important;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      overflow-x: auto;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+  }
+
+  /* Structures non approuvées (grisées, non sélectionnables) */
+  .scard--unverified, .scard-m--unverified {
+    opacity: 0.62 !important;
+    background: #fbfbfc !important;
+    border-color: #cbd5e1 !important;
+  }
+  .scard--unverified .acte-item,
+  .scard-m--unverified .scard-m-acte,
+  .acte-item--unverified {
+    cursor: not-allowed !important;
+    background: #f8fafc !important;
+  }
+  .scard--unverified .scard-total,
+  .scard--unverified .btn-select-all-m {
+    display: none !important;
+  }
+  .scard--unverified .ai-check,
+  .scard-m--unverified .scard-m-checkbox {
+    pointer-events: none !important;
+  }
+
+  /* ── Filtres style Déméthior (DEMO PATIENT : filters-bar + libellés) ──── */
+  .dem-filters-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: var(--dem-shadow);
+    border: 1px solid #e5e7eb;
+    padding: 12px 16px;
+  }
+  @media (min-width:640px) {
+    .dem-filters-card { padding: 14px 16px; }
+  }
+  .dem-filters-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #9ca3af;
+    line-height: 1.3;
+  }
+  .dem-filter-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #9ca3af;
+    margin-bottom: 6px;
+  }
+  .dem-select-sort {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--mc-border, #D4DEEE);
+    color: var(--hc-accent);
+    background: rgba(239, 246, 255, 0.95);
+    cursor: pointer;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .dem-select-sort:hover { border-color: var(--hc-accent); }
+  .dem-select-sort:focus {
+    box-shadow: 0 0 0 2px rgba(79, 163, 199, 0.28);
+    border-color: var(--hc-accent);
+  }
+  .dem-field {
+    width: 100%;
+    border-radius: 8px;
+    border: 1.5px solid #e5e7eb;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .dem-field:focus { border-color: var(--hc-accent); }
+
+  /* ── Piliers familles + nav actes (aligné démo Déméthior) ─────────────── */
+  /* Piliers (DEMO PATIENT .piliers / .pbtn) */
+  .dem-piliers {
+    display: flex; flex-wrap: nowrap; gap: 5px; overflow-x: auto;
+    padding: 0; margin: 0;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .dem-piliers::-webkit-scrollbar { display: none; }
+  .dem-pbtn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 14px; border-radius: 30px; flex-shrink: 0; white-space: nowrap;
+    border: 1.5px solid #e5e7eb; background: #fff; font-size: 11px; font-weight: 500;
+    color: #4b5563; text-decoration: none; transition: border-color .18s, color .18s, background .18s, box-shadow .18s;
+  }
+  .dem-pbtn:hover { border-color: var(--hc-accent); color: var(--hc-accent); background: #f0fdfa; }
+  .dem-pbtn.active {
+    border-color: var(--hc-accent); background: var(--hc-accent); color: #fff;
+    box-shadow: 0 3px 8px rgba(10, 92, 138, 0.2);
+  }
+  .dem-pbtn-ic { font-size: 1em; line-height: 1; }
+  .dem-actes-nav {
+    border-radius: 10px; border: 1px solid #e5e7eb; overflow: hidden;
+    box-shadow: var(--dem-shadow); background: #fff;
+  }
+  .dem-actes-head {
+    padding: 10px 12px; border-bottom: 1px solid #f3f4f6; background: #f9fafb;
+  }
+  .dem-actes-title { font-size: 12px; font-weight: 700; color: #111827; }
+  .dem-actes-sub { font-size: 9px; color: #9ca3af; margin-top: 2px; }
+  .dem-actes-clear {
+    display: inline-block; margin-top: 6px; font-size: 10px; font-weight: 600;
+    color: var(--hc-accent); text-decoration: none;
+  }
+  .dem-actes-clear:hover { text-decoration: underline; }
+  .dem-actes-search-wrap { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; }
+  .dem-acte-tree {
+    overflow-y: auto; scrollbar-width: thin; padding: 4px 0;
+  }
+  .dem-acte-tree::-webkit-scrollbar { width: 4px; }
+  .dem-acte-tree::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+  .dem-acte-group { border-bottom: 1px solid #f3f4f6; }
+  .dem-acte-group:last-child { border-bottom: none; }
+  .dem-acte-group-sum {
+    cursor: pointer; list-style: none; padding: 8px 12px; font-size: 11px; font-weight: 700;
+    color: #374151; user-select: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .dem-acte-group-sum::-webkit-details-marker { display: none; }
+  .dem-acte-group-sum:hover { background: #f9fafb; }
+  .dem-acte-group-body { padding-bottom: 4px; }
+  .dem-acte-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 6px 12px 6px 14px; margin: 0 8px 2px;
+    font-size: 11px; color: #4b5563; text-decoration: none; border-radius: 6px;
+    border-left: 2px solid transparent; transition: background .12s, color .12s;
+  }
+  .dem-acte-row:hover { background: #f9fafb; color: #111827; }
+  .dem-acte-row.active {
+    background: #ecfeff; color: var(--hc-accent-dark); border-left-color: var(--hc-accent); font-weight: 600;
+  }
+  .dem-acte-row.active .dem-acte-count {
+    background: rgba(79, 163, 199, 0.2);
+    color: var(--hc-accent-dark);
+  }
+  .dem-acte-row--multi {
+    cursor: pointer;
+    user-select: none;
+  }
+  .dem-acte-chk-box {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 4px;
+    background: #fff;
+    transition: border-color .15s, background .15s;
+  }
+  .dem-acte-row--multi.active .dem-acte-chk-box {
+    border-color: var(--hc-accent, var(--mc-accent, #4fa3c7));
+    background: var(--hc-accent, var(--mc-accent, #4fa3c7));
+    box-shadow: inset 0 0 0 2px #fff;
+  }
+  .nav-cat-label,
+  .dem-acte-cat-label {
+    display: block;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #9ca3af;
+    padding: 6px 14px 3px 20px;
+  }
+  .dem-acte-family-body.nav-sub {
+    border-left: 2px solid #e5e7eb;
+    margin: 0.25rem 0 0.35rem 0.35rem;
+    padding-left: 0.35rem;
+  }
+  .dem-pbtn-count,
+  .dem-acte-count {
+    font-size: 9px;
+    font-weight: 600;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 1px 6px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    line-height: 1.35;
+  }
+  .dem-pbtn.active .dem-pbtn-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+  }
+  .dem-acte-sum-inner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+  .dem-acte-sum-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dem-acte-chevron {
+    display: inline-flex;
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    color: #9ca3af;
+    transition: transform 0.18s ease;
+  }
+  .dem-acte-chevron::before { content: "▶"; }
+  .dem-acte-group[open] > .dem-acte-group-sum .dem-acte-chevron { transform: rotate(90deg); }
+
+  /* Panneau latéral unifié (familles + actes + affiner, chaque bloc repliable) */
+  .dem-side-unified { margin: -4px 0 0; }
+  .dem-side-fold {
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .dem-side-fold:last-of-type { border-bottom: none; }
+  .dem-side-fold-sum {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 2px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #374151;
+    user-select: none;
+    border-radius: 6px;
+  }
+  .dem-side-fold-sum::-webkit-details-marker { display: none; }
+  .dem-side-fold-sum:hover { background: #f9fafb; }
+  .dem-side-fold[open] > .dem-side-fold-sum .dem-side-chevron { transform: rotate(90deg); }
+  .dem-side-fold-sum-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .dem-side-fold-title { min-width: 0; }
+  .dem-side-fold-body { padding-bottom: 2px; }
+  .dem-side-fold-body-filters { padding-top: 0; }
+  .dem-actes-embed .dem-actes-search-embed {
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: none;
+  }
+
+  #layout-body.layout .dem-actes-title {
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  .piliers .dem-pbtn,
+  #layout-body.layout .dem-acte-row,
+  #layout-body.layout .dem-acte-group-sum {
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* ── Boutons utilitaires ─────────────────────────────────────────────── */
+  .btn-accent { background:var(--hc-accent)!important; color:#fff!important; }
+  .btn-accent:hover { background:var(--hc-accent-dark)!important; }
+  .btn-primary { background:var(--hc-primary)!important; color:#fff!important; }
+  .btn-primary:hover { background:#113149!important; }
+
+  /* ── Layout desktop ≥ lg : 2 col. (latéral | résultats). Mode démo : grille .layout dans demo_patient_search.css ─ */
+  @media (min-width: 1024px) {
+    #layout-body:not(.layout) {
+      display: grid;
+      grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+      grid-template-areas: "side main";
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+    #layout-body:not(.layout).dem-side-wide {
+      grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    }
+    #layout-body.layout {
+      display: grid;
+      grid-template-areas: "side main rail";
+      grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(300px, 380px);
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+    #layout-body.layout #sidebar-desktop {
+      grid-area: side;
+      display: block;
+      min-width: 0;
+      align-self: stretch;
+    }
+    #layout-body.layout #results-col {
+      grid-area: main;
+      min-width: 0;
+    }
+    #layout-body.layout #dem-right-rail {
+      grid-area: rail;
+      min-width: 0;
+    }
+    #sidebar-desktop {
+      grid-area: side;
+      display: block;
+      min-width: 0;
+      align-self: stretch;
+    }
+    #results-col {
+      grid-area: main;
+      min-width: 0;
+    }
+    #layout-body:not(.layout) #sidebar-desktop .search-filters-sticky {
+      position: sticky;
+      top: 11rem;
+      max-height: calc(100vh - 12rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    #search-form:not(.search-page--dem) #layout-body.layout #sidebar-desktop .search-filters-sticky {
+      position: sticky;
+      top: 11rem;
+      max-height: calc(100vh - 12rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    #search-form:not(.search-page--dem) .col-right {
+      top: 11rem;
+    }
+  }
+  @media (max-width: 1023px) {
+    #sidebar-desktop {
+      display: none !important;
+    }
+  }
+
+  /* ── Select2 thème compact ────────────────────────────────────────────── */
+  .select2-container--default .select2-selection--multiple,
+  .select2-container--default .select2-selection--single {
+    border:1.5px solid #e5e7eb!important; border-radius:8px!important;
+    min-height:42px!important; font-size:.875rem!important; padding:2px 4px;
+  }
+  .select2-container--default.select2-container--focus .select2-selection--single,
+  .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: var(--hc-accent)!important;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background:#edfbfc; border:1px solid #a8e9f0; border-radius:9999px;
+    font-size:.7rem; padding:1px 8px; margin-top:6px;
+  }
+  .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background:var(--hc-accent);
+  }
+  .select2-container { width:100%!important; }
+  .select2-dropdown { font-size:.875rem; border-radius:.5rem; border-color:#e5e7eb; }
+
+  /* ── Slider de prix ───────────────────────────────────────────────────── */
+  .noUi-target { background:#e5e7eb; border:none; box-shadow:none; height:6px; border-radius:3px; }
+  .noUi-connect { background:var(--hc-accent); }
+  .noUi-handle { width:22px!important; height:22px!important; border-radius:50%; border:2px solid var(--hc-accent);
+    background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); top:-9px!important; right:-11px!important; cursor:grab; }
+  .noUi-handle::before, .noUi-handle::after { display:none; }
+  .noUi-tooltip { font-size:.7rem; padding:2px 6px; border:1px solid #e5e7eb; border-radius:6px; background:#fff; color:#374151; }
+
+  /* ── Autocomplete dropdown ────────────────────────────────────────────── */
+  #ac-box { position:relative; flex:1; min-width:0; }
+  #ac-list { position:absolute; top:100%; left:0; right:0; z-index:60; margin-top:4px;
+    background:#fff; border:1px solid #e5e7eb; border-radius:.875rem;
+    box-shadow:0 12px 32px -8px rgba(0,0,0,.18); max-height:380px; overflow-y:auto; display:none; }
+  #ac-list .ac-group { padding:8px 14px 4px; font-size:.65rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.06em; color:#9ca3af; }
+  #ac-list .ac-item { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer;
+    font-size:.875rem; color:#1f2937; transition:background .1s; }
+  #ac-list .ac-item:hover, #ac-list .ac-item.ac-active { background:#f0fdfa; }
+  #ac-list .ac-item .ac-icon { width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+    border-radius:8px; font-size:.875rem; flex-shrink:0; }
+  #ac-list .ac-item .ac-icon.t-famille { background:#eef2ff; color:#4f46e5; }
+  #ac-list .ac-item .ac-icon.t-acte { background:var(--mc-accent-light); color:var(--mc-accent); }
+  #ac-list .ac-item .ac-icon.t-centre { background:#fef3c7; color:#d97706; }
+  #ac-list .ac-detail { font-size:.75rem; color:#9ca3af; margin-left:auto; white-space:nowrap; }
+  #ac-list .ac-highlight { font-weight:700; color:var(--hc-primary); }
+
+  /* ── Bottom sheet (filtres mobile) ────────────────────────────────────── */
+  .sheet-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:90; opacity:0; pointer-events:none;
+    transition:opacity .25s ease; }
+  .sheet-backdrop.open { opacity:1; pointer-events:auto; }
+  .sheet-panel {
+    position:fixed; left:0; right:0; bottom:0; z-index:100; max-height:90dvh; display:flex; flex-direction:column;
+    background:#fff; border-top-left-radius:1.25rem; border-top-right-radius:1.25rem;
+    box-shadow:0 -10px 40px -10px rgba(0,0,0,.25);
+    transform:translateY(110%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .sheet-panel.open { transform:translateY(0); }
+  .sheet-handle { width:44px; height:5px; background:#e5e7eb; border-radius:9999px; margin:10px auto 6px; }
+  /* Masquer uniquement le sheet « Filtres » mobile — pas #geo-modal (Près de moi) */
+  @media (min-width: 1024px) {
+    #sheet-panel,
+    #sheet-backdrop { display:none!important; }
+    #dem-mobile-quickbar,
+    #dem-cart-sheet,
+    #dem-cart-backdrop { display:none!important; }
+  }
+  /* Desktop : modale position centrée (lisible, pas coincée en bas invisible) */
+  @media (min-width: 768px) {
+    #geo-modal.sheet-panel {
+      left:50%; right:auto; bottom:auto; top:50%; width:min(440px, 94vw); max-height:min(640px, 85vh);
+      border-radius:1.25rem; border:1px solid #e5e7eb;
+      transform:translate(-50%, -50%) scale(.96); opacity:0; pointer-events:none;
+      transition:transform .25s ease, opacity .2s ease;
+    }
+    #geo-modal.sheet-panel.open {
+      transform:translate(-50%, -50%) scale(1); opacity:1; pointer-events:auto;
+    }
+    #geo-backdrop { z-index:95; }
+    #geo-modal { z-index:105; }
+    #org-preview-panel.sheet-panel {
+      left:50%; right:auto; bottom:auto; top:50%; width:min(420px, 94vw); max-height:min(640px, 88vh);
+      border-radius:1.25rem; border:1px solid #e5e7eb;
+      transform:translate(-50%, -50%) scale(.96); opacity:0; pointer-events:none;
+      transition:transform .25s ease, opacity .2s ease;
+    }
+    #org-preview-panel.sheet-panel.open {
+      transform:translate(-50%, -50%) scale(1); opacity:1; pointer-events:auto;
+    }
+    #org-preview-backdrop { z-index:95; }
+    #org-preview-panel { z-index:106; }
+  }
+
+  /* ── FAB filtres (mobile) ─────────────────────────────────────────────── */
+  /* Au-dessus de la barre d’onglets mobile (base.html) */
+  #fab-filters { position:fixed; right:1rem; z-index:70;
+    bottom:calc(4rem + env(safe-area-inset-bottom, 0px) + 0.35rem);
+    background:var(--hc-primary); color:#fff; padding:.85rem 1.1rem; border-radius:9999px;
+    box-shadow:0 12px 28px -6px rgba(25,70,103,.45); display:inline-flex; align-items:center; gap:.5rem;
+    font-size:.875rem; font-weight:600; cursor:pointer; }
+  @media (min-width: 1024px) {
+    #fab-filters { display:none!important; }
+  }
+  /* Barre Filtres + Chariot mobile remplace le FAB lorsqu’elle est présente */
+  @media (max-width: 1023px) {
+    #search-form:has(#dem-mobile-quickbar) #fab-filters { display: none !important; }
+  }
+
+  /* ── Carte résultat ───────────────────────────────────────────────────── */
+  .pa-card { background:#fff; border:1px solid #e5e7eb; border-radius:1rem; overflow:hidden;
+    transition:box-shadow .2s, transform .15s; display:flex; flex-direction:column; }
+  .pa-card:hover { box-shadow:0 8px 22px -8px rgba(17,24,39,.12); }
+  .pa-card .pa-cta { display:flex; gap:.5rem; }
+  .pa-card .pa-cta a { min-height:42px; }
+
+  /* ── Chips filtre démo desktop ──────────────────────────────────────── */
+  #search-form.search-page--dem .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  #search-form.search-page--dem .filter-chip:hover {
+    border-color: var(--hc-accent);
+    color: var(--hc-accent);
+  }
+  #search-form.search-page--dem .filter-chip.active {
+    border-color: var(--hc-accent);
+    background: var(--hc-accent);
+    color: #fff;
+  }
+  #search-form.search-page--dem .filter-chip.active span {
+    color: #fff !important;
+  }
+  #search-form.search-page--dem .dem-filter-reset {
+    display: none;
+    font-size: 10px;
+    background: none;
+    border: none;
+    color: #dc2626;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 4px 8px;
+  }
+  #search-form.search-page--dem .dem-filter-reset.visible {
+    display: inline;
+  }
+
+  /* ── Chip filtre actif (legacy) ─────────────────────────────────────── */
+  .filter-chip { display:inline-flex; align-items:center; gap:6px; padding:5px 4px 5px 12px;
+    border-radius:9999px; background:#fff; border:1.5px solid #e5e7eb; color:#4b5563;
+    font-size:11px; font-weight:500; transition:border-color .15s, background .15s; }
+  .filter-chip:hover { border-color: var(--hc-accent); color: var(--hc-accent); }
+  .filter-chip a { display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border-radius:9999px; color:inherit; }
+  .filter-chip a:hover { background:var(--mc-accent-light, rgba(79,163,199,0.12)); }
+
+  /* ── Bandeau « Vous êtes à » ──────────────────────────────────────────── */
+  #geo-banner { background:linear-gradient(135deg,#ecfeff,#f0fdfa); border:1px solid #a5f3fc; }
+
+  /* ── Lots prédéfinis : défilement horizontal + flèches ───────────────── */
+  .preset-lots-scroll-wrap {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  .preset-lots-scroll-wrap::-webkit-scrollbar { height: 4px; }
+  .preset-lots-scroll-wrap::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .preset-lot-scroll-btn {
+    align-self: center;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #4b5563;
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .preset-lot-scroll-btn:hover:not(:disabled) {
+    border-color: var(--hc-accent,var(--mc-accent));
+    color: var(--hc-accent-dark,var(--mc-accent-dark, #3d8fb3));
+    background: #f0fdfa;
+  }
+  .preset-lot-scroll-btn:focus-visible {
+    outline: 2px solid var(--hc-accent,var(--mc-accent));
+    outline-offset: 2px;
+  }
+  .preset-lot-scroll-btn:disabled {
+    opacity: .22;
+    cursor: not-allowed;
+  }
+  .preset-lot-scroll-btn.is-hidden-overflow {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Empêche le scroll body quand sheet ouvert */
+  body.sheet-locked { overflow:hidden; }
+
+  /* ── Drawer profil structure (au-dessus du header visiteur z-index 500+) ── */
+  #profil-struct-overlay {
+    z-index: 1040 !important;
+  }
+  #profil-struct-modal {
+    z-index: 1041 !important;
+    display: none;
+    flex-direction: column;
+    font-family: 'DM Sans', sans-serif;
+    color: #0d1b2a;
+  }
+  #profil-struct-modal .profil-drawer-header {
+    background: linear-gradient(135deg, #0a4a72, #054a38);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    flex-shrink: 0;
+  }
+  #profil-struct-modal .profil-drawer-close-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 14px 0;
+  }
+  #profil-struct-modal .profil-drawer-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    color: rgba(255,255,255,0.85);
+    font-size: 15px;
+    cursor: pointer;
+  }
+  #profil-struct-modal .profil-drawer-head-body { padding: 2px 18px 16px; }
+  #profil-struct-modal .profil-drawer-identity {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  #profil-struct-modal .profil-drawer-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  #profil-struct-modal .profil-drawer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #profil-struct-modal .profil-drawer-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-drawer-name {
+    font-family: Syne, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #profil-struct-modal .profil-drawer-verified {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(34,197,94,0.18);
+    color: #22c55e;
+    border: 1px solid rgba(34,197,94,0.35);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-pioneer {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(244,208,63,0.18);
+    color: #f4d03f;
+    border: 1px solid rgba(244,208,63,0.35);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-verified {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(2,132,199,0.18);
+    color: #0284c7;
+    border: 1px solid rgba(2,132,199,0.35);
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+  }
+  #profil-struct-modal .profil-drawer-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.68);
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-drawer-open-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 8px;
+  }
+  #profil-struct-modal .profil-drawer-open-badge--open {
+    background: rgba(74,222,128,0.18);
+    color: #4ade80;
+  }
+  #profil-struct-modal .profil-drawer-open-badge--closed {
+    background: rgba(248,113,113,0.18);
+    color: #f87171;
+  }
+  #profil-struct-modal .profil-drawer-open-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  #profil-struct-modal .profil-drawer-actions {
+    display: flex;
+    gap: 8px;
+  }
+  #profil-struct-modal .profil-drawer-action-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.16);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 9px;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #profil-struct-modal .profil-drawer-horaires-pop {
+    margin-top: 8px;
+    background: #fff;
+    color: #0d1b2a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+  }
+  #profil-struct-modal .profil-drawer-horaires-pop[hidden] { display: none !important; }
+  #profil-struct-modal .profil-drawer-horaires-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a5c8a;
+    margin-bottom: 6px;
+  }
+  #profil-struct-modal .profil-drawer-horaires-line {
+    font-size: 12px;
+    color: #4b5563;
+    padding: 2px 0;
+  }
+  #profil-struct-modal .profil-drawer-horaires-status {
+    margin-top: 6px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  #profil-struct-modal .profil-drawer-horaires-status--open { color: #047857; }
+  #profil-struct-modal .profil-drawer-horaires-status--closed { color: #dc2626; }
+  #profil-struct-modal .profil-drawer-body {
+    padding: 16px;
+    background: #fff;
+    flex: 1;
+    overflow-y: auto;
+  }
+  #profil-struct-modal .profil-drawer-desc {
+    font-size: 12px;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+  #profil-struct-modal .profil-drawer-ins-match {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #dc2626;
+  }
+  #profil-struct-modal .profil-drawer-assur-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 11px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  #profil-struct-modal .profil-drawer-assur-list {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  #profil-struct-modal .profil-drawer-assur-list[hidden] { display: none !important; }
+  #profil-struct-modal .profil-drawer-assur-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 13px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 12px;
+  }
+  #profil-struct-modal .profil-drawer-assur-row--match {
+    background: #fef2f2;
+    color: #dc2626;
+    font-weight: 600;
+  }
+  #profil-struct-modal .profil-drawer-assur-tag {
+    font-size: 9px;
+    font-weight: 700;
+    color: #dc2626;
+    white-space: nowrap;
+  }
+  #profil-struct-modal .profil-drawer-domicile {
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  #profil-struct-modal .profil-drawer-domicile-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a5c8a;
+    margin-bottom: 6px;
+  }
+  #profil-struct-modal .profil-drawer-domicile-sub {
+    font-size: 10px;
+    color: #4b5563;
+  }
+  #profil-struct-modal .profil-drawer-actes-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #9ca3af;
+    margin-bottom: 8px;
+  }
+  #profil-struct-modal .profil-drawer-actes-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  #profil-struct-modal .profil-drawer-actes-search input {
+    flex: 1;
+    font-size: 12px;
+    padding: 9px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  #profil-struct-modal .profil-drawer-actes-search button {
+    background: #0a5c8a;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    padding: 0 16px;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #profil-struct-modal .profil-drawer-cat {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  #profil-struct-modal .profil-drawer-cat-head {
+    padding: 7px 12px;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  #profil-struct-modal .profil-drawer-cat-head span:first-child {
+    font-size: 10px;
+    font-weight: 700;
+    color: #0d1b2a;
+  }
+  #profil-struct-modal .profil-drawer-cat-count {
+    font-size: 9px;
+    background: #dbeafe;
+    color: #0a5c8a;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+  #profil-struct-modal .profil-pa-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 8px;
+    padding: 8px 6px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.12s;
+    user-select: none;
+  }
+  #profil-struct-modal .profil-pa-row:hover {
+    background: #f9fafb;
+  }
+  #profil-struct-modal .profil-pa-row.in-cart {
+    background: #f0fdf4;
+  }
+  #profil-struct-modal .profil-pa-row .ai-check {
+    width: 14px;
+    height: 14px;
+    accent-color: #14b87a;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #profil-struct-modal .profil-pa-info {
+    flex: 1;
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-pa-nom {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0d1b2a;
+    line-height: 1.3;
+  }
+  #profil-struct-modal .profil-pa-cat-label {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 1px;
+  }
+  #profil-struct-modal .profil-pa-delai {
+    font-size: 10px;
+    color: #9ca3af;
+  }
+  #profil-struct-modal .profil-pa-prix {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0a5c8a;
+  }
+  #profil-struct-modal .profil-pa-row--ambulance:hover {
+    background: #e8f4fb;
+  }
+  #profil-struct-modal .profil-pa-amb-note {
+    font-size: 9px;
+    color: #0a5c8a;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  #profil-struct-modal .profil-pa-prix--amb {
+    color: #0a5c8a;
+  }
+  #profil-struct-modal .profil-pa-delai--amb {
+    color: #0891b2;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  #profil-struct-modal .profil-drawer-amb-hint {
+    font-size: 10px;
+    color: #0a5c8a;
+    background: #e8f4fb;
+    border: 1px solid #bfdbfe;
+    border-radius: 7px;
+    padding: 7px 10px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  #profil-struct-modal .profil-drawer-trajet-config {
+    margin-bottom: 14px;
+  }
+  #profil-struct-modal .profil-drawer-empty {
+    padding: 20px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 13px;
+  }
+  #profil-struct-modal .profil-pa-right { text-align: right; flex-shrink: 0; }
+  #profil-struct-modal .devis-btn {
+    width: 100%;
+    background: #14b87a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  #profil-struct-modal .devis-btn:hover {
+    background: #0ea870;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 184, 122, 0.28);
+  }
+  #profil-struct-modal .profil-drawer-devis-btn { margin-top: 10px; }
+  #profil-struct-modal .profil-panier-box {
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 9px;
+    padding: 10px 14px;
+    margin-top: 14px;
+  }
+  #profil-struct-modal .profil-panier-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #0a5c8a;
+    margin-bottom: 8px;
+  }
+  #profil-struct-modal .profil-panier-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  #profil-struct-modal .profil-panier-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  #profil-struct-modal .profil-panier-card-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #0d1b2a;
+    min-width: 0;
+  }
+  #profil-struct-modal .profil-panier-card-price {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0a5c8a;
+    white-space: nowrap;
+  }
+  #profil-struct-modal .profil-panier-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  #profil-struct-modal .profil-panier-total {
+    font-family: Syne, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0a5c8a;
+  }
+  #profil-struct-modal .profil-panier-clear {
+    font-size: 10px;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 3px 9px;
+    cursor: pointer;
+    color: #9ca3af;
+    font-family: inherit;
+  }
+  #profil-struct-modal .profil-drawer-devis-btn { margin-top: 10px; }
+  #search-form #dem-right-rail .cart-compact-hint {
+    font-size: 11px;
+    color: #6b7280;
+    text-align: center;
+    padding: 12px 8px;
+    line-height: 1.5;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="get" id="search-form" class="{% if show_dem_service_acte_nav %}search-page--dem{% endif %}">
+  {# Conserver service + actes sélectionnés au submit (tri, filtres) — seulement si choix explicite URL #}
+  {% if current_service %}<input type="hidden" name="service" value="{{ current_service }}">{% endif %}
+  {% if pool_from_request %}{% for aid in current_actes %}<input type="hidden" name="acte" value="{{ aid }}">{% endfor %}{% endif %}
+  {% if show_dem_service_acte_nav %}
+  <input type="hidden" name="price_min" id="sipn-inp-price-min" value="{{ price_min_val }}">
+  <input type="hidden" name="price_max" id="sipn-inp-price-max" value="{{ price_max_val }}">
+  {% endif %}
+
+  {# Liste des villes pour la datalist (autocomplete native) #}
+  <datalist id="city-options">
+    {% for c in top_cities %}<option value="{{ c }}">{% endfor %}
+  </datalist>
+
+  {% if not show_dem_service_acte_nav %}
+  {# Header sticky : titre, recherche, position rapide #}
+  <div class="sticky top-0 z-30 border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
+    <div class="mx-auto max-w-7xl px-4 py-3 sm:px-6 sm:py-4">
+
+      <div class="hidden sm:block">
+        <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Prestations & tarifs</h1>
+        <p class="mt-0.5 text-xs text-gray-500 sm:text-sm">Trouvez le meilleur tarif pour vos examens et soins.</p>
+      </div>
+
+      {# Bandeau Position actuelle (visible si lat/lng fournis) #}
+      <div id="geo-banner" class="mt-2 flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-xs sm:text-sm" {% if not current_lat or not current_lng %}style="display:none"{% endif %}>
+        <div class="flex min-w-0 items-center gap-2">
+          <span class="text-base inline-flex">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--sm" %}</span>
+          <div class="min-w-0">
+            <div class="truncate font-semibold text-cyan-900" id="geo-banner-label">Position détectée</div>
+            <div class="truncate text-[11px] text-cyan-700" id="geo-banner-coords">{{ current_lat }}, {{ current_lng }}</div>
+          </div>
+        </div>
+        <div class="flex shrink-0 items-center gap-1">
+          <button type="button" id="btn-edit-geo" class="rounded-lg px-2 py-1 text-cyan-700 hover:bg-cyan-100" title="Modifier la position">Modifier</button>
+          <a href="{% url 'healthcare:search' %}?clear_geo=1{% if query %}&q={{ query|urlencode }}{% endif %}" class="rounded-lg px-2 py-1 text-rose-600 hover:bg-rose-50" title="Effacer la position">Effacer</a>
+        </div>
+      </div>
+
+      {# Barre de recherche (mode Déméthior : champ q dans search-section du partial démo) #}
+      <div class="mt-2 sm:mt-3">
+        {% if not show_dem_service_acte_nav %}
+        <div class="flex gap-2">
+          <div id="ac-box">
+            <svg class="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" style="z-index:1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+            <input type="search" name="q" id="search-q" value="{{ query }}" autocomplete="off" inputmode="search"
+              placeholder="IRM, NFS, échographie, radio…"
+              class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 pl-10 pr-10 text-sm focus:border-accent-400 focus:bg-white focus:outline-none">
+            {% if query %}
+            <button type="button" id="btn-clear-q" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-gray-400 hover:bg-gray-100" title="Effacer">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+            {% endif %}
+            <div id="ac-list"></div>
+          </div>
+          <button type="submit" class="btn-accent hidden h-12 rounded-xl px-5 text-sm font-bold sm:inline-block">Rechercher</button>
+        </div>
+        {% endif %}
+
+        {# Boutons rapides : Près de moi · Ville · Tri (mobile prioritaire) #}
+        <div class="mt-2 flex flex-wrap items-center gap-2">
+          <button type="button" id="btn-quick-geo" class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-accent-300 hover:bg-accent-50/60 hover:text-accent-700">
+            {% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %} Près de moi
+          </button>
+          <div class="inline-flex min-w-0 items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2 py-1 text-xs">
+            <span class="pl-1 text-gray-500" aria-hidden="true"></span>
+            <input type="text" name="city" id="city-quick" list="city-options" value="{{ current_city }}" placeholder="Ville…"
+              class="w-32 min-w-0 border-0 bg-transparent p-0 text-xs font-semibold text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0"{% if show_dem_service_acte_nav %} disabled{% endif %}>
+            {% if current_city %}
+            <button type="button" id="btn-clear-city" class="rounded-full p-0.5 text-gray-400 hover:bg-gray-100" title="Effacer la ville">×</button>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn-primary inline-flex h-9 items-center gap-1 rounded-full px-3 text-xs font-bold sm:hidden">OK</button>
+        </div>
+      </div>
+
+      {# Pastilles : actes du lot / parcours #}
+      {% if pool_for_pills %}
+      <div class="mt-3 max-h-32 overflow-y-auto overscroll-contain rounded-xl border border-gray-100 bg-gray-50/60 px-2 py-2">
+        <div class="flex flex-wrap gap-1.5">
+          <a href="{% url 'healthcare:search' %}?sort=price_asc{{ acte_keep_query }}{% if query %}&q={{ query|urlencode }}{% endif %}" class="rounded-full border px-2.5 py-1 text-xs font-semibold {% if not current_service and not current_acte %}border-primary-500 bg-primary-50 text-primary-700{% else %}border-gray-200 text-gray-600{% endif %}">Toutes</a>
+          {% for row in acte_pills %}
+          <span class="inline-flex max-w-full items-center gap-0.5 rounded-full border text-xs font-semibold pl-2.5 pr-1 py-1
+            {% if row.acte.pk|stringformat:'d' in current_actes %}border-accent-400 bg-accent-50 text-accent-700{% else %}border-gray-200 text-gray-600{% endif %}">
+            <a href="{% url 'healthcare:search' %}?acte={{ row.acte.pk }}&sort=price_asc{% if query %}&q={{ query|urlencode }}{% endif %}" class="min-w-0 truncate hover:underline">{{ row.acte.name }}</a>
+            <a href="{{ row.remove_url }}" class="shrink-0 rounded-full p-0.5 text-accent-700 hover:bg-accent-200/70" title="Retirer cet examen" aria-label="Retirer {{ row.acte.name }}">×</a>
+          </span>
+          {% empty %}
+          <span class="text-xs text-amber-700">Aucun examen ne correspond à ce périmètre.</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if show_dem_service_acte_nav %}
+  {% include "healthcare/_search_demo_patient_main.html" %}
+  {% else %}
+  <div class="mx-auto max-w-7xl px-4 py-5 pb-28 sm:px-6 sm:pb-10 lg:pb-5">
+
+    {% if not pool_for_pills %}
+    <section class="mb-5" aria-label="Lots prédéfinis">
+      <h2 class="text-base font-semibold text-gray-900 sm:text-lg">Lots prédéfinis</h2>
+      <div class="mt-3 flex items-stretch gap-1.5 sm:gap-2">
+        <button type="button" id="preset-scroll-prev" class="preset-lot-scroll-btn is-hidden-overflow" aria-label="Lots précédents" title="Voir les lots précédents">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <div id="preset-scroll-search" class="preset-lots-scroll-wrap flex min-w-0 flex-1 gap-3 overflow-x-auto pb-2"></div>
+        <button type="button" id="preset-scroll-next" class="preset-lot-scroll-btn is-hidden-overflow" aria-label="Lots suivants" title="Voir les lots suivants">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+    {% endif %}
+
+    <div id="layout-body" class="layout">
+
+      <aside id="sidebar-desktop">
+        <div class="search-filters-sticky dem-filters-card">
+          <div class="mb-4 flex items-start justify-between gap-2 border-b border-gray-100 pb-3">
+            <span class="dem-filters-section-title pr-2">Affiner la recherche</span>
+            {% if active_filter_count %}<span class="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-accent-500 px-1.5 text-[10px] font-bold text-white">{{ active_filter_count }}</span>{% endif %}
+          </div>
+          {% include "healthcare/_search_filters.html" with mode="desktop" %}
+        </div>
+      </aside>
+
+      <div id="results-col">
+
+        {% if active_filter_count %}
+        <div id="active-chips" class="mb-3 flex flex-wrap items-center gap-1.5"></div>
+        {% endif %}
+
+        <div class="dem-filters-card mb-4 flex flex-wrap items-end gap-3">
+          <div class="min-w-0 flex-1 basis-full sm:basis-auto">
+            <div class="dem-filters-section-title mb-2">Trier &amp; filtrer</div>
+            <p class="text-xs text-gray-500"><strong class="text-sm font-semibold text-gray-800">{{ results_count }}</strong> offre{{ results_count|pluralize }}</p>
+          </div>
+          <label class="ml-auto flex min-w-0 flex-col gap-1 sm:items-end">
+            <span class="dem-filters-section-title hidden sm:block">Tri des offres</span>
+            <select name="sort" class="dem-select-sort max-w-full min-w-[12rem]" onchange="document.getElementById('search-form').submit()">
+              <option value="price_asc"  {% if current_sort == "price_asc" %}selected{% endif %}> Prix croissant</option>
+              <option value="price_desc" {% if current_sort == "price_desc" %}selected{% endif %}>Prix décroissant</option>
+              <option value="popular"    {% if current_sort == "popular" %}selected{% endif %}>Populaires</option>
+              <option value="price_ipm_asc"       {% if current_sort == "price_ipm_asc" %}selected{% endif %}>Prix IPM croissant</option>
+              <option value="price_ipm_desc"      {% if current_sort == "price_ipm_desc" %}selected{% endif %}>Prix IPM décroissant</option>
+              <option value="price_assurance_asc" {% if current_sort == "price_assurance_asc" %}selected{% endif %}>Prix Assurance croissant</option>
+              <option value="price_assurance_desc"{% if current_sort == "price_assurance_desc" %}selected{% endif %}>Prix Assurance décroissant</option>
+              <option value="recent_pa"  {% if current_sort == "recent_pa" %}selected{% endif %}>Récents</option>
+              <option value="name_org"   {% if current_sort == "name_org" %}selected{% endif %}>Nom A→Z</option>
+              <option value="delai_asc"  {% if current_sort == "delai_asc" %}selected{% endif %}>Délai le plus court</option>
+              <option value="delai_desc" {% if current_sort == "delai_desc" %}selected{% endif %}>Délai le plus long</option>
+              {% if has_coordinates %}<option value="distance" {% if current_sort == "distance" %}selected{% endif %}>Distance</option>{% endif %}
+            </select>
+          </label>
+        </div>
+
+        {% if acte_results_accordion %}
+        <div class="space-y-4">
+          {% for block in acte_results_accordion %}
+          <details class="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm open:ring-2 open:ring-accent-100" open>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold text-gray-900 [&::-webkit-details-marker]:hidden">
+              <span class="min-w-0 flex-1 truncate text-left">{{ block.acte.name|default:"Examen" }}</span>
+              <span class="flex shrink-0 items-center gap-2">
+                <span class="text-xs font-normal text-gray-500">{{ block.items|length }} offre{% if block.items|length > 1 %}s{% endif %}</span>
+                <span class="text-accent-600 transition group-open:rotate-180" aria-hidden="true">▼</span>
+              </span>
+            </summary>
+            <div class="border-t border-gray-100 p-4 pt-3">
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {% for pa in block.items %}{% include "healthcare/_search_card.html" with pa=pa %}{% endfor %}
+              </div>
+            </div>
+          </details>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {% for pa in page %}{% include "healthcare/_search_card.html" with pa=pa %}
+          {% empty %}
+          <div class="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-16 text-center">
+            <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-primary-600">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+            </div>
+            <p class="font-medium text-gray-800">Aucune offre trouvée</p>
+            <button type="button" class="btn-primary mt-3 inline-block rounded-xl px-5 py-2 text-sm font-bold btn-reset-filters">Réinitialiser</button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if page.has_other_pages %}
+        <nav class="mt-8 flex justify-center gap-2" aria-label="Pagination">
+          {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700">← Précédent</a>{% endif %}
+          <span class="rounded-xl bg-gray-100 px-4 py-2 text-sm font-semibold">{{ page.number }} / {{ page.paginator.num_pages }}</span>
+          {% if page.has_next %}<a href="?page={{ page.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700">Suivant →</a>{% endif %}
+        </nav>
+        {% endif %}
+      </div>
+
+      {% include "healthcare/_search_cart_rail_desktop.html" %}
+    </div>
+
+    {% include "healthcare/_search_cart_mobile_sheet.html" %}
+  </div>
+  {% endif %}
+
+  {# ───────────────────────── Bottom-sheet filtres mobile ───────────────────────── #}
+  <div class="sheet-backdrop" id="sheet-backdrop" aria-hidden="true"></div>
+  <aside class="sheet-panel" id="sheet-panel" role="dialog" aria-modal="true" aria-label="Filtres de recherche">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="flex items-center justify-between border-b border-gray-100 px-5 pb-3 pt-1">
+      <div>
+        <h2 class="text-base font-bold text-gray-900">Filtres</h2>
+        <p class="mt-0.5 text-[11px] font-medium text-gray-500">Assurance, prix, région, délai…</p>
+        {% if active_filter_count %}<span class="mt-1 inline-flex rounded-full bg-accent-500 px-2 py-0.5 text-[11px] font-bold text-white">{{ active_filter_count }} actif{{ active_filter_count|pluralize }}</span>{% endif %}
+      </div>
+      <button type="button" id="sheet-close" class="rounded-full p-2 text-gray-400 hover:bg-gray-100" aria-label="Fermer">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto px-5 py-4">
+      {% if show_dem_service_acte_nav %}
+      <div class="piliers -mx-5 mb-4 border-b border-gray-200 bg-white px-5 py-2.5" role="region" aria-label="Familles de soins">
+        {% include "healthcare/_search_service_acte_dem.html" with section="piliers" %}
+      </div>
+      {% include "healthcare/_search_dem_unified_panel.html" with mode="mobile" %}
+      {% else %}
+      {% include "healthcare/_search_filters.html" with mode="mobile" %}
+      {% endif %}
+    </div>
+    <div class="border-t border-gray-100 bg-gray-50 px-5 py-3">
+      <button type="button" class="block w-full rounded-xl border border-gray-200 bg-white py-3 text-center text-sm font-semibold text-gray-700 btn-reset-filters">Réinitialiser les filtres</button>
+      <p class="mt-2 text-center text-[11px] text-gray-500">Les critères se mettent à jour dès que vous les modifiez.</p>
+    </div>
+  </aside>
+
+  <button type="button" id="fab-filters" aria-label="Ouvrir les filtres">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M5.636 5.636l2.122 2.122m8.484 8.484 2.122 2.122M3 12h3m12 0h3M5.636 18.364l2.122-2.122m8.484-8.484 2.122-2.122"/></svg>
+    Filtres{% if active_filter_count %} <span class="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1.5 text-[11px] font-bold text-primary-700">{{ active_filter_count }}</span>{% endif %}
+  </button>
+
+  {# ───── Position : mini-modale ───── #}
+  <div class="sheet-backdrop" id="geo-backdrop" aria-hidden="true"></div>
+  <div id="geo-modal" class="sheet-panel" role="dialog" aria-modal="true" aria-label="Modifier la position">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="flex items-center justify-between border-b border-gray-100 px-5 pb-3 pt-1">
+      <h2 class="text-base font-bold text-gray-900 sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--sm" %} Votre position</h2>
+      <button type="button" id="geo-modal-close" class="rounded-full p-2 text-gray-400 hover:bg-gray-100" aria-label="Fermer">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="space-y-4 px-5 py-4">
+      <button type="button" id="btn-geolocate" class="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-accent-600">
+        Utiliser ma position GPS
+      </button>
+      <p id="geo-http-warn" class="hidden text-xs text-amber-700 sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="warning" class="sipn-ico sipn-ico--xs" %} GPS indisponible en HTTP. Utilisez la recherche d’adresse ci-dessous.</p>
+
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Ou saisissez une adresse</label>
+        <div class="flex gap-2">
+          <input type="text" id="geo-address-q" placeholder="Ex. Sacré-Cœur, Dakar…" class="min-w-0 flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm">
+          <button type="button" id="btn-geocode" class="rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white">Chercher</button>
+        </div>
+        <ul id="geo-suggestions" class="mt-2 hidden max-h-44 overflow-auto rounded-lg border border-gray-200 bg-white text-sm"></ul>
+      </div>
+
+      <div>
+        <label class="mb-1 block text-xs font-medium text-gray-700">Rayon</label>
+        <select name="radius_km" id="id_radius" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm">
+          <option value="5"   {% if radius_km|floatformat:0 == "5" %}selected{% endif %}>5 km</option>
+          <option value="10"  {% if radius_km|floatformat:0 == "10" %}selected{% endif %}>10 km</option>
+          <option value="15"  {% if radius_km|floatformat:0 == "15" %}selected{% endif %}>15 km</option>
+          <option value="25"  {% if radius_km|floatformat:0 == "25" %}selected{% endif %}>25 km</option>
+          <option value="30"  {% if radius_km|floatformat:0 == "30" %}selected{% endif %}>30 km</option>
+          <option value="50"  {% if radius_km|floatformat:0 == "50" %}selected{% endif %}>50 km</option>
+          <option value="100" {% if radius_km|floatformat:0 == "100" %}selected{% endif %}>100 km</option>
+        </select>
+      </div>
+
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" id="chk-proximity" {% if proximity_on %}checked{% endif %} class="h-4 w-4 rounded border-gray-300 text-accent-600 focus:ring-accent-500">
+        Limiter au rayon
+      </label>
+
+      <input type="hidden" name="lat" id="geo-lat" value="{{ current_lat }}">
+      <input type="hidden" name="lng" id="geo-lng" value="{{ current_lng }}">
+      <input type="hidden" name="proximity" id="geo-proximity" value="{% if proximity_on %}1{% else %}0{% endif %}">
+      <script type="application/json" id="sipn-saved-geo">{"lat":"{% if saved_lat %}{{ saved_lat }}{% endif %}","lng":"{% if saved_lng %}{{ saved_lng }}{% endif %}"}</script>
+
+      {% if user.is_authenticated %}
+      <div class="pt-2">
+        <button type="button" id="btn-save-profile" class="w-full rounded-xl border border-gray-200 bg-white py-3 text-sm font-semibold text-gray-700 disabled:opacity-50" {% if not has_coordinates %}disabled{% endif %}>Mémoriser dans mon profil</button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ───── Aperçu structure (Sprint 2 — même parcours que démo patient) ───── #}
+  <div class="sheet-backdrop" id="org-preview-backdrop" aria-hidden="true"></div>
+  <aside class="sheet-panel" id="org-preview-panel" role="dialog" aria-modal="true" aria-labelledby="org-preview-title">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="flex items-center justify-between border-b border-gray-100 px-5 pb-3 pt-1">
+      <h2 id="org-preview-title" class="text-base font-bold text-gray-900">Structure</h2>
+      <button type="button" id="org-preview-close" class="rounded-full p-2 text-gray-400 hover:bg-gray-100" aria-label="Fermer l'aperçu">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="org-preview-body" class="flex-1 overflow-y-auto px-5 py-4 text-sm text-gray-700">
+      <p class="text-gray-500">Chargement…</p>
+    </div>
+  </aside>
+
+  {# ───── Drawer profil structure (aligné DEMO_DESKTOP_PATIENT.html) ───── #}
+  <div id="profil-struct-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1040" aria-hidden="true"></div>
+  <div id="profil-struct-modal" style="display:none;position:fixed;top:0;right:0;bottom:0;width:440px;max-width:96vw;background:#fff;z-index:1041;box-shadow:-8px 0 40px rgba(0,0,0,0.18);overflow-y:auto" role="dialog" aria-modal="true" aria-label="Profil structure"></div>
+
+</form>
+
+{% if show_dem_service_acte_nav %}
+{% include "healthcare/_search_mobile_float_actions.html" %}
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+<script>
+  window.SIPN_CONFIG = {
+    urls: {
+      search: '{% url "healthcare:search" %}',
+      login: '{% url "login" %}',
+      autocomplete: '{% url "healthcare:api_search_autocomplete" %}',
+      actesBudget: '{% url "healthcare:api_actes_budget" %}',
+      bundleSaveSession: '{% url "healthcare:bundle_save_session" %}',
+      messagingInbox: '{% url "messaging:inbox" %}',
+      organismePreviewTpl: '{% url "healthcare:api_organisme_preview" slug="org-preview-slug-tmp" %}',
+      apiReverse: '{% url "healthcare:api_reverse" %}',
+      apiGeocode: '{% url "healthcare:api_geocode" %}',
+      saveSearchLocation: '{% url "healthcare:save_search_location" %}',
+      drawerUrlTpl: '{% url "healthcare:organisme_profil_drawer" org_id=0 %}',
+      ambulanceTrajetDevis: '{% url "cart:ambulance_trajet_devis" %}',
+      cartRemoveFallbackTpl: '{% url "cart:cart_remove_pa" 999001999 %}',
+      cartDevisBaseUrl: '{% url "cart:generate_devis" %}',
+      cartViewUrl: '{% url "cart:cart_view" %}',
+      cartChariotUrl: {% if user.is_authenticated and user.is_patient %}'{% url "users:patient_panel_tab" tab="chariot" %}'{% else %}null{% endif %},
+      cartSnapshotUrl: '{% url "cart:cart_snapshot" %}'
+    },
+    demAssuranceCtx: {{ dem_assurance_context_json|default:"null"|safe }},
+    pricingSlider: {
+      pmin: {{ global_price_min|default:"0"|floatformat:"0u" }},
+      pmax: {{ global_price_max|default:"500000"|floatformat:"0u" }},
+      curMin: {{ price_min_val|default:"0" }},
+      curMax: {{ price_max_val|default:"0" }}
+    },
+    presets: {{ presets_json|default:"[]"|safe }},
+    selectedLotIds: {{ selected_lot_ids_json|default:"[]"|safe }},
+    showDemServiceActeNav: {% if show_dem_service_acte_nav %}true{% else %}false{% endif %},
+    userIsAuthenticated: {% if user.is_authenticated %}true{% else %}false{% endif %}
+  };
+</script>
+<script src="{% static 'healthcare/js/search-utils.js' %}"></script>
+<script src="{% static 'healthcare/js/search-filters.js' %}"></script>
+<script src="{% static 'healthcare/js/search-mobile-filters.js' %}"></script>
+<script src="{% static 'healthcare/js/search-mobile-ui.js' %}"></script>
+<script src="{% static 'healthcare/js/search-cart.js' %}"></script>
+<script src="{% static 'healthcare/js/search-profil-drawer.js' %}"></script>
+<script src="{% static 'healthcare/js/search-tag-input.js' %}"></script>
+<script src="{% static 'healthcare/js/search-ajax.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{{ conv.dossier_label }}{% endblock %}
+{% block page_title %}Messagerie · {{ conv.dossier_label }}{% endblock %}
+
+{% block content %}
+{% include "dashboard/partials/_activite_nav.html" %}
+
+<div class="mb-4">
+  <a href="{% url 'dashboard:messaging_overview' %}" class="text-sm font-medium text-gray-500 hover:text-primary-600">← Registre messagerie</a>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-3">
+  <div class="lg:col-span-2 rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div class="border-b border-gray-100 px-5 py-4">
+      <p class="text-sm font-bold text-gray-900">{{ conv.dossier_label }}</p>
+      <p class="text-xs text-gray-500">{{ conv.patient.display_name|default:conv.patient.username }} ↔ {{ conv.prestataire.display_name|default:conv.prestataire.username }}</p>
+    </div>
+    <div class="max-h-[60vh] space-y-3 overflow-y-auto p-5">
+      {% for m in messages %}
+      <div class="rounded-lg px-3 py-2 text-sm {% if m.message_type == 'system' or m.message_type == 'status_card' %}bg-gray-50 text-center text-xs text-gray-500{% elif m.sender_id == conv.patient_id %}bg-blue-50 text-gray-800{% else %}mc-bg-accent-light text-gray-800{% endif %}">
+        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+          {{ m.sender.display_name|default:m.sender.username }}
+          · {{ m.timestamp|date:"d/m/Y H:i" }}
+          {% if m.message_type != 'internal' %} · {{ m.get_message_type_display }}{% endif %}
+        </p>
+        <p class="mt-1 whitespace-pre-wrap">{{ m.content }}</p>
+      </div>
+      {% empty %}
+      <p class="py-8 text-center text-sm text-gray-400">Aucun message.</p>
+      {% endfor %}
+    </div>
+    <div class="border-t border-gray-100 px-5 py-3 text-[11px] text-gray-400">Lecture seule — l'admin ne répond pas depuis cette vue.</div>
+  </div>
+
+  <aside class="space-y-4">
+    <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm text-sm">
+      <h2 class="font-bold text-gray-900">Métadonnées</h2>
+      <dl class="mt-3 space-y-2 text-xs">
+        <div><dt class="text-gray-400">Type</dt><dd>{{ conv.get_kind_display }}</dd></div>
+        <div><dt class="text-gray-400">Statut fil</dt><dd>{{ conv.get_thread_status_display }}</dd></div>
+        <div><dt class="text-gray-400">Structure</dt><dd>{% if conv.organisme %}<a href="{% url 'dashboard:organisme_detail' conv.organisme.pk %}" class="font-medium text-primary-600 hover:underline">{{ conv.organisme.name }}</a>{% else %}—{% endif %}</dd></div>
+        <div><dt class="text-gray-400">Créé</dt><dd>{{ conv.created_at|date:"d/m/Y H:i" }}</dd></div>
+        <div><dt class="text-gray-400">MAJ</dt><dd>{{ conv.updated_at|date:"d/m/Y H:i" }}</dd></div>
+      </dl>
+    </div>
+    <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm text-sm">
+      <h2 class="font-bold text-gray-900">Liens croisés</h2>
+      <ul class="mt-3 space-y-2 text-xs">
+        {% if conv.devis_part %}
+        <li><span class="text-gray-500">Sous-devis</span> <span class="font-mono">{{ conv.devis_part.reference }}</span></li>
+        {% if conv.devis_part.devis_id %}
+        <li><a href="{% url 'dashboard:devis_admin_detail' conv.devis_part.devis.reference %}" class="text-primary-600 hover:underline">Devis {{ conv.devis_part.devis.reference }}</a></li>
+        {% endif %}
+        {% endif %}
+        {% if conv.rendez_vous %}
+        <li><a href="{% url 'dashboard:rdv_admin_detail' conv.rendez_vous.reference %}" class="text-primary-600 hover:underline">RDV {{ conv.rendez_vous.reference }}</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}

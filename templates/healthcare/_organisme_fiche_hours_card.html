@@ -1,0 +1,25 @@
+{# Panneau horaires dépliable (header fiche) — variables : hours_list, org #}
+<div id="pp-hours-card" class="pp-hours-card hidden" role="region" aria-label="Horaires détaillés">
+  <p class="pp-hours-card-title">Horaires d'ouverture</p>
+  {% if hours_list %}
+  <table class="pp-hours-table">
+    <tbody>
+      {% for h in hours_list %}
+      <tr class="{% if h.is_today %}is-today{% endif %}">
+        <th scope="row">
+          {{ h.day }}{% if h.is_today %}<span class="pp-hours-today">· Aujourd'hui</span>{% endif %}
+        </th>
+        <td class="{% if h.closed %}is-closed{% endif %}">
+          {% if h.closed %}Fermé{% else %}{{ h.open|default:"—" }} – {{ h.close|default:"—" }}{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="pp-hours-empty">Horaires non renseignés.</p>
+  {% endif %}
+  {% if org.horaires_complement %}
+  <p class="pp-hours-note">{{ org.horaires_complement }}</p>
+  {% endif %}
+</div>

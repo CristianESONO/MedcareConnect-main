@@ -1,0 +1,17 @@
+{% comment %}Icônes accès rapide prestataire — header desktop (sans panier).{% endcomment %}
+<div class="mc-landing-header-icons" aria-label="Accès rapide">
+  <a href="{% url 'messaging:inbox' %}"
+    class="mc-landing-icon-btn{% if dash_active == 'messages' %} is-active{% endif %}"
+    aria-label="Messagerie{% if unread_messages %} ({{ unread_messages }} non lus){% endif %}"
+    title="Messagerie">
+    <i class="ti ti-messages" aria-hidden="true"></i>
+    {% if unread_messages %}<span class="mc-landing-icon-badge">{{ unread_messages }}</span>{% endif %}
+  </a>
+  <a href="{% url 'messaging:notifications' %}"
+    class="mc-landing-icon-btn{% if dash_active == 'notifications' %} is-active{% endif %}"
+    aria-label="Notifications{% if unread_notifications %} ({{ unread_notifications }} non lues){% endif %}"
+    title="Notifications">
+    <i class="ti ti-bell" aria-hidden="true"></i>
+    {% if unread_notifications %}<span class="mc-landing-icon-badge">{{ unread_notifications }}</span>{% endif %}
+  </a>
+</div>

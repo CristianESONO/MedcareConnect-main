@@ -1,0 +1,56 @@
+{# Select2 + matcher optgroups (même règle que panier invité). Variables : medcare_insurance_select2_id (ex. id_insurance, id_assurance) #}
+<script>
+(function() {
+  var sid = "{{ medcare_insurance_select2_id|default:'id_insurance'|escapejs }}";
+  function norm(s) {
+    try {
+      return (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    } catch (e) {
+      return (s || '').toString().toLowerCase();
+    }
+  }
+  function medcareInsuranceOptgroupMatcher(params, data) {
+    if ($.trim(params.term) === '') {
+      return data;
+    }
+    var q = norm(params.term);
+    if (typeof data.text === 'undefined') {
+      return null;
+    }
+    var kids = data.children;
+    if (Array.isArray(kids) && kids.length > 0) {
+      var parentMatches = norm(data.text).indexOf(q) !== -1;
+      if (parentMatches) {
+        var allInGroup = $.extend({}, data);
+        allInGroup.children = kids.slice();
+        return allInGroup;
+      }
+      var filteredChildren = [];
+      for (var i = 0; i < kids.length; i++) {
+        var leaf = kids[i];
+        if (leaf && typeof leaf.text !== 'undefined' && norm(leaf.text).indexOf(q) !== -1) {
+          filteredChildren.push(leaf);
+        }
+      }
+      if (filteredChildren.length === 0) {
+        return null;
+      }
+      var modifiedData = $.extend({}, data);
+      modifiedData.children = filteredChildren;
+      return modifiedData;
+    }
+    if (norm(data.text).indexOf(q) !== -1) {
+      return $.extend({}, data);
+    }
+    return null;
+  }
+  $(function() {
+    var $el = $('#' + sid);
+    if (!$el.length) return;
+    if ($el.hasClass('select2-hidden-accessible')) {
+      $el.select2('destroy');
+    }
+    $el.select2({ matcher: medcareInsuranceOptgroupMatcher });
+  });
+})();
+</script>

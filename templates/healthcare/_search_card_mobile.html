@@ -1,0 +1,111 @@
+{% comment %}Carte structure unifiée responsive (mobile + desktop).{% endcomment %}
+{% load healthcare_display %}
+<article class="scard-m fade-in-m{% if not block.org.is_verified %} scard-m--unverified scard--unverified opacity-60{% endif %}" id="sm-{{ block.org.pk }}" data-org-id="{{ block.org.pk }}"
+  {% if not block.org.is_verified %}data-org-unverified="1"{% endif %}
+  {% if block.org.latitude %}data-org-lat="{{ block.org.latitude }}"{% endif %}
+  {% if block.org.longitude %}data-org-lng="{{ block.org.longitude }}"{% endif %}>
+  <div class="scard-m-head">
+    <div class="scard-m-head-row flex items-center justify-between gap-2">
+      <div class="scard-m-name flex items-center gap-2 flex-wrap">
+        <button type="button" class="org-preview-trigger scard-org-name font-bold hover:underline" data-org-slug="{{ block.org.slug }}" aria-haspopup="dialog">{{ block.org.name }}</button>
+        {% org_status_badge block.org is_pioneer=block.is_pioneer %}
+      </div>
+      {% coverage_badge block.matching_count block.total_actes %}
+    </div>
+    {% if block.org.is_praticien %}
+    <div class="scard-m-type text-primary-700 font-bold"><i class="ti ti-stethoscope"></i> {{ block.org.get_profession_display|default:"Praticien indépendant" }}</div>
+    {% elif block.org.type_organisme %}
+    <div class="scard-m-type">{{ block.org.type_organisme.name }}</div>
+    {% endif %}
+    <div class="scard-m-meta flex items-center gap-3 mt-1">
+      <span class="smeta-m"><i class="ti ti-map-pin"></i> {% if block.org.city and block.org.quartier %}{{ block.org.city }}, {{ block.org.quartier }}{% elif block.org.city %}{{ block.org.city }}{% elif block.org.quartier %}{{ block.org.quartier }}{% else %}Dakar{% endif %}</span>
+      {% if block.org.horaires_ouverture %}
+      <span class="smeta-m"><i class="ti ti-clock"></i> {{ block.org.horaires_ouverture }}</span>
+      {% else %}
+      <span class="smeta-m"><i class="ti ti-clock"></i> 24h/24</span>
+      {% endif %}
+      {% distance_badge block.org.distance_km|default:block.distance_km %}
+    </div>
+  </div>
+
+  {% for pa in block.items %}
+    {% if block.org.is_ambulance_service %}
+      {% include "healthcare/_ambulance_acte_mobile.html" with org=block.org %}
+    {% else %}
+  <div class="scard-m-acte{% if not block.org.is_verified %} scard-m-acte--unverified cursor-not-allowed opacity-60{% endif %}"
+    data-pa-id="{{ pa.pk }}"
+    {% if not block.org.is_verified %}data-pa-unverified="1" aria-disabled="true"{% endif %}
+    data-pa-acte-pk="{{ pa.acte.pk }}"
+    data-pa-acte="{{ pa.acte.name|escape }}"
+    data-pa-org="{{ pa.organisme.name|escape }}"
+    data-pa-org-id="{{ pa.organisme.pk }}"
+    data-pa-price="{{ pa.price|floatformat:0 }}"
+    data-pa-price-ipm="{% if pa.price_ipm %}{{ pa.price_ipm|floatformat:0 }}{% endif %}"
+    data-pa-price-assurance="{% if pa.price_assurance %}{{ pa.price_assurance|floatformat:0 }}{% endif %}"
+    data-pa-status-ipm="{{ pa.coverage_status_ipm }}"
+    data-pa-status-assurance="{{ pa.coverage_status_assurance }}"
+    data-pa-delai="{% if pa.delai %}{{ pa.get_delai_display }}{% endif %}"
+    data-pa-delai-rank="{{ pa.delai_rank }}"
+    {% if pa.distance_km %}data-pa-distance-km="{{ pa.distance_km }}"{% endif %}
+    data-pa-ins-match="{% if pa.dem_insurance_match %}1{% else %}0{% endif %}"
+    data-pa-add-url="{% url 'cart:cart_add' pa.pk %}?next={{ request.get_full_path|urlencode }}"
+    data-pa-remove-url="{% url 'cart:cart_remove_pa' pa.pk %}">
+    <input type="checkbox" class="scard-m-checkbox" aria-label="Sélectionner {{ pa.acte.name }} pour prendre rendez-vous"{% if not block.org.is_verified %} disabled{% endif %}>
+    <div class="scard-m-acte-info min-w-0 flex-1">
+      <div class="scard-m-acte-nom font-semibold">{{ pa.acte.name }}</div>
+      {% if pa.delai or block.org.prises_sang_domicile %}
+      <div class="scard-m-acte-meta flex items-center gap-2 mt-0.5 flex-wrap">
+        {% if pa.delai %}
+        {% delai_badge pa %}
+        {% endif %}
+        {% if block.org.prises_sang_domicile %}
+        <span class="scard-m-acte-domicile sipn-ico-inline"><i class="ti ti-home"></i> Prestations à domicile</span>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="scard-m-pricing text-right">
+      <div class="scard-m-acte-prix" data-base-price="{{ pa.price|floatformat:0 }}">{{ pa.price|fcfa:"F" }}</div>
+      <div class="ai-regime-badge mt-0.5 text-[9.5px] font-semibold" style="display:none"></div>
+    </div>
+  </div>
+    {% endif %}
+  {% endfor %}
+
+  {% if block.missing_actes %}
+  <div class="scard-missing p-3 bg-amber-50/70 border-t border-amber-100">
+    <div class="scm-title text-xs font-bold text-amber-800 flex items-center gap-1"><i class="ti ti-alert-triangle"></i> Actes non disponibles ici</div>
+    <div class="scm-actes flex flex-wrap gap-1 mt-1.5 mb-2">
+      {% for acte in block.missing_actes %}
+      <span class="scm-pill px-2 py-0.5 bg-white border border-amber-200 text-amber-900 rounded-md text-[10.5px] font-medium" data-acte-pk="{{ acte.pk }}">{{ acte.name }}</span>
+      {% endfor %}
+    </div>
+    <button type="button" class="scm-cta text-xs font-bold text-emerald-700 hover:text-emerald-800" data-sipn-open-comp-panel>Trouver où les faire →</button>
+  </div>
+  {% endif %}
+
+  <div class="scard-m-footer flex items-center justify-between gap-2 p-3">
+    <div class="scard-m-ins text-xs text-gray-500 flex items-center gap-1.5 flex-1 min-w-0">
+      <i class="ti ti-shield-check"></i>
+      <span class="truncate">{{ block.insurance_names|insurance_summary:3 }}</span>
+    </div>
+    {% if not block.org.is_praticien %}
+      {% if list_variant == "desktop" %}
+      <button type="button" class="scard-m-profile-btn profil-drawer-trigger" data-org-id="{{ block.org.pk }}" aria-label="Voir le profil de {{ block.org.name }}">Profil →</button>
+      {% else %}
+      <a href="#" class="scard-m-profile-btn dem-profil-link" data-org-slug="{{ block.org.slug }}" data-org-url="{% url 'healthcare:organisme_detail' slug=block.org.slug %}" aria-label="Voir le profil de {{ block.org.name }}">Profil →</a>
+      {% endif %}
+    {% endif %}
+    {% if not block.org.is_ambulance_service %}
+    <div class="scard-m-cart-badge" data-scard-m-cart-badge hidden></div>
+    {% endif %}
+  </div>
+
+  {% if block.items|length > 1 %}
+  <div class="scard-m-multiselect-footer flex items-center justify-between gap-2 px-3.5 py-2 bg-slate-50 border-t border-slate-200">
+    <span class="text-xs font-semibold text-slate-500">{{ block.items|length }} actes</span>
+    <span class="font-black text-primary-700 text-sm" data-scard-total="{{ block.items_total|floatformat:0 }}">{{ block.items_total|fcfa }}</span>
+    <button type="button" class="btn-select-all-m bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 cursor-pointer shrink-0" data-scard-add-all="{{ block.org.pk }}"><i class="ti ti-plus"></i> Tout</button>
+  </div>
+  {% endif %}
+</article>

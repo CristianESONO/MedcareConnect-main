@@ -1,0 +1,50 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Notifications — Règles{% endblock %}
+{% block page_title %}Notifications · Règles{% endblock %}
+
+{% block content %}
+{% include "notifications/admin/_nav.html" %}
+
+<p class="mb-4 text-xs text-gray-500">Pour chaque événement, choisissez les destinataires sur chaque canal. Une cellule grise = pas encore de règle (cliquez pour configurer).</p>
+
+<div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+  <table class="w-full text-left text-sm">
+    <thead class="border-b border-gray-100 bg-gray-50/60">
+      <tr>
+        <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">Événement</th>
+        {% for ch in channels %}
+        <th class="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ ch.label }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      {% for row in matrix %}
+      <tr>
+        <td class="px-4 py-3">
+          <p class="text-sm font-semibold text-gray-900">{{ row.event.label }}</p>
+          <p class="text-[11px] text-gray-400">{{ row.event.code }} · {{ row.event.get_audience_display }}</p>
+        </td>
+        {% for cell in row.cells %}
+        <td class="px-4 py-3 text-center align-top">
+          <a href="{% url 'notifications:admin_rule_edit' row.event.pk cell.channel.pk %}" class="inline-flex flex-col items-center gap-1 rounded-lg border px-2 py-1.5 text-[11px] font-medium transition {% if cell.rule and cell.rule.is_active %}border-[var(--mc-border)] mc-bg-accent-light mc-text-accent-dark {% elif cell.rule %}border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 {% else %}border-dashed border-gray-300 bg-white text-gray-400 hover:bg-gray-50{% endif %}">
+            {% if cell.rule %}
+              {% if cell.rule.target_roles %}<span>{{ cell.rule.role_labels|join:", " }}</span>{% endif %}
+              {% if cell.rule.notify_event_actor %}<span class="text-[10px]">+ acteur</span>{% endif %}
+              {% if cell.rule.target_users.count %}<span class="text-[10px]">+ {{ cell.rule.target_users.count }} user(s)</span>{% endif %}
+              {% if cell.rule.parse_extra_emails %}<span class="text-[10px]">+ {{ cell.rule.parse_extra_emails|length }} email(s)</span>{% endif %}
+              {% if not cell.rule.is_active %}<span class="text-[10px] italic">désactivée</span>{% endif %}
+              {% if not cell.rule.target_roles and not cell.rule.notify_event_actor and not cell.rule.target_users.count and not cell.rule.parse_extra_emails %}<span class="text-[10px]">Aucun destinataire</span>{% endif %}
+            {% else %}
+              + configurer
+            {% endif %}
+          </a>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-3 text-[11px] text-gray-400">Astuce : créez d'abord vos templates (onglet « Templates ») pour qu'un destinataire reçoive bien un message lisible.</p>
+{% endblock %}

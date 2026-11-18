@@ -1,0 +1,21 @@
+{% extends "visitor_base.html" %}
+
+{% block title %}Page introuvable{% endblock %}
+
+{% block page_content %}
+  <section class="mc-error-page">
+    <div class="mc-container">
+      <p class="mc-error-code">404</p>
+      <h1>Cette page n'existe pas</h1>
+      <p>L'adresse que vous avez saisie est incorrecte, a été déplacée ou n'est plus disponible.</p>
+      {% if path %}
+      <p class="mc-error-path">{{ path }}</p>
+      {% endif %}
+      <div class="mc-error-actions">
+        <a href="{% url 'home' %}" class="mc-btn-primary">Retour à l'accueil</a>
+        <a href="{% url 'healthcare:search' %}" class="mc-btn-primary">Rechercher une prestation</a>
+        <a href="{% url 'contact' %}" class="mc-btn-outline">Nous contacter</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% comment %}Vue panier in-app (onglet bas — démo MOBILE PATIENT).{% endcomment %}
+<div id="sipn-view-panier" class="sipn-mobile-app-view">
+  <div class="sipn-panier-sticky-head">
+    <div class="panier-app-header">
+      <button type="button" class="panier-back-btn sipn-ico-wrap" id="sipn-panier-back-results">
+        {% include "healthcare/_icon_svg.html" with icon="arrow-left" class="sipn-ico sipn-ico--sm" %} Résultats
+      </button>
+      <div class="panier-app-title">Mon panier</div>
+    </div>
+  </div>
+  {% if user.is_authenticated and user.is_patient %}
+  {% include "cart/_cart_mobile_panier_patient.html" %}
+  {% else %}
+  {% include "cart/_cart_mobile_panier_guest.html" %}
+  {% endif %}
+</div>

@@ -1,0 +1,63 @@
+{% extends "dashboard/base.html" %}
+{% load static subscription_plans humanize %}
+{% block title %}Formules d'abonnement{% endblock %}
+{% block page_title %}Abonnements · Formules{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/subscription_plans.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <div class="flex flex-wrap items-center gap-3">
+    <a href="{% url 'dashboard:subscription_features_list' %}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Gérer les droits / modules →</a>
+    <a href="{% url 'dashboard:subscriptions_overview' %}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Vue abonnements structures →</a>
+    {% if pending_requests %}
+    <a href="/admin/healthcare/subscriptionchangerequest/?status__exact=pending" target="_blank" class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800 hover:bg-amber-200">
+      {{ pending_requests }} demande(s) en attente — traiter dans l'admin Django
+    </a>
+    {% endif %}
+  </div>
+  <a href="{% url 'dashboard:subscription_plan_create' %}" class="inline-flex rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-600">+ Nouvelle formule</a>
+</div>
+
+<div class="mcc-sub-plans">
+  <div class="mcc-sp-title-block">
+    <div class="mcc-sp-doc-type">Grille tarifaire · BIZ-ECO-003</div>
+    <div class="mcc-sp-doc-title">Plans d'abonnement — Nomenclature SaaS</div>
+    <div class="mcc-sp-doc-subtitle">Pionnier (Gratuit M0–M6) · Starter 24 000 F · Essentiel 39 000 F · Pro 69 000 F · Type de structure = piliers ouverts = plan · −10 % annuel</div>
+  </div>
+
+  <div class="mcc-sp-section-header">
+    <div class="mcc-sp-section-num">1</div>
+    <div class="mcc-sp-section-title">Grille tarifaire officielle</div>
+    <div class="mcc-sp-section-subtitle">4 plans · nomenclature SaaS · aucun add-on (MedPlaque Starter en option)</div>
+  </div>
+
+  {% if plans %}
+  <div class="mcc-sp-plans-row">
+    {% for plan in plans %}
+    {% include "healthcare/partials/_subscription_plan_card.html" with card_mode="admin" plan_included_map=subscription_plan_included %}
+    {% endfor %}
+  </div>
+
+  {% include "healthcare/partials/_subscription_medplaque_banner.html" %}
+
+  <div class="mcc-sp-section-header mt-8">
+    <div class="mcc-sp-section-num">2</div>
+    <div class="mcc-sp-section-title">Tableau comparatif — Features × Plans</div>
+    <div class="mcc-sp-section-subtitle">Nomenclature exacte SaaS app.medcare.sn · Verrouillage technique à brancher avant M7</div>
+  </div>
+
+  {% include "healthcare/partials/_subscription_compare_table.html" with plan_included_map=subscription_plan_included %}
+
+  <div class="mcc-sp-pionnier-block">
+    <div class="mcc-sp-pionnier-title">Programme Partenaires Pionniers CPP-2025</div>
+    <div class="mcc-sp-pionnier-subtitle">50 structures pilotes · Dakar · 6 mois gratuits · tarif post-période bloqué à vie pour les Pionniers validés.</div>
+    <p class="text-xs text-gray-600 leading-relaxed">Les modules cochés dans chaque formule servent au texte affiché côté structure. Modifiez-les via <a href="{% url 'dashboard:subscription_plans_list' %}" class="font-semibold mc-text-accent-dark underline">Formules d'abonnement → Modifier</a> ou basculez les puces dans la <a href="{% url 'dashboard:subscriptions_overview' %}" class="font-semibold mc-text-accent-dark underline">vue abonnements</a>.</p>
+  </div>
+  {% else %}
+  <div class="rounded-xl border border-gray-200 bg-white py-16 text-center text-sm text-gray-400">Aucune formule. Créez-en une avec le bouton ci-dessus.</div>
+  {% endif %}
+</div>
+{% endblock %}

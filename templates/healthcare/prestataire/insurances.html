@@ -1,0 +1,266 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+{% block title %}Assurances acceptées{% endblock %}
+
+{% block dash_extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_insurances.css' %}?v=1">
+{% endblock %}
+
+{% block dash_content %}
+<div class="ins-page-head">
+  <div>
+    <h1 class="ins-page-title">Assurances acceptées</h1>
+    <p class="ins-page-sub">Cochez les organismes que vous acceptez · Visible par les patients dans l&apos;annuaire</p>
+  </div>
+  <div class="ins-page-actions">
+    <button type="button" class="ins-btn-add" id="btn-open-add-assurance">
+      <i class="ti ti-plus"></i> Ajouter une assurance
+    </button>
+    <span class="ins-count-label" id="js-ins-count-label">{{ insurance_selected_count }} organisme{{ insurance_selected_count|pluralize }} sélectionné{{ insurance_selected_count|pluralize }}</span>
+    <button type="submit" form="frm-assurances" class="ins-btn-save"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
+  </div>
+</div>
+
+<form method="post" id="frm-assurances">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="save_assurances">
+
+  {% if segment_blocks %}
+  <div class="ins-filters" id="ins-filters" role="tablist" aria-label="Filtrer par famille">
+    <button type="button" class="ins-filter is-active" data-ins-filter="all" role="tab" aria-selected="true">Tous</button>
+    {% for block in segment_blocks %}
+    <button type="button" class="ins-filter" data-ins-filter="{{ block.segment }}" role="tab" aria-selected="false">
+      {{ block.filter_icon }} {{ block.filter_label }}
+    </button>
+    {% endfor %}
+  </div>
+
+  <div class="ins-card-wrap">
+    <div class="ins-card-wrap-body">
+      <input type="search" class="ins-search" id="ins-search" placeholder="Rechercher une assurance…" aria-label="Rechercher une assurance" autocomplete="off">
+
+      <div id="ins-grid-container">
+        {% for block in segment_blocks %}
+        <section class="ins-segment-group" data-ins-segment="{{ block.segment }}">
+          <div class="ins-segment-head">
+            <span class="ins-segment-icon" aria-hidden="true">{{ block.filter_icon }}</span>
+            <div class="ins-segment-label">{{ block.filter_label }}</div>
+            <div class="ins-segment-badge js-seg-badge" data-segment="{{ block.segment }}">{{ block.n_selected }} / {{ block.n_total }} sélectionnés</div>
+          </div>
+          <div class="ins-grid">
+            {% for a in block.assurances %}
+            <label class="ins-card{% if a.pk in selected_assurance_ids %} is-checked{% endif %}"
+              data-segment="{{ block.segment }}"
+              data-haystack="{{ a.name|lower }} {% if a.description %}{{ a.description|lower }}{% endif %}">
+              <input type="checkbox" class="sr-only js-ins-cb" name="assurance_ids" value="{{ a.pk }}"{% if a.pk in selected_assurance_ids %} checked{% endif %}>
+              <div class="ins-card-body">
+                <div class="ins-name">{{ a.name }}</div>
+                {% if a.description %}
+                <div class="ins-desc">{{ a.description }}</div>
+                {% endif %}
+              </div>
+              <span class="ins-check" aria-hidden="true">{% if a.pk in selected_assurance_ids %}<i class="ti ti-circle-check"></i>{% else %}⬜{% endif %}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="ins-tarifs-card">
+    <label for="assurances_tarifs_delais" class="ins-tarifs-label">Tarifs &amp; délais</label>
+    <p class="ins-tarifs-hint">Tiers payant, délais de remboursement, pièces à fournir — texte libre affiché sur votre fiche publique.</p>
+    <textarea id="assurances_tarifs_delais" name="assurances_tarifs_delais" class="ins-tarifs-textarea" rows="4" placeholder="Ex. CNAM sur place, AXA avec accord préalable sous 48h…">{{ org.assurances_tarifs_delais }}</textarea>
+  </div>
+  {% else %}
+  <div class="ins-empty">
+    Aucune assurance active dans le référentiel. Chargez les données (import / admin).
+  </div>
+  {% endif %}
+</form>
+
+{% if prises %}
+<div class="mt-4 rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+  <div class="flex items-center justify-between">
+    <p class="text-xs font-bold text-gray-900">Déjà enregistrées · {{ prises|length }}</p>
+    <span class="text-[10px] font-medium text-gray-400">Visibles sur votre fiche</span>
+  </div>
+  <p class="mt-0.5 text-[11px] text-gray-500">Aperçu rapide des assurances actuellement acceptées par votre structure.</p>
+  <div class="mt-2.5 flex flex-wrap gap-1.5">
+    {% for pec in prises|slice:":24" %}
+    <span class="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50/80 px-2.5 py-0.5 text-[11px] font-medium text-gray-700">
+      <span aria-hidden="true">{{ pec.assurance.segment_icon }}</span>
+      {{ pec.assurance.name }}
+    </span>
+    {% endfor %}
+    {% if prises|length > 24 %}
+    <span class="text-[11px] text-gray-400">+ {{ prises|length|add:"-24" }} autres</span>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+
+
+<!-- Modal Saisie Libre d'Assurance -->
+<div class="ins-modal-backdrop" id="modal-add-assurance" hidden aria-hidden="true" role="dialog" aria-labelledby="modal-add-title">
+  <div class="ins-modal">
+    <div class="ins-modal-header">
+      <div class="ins-modal-title" id="modal-add-title">
+        <i class="ti ti-shield-plus"></i>
+        <span>Ajouter une assurance non répertoriée</span>
+      </div>
+      <button type="button" class="ins-modal-close" id="btn-close-modal" aria-label="Fermer la boîte de dialogue">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+
+    <form method="post" id="frm-add-custom-assurance">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add_custom_assurance">
+
+      <div class="ins-modal-body">
+        <div class="ins-form-group">
+          <label for="ins-custom-name" class="ins-form-label">Nom de l'organisme / assurance <span class="req">*</span></label>
+          <input type="text" id="ins-custom-name" name="name" class="ins-form-input" placeholder="Ex. Mutuelle Générale des Cadres, Ascoma Santé…" required autocomplete="off">
+          <p class="ins-form-help">Saisie libre : le nom sera automatiquement rendu disponible et rattaché à votre catalogue.</p>
+        </div>
+
+        <div class="ins-form-group">
+          <label for="ins-custom-segment" class="ins-form-label">Catégorie d'organisme <span class="req">*</span></label>
+          <select id="ins-custom-segment" name="segment" class="ins-form-select" required>
+            {% for s_val, s_lbl in segment_choices %}
+            <option value="{{ s_val }}"{% if s_val == "privee_iard" %} selected{% endif %}>{{ s_lbl }}</option>
+            {% endfor %}
+          </select>
+          <p class="ins-form-help">Permet de classer l'organisme dans le bon onglet (Privée, Digitale, Mutuelle, etc.).</p>
+        </div>
+
+        <div class="ins-form-group">
+          <label for="ins-custom-desc" class="ins-form-label">Description ou précision complémentaire <span class="text-xs text-gray-400 font-normal">(optionnel)</span></label>
+          <textarea id="ins-custom-desc" name="description" class="ins-form-textarea" rows="2" placeholder="Ex. Formule Tiers-Payant d'entreprise, Délégation régionale…"></textarea>
+        </div>
+      </div>
+
+      <div class="ins-modal-footer">
+        <button type="button" class="ins-btn-cancel" id="btn-cancel-modal">Annuler</button>
+        <button type="submit" class="ins-btn-confirm">
+          <i class="ti ti-check"></i> Valider et enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('frm-assurances');
+  if (!form) return;
+
+  var countEl = document.getElementById('js-ins-count-label');
+  var searchEl = document.getElementById('ins-search');
+  var currentFilter = 'all';
+
+  // Modal logic
+  var modalBackdrop = document.getElementById('modal-add-assurance');
+  var btnOpen = document.getElementById('btn-open-add-assurance');
+  var btnClose = document.getElementById('btn-close-modal');
+  var btnCancel = document.getElementById('btn-cancel-modal');
+  var customNameInput = document.getElementById('ins-custom-name');
+
+  function openModal() {
+    if (!modalBackdrop) return;
+    modalBackdrop.removeAttribute('hidden');
+    modalBackdrop.setAttribute('aria-hidden', 'false');
+    setTimeout(function () {
+      if (customNameInput) customNameInput.focus();
+    }, 50);
+  }
+
+  function closeModal() {
+    if (!modalBackdrop) return;
+    modalBackdrop.setAttribute('hidden', 'true');
+    modalBackdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  if (btnOpen) btnOpen.addEventListener('click', openModal);
+  if (btnClose) btnClose.addEventListener('click', closeModal);
+  if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', function (e) {
+      if (e.target === modalBackdrop) {
+        closeModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modalBackdrop && !modalBackdrop.hasAttribute('hidden')) {
+      closeModal();
+    }
+  });
+
+  function refreshCounts() {
+    var checked = form.querySelectorAll('.js-ins-cb:checked').length;
+    if (countEl) {
+      countEl.textContent = checked + ' organisme' + (checked > 1 ? 's' : '') + ' sélectionné' + (checked > 1 ? 's' : '');
+    }
+    form.querySelectorAll('.js-seg-badge').forEach(function (badge) {
+      var seg = badge.getAttribute('data-segment');
+      var cards = form.querySelectorAll('.ins-card[data-segment="' + seg + '"] .js-ins-cb');
+      var sel = form.querySelectorAll('.ins-card[data-segment="' + seg + '"] .js-ins-cb:checked').length;
+      badge.textContent = sel + ' / ' + cards.length + ' sélectionnés';
+    });
+  }
+
+  function applyFilters() {
+    var q = (searchEl && searchEl.value || '').toLowerCase().trim();
+    form.querySelectorAll('.ins-segment-group').forEach(function (group) {
+      var seg = group.getAttribute('data-ins-segment');
+      var segVisible = currentFilter === 'all' || currentFilter === seg;
+      var anyCard = false;
+      group.querySelectorAll('.ins-card').forEach(function (card) {
+        var hay = (card.getAttribute('data-haystack') || '').toLowerCase();
+        var match = segVisible && (!q || hay.indexOf(q) !== -1);
+        card.classList.toggle('is-hidden', !match);
+        if (match) anyCard = true;
+      });
+      group.classList.toggle('is-hidden', !anyCard);
+    });
+  }
+
+  form.querySelectorAll('.ins-card').forEach(function (card) {
+    var cb = card.querySelector('.js-ins-cb');
+    var mark = card.querySelector('.ins-check');
+    if (!cb) return;
+    cb.addEventListener('change', function () {
+      card.classList.toggle('is-checked', cb.checked);
+      if (mark) mark.innerHTML = cb.checked ? '<i class="ti ti-circle-check"></i>' : '⬜';
+      refreshCounts();
+    });
+  });
+
+  document.querySelectorAll('.ins-filter').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentFilter = btn.getAttribute('data-ins-filter') || 'all';
+      document.querySelectorAll('.ins-filter').forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      applyFilters();
+    });
+  });
+
+  if (searchEl) {
+    searchEl.addEventListener('input', applyFilters);
+  }
+
+  refreshCounts();
+  applyFilters();
+})();
+</script>
+{% endblock %}

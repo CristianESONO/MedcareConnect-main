@@ -1,0 +1,106 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Notifications — Messages WhatsApp patient (wa.me){% endblock %}
+{% block page_title %}Messages WhatsApp patient (wa.me){% endblock %}
+
+{% block content %}
+{% include "notifications/admin/_nav.html" %}
+
+<div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
+  <p class="font-semibold">Ce n’est pas la même chose que les « templates » d’événements</p>
+  <p class="mt-1 text-xs leading-relaxed">Ici vous éditez le <strong>texte prérempli</strong> des liens <span class="font-mono">wa.me</span> : fiche <strong>organisme</strong> (contact général / par examen) et fiche <strong>devis</strong> (message par structure / sous-devis). Les e-mails automatiques se règlent sous <a href="{% url 'notifications:admin_templates' %}" class="font-semibold underline">Templates d’événements</a>.</p>
+</div>
+
+<form method="post" class="grid gap-6 lg:grid-cols-3">
+  {% csrf_token %}
+
+  <div class="space-y-6 lg:col-span-2">
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div class="flex flex-wrap items-start justify-between gap-2 border-b border-gray-100 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-gray-900">{{ wa_me_form.patient_wa_me_message_general.label }}</h2>
+          <p class="mt-1 text-[11px] text-gray-500">Bouton WhatsApp principal en haut de la fiche (contact général, sans acte précis).</p>
+        </div>
+        <span class="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-600">Éditable</span>
+      </div>
+      <div class="mt-4">
+        <label for="{{ wa_me_form.patient_wa_me_message_general.id_for_label }}" class="sr-only">{{ wa_me_form.patient_wa_me_message_general.label }}</label>
+        {{ wa_me_form.patient_wa_me_message_general }}
+        {% if wa_me_form.patient_wa_me_message_general.errors %}
+        <p class="mt-2 text-xs text-rose-600">{{ wa_me_form.patient_wa_me_message_general.errors.0 }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div class="flex flex-wrap items-start justify-between gap-2 border-b border-gray-100 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-gray-900">{{ wa_me_form.patient_wa_me_message_acte.label }}</h2>
+          <p class="mt-1 text-[11px] text-gray-500">Bouton WhatsApp à côté de chaque ligne d’examen sur la fiche.</p>
+        </div>
+        <span class="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-600">Éditable</span>
+      </div>
+      <div class="mt-4">
+        <label for="{{ wa_me_form.patient_wa_me_message_acte.id_for_label }}" class="sr-only">{{ wa_me_form.patient_wa_me_message_acte.label }}</label>
+        {{ wa_me_form.patient_wa_me_message_acte }}
+        {% if wa_me_form.patient_wa_me_message_acte.errors %}
+        <p class="mt-2 text-xs text-rose-600">{{ wa_me_form.patient_wa_me_message_acte.errors.0 }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div class="flex flex-wrap items-start justify-between gap-2 border-b border-gray-100 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-gray-900">{{ wa_me_form.patient_wa_me_message_devis_formal.label }}</h2>
+          <p class="mt-1 text-[11px] text-gray-500">Bouton WhatsApp sur la fiche devis patient (un message distinct par structure / sous-devis).</p>
+        </div>
+        <span class="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-600">Éditable</span>
+      </div>
+      <div class="mt-4">
+        <label for="{{ wa_me_form.patient_wa_me_message_devis_formal.id_for_label }}" class="sr-only">{{ wa_me_form.patient_wa_me_message_devis_formal.label }}</label>
+        {{ wa_me_form.patient_wa_me_message_devis_formal }}
+        {% if wa_me_form.patient_wa_me_message_devis_formal.errors %}
+        <p class="mt-2 text-xs text-rose-600">{{ wa_me_form.patient_wa_me_message_devis_formal.errors.0 }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if wa_me_form.non_field_errors %}
+    <div class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800">{{ wa_me_form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="flex flex-wrap justify-end gap-2">
+      <a href="{% url 'notifications:admin_templates' %}" class="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">Voir les templates d’événements</a>
+      <button type="submit" class="rounded-xl mc-bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm">Enregistrer les messages</button>
+    </div>
+  </div>
+
+  <aside class="lg:col-span-1">
+    <div class="sticky top-20 space-y-4 rounded-2xl border border-[var(--mc-border)] mc-bg-accent-light/80 p-4 text-sm mc-text-accent-dark">
+      <h3 class="text-xs font-bold uppercase tracking-wider mc-text-accent-dark">Insertion automatique</h3>
+      <p class="text-[11px] leading-relaxed mc-text-accent-dark">Vous pouvez coller les éléments ci-dessous dans vos messages : le nom de l’établissement ou de l’examen sera mis à jour tout seul pour chaque fiche.</p>
+      <dl class="space-y-3 text-[11px]">
+        <div class="rounded-lg bg-white/90 p-3 ring-1 ring-[var(--mc-border)]">
+          <dt class="font-mono font-semibold text-gray-800">{% verbatim %}{{ org.name }}{% endverbatim %}</dt>
+          <dd class="mt-1 text-gray-600">Nom de l’établissement. Utilisable dans <strong>les deux</strong> messages.</dd>
+        </div>
+        <div class="rounded-lg bg-white/90 p-3 ring-1 ring-[var(--mc-border)]">
+          <dt class="font-mono font-semibold text-gray-800">{% verbatim %}{{ acte.name }}{% endverbatim %}</dt>
+          <dd class="mt-1 text-gray-600">Uniquement dans le message <strong>par examen</strong> (libellé de l’acte).</dd>
+        </div>
+        <div class="rounded-lg bg-white/90 p-3 ring-1 ring-[var(--mc-border)]">
+          <dt class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Message devis (sous-devis)</dt>
+          <dd class="mt-2 space-y-1.5 font-mono text-[10px] leading-snug text-gray-800">
+            <p>{% verbatim %}{{ devis.reference }}{% endverbatim %} · {% verbatim %}{{ devis_part.reference }}{% endverbatim %} · {% verbatim %}{{ org.name }}{% endverbatim %}</p>
+            <p>{% verbatim %}{{ total_display }}{% endverbatim %} — total formaté (ex. 18 000 XOF)</p>
+            <p>{% verbatim %}{% for line in lines %}{{ line.line_display }}
+{% endfor %}{% endverbatim %}</p>
+          </dd>
+          <p class="mt-2 text-[10px] text-gray-600">Chaque <code class="rounded bg-gray-100 px-0.5">line_display</code> reprend acte, quantité éventuelle (×n) et montant. Vous pouvez aussi utiliser <code class="rounded bg-gray-100 px-0.5">{% verbatim %}{{ examens_block }}{% endverbatim %}</code> pour le bloc pré-assemblé.</p>
+        </div>
+      </dl>
+      <p class="text-[10px] leading-relaxed mc-text-accent-dark">Astuce : gardez un ton court ; WhatsApp ouvre déjà la conversation avec le bon numéro.</p>
+    </div>
+  </aside>
+</form>
+{% endblock %}

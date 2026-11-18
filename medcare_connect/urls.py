@@ -1,0 +1,93 @@
+from django.contrib import admin
+from django.views.generic import RedirectView
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from medcare_connect import views
+from users import views as users_views
+from healthcare import practitioner_views as pr_views
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("select2/", include("django_select2.urls")),
+    path("", views.home, name="home"),
+
+    # Routes d'authentification à la racine
+    path("inscription/", users_views.register, name="register"),
+    path("connexion/", users_views.login_view, name="login"),
+    path("deconnexion/", users_views.logout_view, name="logout"),
+
+    # Réinitialisation du mot de passe (mot de passe oublié)
+    path(
+        "mot-de-passe-oublie/",
+        auth_views.PasswordResetView.as_view(
+            template_name="registration/password_reset_form.html",
+            email_template_name="registration/password_reset_email.txt",
+            subject_template_name="registration/password_reset_subject.txt",
+            success_url="/mot-de-passe-oublie/envoye/",
+        ),
+        name="password_reset",
+    ),
+    path(
+        "mot-de-passe-oublie/envoye/",
+        auth_views.PasswordResetDoneView.as_view(
+            template_name="registration/password_reset_done.html",
+        ),
+        name="password_reset_done",
+    ),
+    path(
+        "mot-de-passe-oublie/confirmer/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name="registration/password_reset_confirm.html",
+            success_url="/mot-de-passe-oublie/succes/",
+        ),
+        name="password_reset_confirm",
+    ),
+    path(
+        "mot-de-passe-oublie/succes/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name="registration/password_reset_complete.html",
+        ),
+        name="password_reset_complete",
+    ),
+
+    # Routes canoniques en français pour les pages d'information
+    path("comment-ca-marche/", views.how_it_works, name="how_it_works"),
+    path("a-propos/", views.about, name="about"),
+    path("contact/", views.contact, name="contact"),
+    path("confiance/", views.trust, name="trust"),
+
+    # Redirections d'anciennes pages
+    path("landing/", RedirectView.as_view(url="/inscription/", permanent=True), name="landing"),
+    path("rejoindre/", RedirectView.as_view(url="/inscription/", permanent=True), name="rejoindre"),
+    path("how-it-works/", RedirectView.as_view(url="/comment-ca-marche/", permanent=True)),
+    path("about/", RedirectView.as_view(url="/a-propos/", permanent=True)),
+    path("trust/", RedirectView.as_view(url="/confiance/", permanent=True)),
+    path("medcare-sn/", views.home_medcare_sn, name="medcare_sn"),
+
+    # Applications
+    path("users/", include("users.urls")),
+    path("sante/", include("healthcare.urls")),
+    path("cart/", include("cart.urls")),
+    path("messaging/", include("messaging.urls")),
+    path("dashboard/", include("dashboard.urls")),
+    path("notifications/", include("notifications.urls")),
+    path("rdv/", include("appointments.urls")),
+
+    # Favicon
+    path("favicon.ico", RedirectView.as_view(url="/static/images/logo-sm.png", permanent=True)),
+
+    # Étape 5 — Tickets de prestation (liens directs praticien → patient)
+    # Route courte /t/<identifiant> : non indexée (noindex), accessible sans login
+    path("t/<str:token>/", pr_views.patient_ticket_view, name="patient_ticket_view"),
+    path("patient-mobile/", pr_views.patient_mobile_view, name="patient_mobile"),
+    path("demo-patient/", pr_views.patient_mobile_view, name="demo_patient"),
+    path("assistant/", RedirectView.as_view(url="/sante/assistant-collecte/", permanent=False), name="assistant_shortcut"),
+    path("chatbot/", RedirectView.as_view(url="/sante/assistant-collecte/", permanent=False), name="chatbot_shortcut"),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = "medcare_connect.views.page_not_found"

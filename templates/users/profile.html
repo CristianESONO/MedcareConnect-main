@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mon profil{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <h1 class="text-2xl font-bold text-gray-900">Mon profil</h1>
+    <p class="mt-1 text-sm text-gray-500">Gérez vos informations personnelles.</p>
+
+    <form method="POST" enctype="multipart/form-data" class="mt-8 space-y-6">
+        {% csrf_token %}
+        <div class="rounded-xl border border-gray-200 bg-white p-6">
+            <h2 class="text-lg font-semibold text-gray-900">Informations générales</h2>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                <div><label class="block text-sm font-medium text-gray-700">Prénom</label><div class="mt-1">{{ user_form.first_name }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Nom</label><div class="mt-1">{{ user_form.last_name }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Email</label><div class="mt-1">{{ user_form.email }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Téléphone</label><div class="mt-1">{{ user_form.phone_number }}</div></div>
+                <div class="sm:col-span-2"><label class="block text-sm font-medium text-gray-700">Photo de profil</label><div class="mt-1">{{ user_form.avatar }}</div></div>
+            </div>
+        </div>
+
+        {% if patient_form %}
+        <div class="rounded-xl border border-gray-200 bg-white p-6">
+            <h2 class="text-lg font-semibold text-gray-900">Informations patient</h2>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                <div><label class="block text-sm font-medium text-gray-700">Date de naissance</label><div class="mt-1">{{ patient_form.date_of_birth }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Genre</label><div class="mt-1">{{ patient_form.gender }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Adresse</label><div class="mt-1">{{ patient_form.address }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Ville</label><div class="mt-1">{{ patient_form.city }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Quartier</label><div class="mt-1">{{ patient_form.quartier }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Assurance</label><div class="mt-1">{{ patient_form.insurance }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">N° adhérent</label><div class="mt-1">{{ patient_form.insurance_number }}</div></div>
+            </div>
+            <p class="mt-4 text-xs text-gray-500">Position pour la recherche « à proximité » (optionnel, WGS84 — compatible OpenStreetMap / GPS) :</p>
+            <div class="mt-2 grid gap-4 sm:grid-cols-2">
+                <div><label class="block text-sm font-medium text-gray-700">Latitude</label><div class="mt-1">{{ patient_form.last_known_latitude }}</div></div>
+                <div><label class="block text-sm font-medium text-gray-700">Longitude</label><div class="mt-1">{{ patient_form.last_known_longitude }}</div></div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="flex items-center justify-between">
+            <a href="{% url 'users:change_password' %}" class="text-sm font-medium text-accent-500 hover:text-accent-600">Changer le mot de passe →</a>
+            <button type="submit" class="rounded-lg bg-accent-400 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-500">Enregistrer</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

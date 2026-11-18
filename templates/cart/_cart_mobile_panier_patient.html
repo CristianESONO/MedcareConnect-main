@@ -1,0 +1,75 @@
+{% comment %}Panier mobile patient (compte / panel chariot).{% endcomment %}
+<div class="cart-mobile-panier" id="cart-mobile-panier">
+  <div class="panier-section-head">
+    <div class="psh-title">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--sm" %} Mon panier <span class="psh-count">{{ cart_items_count }}</span></div>
+    {% if cart_groups %}
+    <form method="post" action="{% url 'cart:cart_clear' %}" class="inline">
+      {% csrf_token %}
+      <button type="submit" class="psh-clear" onclick="return confirm('Vider le panier ?')">Vider le panier</button>
+    </form>
+    {% endif %}
+  </div>
+
+  <div id="panier-body-m">
+    {% include "cart/_cart_mobile_missing_actes.html" %}
+    {% if cart_groups %}
+    {% if cart_groups|length > 1 %}
+    <div class="panier-multi-warn"><strong>{{ cart_items_count }} actes</strong> — une discussion par structure.</div>
+    {% endif %}
+
+    {% for group in cart_groups %}
+    <div class="panier-struct-group">
+      <div class="psg-head">
+        <div class="psg-name sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="building" class="sipn-ico sipn-ico--xs" %} {{ group.organisme.name }}</div>
+        <div class="psg-total">
+          {% if insurance_use_in_estimates and cart_insurance and group.patient_subtotal != group.subtotal %}
+          {{ group.patient_subtotal|floatformat:0 }} F
+          {% else %}
+          {{ group.subtotal|floatformat:0 }} F
+          {% endif %}
+        </div>
+      </div>
+      {% for entry in group.lines %}
+      {% with item=entry.item %}
+      <div class="citem-m">
+        <div class="ci-info-m">
+          <div class="ci-nom-m">{{ item.prestataire_acte.acte.name }}{% if item.quantity > 1 %} ×{{ item.quantity }}{% endif %}</div>
+          {% if item.prestataire_acte.delai %}
+          <div class="ci-delai-m sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="clock" class="sipn-ico sipn-ico--xs" %} {{ item.prestataire_acte.get_delai_display }}</div>
+          {% endif %}
+        </div>
+        <div class="ci-prix-m">{{ item.subtotal|floatformat:0 }} F</div>
+        <form method="post" action="{% url 'cart:cart_remove' item.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="ci-del-m" aria-label="Retirer">{% include "healthcare/_icon_svg.html" with icon="x" class="sipn-ico sipn-ico--sm" %}</button>
+        </form>
+      </div>
+      {% endwith %}
+      {% endfor %}
+      <div class="psg-foot">
+        <a href="{% url 'cart:generate_devis' %}?org={{ group.organisme.pk }}" class="psg-creneau-btn">
+          {% include "healthcare/_icon_svg.html" with icon="calendar" class="sipn-ico sipn-ico--sm" %} Réserver mes actes
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="panier-total-card">
+      <div class="ptc-row">
+        <span class="ptc-label">{{ cart_items_count }} acte{{ cart_items_count|pluralize }} · {{ cart_groups|length }} structure{{ cart_groups|length|pluralize }}</span>
+        <span class="ptc-value">{{ cart_total|floatformat:0 }} FCFA</span>
+      </div>
+      {% if insurance_use_in_estimates and cart_insurance and cart_total_assurance %}
+      <p class="text-[11px] mc-text-accent-dark">Estimation assurance : −{{ cart_total_assurance|floatformat:0 }} F · reste {{ cart_total_patient|floatformat:0 }} F</p>
+      {% endif %}
+      <p class="text-[11px] text-gray-500 mt-2">Les actes d’une même structure sont envoyés dans une seule discussion.</p>
+    </div>
+    {% else %}
+    <div class="cart-empty-m">
+      <div class="cemi">{% include "healthcare/_icon_svg.html" with icon="cart" class="sipn-ico sipn-ico--xl" %}</div>
+      <div class="cemt">Votre panier est vide.<br>Ajoutez des actes pour construire votre parcours.</div>
+      <button type="button" class="cemt-cta" data-sipn-goto-tab="prestations">Rechercher des actes</button>
+    </div>
+    {% endif %}
+  </div>
+</div>

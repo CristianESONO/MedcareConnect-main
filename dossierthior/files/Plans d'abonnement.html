@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedCare — Modèle Économique v3 · BIZ-ECO-003</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --blue:#0a5c8a; --blue-light:#e8f4fb; --blue-mid:#bfdbfe;
+  --green:#14b87a; --green-light:#e8faf3; --green-mid:#a7f3d0;
+  --amber:#d97706; --amber-light:#fef3c7;
+  --red:#dc2626; --red-light:#fee2e2;
+  --purple:#7c3aed; --purple-light:#ede9fe;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb;
+  --gray-400:#9ca3af; --gray-600:#4b5563; --gray-800:#1f2937;
+  --text:#0d1b2a; --radius:10px; --radius-sm:6px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; font-size:10pt; line-height:1.65; color:var(--text); background:#fff; }
+.page { width:210mm; min-height:297mm; margin:0 auto; padding:14mm 18mm; background:#fff; }
+
+/* HEADER */
+.header { display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12px; border-bottom:2px solid var(--blue); margin-bottom:20px; }
+.logo { font-family:'Syne',sans-serif; font-size:22pt; color:var(--blue); font-weight:800; }
+.logo span { color:var(--green); }
+.tagline { font-size:8pt; color:var(--gray-400); margin-top:2px; }
+.header-right { text-align:right; font-size:8pt; color:var(--gray-400); line-height:1.7; }
+.doc-ref { font-weight:700; color:var(--text); font-size:8.5pt; }
+
+/* TITLE */
+.title-block { background:linear-gradient(135deg,#f0f7fc,#e8faf3); border-left:4px solid var(--blue); border-radius:0 var(--radius) var(--radius) 0; padding:14px 20px; margin-bottom:20px; }
+.doc-type { font-size:7.5pt; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:.12em; margin-bottom:4px; }
+.doc-title { font-family:'Syne',sans-serif; font-size:14pt; color:var(--text); line-height:1.2; font-weight:700; }
+.doc-subtitle { font-size:8.5pt; color:var(--gray-600); margin-top:5px; }
+.supersede { display:inline-block; background:#fef3c7; color:var(--amber); border:1px solid #fcd34d; border-radius:4px; font-size:7.5pt; font-weight:600; padding:2px 8px; margin-top:6px; }
+
+/* SECTION */
+.section { margin-bottom:24px; }
+.section-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:6px; border-bottom:1.5px solid var(--gray-200); }
+.section-num { width:26px; height:26px; background:var(--blue); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:9pt; font-weight:700; flex-shrink:0; }
+.section-title { font-family:'Syne',sans-serif; font-size:11pt; font-weight:700; color:var(--text); }
+.section-subtitle { font-size:8pt; color:var(--gray-400); }
+.sep { height:1px; background:var(--gray-200); margin:18px 0; }
+
+.pill { display:inline-block; border-radius:12px; padding:2px 8px; font-size:7pt; font-weight:600; border:1px solid; }
+.pill-green { background:#dcfce7; color:#065f46; border-color:var(--green-mid); }
+.pill-blue { background:var(--blue-light); color:var(--blue); border-color:var(--blue-mid); }
+.pill-amber { background:var(--amber-light); color:var(--amber); border-color:#fcd34d; }
+.pill-gray { background:var(--gray-100); color:var(--gray-600); border-color:var(--gray-200); }
+.pill-purple { background:var(--purple-light); color:var(--purple); border-color:#c4b5fd; }
+
+/* PILIER CHIPS */
+.pc { display:inline-block; font-size:7pt; font-weight:600; padding:2px 7px; border-radius:12px; border:1px solid; }
+.pc-bio { background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe; }
+.pc-img { background:#f5f3ff; color:var(--purple); border-color:#c4b5fd; }
+.pc-soins { background:#f0fdf4; color:#15803d; border-color:#86efac; }
+.pc-amb { background:#fff7ed; color:#c2410c; border-color:#fed7aa; }
+.pc-dent { background:#fef9c3; color:#854d0e; border-color:#fef08a; }
+.pc-explo { background:#fdf2f8; color:#9d174d; border-color:#f9a8d4; }
+
+/* ── PLANS 4 COLONNES ── */
+.plans-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
+
+.plan-card { border-radius:var(--radius); border:1.5px solid var(--gray-200); overflow:hidden; }
+.plan-card.pioneer-card { border-color:var(--green-mid); border-width:2px; }
+.plan-card.starter-card { border-color:var(--gray-200); }
+.plan-card.essentiel-card { border-color:var(--blue-mid); border-width:2px; }
+.plan-card.pro-card { border-color:#fcd34d; border-width:2px; }
+
+/* PLAN HEADS */
+.plan-head { padding:12px 13px 10px; }
+.ph-pionnier { background:linear-gradient(135deg,#ecfdf5,#f0fdf4); }
+.ph-starter { background:var(--gray-50); }
+.ph-essentiel { background:var(--blue-light); }
+.ph-pro { background:var(--amber-light); }
+
+.plan-badge { display:inline-flex; align-items:center; gap:4px; font-size:7pt; font-weight:700; padding:2px 9px; border-radius:12px; border:1px solid; margin-bottom:6px; }
+.pb-pionnier { background:#dcfce7; color:#065f46; border-color:var(--green-mid); }
+.pb-starter { background:var(--gray-100); color:var(--gray-600); border-color:var(--gray-200); }
+.pb-essentiel { background:var(--blue-light); color:var(--blue); border-color:var(--blue-mid); }
+.pb-pro { background:var(--amber-light); color:var(--amber); border-color:#fcd34d; }
+
+.plan-name { font-family:'Syne',sans-serif; font-size:11pt; font-weight:800; color:var(--text); margin-bottom:2px; }
+.plan-target { font-size:7.5pt; color:var(--gray-400); margin-bottom:8px; line-height:1.4; }
+
+.plan-price { font-family:'Syne',sans-serif; font-size:16pt; font-weight:800; line-height:1; }
+.pp-pionnier { color:var(--green); }
+.pp-starter { color:var(--gray-800); }
+.pp-essentiel { color:var(--blue); }
+.pp-pro { color:var(--amber); }
+
+.plan-unit { font-size:7.5pt; color:var(--gray-400); margin-top:2px; }
+.plan-annual { font-size:7.5pt; color:var(--gray-600); font-weight:500; margin-top:3px; }
+
+/* PLAN BODY — features */
+.plan-body { padding:10px 13px; }
+.plan-section-label { font-size:6.5pt; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--gray-400); margin:8px 0 5px; }
+.feat-list { list-style:none; }
+.feat-list li { font-size:8pt; padding:2.5px 0; display:flex; align-items:flex-start; gap:5px; border-bottom:1px solid var(--gray-100); }
+.feat-list li:last-child { border-bottom:none; }
+.feat-on { color:var(--green); font-weight:700; flex-shrink:0; font-size:9pt; }
+.feat-off { color:var(--gray-300); flex-shrink:0; font-size:9pt; }
+.feat-text { color:var(--gray-600); line-height:1.35; }
+.feat-text strong { color:var(--text); font-weight:500; display:block; }
+.feat-text span { font-size:7pt; color:var(--gray-400); }
+
+/* STRUCT LIST */
+.struct-list { list-style:none; margin-bottom:8px; }
+.struct-list li { font-size:8pt; color:var(--gray-600); padding:2.5px 0; display:flex; align-items:flex-start; gap:5px; }
+.struct-list li .ico { flex-shrink:0; }
+.struct-list li .sname { font-weight:500; color:var(--text); }
+.struct-list li .chips { display:flex; flex-wrap:wrap; gap:3px; margin-top:2px; }
+.plan-divider { height:1px; background:var(--gray-100); margin:8px 0; }
+
+/* ── COMPARAISON FEATURES ── */
+.feat-compare-table { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:16px; }
+.feat-compare-table th { background:var(--gray-800); color:#fff; padding:6px 10px; text-align:center; font-weight:600; font-size:8pt; }
+.feat-compare-table th.left { text-align:left; }
+.feat-compare-table td { padding:5px 10px; border-bottom:1px solid var(--gray-100); text-align:center; vertical-align:middle; }
+.feat-compare-table td.left { text-align:left; color:var(--gray-600); }
+.feat-compare-table td.left strong { color:var(--text); font-weight:500; }
+.feat-compare-table tr:hover td { background:var(--gray-50); }
+.feat-compare-table .group-head td { background:var(--gray-50); font-size:7.5pt; font-weight:700; color:var(--gray-400); text-transform:uppercase; letter-spacing:.06em; padding:5px 10px; text-align:left; }
+.ico-on { color:var(--green); font-weight:800; font-size:10pt; }
+.ico-off { color:var(--gray-300); font-size:10pt; }
+
+/* PIONNIER BLOCK */
+.pionnier-block { background:linear-gradient(135deg,#ecfdf5,#f0fdf4); border:2px solid var(--green-mid); border-radius:var(--radius); padding:16px 20px; margin-bottom:16px; position:relative; overflow:hidden; }
+.pionnier-block::before { content:'CPP-2025'; position:absolute; top:-1px; right:20px; background:var(--green); color:#fff; font-size:7pt; font-weight:700; padding:3px 10px; border-radius:0 0 6px 6px; letter-spacing:.05em; }
+.pionnier-title { font-family:'Syne',sans-serif; font-size:10pt; font-weight:800; color:var(--green); margin-bottom:4px; }
+.pionnier-subtitle { font-size:8.5pt; color:var(--gray-600); margin-bottom:12px; }
+.pionnier-cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.pionnier-col-title { font-size:7.5pt; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--gray-400); margin-bottom:6px; }
+.pionnier-feat { list-style:none; }
+.pionnier-feat li { font-size:8.5pt; color:var(--gray-600); padding:2px 0; }
+.pionnier-feat li .ok { color:var(--green); font-weight:700; margin-right:5px; }
+.pioneer-table { width:100%; border-collapse:collapse; font-size:8pt; }
+.pioneer-table th { background:rgba(20,184,122,.12); padding:5px 8px; text-align:left; font-weight:600; color:var(--text); border-bottom:1px solid var(--green-mid); }
+.pioneer-table td { padding:5px 8px; border-bottom:1px solid #e5e7eb; color:var(--gray-600); }
+.pioneer-table td strong { color:#065f46; font-weight:700; }
+.pioneer-table tr:last-child td { border-bottom:none; }
+
+/* MODÈLE ÉCO */
+.deonto-block { background:#fffbeb; border:1px solid #fcd34d; border-radius:var(--radius); padding:12px 16px; margin-bottom:14px; }
+.deonto-label { font-size:7.5pt; font-weight:700; color:var(--amber); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+.revenus-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+.revenu-card { border-radius:var(--radius); padding:12px 14px; border:1px solid; }
+.src1 { background:var(--blue-light); border-color:var(--blue-mid); }
+.src2 { background:var(--green-light); border-color:var(--green-mid); }
+.src3 { background:var(--purple-light); border-color:#c4b5fd; }
+.src-label { font-size:7pt; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--gray-400); margin-bottom:4px; }
+.src-title { font-family:'Syne',sans-serif; font-size:9.5pt; font-weight:700; color:var(--text); margin-bottom:5px; }
+.src-desc { font-size:8pt; color:var(--gray-600); line-height:1.5; }
+.src-amount { font-family:'Syne',sans-serif; font-size:8.5pt; font-weight:700; color:var(--text); margin-top:8px; padding-top:6px; border-top:1px solid rgba(0,0,0,.08); }
+.confirm-block { background:#f0fdf4; border:1px solid var(--green-mid); border-radius:var(--radius); padding:12px 16px; margin-bottom:14px; }
+.confirm-label { font-size:7.5pt; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+.proj-table { width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8px; }
+.proj-table th { background:var(--gray-800); color:#fff; padding:6px 10px; text-align:left; font-weight:600; font-size:8pt; }
+.proj-table td { padding:5px 10px; border-bottom:1px solid var(--gray-100); vertical-align:middle; }
+.proj-table .tot { background:var(--blue-light); }
+.proj-table .tot td { border-bottom:none; color:var(--blue); font-weight:700; }
+
+.medplaque-banner { display:flex; gap:12px; align-items:flex-start; background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius); padding:12px 16px; margin-bottom:16px; }
+.medplaque-icon { font-size:18pt; line-height:1; flex-shrink:0; }
+.medplaque-title { font-size:9pt; font-weight:700; color:var(--text); margin-bottom:3px; }
+.medplaque-desc { font-size:8pt; color:var(--gray-600); line-height:1.5; }
+
+.footer { margin-top:20px; padding-top:8px; border-top:1px solid var(--gray-200); display:flex; justify-content:space-between; font-size:7.5pt; color:var(--gray-400); }
+@media print { body { font-size:9.5pt; } .page { margin:0; padding:12mm 16mm; width:100%; } .section { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- EN-TÊTE -->
+<div class="header">
+  <div>
+    <div class="logo">Med<span>Care</span></div>
+    <div class="tagline">Plateforme numérique de santé — medcare.sn</div>
+  </div>
+  <div class="header-right">
+    <div class="doc-ref">BIZ-ECO-003</div>
+    <div>Version 2.0 — Mai 2025</div>
+    <div>Usage interne · Direction Générale</div>
+  </div>
+</div>
+
+<!-- TITRE -->
+<div class="title-block">
+  <div class="doc-type">Document stratégique & économique</div>
+  <div class="doc-title">Plans d'abonnement v3 · 4 plans · Nomenclature SaaS · Tarification par type de structure</div>
+  <div class="doc-subtitle">Pionnier (Gratuit M0–M6) · Starter 24 000 F · Essentiel 39 000 F · Pro 69 000 F · Type de structure = piliers ouverts = plan · Aucun add-on · Conforme MÉMO-DÉONTO-001 et CPP-2025</div>
+  <div class="supersede">⚠ Nomenclature alignée sur SaaS app.medcare.sn · Remplace BIZ-ECO-001 et BIZ-ECO-002</div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 1 — 4 PLANS                          -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">Plans d'abonnement — Grille tarifaire officielle</div>
+    <div class="section-subtitle">4 plans · nomenclature SaaS · −10% annuel · aucun add-on · type de structure détermine le plan</div>
+  </div>
+
+  <div class="plans-row">
+
+    <!-- PIONNIER -->
+    <div class="plan-card pioneer-card">
+      <div class="plan-head ph-pionnier">
+        <div class="plan-badge pb-pionnier">★ Pionnier</div>
+        <div class="plan-name">Pionnier</div>
+        <div class="plan-target">Programme Partenaires Pionniers CPP-2025 · 50 slots · Dakar</div>
+        <div class="plan-price pp-pionnier">Gratuit</div>
+        <div class="plan-unit">M0–M6 · 6 mois d'essai</div>
+        <div class="plan-annual">Tarif post-période bloqué à vie</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-section-label">Fonctionnalités incluses</div>
+        <ul class="feat-list">
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Badge Partenaire Pionnier</strong><span>Visibilité programme Pionnier</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Listing annuaire</strong><span>Visible dans les résultats de recherche</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Fiche publique complète</strong><span>Page profil détaillée</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Assurances déclarées</strong><span>Assurances acceptées affichées</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Devis WhatsApp</strong><span>Canal devis automatique</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Tableau de bord</strong><span>Statistiques de base</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Tableau de bord avancé</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Réservations en ligne</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">MedPlaque NFC</strong><span>Offerte physiquement à l'onboarding</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Statistiques mensuelles</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">API partenaires</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Multi-sites</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Support prioritaire</strong><span>Désactivé</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STARTER -->
+    <div class="plan-card starter-card">
+      <div class="plan-head ph-starter">
+        <div class="plan-badge pb-starter">Starter</div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-target">Structures mono-pilier</div>
+        <div class="plan-price pp-starter">24 000</div>
+        <div class="plan-unit">FCFA / mois</div>
+        <div class="plan-annual">259 200 F / an (−10%)</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-section-label">Structures · pilier inclus</div>
+        <ul class="struct-list">
+          <li><span class="ico">🔬</span><div><div class="sname">Laboratoire d'analyses</div><div class="chips"><span class="pc pc-bio">Biologie</span></div></div></li>
+          <li><span class="ico">🖥</span><div><div class="sname">Centre d'imagerie</div><div class="chips"><span class="pc pc-img">Imagerie</span></div></div></li>
+          <li><span class="ico">🦷</span><div><div class="sname">Cabinet dentaire</div><div class="chips"><span class="pc pc-dent">Soins dentaires</span></div></div></li>
+          <li><span class="ico">🏃</span><div><div class="sname">Kiné / Rééducation</div><div class="chips"><span class="pc pc-soins">Soins spécialisés</span></div></div></li>
+          <li><span class="ico">💧</span><div><div class="sname">Centre de dialyse</div><div class="chips"><span class="pc pc-soins">Soins spécialisés</span></div></div></li>
+          <li><span class="ico">🧠</span><div><div class="sname">Cabinet santé mentale</div><div class="chips"><span class="pc pc-soins">Soins spécialisés</span></div></div></li>
+          <li><span class="ico">🚑</span><div><div class="sname">Service ambulancier</div><div class="chips"><span class="pc pc-amb">Ambulances</span></div></div></li>
+        </ul>
+        <div class="plan-divider"></div>
+        <div class="plan-section-label">Fonctionnalités incluses</div>
+        <ul class="feat-list">
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Badge Partenaire Pionnier</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Listing annuaire</strong><span>Visible dans les résultats de recherche</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Fiche publique complète</strong><span>Page profil détaillée</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Assurances déclarées</strong><span>Assurances acceptées affichées</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Devis WhatsApp</strong><span>Canal devis automatique</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Tableau de bord</strong><span>Statistiques de base</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Tableau de bord avancé</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Réservations en ligne</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-on">+</span><div class="feat-text"><strong>MedPlaque NFC</strong><span>Add-on optionnel · +5 000 FCFA/mois</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Statistiques mensuelles</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">API partenaires</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Multi-sites</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Support prioritaire</strong><span>Désactivé</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ESSENTIEL -->
+    <div class="plan-card essentiel-card">
+      <div class="plan-head ph-essentiel">
+        <div class="plan-badge pb-essentiel">Essentiel</div>
+        <div class="plan-name">Essentiel</div>
+        <div class="plan-target">Cabinets spécialisés multi-piliers</div>
+        <div class="plan-price pp-essentiel">39 000</div>
+        <div class="plan-unit">FCFA / mois</div>
+        <div class="plan-annual">421 200 F / an (−10%)</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-section-label">Structures · piliers inclus</div>
+        <ul class="struct-list">
+          <li><span class="ico">🩺</span><div><div class="sname">Cabinet spécialisé</div><div class="chips"><span class="pc pc-img">Imagerie</span><span class="pc pc-explo">Exploration fonct.</span><span class="pc pc-soins">Soins spécialisés</span></div></div></li>
+          <li><span class="ico">🏥</span><div><div class="sname">Centre de santé</div><div class="chips"><span class="pc pc-bio">Biologie</span><span class="pc pc-img">Imagerie</span><span class="pc pc-soins">Soins spécialisés</span></div></div></li>
+          <li><span class="ico">🏨</span><div><div class="sname">Clinique privée</div><div class="chips"><span class="pc pc-bio">Biologie</span><span class="pc pc-img">Imagerie</span><span class="pc pc-soins">Soins spécialisés</span></div></div></li>
+        </ul>
+        <div class="plan-divider"></div>
+        <div class="plan-section-label">Fonctionnalités incluses</div>
+        <ul class="feat-list">
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Badge Partenaire Pionnier</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Listing annuaire</strong><span>Visible dans les résultats de recherche</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Fiche publique complète</strong><span>Page profil détaillée</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Assurances déclarées</strong><span>Assurances acceptées affichées</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Devis WhatsApp</strong><span>Canal devis automatique</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Tableau de bord</strong><span>Statistiques de base</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Tableau de bord avancé</strong><span>Graphiques et exports</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Réservations en ligne</strong><span>Prise de RDV via MedCare</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>MedPlaque NFC</strong><span>Plaque / QR accueil</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Statistiques mensuelles</strong><span>Rapports périodiques</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">API partenaires</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Multi-sites</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Support prioritaire</strong><span>Désactivé</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan-card pro-card">
+      <div class="plan-head ph-pro">
+        <div class="plan-badge pb-pro">Pro</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-target">Hôpitaux · 6 piliers complets</div>
+        <div class="plan-price pp-pro">69 000</div>
+        <div class="plan-unit">FCFA / mois</div>
+        <div class="plan-annual">745 200 F / an (−10%)</div>
+      </div>
+      <div class="plan-body">
+        <div class="plan-section-label">Structures · tous piliers inclus</div>
+        <ul class="struct-list">
+          <li><span class="ico">🏛</span><div>
+            <div class="sname">Hôpital — accès complet</div>
+            <div class="chips">
+              <span class="pc pc-bio">Biologie</span><span class="pc pc-img">Imagerie</span>
+              <span class="pc pc-soins">Soins spécialisés</span><span class="pc pc-amb">Ambulances</span>
+              <span class="pc pc-dent">Soins dentaires</span><span class="pc pc-explo">Exploration fonct.</span>
+            </div>
+          </div></li>
+        </ul>
+        <div class="plan-divider"></div>
+        <div class="plan-section-label">Fonctionnalités incluses</div>
+        <ul class="feat-list">
+          <li><span class="feat-off">–</span><div class="feat-text" style="color:var(--gray-300)"><strong style="color:var(--gray-300)">Badge Partenaire Pionnier</strong><span>Désactivé</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Listing annuaire</strong><span>Visible dans les résultats de recherche</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Fiche publique complète</strong><span>Page profil détaillée</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Assurances déclarées</strong><span>Assurances acceptées affichées</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Devis WhatsApp</strong><span>Canal devis automatique</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Tableau de bord</strong><span>Statistiques de base</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Tableau de bord avancé</strong><span>Graphiques et exports</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Réservations en ligne</strong><span>Prise de RDV via MedCare</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>MedPlaque NFC</strong><span>Plaque / QR accueil</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Statistiques mensuelles</strong><span>Rapports périodiques</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>API partenaires</strong><span>Intégrations techniques</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Multi-sites</strong><span>Plusieurs établissements</span></div></li>
+          <li><span class="feat-on">✓</span><div class="feat-text"><strong>Support prioritaire</strong><span>Assistance renforcée</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MEDPLAQUE NOTE -->
+  <div class="medplaque-banner">
+    <div class="medplaque-icon">📍</div>
+    <div>
+      <div class="medplaque-title">MedPlaque NFC — Add-on Starter (+5 000 F/mois) · Incluse plan Essentiel · Incluse plan Pro · Offerte physiquement aux Pionniers à l'onboarding</div>
+      <div class="medplaque-desc">Support physique NFC personnalisé apposé à l'entrée de la structure. Remis sans obligation de restitution aux Pionniers. NFC hosting actif 6 mois puis plan payant requis. QR et NFC trackés séparément via UTM pour le bilan KPI. <strong>Valeur indicative : 15 000–20 000 FCFA.</strong> Pour le plan Starter, la feature est souscriptible en add-on mensuel à +5 000 FCFA/mois directement depuis l'espace pro.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sep"></div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 2 — TABLEAU COMPARATIF FEATURES      -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-title">Tableau comparatif — Features × Plans</div>
+    <div class="section-subtitle">Nomenclature exacte SaaS app.medcare.sn · Verrouillage technique à brancher avant M7</div>
+  </div>
+
+  <table class="feat-compare-table">
+    <thead>
+      <tr>
+        <th class="left" style="width:34%">Feature (nomenclature SaaS)</th>
+        <th style="width:16%">Pionnier<br><span style="font-size:7pt;font-weight:400;">Gratuit M0–M6</span></th>
+        <th style="width:16%">Starter<br><span style="font-size:7pt;font-weight:400;">24 000 F/mois</span></th>
+        <th style="width:17%">Essentiel<br><span style="font-size:7pt;font-weight:400;">39 000 F/mois</span></th>
+        <th style="width:17%">Pro<br><span style="font-size:7pt;font-weight:400;">69 000 F/mois</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="group-head"><td colspan="5">Visibilité & profil</td></tr>
+      <tr>
+        <td class="left"><strong>Badge Partenaire Pionnier</strong><br><span style="font-size:7pt;color:var(--gray-400);">Visibilité programme Pionnier</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Listing annuaire</strong><br><span style="font-size:7pt;color:var(--gray-400);">Visible dans les résultats de recherche</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Fiche publique complète</strong><br><span style="font-size:7pt;color:var(--gray-400);">Page profil détaillée</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Assurances déclarées</strong><br><span style="font-size:7pt;color:var(--gray-400);">Assurances acceptées affichées</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr class="group-head"><td colspan="5">Workflow & communication</td></tr>
+      <tr>
+        <td class="left"><strong>Devis WhatsApp</strong><br><span style="font-size:7pt;color:var(--gray-400);">Canal devis automatique</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Réservations en ligne</strong><br><span style="font-size:7pt;color:var(--gray-400);">Prise de RDV via MedCare</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr class="group-head"><td colspan="5">Analytics & reporting</td></tr>
+      <tr>
+        <td class="left"><strong>Tableau de bord</strong><br><span style="font-size:7pt;color:var(--gray-400);">Statistiques de base</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Tableau de bord avancé</strong><br><span style="font-size:7pt;color:var(--gray-400);">Graphiques et exports</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Statistiques mensuelles</strong><br><span style="font-size:7pt;color:var(--gray-400);">Rapports périodiques</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr class="group-head"><td colspan="5">Physique & intégrations</td></tr>
+      <tr>
+        <td class="left"><strong>MedPlaque NFC</strong><br><span style="font-size:7pt;color:var(--gray-400);">Plaque / QR accueil · add-on Starter +5 000 F/mois</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span style="font-size:7.5pt;font-weight:700;color:var(--amber);">+5 000 F</span></td>
+        <td><span class="ico-on">✓</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>API partenaires</strong><br><span style="font-size:7pt;color:var(--gray-400);">Intégrations techniques</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Multi-sites</strong><br><span style="font-size:7pt;color:var(--gray-400);">Plusieurs établissements</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Support prioritaire</strong><br><span style="font-size:7pt;color:var(--gray-400);">Assistance renforcée</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-off">–</span></td>
+        <td><span class="ico-on">✓</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--amber-light);border:1px solid #fcd34d;border-radius:var(--radius-sm);padding:9px 12px;font-size:8pt;color:var(--gray-600);margin-bottom:6px;">
+    ⚠ <strong>Note technique (Rassoul) :</strong> le verrouillage technique des écrans par feature n'est pas encore branché (mentionné dans l'admin Django). Doit être implémenté <strong>avant M7</strong>, date de première conversion des Pionniers en plan payant. Les tarifs Essentiel (25 000 → <strong>39 000 F</strong>) et Pro (50 000 → <strong>69 000 F</strong>) sont à mettre à jour dans l'admin.
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 3 — PARTENAIRES PIONNIERS            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-title">Partenaires Pionniers CPP-2025</div>
+    <div class="section-subtitle">Plan Pionnier · 6 mois gratuits · tarif post-période bloqué à vie selon le plan du type de structure</div>
+  </div>
+
+  <div class="pionnier-block">
+    <div class="pionnier-title">Partenaire Pionnier CPP-2025 — 50 slots · Dakar uniquement</div>
+    <div class="pionnier-subtitle">6 mois d'accès gratuit (plan Pionnier) · à M7 bascule automatiquement sur le plan du type de structure déclaré · Tarif bloqué à vie (champ <code>tarif_bloqué</code>)</div>
+    <div class="pionnier-cols">
+      <div>
+        <div class="pionnier-col-title">Avantages communs à tous les Pionniers</div>
+        <ul class="pionnier-feat">
+          <li><span class="ok">✓</span> Plan Pionnier gratuit M0–M6 (features de base)</li>
+          <li><span class="ok">✓</span> MedPlaque NFC personnalisée offerte à l'onboarding (hors SaaS)</li>
+          <li><span class="ok">✓</span> Onboarding dédié J+15 avec chargé de compte</li>
+          <li><span class="ok">✓</span> Badge Partenaire Pionnier permanent dans l'annuaire</li>
+          <li><span class="ok">✓</span> Numérotation officielle CPP-2025-[NNN]</li>
+          <li><span class="ok">✓</span> Tarif post-période bloqué à vie (<code>tarif_bloqué</code> en DB)</li>
+          <li><span class="ok">✓</span> À M7 : bascule sur Starter / Essentiel / Pro selon type déclaré</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pionnier-col-title">Valeur économique offerte par plan de destination</div>
+        <table class="pioneer-table">
+          <thead>
+            <tr><th>Plan à M7</th><th>Structures</th><th>Tarif</th><th>Valeur 6 mois</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-gray">Starter</span></td>
+              <td>Labo · Imagerie · Dentaire<br>Kiné · Dialyse · Psy · Ambulance</td>
+              <td>24 000 F</td>
+              <td><strong>144 000 F</strong></td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-blue">Essentiel</span></td>
+              <td>Gynéco · Ophtalmo<br>Centre santé · Clinique</td>
+              <td>39 000 F</td>
+              <td><strong>234 000 F</strong></td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-amber">Pro</span></td>
+              <td>Hôpital</td>
+              <td>69 000 F</td>
+              <td><strong>414 000 F</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:7.5pt;color:var(--gray-400);margin-top:6px;">+ MedPlaque NFC offerte à tous (valeur 15 000–20 000 FCFA).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SECTION 4 — MODÈLE ÉCONOMIQUE                -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-title">Modèle économique — Flux de revenus</div>
+    <div class="section-subtitle">Conforme MÉMO-DÉONTO-001 · Art. 17 Code de Déontologie Médicale · Zéro commission sur actes</div>
+  </div>
+
+  <div class="deonto-block">
+    <div class="deonto-label">⚖ Art. 17 Code de Déontologie Médicale — Principe fondateur non négociable</div>
+    <p>MedCare ne perçoit <strong>aucune commission sur les actes médicaux</strong>. L'abonnement est forfaitaire par plan, identique quel que soit le nombre de patients reçus via MedCare. La différenciation tarifaire couvre exclusivement la complexité fonctionnelle des modules accessibles.</p>
+  </div>
+
+  <div class="revenus-grid">
+    <div class="revenu-card src1">
+      <div class="src-label">Source 1 · Structures</div>
+      <div class="src-title">Abonnements SaaS</div>
+      <div class="src-desc">Starter 24 000 F · Essentiel 39 000 F · Pro 69 000 F. Mensuel ou annuel (−10%). Forfait fixe, indépendant du volume de patients. Pionnier gratuit M0–M6.</div>
+      <div class="src-amount">24 000 – 69 000 FCFA / mois / structure</div>
+    </div>
+    <div class="revenu-card src2">
+      <div class="src-label">Source 2 · Patients</div>
+      <div class="src-title">Frais de réservation</div>
+      <div class="src-desc">500 FCFA forfaitaires par réservation confirmée, débités au patient. Rémunèrent le service numérique de mise en relation. Indépendants des honoraires de la structure. Activés à M6. Wave · Orange Money · carte bancaire.</div>
+      <div class="src-amount">500 FCFA / réservation confirmée</div>
+    </div>
+    <div class="revenu-card src3">
+      <div class="src-label">Source 3 · An 2+ · Scale</div>
+      <div class="src-title">API partenaires institutionnels</div>
+      <div class="src-desc">Feature "API partenaires" (plan Pro) mise à disposition des assurances (CNAM, IPM), ONG, MSAS. Accès aux données agrégées anonymisées. Tarification sur demande. Aucun boost de visibilité (incompatible Art. 11 Code de Déontologie).</div>
+      <div class="src-amount">Sur devis · contrats institutionnels An 2+</div>
+    </div>
+  </div>
+
+  <div class="confirm-block">
+    <div class="confirm-label">✓ Conformité Art. 11 — Égalité de traitement absolue dans l'annuaire</div>
+    <p>Aucune feature ne crée de hiérarchie de visibilité entre structures. Toutes apparaissent selon les mêmes critères objectifs (localisation, spécialité, disponibilité) quel que soit leur plan. Un labo Starter à 24 000 F est affiché selon les mêmes règles qu'un hôpital Pro à 69 000 F.</p>
+  </div>
+
+  <p style="font-size:9pt;font-weight:600;color:var(--text);margin-bottom:8px;">Projection revenus an 1 — Scénario équilibré · Grille BIZ-ECO-003 v2</p>
+  <table class="proj-table">
+    <thead>
+      <tr>
+        <th>Segment</th>
+        <th>Volume estimé</th>
+        <th>Tarif</th>
+        <th>MRR fin an 1</th>
+        <th>ARR</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Plan Pionnier</strong></td>
+        <td>50 structures · M0–M6</td>
+        <td>0 F</td>
+        <td>0</td>
+        <td>Coût MedPlaque ~750K–1M F</td>
+        <td><span class="pill pill-green">Amorçage</span></td>
+      </tr>
+      <tr>
+        <td><strong>Plan Starter</strong><br><span style="font-size:7.5pt;color:var(--gray-400);">Labo · Imagerie · Dentaire · Kiné · Dialyse · Psy · Ambulance</span></td>
+        <td>40–70 structures</td>
+        <td>24 000 F</td>
+        <td>960K – 1,68M F</td>
+        <td>11,5M – 20,2M F</td>
+        <td><span class="pill pill-gray">Actif</span></td>
+      </tr>
+      <tr>
+        <td><strong>Plan Essentiel</strong><br><span style="font-size:7.5pt;color:var(--gray-400);">Gynéco · Ophtalmo · Centre santé · Clinique</span></td>
+        <td>15–25 structures</td>
+        <td>39 000 F</td>
+        <td>585K – 975K F</td>
+        <td>7M – 11,7M F</td>
+        <td><span class="pill pill-blue">Actif</span></td>
+      </tr>
+      <tr>
+        <td><strong>Plan Pro</strong><br><span style="font-size:7.5pt;color:var(--gray-400);">Hôpitaux</span></td>
+        <td>1–3 structures</td>
+        <td>69 000 F</td>
+        <td>69K – 207K F</td>
+        <td>830K – 2,5M F</td>
+        <td><span class="pill pill-amber">Actif</span></td>
+      </tr>
+      <tr>
+        <td><strong>Frais réservation patients</strong></td>
+        <td>1 000–3 000 réservations/mois</td>
+        <td>500 F</td>
+        <td>500K – 1,5M F</td>
+        <td>6M – 18M F</td>
+        <td><span class="pill pill-green">Actif dès M6</span></td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr class="tot">
+        <td colspan="3"><strong>Total consolidé an 1</strong></td>
+        <td><strong>2,1M – 4,4M FCFA/mois</strong></td>
+        <td><strong>25,3M – 52,4M FCFA</strong></td>
+        <td><span class="pill pill-blue">Objectif</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="font-size:7.5pt;color:var(--gray-400);margin-top:4px;">Projections conservatrices · excluent API institutionnels (An 2+) · Pionniers convertis à M7 intègreront le MRR selon leur plan de destination.</div>
+</div>
+
+<div class="footer">
+  <div><strong>MedCare</strong> · medcare.sn · BIZ-ECO-003 v2.0 · Mai 2025 · Nomenclature alignée SaaS app.medcare.sn</div>
+  <div>Usage interne · Direction Générale · Conforme MÉMO-DÉONTO-001 · Art. 17 Code de Déontologie Médicale</div>
+</div>
+
+</div>
+</body>
+</html>

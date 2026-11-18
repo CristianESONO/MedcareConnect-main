@@ -1,0 +1,27 @@
+{% if notifications %}
+<div class="pac-panel">
+  {% for n in notifications %}
+  <a href="{% url 'messaging:notification_read' n.pk %}" class="pac-panel-row{% if not n.is_read %} pac-panel-row--unread{% endif %}">
+    <span class="ni-box {{ n.bell_class }}">{% include "partials/notif_icon.html" with type=n.notification_type %}</span>
+    <span class="min-w-0 flex-1">
+      <span class="block text-sm font-semibold text-gray-900">{{ n.title }}</span>
+      {% if n.content %}<span class="mt-0.5 block text-xs text-gray-500 leading-relaxed">{{ n.content }}</span>{% endif %}
+      <span class="mt-1 flex items-center gap-2 flex-wrap">
+        <span class="text-[11px] text-gray-400">{{ n.created_at|timesince }}</span>
+        {% if n.link %}<span class="text-[11px] font-bold uppercase tracking-wide text-[var(--mc-navy, #123a63)]">{{ n.bell_cta }} →</span>{% endif %}
+      </span>
+    </span>
+    {% if not n.is_read %}<span class="pac-unread-dot" aria-label="Non lu"></span>{% endif %}
+    <span class="pac-panel-chevron" aria-hidden="true">›</span>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="pac-empty-state">
+  <div class="pac-empty-state-icon">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+  </div>
+  <p>{{ empty_title|default:"Aucune notification" }}</p>
+  {% if empty_hint %}<p class="pac-empty-hint">{{ empty_hint }}</p>{% endif %}
+</div>
+{% endif %}

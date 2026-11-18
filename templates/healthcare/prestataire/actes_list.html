@@ -1,0 +1,1480 @@
+{% extends "healthcare/prestataire/dashboard_base.html" %}
+{% load static %}
+{% block title %}Catalogue des actes{% endblock %}
+
+{% block dash_extra_css %}
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=8">
+{% endblock %}
+
+{% block dash_content %}
+{{ prep_data|json_script:"cat-prep-data" }}
+<div class="cat-page-head">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">Catalogue des actes</h1>
+    <p class="mt-0.5 text-sm text-gray-500">Gérez vos actes, tarifs et délais · Modifiez et sauvegardez directement</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-2">
+    <span id="save-ind" class="cat-save-ind" aria-live="polite"><i class="ti ti-check"></i> Sauvegardé</span>
+    <a href="{% url 'healthcare:actes_template_excel' %}"
+       class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition"
+       title="Télécharger le modèle Excel pré-rempli avec vos actes">
+      <span><i class="ti ti-file-text"></i></span> Modèle Excel
+    </a>
+    <a href="{% url 'healthcare:chatbot_collecte' %}"
+       class="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-sm font-bold text-emerald-800 shadow-xs hover:bg-emerald-100 hover:border-emerald-400 transition cursor-pointer"
+       title="Importer votre catalogue d'actes via l'assistant MedCare">
+      <span><i class="ti ti-download"></i></span> Importer Excel
+    </a>
+    <button type="submit" form="catalogue-form" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700"><i class="ti ti-device-floppy"></i> Sauvegarder</button>
+  </div>
+</div>
+
+{# ── Piliers ── #}
+<div class="cat-card mt-6">
+  <div class="cat-card-body">
+    <p class="cat-section-label">Pilier d'activité</p>
+    <div class="cat-pilier-tabs" id="pilier-tabs" role="tablist" aria-label="Piliers">
+      {% for block in catalog_by_pilier %}
+      <button type="button"
+        class="pilier-tab js-pilier-tab{% if block.pilier.pk == first_applicable_pilier_id %} is-active{% endif %}"
+        data-pilier-panel="pilier-{{ block.pilier.pk }}"
+        data-pilier-slug="{{ block.pilier.slug }}"
+        data-pilier-label="{{ block.pilier.display_name }}"
+        data-count-text="{{ block.active_count }} / {{ block.acte_count }} actif{{ block.active_count|pluralize }}">
+        <span class="pilier-tab-icon">{% if block.pilier.display_icon %}{{ block.pilier.display_icon }}{% else %}<i class="ti ti-building-hospital"></i>{% endif %}</span>
+        <span class="pilier-tab-label">{{ block.pilier.display_name|upper }}</span>
+        <span class="pilier-tab-count js-pilier-tab-count{% if block.active_count > 0 %} has-active{% endif %}">
+          {% if block.active_count > 0 %}
+            <span class="tab-count-active">{{ block.active_count }}</span><span class="tab-count-sep"> / {{ block.acte_count }}</span>
+          {% else %}
+            {{ block.acte_count }} acte{{ block.acte_count|pluralize }}
+          {% endif %}
+        </span>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{# ── Prestations à domicile (biologie, explorations, soins spécialisés) ── #}
+{% if show_domicile_block %}
+<div id="bloc-domicile-wrapper" class="{% if first_applicable_pilier_slug != 'biologie-medicale' and first_applicable_pilier_slug != 'explorations-fonctionnelles' and first_applicable_pilier_slug != 'soins-specialises' %}hidden{% endif %}">
+  <form method="post" id="domicile-form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save_domicile">
+    {% include "healthcare/prestataire/_actes_domicile_block.html" %}
+  </form>
+</div>
+{% endif %}
+
+<form method="post" id="catalogue-form" class="space-y-3">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="save_catalogue">
+
+  {% for block in catalog_by_pilier %}
+  <section id="pilier-{{ block.pilier.pk }}"
+    class="pilier-panel cat-card{% if block.pilier.pk != first_applicable_pilier_id %} hidden{% endif %}"
+    data-pilier-slug="{{ block.pilier.slug }}"
+    data-applicable="1">
+    <div class="cat-card-body">
+      {% if 'ambulance' in block.pilier.slug or 'Ambulance' in block.pilier.name %}
+      {% include "healthcare/prestataire/_actes_ambulance_block.html" %}
+      {% endif %}
+      <div class="cat-toolbar">
+        <span class="cat-toolbar-pilier js-pilier-label">{% if block.pilier.display_icon %}{{ block.pilier.display_icon }}{% else %}<i class="ti ti-building-hospital"></i>{% endif %} {{ block.pilier.display_name }}</span>
+        <div class="flex-1"></div>
+        <input type="search" class="cat-search js-cat-search" placeholder="Rechercher un acte…" aria-label="Rechercher un acte">
+        <select class="cat-cat-select js-cat-cat" aria-label="Filtrer par catégorie">
+          <option value="">Toutes catégories</option>
+          {% for sg in block.subgroups %}
+          <option value="{{ sg.label }}">{{ sg.label }}</option>
+          {% endfor %}
+        </select>
+        <a href="{% url 'healthcare:chatbot_collecte' %}" class="whitespace-nowrap rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-800 hover:bg-teal-100 cursor-pointer inline-flex items-center gap-1.5"><i class="ti ti-download"></i> Importer Excel</a>
+        <button type="button" class="js-open-add-acte-modal whitespace-nowrap rounded-lg bg-primary-600 px-3 py-2 text-xs font-bold text-white hover:bg-primary-700 cursor-pointer">+ Ajouter un acte</button>
+        <a href="{% url 'healthcare:prestataire_rdv_reminder_list' %}" class="whitespace-nowrap rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">Rappels RDV</a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="catalogue-table js-cat-table">
+          <thead>
+            <tr>
+              <th>Acte</th>
+              <th>Catégorie</th>
+              <th>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs">Tarif :</span>
+                  <select class="js-catalogue-regime-select text-[11px] font-semibold rounded border border-gray-300 py-0.5 px-1.5 bg-white text-gray-800 focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer" title="Sélecteur de régime tarifaire (G23)">
+                    <option value="comptant" selected>Comptant ▾</option>
+                    <option value="ipm">IPM</option>
+                    <option value="assurance">Assurance</option>
+                  </select>
+                </div>
+              </th>
+              <th>Délai résultat</th>
+              <th style="text-align:center">Préparation</th>
+              <th>Actif</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sg in block.subgroups %}
+            {% for row in sg.rows %}
+            <tr class="js-cat-row" data-cat="{{ sg.label }}" data-search="{{ row.acte.name|lower }}">
+              <td>
+                <div class="cat-acte-name">{{ row.acte.name }}</div>
+                {% if row.acte.parent_service %}<div class="cat-acte-sub">{{ row.acte.parent_service.name }}</div>{% endif %}
+              </td>
+              <td class="text-gray-600">{{ sg.label }}</td>
+              <td class="js-tarif-cell">
+                {# Mode Comptant (éditable) #}
+                <div class="js-tarif-view js-tarif-comptant">
+                  <input type="number" min="0" step="500" name="price_{{ row.acte.pk }}" value="{{ row.price_val|floatformat:0 }}" class="cat-prix-input">
+                </div>
+                {# Mode IPM (tarif conventionné ou statut hors nomenclature) #}
+                <div class="js-tarif-view js-tarif-ipm hidden">
+                  {% if row.pa.coverage_status_ipm == 'covered' and row.pa.price_ipm %}
+                    <span class="inline-flex items-center font-bold text-sm text-emerald-700">{{ row.pa.price_ipm|floatformat:0 }} F</span>
+                    <span class="ml-1 inline-block text-[10px] text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded font-semibold">✓ IPM</span>
+                  {% elif row.pa.coverage_status_ipm == 'excluded' %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">✕ Non couvert</span>
+                  {% else %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">⚑ À confirmer</span>
+                  {% endif %}
+                </div>
+                {# Mode Assurance (tarif conventionné ou statut hors nomenclature) #}
+                <div class="js-tarif-view js-tarif-assurance hidden">
+                  {% if row.pa.coverage_status_assurance == 'covered' and row.pa.price_assurance %}
+                    <span class="inline-flex items-center font-bold text-sm text-emerald-700">{{ row.pa.price_assurance|floatformat:0 }} F</span>
+                    <span class="ml-1 inline-block text-[10px] text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded font-semibold">✓ Assur.</span>
+                  {% elif row.pa.coverage_status_assurance == 'excluded' %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">✕ Non couvert</span>
+                  {% else %}
+                    <span class="inline-flex items-center text-[11px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">⚑ À confirmer</span>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <select name="delai_{{ row.acte.pk }}" class="cat-delai-select">
+                  <option value="">—</option>
+                  {% for val, lbl in prestataire_delai_choices %}
+                  <option value="{{ val }}"{% if row.delai_val == val %} selected{% endif %}>{{ lbl }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td style="text-align:center" class="js-prep-cell" data-acte-id="{{ row.acte.pk }}">
+                {% if row.prep.configured %}
+                <button type="button" class="prep-btn ok js-prep-open" data-acte-id="{{ row.acte.pk }}"><i class="ti ti-check"></i> Configurée</button>
+                <div class="prep-state js-prep-state">{% if row.prep.active %}<i class="ti ti-bell"></i> Diffusée au patient{% else %}Non diffusée{% endif %}</div>
+                {% else %}
+                <button type="button" class="prep-btn todo js-prep-open" data-acte-id="{{ row.acte.pk }}"><i class="ti ti-settings"></i> À configurer</button>
+                {% endif %}
+              </td>
+              <td>
+                <label class="cat-toggle" title="Activer cet acte">
+                  <input type="checkbox" name="acte_ids" value="{{ row.acte.pk }}" class="js-acte-active" {% if row.acte.pk in selected_acte_ids %}checked{% endif %}>
+                  <span class="cat-toggle-track"></span>
+                </label>
+              </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+  {% endfor %}
+
+  <div class="cat-card">
+    <div class="cat-card-body">
+      <label for="catalogue_tarifs_delais" class="block text-sm font-semibold text-gray-900">Tarifs &amp; délais (texte libre)</label>
+      <p class="mt-0.5 text-xs text-gray-500">Informations complémentaires affichées sur votre fiche patient.</p>
+      <textarea id="catalogue_tarifs_delais" name="catalogue_tarifs_delais" rows="4" class="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm">{{ org.catalogue_tarifs_delais }}</textarea>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 pb-4">
+    <button type="submit" class="rounded-xl bg-primary-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-primary-700">Enregistrer le catalogue</button>
+    <a href="{% url 'healthcare:prestataire_dashboard' %}" class="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50">Annuler</a>
+  </div>
+</form>
+
+{# ── Panneau préparation / rappels (démo) ── #}
+<div class="prep-overlay" id="prep-overlay" aria-hidden="true"></div>
+<aside class="prep-panel" id="prep-panel" aria-hidden="true">
+  <div class="prep-panel-head">
+    <div>
+      <div class="pph-acte" id="prep-ph-acte">—</div>
+      <div class="pph-cat" id="prep-ph-cat">—</div>
+    </div>
+    <button type="button" class="prep-panel-close" id="prep-panel-close" aria-label="Fermer"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="prep-panel-body" id="prep-panel-body"></div>
+  <div class="prep-panel-foot">
+    <button type="button" class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50" id="prep-cancel">Annuler</button>
+    <button type="button" class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-bold text-white hover:bg-primary-700" id="prep-save">Enregistrer</button>
+  </div>
+</aside>
+
+{# ── Modal Ajouter un acte ── #}
+<div id="add-acte-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-xs p-4 hidden opacity-0 transition-opacity duration-200" aria-hidden="true">
+  <div id="add-acte-modal" class="relative w-full max-w-lg transform rounded-2xl bg-white p-6 shadow-2xl transition-all duration-200 scale-95 border border-gray-100">
+    <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary-600 font-bold text-lg shadow-xs">
+          <i class="ti ti-plus"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-900">Ajouter un acte au catalogue</h3>
+          <p class="text-xs text-gray-500">Sélectionnez un acte du référentiel et définissez son tarif</p>
+        </div>
+      </div>
+      <button type="button" id="btn-close-add-acte-modal" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition cursor-pointer">
+        &times;
+      </button>
+    </div>
+
+    <form method="POST" action="{% url 'healthcare:acte_add' %}" class="mt-5 space-y-4">
+      {% csrf_token %}
+
+      <div>
+        <label for="modal_id_acte" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Acte proposé <span class="text-rose-500">*</span></label>
+        <p class="mt-0.5 text-[11px] text-gray-500 mb-1.5">Recherchez par nom d'acte ou catégorie</p>
+        <select name="acte" id="modal_id_acte" required
+          class="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none">
+          <option value="">— Sélectionnez un acte —</option>
+          {% for g in acte_option_groups %}
+          <optgroup label="{{ g.service_name }}">
+            {% for pk, label in g.options %}
+            <option value="{{ pk }}">{{ label }}</option>
+            {% endfor %}
+          </optgroup>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <div>
+          <label for="modal_id_price" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Prix (FCFA) <span class="text-rose-500">*</span></label>
+          <input type="number" min="0" step="500" name="price" id="modal_id_price" required placeholder="ex: 15000"
+            class="mt-1 w-full rounded-xl border border-gray-300 px-3.5 py-2 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none">
+        </div>
+        <div>
+          <label for="modal_id_delai" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Délai indicatif</label>
+          <select name="delai" id="modal_id_delai"
+            class="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none">
+            <option value="">— Aucun délai —</option>
+            {% for val, lbl in prestataire_delai_choices %}
+            <option value="{{ val }}">{{ lbl }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-1">
+        <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+          <input type="checkbox" name="is_available" value="true" checked class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+          <span>Disponible immédiatement au catalogue</span>
+        </label>
+      </div>
+
+      <div>
+        <label for="modal_id_notes" class="block text-xs font-bold uppercase tracking-wider text-gray-700">Notes / Précisions</label>
+        <textarea name="notes" id="modal_id_notes" rows="2" placeholder="Précisions éventuelles sur la prise en charge..."
+          class="mt-1 w-full rounded-xl border border-gray-300 px-3.5 py-2 text-sm text-gray-900 shadow-xs focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none"></textarea>
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-2.5 border-t border-gray-100 pt-4">
+        <button type="button" id="btn-cancel-add-acte-modal" class="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition cursor-pointer">
+          Annuler
+        </button>
+        <button type="submit" class="rounded-xl bg-primary-600 px-5 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-700 transition cursor-pointer">
+          Ajouter au catalogue
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ── Modal Importer un catalogue Excel / CSV ── #}
+<div id="import-excel-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4 hidden opacity-0 transition-opacity duration-200" aria-hidden="true">
+  <div id="import-excel-modal" class="relative w-full max-w-3xl transform rounded-2xl bg-white shadow-2xl transition-all duration-200 scale-95 border border-gray-100 flex flex-col overflow-hidden" style="max-height:95vh">
+    
+    <!-- En-tête fixe -->
+    <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4 flex-shrink-0 bg-white">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 font-bold text-lg shadow-xs">
+          <i class="ti ti-chart-bar"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-900">Importer le catalogue (Excel / CSV)</h3>
+          <p class="text-xs text-gray-500">Mettez à jour vos actes, tarifs et délais en masse</p>
+        </div>
+      </div>
+      <button type="button" id="btn-close-import-modal" class="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition cursor-pointer">
+        &times;
+      </button>
+    </div>
+
+    <!-- Corps scrollable -->
+    <div class="flex-1 overflow-y-auto px-6 py-5 min-h-0">
+      <form id="import-excel-form" method="POST" action="{% url 'healthcare:actes_import_excel' %}" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+
+        <div id="import-inputs-section" class="space-y-4">
+          <!-- Modèle Excel rapide -->
+          <div class="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3.5 text-xs text-emerald-900 flex items-start justify-between gap-3">
+            <div>
+              <p class="font-bold text-emerald-950">Vous n'avez pas encore de fichier préparé ?</p>
+              <p class="mt-0.5 text-emerald-800 text-[11px]">Téléchargez notre modèle pré-rempli avec vos actes du référentiel.</p>
+            </div>
+            <a href="{% url 'healthcare:actes_template_excel' %}" download
+               class="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition">
+              <i class="ti ti-file-text"></i> Modèle (.xlsx)
+            </a>
+          </div>
+
+          <!-- Zone de glisser-déposer -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Fichier Excel ou CSV <span class="text-rose-500">*</span></label>
+            <div id="dropzone" class="relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50/70 p-6 text-center hover:border-emerald-500 hover:bg-emerald-50/30 transition cursor-pointer">
+              <input type="file" id="catalog-file-input" name="file" accept=".xlsx,.xls,.csv" required class="absolute inset-0 h-full w-full opacity-0 cursor-pointer">
+              <div id="dropzone-prompt" class="flex flex-col items-center pointer-events-none">
+                <span class="text-3xl mb-1"><i class="ti ti-folder"></i></span>
+                <p class="text-xs font-semibold text-gray-700"><span class="text-emerald-700 font-bold underline">Cliquez pour choisir</span> ou glissez votre fichier ici</p>
+                <p class="text-[11px] text-gray-400 mt-0.5">Formats acceptés : .xlsx, .xls, .csv</p>
+              </div>
+              <div id="dropzone-file-info" class="hidden flex items-center gap-2.5 rounded-xl bg-white px-3 py-2 border border-emerald-200 shadow-xs">
+                <span class="text-lg"><i class="ti ti-file-text"></i></span>
+                <div class="text-left">
+                  <p id="dropzone-file-name" class="text-xs font-bold text-gray-800 truncate max-w-[280px]"></p>
+                  <p id="dropzone-file-size" class="text-[10px] text-gray-500"></p>
+                </div>
+                <button type="button" id="btn-remove-file" class="ml-2 text-xs text-rose-500 hover:text-rose-700 font-bold cursor-pointer"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Options -->
+          <div class="rounded-xl bg-gray-50 p-3 border border-gray-100">
+            <label class="inline-flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+              <input type="checkbox" name="auto_activate" value="1" checked class="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+              <span>Activer immédiatement au catalogue les actes ayant un tarif</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Alertes / Résultat en direct -->
+        <div id="import-result-box" class="hidden rounded-xl text-xs"></div>
+
+        <!-- Boutons d'action par défaut -->
+        <div id="import-actions-footer" class="flex items-center justify-end gap-2.5 border-t border-gray-100 pt-4">
+          <button type="button" id="btn-cancel-import-modal" class="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition cursor-pointer">
+            Annuler
+          </button>
+          <button type="submit" id="btn-submit-import" class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition cursor-pointer disabled:opacity-50">
+            <span id="import-btn-spinner" class="hidden animate-spin"><i class="ti ti-hourglass"></i></span>
+            <span id="import-btn-text">Importer le catalogue</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block dash_extra_js %}
+<script>
+window.MEDCARE_CATALOGUE_PREP = {
+  saveUrlTpl: "{{ prep_save_url_tpl|escapejs }}",
+  reminderAddUrlTpl: "{{ reminder_add_url_tpl|escapejs }}",
+  reminderDeleteUrlTpl: "{{ reminder_delete_url_tpl|escapejs }}",
+  orgName: "{{ org.name|escapejs }}"
+};
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var prepCfg = window.MEDCARE_CATALOGUE_PREP || {};
+  var prepData = {};
+  try {
+    var prepEl = document.getElementById('cat-prep-data');
+    if (prepEl) prepData = JSON.parse(prepEl.textContent || '{}');
+  } catch (e) {}
+
+    // ── Sélecteur de tarification sur la colonne Tarif (G23) ──
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.classList.contains('js-catalogue-regime-select')) {
+      var regime = e.target.value;
+      document.querySelectorAll('.js-catalogue-regime-select').forEach(function(sel) {
+        if (sel !== e.target) sel.value = regime;
+      });
+      document.querySelectorAll('.js-tarif-cell').forEach(function(cell) {
+        var comptant = cell.querySelector('.js-tarif-comptant');
+        var ipm = cell.querySelector('.js-tarif-ipm');
+        var assurance = cell.querySelector('.js-tarif-assurance');
+        if (comptant) comptant.classList.toggle('hidden', regime !== 'comptant');
+        if (ipm) ipm.classList.toggle('hidden', regime !== 'ipm');
+        if (assurance) assurance.classList.toggle('hidden', regime !== 'assurance');
+      });
+    }
+  });
+
+  var saveInd = document.getElementById('save-ind');
+  var domiWrapper = document.getElementById('bloc-domicile-wrapper');
+  var tabs = document.querySelectorAll('.pilier-tab:not(.is-disabled)');
+  var panels = document.querySelectorAll('.pilier-panel');
+
+  function showSaveIndicator() {
+    if (!saveInd) return;
+    saveInd.classList.add('is-visible');
+    clearTimeout(saveInd._t);
+    saveInd._t = setTimeout(function () {
+      saveInd.classList.remove('is-visible');
+    }, 2200);
+  }
+
+  var DOMICILE_SLUGS = ['biologie-medicale', 'explorations-fonctionnelles', 'soins-specialises'];
+  function updateDomicileVisibility(slug) {
+    if (!domiWrapper) return;
+    domiWrapper.classList.toggle('hidden', DOMICILE_SLUGS.indexOf(slug) === -1);
+  }
+
+  function filterCataloguePanel(panel) {
+    if (!panel) return;
+    var q = ((panel.querySelector('.js-cat-search') || {}).value || '').toLowerCase().trim();
+    var cat = (panel.querySelector('.js-cat-cat') || {}).value || '';
+    panel.querySelectorAll('.js-cat-row').forEach(function (row) {
+      var name = row.getAttribute('data-search') || '';
+      var rowCat = row.getAttribute('data-cat') || '';
+      var okSearch = !q || name.indexOf(q) !== -1;
+      var okCat = !cat || rowCat === cat;
+      row.classList.toggle('cat-row-hidden', !(okSearch && okCat));
+    });
+  }
+
+  // ── Types de structure interactifs & filtrage piliers ──
+  var typeChips = document.querySelectorAll('.js-type-chip');
+  var typeDescEl = document.getElementById('type-struct-desc');
+  var allPilierTabs = document.querySelectorAll('.js-pilier-tab');
+
+  function activatePilierBySlug(targetSlug) {
+    var found = false;
+    allPilierTabs.forEach(function (tab) {
+      var isTabDisabled = tab.classList.contains('is-disabled');
+      var slug = tab.getAttribute('data-pilier-slug') || '';
+      if (!isTabDisabled && !found && (slug === targetSlug || !targetSlug)) {
+        tab.classList.add('is-active');
+        var panelId = tab.getAttribute('data-pilier-panel');
+        panels.forEach(function (p) { p.classList.toggle('hidden', p.id !== panelId); });
+        updateDomicileVisibility(slug);
+        found = true;
+      } else {
+        tab.classList.remove('is-active');
+      }
+    });
+  }
+
+  function setStructureType(chip) {
+    if (!chip) return;
+    typeChips.forEach(function (c) { c.classList.remove('is-active'); });
+    chip.classList.add('is-active');
+
+    var label = chip.getAttribute('data-label') || '';
+    var desc = chip.getAttribute('data-desc') || '';
+    var piliersRaw = chip.getAttribute('data-piliers') || '';
+    var allowedPiliers = piliersRaw ? piliersRaw.split(',') : [];
+
+    if (typeDescEl) {
+      typeDescEl.textContent = label + ' — ' + desc;
+    }
+
+    var firstAllowedTab = null;
+
+    allPilierTabs.forEach(function (tab) {
+      var slug = tab.getAttribute('data-pilier-slug') || '';
+      var countSpan = tab.querySelector('.js-pilier-tab-count');
+      var originalCountText = tab.getAttribute('data-count-text') || '';
+
+      var isAllowed = allowedPiliers.length === 0 || allowedPiliers.indexOf(slug) !== -1;
+
+      if (isAllowed) {
+        tab.classList.remove('is-disabled');
+        tab.removeAttribute('disabled');
+        tab.removeAttribute('title');
+        if (countSpan) {
+          countSpan.classList.remove('is-na');
+          countSpan.textContent = originalCountText;
+        }
+        if (!firstAllowedTab) firstAllowedTab = tab;
+      } else {
+        tab.classList.add('is-disabled');
+        tab.classList.remove('is-active');
+        tab.setAttribute('disabled', 'disabled');
+        tab.setAttribute('title', 'Non applicable à ce type de structure');
+        if (countSpan) {
+          countSpan.classList.add('is-na');
+          countSpan.textContent = 'Non applicable';
+        }
+      }
+    });
+
+    if (firstAllowedTab) {
+      var firstSlug = firstAllowedTab.getAttribute('data-pilier-slug') || '';
+      activatePilierBySlug(firstSlug);
+    }
+  }
+
+  typeChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      setStructureType(chip);
+    });
+  });
+
+  allPilierTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      if (tab.classList.contains('is-disabled')) return;
+      var id = tab.getAttribute('data-pilier-panel');
+      var slug = tab.getAttribute('data-pilier-slug') || '';
+      allPilierTabs.forEach(function (t) { t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      panels.forEach(function (p) { p.classList.toggle('hidden', p.id !== id); });
+      updateDomicileVisibility(slug);
+    });
+  });
+
+  var initActiveTab = document.querySelector('.js-pilier-tab.is-active');
+  if (initActiveTab) {
+    updateDomicileVisibility(initActiveTab.getAttribute('data-pilier-slug') || '');
+  }
+
+  panels.forEach(function (panel) {
+    var search = panel.querySelector('.js-cat-search');
+    var catSel = panel.querySelector('.js-cat-cat');
+    if (search) search.addEventListener('input', function () { filterCataloguePanel(panel); });
+    if (catSel) catSel.addEventListener('change', function () { filterCataloguePanel(panel); });
+  });
+
+  var frm = document.getElementById('catalogue-form');
+  var saveTimer = null;
+  var saving = false;
+  var pendingSave = false;
+  // Empêche l'auto-save de se déclencher pendant le chargement initial de la page
+  // (le navigateur peut émettre des events "change" lors de la restauration de l'état des cases)
+  var pageReady = false;
+  setTimeout(function () { pageReady = true; }, 1200);
+
+  function escapeHtml(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function scheduleAutoSave() {
+    if (!pageReady) return; // Ignorer les events du chargement initial
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(autoSaveCatalogue, 700);
+  }
+
+  function autoSaveCatalogue() {
+    if (!frm) return;
+    if (saving) {
+      pendingSave = true;
+      return;
+    }
+    saving = true;
+    var fd = new FormData(frm);
+    fetch(window.location.href, {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      if (!res.ok) throw new Error('save failed');
+      return res.json();
+    }).then(function () {
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ }).finally(function () {
+      saving = false;
+      if (pendingSave) {
+        pendingSave = false;
+        scheduleAutoSave();
+      }
+    });
+  }
+
+  if (frm) {
+    frm.addEventListener('change', scheduleAutoSave);
+    frm.addEventListener('input', function (e) {
+      if (e.target.matches('input, select, textarea')) scheduleAutoSave();
+    });
+  }
+
+  /* ── Prestations à domicile ── */
+  var domiToggle = document.getElementById('toggle-domicile');
+  var domiDetails = document.getElementById('domicile-details');
+  var domiList = document.getElementById('zones-domicile-list');
+  var domiTimer = null;
+  var domiSaving = false;
+  var domiPending = false;
+  var domiPendingDelete = null;
+
+  function csrfToken() {
+    var el = document.querySelector('[name=csrfmiddlewaretoken]');
+    return el ? el.value : '';
+  }
+
+  function collectDomicileZones() {
+    var zones = [];
+    if (!domiList) return zones;
+    domiList.querySelectorAll('.js-domi-zone-row').forEach(function (row) {
+      var label = (row.querySelector('.js-domi-zone-label') || {}).value || '';
+      var forfait = (row.querySelector('.js-domi-zone-forfait') || {}).value || '0';
+      var pk = row.getAttribute('data-pk') || '';
+      if (!label.trim() && !pk) return;
+      zones.push({ pk: pk || null, label: label.trim(), forfait_fcfa: parseInt(forfait, 10) || 0 });
+    });
+    return zones;
+  }
+
+  function refreshDomicileEmptyState() {
+    if (!domiList) return;
+    var empty = domiList.querySelector('.js-domi-zones-empty');
+    var hasRows = domiList.querySelectorAll('.js-domi-zone-row').length > 0;
+    if (empty) empty.classList.toggle('hidden', hasRows);
+  }
+
+  function buildDomicileZoneRow(pk, label, forfait) {
+    var row = document.createElement('div');
+    row.className = 'js-domi-zone-row zone-prelevement-row';
+    row.setAttribute('data-pk', pk || '');
+    row.innerHTML =
+      '<input type="text" class="js-domi-zone-label js-domi-field domi-search-input" value="' + escapeHtml(label || '') + '" placeholder="Nom de la zone (ex : Mermoz, Plateau…)" style="font-size:11px">'
+      + '<div class="domi-zone-forfait-wrap"><input type="number" min="0" step="500" class="js-domi-zone-forfait js-domi-field domi-search-input" value="' + (forfait || 0) + '" placeholder="0 = gratuit" style="font-size:11px;padding-right:40px">'
+      + '<span class="domi-zone-fcfa">FCFA</span></div>'
+      + '<button type="button" class="js-domi-zone-remove domi-zone-remove" title="Supprimer"><i class="ti ti-x"></i></button>';
+    return row;
+  }
+
+  function renderDomicileZones(zones) {
+    if (!domiList || !zones) return;
+    domiList.querySelectorAll('.js-domi-zone-row').forEach(function (r) { r.remove(); });
+    zones.forEach(function (z) {
+      domiList.appendChild(buildDomicileZoneRow(z.pk, z.label, z.forfait_fcfa));
+    });
+    bindDomicileZoneRows();
+    refreshDomicileEmptyState();
+  }
+
+  function saveDomicile(op, extra) {
+    return new Promise(function (resolve) {
+      if (!domiToggle) { resolve(false); return; }
+      clearTimeout(domiTimer);
+      if (domiSaving) {
+        if (op === 'delete_zone') domiPendingDelete = extra;
+        else domiPending = true;
+        resolve(false);
+        return;
+      }
+      domiSaving = true;
+      var fd = new FormData();
+      fd.append('csrfmiddlewaretoken', csrfToken());
+      fd.append('action', 'save_domicile');
+      fd.append('domicile_op', op || 'save');
+      fd.append('prises_sang_domicile', domiToggle.checked ? '1' : '0');
+      fd.append('zones_json', JSON.stringify(collectDomicileZones()));
+      var delaiEl = document.getElementById('domicile-delai');
+      var plagesEl = document.getElementById('domicile-plages');
+      if (delaiEl) fd.append('domicile_delai_intervention', delaiEl.value || '');
+      if (plagesEl) fd.append('domicile_plages_horaires', plagesEl.value || '');
+      if (extra && extra.zone_pk) fd.append('zone_pk', extra.zone_pk);
+      fetch(window.location.href, {
+        method: 'POST',
+        body: fd,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin',
+      }).then(function (res) {
+        if (!res.ok) throw new Error('domi save failed');
+        return res.json();
+      }).then(function (data) {
+        if (!data || !data.ok) throw new Error('domi save failed');
+        if (data.zones) renderDomicileZones(data.zones);
+        showSaveIndicator();
+        resolve(true);
+      }).catch(function () {
+        resolve(false);
+      }).finally(function () {
+        domiSaving = false;
+        if (domiPendingDelete) {
+          var pendingDel = domiPendingDelete;
+          domiPendingDelete = null;
+          saveDomicile('delete_zone', pendingDel);
+        } else if (domiPending) {
+          domiPending = false;
+          scheduleDomicileSave('save');
+        }
+      });
+    });
+  }
+
+  function scheduleDomicileSave(op) {
+    clearTimeout(domiTimer);
+    domiTimer = setTimeout(function () { saveDomicile(op || 'save'); }, 700);
+  }
+
+  function domiFieldInput() { scheduleDomicileSave('save'); }
+
+  function bindDomicileZoneRows() {
+    if (!domiList) return;
+    domiList.querySelectorAll('.js-domi-zone-row').forEach(function (row) {
+      row.querySelectorAll('.js-domi-field').forEach(function (inp) {
+        inp.removeEventListener('input', domiFieldInput);
+        inp.addEventListener('input', domiFieldInput);
+      });
+    });
+  }
+
+  function handleDomicileZoneRemove(btn) {
+    var row = btn.closest('.js-domi-zone-row');
+    if (!row) return;
+    clearTimeout(domiTimer);
+    var pk = row.getAttribute('data-pk');
+    if (!pk) {
+      row.remove();
+      refreshDomicileEmptyState();
+      scheduleDomicileSave('save');
+      return;
+    }
+    btn.disabled = true;
+    saveDomicile('delete_zone', { zone_pk: pk }).then(function (ok) {
+      btn.disabled = false;
+      if (ok) refreshDomicileEmptyState();
+    });
+  }
+
+  function parseDomiActeIds(raw) {
+    if (!raw || raw === 'all') {
+      var ids = [];
+      document.querySelectorAll('.js-domi-acte-tag[data-acte-ids]').forEach(function (tag) {
+        var v = tag.getAttribute('data-acte-ids') || '';
+        if (v && v !== 'all') {
+          v.split(',').forEach(function (id) {
+            id = parseInt(id, 10);
+            if (id) ids.push(id);
+          });
+        }
+      });
+      return ids;
+    }
+    return raw.split(',').map(function (id) { return parseInt(id, 10); }).filter(Boolean);
+  }
+
+  function setActeActive(acteId, on) {
+    var cb = document.querySelector('input[name="acte_ids"][value="' + acteId + '"]');
+    if (cb) cb.checked = !!on;
+  }
+
+  function refreshDomiActeTags() {
+    document.querySelectorAll('.js-domi-acte-tag').forEach(function (tag) {
+      var raw = tag.getAttribute('data-acte-ids') || '';
+      var cb = tag.querySelector('.js-domi-acte-cb');
+      if (!cb) return;
+      var ids = parseDomiActeIds(raw);
+      if (!ids.length) {
+        cb.checked = false;
+        return;
+      }
+      cb.checked = ids.every(function (id) {
+        var rowCb = document.querySelector('input[name="acte_ids"][value="' + id + '"]');
+        return rowCb && rowCb.checked;
+      });
+    });
+  }
+
+  if (domiToggle) {
+    domiToggle.addEventListener('change', function () {
+      if (domiDetails) {
+        domiDetails.classList.toggle('domicile-details--hidden', !domiToggle.checked);
+      }
+      saveDomicile('toggle');
+    });
+  }
+
+  ['domicile-delai', 'domicile-plages'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', domiFieldInput);
+      el.addEventListener('change', domiFieldInput);
+    }
+  });
+
+  var btnAddDomi = document.getElementById('btn-add-domi-zone');
+  if (btnAddDomi && domiList) {
+    btnAddDomi.addEventListener('click', function () {
+      domiList.appendChild(buildDomicileZoneRow('', '', 0));
+      bindDomicileZoneRows();
+      refreshDomicileEmptyState();
+      var rows = domiList.querySelectorAll('.js-domi-zone-row');
+      var last = rows[rows.length - 1];
+      if (last) {
+        var inp = last.querySelector('.js-domi-zone-label');
+        if (inp) inp.focus();
+      }
+    });
+    domiList.addEventListener('click', function (e) {
+      var btn = e.target.closest('.js-domi-zone-remove');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      handleDomicileZoneRemove(btn);
+    });
+  }
+
+  document.querySelectorAll('.js-domi-acte-tag').forEach(function (tag) {
+    tag.addEventListener('click', function (e) {
+      if (e.target.classList.contains('js-domi-acte-cb')) return;
+      var cb = tag.querySelector('.js-domi-acte-cb');
+      if (cb) cb.checked = !cb.checked;
+      tag.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    tag.addEventListener('change', function () {
+      var raw = tag.getAttribute('data-acte-ids') || '';
+      var cb = tag.querySelector('.js-domi-acte-cb');
+      var ids = parseDomiActeIds(raw);
+      var on = cb && cb.checked;
+      if (raw === 'all' && on) {
+        document.querySelectorAll('.js-domi-acte-tag:not([data-acte-ids="all"]) .js-domi-acte-cb').forEach(function (other) {
+          other.checked = true;
+        });
+        ids = parseDomiActeIds('all');
+      }
+      ids.forEach(function (id) { setActeActive(id, on); });
+      if (raw !== 'all') refreshDomiActeTags();
+      scheduleAutoSave();
+    });
+  });
+
+  bindDomicileZoneRows();
+  refreshDomicileEmptyState();
+  refreshDomiActeTags();
+
+  /* ── Panneau préparation / rappels ── */
+  var prepOverlay = document.getElementById('prep-overlay');
+  var prepPanel = document.getElementById('prep-panel');
+  var prepBody = document.getElementById('prep-panel-body');
+  var openPrepActeId = null;
+  var prepReference = '';
+
+  function escapeHtmlPrep(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function prepConfirmationText(acteName, prep) {
+    var p = (prep || '').trim();
+    if (!p) return '';
+    return 'Bonjour \nVotre RDV pour un ' + acteName + ' est confirmé.\nPréparation : ' + p;
+  }
+
+  function extractPrepFromConfirmation(text) {
+    var raw = (text || '').trim();
+    if (!raw) return '';
+    var marker = 'Préparation :';
+    var idx = raw.indexOf(marker);
+    if (idx !== -1) return raw.slice(idx + marker.length).trim();
+    return raw;
+  }
+
+  function prepSuggestionHtml(data) {
+    var lines = data.reference_lines || [];
+    if (lines.length) {
+      return ''
+        + '<div class="prep-suggestion">'
+        + '<div class="ps-head"><i class="ti ti-bulb"></i> Suggestion MedCare — conditions de référence</div>'
+        + '<ul>' + lines.map(function (p) {
+          return '<li><span>▪</span><span>' + escapeHtmlPrep(p) + '</span></li>';
+        }).join('') + '</ul>'
+        + '<p class="ps-footer">Base de connaissances de l\'acte. Servez-vous-en pour rédiger les messages ci-dessous.</p>'
+        + '</div>';
+    }
+    return ''
+      + '<div class="prep-suggestion none">'
+      + '<div class="ps-head"><i class="ti ti-notes"></i> Aucune fiche de référence pour cet acte</div>'
+      + '<div class="prep-none-desc">Rédigez librement le message de confirmation que le patient recevra après la validation de son rendez-vous.</div>'
+      + '</div>';
+  }
+
+  function syncPrepPreview() {
+    var ta = document.getElementById('prep-notif');
+    var wa = document.getElementById('prep-wa-text');
+    if (!ta || !wa) return;
+    var text = ta.value.trim();
+    wa.textContent = text || '…';
+  }
+
+  function prepRemindersListHtml(reminders) {
+    if (!reminders || !reminders.length) {
+      return '<p class="prep-reminders-empty">Aucun rappel programmé pour le moment</p>';
+    }
+    return '<div class="prep-reminders-chips">' + reminders.map(function (r) {
+      return '<div class="prep-reminder-chip">'
+        + '<span>' + escapeHtmlPrep(r.display || r.label) + '</span>'
+        + '<button type="button" class="prep-rem-del js-prep-rem-del" data-pk="' + r.pk + '" aria-label="Supprimer"><i class="ti ti-x"></i></button>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+
+  function prepRemindersSectionHtml(reminders) {
+    return ''
+      + '<hr class="prep-sep">'
+      + '<div class="prep-block-title"><i class="ti ti-alarm"></i> Rappels avant l\'examen</div>'
+      + '<div class="prep-block-desc">Messages courts envoyés à l\'approche du RDV (H-12, H-6…). Idéal pour les consignes de dernière minute : « ne mangez plus », « pensez à… ».</div>'
+      + '<div id="prep-reminders-list" class="prep-reminders-list">' + prepRemindersListHtml(reminders) + '</div>'
+      + '<div class="prep-reminders-quick">'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="12">+ H-12</button>'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="6">+ H-6</button>'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="2">+ H-2</button>'
+      + '<button type="button" class="prep-rem-btn js-prep-rem-add" data-hours="1">+ H-1</button>'
+      + '<span class="prep-rem-or">ou H-</span>'
+      + '<input type="number" class="prep-rem-input" id="prep-rem-custom" min="1" max="168" placeholder="ex 4" inputmode="numeric">'
+      + '<button type="button" class="prep-rem-add-btn" id="prep-rem-add-custom">+ Ajouter</button>'
+      + '</div>';
+  }
+
+  function renderPrepReminders(reminders) {
+    var list = document.getElementById('prep-reminders-list');
+    if (list) list.innerHTML = prepRemindersListHtml(reminders);
+  }
+
+  function reminderAddUrl() {
+    return (prepCfg.reminderAddUrlTpl || '').replace('ACTE_ID', openPrepActeId);
+  }
+
+  function reminderDeleteUrl(pk) {
+    return (prepCfg.reminderDeleteUrlTpl || '').replace('ACTE_ID', openPrepActeId).replace('SCHEDULE_PK', pk);
+  }
+
+  function addPrepReminder(hours) {
+    if (!openPrepActeId || !hours) return;
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', csrfToken());
+    fd.append('hours', String(hours));
+    fetch(reminderAddUrl(), {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (res) {
+      if (!res.ok || !res.j.ok) return;
+      var reminders = res.j.reminders || [];
+      prepData[String(openPrepActeId)] = Object.assign({}, prepData[String(openPrepActeId)] || {}, {
+        reminders: reminders,
+      });
+      renderPrepReminders(reminders);
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ });
+  }
+
+  function deletePrepReminder(pk) {
+    if (!openPrepActeId || !pk) return;
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', csrfToken());
+    fetch(reminderDeleteUrl(pk), {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (res) {
+      if (!res.ok || !res.j.ok) return;
+      var reminders = res.j.reminders || [];
+      prepData[String(openPrepActeId)] = Object.assign({}, prepData[String(openPrepActeId)] || {}, {
+        reminders: reminders,
+      });
+      renderPrepReminders(reminders);
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ });
+  }
+
+  function renderPrepCell(acteId, configured, active) {
+    document.querySelectorAll('.js-prep-cell[data-acte-id="' + acteId + '"]').forEach(function (cell) {
+      if (configured) {
+        cell.innerHTML =
+          '<button type="button" class="prep-btn ok js-prep-open" data-acte-id="' + acteId + '"><i class="ti ti-check"></i> Configurée</button>'
+          + '<div class="prep-state js-prep-state">' + (active ? '<i class="ti ti-bell"></i> Diffusée au patient' : 'Non diffusée') + '</div>';
+      } else {
+        cell.innerHTML =
+          '<button type="button" class="prep-btn todo js-prep-open" data-acte-id="' + acteId + '"><i class="ti ti-settings"></i> À configurer</button>';
+      }
+    });
+  }
+
+  function openPrepPanel(acteId) {
+    var data = prepData[String(acteId)];
+    if (!data || !prepBody) return;
+    openPrepActeId = acteId;
+    prepReference = data.reference || '';
+    var acteName = data.name || '—';
+    var pilierLabel = (data.pilier_icon ? data.pilier_icon + ' ' : '') + (data.pilier || '');
+    document.getElementById('prep-ph-acte').textContent = acteName;
+    document.getElementById('prep-ph-cat').textContent = pilierLabel + ' · ' + (data.category || '');
+
+    prepBody.innerHTML = prepSuggestionHtml(data)
+      + '<hr class="prep-sep">'
+      + '<div class="prep-block-title"><i class="ti ti-mail"></i> Message de confirmation</div>'
+      + '<div class="prep-block-desc">Envoyé une fois au patient, juste après la validation de son rendez-vous.</div>'
+      + '<div class="prep-message-toolbar">'
+      + '<span class="prep-msg-label">Texte du message</span>'
+      + '<button type="button" class="prep-suggest-btn" id="prep-use-ref">↺ Suggestion</button>'
+      + '</div>'
+      + '<div class="prep-edit">'
+      + '<textarea class="prep-text" id="prep-notif" placeholder="Bonjour  Votre RDV pour un examen est confirmé.&#10;Préparation : …"></textarea>'
+      + '<div><div class="wa-label"><i class="ti ti-device-mobile"></i> Aperçu WhatsApp</div>'
+      + '<div class="wa-frame"><div class="wa-bubble">'
+      + '<div class="wa-sender"><i class="ti ti-stethoscope"></i> MedCare · ' + escapeHtmlPrep(prepCfg.orgName || '') + '</div>'
+      + '<div class="wa-text" id="prep-wa-text">…</div>'
+      + '<div class="wa-time">à la confirmation <span class="wa-check"><i class="ti ti-check"></i><i class="ti ti-check"></i></span></div>'
+      + '</div></div></div></div>'
+      + prepRemindersSectionHtml(data.reminders || [])
+      + '<hr class="prep-sep">'
+      + '<div class="prep-diff-row"><div>'
+      + '<div class="pdr-t">Diffuser au patient</div>'
+      + '<div class="pdr-d">Active l\'envoi automatique du message de confirmation et des rappels.</div>'
+      + '</div><label class="prep-toggle"><input type="checkbox" id="prep-diffuse"' + (data.active ? ' checked' : '') + '><span class="prep-toggle-track"></span></label></div>';
+
+    var useBtn = document.getElementById('prep-use-ref');
+    if (useBtn) {
+      useBtn.addEventListener('click', function () {
+        var ta = document.getElementById('prep-notif');
+        if (ta && prepReference) {
+          ta.value = prepConfirmationText(acteName, prepReference);
+          syncPrepPreview();
+          showSaveIndicator();
+        }
+      });
+    }
+    var ta = document.getElementById('prep-notif');
+    if (ta) {
+      ta.value = prepConfirmationText(acteName, data.message || '');
+      ta.addEventListener('input', syncPrepPreview);
+    }
+    syncPrepPreview();
+
+    prepBody.querySelectorAll('.js-prep-rem-add').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        addPrepReminder(parseInt(btn.getAttribute('data-hours'), 10));
+      });
+    });
+    var customAdd = document.getElementById('prep-rem-add-custom');
+    if (customAdd) {
+      customAdd.addEventListener('click', function () {
+        var inp = document.getElementById('prep-rem-custom');
+        var h = inp ? parseInt(inp.value, 10) : 0;
+        if (h > 0) {
+          addPrepReminder(h);
+          if (inp) inp.value = '';
+        }
+      });
+    }
+    prepBody.addEventListener('click', function (e) {
+      var del = e.target.closest('.js-prep-rem-del');
+      if (del) {
+        e.preventDefault();
+        deletePrepReminder(del.getAttribute('data-pk'));
+      }
+    });
+
+    prepOverlay.classList.add('open');
+    prepPanel.classList.add('open');
+    prepOverlay.setAttribute('aria-hidden', 'false');
+    prepPanel.setAttribute('aria-hidden', 'false');
+  }
+
+  function closePrepPanel() {
+    if (document.activeElement && (prepPanel && prepPanel.contains(document.activeElement) || prepOverlay && prepOverlay.contains(document.activeElement))) {
+      document.activeElement.blur();
+    }
+    openPrepActeId = null;
+    prepReference = '';
+    prepOverlay.classList.remove('open');
+    prepPanel.classList.remove('open');
+    prepOverlay.setAttribute('aria-hidden', 'true');
+    prepPanel.setAttribute('aria-hidden', 'true');
+  }
+
+  function savePrepPanel() {
+    if (!openPrepActeId) return;
+    var ta = document.getElementById('prep-notif');
+    var diffuse = document.getElementById('prep-diffuse');
+    var url = (prepCfg.saveUrlTpl || '').replace('ACTE_ID', openPrepActeId);
+    var prepOnly = extractPrepFromConfirmation(ta ? ta.value : '');
+    var fd = new FormData();
+    fd.append('csrfmiddlewaretoken', csrfToken());
+    fd.append('rdv_prerequisites', prepOnly);
+    fd.append('rdv_prerequisites_active', diffuse && diffuse.checked ? '1' : '0');
+    fetch(url, {
+      method: 'POST',
+      body: fd,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      credentials: 'same-origin',
+    }).then(function (res) {
+      return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (res) {
+      if (!res.ok || !res.j.ok) return;
+      var msg = res.j.message || (ta ? ta.value : '');
+      var active = !!res.j.active;
+      var configured = !!res.j.configured;
+      prepData[String(openPrepActeId)] = Object.assign({}, prepData[String(openPrepActeId)] || {}, {
+        message: msg,
+        active: active,
+        configured: configured,
+      });
+      renderPrepCell(openPrepActeId, configured, active);
+      closePrepPanel();
+      showSaveIndicator();
+    }).catch(function () { /* silencieux */ });
+  }
+
+  document.addEventListener('click', function (e) {
+    var openBtn = e.target.closest('.js-prep-open');
+    if (openBtn) {
+      e.preventDefault();
+      openPrepPanel(openBtn.getAttribute('data-acte-id'));
+      return;
+    }
+  });
+
+  if (prepOverlay) prepOverlay.addEventListener('click', closePrepPanel);
+  document.getElementById('prep-panel-close') && document.getElementById('prep-panel-close').addEventListener('click', closePrepPanel);
+  document.getElementById('prep-cancel') && document.getElementById('prep-cancel').addEventListener('click', closePrepPanel);
+  document.getElementById('prep-save') && document.getElementById('prep-save').addEventListener('click', savePrepPanel);
+  // ── Modal Ajouter un acte ──
+  var addActeOverlay = document.getElementById('add-acte-overlay');
+  var addActeModal = document.getElementById('add-acte-modal');
+  var openAddBtns = document.querySelectorAll('.js-open-add-acte-modal');
+  var closeAddBtn = document.getElementById('btn-close-add-acte-modal');
+  var cancelAddBtn = document.getElementById('btn-cancel-add-acte-modal');
+
+  function openAddModal() {
+    if (!addActeOverlay || !addActeModal) return;
+    addActeOverlay.classList.remove('hidden');
+    addActeOverlay.setAttribute('aria-hidden', 'false');
+    setTimeout(function() {
+      addActeOverlay.classList.remove('opacity-0');
+      addActeModal.classList.remove('scale-95');
+      addActeModal.classList.add('scale-100');
+    }, 10);
+
+    if (window.jQuery && jQuery.fn.select2) {
+      var $select = jQuery('#modal_id_acte');
+      if ($select.length && !$select.hasClass('select2-hidden-accessible')) {
+        $select.select2({
+          dropdownParent: jQuery('#add-acte-modal'),
+          placeholder: 'Rechercher un acte…',
+          allowClear: true
+        });
+      }
+    }
+  }
+
+  function closeAddModal() {
+    if (!addActeOverlay || !addActeModal) return;
+    if (document.activeElement && addActeOverlay.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    addActeOverlay.classList.add('opacity-0');
+    addActeModal.classList.remove('scale-100');
+    addActeModal.classList.add('scale-95');
+    setTimeout(function() {
+      addActeOverlay.classList.add('hidden');
+      addActeOverlay.setAttribute('aria-hidden', 'true');
+    }, 200);
+  }
+
+  openAddBtns.forEach(function(btn) {
+    btn.addEventListener('click', openAddModal);
+  });
+  if (closeAddBtn) closeAddBtn.addEventListener('click', closeAddModal);
+  if (cancelAddBtn) cancelAddBtn.addEventListener('click', closeAddModal);
+  if (addActeOverlay) {
+    addActeOverlay.addEventListener('click', function(e) {
+      if (e.target === addActeOverlay) closeAddModal();
+    });
+  }
+  // ── Modal Importer catalogue Excel / CSV ──
+  var importOverlay = document.getElementById('import-excel-overlay');
+  var importModal = document.getElementById('import-excel-modal');
+  var openImportBtns = document.querySelectorAll('.js-open-import-modal');
+  var closeImportBtn = document.getElementById('btn-close-import-modal');
+  var cancelImportBtn = document.getElementById('btn-cancel-import-modal');
+  var importForm = document.getElementById('import-excel-form');
+  var fileInput = document.getElementById('catalog-file-input');
+  var dropzone = document.getElementById('dropzone');
+  var dropzonePrompt = document.getElementById('dropzone-prompt');
+  var dropzoneFileInfo = document.getElementById('dropzone-file-info');
+  var dropzoneFileName = document.getElementById('dropzone-file-name');
+  var dropzoneFileSize = document.getElementById('dropzone-file-size');
+  var btnRemoveFile = document.getElementById('btn-remove-file');
+  var resultBox = document.getElementById('import-result-box');
+  var submitBtn = document.getElementById('btn-submit-import');
+  var btnSpinner = document.getElementById('import-btn-spinner');
+  var btnText = document.getElementById('import-btn-text');
+
+  var currentImportFile = null;
+
+  var importInputsSection = document.getElementById('import-inputs-section');
+  var importActionsFooter = document.getElementById('import-actions-footer');
+
+  function openImportModal() {
+    if (!importOverlay || !importModal) return;
+    if (resultBox) { resultBox.className = 'hidden rounded-xl text-xs'; resultBox.innerHTML = ''; }
+    if (importInputsSection) importInputsSection.classList.remove('hidden');
+    if (importActionsFooter) importActionsFooter.classList.remove('hidden');
+    updateSelectedFile(null);
+    if (fileInput) fileInput.value = '';
+    importOverlay.classList.remove('hidden');
+    importOverlay.setAttribute('aria-hidden', 'false');
+    setTimeout(function() {
+      importOverlay.classList.remove('opacity-0');
+      importModal.classList.remove('scale-95');
+      importModal.classList.add('scale-100');
+    }, 10);
+  }
+
+  function closeImportModal() {
+    if (!importOverlay || !importModal) return;
+    if (document.activeElement && importOverlay.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    importOverlay.classList.add('opacity-0');
+    importModal.classList.remove('scale-100');
+    importModal.classList.add('scale-95');
+    setTimeout(function() {
+      importOverlay.classList.add('hidden');
+      importOverlay.setAttribute('aria-hidden', 'true');
+    }, 200);
+  }
+
+  function updateSelectedFile(file) {
+    currentImportFile = file || null;
+    if (!file) {
+      if (dropzonePrompt) dropzonePrompt.classList.remove('hidden');
+      if (dropzoneFileInfo) dropzoneFileInfo.classList.add('hidden');
+      return;
+    }
+    if (dropzonePrompt) dropzonePrompt.classList.add('hidden');
+    if (dropzoneFileInfo) dropzoneFileInfo.classList.remove('hidden');
+    if (dropzoneFileName) dropzoneFileName.textContent = file.name;
+    if (dropzoneFileSize) {
+      var kb = Math.round(file.size / 1024);
+      dropzoneFileSize.textContent = kb > 1024 ? (kb / 1024).toFixed(1) + ' Mo' : kb + ' Ko';
+    }
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files && fileInput.files[0]) {
+        updateSelectedFile(fileInput.files[0]);
+      } else {
+        updateSelectedFile(null);
+      }
+    });
+  }
+
+  if (btnRemoveFile) {
+    btnRemoveFile.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (fileInput) fileInput.value = '';
+      updateSelectedFile(null);
+    });
+  }
+
+  if (dropzone) {
+    ['dragenter', 'dragover'].forEach(function(evt) {
+      dropzone.addEventListener(evt, function(e) {
+        e.preventDefault();
+        dropzone.classList.add('border-emerald-500', 'bg-emerald-50/50');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function(evt) {
+      dropzone.addEventListener(evt, function(e) {
+        e.preventDefault();
+        dropzone.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+      });
+    });
+    dropzone.addEventListener('drop', function(e) {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        var dropped = e.dataTransfer.files[0];
+        try {
+          fileInput.files = e.dataTransfer.files;
+        } catch (ex) {}
+        updateSelectedFile(dropped);
+      }
+    });
+  }
+
+  openImportBtns.forEach(function(btn) {
+    btn.addEventListener('click', openImportModal);
+  });
+  if (closeImportBtn) closeImportBtn.addEventListener('click', closeImportModal);
+  if (cancelImportBtn) cancelImportBtn.addEventListener('click', closeImportModal);
+  if (importOverlay) {
+    importOverlay.addEventListener('click', function(e) {
+      if (e.target === importOverlay) closeImportModal();
+    });
+  }
+
+  if (importForm) {
+    importForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var fileToUpload = currentImportFile || (fileInput && fileInput.files && fileInput.files[0]);
+      if (!fileToUpload) {
+        alert('Veuillez sélectionner un fichier Excel (.xlsx) ou CSV.');
+        return;
+      }
+
+      var fd = new FormData(importForm);
+      fd.set('file', fileToUpload);
+      if (submitBtn) submitBtn.disabled = true;
+      if (btnSpinner) btnSpinner.classList.remove('hidden');
+      if (btnText) btnText.textContent = 'Importation en cours…';
+      if (resultBox) {
+        resultBox.className = 'rounded-xl p-3 text-xs bg-gray-50 border border-gray-200 text-gray-700';
+        resultBox.innerHTML = '<span class="animate-pulse">Traitement du fichier et mise à jour de vos tarifs en cours…</span>';
+        resultBox.classList.remove('hidden');
+      }
+
+      fetch(importForm.action, {
+        method: 'POST',
+        body: fd,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json'
+        },
+        credentials: 'same-origin'
+      })
+      .then(function(res) {
+        return res.text().then(function(text) {
+          try {
+            var data = JSON.parse(text);
+            return { ok: res.ok, status: res.status, data: data };
+          } catch (e) {
+            return {
+              ok: false,
+              status: res.status,
+              data: {
+                ok: false,
+                error: res.status === 500
+                  ? 'Erreur interne du serveur (500). Veuillez vérifier que le fichier est bien au format .xlsx ou .csv valide.'
+                  : ('Erreur HTTP ' + res.status + ' lors du traitement du fichier.')
+              }
+            };
+          }
+        });
+      })
+      .then(function(resObj) {
+        var data = resObj.data;
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnSpinner) btnSpinner.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Importer le catalogue';
+
+        if (!data || !data.ok) {
+          var errMsg = (data && data.error) ? data.error : 'Erreur lors du traitement du fichier.';
+          resultBox.className = 'rounded-xl p-3.5 text-xs bg-rose-50 border border-rose-200 text-rose-800 space-y-2';
+          var html = '<div class="font-bold text-rose-900 text-sm flex items-center gap-2"><span><i class="ti ti-x"></i></span> ' + errMsg + '</div>';
+          if (data && data.details && data.details.length) {
+            html += '<div class="max-h-48 overflow-y-auto pr-1"><ul class="list-disc list-inside space-y-1 text-[11px] text-rose-700">';
+            data.details.forEach(function(d) {
+              html += '<li>' + d + '</li>';
+            });
+            html += '</ul></div>';
+          }
+          resultBox.innerHTML = html;
+        } else {
+          resultBox.className = 'rounded-xl p-4 text-xs bg-emerald-50/80 border border-emerald-200 text-emerald-950 space-y-3';
+          var successHtml = '<div class="flex items-center justify-between gap-2">';
+          successHtml += '<div class="font-bold text-emerald-900 text-sm flex items-center gap-2"><span><i class="ti ti-check"></i></span> ' + data.message + '</div>';
+          successHtml += '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-200 text-emerald-900">Terminé</span>';
+          successHtml += '</div>';
+
+          // Statistiques claires
+          successHtml += '<div class="grid grid-cols-3 gap-2 py-2 text-center border-y border-emerald-200/60 my-2">';
+          successHtml += '<div class="bg-white/80 p-1.5 rounded-lg border border-emerald-100"><div class="text-sm font-extrabold text-emerald-700">' + (data.imported_count || 0) + '</div><div class="text-[10px] text-gray-500">Valides</div></div>';
+          successHtml += '<div class="bg-white/80 p-1.5 rounded-lg border border-emerald-100"><div class="text-sm font-extrabold text-emerald-600">' + (data.created_count || 0) + '</div><div class="text-[10px] text-gray-500">Nouveaux</div></div>';
+          successHtml += '<div class="bg-white/80 p-1.5 rounded-lg border border-emerald-100"><div class="text-sm font-extrabold text-amber-600">' + (data.skipped_count || 0) + '</div><div class="text-[10px] text-gray-500">Rejetés/Ignorés</div></div>';
+          successHtml += '</div>';
+
+          if (data.errors && data.errors.length) {
+            successHtml += '<div class="text-[11px] text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-200">';
+            successHtml += '<div class="font-bold text-amber-950 mb-1 flex items-center justify-between"><span>Détail des remarques et anomalies (' + data.errors.length + ') :</span></div>';
+            successHtml += '<div class="space-y-1 pr-1 font-mono text-[10.5px]">';
+            data.errors.forEach(function(err) {
+              var isRejet = err.indexOf('rejetée') !== -1 || err.indexOf('introuvable') !== -1 || err.indexOf('invalide') !== -1;
+              var lineClass = isRejet ? 'text-rose-700 bg-rose-50/60 p-1 rounded border border-rose-100' : 'text-amber-800 bg-white/70 p-1 rounded border border-amber-100';
+              successHtml += '<div class="' + lineClass + '">' + err + '</div>';
+            });
+            successHtml += '</div></div>';
+          }
+
+          // Boutons d'action : Copier le rapport et Actualiser quand on le souhaite
+          successHtml += '<div class="pt-2 flex items-center justify-between gap-2">';
+          successHtml += '<button type="button" id="btn-copy-import-report" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-700 text-xs font-semibold hover:bg-gray-50 shadow-xs cursor-pointer">';
+          successHtml += '<i class="ti ti-clipboard-list"></i> Copier le rapport complet';
+          successHtml += '</button>';
+          successHtml += '<button type="button" onclick="window.location.reload();" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 shadow-xs cursor-pointer">';
+          successHtml += '<i class="ti ti-refresh"></i> Actualiser le catalogue';
+          successHtml += '</button>';
+          successHtml += '</div>';
+
+          resultBox.innerHTML = successHtml;
+
+          // Brancher la copie du rapport
+          var btnCopyReport = document.getElementById('btn-copy-import-report');
+          if (btnCopyReport) {
+            btnCopyReport.addEventListener('click', function() {
+              var reportText = '=== RAPPORT D\'IMPORTATION MEDCARE ===\n' +
+                'Statut : ' + data.message + '\n' +
+                'Importés : ' + (data.imported_count || 0) + ' (Créés: ' + (data.created_count || 0) + ', Mis à jour: ' + (data.updated_count || 0) + ')\n' +
+                'Rejetés/Ignorés : ' + (data.skipped_count || 0) + '\n\n' +
+                'Détail des lignes :\n' +
+                (data.errors || []).join('\n');
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(reportText).then(function() {
+                  btnCopyReport.textContent = '<i class="ti ti-check"></i> Rapport copié !';
+                  setTimeout(function() { btnCopyReport.textContent = '<i class="ti ti-clipboard-list"></i> Copier le rapport complet'; }, 3000);
+                });
+              } else {
+                alert(reportText);
+              }
+            });
+          }
+        }
+      })
+      .catch(function(err) {
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnSpinner) btnSpinner.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Importer le catalogue';
+        if (resultBox) {
+          resultBox.className = 'rounded-xl p-3 text-xs bg-rose-50 border border-rose-200 text-rose-800';
+          resultBox.innerHTML = '<strong>Erreur réseau :</strong> Impossible de traiter le fichier. Réessayez ou vérifiez votre connexion.';
+        }
+      });
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (importOverlay && !importOverlay.classList.contains('hidden')) {
+        closeImportModal();
+      }
+      if (addActeOverlay && !addActeOverlay.classList.contains('hidden')) {
+        closeAddModal();
+      }
+    }
+  });
+})();
+</script>
+{% endblock %}

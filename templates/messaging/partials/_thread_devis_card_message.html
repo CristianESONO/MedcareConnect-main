@@ -1,0 +1,43 @@
+{% comment %}Carte devis MedCare — juste après la demande patient (ordre démo).{% endcomment %}
+<div class="mc-wmsg mc-wmsg--r mc-wmsg--card" id="mc-devis-card-msg">
+  <div class="mc-wmsg-sender mc-wmsg-sender--medcare">MedCare</div>
+  Bonjour ! Voici votre devis :
+  <div class="mc-devis-card">
+    <div class="mc-devis-head">
+      <div class="mc-devis-logo">Med<span>Care</span></div>
+      <div class="mc-devis-ref">Réf. {{ conversation.devis_part.reference }}</div>
+    </div>
+    <div class="mc-devis-body">
+      <div class="mc-devis-row">
+        <span class="l">Structure</span>
+        <span class="v">{% if org %}{{ org.name }}{% else %}—{% endif %}</span>
+      </div>
+      {% if org and org.city %}
+      <div class="mc-devis-row">
+        <span class="l">Zone</span>
+        <span class="v">{{ org.city }}{% if org.quartier %}, {{ org.quartier }}{% endif %}</span>
+      </div>
+      {% endif %}
+      <div class="mc-devis-sep"></div>
+      <div class="mc-devis-actes-lbl">{{ conversation.devis_part.details|length }} acte{{ conversation.devis_part.details|length|pluralize }}</div>
+      {% for line in conversation.devis_part.details %}
+      <div class="mc-devis-acte">
+        <div class="mc-devis-acte-nom">{{ line.acte }}{% if line.quantity > 1 %} ×{{ line.quantity }}{% endif %}</div>
+        <div class="mc-devis-acte-meta">
+          <span>&nbsp;</span>
+          <span class="price">{% if line.patient_cost %}{{ line.patient_cost|floatformat:0 }}{% else %}{{ line.subtotal|floatformat:0 }}{% endif %} FCFA</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="mc-devis-total-bar">
+      <span>Total estimé</span>
+      <strong>{{ conversation.devis_part.total_patient|floatformat:0 }} FCFA</strong>
+    </div>
+    <div class="mc-devis-disclaimer">
+      Votre assurance peut ne pas couvrir tout ou partie de ces actes. Montants indicatifs, sous validation du prestataire de santé.
+    </div>
+    <div class="mc-devis-foot">Réf. {{ conversation.devis_part.reference }} · medcare.sn · Zéro commission MedCare</div>
+  </div>
+  <div class="mc-wtime">{{ conversation.updated_at|date:"H:i" }}</div>
+</div>

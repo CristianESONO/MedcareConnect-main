@@ -1,0 +1,18 @@
+{% comment %}
+Bandeau sélection + panneau actes cochés (mobile, hors carte recherche).
+{% endcomment %}
+<div class="sel-strip-m sipn-pilier-mobile-ui" id="sel-strip-m" hidden>
+  <div class="sel-strip-head">
+    <span class="sel-strip-title">Sélection des actes</span>
+    <div class="sel-strip-actions">
+      <button type="button" class="sel-strip-go" id="sel-strip-go-results">Ma sélection</button>
+      <button type="button" class="sel-strip-clear" id="sel-strip-clear-actes">Tout décocher</button>
+    </div>
+  </div>
+  <div id="sel-pills-m" class="sel-pills-m"></div>
+</div>
+
+<div id="pilier-actes-panel" class="sipn-pap-wrap sipn-pilier-mobile-ui" hidden></div>
+
+<script type="application/json" id="sipn-mobile-piliers-data">{{ mobile_piliers_json|safe }}</script>
+<script type="application/json" id="sipn-mobile-selected-data">[{% for aid in current_actes %}"{{ aid }}"{% if not forloop.last %},{% endif %}{% endfor %}]</script>

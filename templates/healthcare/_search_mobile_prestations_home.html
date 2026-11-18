@@ -1,0 +1,38 @@
+{% comment %}
+Sections accueil mobile — démo MOBILE PATIENT (Actes populaires + Structures partenaires).
+{% endcomment %}
+<div class="sipn-prest-home-extras sipn-pilier-mobile-ui" aria-label="Suggestions">
+  {% if search_popular_actes %}
+  <div class="sipn-section-head">
+    <div class="sipn-sh-title">Actes populaires</div>
+    <a href="{% url 'healthcare:search' %}#results-col" class="sipn-sh-link" data-sipn-goto-results>Voir tout →</a>
+  </div>
+  <div class="sipn-acte-pills" role="list">
+    {% for row in search_popular_actes %}
+    <a href="{% url 'healthcare:search' %}?acte={{ row.acte.pk }}&sort=price_asc#results-col" class="sipn-acte-pill" role="listitem">
+      {{ row.acte.name }} <span class="sipn-acte-pill-cnt">{{ row.struct_count }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if search_partner_structures %}
+  <div class="sipn-section-head">
+    <div class="sipn-sh-title">Structures partenaires</div>
+    <a href="{% url 'healthcare:search' %}#results-col" class="sipn-sh-link" data-sipn-goto-results>Tout voir →</a>
+  </div>
+  <div class="sipn-struct-cards-scroll" role="list">
+    {% for row in search_partner_structures %}
+    <a href="{% url 'healthcare:organisme_detail' row.org.slug %}" class="sipn-scard-h" role="listitem">
+      <div class="sipn-scard-h-img" aria-hidden="true">{{ row.icon }}</div>
+      <div class="sipn-scard-h-body">
+        <div class="sipn-scard-h-badge">Pionnier</div>
+        <div class="sipn-scard-h-name">{{ row.org.name }}</div>
+        <div class="sipn-scard-h-zone sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="map-pin" class="sipn-ico sipn-ico--xs" %} {{ row.org.city }}{% if row.org.quartier %}, {{ row.org.quartier }}{% endif %}</div>
+        <div class="sipn-scard-h-actes">{{ row.acte_count }} acte{{ row.acte_count|pluralize }} disponible{{ row.acte_count|pluralize }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

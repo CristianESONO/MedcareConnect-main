@@ -1,0 +1,161 @@
+{% comment %}Cloche de notifications enrichie (maquette Thior) — desktop. Utilise unread_notifications, recent_notifications, recent_unread_count (context processor global).{% endcomment %}
+<style>
+  #medcare-notif-panel .notif-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;line-height:1;color:inherit}
+  #medcare-notif-panel .notif-icon svg.notif-type-icon{width:18px;height:18px;display:block;flex-shrink:0}
+  #medcare-notif-panel .ni-devis{background:#dbeafe;color:#1d4ed8}
+  #medcare-notif-panel .ni-rdv{background:#ede9fe;color:#7c3aed}
+  #medcare-notif-panel .ni-message{background:var(--mc-accent-light, rgba(79,163,199,0.12));color:#15803d}
+  #medcare-notif-panel .ni-rappel{background:#fef3c7;color:#d97706}
+  #medcare-notif-panel .ni-assurance{background:#cffafe;color:#0891b2}
+  #medcare-notif-panel .ni-prelevement{background:#fee2e2;color:#dc2626}
+  #medcare-notif-panel .ni-system{background:#f3f4f6;color:#4b5563}
+  #medcare-notif-panel {
+    display: flex;
+    flex-direction: column;
+    width: 26rem;
+    min-width: 22rem;
+    max-width: min(26rem, calc(100vw - 1.5rem));
+    max-height: min(560px, calc(100dvh - 5rem));
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  #medcare-notif-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+  #medcare-notif-panel .notif-item{position:relative;display:flex;gap:12px;padding:13px 16px;border-bottom:1px solid #f3f4f6;text-decoration:none;align-items:flex-start}
+  #medcare-notif-panel .notif-item:hover{background:#f9fafb}
+  #medcare-notif-panel .notif-item.unread{background:linear-gradient(90deg,#eff6ff,#fff);border-left:3px solid var(--mc-navy, #123a63);padding-left:11px}
+  #medcare-notif-panel .notif-title{font-size:13px;font-weight:700;color:#0d1b2a;line-height:1.35}
+  #medcare-notif-panel .notif-desc{font-size:12px;color:#4b5563;line-height:1.5;margin-top:3px;word-break:break-word}
+  #medcare-notif-panel .notif-meta{display:flex;align-items:center;gap:6px;margin-top:5px}
+  #medcare-notif-panel .notif-time{font-size:10px;color:#9ca3af}
+  #medcare-notif-panel .notif-cta{font-size:10px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--mc-navy, #123a63)}
+  #medcare-notif-panel .notif-unread-dot{position:absolute;top:15px;right:13px;width:7px;height:7px;border-radius:50%;background:var(--mc-navy, #123a63);box-shadow:0 0 0 3px rgba(18,58,99,.15)}
+  #medcare-notif-panel .notif-tab.active{color:var(--mc-navy, #123a63);border-bottom-color:var(--mc-navy, #123a63)}
+  #medcare-notif-panel .notif-empty{padding:38px 16px;text-align:center}
+  #medcare-notif-panel.is-unread .notif-item:not(.unread){display:none}
+  #medcare-notif-panel{display:none}
+  #medcare-notif-panel.is-open{display:flex}
+  #medcare-notif-panel .notif-head,
+  #medcare-notif-panel .notif-tabs,
+  #medcare-notif-panel .notif-foot{flex-shrink:0}
+  #medcare-notif-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:40;
+    display:none;
+    background:transparent;
+  }
+  #medcare-notif-backdrop.is-open{display:block}
+</style>
+<div class="relative" id="medcare-notif">
+    <button type="button" id="medcare-notif-btn"
+            class="relative rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
+            aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+        {% if unread_notifications %}<span class="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{% if unread_notifications > 9 %}9+{% else %}{{ unread_notifications }}{% endif %}</span>{% endif %}
+    </button>
+    <div id="medcare-notif-backdrop" aria-hidden="true"></div>
+    <div id="medcare-notif-panel" class="absolute right-0 z-50 mt-2 overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <div class="notif-head flex items-center justify-between border-b border-gray-100 px-5 py-3">
+            <span class="text-sm font-bold text-gray-900">Notifications</span>
+            <form method="post" action="{% url 'messaging:mark_all_read' %}" class="leading-none">{% csrf_token %}<input type="hidden" name="scope" value="inbox"><button type="submit" id="medcare-notif-markall" class="text-xs font-semibold text-accent-500 hover:underline disabled:cursor-not-allowed disabled:text-gray-300 disabled:no-underline" {% if not recent_unread_count %}disabled{% endif %}>Tout marquer lu</button></form>
+        </div>
+        <div class="notif-tabs flex gap-1 border-b border-gray-100 px-4 pt-1">
+            <button type="button" data-notif-filter="all" class="notif-tab active inline-flex items-center gap-1.5 border-b-2 border-transparent px-2 pb-2 pt-1 text-xs font-semibold text-gray-500">Toutes <span class="rounded-full bg-gray-100 px-1.5 text-[10px] font-bold text-gray-500">{{ recent_notifications|length }}</span></button>
+            <button type="button" data-notif-filter="unread" class="notif-tab inline-flex items-center gap-1.5 border-b-2 border-transparent px-2 pb-2 pt-1 text-xs font-semibold text-gray-500">Non lues <span class="rounded-full bg-gray-100 px-1.5 text-[10px] font-bold text-gray-500">{{ recent_unread_count }}</span></button>
+        </div>
+        <div id="medcare-notif-list">
+            {% for n in recent_notifications %}
+            <a href="{% url 'messaging:notification_read' n.pk %}" class="notif-item {% if not n.is_read %}unread{% endif %}">
+                <span class="notif-icon {{ n.bell_class }}">{% include "partials/notif_icon.html" with type=n.notification_type %}</span>
+                <span class="min-w-0 flex-1">
+                    <span class="notif-title block">{{ n.title }}</span>
+                    {% if n.content %}<span class="notif-desc block">{{ n.content|truncatechars:160 }}</span>{% endif %}
+                    <span class="notif-meta">
+                        <span class="notif-time">{{ n.created_at|timesince }}</span>
+                        {% if n.link %}<span class="text-gray-300">·</span><span class="notif-cta">{{ n.bell_cta }} →</span>{% endif %}
+                    </span>
+                </span>
+                {% if not n.is_read %}<span class="notif-unread-dot"></span>{% endif %}
+            </a>
+            {% empty %}
+            <div class="notif-empty">
+                <svg class="mx-auto h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.143 17.082a24.248 24.248 0 0 0 3.844.148m-3.844-.148a23.856 23.856 0 0 1-5.455-1.31 8.964 8.964 0 0 0 2.3-5.542m3.155 6.852a3 3 0 0 0 5.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 0 0 3.536-1.003 8.967 8.967 0 0 1-2.312-6.022V9a6 6 0 0 0-9.75-4.684M4.5 4.5l15 15"/></svg>
+                <div class="mt-2 text-sm font-bold text-gray-700">Aucune notification</div>
+                <div class="mt-1 text-xs text-gray-400">Vous serez notifié dès qu'une activité concerne votre compte.</div>
+            </div>
+            {% endfor %}
+            <div class="notif-empty" id="medcare-notif-allread" style="display:none">
+                <svg class="mx-auto h-8 w-8 mc-text-accent" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                <div class="mt-2 text-sm font-bold text-gray-700">Tout est à jour</div>
+                <div class="mt-1 text-xs text-gray-400">Vous avez lu toutes vos notifications.</div>
+            </div>
+        </div>
+        <a href="{% url 'messaging:notifications' %}" class="notif-foot block border-t border-gray-100 bg-gray-50 px-5 py-3 text-center text-xs font-semibold text-accent-500 transition hover:bg-gray-100">Voir toutes les notifications</a>
+    </div>
+</div>
+<script>
+(function () {
+    var wrap = document.getElementById('medcare-notif');
+    var btn = document.getElementById('medcare-notif-btn');
+    var panel = document.getElementById('medcare-notif-panel');
+    var backdrop = document.getElementById('medcare-notif-backdrop');
+    if (!wrap || !btn || !panel || !backdrop) return;
+    document.body.appendChild(backdrop);
+
+    function isOpen() {
+        return panel.classList.contains('is-open');
+    }
+    function closePanel() {
+        panel.classList.remove('is-open');
+        backdrop.classList.remove('is-open');
+        backdrop.setAttribute('aria-hidden', 'true');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+    function openPanel() {
+        panel.classList.add('is-open');
+        backdrop.classList.add('is-open');
+        backdrop.setAttribute('aria-hidden', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+    }
+
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (isOpen()) closePanel();
+        else openPanel();
+    });
+    backdrop.addEventListener('click', closePanel);
+    panel.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+    document.addEventListener('click', function (e) {
+        if (!isOpen()) return;
+        if (!wrap.contains(e.target)) closePanel();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isOpen()) closePanel();
+    });
+    var tabs = panel.querySelectorAll('[data-notif-filter]');
+    var allread = document.getElementById('medcare-notif-allread');
+    var hasUnread = {{ recent_unread_count|default:0 }} > 0;
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            tabs.forEach(function (t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            var unreadOnly = tab.getAttribute('data-notif-filter') === 'unread';
+            panel.classList.toggle('is-unread', unreadOnly);
+            if (allread) allread.style.display = (unreadOnly && !hasUnread) ? 'block' : 'none';
+        });
+    });
+    var list = document.getElementById('medcare-notif-list');
+    if (list) {
+        list.addEventListener('wheel', function (e) { e.stopPropagation(); }, { passive: true });
+    }
+})();
+</script>
