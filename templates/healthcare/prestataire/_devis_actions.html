@@ -2,7 +2,7 @@
 {# Variables : r (row enrichie), status_filter, compact=False #}
 {% with p=r.part d=r.devis %}
 <div class="flex flex-wrap items-center gap-2 {% if not compact %}border-t border-gray-100 pt-3 mt-3{% endif %}">
-  <a href="{% url 'healthcare:prestataire_devis_part_detail' p.reference %}?status={{ status_filter|default:'active' }}"
+  <a href="{% url 'healthcare:prestataire_patient_dossier' p.reference %}?status={{ status_filter|default:'active' }}"
      class="action-btn inline-flex items-center gap-1 rounded-md bg-primary-50 px-2.5 py-1 text-[10px] font-semibold text-primary-700 hover:bg-primary-100">
     <i class="ti ti-eye"></i> Consulter
   </a>

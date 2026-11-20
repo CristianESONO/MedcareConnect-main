@@ -21,8 +21,20 @@
 {% block account_content %}
 <div class="mc-inbox-wrap">
 
+  <form method="get" action="{% url 'messaging:inbox' %}" class="mb-4 rounded-xl border border-gray-200 bg-white p-3" role="search">
+    <label for="pac-inbox-search" class="mb-2 block text-sm font-medium text-gray-700">Rechercher dans la messagerie</label>
+    <div class="flex flex-col gap-2 sm:flex-row">
+      <input id="pac-inbox-search" type="search" name="q" value="{{ conversation_search }}" placeholder="Établissement, référence ou contenu d'un message" class="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-accent-500 focus:outline-none">
+      {% if request.GET.devis %}<input type="hidden" name="devis" value="{{ request.GET.devis }}">{% endif %}
+      {% if request.GET.validate %}<input type="hidden" name="validate" value="{{ request.GET.validate }}">{% endif %}
+      <button type="submit" class="rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-600">Rechercher</button>
+      {% if conversation_search %}
+      <a href="{% url 'messaging:inbox' %}" class="rounded-lg border border-gray-200 px-4 py-2 text-center text-sm font-medium text-gray-600 hover:bg-gray-50">Effacer</a>
+      {% endif %}
+    </div>
+  </form>
 
-  {% if devis_validate_banner %}
+  {% if devis_validate_banner and not conversation_search %}
   <section class="mc-validate-banner" aria-label="Structures à valider">
     <div class="mc-validate-banner-head">
       <div class="mc-validate-banner-title">Validez vos demandes</div>
@@ -127,9 +139,14 @@
   </div>
   {% else %}
   <div class="mc-inbox-empty">
+    {% if conversation_search %}
+    <div class="mc-inbox-empty-title">Aucun résultat</div>
+    <p class="mc-inbox-empty-sub">Aucune conversation ou aucun message ne correspond à « {{ conversation_search }} ».</p>
+    {% else %}
     <div class="mc-inbox-empty-title">Aucun message pour l'instant</div>
     <p class="mc-inbox-empty-sub">Ajoutez des actes à votre panier<br>puis cliquez sur <strong>Réserver mes actes</strong>.</p>
     <a href="{% url 'healthcare:search' %}" class="mc-thread-act mc-thread-act--primary" style="display:inline-flex;margin-top:16px">Parcourir les prestations</a>
+    {% endif %}
   </div>
   {% endif %}
 </div>

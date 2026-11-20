@@ -120,8 +120,14 @@
 #search-form.search-page--dem .dem-acte-group--nested {
   margin-bottom: 0.35rem;
 }
-#search-form.search-page--dem .dem-acte-group--nested .dem-acte-group-body {
+#search-form.search-page--dem .dem-acte-group--nested .dem-acte-subfamily-body {
   padding-left: 0.25rem;
+}
+#search-form.search-page--dem .dem-acte-subfamily-sum {
+  padding: 6px 10px 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
 }
 #search-form.search-page--dem .dem-acte-ungrouped {
   display: flex;

@@ -22,6 +22,54 @@ DOMICILE_ELIGIBLE_SLUGS = {
     "soins-specialises",
 }
 
+DOMICILE_DAYS = (
+    ("lundi", "Lundi"),
+    ("mardi", "Mardi"),
+    ("mercredi", "Mercredi"),
+    ("jeudi", "Jeudi"),
+    ("vendredi", "Vendredi"),
+    ("samedi", "Samedi"),
+    ("dimanche", "Dimanche"),
+)
+
+
+def parse_domicile_schedule(raw: str) -> dict[str, dict]:
+    if not raw:
+        return {}
+    try:
+        data = json.loads(raw)
+    except (TypeError, json.JSONDecodeError):
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    result = {}
+    for code, _label in DOMICILE_DAYS:
+        row = data.get(code)
+        if not isinstance(row, dict):
+            continue
+        open_time = str(row.get("open") or "").strip()[:5]
+        close_time = str(row.get("close") or "").strip()[:5]
+        result[code] = {
+            "closed": bool(row.get("closed", False)),
+            "open": open_time,
+            "close": close_time,
+        }
+    return result
+
+
+def serialize_domicile_schedule(raw_schedule: dict) -> str:
+    clean = {}
+    for code, _label in DOMICILE_DAYS:
+        row = raw_schedule.get(code) if isinstance(raw_schedule, dict) else None
+        if not isinstance(row, dict):
+            continue
+        clean[code] = {
+            "closed": bool(row.get("closed", False)),
+            "open": str(row.get("open") or "").strip()[:5],
+            "close": str(row.get("close") or "").strip()[:5],
+        }
+    return json.dumps(clean, ensure_ascii=False)
+
 
 def show_domicile_block(org: OrganismeDeSante, applicable_slugs: set[str] | None) -> bool:
     """Prestations à domicile disponible UNIQUEMENT pour biologie médicale, explorations fonctionnelles et soins spécialisés."""
@@ -87,7 +135,15 @@ def _save_domicile_params(org: OrganismeDeSante, request) -> None:
     allowed = {c[0] for c in DOMICILE_DELAI_CHOICES}
     if delai not in allowed:
         delai = ""
-    plages = (request.POST.get("domicile_plages_horaires") or "").strip()[:120]
+    raw_plages = (request.POST.get("domicile_plages_horaires") or "").strip()[:500]
+    try:
+        schedule_payload = json.loads(raw_plages) if raw_plages else None
+    except json.JSONDecodeError:
+        schedule_payload = None
+    if isinstance(schedule_payload, dict):
+        plages = serialize_domicile_schedule(schedule_payload)
+    else:
+        plages = raw_plages
     updates = []
     if org.domicile_delai_intervention != delai:
         org.domicile_delai_intervention = delai

@@ -11,6 +11,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <style>
+        html,
+        #sidebar nav {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar,
+        #sidebar nav::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="flex h-full bg-gray-100">
@@ -20,7 +32,7 @@
         <!-- Logo -->
         <div class="border-b border-primary-400 px-4 py-4">
             <div class="rounded-lg bg-white px-2.5 py-2">
-                <img src="{% static 'images/MEDCARE.png' %}" alt="MedCare Connect" class="h-9 w-full max-w-[11.5rem] object-contain object-left">
+                <img src="{% static 'images/logo_MEDCARE.png' %}" alt="MedCare Connect" class="h-9 w-full max-w-[11.5rem] object-contain object-left">
             </div>
             <span class="mt-2 block text-[10px] font-semibold uppercase tracking-widest text-primary-300">Administration</span>
         </div>
@@ -135,17 +147,6 @@
 
                 <li class="pt-4">
                     <span class="px-3 text-[10px] font-semibold uppercase tracking-widest text-primary-300">Activité</span>
-                </li>
-
-                <li>
-                    <a href="{% url 'dashboard:devis_overview' %}"
-                       class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
-                              {% if current == 'devis_overview' %}bg-primary-400 text-white{% else %}text-primary-200 hover:bg-primary-400/50 hover:text-white{% endif %}">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/>
-                        </svg>
-                        Devis WhatsApp
-                    </a>
                 </li>
 
                 <li>

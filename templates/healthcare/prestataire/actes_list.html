@@ -3,7 +3,7 @@
 {% block title %}Catalogue des actes{% endblock %}
 
 {% block dash_extra_css %}
-<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=8">
+<link rel="stylesheet" href="{% static 'healthcare/css/prestataire_catalogue.css' %}?v=12">
 {% endblock %}
 
 {% block dash_content %}
@@ -15,6 +15,13 @@
   </div>
   <div class="flex flex-wrap items-center gap-2">
     <span id="save-ind" class="cat-save-ind" aria-live="polite"><i class="ti ti-check"></i> Sauvegardé</span>
+    {% if org.account_nature == 'praticien' %}
+    <button type="button" id="btn-preview-selected-actes" class="cat-selected-review-btn">
+      <i class="ti ti-eye"></i>
+      <span>Voir mes actes sélectionnés</span>
+      <span id="selected-actes-count" class="cat-selected-review-count">{{ selected_acte_ids|length }}</span>
+    </button>
+    {% endif %}
     <a href="{% url 'healthcare:actes_template_excel' %}"
        class="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 hover:border-gray-300 transition"
        title="Télécharger le modèle Excel pré-rempli avec vos actes">
@@ -93,6 +100,14 @@
         <a href="{% url 'healthcare:chatbot_collecte' %}" class="whitespace-nowrap rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-800 hover:bg-teal-100 cursor-pointer inline-flex items-center gap-1.5"><i class="ti ti-download"></i> Importer Excel</a>
         <button type="button" class="js-open-add-acte-modal whitespace-nowrap rounded-lg bg-primary-600 px-3 py-2 text-xs font-bold text-white hover:bg-primary-700 cursor-pointer">+ Ajouter un acte</button>
         <a href="{% url 'healthcare:prestataire_rdv_reminder_list' %}" class="whitespace-nowrap rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50">Rappels RDV</a>
+      </div>
+
+      <div class="cat-pagination js-cat-pagination" aria-label="Pagination du catalogue">
+        <span class="cat-page-status js-cat-page-status" aria-live="polite">20 actes par page</span>
+        <div class="cat-pagination-controls">
+          <button type="button" class="cat-page-btn js-cat-prev" aria-label="Page précédente">← Précédent</button>
+          <button type="button" class="cat-page-btn js-cat-next" aria-label="Page suivante">Suivant →</button>
+        </div>
       </div>
 
       <div class="overflow-x-auto">
@@ -199,6 +214,41 @@
     <a href="{% url 'healthcare:prestataire_dashboard' %}" class="rounded-xl border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50">Annuler</a>
   </div>
 </form>
+
+{% if org.account_nature == 'praticien' %}
+<div id="selected-actes-overlay" class="selected-actes-overlay hidden" aria-hidden="true">
+  <section class="selected-actes-modal" role="dialog" aria-modal="true" aria-labelledby="selected-actes-title">
+    <header class="selected-actes-modal-head">
+      <div>
+        <h2 id="selected-actes-title">Mes actes sélectionnés</h2>
+        <p id="selected-actes-summary" aria-live="polite">Vérifiez les actes, leurs tarifs et leurs délais.</p>
+      </div>
+      <button type="button" id="btn-close-selected-actes" class="selected-actes-close" aria-label="Fermer">×</button>
+    </header>
+    <div id="selected-actes-table-wrap" class="selected-actes-table-wrap hidden">
+      <table class="selected-actes-table">
+        <thead>
+          <tr>
+            <th scope="col">Acte</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Tarif affiché</th>
+            <th scope="col">Délai</th>
+          </tr>
+        </thead>
+        <tbody id="selected-actes-list"></tbody>
+      </table>
+    </div>
+    <div id="selected-actes-empty" class="selected-actes-empty hidden">
+      <i class="ti ti-clipboard-list"></i>
+      <strong>Aucun acte sélectionné</strong>
+      <span>Activez les actes souhaités dans le catalogue pour les retrouver ici.</span>
+    </div>
+    <footer class="selected-actes-modal-foot">
+      <button type="button" id="btn-close-selected-actes-footer" class="selected-actes-done">Fermer</button>
+    </footer>
+  </section>
+</div>
+{% endif %}
 
 {# ── Panneau préparation / rappels (démo) ── #}
 <div class="prep-overlay" id="prep-overlay" aria-hidden="true"></div>
@@ -427,19 +477,59 @@ window.MEDCARE_CATALOGUE_PREP = {
   var tabs = document.querySelectorAll('.pilier-tab:not(.is-disabled)');
   var panels = document.querySelectorAll('.pilier-panel');
 
-  function showSaveIndicator() {
+  function showSaveIndicator(message, state) {
     if (!saveInd) return;
+    if (message) saveInd.textContent = message;
+    else saveInd.innerHTML = '<i class="ti ti-check"></i> Sauvegardé';
+    saveInd.classList.toggle('is-error', state === 'error');
+    saveInd.classList.toggle('is-warning', state === 'warning');
     saveInd.classList.add('is-visible');
     clearTimeout(saveInd._t);
     saveInd._t = setTimeout(function () {
       saveInd.classList.remove('is-visible');
-    }, 2200);
+    }, state === 'error' ? 7000 : (state === 'warning' ? 5000 : 2200));
   }
 
   var DOMICILE_SLUGS = ['biologie-medicale', 'explorations-fonctionnelles', 'soins-specialises'];
   function updateDomicileVisibility(slug) {
     if (!domiWrapper) return;
     domiWrapper.classList.toggle('hidden', DOMICILE_SLUGS.indexOf(slug) === -1);
+  }
+
+  var CAT_PAGE_SIZE = 20;
+
+  function paginateCataloguePanel(panel) {
+    if (!panel) return;
+    var rows = Array.prototype.filter.call(
+      panel.querySelectorAll('.js-cat-row'),
+      function (row) { return !row.classList.contains('cat-row-hidden'); }
+    );
+    var state = panel._catPagination || { page: 1 };
+    var totalPages = Math.max(1, Math.ceil(rows.length / CAT_PAGE_SIZE));
+    state.page = Math.min(Math.max(1, state.page), totalPages);
+    var start = (state.page - 1) * CAT_PAGE_SIZE;
+    var end = start + CAT_PAGE_SIZE;
+    panel._catPagination = state;
+
+    panel.querySelectorAll('.js-cat-row').forEach(function (row) {
+      var visibleIndex = rows.indexOf(row);
+      row.classList.toggle(
+        'cat-page-hidden',
+        row.classList.contains('cat-row-hidden') || visibleIndex < start || visibleIndex >= end
+      );
+    });
+
+    var status = panel.querySelector('.js-cat-page-status');
+    var prev = panel.querySelector('.js-cat-prev');
+    var next = panel.querySelector('.js-cat-next');
+    if (status) {
+      var firstVisible = rows.length ? start + 1 : 0;
+      var lastVisible = Math.min(end, rows.length);
+      status.textContent = 'Affichage ' + firstVisible + '–' + lastVisible + ' sur ' + rows.length +
+        ' actes · ' + CAT_PAGE_SIZE + ' par page · Page ' + state.page + ' / ' + totalPages;
+    }
+    if (prev) prev.disabled = state.page <= 1;
+    if (next) next.disabled = state.page >= totalPages;
   }
 
   function filterCataloguePanel(panel) {
@@ -453,6 +543,9 @@ window.MEDCARE_CATALOGUE_PREP = {
       var okCat = !cat || rowCat === cat;
       row.classList.toggle('cat-row-hidden', !(okSearch && okCat));
     });
+    if (!panel._catPagination) panel._catPagination = { page: 1 };
+    panel._catPagination.page = 1;
+    paginateCataloguePanel(panel);
   }
 
   // ── Types de structure interactifs & filtrage piliers ──
@@ -555,6 +648,19 @@ window.MEDCARE_CATALOGUE_PREP = {
     var catSel = panel.querySelector('.js-cat-cat');
     if (search) search.addEventListener('input', function () { filterCataloguePanel(panel); });
     if (catSel) catSel.addEventListener('change', function () { filterCataloguePanel(panel); });
+    var prev = panel.querySelector('.js-cat-prev');
+    var next = panel.querySelector('.js-cat-next');
+    if (prev) prev.addEventListener('click', function () {
+      panel._catPagination = panel._catPagination || { page: 1 };
+      panel._catPagination.page -= 1;
+      paginateCataloguePanel(panel);
+    });
+    if (next) next.addEventListener('click', function () {
+      panel._catPagination = panel._catPagination || { page: 1 };
+      panel._catPagination.page += 1;
+      paginateCataloguePanel(panel);
+    });
+    paginateCataloguePanel(panel);
   });
 
   var frm = document.getElementById('catalogue-form');
@@ -590,11 +696,23 @@ window.MEDCARE_CATALOGUE_PREP = {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
       credentials: 'same-origin',
     }).then(function (res) {
-      if (!res.ok) throw new Error('save failed');
-      return res.json();
-    }).then(function () {
-      showSaveIndicator();
-    }).catch(function () { /* silencieux */ }).finally(function () {
+      return res.json().catch(function () { return {}; }).then(function (payload) {
+        if (!res.ok || !payload.ok) {
+          var error = new Error(payload.message || "Échec de l'enregistrement du catalogue.");
+          error.userMessage = payload.message || "Échec de l'enregistrement. Réessayez.";
+          throw error;
+        }
+        return payload;
+      });
+    }).then(function (payload) {
+      showSaveIndicator(payload.message || null, payload.warning ? 'warning' : null);
+    }).catch(function (error) {
+      console.error("Erreur lors de l'enregistrement du catalogue.", error);
+      showSaveIndicator(
+        error.userMessage || "Échec de l'enregistrement. Réessayez.",
+        'error'
+      );
+    }).finally(function () {
       saving = false;
       if (pendingSave) {
         pendingSave = false;
@@ -686,7 +804,19 @@ window.MEDCARE_CATALOGUE_PREP = {
       var delaiEl = document.getElementById('domicile-delai');
       var plagesEl = document.getElementById('domicile-plages');
       if (delaiEl) fd.append('domicile_delai_intervention', delaiEl.value || '');
-      if (plagesEl) fd.append('domicile_plages_horaires', plagesEl.value || '');
+      if (plagesEl) {
+        var schedule = {};
+        plagesEl.querySelectorAll('.domicile-schedule-row').forEach(function (row) {
+          var code = row.getAttribute('data-day');
+          var closed = row.querySelector('.js-domi-day-closed');
+          schedule[code] = {
+            closed: !!(closed && closed.checked),
+            open: (row.querySelector('.js-domi-day-open') || {}).value || '',
+            close: (row.querySelector('.js-domi-day-close') || {}).value || '',
+          };
+        });
+        fd.append('domicile_plages_horaires', JSON.stringify(schedule));
+      }
       if (extra && extra.zone_pk) fd.append('zone_pk', extra.zone_pk);
       fetch(window.location.href, {
         method: 'POST',
@@ -800,13 +930,35 @@ window.MEDCARE_CATALOGUE_PREP = {
     });
   }
 
-  ['domicile-delai', 'domicile-plages'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('input', domiFieldInput);
-      el.addEventListener('change', domiFieldInput);
-    }
-  });
+  var delaiEl = document.getElementById('domicile-delai');
+  if (delaiEl) {
+    delaiEl.addEventListener('input', domiFieldInput);
+    delaiEl.addEventListener('change', domiFieldInput);
+  }
+  var plagesEl = document.getElementById('domicile-plages');
+  if (plagesEl) {
+    plagesEl.addEventListener('input', domiFieldInput);
+    plagesEl.addEventListener('change', function (event) {
+      var closed = event.target.closest('.js-domi-day-closed');
+      if (closed) {
+        var row = closed.closest('.domicile-schedule-row');
+        if (row) {
+          row.querySelectorAll('.js-domi-day-open,.js-domi-day-close').forEach(function (input) {
+            input.disabled = closed.checked;
+          });
+        }
+      }
+      domiFieldInput();
+    });
+    plagesEl.querySelectorAll('.domicile-schedule-row').forEach(function (row) {
+      var closed = row.querySelector('.js-domi-day-closed');
+      if (closed && closed.checked) {
+        row.querySelectorAll('.js-domi-day-open,.js-domi-day-close').forEach(function (input) {
+          input.disabled = true;
+        });
+      }
+    });
+  }
 
   var btnAddDomi = document.getElementById('btn-add-domi-zone');
   if (btnAddDomi && domiList) {
@@ -1150,6 +1302,130 @@ window.MEDCARE_CATALOGUE_PREP = {
   document.getElementById('prep-panel-close') && document.getElementById('prep-panel-close').addEventListener('click', closePrepPanel);
   document.getElementById('prep-cancel') && document.getElementById('prep-cancel').addEventListener('click', closePrepPanel);
   document.getElementById('prep-save') && document.getElementById('prep-save').addEventListener('click', savePrepPanel);
+  // ── Aperçu des actes sélectionnés pour le praticien ──
+  var selectedActesButton = document.getElementById('btn-preview-selected-actes');
+  var selectedActesOverlay = document.getElementById('selected-actes-overlay');
+  var selectedActesList = document.getElementById('selected-actes-list');
+  var selectedActesTable = document.getElementById('selected-actes-table-wrap');
+  var selectedActesEmpty = document.getElementById('selected-actes-empty');
+  var selectedActesCount = document.getElementById('selected-actes-count');
+  var selectedActesSummary = document.getElementById('selected-actes-summary');
+  var selectedActesCloseButton = document.getElementById('btn-close-selected-actes');
+  var selectedActesFooterButton = document.getElementById('btn-close-selected-actes-footer');
+
+  function getSelectedActeDetails() {
+    return Array.prototype.map.call(
+      document.querySelectorAll('#catalogue-form .js-acte-active:checked'),
+      function (input) {
+        var row = input.closest('.js-cat-row');
+        if (!row) return null;
+        var panel = row.closest('.pilier-panel');
+        var priceView = row.querySelector('.js-tarif-view:not(.hidden)') ||
+          row.querySelector('.js-tarif-view');
+        var priceInput = priceView && priceView.querySelector('.cat-prix-input');
+        var price = priceInput
+          ? (priceInput.value
+            ? new Intl.NumberFormat('fr-FR').format(Number(priceInput.value)) + ' FCFA'
+            : 'À renseigner')
+          : (priceView ? priceView.textContent.replace(/\s+/g, ' ').trim() : 'Non renseigné');
+        var regimeSelect = panel && panel.querySelector('.js-catalogue-regime-select');
+        var regime = regimeSelect ? regimeSelect.value : '';
+        var regimeLabels = { comptant: 'Comptant', ipm: 'IPM', assurance: 'Assurance' };
+        var delaySelect = row.querySelector('.cat-delai-select');
+        var delay = delaySelect && delaySelect.value
+          ? delaySelect.options[delaySelect.selectedIndex].textContent.trim()
+          : 'Non renseigné';
+        var name = row.querySelector('.cat-acte-name');
+
+        return {
+          name: name ? name.textContent.trim() : 'Acte sans nom',
+          category: row.cells[1] ? row.cells[1].textContent.trim() : 'Non classé',
+          price: price,
+          regime: regimeLabels[regime] || '',
+          delay: delay
+        };
+      }
+    ).filter(function (acte) { return !!acte; });
+  }
+
+  function renderSelectedActesPreview() {
+    if (!selectedActesList) return;
+    while (selectedActesList.firstChild) {
+      selectedActesList.removeChild(selectedActesList.firstChild);
+    }
+    var actes = getSelectedActeDetails();
+    if (selectedActesCount) selectedActesCount.textContent = String(actes.length);
+    if (selectedActesSummary) {
+      selectedActesSummary.textContent = actes.length
+        ? actes.length + (actes.length > 1 ? ' actes sélectionnés' : ' acte sélectionné') +
+          ' · tarifs et délais actuels'
+        : 'Aucun acte sélectionné';
+    }
+    if (selectedActesTable) selectedActesTable.classList.toggle('hidden', actes.length === 0);
+    if (selectedActesEmpty) selectedActesEmpty.classList.toggle('hidden', actes.length > 0);
+
+    actes.forEach(function (acte) {
+      var tr = document.createElement('tr');
+      var nameCell = document.createElement('td');
+      var name = document.createElement('strong');
+      name.textContent = acte.name;
+      nameCell.appendChild(name);
+      var categoryCell = document.createElement('td');
+      categoryCell.textContent = acte.category || 'Non classé';
+      var priceCell = document.createElement('td');
+      var price = document.createElement('strong');
+      price.textContent = acte.price;
+      priceCell.appendChild(price);
+      if (acte.regime) {
+        var regime = document.createElement('span');
+        regime.className = 'selected-acte-regime';
+        regime.textContent = acte.regime;
+        priceCell.appendChild(regime);
+      }
+      var delayCell = document.createElement('td');
+      delayCell.textContent = acte.delay;
+      tr.appendChild(nameCell);
+      tr.appendChild(categoryCell);
+      tr.appendChild(priceCell);
+      tr.appendChild(delayCell);
+      selectedActesList.appendChild(tr);
+    });
+  }
+
+  function closeSelectedActesPreview() {
+    if (!selectedActesOverlay) return;
+    selectedActesOverlay.classList.add('hidden');
+    selectedActesOverlay.setAttribute('aria-hidden', 'true');
+    if (selectedActesButton) selectedActesButton.focus();
+  }
+
+  if (selectedActesButton && selectedActesOverlay) {
+    renderSelectedActesPreview();
+    selectedActesButton.addEventListener('click', function () {
+      renderSelectedActesPreview();
+      selectedActesOverlay.classList.remove('hidden');
+      selectedActesOverlay.setAttribute('aria-hidden', 'false');
+      if (selectedActesCloseButton) selectedActesCloseButton.focus();
+    });
+    var catalogueForm = document.getElementById('catalogue-form');
+    if (catalogueForm) {
+      catalogueForm.addEventListener('change', function (event) {
+        if (event.target && event.target.classList.contains('js-acte-active')) {
+          renderSelectedActesPreview();
+        }
+      });
+    }
+    if (selectedActesCloseButton) {
+      selectedActesCloseButton.addEventListener('click', closeSelectedActesPreview);
+    }
+    if (selectedActesFooterButton) {
+      selectedActesFooterButton.addEventListener('click', closeSelectedActesPreview);
+    }
+    selectedActesOverlay.addEventListener('click', function (event) {
+      if (event.target === selectedActesOverlay) closeSelectedActesPreview();
+    });
+  }
+
   // ── Modal Ajouter un acte ──
   var addActeOverlay = document.getElementById('add-acte-overlay');
   var addActeModal = document.getElementById('add-acte-modal');
@@ -1472,6 +1748,9 @@ window.MEDCARE_CATALOGUE_PREP = {
       }
       if (addActeOverlay && !addActeOverlay.classList.contains('hidden')) {
         closeAddModal();
+      }
+      if (selectedActesOverlay && !selectedActesOverlay.classList.contains('hidden')) {
+        closeSelectedActesPreview();
       }
     }
   });

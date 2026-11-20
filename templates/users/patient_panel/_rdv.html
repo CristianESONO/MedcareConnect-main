@@ -2,12 +2,19 @@
 <div data-pac-active="rdv">
 {% include "users/patient_panel/_messages.html" %}
 
+<div data-pac-rdv-search-root>
+  <div class="pac-profil-field" style="margin:0 0 16px">
+    <label for="pac-rdv-search">Rechercher un rendez-vous</label>
+    <input id="pac-rdv-search" type="search" class="pac-profil-input" data-pac-rdv-search placeholder="Établissement, date, statut, référence ou acte">
+  </div>
+  <div class="pac-empty-state pac-search-hidden" data-pac-rdv-no-results role="status">
+    <p>Aucun rendez-vous ne correspond à cette recherche.</p>
+  </div>
 
-
-
+<section data-pac-rdv-section>
 <div class="compte-section-title">RDV à venir</div>
 {% for rdv in rdv_upcoming %}
-<div class="pac-rdv-card">
+<div class="pac-rdv-card" data-pac-rdv-item data-pac-rdv-search-text="{{ rdv.organisme.name }} {{ rdv.organisme.quartier }} {{ rdv.organisme.city }} {{ rdv.reference }} {{ rdv.status }} {{ rdv.get_status_display }} {{ rdv.start|date:'d/m/Y' }} {{ rdv.start|date:'Y-m-d' }}{% for line in rdv.actes_snapshot %} {{ line.acte }}{% endfor %}">
   <div class="pac-rdv-top">
     <div class="min-w-0">
       <div class="pac-rdv-struct">{{ rdv.organisme.name }}</div>
@@ -78,10 +85,12 @@
   <p class="pac-empty-hint">Obtenez un devis depuis la recherche, puis demandez un créneau dans <button type="button" class="font-semibold text-[var(--mc-navy, #123a63)] underline js-pac-tab" data-pac-tab="devis">Mes devis</button>.</p>
 </div>
 {% endfor %}
+</section>
 
+<section data-pac-rdv-section>
 <div class="compte-section-title">Historique</div>
 {% for rdv in rdv_past %}
-<div class="pac-rdv-card pac-rdv-card--past">
+<div class="pac-rdv-card pac-rdv-card--past" data-pac-rdv-item data-pac-rdv-search-text="{{ rdv.organisme.name }} {{ rdv.organisme.quartier }} {{ rdv.organisme.city }} {{ rdv.reference }} {{ rdv.status }} {{ rdv.get_status_display }} {{ rdv.start|date:'d/m/Y' }} {{ rdv.start|date:'Y-m-d' }}{% for line in rdv.actes_snapshot %} {{ line.acte }}{% endfor %}">
   <div class="pac-rdv-top">
     <div class="min-w-0">
       <div class="pac-rdv-struct">{{ rdv.organisme.name }}</div>
@@ -102,4 +111,6 @@
   <p>Aucun rendez-vous passé pour le moment.</p>
 </div>
 {% endfor %}
+</section>
+</div>
 </div>

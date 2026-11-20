@@ -14,6 +14,11 @@ from healthcare.models import (
 )
 from cart.models import Cart, CartItem
 from healthcare.services import DashboardService
+from healthcare.views import _dashboard_completion, _organisme_profile_completion
+from healthcare.prestataire_domicile import (
+    parse_domicile_schedule,
+    serialize_domicile_schedule,
+)
 
 
 class DashboardServiceTests(TestCase):
@@ -87,3 +92,27 @@ class DashboardServiceTests(TestCase):
         self.assertEqual(ctx["period_label"], "30 derniers jours")
         self.assertIn("completion_pct", ctx)
         self.assertIn("activity_chart", ctx)
+
+    def test_practitioner_dashboard_completion_matches_profile_edit(self):
+        self.org.account_nature = "praticien"
+        self.org.profession = "Médecin"
+        self.org.ordre_numero = "ONMS-123"
+        self.org.description = "Présentation professionnelle suffisamment détaillée."
+        self.org.contact_phone = "+221770000000"
+
+        completion = _dashboard_completion(self.org, actes_count=1, insurances_count=0)
+        completion_pct = round(
+            sum(1 for step in completion if step["ok"]) * 100.0 / len(completion)
+        )
+
+        self.assertEqual(completion_pct, _organisme_profile_completion(self.org))
+
+    def test_domicile_schedule_json_round_trip(self):
+        schedule = {
+            "lundi": {"closed": False, "open": "08:00", "close": "17:00"},
+            "dimanche": {"closed": True, "open": "", "close": ""},
+        }
+        encoded = serialize_domicile_schedule(schedule)
+        parsed = parse_domicile_schedule(encoded)
+        self.assertEqual(parsed["lundi"]["open"], "08:00")
+        self.assertTrue(parsed["dimanche"]["closed"])

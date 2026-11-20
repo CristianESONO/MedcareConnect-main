@@ -25,7 +25,7 @@
     #dash-mobile-bar {
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 60;
     }
   }
   #dash-sidebar { display: none; }
@@ -415,9 +415,12 @@
         <span class="text-sm font-bold text-gray-900 truncate max-w-[160px]">Espace prestataire</span>
       {% endif %}
     </div>
-    <button type="button" id="dash-mob-toggle" class="mc-app-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="dashAppDrawer">
-      <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
-    </button>
+    <div class="flex items-center gap-2">
+      {% include "partials/notif_bell.html" with notif_button_class="relative rounded-lg p-2 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900" notif_instance="practitioner-mobile" %}
+      <button type="button" id="dash-mob-toggle" class="mc-app-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="dashAppDrawer">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- ===== MOBILE DRAWER (vitrine) ===== -->

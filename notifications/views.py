@@ -39,6 +39,15 @@ def _admin_ctx(active="settings"):
     return {"notif_admin_active": active}
 
 
+def _channels_with_availability(settings_obj):
+    channels = list(NotificationChannel.objects.all().order_by("order", "label"))
+    for channel in channels:
+        channel.is_available, channel.availability_reason = channel.get_availability(
+            settings_obj
+        )
+    return channels
+
+
 @superadmin_required
 def admin_settings(request):
     """Configuration SMTP + WhatsApp Cloud + général + boutons de test."""
@@ -110,7 +119,7 @@ def admin_settings(request):
             "general_form": general_form,
             "test_email_form": test_email_form,
             "test_wa_form": test_wa_form,
-            "channels": NotificationChannel.objects.all(),
+            "channels": _channels_with_availability(obj),
         }
     )
     return render(request, "notifications/admin/settings.html", ctx)
@@ -120,7 +129,7 @@ def admin_settings(request):
 def admin_rules(request):
     """Tableau matriciel des règles : événements × canaux, lien vers édition."""
     events = NotificationEvent.objects.all().order_by("order", "label")
-    channels = NotificationChannel.objects.all().order_by("order", "label")
+    channels = _channels_with_availability(NotificationSettings.load())
     rules = NotificationRule.objects.select_related("event", "channel")
     rule_map = {(r.event_id, r.channel_id): r for r in rules}
 
@@ -140,6 +149,9 @@ def admin_rules(request):
 def admin_rule_edit(request, event_id: int, channel_id: int):
     event = get_object_or_404(NotificationEvent, pk=event_id)
     channel = get_object_or_404(NotificationChannel, pk=channel_id)
+    channel.is_available, channel.availability_reason = channel.get_availability(
+        NotificationSettings.load()
+    )
     rule, created = NotificationRule.objects.get_or_create(
         event=event, channel=channel, defaults={"is_active": True}
     )

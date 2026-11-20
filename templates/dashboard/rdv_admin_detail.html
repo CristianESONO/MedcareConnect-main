@@ -73,18 +73,6 @@
           <p class="text-[10px] font-bold uppercase text-gray-400">Structure</p>
           <a href="{% url 'dashboard:organisme_detail' rdv.organisme_id %}" class="font-medium text-primary-600 hover:underline">{{ rdv.organisme.name }}</a>
         </li>
-        {% if rdv.devis %}
-        <li>
-          <p class="text-[10px] font-bold uppercase text-gray-400">Devis</p>
-          <a href="{% url 'dashboard:devis_admin_detail' rdv.devis.reference %}" class="font-mono text-xs font-bold text-primary-600 hover:underline">{{ rdv.devis.reference }}</a>
-        </li>
-        {% endif %}
-        {% if rdv.devis_part %}
-        <li>
-          <p class="text-[10px] font-bold uppercase text-gray-400">Sous-devis</p>
-          <span class="font-mono text-xs text-gray-700">{{ rdv.devis_part.reference }}</span>
-        </li>
-        {% endif %}
         {% if conversation %}
         <li>
           <p class="text-[10px] font-bold uppercase text-gray-400">Discussion</p>

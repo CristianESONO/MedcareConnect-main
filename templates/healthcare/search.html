@@ -13,7 +13,7 @@
 <link href="{% static 'healthcare/css/sipn_mobile_pilier.css' %}?v=46" rel="stylesheet" />
 <link href="{% static 'healthcare/css/cart_mobile_demo.css' %}?v=6" rel="stylesheet" />
 <link href="{% static 'messaging/css/thread_wa.css' %}?v=16" rel="stylesheet" />
-<link href="{% static 'healthcare/css/demo_patient_search.css' %}?v=20260530e" rel="stylesheet" />
+<link href="{% static 'healthcare/css/demo_patient_search.css' %}?v=20261120_mc018" rel="stylesheet" />
 {% include "partials/medcare_alerts_shell.html" %}
 <style>
   :root { --hc-accent:#4fa3c7; --hc-accent-dark:#3d8fb3; --hc-primary:var(--mc-navy, #123a63); --dem-shadow:0 2px 16px rgba(18,58,99,.09); }
@@ -789,14 +789,20 @@
     display: flex;
     align-items: center;
     gap: 9px;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
     border-radius: 10px;
     padding: 10px 12px;
     margin-bottom: 10px;
     font-size: 11.5px;
     font-weight: 600;
-    color: #dc2626;
+    color: #047857;
+  }
+  #profil-struct-modal .profil-drawer-ins-match-icon {
+    color: #047857;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
   }
   #profil-struct-modal .profil-drawer-assur-toggle {
     width: 100%;
@@ -830,14 +836,14 @@
     font-size: 12px;
   }
   #profil-struct-modal .profil-drawer-assur-row--match {
-    background: #fef2f2;
-    color: #dc2626;
+    background: #ecfdf5;
+    color: #047857;
     font-weight: 600;
   }
   #profil-struct-modal .profil-drawer-assur-tag {
     font-size: 9px;
     font-weight: 700;
-    color: #dc2626;
+    color: #047857;
     white-space: nowrap;
   }
   #profil-struct-modal .profil-drawer-domicile {
@@ -1358,7 +1364,7 @@
       <button type="button" id="btn-geolocate" class="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-accent-600">
         Utiliser ma position GPS
       </button>
-      <p id="geo-http-warn" class="hidden text-xs text-amber-700 sipn-ico-inline">{% include "healthcare/_icon_svg.html" with icon="warning" class="sipn-ico sipn-ico--xs" %} GPS indisponible en HTTP. Utilisez la recherche d’adresse ci-dessous.</p>
+      <p id="geo-location-status" class="hidden text-xs text-amber-700" role="status" aria-live="polite"></p>
 
       <div>
         <label class="mb-1 block text-xs font-medium text-gray-700">Ou saisissez une adresse</label>
@@ -1462,10 +1468,10 @@
     userIsAuthenticated: {% if user.is_authenticated %}true{% else %}false{% endif %}
   };
 </script>
-<script src="{% static 'healthcare/js/search-utils.js' %}"></script>
-<script src="{% static 'healthcare/js/search-filters.js' %}"></script>
+<script src="{% static 'healthcare/js/search-utils.js' %}?v=20261120_mc018"></script>
+<script src="{% static 'healthcare/js/search-filters.js' %}?v=20261120_mc018"></script>
 <script src="{% static 'healthcare/js/search-mobile-filters.js' %}"></script>
-<script src="{% static 'healthcare/js/search-mobile-ui.js' %}"></script>
+<script src="{% static 'healthcare/js/search-mobile-ui.js' %}?v=20261120_mc017"></script>
 <script src="{% static 'healthcare/js/search-cart.js' %}"></script>
 <script src="{% static 'healthcare/js/search-profil-drawer.js' %}"></script>
 <script src="{% static 'healthcare/js/search-tag-input.js' %}?v=2"></script>

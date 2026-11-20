@@ -34,23 +34,30 @@
   </div>
 </div>
 
+<nav aria-label="Filtrer les rappels" style="display:flex;gap:14px;margin-bottom:16px;font-size:12px">
+  <a href="{% url 'messaging:rappels' %}" {% if not is_history %}aria-current="page"{% endif %}>À traiter</a>
+  <a href="{% url 'messaging:rappels' %}?view=history" {% if is_history %}aria-current="page"{% endif %}>Historique</a>
+</nav>
+
 {# ── 1. Rappels de proximité RDV & Consignes de préparation ── #}
 {% if notifications %}
 <div style="margin-bottom:24px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;display:flex;align-items:center;gap:6px">
-      <span><i class="ti ti-alarm"></i></span> Rappels de proximité &amp; Consignes de préparation
+      <span><i class="ti ti-alarm"></i></span> {% if is_history %}Historique des rappels{% else %}Rappels de proximité &amp; Consignes de préparation{% endif %}
     </div>
+    {% if not is_history %}
     <form method="post" action="{% url 'messaging:mark_all_read' %}">
       {% csrf_token %}
       <input type="hidden" name="scope" value="rappels">
       <button type="submit" style="font-size:11px;font-weight:600;color:#0a5c8a;background:none;border:none;cursor:pointer">Tout marquer comme lu</button>
     </form>
+    {% endif %}
   </div>
   <div class="pac-panel" style="display:flex;flex-direction:column;gap:10px">
     {% for n in notifications %}
-    <div style="display:flex;align-items:flex-start;gap:12px;background:#fffbeb;border:1.5px solid #fef3c7;border-left:4px solid #d97706;border-radius:10px;padding:12px 14px">
-      <div style="width:32px;height:32px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#92400e">
+    <div style="display:flex;align-items:flex-start;gap:12px;background:{% if n.is_read %}#f9fafb{% else %}#fffbeb{% endif %};border:1.5px solid {% if n.is_read %}#e5e7eb{% else %}#fef3c7{% endif %};border-left:4px solid {% if n.is_read %}#16a34a{% else %}#d97706{% endif %};border-radius:10px;padding:12px 14px">
+      <div style="width:32px;height:32px;border-radius:8px;background:{% if n.is_read %}#dcfce7{% else %}#fef3c7{% endif %};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:{% if n.is_read %}#166534{% else %}#92400e{% endif %}">
         <i class="ti ti-alarm"></i>
       </div>
       <div style="flex:1;min-width:0">
@@ -61,11 +68,34 @@
         {% if n.content %}
         <p style="font-size:11px;color:#374151;margin-top:3px;line-height:1.5;font-weight:500">{{ n.content }}</p>
         {% endif %}
+        <div style="margin-top:8px">
+          {% if n.is_read %}
+          <span role="status" aria-label="Rappel marqué comme lu" style="font-size:10px;font-weight:700;color:#166534">Lu ✓</span>
+          {% else %}
+          <form method="post" action="{% url 'messaging:notification_read' n.pk %}">
+            {% csrf_token %}
+            <button type="submit" style="font-size:10px;font-weight:700;color:#0a5c8a;background:none;border:0;padding:0;cursor:pointer">Marquer comme lu</button>
+          </form>
+          {% endif %}
+        </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
+{% else %}
+<div class="pac-empty-state" style="margin-bottom:24px">
+  <p>{% if is_history %}Aucun rappel dans votre historique.{% else %}Aucun rappel à traiter.{% endif %}</p>
+  {% if not is_history %}<p class="pac-empty-hint">Les rappels lus sont conservés dans votre historique.</p>{% endif %}
+</div>
+{% endif %}
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Pagination des rappels" style="display:flex;justify-content:center;gap:14px;margin:18px 0">
+  {% if page_obj.has_previous %}<a href="?{% if is_history %}view=history&amp;{% endif %}page={{ page_obj.previous_page_number }}">Précédent</a>{% endif %}
+  <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="?{% if is_history %}view=history&amp;{% endif %}page={{ page_obj.next_page_number }}">Suivant</a>{% endif %}
+</nav>
 {% endif %}
 
 {# ── 2. Bilans recommandés (Style exact cartes DEMO_DESKTOP_PATIENT.html) ── #}
@@ -92,7 +122,7 @@
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46">Bilan lipidique</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfdf5;color:#065f46">Créatinémie</span>
       </div>
-      <a href="{% url 'healthcare:search' %}?q=Bilan+de+sant%C3%A9" style="display:block;width:100%;background:#059669;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+      <a href="{% url 'healthcare:search' %}?bilan=general" style="display:block;width:100%;background:#059669;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
         <i class="ti ti-flask"></i> Rechercher ces actes →
       </a>
     </div>
@@ -113,8 +143,9 @@
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">Électrophorèse Hb</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">VIH Ag/Ac</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">HBsAg</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#e8f4fb;color:#0a5c8a">Anti-VHC</span>
       </div>
-      <a href="{% url 'healthcare:search' %}?q=Bilan+pr%C3%A9nuptial" style="display:block;width:100%;background:#0a5c8a;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+      <a href="{% url 'healthcare:search' %}?bilan=prenup" style="display:block;width:100%;background:#0a5c8a;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
         <i class="ti ti-flask"></i> Rechercher ces actes →
       </a>
     </div>
@@ -135,8 +166,9 @@
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Toxoplasmose</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Rubéole</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Échographie T2</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef3c7;color:#d97706">Échographie T3</span>
       </div>
-      <a href="{% url 'healthcare:search' %}?q=%C3%89chographie+obst%C3%A9tricale" style="display:block;width:100%;background:#d97706;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+      <a href="{% url 'healthcare:search' %}?bilan=pregnancy" style="display:block;width:100%;background:#d97706;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
         <i class="ti ti-flask"></i> Rechercher ces actes →
       </a>
     </div>
@@ -156,9 +188,10 @@
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">Glycémie à jeun</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">HbA1c</span>
         <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">ECG 12 dérivations</span>
-        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">Dépistage IST</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">VIH Ag/Ac</span>
+        <span style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:#ecfeff;color:#0891b2">Syphilis VDRL</span>
       </div>
-      <a href="{% url 'healthcare:search' %}?q=Glyc%C3%A9mie" style="display:block;width:100%;background:#0891b2;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
+      <a href="{% url 'healthcare:search' %}?bilan=oms" style="display:block;width:100%;background:#0891b2;color:#ffffff !important;border:none;border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-align:center;text-decoration:none">
         <i class="ti ti-flask"></i> Rechercher ces actes →
       </a>
     </div>

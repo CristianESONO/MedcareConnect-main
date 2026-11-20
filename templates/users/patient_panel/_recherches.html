@@ -1,9 +1,17 @@
 <p class="pac-lead">Retrouvez vos dernières recherches et relancez-les en un clic.</p>
 
 {% if history %}
+<div data-pac-history-search-root>
+  <div class="pac-profil-field" style="margin:0 0 16px">
+    <label for="pac-history-search">Rechercher dans l’historique</label>
+    <input id="pac-history-search" type="search" class="pac-profil-input" data-pac-history-search placeholder="Recherche, type, nombre de résultats ou date">
+  </div>
+  <div class="pac-empty-state pac-search-hidden" data-pac-history-no-results role="status">
+    <p>Aucune entrée ne correspond à cette recherche.</p>
+  </div>
 <div class="pac-panel">
   {% for h in history %}
-  <a href="{% url 'healthcare:search' %}?q={{ h.query|urlencode }}" class="pac-panel-row">
+  <a href="{% url 'healthcare:search' %}?q={{ h.query|urlencode }}" class="pac-panel-row" data-pac-history-item data-pac-history-search-text="{{ h.query }} {{ h.search_type }} {{ h.get_search_type_display }} {{ h.results_count }} {{ h.searched_at|date:'d/m/Y H:i' }} {{ h.searched_at|date:'Y-m-d' }}">
     <span class="pac-list-ic" aria-hidden="true">
       <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
     </span>
@@ -14,6 +22,7 @@
     <span class="pac-panel-chevron" aria-hidden="true">›</span>
   </a>
   {% endfor %}
+</div>
 </div>
 {% else %}
 <div class="pac-empty-state">

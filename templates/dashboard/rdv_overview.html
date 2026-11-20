@@ -41,7 +41,7 @@
   </div>
   <form method="get" class="flex flex-wrap gap-2">
     <input type="hidden" name="status" value="{{ status_filter }}">
-    <input type="text" name="q" value="{{ search }}" placeholder="Réf., patient, devis…" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
+    <input type="text" name="q" value="{{ search }}" placeholder="Réf. RDV ou patient…" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
     <input type="text" name="org" value="{{ org_filter }}" placeholder="ID structure" class="w-24 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
     <button type="submit" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-bold text-white">Filtrer</button>
   </form>
@@ -57,7 +57,6 @@
           <th class="px-4 py-3 font-medium">Structure</th>
           <th class="px-4 py-3 font-medium">Créneau</th>
           <th class="px-4 py-3 font-medium">Source</th>
-          <th class="px-4 py-3 font-medium">Devis lié</th>
           <th class="px-4 py-3 font-medium">Statut</th>
           <th class="px-4 py-3 font-medium"></th>
         </tr>
@@ -75,7 +74,6 @@
           <td class="px-4 py-3 text-xs">
             {% if r.source == 'walk_in' %}<span class="rounded bg-gray-100 px-1.5 py-0.5">Sur place</span>{% else %}<span class="rounded bg-blue-50 px-1.5 py-0.5 text-blue-700">En ligne</span>{% endif %}
           </td>
-          <td class="px-4 py-3 font-mono text-[11px] text-gray-500">{% if r.devis %}{{ r.devis.reference }}{% else %}—{% endif %}</td>
           <td class="px-4 py-3">
             {% if r.status == 'requested' %}<span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">Demandé</span>
             {% elif r.status == 'confirmed' %}<span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Confirmé</span>
@@ -90,7 +88,7 @@
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="8" class="px-4 py-12 text-center text-sm text-gray-400">Aucun rendez-vous pour ce filtre.</td></tr>
+        <tr><td colspan="7" class="px-4 py-12 text-center text-sm text-gray-400">Aucun rendez-vous pour ce filtre.</td></tr>
         {% endfor %}
       </tbody>
     </table>

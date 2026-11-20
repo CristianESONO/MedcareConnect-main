@@ -28,7 +28,6 @@
 <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
   <div class="inline-flex flex-wrap gap-1.5 rounded-xl border border-gray-200 bg-white p-1 text-xs font-semibold">
     <a href="?kind=all&status={{ status_filter }}&q={{ search }}" class="rounded-lg px-3 py-1.5 transition {% if kind_filter == 'all' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Tous <span class="ml-1 opacity-70">{{ counts.all }}</span></a>
-    <a href="?kind=devis&status={{ status_filter }}&q={{ search }}" class="rounded-lg px-3 py-1.5 transition {% if kind_filter == 'devis' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Devis <span class="ml-1 opacity-70">{{ counts.devis }}</span></a>
     <a href="?kind=rdv&status={{ status_filter }}&q={{ search }}" class="rounded-lg px-3 py-1.5 transition {% if kind_filter == 'rdv' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">RDV <span class="ml-1 opacity-70">{{ counts.rdv }}</span></a>
     <a href="?kind=general&status={{ status_filter }}&q={{ search }}" class="rounded-lg px-3 py-1.5 transition {% if kind_filter == 'general' %}bg-primary-500 text-white{% else %}text-gray-600 hover:bg-gray-50{% endif %}">Général <span class="ml-1 opacity-70">{{ counts.general }}</span></a>
   </div>
@@ -41,7 +40,7 @@
   <form method="get" class="flex gap-2">
     <input type="hidden" name="kind" value="{{ kind_filter }}">
     <input type="hidden" name="status" value="{{ status_filter }}">
-    <input type="text" name="q" value="{{ search }}" placeholder="Patient, réf. devis/RDV…" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
+    <input type="text" name="q" value="{{ search }}" placeholder="Patient ou réf. RDV…" class="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs">
     <button type="submit" class="rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-bold text-white">Rechercher</button>
   </form>
 </div>

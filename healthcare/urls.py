@@ -52,6 +52,11 @@ urlpatterns = [
         views.prestataire_devis_part_detail,
         name="prestataire_devis_part_detail",
     ),
+    path(
+        "prestataire/dossier-patient/<str:reference>/",
+        views.prestataire_patient_dossier,
+        name="prestataire_patient_dossier",
+    ),
     path("prestataire/devis/<str:reference>/relance/", views.prestataire_devis_relance, name="prestataire_devis_relance"),
     path("prestataire/devis/<str:reference>/archiver/", views.prestataire_devis_archiver, name="prestataire_devis_archiver"),
     path("prestataire/organisme/creer/", views.organisme_create, name="organisme_create"),

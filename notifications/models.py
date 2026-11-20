@@ -149,6 +149,31 @@ class NotificationChannel(models.Model):
     def __str__(self):
         return self.label
 
+    def get_availability(self, settings_obj):
+        if not self.is_enabled:
+            return False, "Désactivé dans le catalogue des canaux."
+
+        if self.code == "in_app":
+            if settings_obj.in_app_enabled:
+                return True, "Les notifications in-app sont activées."
+            return False, "Les notifications in-app sont désactivées dans les réglages généraux."
+
+        if self.code == "email":
+            if not settings_obj.email_enabled:
+                return False, "L'envoi email est désactivé dans la configuration SMTP."
+            if not settings_obj.smtp_host or not settings_obj.smtp_from_email:
+                return False, "Configuration SMTP incomplète : renseignez l'hôte et l'adresse expéditeur."
+            return True, "Configuration SMTP prête ; la connectivité n'a pas été testée."
+
+        if self.code == "whatsapp_cloud":
+            if not settings_obj.whatsapp_enabled:
+                return False, "WhatsApp Cloud est désactivé dans sa configuration."
+            if not settings_obj.wa_phone_number_id or not settings_obj.wa_access_token:
+                return False, "Configuration WhatsApp incomplète : Phone number ID et Access Token requis."
+            return True, "Configuration WhatsApp prête ; la connectivité n'a pas été testée."
+
+        return False, "Aucun pilote d'envoi n'est disponible pour ce canal."
+
 
 class NotificationEvent(models.Model):
     """Événement métier déclencheur (catalogue admin-modifiable)."""

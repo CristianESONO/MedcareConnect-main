@@ -1,6 +1,8 @@
 from datetime import timedelta
 from urllib.parse import quote
 
+from django.db.models import Q
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages as django_messages
@@ -275,11 +277,36 @@ def inbox(request):
     else:
         conversations = Conversation.objects.filter(patient=request.user)
 
+    conversation_search = ""
+    if request.user.is_patient:
+        conversation_search = (request.GET.get("q") or "").strip()
+        if conversation_search:
+            search_fields = (
+                "subject",
+                "devis_part__reference",
+                "devis_part__organisme__name",
+                "rendez_vous__reference",
+                "rendez_vous__organisme__name",
+                "prestataire__username",
+                "prestataire__first_name",
+                "prestataire__last_name",
+                "messages__content",
+            )
+            for term in conversation_search.split():
+                term_filter = Q()
+                for field in search_fields:
+                    term_filter |= Q(**{f"{field}__icontains": term})
+                conversations = conversations.filter(term_filter)
+            conversations = conversations.distinct()
+
     conversations = conversations.select_related(
         "patient", "prestataire", "devis_part__organisme", "rendez_vous"
     ).order_by("-updated_at")
 
-    ctx = {"conversations": conversations}
+    ctx = {
+        "conversations": conversations,
+        "conversation_search": conversation_search,
+    }
     if request.user.is_patient:
         devis_ref = (request.GET.get("devis") or "").strip()
         if devis_ref and request.GET.get("validate") == "1":
@@ -499,11 +526,20 @@ def whatsapp_contact(request, slug):
 
 @login_required
 def notifications_list(request):
-    notifs = Notification.queryset_inbox(request.user).order_by("-created_at")[:50]
-    ctx = {"notifications": notifs, "notif_scope": "inbox"}
+    inbox = Notification.queryset_inbox(request.user).order_by("-created_at", "-pk")
+    ctx = {"notif_scope": "inbox"}
     if request.user.is_patient:
+        is_history = request.GET.get("view") == "history"
+        inbox = inbox.filter(is_read=is_history)
+        page_obj = Paginator(inbox, 20).get_page(request.GET.get("page"))
+        ctx.update({
+            "notifications": page_obj.object_list,
+            "page_obj": page_obj,
+            "is_history": is_history,
+        })
         ctx.update(patient_account_tab("notifications"))
         return render(request, "messaging/notifications_patient.html", ctx)
+    ctx["notifications"] = inbox[:50]
     return render(request, "messaging/notifications.html", ctx)
 
 
@@ -515,10 +551,15 @@ def rappels_list(request):
         Notification.queryset_rappels(request.user)
         .exclude(title__icontains="confirmé")
         .exclude(title__icontains="devis")
-        .order_by("-created_at")[:50]
+        .order_by("-created_at", "-pk")
     )
+    is_history = request.GET.get("view") == "history"
+    notifs = notifs.filter(is_read=is_history)
+    page_obj = Paginator(notifs, 20).get_page(request.GET.get("page"))
     ctx = {
-        "notifications": notifs,
+        "notifications": page_obj.object_list,
+        "page_obj": page_obj,
+        "is_history": is_history,
         "notif_scope": "rappels",
     }
     ctx.update(patient_account_tab("rappels"))
@@ -528,6 +569,12 @@ def rappels_list(request):
 @login_required
 def notification_read(request, pk):
     notif = get_object_or_404(Notification, pk=pk, user=request.user)
+    if request.method == "POST" and notif.is_rappel:
+        if not notif.is_read:
+            notif.is_read = True
+            notif.save(update_fields=["is_read"])
+        return redirect("messaging:rappels")
+
     notif.is_read = True
     notif.save(update_fields=["is_read"])
     if notif.link:

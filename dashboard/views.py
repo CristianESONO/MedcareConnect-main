@@ -1,6 +1,8 @@
 import json
+from math import isfinite
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404
 from django.urls import reverse
 from django.contrib import messages
 from django.db import transaction
@@ -153,16 +155,32 @@ def index(request):
 
     # ── Structures pour la carte Sénégal ───────────────────────────────────────
     map_orgs = []
-    for o in OrganismeDeSante.objects.exclude(latitude__isnull=True).exclude(longitude__isnull=True)[:200]:
+    map_invalid_count = 0
+    map_orgs_qs = (
+        OrganismeDeSante.objects.exclude(latitude__isnull=True)
+        .exclude(longitude__isnull=True)
+        .select_related("type_organisme")
+        .order_by("name")[:200]
+    )
+    for o in map_orgs_qs:
+        try:
+            lat = float(o.latitude)
+            lng = float(o.longitude)
+        except (TypeError, ValueError, OverflowError):
+            map_invalid_count += 1
+            continue
+        if not (isfinite(lat) and isfinite(lng) and -90 <= lat <= 90 and -180 <= lng <= 180):
+            map_invalid_count += 1
+            continue
         map_orgs.append({
             "id": o.id,
             "name": o.name,
             "type": str(o.type_organisme) if o.type_organisme_id else "",
             "city": o.city or "",
-            "lat": float(o.latitude),
-            "lng": float(o.longitude),
+            "lat": lat,
+            "lng": lng,
             "active": bool(o.is_active),
-            "url": f"/sante/{o.slug}/",
+            "url": o.get_public_url() if o.is_active else "",
         })
 
     context = {
@@ -200,6 +218,7 @@ def index(request):
         "map_orgs_json": json.dumps(map_orgs),
         "map_count_active": sum(1 for o in map_orgs if o["active"]),
         "map_count_pending": sum(1 for o in map_orgs if not o["active"]),
+        "map_invalid_count": map_invalid_count,
     }
     return render(request, "dashboard/index.html", context)
 
@@ -312,19 +331,15 @@ def organisme_detail(request, pk):
     bilan = _bilan_score_org(org)
     recent_rdv = (
         RendezVous.objects.filter(organisme=org)
-        .select_related("patient", "devis")
+        .select_related("patient")
         .order_by("-start")[:8]
-    )
-    recent_parts = (
-        DevisPart.objects.filter(organisme=org)
-        .exclude(status="draft")
-        .select_related("devis", "devis__patient")
-        .order_by("-created_at")[:8]
     )
     recent_conv = (
         Conversation.objects.filter(
             Q(devis_part__organisme=org) | Q(rendez_vous__organisme=org)
         )
+        .exclude(kind=Conversation.KIND_DEVIS)
+        .filter(devis_part__isnull=True)
         .select_related("patient", "prestataire", "devis_part", "rendez_vous")
         .distinct()
         .order_by("-updated_at")[:8]
@@ -346,7 +361,6 @@ def organisme_detail(request, pk):
             "org": org,
             "bilan": bilan,
             "recent_rdv": recent_rdv,
-            "recent_parts": recent_parts,
             "recent_conv": recent_conv,
             "stats": stats,
         },
@@ -403,10 +417,32 @@ def services_list(request):
 
 @superadmin_required
 def assurances_list(request):
+    search = (request.GET.get("q") or "").strip()
     assurances = Assurance.objects.annotate(
         providers_count=Count("prises_en_charge__organisme", distinct=True),
-    ).order_by("segment", "name")
-    return render(request, "dashboard/assurances_list.html", {"assurances": assurances})
+    )
+    if search:
+        matching_segments = [
+            value
+            for value, label in Assurance.Segment.choices
+            if search.casefold() in label.casefold()
+        ]
+        search_filter = (
+            Q(name__icontains=search)
+            | Q(segment__icontains=search)
+            | Q(description__icontains=search)
+            | Q(website__icontains=search)
+            | Q(contact_phone__icontains=search)
+        )
+        if matching_segments:
+            search_filter |= Q(segment__in=matching_segments)
+        assurances = assurances.filter(search_filter)
+    assurances = assurances.order_by("segment", "name")
+    return render(
+        request,
+        "dashboard/assurances_list.html",
+        {"assurances": assurances, "search": search},
+    )
 
 
 # ─── Modération avis ──────────────────────────────────────────────────────────
@@ -1232,161 +1268,9 @@ def finances(request):
     return render(request, "dashboard/finances.html", context)
 
 
-# ─── Sprint C · Devis WA admin ────────────────────────────────────────────────
-
 @superadmin_required
-def devis_overview(request):
-    """Registre consolidé plateforme des devis WA."""
-    status_filter = (request.GET.get("status") or "all").strip()
-    valid = {"all", "sent", "viewed", "relanced", "expired", "archived"}
-    if status_filter not in valid:
-        status_filter = "all"
-    search = (request.GET.get("q") or "").strip()
-
-    qs = (
-        Devis.objects.exclude(status="draft")
-        .select_related("patient", "insurance", "cart")
-        .annotate(parts_count=Count("parts", distinct=True))
-        .order_by("-created_at")
-    )
-    if status_filter != "all":
-        qs = qs.filter(status=status_filter)
-    if search:
-        qs = qs.filter(
-            Q(reference__icontains=search)
-            | Q(patient__username__icontains=search)
-            | Q(patient__email__icontains=search)
-            | Q(patient__first_name__icontains=search)
-            | Q(patient__last_name__icontains=search)
-        )
-
-    base_qs = Devis.objects.exclude(status="draft").annotate(parts_count=Count("parts", distinct=True))
-    counts = {
-        "all": base_qs.count(),
-        "sent": base_qs.filter(status="sent").count(),
-        "viewed": base_qs.filter(status="viewed").count(),
-        "relanced": base_qs.filter(status="relanced").count(),
-        "expired": base_qs.filter(status="expired").count(),
-        "archived": base_qs.filter(status="archived").count(),
-    }
-
-    paginator = Paginator(qs, 25)
-    page = paginator.get_page(request.GET.get("page"))
-
-    rows = []
-    for d in page.object_list:
-        org_names = []
-        if d.cart_id:
-            for it in d.cart.items.select_related("prestataire_acte__organisme"):
-                if it.prestataire_acte and it.prestataire_acte.organisme:
-                    n = it.prestataire_acte.organisme.name
-                    if n not in org_names:
-                        org_names.append(n)
-        rows.append({"d": d, "org_names": org_names, "parts_count": getattr(d, "parts_count", 0)})
-
-    valeur_total = base_qs.aggregate(s=Sum("total_brut"))["s"] or 0
-    accept_count = base_qs.filter(status="viewed").count()
-    pending_count = base_qs.filter(status__in=["sent", "viewed"]).count()
-    expired_count = base_qs.filter(status="expired").count()
-
-    context = {
-        "rows": rows,
-        "page": page,
-        "status_filter": status_filter,
-        "search": search,
-        "counts": counts,
-        "kpi_total": counts["all"],
-        "kpi_accept": accept_count,
-        "kpi_pending": pending_count,
-        "kpi_expired": expired_count,
-        "kpi_valeur": valeur_total,
-    }
-    return render(request, "dashboard/devis_overview.html", context)
-
-
-@superadmin_required
-def devis_admin_detail(request, reference):
-    from cart.models import DevisPart
-
-    devis = get_object_or_404(
-        Devis.objects.select_related("patient", "insurance", "cart")
-        .prefetch_related(
-            Prefetch(
-                "parts",
-                queryset=DevisPart.objects.select_related("organisme").order_by(
-                    "organisme__name"
-                ),
-            )
-        ),
-        reference=reference,
-    )
-    parts_data = []
-    for part in devis.parts.all():
-        conv = Conversation.objects.filter(devis_part=part).first()
-        rdv = RendezVous.objects.filter(devis_part=part).order_by("-created_at").first()
-        parts_data.append({"part": part, "conversation": conv, "rdv": rdv})
-    org_names = []
-    for line in devis.details or []:
-        n = line.get("organisme")
-        if n and n not in org_names:
-            org_names.append(n)
-    return render(
-        request,
-        "dashboard/devis_admin_detail.html",
-        {
-            "devis": devis,
-            "parts_data": parts_data,
-            "org_names": org_names,
-        },
-    )
-
-
-@superadmin_required
-@require_POST
-def devis_admin_relance(request, reference):
-    """Relance : sur chaque sous-devis si présents, sinon sur le devis parent (legacy)."""
-    devis = get_object_or_404(Devis.objects.prefetch_related("parts"), reference=reference)
-    parts = list(devis.parts.all())
-    if parts:
-        relanced = 0
-        for p in parts:
-            if p.can_relance():
-                p.mark_relance(by_user=request.user)
-                relanced += 1
-        if relanced:
-            messages.success(
-                request,
-                f"{relanced} sous-devis relancé(s) pour le devis {devis.reference}.",
-            )
-        else:
-            messages.warning(request, f"Aucun sous-devis relançable pour {devis.reference}.")
-    elif not devis.can_relance():
-        if devis.is_archived:
-            messages.warning(request, f"Devis {devis.reference} déjà archivé.")
-        else:
-            messages.warning(request, f"Devis {devis.reference} : relances épuisées.")
-    else:
-        devis.mark_relance(by_user=request.user)
-        msg = f"Devis {devis.reference} relancé ({devis.relance_count}/{devis.MAX_RELANCES})."
-        if devis.is_archived:
-            msg += " Archivage automatique appliqué."
-        messages.success(request, msg)
-    return redirect("dashboard:devis_admin_detail", reference=reference)
-
-
-@superadmin_required
-@require_POST
-def devis_admin_archive(request, reference):
-    devis = get_object_or_404(Devis.objects.prefetch_related("parts"), reference=reference)
-    if devis.is_archived:
-        messages.info(request, f"Devis {devis.reference} déjà archivé.")
-    else:
-        for p in devis.parts.all():
-            if not p.is_archived:
-                p.archive(reason="Archivé par admin")
-        devis.archive(reason="Archivé par admin")
-        messages.success(request, f"Devis {devis.reference} et sous-devis archivés.")
-    return redirect("dashboard:devis_admin_detail", reference=reference)
+def devis_admin_unavailable(request, *args, **kwargs):
+    raise Http404
 
 
 @superadmin_required
@@ -1452,19 +1336,14 @@ def _activite_kpis():
 def activite_overview(request):
     """Hub activité patient ↔ plateforme (devis, RDV, messagerie)."""
     kpis = _activite_kpis()
-    recent_devis = (
-        Devis.objects.exclude(status="draft")
-        .select_related("patient")
-        .order_by("-created_at")[:6]
-    )
     recent_rdv = (
-        RendezVous.objects.select_related("patient", "organisme", "devis")
+        RendezVous.objects.select_related("patient", "organisme")
         .order_by("-created_at")[:6]
     )
     recent_conv = (
-        Conversation.objects.select_related(
-            "patient", "prestataire", "devis_part", "rendez_vous"
-        )
+        Conversation.objects.exclude(kind=Conversation.KIND_DEVIS)
+        .filter(devis_part__isnull=True)
+        .select_related("patient", "prestataire", "rendez_vous")
         .annotate(msg_count=Count("messages"))
         .order_by("-updated_at")[:6]
     )
@@ -1473,7 +1352,6 @@ def activite_overview(request):
         "dashboard/activite_overview.html",
         {
             "kpis": kpis,
-            "recent_devis": recent_devis,
             "recent_rdv": recent_rdv,
             "recent_conv": recent_conv,
         },
@@ -1499,9 +1377,7 @@ def rdv_overview(request):
     search = (request.GET.get("q") or "").strip()
     org_filter = (request.GET.get("org") or "").strip()
 
-    qs = RendezVous.objects.select_related(
-        "patient", "organisme", "devis", "devis_part"
-    ).order_by("-start")
+    qs = RendezVous.objects.select_related("patient", "organisme").order_by("-start")
     now = timezone.now()
     if status_filter == "upcoming":
         qs = qs.filter(status__in=RendezVous.LIVE_STATUSES, start__gte=now)
@@ -1516,7 +1392,6 @@ def rdv_overview(request):
             | Q(patient__email__icontains=search)
             | Q(patient__first_name__icontains=search)
             | Q(patient__last_name__icontains=search)
-            | Q(devis__reference__icontains=search)
         )
     if org_filter.isdigit():
         qs = qs.filter(organisme_id=int(org_filter))
@@ -1569,21 +1444,17 @@ def rdv_overview(request):
 def rdv_admin_detail(request, reference):
     rdv = get_object_or_404(
         RendezVous.objects.select_related(
-            "patient", "organisme", "devis", "devis_part"
+            "patient", "organisme"
         ),
         reference=reference,
     )
     conversation = (
         Conversation.objects.filter(rendez_vous=rdv)
+        .exclude(kind=Conversation.KIND_DEVIS)
+        .filter(devis_part__isnull=True)
         .select_related("patient", "prestataire")
         .first()
     )
-    if not conversation and rdv.devis_part_id:
-        conversation = (
-            Conversation.objects.filter(devis_part=rdv.devis_part)
-            .select_related("patient", "prestataire")
-            .first()
-        )
     return render(
         request,
         "dashboard/rdv_admin_detail.html",
@@ -1668,9 +1539,8 @@ def messaging_overview(request):
     status_filter = (request.GET.get("status") or "all").strip()
     valid_kinds = {
         "all",
-        Conversation.KIND_GENERAL,
-        Conversation.KIND_DEVIS,
         Conversation.KIND_RDV,
+        Conversation.KIND_GENERAL,
     }
     valid_status = {
         "all",
@@ -1685,10 +1555,11 @@ def messaging_overview(request):
     search = (request.GET.get("q") or "").strip()
 
     qs = (
-        Conversation.objects.select_related(
+        Conversation.objects.exclude(kind=Conversation.KIND_DEVIS)
+        .filter(devis_part__isnull=True)
+        .select_related(
             "patient",
             "prestataire",
-            "devis_part__organisme",
             "rendez_vous__organisme",
         )
         .annotate(msg_count=Count("messages"))
@@ -1706,14 +1577,14 @@ def messaging_overview(request):
             | Q(patient__first_name__icontains=search)
             | Q(patient__last_name__icontains=search)
             | Q(prestataire__username__icontains=search)
-            | Q(devis_part__reference__icontains=search)
             | Q(rendez_vous__reference__icontains=search)
         )
 
-    base_qs = Conversation.objects.all()
+    base_qs = Conversation.objects.exclude(kind=Conversation.KIND_DEVIS).filter(
+        devis_part__isnull=True
+    )
     counts = {
         "all": base_qs.count(),
-        Conversation.KIND_DEVIS: base_qs.filter(kind=Conversation.KIND_DEVIS).count(),
         Conversation.KIND_RDV: base_qs.filter(kind=Conversation.KIND_RDV).count(),
         Conversation.KIND_GENERAL: base_qs.filter(kind=Conversation.KIND_GENERAL).count(),
         Conversation.STATUS_ACTIVE: base_qs.filter(
@@ -1757,13 +1628,12 @@ def messaging_admin_detail(request, pk):
         Conversation.objects.select_related(
             "patient",
             "prestataire",
-            "devis_part__organisme",
-            "devis_part__devis",
             "rendez_vous__organisme",
-            "rendez_vous__devis",
         ),
         pk=pk,
     )
+    if conv.kind == Conversation.KIND_DEVIS or conv.devis_part_id:
+        raise Http404
     msg_list = conv.messages.select_related("sender", "receiver").order_by("timestamp")
     return render(
         request,

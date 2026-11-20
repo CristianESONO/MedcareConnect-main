@@ -3,9 +3,11 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.http import JsonResponse, Http404
 from django.utils.crypto import get_random_string
 from django.utils.text import slugify
+from django.db import transaction
 from django.db.models import F
 
 from healthcare.models import (
@@ -812,6 +814,7 @@ def prestataire_panels(request):
 
 
 @login_required
+@transaction.atomic
 def panel_create(request):
     """Créer ou modifier un panel d'examens ou un ticket (supporte formulaire classique et AJAX)."""
     if request.method != "POST":
@@ -838,69 +841,87 @@ def panel_create(request):
     if kind not in (ExamenPanel.KIND_PANEL, ExamenPanel.KIND_TICKET):
         kind = ExamenPanel.KIND_PANEL
 
-    if panel_id:
-        try:
-            panel = ExamenPanel.objects.get(pk=int(panel_id), organisme=org)
-            panel.nom = nom
-            panel.kind = kind
-            panel.description = description
-            panel.save()
-        except (ExamenPanel.DoesNotExist, ValueError):
+    try:
+        if panel_id:
+            try:
+                panel = ExamenPanel.objects.get(pk=int(panel_id), organisme=org)
+                panel.nom = nom
+                panel.kind = kind
+                panel.description = description
+                panel.save()
+            except (ExamenPanel.DoesNotExist, ValueError):
+                panel = ExamenPanel.objects.create(
+                    organisme=org,
+                    kind=kind,
+                    nom=nom,
+                    description=description,
+                )
+        else:
             panel = ExamenPanel.objects.create(
                 organisme=org,
                 kind=kind,
                 nom=nom,
                 description=description,
             )
-    else:
-        panel = ExamenPanel.objects.create(
-            organisme=org,
-            kind=kind,
-            nom=nom,
-            description=description,
-        )
 
-    # Attacher les actes sélectionnés
-    selected_pas = []
-    if acte_ids_raw:
-        for x in acte_ids_raw.split(","):
-            x = x.strip()
-            if not x:
-                continue
-            if x.isdigit():
-                pa = PrestataireActe.objects.filter(pk=int(x), organisme=org).first()
-                if pa and pa not in selected_pas:
-                    selected_pas.append(pa)
-            elif x.startswith("am_") and x[3:].isdigit():
-                am_id = int(x[3:])
-                am = ActeMedical.objects.filter(pk=am_id, level=3).first()
-                if am:
-                    pa, _ = PrestataireActe.objects.get_or_create(
-                        organisme=org,
-                        acte=am,
-                        defaults={"price": am.reference_price or 0, "is_available": True}
-                    )
+        # Attacher les actes sélectionnés
+        selected_pas = []
+        if acte_ids_raw:
+            for x in acte_ids_raw.split(","):
+                x = x.strip()
+                if not x:
+                    continue
+                if x.isdigit():
+                    pa = PrestataireActe.objects.filter(pk=int(x), organisme=org).first()
                     if pa and pa not in selected_pas:
                         selected_pas.append(pa)
+                elif x.startswith("am_") and x[3:].isdigit():
+                    am_id = int(x[3:])
+                    am = ActeMedical.objects.filter(pk=am_id, level=3).first()
+                    if am:
+                        price = am.reference_price
+                        if price is None or price <= 0:
+                            raise ValidationError(
+                                f"Ajoutez un tarif à « {am.name} » avant de l'inclure dans ce panel."
+                            )
+                        pa, _ = PrestataireActe.objects.get_or_create(
+                            organisme=org,
+                            acte=am,
+                            defaults={"price": price, "is_available": True}
+                        )
+                        if pa and pa not in selected_pas:
+                            selected_pas.append(pa)
 
-    if acte_noms_raw:
-        noms = [n.strip() for n in acte_noms_raw.split("|||") if n.strip()]
-        for nom_acte in noms:
-            pa = PrestataireActe.objects.filter(organisme=org, acte__name__iexact=nom_acte).first()
-            if not pa:
-                am = ActeMedical.objects.filter(name__iexact=nom_acte, level=3).first()
-                if not am:
-                    am = ActeMedical.objects.filter(name__icontains=nom_acte, level=3).first()
-                if am:
-                    pa, _ = PrestataireActe.objects.get_or_create(
-                        organisme=org,
-                        acte=am,
-                        defaults={"price": am.reference_price or 0, "is_available": True}
-                    )
-            if pa and pa not in selected_pas:
-                selected_pas.append(pa)
+        if acte_noms_raw:
+            noms = [n.strip() for n in acte_noms_raw.split("|||") if n.strip()]
+            for nom_acte in noms:
+                pa = PrestataireActe.objects.filter(organisme=org, acte__name__iexact=nom_acte).first()
+                if not pa:
+                    am = ActeMedical.objects.filter(name__iexact=nom_acte, level=3).first()
+                    if not am:
+                        am = ActeMedical.objects.filter(name__icontains=nom_acte, level=3).first()
+                    if am:
+                        price = am.reference_price
+                        if price is None or price <= 0:
+                            raise ValidationError(
+                                f"Ajoutez un tarif à « {am.name} » avant de l'inclure dans ce panel."
+                            )
+                        pa, _ = PrestataireActe.objects.get_or_create(
+                            organisme=org,
+                            acte=am,
+                            defaults={"price": price, "is_available": True}
+                        )
+                if pa and pa not in selected_pas:
+                    selected_pas.append(pa)
 
-    panel.actes.set(selected_pas)
+        panel.actes.set(selected_pas)
+    except ValidationError as exc:
+        transaction.set_rollback(True)
+        error = " ".join(exc.messages)
+        if is_ajax:
+            return JsonResponse({"ok": False, "error": error}, status=400)
+        messages.error(request, error)
+        return redirect("healthcare:prestataire_panels")
 
     if is_ajax:
         return JsonResponse({

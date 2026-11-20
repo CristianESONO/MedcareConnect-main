@@ -110,6 +110,9 @@
       <span class="legend-pill"><span class="d" style="background:var(--mc-accent)"></span>Actif ({{ map_count_active }})</span>
       <span class="legend-pill"><span class="d" style="background:#f59e0b"></span>Onboarding ({{ map_count_pending }})</span>
       <span class="legend-pill"><span class="d" style="background:#9ca3af;border-style:dashed"></span>Sans coordonnées</span>
+      {% if map_invalid_count %}
+      <span class="legend-pill text-rose-600"><span class="d" style="background:#e11d48"></span>Coordonnées invalides ({{ map_invalid_count }})</span>
+      {% endif %}
     </div>
   </div>
   <div class="map-wrap">
@@ -120,6 +123,7 @@
         <p class="map-loader__sub" id="map-loader-sub">Préparation des tuiles et des marqueurs. Avec de nombreuses structures, cela peut prendre quelques secondes.</p>
       </div>
     </div>
+    <div id="map-error" class="hidden absolute left-3 top-3 max-w-sm rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 shadow-sm" style="z-index:1000" role="status" aria-live="polite"></div>
     <div id="senegal-map"></div>
   </div>
 </div>
@@ -259,11 +263,18 @@
   var mapEl = document.getElementById('senegal-map');
   var loaderEl = document.getElementById('map-loader');
   var loaderSub = document.getElementById('map-loader-sub');
+  var mapErrorEl = document.getElementById('map-error');
 
   function hideMapLoader() {
     if (!loaderEl) return;
     loaderEl.classList.add('map-loader--done');
     loaderEl.setAttribute('aria-busy', 'false');
+  }
+
+  function showMapError(message) {
+    if (!mapErrorEl) return;
+    mapErrorEl.textContent = message;
+    mapErrorEl.classList.remove('hidden');
   }
 
   if (mapEl && typeof L !== 'undefined') {
@@ -275,19 +286,28 @@
     }
 
     var map = L.map('senegal-map', { zoomControl: true, scrollWheelZoom: false }).setView([14.4974, -14.4524], 7);
-    var tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
-      maxZoom: 20,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" rel="noopener">CARTO</a>'
+    var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap contributors</a>'
     });
     // Écouteurs avant addTo pour ne pas rater un événement `load` immédiat (cache navigateur)
     var hideLoaderTimer = null;
+    var tileLoadSucceeded = false;
     function scheduleHideMapLoader() {
       clearTimeout(hideLoaderTimer);
       hideLoaderTimer = setTimeout(hideMapLoader, 320);
     }
-    tiles.on('load', scheduleHideMapLoader);
-    tiles.on('tileerror', scheduleHideMapLoader);
+    tiles.on('load', function() {
+      tileLoadSucceeded = true;
+      if (mapErrorEl) mapErrorEl.classList.add('hidden');
+      scheduleHideMapLoader();
+    });
+    tiles.on('tileerror', function() {
+      if (!tileLoadSucceeded) {
+        showMapError('Le fond cartographique est indisponible. Les marqueurs restent affichés; vérifiez la connexion.');
+      }
+      scheduleHideMapLoader();
+    });
     tiles.addTo(map);
     setTimeout(hideMapLoader, 18000);
 
@@ -296,10 +316,13 @@
       var marker = L.circleMarker([o.lat, o.lng], {
         radius: 8, color: color, fillColor: color, fillOpacity: .55, weight: 2
       }).addTo(map);
+      var profileLink = o.url
+        ? '<br><a href="' + o.url + '" target="_blank" rel="noopener" style="color:#3b82f6">Voir profil →</a>'
+        : '<br><span style="color:#6b7280">Fiche publique non disponible</span>';
       marker.bindTooltip(
         '<strong>' + o.name + '</strong><br>' +
         (o.type ? o.type + ' · ' : '') + (o.city || '') +
-        '<br><a href="' + o.url + '" target="_blank" style="color:#3b82f6">Voir profil →</a>',
+        profileLink,
         { sticky: true, direction: 'top' }
       );
     });
@@ -310,6 +333,7 @@
       } catch(e) { scheduleHideMapLoader(); }
     }
   } else {
+    showMapError('La bibliothèque cartographique n’a pas pu être chargée. Les données restent disponibles dans Prestataires.');
     hideMapLoader();
   }
 

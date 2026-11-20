@@ -118,6 +118,36 @@ class PrestataireDevisViewTest(TestCase):
         self.part.refresh_from_db()
         self.assertEqual(self.part.status, "viewed")
 
+    def test_patient_dossier_is_accessible_from_devis(self):
+        self.client.force_login(self.presta)
+        url = reverse("healthcare:prestataire_patient_dossier", args=[self.part.reference])
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Dossier patient")
+        self.assertContains(r, self.patient.display_name)
+        self.assertContains(r, self.part.reference)
+        self.part.refresh_from_db()
+        self.assertEqual(self.part.status, "viewed")
+
+    def test_patient_dossier_rejects_another_structure(self):
+        other_presta = User.objects.create_user(
+            username="other_presta",
+            email="other@e.com",
+            password="x",
+            user_type="prestataire",
+        )
+        other_org = OrganismeDeSante.objects.create(
+            user=other_presta,
+            name="Autre structure",
+            address="Thiès",
+            subscription_plan=self.plan,
+            is_active=True,
+        )
+        self.client.force_login(other_presta)
+        url = reverse("healthcare:prestataire_patient_dossier", args=[self.part.reference])
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 404)
+
     def test_filter_accepted(self):
         start = timezone.now() + timezone.timedelta(days=2)
         RendezVous.objects.create(

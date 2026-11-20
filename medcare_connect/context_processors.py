@@ -43,11 +43,12 @@ def global_context(request):
     if request.user.is_authenticated:
         inbox = Notification.queryset_inbox(request.user)
         rappels = Notification.queryset_rappels(request.user)
-        ctx["unread_notifications"] = inbox.filter(is_read=False).count()
+        unread_inbox = inbox.filter(is_read=False)
+        ctx["unread_notifications"] = unread_inbox.count()
         ctx["unread_rappels"] = rappels.filter(is_read=False).count()
-        recent = list(inbox.order_by("-created_at")[:10])
+        recent = list(unread_inbox.order_by("-created_at")[:5])
         ctx["recent_notifications"] = recent
-        ctx["recent_unread_count"] = sum(1 for n in recent if not n.is_read)
+        ctx["recent_unread_count"] = ctx["unread_notifications"]
         ctx["unread_messages"] = Message.objects.filter(
             receiver=request.user, is_read=False
         ).count()

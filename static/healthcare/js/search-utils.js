@@ -52,9 +52,23 @@
           row.style.display = show ? '' : 'none';
           if (show) nvis++;
         });
+        grp.querySelectorAll('[data-dem-acte-subgroup]').forEach(function (subgroup) {
+          var subgroupRows = subgroup.querySelectorAll('[data-dem-acte-name]');
+          var hasVisibleRows = Array.prototype.some.call(subgroupRows, function (row) {
+            return row.style.display !== 'none';
+          });
+          subgroup.style.display = (!q || hasVisibleRows) ? '' : 'none';
+          subgroup.open = q
+            ? hasVisibleRows
+            : subgroup.getAttribute('data-default-open') === '1';
+        });
         var vis = (!q || nvis > 0);
         grp.style.display = vis ? '' : 'none';
-        if (vis && q && nvis > 0 && grp.tagName === 'DETAILS') grp.open = true;
+        if (grp.tagName === 'DETAILS') {
+          grp.open = q
+            ? nvis > 0
+            : grp.getAttribute('data-default-open') === '1';
+        }
       });
     });
   }

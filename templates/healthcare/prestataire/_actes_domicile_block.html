@@ -24,11 +24,27 @@
           </select>
         </div>
         <div>
-          <label class="domi-field-label" for="domicile-plages">Plages horaires</label>
-          <input id="domicile-plages" name="domicile_plages_horaires" type="text"
-            class="domi-search-input js-domi-field" style="width:100%"
-            value="{{ org.domicile_plages_horaires|default:'' }}"
-            placeholder="Ex : 7h–10h Lun–Sam">
+          <span class="domi-field-label">Plages horaires</span>
+          <div id="domicile-plages" class="domicile-schedule-grid js-domicile-schedule">
+            <div class="domicile-schedule-head" aria-hidden="true">
+              <span>Jour</span>
+              <span>Ouverture</span>
+              <span>Fermeture</span>
+            </div>
+            {% for day in domicile_schedule_rows %}
+            <div class="domicile-schedule-row" data-day="{{ day.code }}">
+              <div class="domicile-schedule-day">
+                <strong>{{ day.label }}</strong>
+                <label>
+                  <input type="checkbox" class="js-domi-day-closed"{% if day.closed %} checked{% endif %}>
+                  <span>Fermé</span>
+                </label>
+              </div>
+              <input type="time" class="js-domi-day-open js-domi-field" value="{{ day.open|default:'' }}" aria-label="Heure d'ouverture {{ day.label }}">
+              <input type="time" class="js-domi-day-close js-domi-field" value="{{ day.close|default:'' }}" aria-label="Heure de fermeture {{ day.label }}">
+            </div>
+            {% endfor %}
+          </div>
         </div>
       </div>
 

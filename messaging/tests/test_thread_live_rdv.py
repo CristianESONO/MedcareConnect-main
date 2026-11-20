@@ -9,7 +9,7 @@ from django.utils import timezone
 from appointments.models import RendezVous
 from cart.models import Devis, DevisPart
 from healthcare.models import ActeMedical, OrganismeDeSante, ServiceMedical, SubscriptionPlan
-from messaging.models import Conversation
+from messaging.models import Conversation, Message
 from users.models import User
 
 
@@ -96,6 +96,33 @@ class ThreadBookingWhenRdvLiveTest(TestCase):
             response.content.decode().count("Secrétariat de Clinique Msg QA"),
             1,
         )
+
+    def test_patient_inbox_search_matches_message_content(self):
+        Message.objects.create(
+            conversation=self.conv,
+            sender=self.prest,
+            receiver=self.patient,
+            content="Le prélèvement se fait à jeun.",
+        )
+
+        response = self.client.get(
+            reverse("messaging:inbox"),
+            {"q": "prélèvement à jeun"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Clinique Msg QA")
+        self.assertContains(response, 'value="prélèvement à jeun"')
+
+    def test_patient_inbox_search_shows_empty_state_when_no_exchange_matches(self):
+        response = self.client.get(
+            reverse("messaging:inbox"),
+            {"q": "vaccination inconnue"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Aucun résultat")
+        self.assertNotContains(response, "Clinique Msg QA")
 
     def test_prestataire_can_send_attachment_in_conversation(self):
         self.client.force_login(self.prest)

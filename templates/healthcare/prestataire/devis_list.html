@@ -123,7 +123,7 @@
 
     {% if p.status != 'archived' %}
     <div class="mt-3 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-3">
-      <a href="{% url 'healthcare:prestataire_devis_part_detail' p.reference %}" class="inline-flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-primary-600">Ouvrir la fiche</a>
+      <a href="{% url 'healthcare:prestataire_patient_dossier' p.reference %}" class="inline-flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-primary-600">Consulter</a>
       {% if p.can_relance %}
       <form method="post" action="{% url 'healthcare:prestataire_devis_relance' p.reference %}" class="inline">
         {% csrf_token %}

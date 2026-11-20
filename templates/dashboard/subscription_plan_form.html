@@ -200,7 +200,7 @@
 
     if (cb.checked) {
       label.classList.add('is-on');
-      icon.textContent = '<i class="ti ti-check"></i>';
+      icon.textContent = '✓';
       if (state) state.textContent = 'Inclus';
     } else if (isStarterMedplaqueAddon(code, false)) {
       label.classList.add('is-addon');
@@ -239,7 +239,7 @@
     text.className = 'mcc-sp-feat-text';
     if (checked) {
       icon.className = 'mcc-sp-feat-on';
-      icon.textContent = '<i class="ti ti-check"></i>';
+      icon.textContent = '✓';
       var sub = text.querySelector('span');
       if (sub && sub.textContent === 'Désactivé') {
         sub.textContent = sub.dataset.desc || sub.textContent;

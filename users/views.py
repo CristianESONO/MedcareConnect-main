@@ -28,6 +28,17 @@ def _after_patient_login_redirect(request, next_url=None):
     return redirect(panel_redirect("rdv"))
 
 
+def _authenticated_user_redirect(request):
+    user = request.user
+    if user.is_superuser or user.is_admin_user:
+        return redirect("dashboard:index")
+    if user.is_patient:
+        return _after_patient_login_redirect(request)
+    if user.is_prestataire:
+        return redirect("healthcare:prestataire_dashboard")
+    return redirect("home")
+
+
 from medcare_connect.views import _home_vitrine_context
 
 
@@ -41,9 +52,7 @@ def _register_context(form, initial_mode="structure", initial_account="structure
 
 def register(request):
     if request.user.is_authenticated:
-        if request.user.is_patient:
-            return redirect(panel_redirect("rdv"))
-        return redirect("home")
+        return _authenticated_user_redirect(request)
     if request.method == "POST":
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -177,9 +186,7 @@ def register(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        if request.user.is_patient:
-            return redirect(panel_redirect("rdv"))
-        return redirect("home")
+        return _authenticated_user_redirect(request)
     if request.method == "POST":
         identifier = (request.POST.get("username") or "").strip()
         password = request.POST.get("password")
@@ -196,13 +203,7 @@ def login_view(request):
             )
             if next_url:
                 return redirect(next_url)
-            if user.is_prestataire:
-                return redirect("healthcare:prestataire_dashboard")
-            if user.is_superuser or getattr(user, "is_admin_user", False):
-                return redirect("dashboard:index")
-            if user.is_patient:
-                return _after_patient_login_redirect(request)
-            return redirect("home")
+            return _authenticated_user_redirect(request)
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
     return render(request, "users/login.html")

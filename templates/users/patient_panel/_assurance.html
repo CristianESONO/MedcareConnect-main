@@ -102,24 +102,3 @@
     <div class="pac-roadmap-item" style="opacity:.65"><span class="pac-roadmap-step pac-roadmap-step--future">3</span> Identifiant biométrique unique · ~36+ mois</div>
   </div>
 </form>
-
-<script>
-(function() {
-  var globalInput = document.getElementById('id_insurance_coverage_pct');
-  document.querySelectorAll('[data-pac-global-pct]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      if (!globalInput) return;
-      globalInput.value = btn.getAttribute('data-pac-global-pct');
-      document.querySelectorAll('.pac-taux-btn').forEach(function(b) { b.classList.remove('pac-taux-btn--active'); });
-      btn.classList.add('pac-taux-btn--active');
-    });
-  });
-  if (globalInput && globalInput.value) {
-    document.querySelectorAll('[data-pac-global-pct]').forEach(function(btn) {
-      if (btn.getAttribute('data-pac-global-pct') === String(parseFloat(globalInput.value))) {
-        btn.classList.add('pac-taux-btn--active');
-      }
-    });
-  }
-})();
-</script>

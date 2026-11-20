@@ -15,8 +15,15 @@
     <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Canal</p>
     <p class="mt-1 text-base font-bold text-gray-900">{{ channel.label }} <span class="text-xs font-normal text-gray-400">{{ channel.code }}</span></p>
     <p class="mt-2 text-[11px] text-gray-500">Ce couple événement × canal est fixé par l’URL ; seules les règles de diffusion ci-dessous sont modifiables.</p>
+    <p class="mt-2 text-xs {% if channel.is_available %}text-emerald-700{% else %}text-amber-700{% endif %}">{% if channel.is_available %}Canal disponible : {% else %}Canal indisponible : {% endif %}{{ channel.availability_reason }}</p>
   </div>
 </div>
+
+{% if not channel.is_available %}
+<div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+  La règle peut être préparée, mais aucun envoi ne sera effectué sur ce canal tant que sa configuration n’est pas disponible.
+</div>
+{% endif %}
 
 {% if not template %}
 <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">

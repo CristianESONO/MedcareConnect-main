@@ -91,8 +91,8 @@ class PatientInsurancePublicProfileTests(TestCase):
 
         self.client = Client()
 
-    def test_patient_with_matched_insurance_sees_red_message(self):
-        """Quand le patient a configuré son assurance et qu'elle est acceptée, le message rouge apparaît."""
+    def test_patient_with_matched_insurance_sees_green_message(self):
+        """Quand le patient a configuré son assurance et qu'elle est acceptée, le message vert apparaît."""
         self.client.force_login(self.patient_with_axa)
         url = reverse("healthcare:organisme_detail", kwargs={"slug": self.org.slug})
         resp = self.client.get(url)
@@ -104,8 +104,10 @@ class PatientInsurancePublicProfileTests(TestCase):
         self.assertIn("Votre assurance est acceptée ici", html)
         self.assertIn("AXA Assurances", html)
 
-        # Le message est stylé en rouge
-        self.assertIn("#dc2626", html)
+        # Le message d'acceptation utilise les couleurs de succès.
+        self.assertIn("#ecfdf5", html)
+        self.assertIn("#a7f3d0", html)
+        self.assertIn("#047857", html)
         self.assertIn('<div class="profil-drawer-ins-match"', html)
 
         # Le tag dans la liste des assurances
@@ -145,4 +147,4 @@ class PatientInsurancePublicProfileTests(TestCase):
 
         self.assertIn("Votre assurance est acceptée ici", html)
         self.assertIn('<div class="profil-drawer-ins-match"', html)
-        self.assertIn("#dc2626", html)
+        self.assertIn("#047857", html)

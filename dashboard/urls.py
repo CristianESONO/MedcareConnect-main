@@ -93,11 +93,11 @@ urlpatterns = [
     path("bilans/", views.bilans_overview, name="bilans_overview"),
     # Sprint F · Conformité CDP
     path("conformite/", views.conformite, name="conformite"),
-    # Sprint C · Devis WA admin
-    path("devis/", views.devis_overview, name="devis_overview"),
-    path("devis/<str:reference>/", views.devis_admin_detail, name="devis_admin_detail"),
-    path("devis/<str:reference>/relance/", views.devis_admin_relance, name="devis_admin_relance"),
-    path("devis/<str:reference>/archiver/", views.devis_admin_archive, name="devis_admin_archive"),
+    # Devis WhatsApp are private to patients and providers.
+    path("devis/", views.devis_admin_unavailable, name="devis_overview"),
+    path("devis/<str:reference>/", views.devis_admin_unavailable, name="devis_admin_detail"),
+    path("devis/<str:reference>/relance/", views.devis_admin_unavailable, name="devis_admin_relance"),
+    path("devis/<str:reference>/archiver/", views.devis_admin_unavailable, name="devis_admin_archive"),
     # Activité plateforme · Vue 360°
     path("activite/", views.activite_overview, name="activite_overview"),
     path("activite/rdv/", views.rdv_overview, name="rdv_overview"),

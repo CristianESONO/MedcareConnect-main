@@ -22,7 +22,6 @@ ADMIN_GET_PAGES = [
     "dashboard:bilans_overview",
     "dashboard:conformite",
     "dashboard:activite_overview",
-    "dashboard:devis_overview",
     "dashboard:rdv_overview",
     "dashboard:messaging_overview",
     "dashboard:reviews_list",

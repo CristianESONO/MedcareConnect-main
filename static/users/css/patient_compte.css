@@ -989,6 +989,7 @@
 .pac-badge--wait { background: #fef3c7; color: #92400e; }
 .pac-badge--ok { background: var(--mc-accent-light, rgba(79,163,199,0.12)); color: var(--mc-accent-dark, #3d8fb3); }
 .pac-badge--done { background: #dbeafe; color: #1e40af; }
+.pac-search-hidden { display: none !important; }
 
 /* ─── Rendez-vous ─────────────────────────────────────────── */
 .pac-rdv-card--past { opacity: 0.72; }
@@ -1413,6 +1414,11 @@
   background: var(--mc-navy, #123a63);
   color: #fff;
   font-weight: 700;
+}
+.pac-ins-yn-btn--active:hover {
+  border-color: var(--mc-navy, #123a63);
+  background: var(--mc-navy, #123a63);
+  color: #fff;
 }
 .pac-ins-tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 .pac-ins-tag {

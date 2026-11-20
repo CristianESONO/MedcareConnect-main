@@ -68,9 +68,23 @@
           row.style.display = show ? '' : 'none';
           if (show) nvis++;
         });
+        grp.querySelectorAll('[data-dem-acte-subgroup]').forEach(function(subgroup){
+          var subgroupRows = subgroup.querySelectorAll('[data-dem-acte-name]');
+          var hasVisibleRows = Array.prototype.some.call(subgroupRows, function(row){
+            return row.style.display !== 'none';
+          });
+          subgroup.style.display = (!q || hasVisibleRows) ? '' : 'none';
+          subgroup.open = q
+            ? hasVisibleRows
+            : subgroup.getAttribute('data-default-open') === '1';
+        });
         var vis = (!q || nvis > 0);
         grp.style.display = vis ? '' : 'none';
-        if (vis && q && nvis > 0 && grp.tagName === 'DETAILS') grp.open = true;
+        if (grp.tagName === 'DETAILS') {
+          grp.open = q
+            ? nvis > 0
+            : grp.getAttribute('data-default-open') === '1';
+        }
       });
     });
   }
@@ -688,42 +702,18 @@
         '<input type="text" name="city" id="dem-bar-city" list="city-options" autocomplete="address-level2" ' +
         'class="dem-field w-full py-2.5 text-sm" placeholder="Dakar, Mermoz, Thiès…" value="' + demEscapeAttr(curCity) + '">' +
         '<button type="button" id="dem-zone-geo" class="btn-accent w-full rounded-xl py-2.5 text-sm font-bold"><i class="ti ti-antenna"></i> Utiliser ma position</button>' +
+        '<p id="dem-zone-geo-status" class="hidden mt-2 text-xs text-amber-700" role="status" aria-live="polite"></p>' +
         '<button type="submit" class="w-full rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-800">Rechercher</button>' +
         '</div>';
-      document.getElementById('dem-zone-geo').addEventListener('click', function(){
-        if (!navigator.geolocation) {
-          if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-            alert("La géolocalisation nécessite une connexion sécurisée (HTTPS). Utilisez la recherche d'adresse.");
-          } else {
-            alert('Géolocalisation indisponible sur ce navigateur.');
-          }
-          return;
+      document.getElementById('dem-zone-geo').addEventListener('click', function(event){
+        var btn = event.currentTarget;
+        var status = document.getElementById('dem-zone-geo-status');
+        if (window._sipnRequestPatientLocation) {
+          window._sipnRequestPatientLocation(btn, status);
+        } else if (status) {
+          status.textContent = 'La géolocalisation est indisponible. Vous pouvez saisir une adresse.';
+          status.classList.remove('hidden');
         }
-        var btn = document.getElementById('dem-zone-geo');
-        var prev = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Localisation…';
-        navigator.geolocation.getCurrentPosition(function(p){
-          if (window.setCoords) {
-            window.setCoords(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6), true);
-          }
-          btn.disabled = false;
-          btn.textContent = prev;
-        }, function(err){
-          btn.disabled = false;
-          btn.textContent = prev;
-          if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-            alert("La géolocalisation nécessite une connexion sécurisée (HTTPS). Utilisez la recherche d'adresse.");
-            return;
-          }
-          var msg = 'Position refusée ou indisponible.';
-          if (err) {
-            if (err.code === 1) msg = 'Autorisation GPS refusée. Activez la localisation dans votre navigateur.';
-            else if (err.code === 2) msg = 'Position GPS momentanément indisponible.';
-            else if (err.code === 3) msg = 'Délai GPS dépassé. Veuillez réessayer.';
-          }
-          alert(msg);
-        }, { enableHighAccuracy: true, timeout: 15000 });
       });
     }
     function applyDemSearchMode(mode){

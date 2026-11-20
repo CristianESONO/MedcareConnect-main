@@ -1,10 +1,14 @@
 import json
+import logging
+import unicodedata
 from datetime import datetime
 from urllib.parse import quote, urlencode
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.db import DatabaseError
 from decimal import Decimal, InvalidOperation
 
 from django.db.models import Q, Min, Max, Count, F, Sum, Case, When, IntegerField, Value, Prefetch
@@ -44,6 +48,8 @@ from .utils import assurances_grouped_for_select
 from collections import OrderedDict, defaultdict
 from itertools import groupby
 
+logger = logging.getLogger(__name__)
+
 from healthcare.services import (
     PricingService,
     SearchService,
@@ -62,6 +68,36 @@ from .geo import haversine_km, parse_lat_lng, parse_radius_km
 from .nominatim import reverse as nominatim_reverse, search_places as nominatim_search
 
 SESSION_PARCOURS_ACTES = "parcours_acte_ids"
+
+RECOMMENDED_BILAN_ACTS = {
+    "general": (
+        "NFS / Hémogramme",
+        "Glycémie à jeun",
+        "Bilan lipidique (EAL)",
+        "Créatininémie",
+    ),
+    "prenup": (
+        "Groupe ABO/Rhésus",
+        "Électrophorèse de l'hémoglobine",
+        "VIH Ag/Ac",
+        "HBsAg",
+        "Anti-VHC",
+    ),
+    "pregnancy": (
+        "Échographie obstétricale T1",
+        "Toxoplasmose IgG/IgM",
+        "Rubéole IgG/IgM",
+        "Échographie morphologique T2",
+        "Échographie T3 (biométrie)",
+    ),
+    "oms": (
+        "Glycémie à jeun",
+        "HbA1c",
+        "ECG standard 12 dérivations",
+        "VIH Ag/Ac",
+        "Syphilis VDRL",
+    ),
+}
 
 
 def _leaf_actes_grouped_by_service():
@@ -312,6 +348,58 @@ def _search_url_with_query(query_string: str) -> str:
     base = reverse("healthcare:search")
     qs = (query_string or "").strip()
     return base + (f"?{qs}" if qs else "")
+
+
+def _normalize_recommended_act_name(name: str) -> str:
+    return "".join(
+        char
+        for char in unicodedata.normalize("NFD", name.casefold())
+        if unicodedata.category(char) != "Mn" and char.isalnum()
+    )
+
+
+def _recommended_bilan_acte_ids(bilan_key: str) -> tuple[list[int], list[str]]:
+    expected_names = RECOMMENDED_BILAN_ACTS.get(bilan_key)
+    if expected_names is None:
+        return [], []
+
+    normalized_names = {
+        _normalize_recommended_act_name(name): name for name in expected_names
+    }
+    acts_by_name: dict[str, list[ActeMedical]] = defaultdict(list)
+    for acte in ActeMedical.objects.filter(is_active=True, level=3).order_by("pk"):
+        normalized_name = _normalize_recommended_act_name(acte.name)
+        if normalized_name in normalized_names:
+            acts_by_name[normalized_name].append(acte)
+
+    candidate_ids = [
+        acte.pk for actes in acts_by_name.values() for acte in actes
+    ]
+    offer_counts = dict(
+        PrestataireActe.objects.filter(
+            acte_id__in=candidate_ids,
+            is_available=True,
+            organisme__is_active=True,
+            price__gt=0,
+        )
+        .values("acte_id")
+        .annotate(total=Count("pk"))
+        .values_list("acte_id", "total")
+    )
+
+    acte_ids = []
+    missing_names = []
+    for normalized_name, name in normalized_names.items():
+        candidates = acts_by_name.get(normalized_name, [])
+        if not candidates:
+            missing_names.append(name)
+            continue
+        selected = max(
+            candidates,
+            key=lambda acte: (offer_counts.get(acte.pk, 0), -acte.pk),
+        )
+        acte_ids.append(selected.pk)
+    return list(dict.fromkeys(acte_ids)), missing_names
 
 
 def _build_mobile_piliers_payload(acte_offer_counts: dict[int, int]) -> list[dict]:
@@ -859,6 +947,37 @@ def search(request):
         except (TypeError, ValueError):
             continue
     acte_ids_clean = list(dict.fromkeys(acte_ids_clean))
+    bilan_key = (request.GET.get("bilan") or "").strip()
+    if bilan_key in RECOMMENDED_BILAN_ACTS:
+        recommended_acte_ids, missing_bilan_names = _recommended_bilan_acte_ids(
+            bilan_key
+        )
+        if missing_bilan_names:
+            logger.warning(
+                "Recommended health bundle contains acts missing from the catalogue",
+                extra={
+                    "bilan_key": bilan_key,
+                    "act_names": missing_bilan_names,
+                },
+            )
+            messages.warning(
+                request,
+                "Certains actes de ce bilan ne sont pas encore disponibles dans le catalogue.",
+            )
+        params = request.GET.copy()
+        params.pop("bilan", None)
+        params.pop("page", None)
+        params.pop("q", None)
+        params.setlist(
+            "acte",
+            [
+                str(acte_id)
+                for acte_id in dict.fromkeys(
+                    [*acte_ids_clean, *recommended_acte_ids]
+                )
+            ],
+        )
+        return redirect(_search_url_with_query(params.urlencode()))
     lot_ids_clean = _parse_int_list(request.GET.getlist("lot"))
     # Sans ceci, lot= réétend le périmètre (union) : pastille retirée ou lien « Toutes »
     # pouvaient laisser lot= alors que l’utilisateur a une liste d’actes explicite affinée.
@@ -1393,6 +1512,10 @@ def search(request):
             # Only sort when p_info is None (fallback to database order)
             if not p_info:
                 subgroups_out.sort(key=lambda sg: sg["title"])
+            for subgroup in subgroups_out:
+                subgroup["open"] = any(
+                    row["selected"] for row in subgroup["rows"]
+                )
 
             if not subgroups_out:
                 continue
@@ -1415,8 +1538,6 @@ def search(request):
                     "open": is_fam_open,
                 }
             )
-        if acte_dem_families and not any(f["open"] for f in acte_dem_families):
-            acte_dem_families[0]["open"] = True
 
         mobile_piliers_json = json.dumps(
             _build_mobile_piliers_payload(acte_offer_counts),
@@ -2361,6 +2482,20 @@ def _dashboard_period(request, org=None):
 
 def _dashboard_completion(org, actes_count, insurances_count):
     """Liste de check-points de complétion du profil prestataire."""
+    if getattr(org, "is_praticien", False):
+        return [
+            {"key": "name", "label": "Nom complet", "ok": bool((org.name or "").strip())},
+            {"key": "profession", "label": "Profession", "ok": bool((org.profession or "").strip())},
+            {"key": "order", "label": "N° Ordre / Titre", "ok": bool((org.ordre_numero or "").strip())},
+            {"key": "logo", "label": "Photo de profil", "ok": bool(org.logo)},
+            {"key": "description", "label": "Biographie", "ok": bool((org.description or "").strip())},
+            {
+                "key": "contact",
+                "label": "Téléphone / WhatsApp",
+                "ok": bool((org.contact_phone or "").strip() or (org.whatsapp_number or "").strip()),
+            },
+        ]
+
     raw_oh = org.opening_hours
     if isinstance(raw_oh, str):
         raw_oh = None
@@ -2554,6 +2689,61 @@ def prestataire_devis_part_detail(request, reference):
         }
     )
     return render(request, "healthcare/prestataire/devis_part_detail.html", ctx)
+
+
+@_require_prestataire
+def prestataire_patient_dossier(request, reference):
+    """Dossier patient lisible par la structure à partir d'un sous-devis WhatsApp."""
+    from appointments.models import RendezVous
+    from cart.models import DevisPart
+    from messaging.thread import conversation_for_part, thread_url
+    from users.models import PatientProfile
+
+    org = get_object_or_404(OrganismeDeSante, user=request.user)
+    part = get_object_or_404(
+        DevisPart.objects.select_related(
+            "devis",
+            "devis__patient",
+            "devis__insurance",
+            "organisme",
+        ),
+        reference=reference.strip(),
+        organisme=org,
+    )
+    patient = part.devis.patient
+    profile = PatientProfile.objects.filter(user=patient).select_related("insurance").first()
+    if part.status == "sent":
+        part.status = "viewed"
+        part.save(update_fields=["status"])
+
+    patient_parts = (
+        DevisPart.objects.filter(
+            organisme=org,
+            devis__patient=patient,
+        )
+        .select_related("devis", "devis__insurance")
+        .order_by("-created_at")
+    )
+    rendez_vous = RendezVous.objects.filter(
+        organisme=org,
+        patient=patient,
+    ).order_by("-start")
+
+    conversation = conversation_for_part(part)
+    ctx = _dash_context(request, "devis")
+    ctx.update(
+        {
+            "patient": patient,
+            "patient_profile": profile,
+            "part": part,
+            "devis": part.devis,
+            "patient_parts": patient_parts,
+            "rendez_vous": rendez_vous,
+            "conversation_url": thread_url(conversation) if conversation else None,
+            "status_filter": (request.GET.get("status") or "active").strip(),
+        }
+    )
+    return render(request, "healthcare/prestataire/patient_dossier.html", ctx)
 
 
 @_require_prestataire
@@ -3003,49 +3193,119 @@ def actes_list(request):
                 except (TypeError, ValueError):
                     continue
             selected &= selectable
-            org.catalogue_tarifs_delais = (request.POST.get("catalogue_tarifs_delais") or "").strip()
-            org.save(update_fields=["catalogue_tarifs_delais", "updated_at"])
-            with transaction.atomic():
-                existing = {
-                    pa.acte_id: pa
-                    for pa in PrestataireActe.objects.select_for_update().filter(organisme=org)
-                }
-                need_ids = set(existing.keys()) | selected
-                acte_ref = {
-                    a.pk: a
-                    for a in ActeMedical.objects.filter(pk__in=need_ids)
-                }
-                for aid, pa in existing.items():
-                    want = aid in selected
-                    new_price = _catalog_price_from_post(request.POST, aid, pa.price)
-                    new_delai = _catalog_delai_from_post(request.POST, aid, pa.delai)
-                    pa.price = new_price
-                    pa.delai = new_delai
-                    pa.is_available = want
-                    pa.save(
-                        update_fields=["price", "delai", "is_available", "updated_at"]
+            skipped_acte_ids = []
+            try:
+                with transaction.atomic():
+                    org.catalogue_tarifs_delais = (
+                        request.POST.get("catalogue_tarifs_delais") or ""
+                    ).strip()
+                    org.save(update_fields=["catalogue_tarifs_delais", "updated_at"])
+
+                    existing_rows = list(
+                        PrestataireActe.objects.select_for_update().filter(organisme=org)
                     )
-                for aid in selected:
-                    if aid in existing:
-                        continue
-                    acte = acte_ref.get(aid)
-                    if acte is None:
-                        acte = ActeMedical.objects.get(pk=aid)
-                    ref = (
-                        acte.reference_price
-                        if acte.reference_price is not None
-                        else Decimal("0")
+                    skipped_acte_ids = sorted(
+                        {pa.acte_id for pa in existing_rows if pa.acte_id not in selectable}
                     )
-                    price = _catalog_price_from_post(request.POST, aid, ref)
-                    delai = _catalog_delai_from_post(request.POST, aid, "")
-                    PrestataireActe.objects.create(
-                        organisme=org,
-                        acte=acte,
-                        price=price,
-                        delai=delai,
-                        is_available=True,
+                    if skipped_acte_ids:
+                        PrestataireActe.objects.filter(
+                            organisme=org,
+                            acte_id__in=skipped_acte_ids,
+                            is_available=True,
+                        ).update(is_available=False, updated_at=timezone.now())
+                    existing = {
+                        pa.acte_id: pa
+                        for pa in existing_rows
+                        if pa.acte_id in selectable
+                    }
+                    need_ids = set(existing.keys()) | selected
+                    acte_ref = {
+                        a.pk: a
+                        for a in ActeMedical.objects.filter(pk__in=need_ids)
+                    }
+                    for aid, pa in existing.items():
+                        want = aid in selected
+                        new_price = _catalog_price_from_post(request.POST, aid, pa.price)
+                        new_delai = _catalog_delai_from_post(request.POST, aid, pa.delai)
+                        pa.price = new_price
+                        pa.delai = new_delai
+                        pa.is_available = want
+                        pa.save(
+                            update_fields=["price", "delai", "is_available", "updated_at"]
+                        )
+                    for aid in selected:
+                        if aid in existing:
+                            continue
+                        acte = acte_ref.get(aid)
+                        if acte is None:
+                            acte = ActeMedical.objects.get(pk=aid)
+                        ref = (
+                            acte.reference_price
+                            if acte.reference_price is not None
+                            else Decimal("0")
+                        )
+                        price = _catalog_price_from_post(request.POST, aid, ref)
+                        delai = _catalog_delai_from_post(request.POST, aid, "")
+                        PrestataireActe.objects.create(
+                            organisme=org,
+                            acte=acte,
+                            price=price,
+                            delai=delai,
+                            is_available=True,
+                        )
+            except ValidationError:
+                logger.exception(
+                    "Validation error while saving practitioner catalogue",
+                    extra={"organisme_id": org.pk},
+                )
+                error_message = (
+                    "Le catalogue n’a pas été enregistré. Vérifiez que chaque acte est "
+                    "sélectionnable et que les tarifs sont supérieurs à 0 FCFA."
+                )
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse(
+                        {"ok": False, "message": error_message}, status=400
                     )
-            messages.success(request, "Votre offre d’actes et le texte Tarifs & délais ont été enregistrés.")
+                messages.error(request, error_message)
+                return redirect("healthcare:actes_list")
+            except DatabaseError:
+                logger.exception(
+                    "Database error while saving practitioner catalogue",
+                    extra={"organisme_id": org.pk},
+                )
+                error_message = (
+                    "Une erreur est survenue pendant l’enregistrement. "
+                    "Aucune modification n’a été appliquée ; réessayez."
+                )
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse(
+                        {"ok": False, "message": error_message}, status=500
+                    )
+                messages.error(request, error_message)
+                return redirect("healthcare:actes_list")
+
+            if skipped_acte_ids:
+                logger.warning(
+                    "Skipped non-selectable legacy catalogue acts",
+                    extra={
+                        "organisme_id": org.pk,
+                        "acte_ids": skipped_acte_ids,
+                    },
+                )
+                warning_message = (
+                    "Catalogue enregistré. Certains anciens actes non sélectionnables "
+                    "ont été ignorés."
+                )
+                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                    return JsonResponse(
+                        {"ok": True, "warning": True, "message": warning_message}
+                    )
+                messages.warning(request, warning_message)
+            else:
+                messages.success(
+                    request,
+                    "Votre offre d’actes et le texte Tarifs & délais ont été enregistrés.",
+                )
             if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                 return JsonResponse({"ok": True})
             return redirect("healthcare:actes_list")
@@ -3129,8 +3389,10 @@ def actes_list(request):
         block["active_count"] = len(block_acte_pks & selected_acte_ids)
 
     from healthcare.prestataire_domicile import (
+        DOMICILE_DAYS,
         DOMICILE_DELAI_CHOICES,
         domicile_all_actes_active,
+        parse_domicile_schedule,
         domicile_subgroups_from_catalog,
         domicile_zones_queryset,
         show_domicile_block,
@@ -3160,6 +3422,19 @@ def actes_list(request):
                 domicile_all_acte_ids, set(selected_acte_ids)
             ),
             "domicile_delai_choices": DOMICILE_DELAI_CHOICES,
+            "domicile_days": DOMICILE_DAYS,
+            "domicile_schedule_rows": [
+                {
+                    "code": code,
+                    "label": label,
+                    **parse_domicile_schedule(org.domicile_plages_horaires).get(code, {
+                        "closed": False,
+                        "open": "",
+                        "close": "",
+                    }),
+                }
+                for code, label in DOMICILE_DAYS
+            ],
             "prep_data": prep_data,
             "prep_save_url_tpl": reverse(
                 "healthcare:prestataire_acte_prerequisites", args=[0]

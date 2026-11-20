@@ -32,8 +32,25 @@ class DevisPartInline(admin.TabularInline):
     can_delete = False
 
 
+class DevisAdminAccessDeniedMixin:
+    def has_module_permission(self, request):
+        return False
+
+    def has_view_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Devis)
-class DevisAdmin(admin.ModelAdmin):
+class DevisAdmin(DevisAdminAccessDeniedMixin, admin.ModelAdmin):
     list_display = ("reference", "patient", "insurance", "total_brut", "total_patient", "status", "created_at")
     list_filter = ("status",)
     search_fields = ("reference", "patient__username")
@@ -43,7 +60,7 @@ class DevisAdmin(admin.ModelAdmin):
 
 
 @admin.register(DevisPart)
-class DevisPartAdmin(admin.ModelAdmin):
+class DevisPartAdmin(DevisAdminAccessDeniedMixin, admin.ModelAdmin):
     list_display = ("reference", "devis", "organisme", "total_brut", "total_patient", "status", "created_at")
     list_filter = ("status",)
     search_fields = ("reference", "devis__reference", "organisme__name")

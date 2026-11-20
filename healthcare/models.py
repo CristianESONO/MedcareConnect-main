@@ -219,7 +219,7 @@ class OrganismeDeSante(models.Model):
         help_text="Délai indicatif pour les prestations à domicile (catalogue actes).",
     )
     domicile_plages_horaires = models.CharField(
-        max_length=120,
+        max_length=500,
         blank=True,
         default="",
         verbose_name="Plages horaires à domicile",

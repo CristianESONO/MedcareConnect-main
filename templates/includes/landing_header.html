@@ -46,7 +46,13 @@
     </nav>
 
     <div class="mc-landing-header-ctas">
-      {% if user.is_authenticated and user.is_patient %}
+      {% if user.is_authenticated and user.is_superuser or user.is_authenticated and user.is_admin_user %}
+      <a href="{% url 'dashboard:index' %}" class="mc-landing-btn mc-landing-btn-login">Administration</a>
+      <form method="post" action="{% url 'logout' %}" class="inline-block">
+        {% csrf_token %}
+        <button type="submit" class="mc-landing-btn mc-landing-btn-login">Déconnexion</button>
+      </form>
+      {% elif user.is_authenticated and user.is_patient %}
       {% include "includes/_patient_header_quick_icons.html" %}
       <form method="post" action="{% url 'logout' %}" class="inline-block">
         {% csrf_token %}

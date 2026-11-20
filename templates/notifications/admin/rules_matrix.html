@@ -13,7 +13,12 @@
       <tr>
         <th class="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">Événement</th>
         {% for ch in channels %}
-        <th class="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-400">{{ ch.label }}</th>
+        <th class="px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+          {{ ch.label }}
+          <span class="mt-1 block text-[10px] font-medium normal-case {% if ch.is_available %}text-emerald-700{% else %}text-amber-700{% endif %}" title="{{ ch.availability_reason }}">
+            {% if ch.is_available %}Disponible{% else %}Indisponible{% endif %}
+          </span>
+        </th>
         {% endfor %}
       </tr>
     </thead>
@@ -26,8 +31,9 @@
         </td>
         {% for cell in row.cells %}
         <td class="px-4 py-3 text-center align-top">
-          <a href="{% url 'notifications:admin_rule_edit' row.event.pk cell.channel.pk %}" class="inline-flex flex-col items-center gap-1 rounded-lg border px-2 py-1.5 text-[11px] font-medium transition {% if cell.rule and cell.rule.is_active %}border-[var(--mc-border)] mc-bg-accent-light mc-text-accent-dark {% elif cell.rule %}border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 {% else %}border-dashed border-gray-300 bg-white text-gray-400 hover:bg-gray-50{% endif %}">
+          <a href="{% url 'notifications:admin_rule_edit' row.event.pk cell.channel.pk %}" class="inline-flex flex-col items-center gap-1 rounded-lg border px-2 py-1.5 text-[11px] font-medium transition {% if cell.rule and cell.rule.is_active and cell.channel.is_available %}border-[var(--mc-border)] mc-bg-accent-light mc-text-accent-dark {% elif cell.rule %}border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 {% else %}border-dashed border-gray-300 bg-white text-gray-400 hover:bg-gray-50{% endif %}">
             {% if cell.rule %}
+              {% if cell.rule.is_active and not cell.channel.is_available %}<span class="text-[10px] text-amber-700">Canal indisponible</span>{% endif %}
               {% if cell.rule.target_roles %}<span>{{ cell.rule.role_labels|join:", " }}</span>{% endif %}
               {% if cell.rule.notify_event_actor %}<span class="text-[10px]">+ acteur</span>{% endif %}
               {% if cell.rule.target_users.count %}<span class="text-[10px]">+ {{ cell.rule.target_users.count }} user(s)</span>{% endif %}

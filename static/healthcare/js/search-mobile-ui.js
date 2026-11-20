@@ -971,6 +971,58 @@
   }
   window.setCoords = setCoords;
 
+  function isGeoContextSecure() {
+    if (typeof window.isSecureContext === 'boolean') return window.isSecureContext;
+    return location.protocol === 'https:' ||
+      ['localhost', '127.0.0.1', '::1', '[::1]'].indexOf(location.hostname) !== -1;
+  }
+
+  function requestPatientLocation(button, status) {
+    if (status) {
+      status.textContent = '';
+      status.classList.add('hidden');
+    }
+    if (!isGeoContextSecure()) {
+      if (status) {
+        status.textContent = 'Le GPS nécessite une connexion HTTPS. Vous pouvez saisir une adresse ci-dessous.';
+        status.classList.remove('hidden');
+      }
+      return;
+    }
+    if (!navigator.geolocation) {
+      if (status) {
+        status.textContent = 'La géolocalisation n’est pas prise en charge par ce navigateur. Vous pouvez saisir une adresse.';
+        status.classList.remove('hidden');
+      }
+      return;
+    }
+
+    var previousHtml = button.innerHTML;
+    button.disabled = true;
+    button.textContent = 'Localisation…';
+    navigator.geolocation.getCurrentPosition(function(position) {
+      button.disabled = false;
+      button.innerHTML = previousHtml;
+      setCoords(position.coords.latitude.toFixed(6), position.coords.longitude.toFixed(6), true);
+    }, function(error) {
+      button.disabled = false;
+      button.innerHTML = previousHtml;
+      var message = 'Impossible de déterminer votre position. Réessayez ou saisissez une adresse.';
+      if (error && error.code === 1) {
+        message = 'Autorisation GPS refusée. Autorisez l’accès à votre position dans le navigateur, puis réessayez ou saisissez une adresse.';
+      } else if (error && error.code === 2) {
+        message = 'Position GPS indisponible. Vérifiez que la localisation est activée, ou saisissez une adresse.';
+      } else if (error && error.code === 3) {
+        message = 'La recherche GPS a dépassé le délai. Réessayez ou saisissez une adresse.';
+      }
+      if (status) {
+        status.textContent = message;
+        status.classList.remove('hidden');
+      }
+    }, { enableHighAccuracy: false, timeout: 30000, maximumAge: 120000 });
+  }
+  window._sipnRequestPatientLocation = requestPatientLocation;
+
   function reverseLookup(lat, lng){
     fetch(apiReverseUrl + '?lat=' + encodeURIComponent(lat) + '&lon=' + encodeURIComponent(lng))
       .then(function(r){return r.json();})
@@ -987,35 +1039,7 @@
 
   var bg = $('#btn-geolocate');
   if (bg) bg.addEventListener('click', function(){
-    var w = $('#geo-http-warn');
-    if (w) w.classList.add('hidden');
-
-    if (!navigator.geolocation){
-      if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-        if (w) w.classList.remove('hidden');
-      } else {
-        alert('Géolocalisation indisponible sur cet appareil.');
-      }
-      return;
-    }
-    bg.disabled = true; bg.textContent = 'Localisation…';
-    navigator.geolocation.getCurrentPosition(function(p){
-      setCoords(p.coords.latitude.toFixed(6), p.coords.longitude.toFixed(6), true);
-      bg.disabled = false; bg.innerHTML = '<span><i class="ti ti-antenna"></i></span> Utiliser ma position GPS';
-    }, function(err){
-      bg.disabled = false; bg.innerHTML = '<span><i class="ti ti-antenna"></i></span> Utiliser ma position GPS';
-      if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-        if (w) w.classList.remove('hidden');
-        return;
-      }
-      var msg = 'Position refusée ou indisponible.';
-      if (err) {
-        if (err.code === 1) msg = 'Autorisation GPS refusée. Activez la localisation dans les réglages de votre navigateur.';
-        else if (err.code === 2) msg = 'Position GPS momentanément indisponible.';
-        else if (err.code === 3) msg = 'Délai GPS dépassé. Veuillez réessayer ou entrer une adresse.';
-      }
-      alert(msg);
-    }, {enableHighAccuracy:true, timeout:15000});
+    requestPatientLocation(bg, $('#geo-location-status'));
   });
 
   var bn = $('#btn-geocode');

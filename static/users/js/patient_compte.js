@@ -60,6 +60,19 @@
     var selZone = qs('#pac-ins-selector', form);
     var directZone = qs('#pac-ins-direct', form);
     var insSelect = qs('#id_insurance', form);
+    var coverageInput = qs('#id_insurance_coverage_pct', form);
+    var rateButtons = qsa('[data-pac-global-pct]', form);
+
+    function syncRateButtons() {
+      if (!coverageInput) return;
+      var selectedRate = parseFloat(coverageInput.value);
+      rateButtons.forEach(function (btn) {
+        var selected = Number(btn.getAttribute('data-pac-global-pct')) === selectedRate;
+        btn.classList.toggle('pac-taux-btn--active', selected);
+        btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
+    }
+
     qsa('[data-ins-yes]', form).forEach(function (btn) {
       btn.addEventListener('click', function () {
         var yes = btn.getAttribute('data-ins-yes') === '1';
@@ -73,8 +86,79 @@
         if (!yes && insSelect) insSelect.value = '';
       });
     });
+    rateButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!coverageInput) return;
+        coverageInput.value = btn.getAttribute('data-pac-global-pct');
+        syncRateButtons();
+      });
+    });
+    if (coverageInput) coverageInput.addEventListener('input', syncRateButtons);
+    syncRateButtons();
     form.addEventListener('submit', function () {
       if (hidden && hidden.value === '0' && insSelect) insSelect.value = '';
+    });
+  }
+
+  function normalizeSearchText(value) {
+    return String(value || '')
+      .toLocaleLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
+  function initPatientRdvSearch(ctx) {
+    var root = qs('[data-pac-rdv-search-root]', ctx);
+    if (!root) return;
+    var input = qs('[data-pac-rdv-search]', root);
+    var noResults = qs('[data-pac-rdv-no-results]', root);
+    if (!input || input.getAttribute('data-pac-search-bound')) return;
+    input.setAttribute('data-pac-search-bound', '1');
+
+    var sections = qsa('[data-pac-rdv-section]', root);
+    input.addEventListener('input', function () {
+      var terms = normalizeSearchText(input.value).split(/\s+/).filter(Boolean);
+      var matchedCount = 0;
+      sections.forEach(function (section) {
+        var items = qsa('[data-pac-rdv-item]', section);
+        var sectionMatchCount = 0;
+        items.forEach(function (item) {
+          var text = normalizeSearchText(item.getAttribute('data-pac-rdv-search-text'));
+          var matches = terms.every(function (term) { return text.indexOf(term) !== -1; });
+          item.classList.toggle('pac-search-hidden', !matches);
+          if (matches) sectionMatchCount += 1;
+        });
+        section.classList.toggle('pac-search-hidden', terms.length > 0 && sectionMatchCount === 0);
+        matchedCount += sectionMatchCount;
+      });
+      if (noResults) {
+        noResults.classList.toggle('pac-search-hidden', terms.length === 0 || matchedCount > 0);
+      }
+    });
+  }
+
+  function initPatientHistorySearch(ctx) {
+    var root = qs('[data-pac-history-search-root]', ctx);
+    if (!root) return;
+    var input = qs('[data-pac-history-search]', root);
+    var noResults = qs('[data-pac-history-no-results]', root);
+    if (!input || input.getAttribute('data-pac-search-bound')) return;
+    input.setAttribute('data-pac-search-bound', '1');
+
+    var items = qsa('[data-pac-history-item]', root);
+    input.addEventListener('input', function () {
+      var terms = normalizeSearchText(input.value).split(/\s+/).filter(Boolean);
+      var matchedCount = 0;
+      items.forEach(function (item) {
+        var text = normalizeSearchText(item.getAttribute('data-pac-history-search-text'));
+        var matches = terms.every(function (term) { return text.indexOf(term) !== -1; });
+        item.classList.toggle('pac-search-hidden', !matches);
+        if (matches) matchedCount += 1;
+      });
+      if (noResults) {
+        noResults.classList.toggle('pac-search-hidden', terms.length === 0 || matchedCount > 0);
+      }
     });
   }
 
@@ -249,6 +333,8 @@
       });
     });
     initInsuranceForm(ctx);
+    initPatientRdvSearch(ctx);
+    initPatientHistorySearch(ctx);
     initBookChat(ctx);
   }
 
@@ -279,7 +365,7 @@
     });
   }
 
-  function injectHtml(html) {
+  function injectHtml(html, restoreScroll) {
     var inner = getContentInner();
     if (!inner) return;
     inner.innerHTML = html;
@@ -292,7 +378,12 @@
     }
     bindPanelEvents(inner);
     var scrollEl = getContentScrollEl();
-    if (scrollEl) scrollEl.scrollTop = 0;
+    if (restoreScroll) {
+      if (scrollEl) scrollEl.scrollTop = restoreScroll.containerTop;
+      if (!open) window.scrollTo(0, restoreScroll.pageTop);
+    } else if (scrollEl) {
+      scrollEl.scrollTop = 0;
+    }
   }
 
   function loadTab(tab) {
@@ -350,11 +441,21 @@
 
   function onFormSubmit(e) {
     var form = e.target;
-    if (!open || !content || !content.contains(form)) return;
+    var fullPageProfile = qs('#pac-page.pac-page--profil');
+    var inOpenDrawer = open && content && content.contains(form);
+    var inFullPageProfile = !open && fullPageProfile && fullPageProfile.contains(form);
+    if (!inOpenDrawer && !inFullPageProfile) return;
     if ((form.method || '').toLowerCase() !== 'post') return;
     e.preventDefault();
     var fd = new FormData(form);
-    fetchPanel(form.action, 'POST', fd).then(injectHtml).catch(showError);
+    var scrollEl = getContentScrollEl();
+    var scrollPosition = {
+      containerTop: scrollEl ? scrollEl.scrollTop : 0,
+      pageTop: window.pageYOffset || document.documentElement.scrollTop || 0,
+    };
+    fetchPanel(form.action, 'POST', fd)
+      .then(function (html) { injectHtml(html, scrollPosition); })
+      .catch(showError);
   }
 
   function init() {

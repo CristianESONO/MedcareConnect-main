@@ -52,10 +52,10 @@ def test_superuser_reviews_list_200(client, superuser):
 
 
 @pytest.mark.django_db
-def test_superuser_devis_overview_200(client, superuser):
+def test_superuser_devis_overview_is_not_available(client, superuser):
     client.force_login(superuser)
     r = client.get(reverse("dashboard:devis_overview"))
-    assert r.status_code == 200
+    assert r.status_code == 404
 
 
 @pytest.mark.django_db

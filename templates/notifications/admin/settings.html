@@ -10,10 +10,14 @@
   <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
     <div class="flex items-center justify-between">
       <h2 class="text-base font-bold text-gray-900">Email (SMTP)</h2>
-      {% if obj.email_enabled and obj.smtp_host %}
-        <span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Activé</span>
-      {% elif obj.smtp_host %}
+      {% if obj.email_enabled and obj.smtp_host and obj.smtp_from_email %}
+        <span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Prêt à l'envoi</span>
+      {% elif obj.email_enabled %}
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Configuration incomplète</span>
+      {% elif obj.smtp_host and obj.smtp_from_email %}
         <span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">Configuré · Désactivé</span>
+      {% elif obj.smtp_host or obj.smtp_from_email %}
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Partiellement configuré</span>
       {% else %}
         <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Non configuré</span>
       {% endif %}
@@ -85,10 +89,14 @@
   <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
     <div class="flex items-center justify-between">
       <h2 class="text-base font-bold text-gray-900">WhatsApp Cloud API</h2>
-      {% if obj.whatsapp_enabled and obj.wa_access_token %}
-        <span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Activé</span>
-      {% elif obj.wa_access_token %}
+      {% if obj.whatsapp_enabled and obj.wa_phone_number_id and obj.wa_access_token %}
+        <span class="rounded-full mc-bg-accent-light px-2 py-0.5 text-[10px] font-bold mc-text-accent-dark">Prêt à l'envoi</span>
+      {% elif obj.whatsapp_enabled %}
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Configuration incomplète</span>
+      {% elif obj.wa_phone_number_id and obj.wa_access_token %}
         <span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">Configuré · Désactivé</span>
+      {% elif obj.wa_phone_number_id or obj.wa_access_token %}
+        <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Partiellement configuré</span>
       {% else %}
         <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Non configuré</span>
       {% endif %}
@@ -168,16 +176,17 @@
 {# ═════════ Vue d'ensemble canaux ═════════ #}
 <section class="mt-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
   <h2 class="text-base font-bold text-gray-900">Canaux disponibles</h2>
-  <p class="mt-1 text-xs text-gray-500">Activez ou désactivez globalement un canal depuis la <a href="/admin/notifications/notificationchannel/" class="text-primary-600 hover:underline">liste des canaux</a>.</p>
+  <p class="mt-1 text-xs text-gray-500">Un canal est utilisable seulement s’il est activé dans la <a href="/admin/notifications/notificationchannel/" class="text-primary-600 hover:underline">liste des canaux</a> et si sa configuration spécifique est prête.</p>
   <ul class="mt-3 divide-y divide-gray-100">
     {% for ch in channels %}
     <li class="flex items-center justify-between py-2 text-sm">
       <div>
         <p class="font-semibold text-gray-800">{{ ch.label }} <span class="text-[11px] text-gray-400">{{ ch.code }}</span></p>
         {% if ch.description %}<p class="text-xs text-gray-500">{{ ch.description }}</p>{% endif %}
+        <p class="mt-1 text-xs {% if ch.is_available %}text-emerald-700{% else %}text-amber-700{% endif %}">{{ ch.availability_reason }}</p>
       </div>
-      <span class="rounded-full px-2 py-0.5 text-[10px] font-bold {% if ch.is_enabled %}mc-bg-accent-light mc-text-accent-dark{% else %}bg-rose-100 text-rose-700{% endif %}">
-        {% if ch.is_enabled %}Activé{% else %}Désactivé{% endif %}
+      <span class="rounded-full px-2 py-0.5 text-[10px] font-bold {% if ch.is_available %}mc-bg-accent-light mc-text-accent-dark{% else %}bg-amber-100 text-amber-800{% endif %}">
+        {% if ch.is_available %}Disponible{% else %}Indisponible{% endif %}
       </span>
     </li>
     {% endfor %}
