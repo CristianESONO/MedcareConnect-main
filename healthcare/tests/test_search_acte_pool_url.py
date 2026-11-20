@@ -22,7 +22,7 @@ def test_remove_url_drops_lot_param():
     assert "sort=price_asc" in url
 
 
-@patch("healthcare.views._acte_ids_from_lot_params")
+@patch("healthcare.search_views._acte_ids_from_lot_params")
 def test_search_redirect_strips_lot_when_explicit_subset_of_lot(mock_lot_ids):
     """GET avec actes affinés + lot= : redirection sans lot= pour ne pas réétendre le périmètre."""
     mock_lot_ids.return_value = [58, 59, 60]

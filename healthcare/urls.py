@@ -3,6 +3,8 @@ from . import views
 from . import bundle_views
 from . import practitioner_views
 from . import chatbot_views
+from . import geo_views
+from . import search_views
 
 app_name = "healthcare"
 
@@ -17,7 +19,7 @@ urlpatterns = [
         bundle_views.api_pa_alternatives,
         name="api_pa_alternatives",
     ),
-    path("recherche/", views.search, name="search"),
+    path("recherche/", search_views.search, name="search"),
     path("annuaire/", views.annuaire, name="annuaire"),
     path("centres/", views.centres_list, name="centres_list"),
     path("favoris/", views.my_favorites, name="my_favorites"),
@@ -27,14 +29,14 @@ urlpatterns = [
     path("api/autocompletion/", views.api_search_autocomplete, name="api_search_autocomplete"),
     path("api/ai-agent/", views.api_ai_agent_chat, name="api_ai_agent_chat"),
     path("api/actes-budgetaires/", views.api_actes_budget, name="api_actes_budget"),
-    path("api/geocode/", views.api_geocode, name="api_geocode"),
-    path("api/inverser/", views.api_reverse, name="api_reverse"),
+    path("api/geocode/", geo_views.api_geocode, name="api_geocode"),
+    path("api/inverser/", geo_views.api_reverse, name="api_reverse"),
     path(
         "api/organisme/<slug:slug>/apercu/",
         views.api_organisme_preview,
         name="api_organisme_preview",
     ),
-    path("api/enregistrer-localisation/", views.save_search_location, name="save_search_location"),
+    path("api/enregistrer-localisation/", geo_views.save_search_location, name="save_search_location"),
     path("service/<slug:slug>/", views.service_detail, name="service_detail"),
 
     # Chatbot d'onboarding prestataire (4 questions → import catalogue)
