@@ -73,6 +73,36 @@
     }
   };
 
+  var patientDrawer = document.getElementById('pacAppDrawer');
+  if (patientDrawer) {
+    patientDrawer.addEventListener('click', function (e) {
+      var link = e.target.closest('a.mc-menu-item.js-pac-nav');
+      if (!link || !patientDrawer.classList.contains('is-open') || window.innerWidth >= 1110) return;
+
+      var destination = new URL(link.href, window.location.href);
+      if (destination.origin !== window.location.origin) return;
+
+      var source = new URL(window.location.href);
+      if (source.searchParams.get('pacMenu') === '1') return;
+      source.searchParams.set('pacMenu', '1');
+      window.history.pushState(window.history.state || {}, '', source.pathname + source.search + source.hash);
+    });
+  }
+
+  function restorePatientDrawerFromHistory() {
+    var returnToPatientDrawer = new URLSearchParams(window.location.search);
+    if (returnToPatientDrawer.get('pacMenu') !== '1') return;
+
+    window.openPatientDrawer();
+    returnToPatientDrawer.delete('pacMenu');
+    var cleanUrl = window.location.pathname
+      + (returnToPatientDrawer.toString() ? '?' + returnToPatientDrawer.toString() : '')
+      + window.location.hash;
+    window.history.replaceState(window.history.state || {}, '', cleanUrl);
+  }
+  restorePatientDrawerFromHistory();
+  window.addEventListener('pageshow', restorePatientDrawerFromHistory);
+
   var dashBackdrop = document.getElementById('dashAppDrawerBackdrop');
   if (dashBackdrop) {
     dashBackdrop.addEventListener('click', function () {

@@ -88,6 +88,25 @@ def actes_list(request):
                         want = aid in selected
                         new_price = shared._catalog_price_from_post(request.POST, aid, pa.price)
                         new_delai = shared._catalog_delai_from_post(request.POST, aid, pa.delai)
+                        if want and (new_price is None or new_price <= 0):
+                            raise ValidationError(
+                                {
+                                    "price": (
+                                        f"Le tarif de l’acte « {pa.acte.name} » doit être "
+                                        "strictement supérieur à 0 FCFA."
+                                    )
+                                }
+                            )
+                        if not want:
+                            update_values = {
+                                "is_available": False,
+                                "delai": new_delai,
+                                "updated_at": timezone.now(),
+                            }
+                            if new_price is not None and new_price > 0:
+                                update_values["price"] = new_price
+                            PrestataireActe.objects.filter(pk=pa.pk).update(**update_values)
+                            continue
                         pa.price = new_price
                         pa.delai = new_delai
                         pa.is_available = want
@@ -106,6 +125,15 @@ def actes_list(request):
                             else Decimal("0")
                         )
                         price = shared._catalog_price_from_post(request.POST, aid, ref)
+                        if price is None or price <= 0:
+                            raise ValidationError(
+                                {
+                                    "price": (
+                                        f"Le tarif de l’acte « {acte.name} » doit être "
+                                        "strictement supérieur à 0 FCFA."
+                                    )
+                                }
+                            )
                         delai = shared._catalog_delai_from_post(request.POST, aid, "")
                         PrestataireActe.objects.create(
                             organisme=org,
@@ -114,7 +142,7 @@ def actes_list(request):
                             delai=delai,
                             is_available=True,
                         )
-            except ValidationError:
+            except ValidationError as exc:
                 logger.exception(
                     "Validation error while saving practitioner catalogue",
                     extra={"organisme_id": org.pk},
@@ -123,6 +151,9 @@ def actes_list(request):
                     "Le catalogue n’a pas été enregistré. Vérifiez que chaque acte est "
                     "sélectionnable et que les tarifs sont supérieurs à 0 FCFA."
                 )
+                details = "; ".join(exc.messages)
+                if details:
+                    error_message = f"{error_message} {details}"
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return JsonResponse(
                         {"ok": False, "message": error_message}, status=400
@@ -438,10 +469,11 @@ def prestataire_acte_prerequisites(request, acte_id):
     pa = PrestataireActe.objects.filter(organisme=org, acte=acte).first()
     if pa is None:
         ref = acte.reference_price if acte.reference_price is not None else Decimal("0")
+        fallback_price = ref if ref is not None and ref > 0 else Decimal("1")
         pa = PrestataireActe.objects.create(
             organisme=org,
             acte=acte,
-            price=ref,
+            price=fallback_price,
             delai="",
             is_available=False,
         )
@@ -450,7 +482,13 @@ def prestataire_acte_prerequisites(request, acte_id):
     if form.is_valid():
         obj = form.save(commit=False)
         obj.rdv_prerequisites_active = request.POST.get("rdv_prerequisites_active") == "1"
-        obj.save()
+        # Les consignes peuvent être configurées avant que l'acte ait un tarif
+        # public positif. On ne valide donc pas ici le prix du catalogue.
+        PrestataireActe.objects.filter(pk=obj.pk).update(
+            rdv_prerequisites=obj.rdv_prerequisites,
+            rdv_prerequisites_active=obj.rdv_prerequisites_active,
+            updated_at=timezone.now(),
+        )
         message = (obj.rdv_prerequisites or "").strip() or (acte.rdv_prerequisites or "").strip()
         configured = bool((obj.rdv_prerequisites or "").strip()) or (
             obj.rdv_prerequisites_active and bool((acte.rdv_prerequisites or "").strip())

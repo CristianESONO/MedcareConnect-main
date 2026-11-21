@@ -658,12 +658,18 @@ class PrestataireActe(models.Model):
         unique_together = ("organisme", "acte")
         verbose_name = "Prestataire-Acte"
         verbose_name_plural = "Prestataires-Actes"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(is_available=False) | models.Q(price__gt=0),
+                name="presta_acte_active_price_positive",
+            ),
+        ]
 
     def clean(self):
         super().clean()
         from django.core.exceptions import ValidationError
 
-        if self.price is not None and self.price <= 0:
+        if self.is_available and self.price is not None and self.price <= 0:
             raise ValidationError(
                 {"price": "Le tarif public / comptant doit être strictement supérieur à 0 FCFA."}
             )

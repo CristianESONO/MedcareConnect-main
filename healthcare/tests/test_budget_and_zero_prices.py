@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.db import IntegrityError, transaction
 from django.test import TestCase, Client
 from django.urls import reverse
 from healthcare.models import ActeMedical, OrganismeDeSante, PrestataireActe, ServiceMedical, TypeOrganisme
@@ -50,17 +51,16 @@ class BudgetAndZeroPricesTestCase(TestCase):
             is_verified=True,
             city="Dakar",
         )
-        # Note: on force la création directe pour tester le comportement de la recherche face aux données existantes à 0
+        # Une offre à 0 peut exister tant qu'elle n'est pas activée.
         self.pa_zero = PrestataireActe.objects.filter(organisme=self.org_zero, acte=self.acte).first()
         if not self.pa_zero:
             self.pa_zero = PrestataireActe(
                 organisme=self.org_zero,
                 acte=self.acte,
                 price=Decimal("0.00"),
-                is_available=True,
+                is_available=False,
             )
-            # save sans full_clean si nécessaire pour émuler données corrompues en base
-            super(PrestataireActe, self.pa_zero).save()
+            self.pa_zero.save()
 
     def test_zero_price_not_in_search(self):
         """Une offre avec un prix à 0 ne doit jamais apparaître dans la recherche patient."""
@@ -94,4 +94,20 @@ class BudgetAndZeroPricesTestCase(TestCase):
         )
         with self.assertRaises(ValidationError):
             bad_pa.full_clean()
+
+    def test_zero_price_allowed_for_inactive_unconfigured_act(self):
+        pa = PrestataireActe(
+            organisme=self.org,
+            acte=self.acte,
+            price=Decimal("0.00"),
+            is_available=False,
+        )
+        pa.clean()
+
+    def test_database_rejects_activating_zero_price_act(self):
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                PrestataireActe.objects.filter(pk=self.pa_zero.pk).update(
+                    is_available=True
+                )
 

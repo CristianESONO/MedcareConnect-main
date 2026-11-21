@@ -269,7 +269,7 @@
       strip.hidden = false;
       var stripGoBtn = document.getElementById('sel-strip-go-results');
       if (stripGoBtn) {
-        stripGoBtn.textContent = 'Voir les structures (' + selected.size + ') →';
+        stripGoBtn.textContent = 'Voir les structures →';
       }
       pills.innerHTML = Array.from(selected).map(function(pk){
         var name = acteNames[pk] || ('Acte #' + pk);
@@ -345,7 +345,7 @@
         fabGo.classList.toggle('show', showGo);
         var fabLabel = fabGo.querySelector('.sipn-fab-label');
         if (fabLabel) {
-          fabLabel.textContent = 'Voir les structures (' + selected.size + ')';
+          fabLabel.textContent = 'Voir les structures';
         }
       }
       if (fabCount) {

@@ -1005,8 +1005,13 @@ body.sipn-prestations #search-form.search-page--dem #layout-body.layout.sipn-lay
 
   .sipn-hero-title {
     margin-bottom: 0.35rem;
-    font-size: 1.18rem;
+    font-size: 18px !important;
     line-height: 1.18;
+  }
+
+  .sipn-hero-title-line {
+    display: inline-block;
+    white-space: nowrap;
   }
 
   .sipn-hero-sub {

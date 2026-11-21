@@ -18,7 +18,7 @@
     <header class="pac-main-head">
       <div class="pac-head-left">
         {% block pac_head_back %}
-        <button type="button" onclick="if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) { window.history.back(); } else { window.location.href='{% url 'healthcare:search' %}'; }" class="pac-head-back-btn" aria-label="Retour">
+        <button type="button" onclick="var previousPage = document.referrer; if (previousPage && previousPage.indexOf(window.location.origin) === 0) { if (/[?&]pacMenu=1(?:&|#|$)/.test(previousPage)) { window.location.replace(previousPage); } else { window.history.back(); } } else { window.location.href='{% url 'healthcare:search' %}'; }" class="pac-head-back-btn" aria-label="Retour">
           <i class="ti ti-arrow-left" aria-hidden="true"></i>
         </button>
         {% endblock %}

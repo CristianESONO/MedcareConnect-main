@@ -667,6 +667,7 @@ window.MEDCARE_CATALOGUE_PREP = {
   var saveTimer = null;
   var saving = false;
   var pendingSave = false;
+  var formRevision = 0;
   // Empêche l'auto-save de se déclencher pendant le chargement initial de la page
   // (le navigateur peut émettre des events "change" lors de la restauration de l'état des cases)
   var pageReady = false;
@@ -678,6 +679,7 @@ window.MEDCARE_CATALOGUE_PREP = {
 
   function scheduleAutoSave() {
     if (!pageReady) return; // Ignorer les events du chargement initial
+    formRevision += 1;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(autoSaveCatalogue, 700);
   }
@@ -689,6 +691,7 @@ window.MEDCARE_CATALOGUE_PREP = {
       return;
     }
     saving = true;
+    var savingRevision = formRevision;
     var fd = new FormData(frm);
     fetch(window.location.href, {
       method: 'POST',
@@ -705,23 +708,33 @@ window.MEDCARE_CATALOGUE_PREP = {
         return payload;
       });
     }).then(function (payload) {
-      showSaveIndicator(payload.message || null, payload.warning ? 'warning' : null);
+      if (savingRevision === formRevision) {
+        showSaveIndicator(payload.message || null, payload.warning ? 'warning' : null);
+      }
     }).catch(function (error) {
       console.error("Erreur lors de l'enregistrement du catalogue.", error);
-      showSaveIndicator(
-        error.userMessage || "Échec de l'enregistrement. Réessayez.",
-        'error'
-      );
+      if (savingRevision === formRevision) {
+        showSaveIndicator(
+          error.userMessage || "Échec de l'enregistrement. Réessayez.",
+          'error'
+        );
+      }
     }).finally(function () {
       saving = false;
-      if (pendingSave) {
+      if (pendingSave || savingRevision !== formRevision) {
         pendingSave = false;
-        scheduleAutoSave();
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(autoSaveCatalogue, 0);
       }
     });
   }
 
   if (frm) {
+    frm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      clearTimeout(saveTimer);
+      autoSaveCatalogue();
+    });
     frm.addEventListener('change', scheduleAutoSave);
     frm.addEventListener('input', function (e) {
       if (e.target.matches('input, select, textarea')) scheduleAutoSave();
@@ -1169,9 +1182,10 @@ window.MEDCARE_CATALOGUE_PREP = {
     openPrepActeId = acteId;
     prepReference = data.reference || '';
     var acteName = data.name || '—';
-    var pilierLabel = (data.pilier_icon ? data.pilier_icon + ' ' : '') + (data.pilier || '');
+    var pilierLabel = (data.pilier_icon || '') + ' ' + escapeHtmlPrep(data.pilier || '');
     document.getElementById('prep-ph-acte').textContent = acteName;
-    document.getElementById('prep-ph-cat').textContent = pilierLabel + ' · ' + (data.category || '');
+    document.getElementById('prep-ph-cat').innerHTML =
+      pilierLabel + ' · ' + escapeHtmlPrep(data.category || '');
 
     prepBody.innerHTML = prepSuggestionHtml(data)
       + '<hr class="prep-sep">'
@@ -1258,10 +1272,15 @@ window.MEDCARE_CATALOGUE_PREP = {
 
   function savePrepPanel() {
     if (!openPrepActeId) return;
+    var saveButton = document.getElementById('prep-save');
     var ta = document.getElementById('prep-notif');
     var diffuse = document.getElementById('prep-diffuse');
     var url = (prepCfg.saveUrlTpl || '').replace('ACTE_ID', openPrepActeId);
     var prepOnly = extractPrepFromConfirmation(ta ? ta.value : '');
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.textContent = 'Enregistrement…';
+    }
     var fd = new FormData();
     fd.append('csrfmiddlewaretoken', csrfToken());
     fd.append('rdv_prerequisites', prepOnly);
@@ -1274,7 +1293,9 @@ window.MEDCARE_CATALOGUE_PREP = {
     }).then(function (res) {
       return res.json().then(function (j) { return { ok: res.ok, j: j }; });
     }).then(function (res) {
-      if (!res.ok || !res.j.ok) return;
+      if (!res.ok || !res.j.ok) {
+        throw new Error(res.j.error || res.j.message || "Impossible d'enregistrer la configuration.");
+      }
       var msg = res.j.message || (ta ? ta.value : '');
       var active = !!res.j.active;
       var configured = !!res.j.configured;
@@ -1285,8 +1306,16 @@ window.MEDCARE_CATALOGUE_PREP = {
       });
       renderPrepCell(openPrepActeId, configured, active);
       closePrepPanel();
-      showSaveIndicator();
-    }).catch(function () { /* silencieux */ });
+      showSaveIndicator("Configuration enregistrée");
+    }).catch(function (error) {
+      console.error("Erreur lors de l'enregistrement de la configuration.", error);
+      showSaveIndicator(error.message || "Échec de l'enregistrement.", "error");
+    }).finally(function () {
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.textContent = 'Enregistrer';
+      }
+    });
   }
 
   document.addEventListener('click', function (e) {

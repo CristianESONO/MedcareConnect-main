@@ -872,12 +872,13 @@ def _dashboard_completion(org, actes_count, insurances_count):
             {"key": "description", "label": "Biographie / Présentation", "ok": bool(org.description and len(org.description) > 20)},
         ]
     return [
-        {"key": "profile", "label": "Identité", "ok": bool(org.name and org.city)},
-        {"key": "actes", "label": "Catalogue d'actes", "ok": actes_count > 0},
-        {"key": "insurances", "label": "Assurances", "ok": insurances_count > 0},
-        {"key": "hours", "label": "Horaires", "ok": hours_ok},
+        {"key": "name", "label": "Nom affiché", "ok": bool((org.name or "").strip())},
         {"key": "logo", "label": "Logo", "ok": bool(org.logo)},
-        {"key": "description", "label": "Description", "ok": bool(org.description and len(org.description) > 20)},
+        {"key": "description", "label": "Description", "ok": bool((org.description or "").strip())},
+        {"key": "gps", "label": "Coordonnées GPS", "ok": org.latitude is not None and org.longitude is not None},
+        {"key": "phone", "label": "Téléphone", "ok": bool((org.contact_phone or "").strip())},
+        {"key": "whatsapp", "label": "WhatsApp", "ok": bool((org.whatsapp_number or "").strip())},
+        {"key": "hours", "label": "Horaires", "ok": hours_ok},
     ]
 
 

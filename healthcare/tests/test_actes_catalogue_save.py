@@ -107,3 +107,92 @@ class ActesCatalogueSaveTests(TestCase):
         self.org.refresh_from_db()
         self.assertEqual(existing.price, Decimal("10000"))
         self.assertEqual(self.org.catalogue_tarifs_delais, "Texte précédent")
+
+    def test_selected_acte_with_positive_price_is_saved(self):
+        response = self.post_catalogue(
+            acte_ids=str(self.leaf_acte.pk),
+            **{f"price_{self.leaf_acte.pk}": "12500"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+
+        saved = PrestataireActe.objects.get(
+            organisme=self.org,
+            acte=self.leaf_acte,
+        )
+        self.assertEqual(saved.price, Decimal("12500"))
+        self.assertTrue(saved.is_available)
+
+    def test_acte_prerequisites_save_ajax(self):
+        response = self.client.post(
+            reverse(
+                "healthcare:prestataire_acte_prerequisites",
+                args=[self.leaf_acte.pk],
+            ),
+            {
+                "rdv_prerequisites": "À jeun pendant 12 heures.",
+                "rdv_prerequisites_active": "1",
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertTrue(payload["configured"])
+
+        saved = PrestataireActe.objects.get(
+            organisme=self.org,
+            acte=self.leaf_acte,
+        )
+        self.assertEqual(saved.rdv_prerequisites, "À jeun pendant 12 heures.")
+        self.assertTrue(saved.rdv_prerequisites_active)
+
+    def test_acte_prerequisites_save_with_zero_price_inactive(self):
+        existing = PrestataireActe.objects.create(
+            organisme=self.org,
+            acte=self.leaf_acte,
+            price=Decimal("500"),
+            is_available=False,
+        )
+        PrestataireActe.objects.filter(pk=existing.pk).update(price=Decimal("0"))
+
+        response = self.client.post(
+            reverse(
+                "healthcare:prestataire_acte_prerequisites",
+                args=[self.leaf_acte.pk],
+            ),
+            {
+                "rdv_prerequisites": "Apporter l'ordonnance.",
+                "rdv_prerequisites_active": "1",
+            },
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["ok"])
+        existing.refresh_from_db()
+        self.assertEqual(existing.rdv_prerequisites, "Apporter l'ordonnance.")
+        self.assertTrue(existing.rdv_prerequisites_active)
+
+    def test_existing_zero_price_act_can_be_priced_and_activated(self):
+        existing = PrestataireActe.objects.create(
+            organisme=self.org,
+            acte=self.leaf_acte,
+            price=Decimal("500"),
+            is_available=False,
+        )
+        PrestataireActe.objects.filter(pk=existing.pk).update(price=Decimal("0"))
+
+        response = self.post_catalogue(
+            acte_ids=str(self.leaf_acte.pk),
+            **{f"price_{self.leaf_acte.pk}": "8500"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["ok"])
+        existing.refresh_from_db()
+        self.assertEqual(existing.price, Decimal("8500"))
+        self.assertTrue(existing.is_available)

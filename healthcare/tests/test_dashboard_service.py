@@ -107,6 +107,31 @@ class DashboardServiceTests(TestCase):
 
         self.assertEqual(completion_pct, _organisme_profile_completion(self.org))
 
+    def test_structure_dashboard_completion_matches_profile_edit_fields(self):
+        self.org.account_nature = "structure"
+        self.org.name = "Clinique Test"
+        self.org.description = "Description de test"
+        self.org.latitude = 14.7
+        self.org.longitude = -17.4
+        self.org.contact_phone = "+221770000000"
+        self.org.whatsapp_number = "+221770000001"
+
+        completion = _dashboard_completion(self.org, actes_count=1, insurances_count=1)
+        labels = [step["label"] for step in completion]
+
+        self.assertEqual(
+            labels,
+            [
+                "Nom affiché",
+                "Logo",
+                "Description",
+                "Coordonnées GPS",
+                "Téléphone",
+                "WhatsApp",
+                "Horaires",
+            ],
+        )
+
     def test_domicile_schedule_json_round_trip(self):
         schedule = {
             "lundi": {"closed": False, "open": "08:00", "close": "17:00"},
